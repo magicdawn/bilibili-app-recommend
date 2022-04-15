@@ -13,8 +13,8 @@
 // @grant        	GM_setValue
 // @grant        	GM_deleteValue
 //
-// @match        *://www.bilibili.com/*
-// @include      https://www.mcbbs.net/template/mcbbs/image/special_photo_bg.png?*
+// @match        	*://www.bilibili.com/*
+// @include     	https://www.mcbbs.net/template/mcbbs/image/special_photo_bg.png?*
 //
 // @connect       localhost
 // @connect       app.bilibili.com
