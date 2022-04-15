@@ -5,6 +5,11 @@ import { readFileSync } from 'fs'
 process.env.NODE_ENV = process.env.NODE_ENV || 'development'
 const env = process.env.NODE_ENV
 
+let banner = readFileSync(__dirname + '/src/banner.user.ts', 'utf-8')
+if (env === 'development') {
+  banner = banner.replace(/production\.min/g, 'development')
+}
+
 const config: Configuration = {
   entry: __dirname + '/src/main.tsx',
 
@@ -64,7 +69,7 @@ const config: Configuration = {
 
   plugins: [
     new BannerPlugin({
-      banner: readFileSync(__dirname + '/src/banner.user.ts', 'utf-8'),
+      banner,
       raw: true,
     }),
     new ProvidePlugin({

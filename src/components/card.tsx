@@ -1,4 +1,65 @@
-export function VideoCard() {
+import { useEffect, useRef } from 'react'
+import { useHover } from 'ahooks'
+import { getVideoData } from './card.service'
+import { RecItem } from '../define/recommend'
+import dayjs from 'dayjs'
+
+let curYear = dayjs().format('YYYY')
+
+export function VideoCard({ item }: { item: RecItem }) {
+  // 预览 hover state
+  const videoPreviewWrapperRef = useRef(null)
+  const isHovering = useHover(videoPreviewWrapperRef)
+
+  // 稍后再看 hover state
+  const watchLaterRef = useRef(null)
+  const isWatchLaterHovering = useHover(watchLaterRef)
+
+  const {
+    param: id, // 视频 id
+    title,
+    cover,
+
+    goto,
+
+    play,
+    like,
+    coin,
+    desc,
+    danmaku,
+    ctime,
+    duration,
+
+    // author
+    name,
+    face,
+  } = item
+
+  let cdate = ''
+  if (ctime) {
+    const dayCtime = dayjs.unix(ctime)
+    if (dayCtime.format('YYYY') === curYear) {
+      cdate = dayCtime.format('M-D')
+    } else {
+      cdate = dayCtime.format('YY-M-D')
+    }
+  }
+
+  useEffect(() => {
+    // first
+    if (isHovering) {
+      ;(async () => {
+        const data = getVideoData(id)
+      })()
+    } else {
+      //
+    }
+
+    return () => {
+      // second
+    }
+  }, [isHovering])
+
   return (
     <div className='bili-video-card' data-report='partition_recommend.content'>
       <div className='bili-video-card__skeleton hide'>
@@ -20,25 +81,27 @@ export function VideoCard() {
           data-idx='content'
           data-ext='click'
         >
-          <div className='bili-video-card__image __scale-player-wrap'>
+          <div className='bili-video-card__image __scale-player-wrap' ref={videoPreviewWrapperRef}>
             <div className='bili-video-card__image--wrap'>
-              <div className='bili-watch-later' style={{ display: 'none' }}>
+              <div
+                className='bili-watch-later'
+                style={{ display: isHovering ? 'flex' : 'none' }}
+                ref={watchLaterRef}
+              >
                 <svg className='bili-watch-later__icon'>
                   <use xlinkHref='#widget-watch-later'></use>
                 </svg>
-                <span className='bili-watch-later__tip' style={{ display: 'none' }}></span>
+                <span
+                  className='bili-watch-later__tip'
+                  style={{ display: isWatchLaterHovering ? 'block' : 'none' }}
+                >
+                  稍后再看
+                </span>
               </div>
 
               <picture className='v-img bili-video-card__cover'>
-                <source
-                  srcSet='//i0.hdslb.com/bfs/archive/5d73a5c69b5c15839f7036bb4c938cdcfcf46f93.jpg@672w_378h_1c.webp'
-                  type='image/webp'
-                />
-                <img
-                  src='//i0.hdslb.com/bfs/archive/5d73a5c69b5c15839f7036bb4c938cdcfcf46f93.jpg@672w_378h_1c'
-                  alt='善恶终有报，天道好轮回'
-                  loading='lazy'
-                />
+                <source srcSet={`${cover}@672w_378h_1c.webp`} type='image/webp' />
+                <img src={`${cover}@672w_378h_1c.webp`} alt={title} loading='lazy' />
               </picture>
 
               <div className='v-inline-player'></div>
@@ -47,20 +110,34 @@ export function VideoCard() {
             <div className='bili-video-card__mask'>
               <div className='bili-video-card__stats'>
                 <div className='bili-video-card__stats--left'>
+                  {/* 播放 */}
                   <span className='bili-video-card__stats--item'>
                     <svg className='bili-video-card__stats--icon'>
                       <use xlinkHref='#widget-play-count'></use>
                     </svg>
-                    <span className='bili-video-card__stats--text'>3.2万</span>
+                    <span className='bili-video-card__stats--text'>
+                      {/* 3.2万 */}
+                      {/* TODO: format */}
+                      {play}
+                    </span>
                   </span>
+                  {/* 点赞 */}
                   <span className='bili-video-card__stats--item'>
                     <svg className='bili-video-card__stats--icon'>
                       <use xlinkHref='#widget-agree'></use>
                     </svg>
-                    <span className='bili-video-card__stats--text'>1955</span>
+                    <span className='bili-video-card__stats--text'>
+                      {/* TODO: format */}
+                      {like}
+                    </span>
                   </span>
                 </div>
-                <span className='bili-video-card__stats__duration'>06:55</span>
+                {/* 时长 */}
+                <span className='bili-video-card__stats__duration'>
+                  {/* 06:55 */}
+                  {/* TODO: format */}
+                  {duration}
+                </span>
               </div>
             </div>
           </div>
@@ -75,8 +152,8 @@ export function VideoCard() {
               data-idx='content'
               data-ext='click'
             >
-              <h3 className='bili-video-card__info--tit' title='善恶终有报，天道好轮回'>
-                善恶终有报，天道好轮回
+              <h3 className='bili-video-card__info--tit' title={title}>
+                {title}
               </h3>
             </a>
             <p className='bili-video-card__info--bottom'>
@@ -91,8 +168,8 @@ export function VideoCard() {
                 <svg className='bili-video-card__info--owner__up'>
                   <use xlinkHref='#widget-up'></use>
                 </svg>
-                <span className='bili-video-card__info--author'>海绵宝宝能吃吗</span>
-                <span className='bili-video-card__info--date'>· 3-21</span>
+                <span className='bili-video-card__info--author'>{name}</span>
+                {cdate ? <span className='bili-video-card__info--date'>· {cdate}</span> : null}
               </a>
             </p>
           </div>

@@ -2,9 +2,12 @@ import cx from 'classnames'
 import { VideoCard } from './card'
 import styles from './section.module.less'
 
+import recommendData from '../define/recommend.json'
+import { RecItem } from '../define/recommend'
+
 export function SectionRecommend() {
   return (
-    <section className={cx('bili-grid no-margin', styles.grid)} data-area='App推荐内容'>
+    <section className={cx('bili-grid no-margin', styles.grid)} data-area='App 推荐流'>
       <div className='video-card-list is-full'>
         <div className='area-header'>
           <div className='left'>
@@ -13,7 +16,7 @@ export function SectionRecommend() {
               <use xlinkHref='#channel-cinephile'></use>
             </svg>
             <a className='title' href='https://www.bilibili.com/v/cinephile' target='_blank'>
-              <span>App推荐内容</span>
+              <span>App 推荐流</span>
             </a>
           </div>
 
@@ -38,17 +41,9 @@ export function SectionRecommend() {
         </div>
 
         <div className='video-card-body'>
-          <VideoCard />
-          <VideoCard />
-          <VideoCard />
-          <VideoCard />
-          <VideoCard />
-          <VideoCard />
-          <VideoCard />
-          <VideoCard />
-          <VideoCard />
-          <VideoCard />
-          <VideoCard />
+          {recommendData.data.map((item) => {
+            return <VideoCard key={item.param} item={item as RecItem} />
+          })}
         </div>
       </div>
     </section>

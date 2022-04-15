@@ -1,5 +1,5 @@
 import React from 'react'
-import { render } from 'react-dom'
+import { createRoot } from 'react-dom/client'
 import $ from 'jquery'
 import { SectionRecommend } from './components/section'
 import sleep from 'delay'
@@ -15,5 +15,6 @@ export default async function main() {
   recommendSection.insertAfter(firstSection)
 
   const container = recommendSection[0]
-  render(<SectionRecommend />, container)
+  const root = createRoot(container)
+  root.render(<SectionRecommend />)
 }

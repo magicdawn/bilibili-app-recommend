@@ -22,6 +22,7 @@
     "@rollup/plugin-typescript": "^8.3.2",
     "@swc/core": "^1.2.165",
     "@types/jquery": "^3.5.14",
+    "@types/lru-cache": "^7.6.1",
     "@types/node": "^17.0.24",
     "@types/react": "^18",
     "@types/react-dom": "^18",
@@ -51,10 +52,13 @@
     "webpack-cli": "^4.9.2"
   },
   "dependencies": {
+    "ahooks": "^3.3.8",
     "axios": "^0.26.1",
     "classnames": "^2.3.1",
+    "dayjs": "^1.11.1",
     "delay": "^5.0.0",
     "jquery": "^3.6.0",
+    "lru-cache": "^7.8.1",
     "react": "^18.0.0",
     "react-dom": "^18.0.0"
   }
