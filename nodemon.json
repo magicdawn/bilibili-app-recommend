@@ -1,6 +1,6 @@
 {
   "verbose": true,
-  "watch": ["rollup.config.ts", "nodemon.json"],
+  "watch": ["nodemon.json"],
   "ext": "js,ts,json",
-  "exec": "pnpm run build -- -w"
+  "exec": "pnpm run build"
 }
