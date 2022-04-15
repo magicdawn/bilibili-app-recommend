@@ -1,7 +1,6 @@
 import React from 'react'
 import { render } from 'react-dom'
 import $ from 'jquery'
-import './esbuild-inject.ts'
 import { SectionRecommend } from './components/section'
 import sleep from 'delay'
 

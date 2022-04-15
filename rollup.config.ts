@@ -5,17 +5,13 @@ import commonjs from '@rollup/plugin-commonjs'
 import nodeResolve from '@rollup/plugin-node-resolve'
 import replace from '@rollup/plugin-replace'
 import nodePolyfills from 'rollup-plugin-polyfill-node'
+import lessModules from 'rollup-plugin-less-modules'
 
 // typescript
 import esbuild from 'rollup-plugin-esbuild' // https://github.com/egoist/rollup-plugin-esbuild
 import ts from 'rollup-plugin-ts' // https://github.com/wessberg/rollup-plugin-ts#install
 
-// 打包去除 `@require file:// ` 路径
 let banner = fs.readFileSync(__dirname + '/src/banner.user.ts', 'utf8')
-banner = banner
-  .split('\n')
-  .filter((line) => !line.includes('file:///'))
-  .join('\n')
 
 export default defineConfig({
   input: __dirname + '/src/main.tsx',
@@ -28,10 +24,12 @@ export default defineConfig({
     }),
 
     json(),
+    lessModules(),
 
-    esbuild({
-      // @ts-ignore
-      // inject: ['./src/esbuild-inject.js'],
+    // ts
+    // esbuild({}),
+    ts({
+      tsconfig: 'tsconfig.json',
     }),
 
     replace({
@@ -44,7 +42,7 @@ export default defineConfig({
     // builtins(),
   ],
 
-  external: ['axios', 'jquery', 'react', 'react-dom'],
+  external: ['axios', 'jquery', 'react', 'react-dom', 'react-dom/client'],
 
   output: {
     format: 'iife',
@@ -57,6 +55,7 @@ export default defineConfig({
       'jquery': '$',
       'react': 'React',
       'react-dom': 'ReactDOM',
+      'react-dom/client': 'ReactDOM',
     },
   },
 })

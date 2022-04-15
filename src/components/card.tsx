@@ -1,5 +1,3 @@
-import React from 'react'
-
 export function VideoCard() {
   return (
     <div className='bili-video-card' data-report='partition_recommend.content'>
@@ -45,6 +43,7 @@ export function VideoCard() {
 
               <div className='v-inline-player'></div>
             </div>
+
             <div className='bili-video-card__mask'>
               <div className='bili-video-card__stats'>
                 <div className='bili-video-card__stats--left'>

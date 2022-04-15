@@ -1,10 +1,11 @@
-import React from 'react'
+import cx from 'classnames'
 import { VideoCard } from './card'
+import styles from './section.module.less'
 
 export function SectionRecommend() {
   return (
-    <section className='bili-grid no-margin' data-area='App推荐内容'>
-      <div className='battle-area'>
+    <section className={cx('bili-grid no-margin', styles.grid)} data-area='App推荐内容'>
+      <div className='video-card-list is-full'>
         <div className='area-header'>
           <div className='left'>
             <a id='影视' className='the-world area-anchor' data-id='25'></a>
@@ -36,7 +37,7 @@ export function SectionRecommend() {
           </div>
         </div>
 
-        <div className='battle-body'>
+        <div className='video-card-body'>
           <VideoCard />
           <VideoCard />
           <VideoCard />
