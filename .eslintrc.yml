@@ -1,0 +1,12 @@
+# root
+root: true
+
+parserOptions:
+  sourceType: 'module'
+
+env:
+  browser: true
+  greasemonkey: true
+
+extends:
+  - '@magicdawn'

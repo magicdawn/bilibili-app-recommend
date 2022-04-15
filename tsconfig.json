@@ -1,0 +1,13 @@
+{
+  "include": ["src/**/*"],
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "target": "es2019",
+    "module": "ES6",
+    "strictNullChecks": true,
+    "jsx": "react-jsx"
+  }
+}
