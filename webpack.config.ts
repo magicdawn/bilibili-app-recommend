@@ -1,6 +1,7 @@
 import { BannerPlugin, Configuration, ProvidePlugin } from 'webpack'
 import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin'
 import { readFileSync } from 'fs'
+import chalk from 'chalk'
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development'
 const env = process.env.NODE_ENV
@@ -12,14 +13,13 @@ if (env === 'development') {
 
 const config: Configuration = {
   entry: __dirname + '/src/main.tsx',
-
-  mode: env as Configuration['mode'],
-  devtool: false,
-
   output: {
     path: __dirname + '/dist/',
     filename: 'main.user.js',
   },
+
+  mode: env as Configuration['mode'],
+  devtool: false,
 
   externals: {
     'jquery': '$',
@@ -77,5 +77,11 @@ const config: Configuration = {
     }),
   ],
 }
+
+const url = `file://${config.output!.path}${config.output!.filename}`
+console.log('-'.repeat(50))
+console.log(`script url: ${chalk.green(url)}`)
+console.log('open this url in Chrome with ViolentMonkey installed')
+console.log('-'.repeat(50))
 
 export default config

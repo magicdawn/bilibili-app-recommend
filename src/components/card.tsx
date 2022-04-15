@@ -1,10 +1,20 @@
 import { useEffect, useRef } from 'react'
-import { useHover } from 'ahooks'
+import { useHover, useMemoizedFn } from 'ahooks'
 import { getVideoData } from './card.service'
 import { RecItem } from '../define/recommend'
 import dayjs from 'dayjs'
 
-let curYear = dayjs().format('YYYY')
+const currentYear = dayjs().format('YYYY')
+const getCdate = (ctime?: number) => {
+  if (!ctime) return ''
+
+  const dayCtime = dayjs.unix(ctime)
+  if (dayCtime.format('YYYY') === currentYear) {
+    return dayCtime.format('M-D')
+  } else {
+    return dayCtime.format('YY-M-D')
+  }
+}
 
 export function VideoCard({ item }: { item: RecItem }) {
   // 预览 hover state
@@ -35,21 +45,13 @@ export function VideoCard({ item }: { item: RecItem }) {
     face,
   } = item
 
-  let cdate = ''
-  if (ctime) {
-    const dayCtime = dayjs.unix(ctime)
-    if (dayCtime.format('YYYY') === curYear) {
-      cdate = dayCtime.format('M-D')
-    } else {
-      cdate = dayCtime.format('YY-M-D')
-    }
-  }
+  let cdate = getCdate(ctime)
 
   useEffect(() => {
     // first
     if (isHovering) {
       ;(async () => {
-        const data = getVideoData(id)
+        const data = await getVideoData(id)
       })()
     } else {
       //
@@ -59,6 +61,21 @@ export function VideoCard({ item }: { item: RecItem }) {
       // second
     }
   }, [isHovering])
+
+  // 稍候再看
+  const onWatchLater = useMemoizedFn(() => {
+    //
+  })
+
+  // 不喜欢
+  const onDislike = useMemoizedFn(() => {
+    //
+  })
+
+  // 撤销不喜欢
+  const onCancelDislike = useMemoizedFn(() => {
+    //
+  })
 
   return (
     <div className='bili-video-card' data-report='partition_recommend.content'>
@@ -87,6 +104,7 @@ export function VideoCard({ item }: { item: RecItem }) {
                 className='bili-watch-later'
                 style={{ display: isHovering ? 'flex' : 'none' }}
                 ref={watchLaterRef}
+                onClick={onWatchLater}
               >
                 <svg className='bili-watch-later__icon'>
                   <use xlinkHref='#widget-watch-later'></use>

@@ -21,6 +21,7 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@types/tampermonkey": "^4.0.5",
+    "chalk": "4",
     "css-loader": "^6.7.1",
     "esbuild": "^0.14.36",
     "less": "^4.1.2",
