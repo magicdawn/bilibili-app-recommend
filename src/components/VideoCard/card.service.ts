@@ -1,7 +1,7 @@
 import axios from 'axios'
 import LRUCache from 'lru-cache'
-import { DmJson } from '../define/dm'
-import { RecommendJson } from '../define/recommend'
+import { PvideoJson } from '../../define/pvideo'
+import { DmJson } from '../../define/dm'
 
 export const HOST_API = 'https://api.bilibili.com'
 export const request = axios.create({
@@ -26,7 +26,7 @@ request.interceptors.request.use(
 // 视频预览
 export async function pvideo(aid: string) {
   const res = await request.get('/pvideo', { params: { aid } })
-  const json = res.data as RecommendJson
+  const json = res.data as PvideoJson
 
   // TODO: process errors
 
@@ -46,7 +46,7 @@ export async function dm(aid: string) {
 export const cache = new LRUCache<string, VideoData>({ max: 200 })
 
 export type VideoData = {
-  pvideoData: RecommendJson['data']
+  pvideoData: PvideoJson['data']
   dmData: DmJson['data']
 }
 

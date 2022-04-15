@@ -1,8 +1,10 @@
 import { useEffect, useRef } from 'react'
-import { useHover, useMemoizedFn } from 'ahooks'
-import { getVideoData } from './card.service'
-import { RecItem } from '../define/recommend'
+import { useHover, useMemoizedFn, useSafeState } from 'ahooks'
+import { getVideoData, VideoData } from './card.service'
+import { RecItem } from '../../define/recommend'
 import dayjs from 'dayjs'
+import PreviewImage from './PreviewImage'
+import styles from './index.module.less'
 
 const currentYear = dayjs().format('YYYY')
 const getCdate = (ctime?: number) => {
@@ -47,11 +49,13 @@ export function VideoCard({ item }: { item: RecItem }) {
 
   let cdate = getCdate(ctime)
 
+  const [videoData, setVideoData] = useSafeState<VideoData | null>(null)
   useEffect(() => {
     // first
     if (isHovering) {
       ;(async () => {
         const data = await getVideoData(id)
+        setVideoData(data)
       })()
     } else {
       //
@@ -77,6 +81,8 @@ export function VideoCard({ item }: { item: RecItem }) {
     //
   })
 
+  const href = item.goto === 'av' ? `/video/av${id}` : item.uri
+
   return (
     <div className='bili-video-card' data-report='partition_recommend.content'>
       <div className='bili-video-card__skeleton hide'>
@@ -92,14 +98,14 @@ export function VideoCard({ item }: { item: RecItem }) {
 
       <div className='bili-video-card__wrap __scale-wrap'>
         <a
-          href='//www.bilibili.com/video/BV1Tq4y1v7u7'
+          href={href}
           target='_blank'
           data-mod='partition_recommend'
           data-idx='content'
           data-ext='click'
         >
           <div className='bili-video-card__image __scale-player-wrap' ref={videoPreviewWrapperRef}>
-            <div className='bili-video-card__image--wrap'>
+            <div className='bili-video-card__image--wrap' style={{ overflow: 'hidden' }}>
               <div
                 className='bili-watch-later'
                 style={{ display: isHovering ? 'flex' : 'none' }}
@@ -123,6 +129,18 @@ export function VideoCard({ item }: { item: RecItem }) {
               </picture>
 
               <div className='v-inline-player'></div>
+
+              {/* preview */}
+              {/* isHovering */}
+              {/* 297635747 */}
+              {/* id === '297635747' */}
+              {isHovering && videoData?.pvideoData ? (
+                <PreviewImage
+                  className={styles.previewCardWrapper}
+                  item={item}
+                  pvideo={videoData?.pvideoData}
+                />
+              ) : null}
             </div>
 
             <div className='bili-video-card__mask'>
@@ -164,7 +182,7 @@ export function VideoCard({ item }: { item: RecItem }) {
         <div className='bili-video-card__info __scale-disable'>
           <div className='bili-video-card__info--right'>
             <a
-              href='//www.bilibili.com/video/BV1Tq4y1v7u7'
+              href={href}
               target='_blank'
               data-mod='partition_recommend'
               data-idx='content'
