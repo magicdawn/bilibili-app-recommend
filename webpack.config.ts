@@ -29,7 +29,7 @@ const config: Configuration = {
   },
 
   resolve: {
-    plugins: [new TsconfigPathsPlugin({})],
+    plugins: [new TsconfigPathsPlugin()],
     extensions: ['.js', '.cjs', '.mjs', '.json', '.wasm', '.ts', '.tsx'],
   },
 
@@ -50,14 +50,15 @@ const config: Configuration = {
       {
         test: /\.less$/i,
         use: [
-          // compiles Less to CSS
           'style-loader',
           {
             loader: 'css-loader',
             options: {
               modules: {
                 auto: true,
+                namedExport: true,
                 exportLocalsConvention: 'camelCaseOnly',
+                localIdentName: '[local]_[hash:base64:5]',
               },
             },
           },

@@ -1,6 +1,6 @@
 import cx from 'classnames'
 import { VideoCard } from './VideoCard'
-import styles from './section.module.less'
+import * as styles from './section.module.less'
 
 import recommendData from '../define/recommend.json'
 import { RecItem } from '../define/recommend'

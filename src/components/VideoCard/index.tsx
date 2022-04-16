@@ -4,7 +4,7 @@ import { getVideoData, VideoData } from './card.service'
 import { RecItem } from '../../define/recommend'
 import dayjs from 'dayjs'
 import PreviewImage from './PreviewImage'
-import styles from './index.module.less'
+import * as styles from './index.module.less'
 
 const currentYear = dayjs().format('YYYY')
 const getCdate = (ctime?: number) => {
