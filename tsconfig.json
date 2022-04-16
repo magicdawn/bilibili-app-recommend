@@ -1,7 +1,10 @@
 {
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "banner.user.js"],
   "compilerOptions": {
-    "baseUrl": "src",
+    "baseUrl": "./",
+    "paths": {
+      "@*": ["./src/*"]
+    },
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "moduleResolution": "node",

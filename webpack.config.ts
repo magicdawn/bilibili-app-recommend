@@ -6,7 +6,7 @@ import chalk from 'chalk'
 process.env.NODE_ENV = process.env.NODE_ENV || 'development'
 const env = process.env.NODE_ENV
 
-let banner = readFileSync(__dirname + '/src/banner.user.ts', 'utf-8')
+let banner = readFileSync(__dirname + '/banner.user.js', 'utf-8')
 if (env === 'development') {
   banner = banner.replace(/production\.min/g, 'development')
 }
@@ -30,7 +30,7 @@ const config: Configuration = {
   },
 
   resolve: {
-    plugins: [new TsconfigPathsPlugin()],
+    plugins: [new TsconfigPathsPlugin({ configFile: __dirname + '/tsconfig.json' })],
     extensions: ['.js', '.cjs', '.mjs', '.json', '.wasm', '.ts', '.tsx'],
   },
 

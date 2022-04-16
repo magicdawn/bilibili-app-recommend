@@ -4,8 +4,20 @@ import $ from 'jquery'
 import { SectionRecommend } from './components/section'
 import sleep from 'delay'
 
+// fixme
+import * as settings from '@settings'
+;(unsafeWindow as any).settings = settings
+
 main()
 export default async function main() {
+  // 用于获取授权
+  if (
+    location.href.startsWith('https://www.mcbbs.net/template/mcbbs/image/special_photo_bg.png?')
+  ) {
+    window.stop()
+    return window.top?.postMessage(location.href, 'https://www.bilibili.com')
+  }
+
   const start = Date.now()
   const timeout = 10 * 1000 // 10s
 

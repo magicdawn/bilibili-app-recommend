@@ -1,11 +1,29 @@
 import cx from 'classnames'
+import { useMemoizedFn, useSafeState } from 'ahooks'
+import { RecItem } from '@define'
+import recommendData from '@define/recommend.json'
+import { config } from '@settings'
 import { VideoCard } from './VideoCard'
 import * as styles from './section.module.less'
-
-import recommendData from '../define/recommend.json'
-import { RecItem } from '../define/recommend'
+import { auth } from '@utility/auth'
+import { useState } from 'react'
 
 export function SectionRecommend() {
+  const [accessKey, setAccessKey] = useState(config.access_key)
+
+  const onGetAuth = useMemoizedFn(async () => {
+    if (config.access_key) {
+      setAccessKey(config.access_key)
+      return
+    }
+
+    const accessKey = await auth()
+    if (accessKey) {
+      setAccessKey(accessKey)
+      return
+    }
+  })
+
   return (
     <section className={cx('bili-grid no-margin', styles.grid)} data-area='App 推荐流'>
       <div className={`video-card-list is-full ${styles.videoCardList}`}>
@@ -21,12 +39,19 @@ export function SectionRecommend() {
           </div>
 
           <div className='right'>
+            {!accessKey ? (
+              <button className='primary-btn roll-btn' onClick={onGetAuth}>
+                <span>获取 access_key</span>
+              </button>
+            ) : null}
+
             <button className='primary-btn roll-btn'>
               <svg style={{ transform: 'rotate(0deg)' }}>
                 <use xlinkHref='#widget-roll'></use>
               </svg>
               <span>换一换</span>
             </button>
+
             <a
               className='primary-btn see-more'
               href='https://www.bilibili.com/v/cinephile'
