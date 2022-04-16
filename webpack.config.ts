@@ -76,6 +76,7 @@ const config: Configuration = {
     }),
     new ProvidePlugin({
       React: 'react', // auto import for React
+      GM: __dirname + '/src/GM.ts',
     }),
   ],
 }

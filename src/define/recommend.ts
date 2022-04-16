@@ -45,6 +45,9 @@ export interface RecItem {
   type?: number
   badge?: string
   square?: string
+
+  // 推荐理由
+  rcmd_reason?: { id: number; content: string }
 }
 
 export interface DislikeReason {

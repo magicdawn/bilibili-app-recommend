@@ -3,12 +3,21 @@
 }
 
 @media (min-width: 2200px) {
-  .video-card-list {
+  .video-card-list:global(.is-full) {
     grid-column: span 7 !important;
 
-    :global(.video-card-body) {
-      grid-column: span 7 !important;
-      grid-template-columns: repeat(7, 1fr) !important;
+    :global {
+      .video-card-body.more-class1.more-class2 {
+        grid-column: span 7 !important;
+        grid-template-columns: repeat(7, 1fr) !important;
+
+        > * {
+          display: block !important;
+        }
+        > *:nth-of-type(1n + 15) {
+          display: none !important;
+        }
+      }
     }
   }
 }

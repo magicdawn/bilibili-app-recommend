@@ -1,15 +1,16 @@
 import cx from 'classnames'
-import { useMemoizedFn, useSafeState } from 'ahooks'
+import { useMemoizedFn, useMount, useSafeState } from 'ahooks'
 import { RecItem } from '@define'
-import recommendData from '@define/recommend.json'
 import { config } from '@settings'
 import { VideoCard } from './VideoCard'
 import * as styles from './section.module.less'
 import { auth } from '@utility/auth'
-import { useState } from 'react'
+import { getHomeRecommend } from '@service'
+
+import mockRecommendData from '../define/recommend.json'
 
 export function SectionRecommend() {
-  const [accessKey, setAccessKey] = useState(config.access_key)
+  const [accessKey, setAccessKey] = useSafeState(config.access_key)
 
   const onGetAuth = useMemoizedFn(async () => {
     if (config.access_key) {
@@ -22,6 +23,17 @@ export function SectionRecommend() {
       setAccessKey(accessKey)
       return
     }
+  })
+
+  const [items, setItems] = useSafeState<RecItem[]>([])
+
+  const refresh = useMemoizedFn(async () => {
+    const items = await getHomeRecommend()
+    setItems(items)
+  })
+
+  useMount(async () => {
+    refresh()
   })
 
   return (
@@ -45,7 +57,7 @@ export function SectionRecommend() {
               </button>
             ) : null}
 
-            <button className='primary-btn roll-btn'>
+            <button className='primary-btn roll-btn' onClick={refresh}>
               <svg style={{ transform: 'rotate(0deg)' }}>
                 <use xlinkHref='#widget-roll'></use>
               </svg>
@@ -65,10 +77,15 @@ export function SectionRecommend() {
           </div>
         </div>
 
-        <div className='video-card-body'>
-          {recommendData.data.map((item) => {
-            return <VideoCard key={item.param} item={item as RecItem} />
+        <div className='video-card-body more-class1 more-class2'>
+          {items.map((item) => {
+            return <VideoCard key={item.param} item={item} />
           })}
+
+          {/* {mockRecommendData.data.map((item) => {
+            // @ts-ignore
+            return <VideoCard key={item.param} item={item} />
+          })} */}
         </div>
       </div>
     </section>

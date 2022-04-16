@@ -1,10 +1,11 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { useHover, useMemoizedFn, useSafeState } from 'ahooks'
 import { getVideoData, VideoData } from './card.service'
 import { RecItem } from '../../define/recommend'
 import dayjs from 'dayjs'
 import PreviewImage from './PreviewImage'
 import * as styles from './index.module.less'
+import { getCountStr, getDurationStr } from '@utility/video'
 
 const currentYear = dayjs().format('YYYY')
 const getCdate = (ctime?: number) => {
@@ -18,6 +19,8 @@ const getCdate = (ctime?: number) => {
   }
 }
 
+const toHttps = (url: string) => url.replace(/^http:\/\//, 'https://')
+
 export function VideoCard({ item }: { item: RecItem }) {
   // 预览 hover state
   const videoPreviewWrapperRef = useRef(null)
@@ -30,7 +33,7 @@ export function VideoCard({ item }: { item: RecItem }) {
   const {
     param: id, // 视频 id
     title,
-    cover,
+    cover: coverRaw,
 
     goto,
 
@@ -45,9 +48,18 @@ export function VideoCard({ item }: { item: RecItem }) {
     // author
     name,
     face,
+    mid,
+
+    // bangumi
+    favorite,
+    badge,
+
+    // 推荐理由
+    rcmd_reason,
   } = item
 
-  let cdate = getCdate(ctime)
+  const cdate = getCdate(ctime)
+  const cover = toHttps(coverRaw)
 
   const [videoData, setVideoData] = useSafeState<VideoData | null>(null)
   useEffect(() => {
@@ -83,6 +95,11 @@ export function VideoCard({ item }: { item: RecItem }) {
 
   const href = item.goto === 'av' ? `/video/av${id}` : item.uri
 
+  const durationStr = useMemo(() => getDurationStr(duration), [duration])
+  const playStr = useMemo(() => getCountStr(play), [play])
+  const likeStr = useMemo(() => getCountStr(like), [like])
+  const favoriteStr = useMemo(() => getCountStr(favorite), [favorite])
+
   return (
     <div className='bili-video-card' data-report='partition_recommend.content'>
       <div className='bili-video-card__skeleton hide'>
@@ -106,8 +123,24 @@ export function VideoCard({ item }: { item: RecItem }) {
         >
           <div className='bili-video-card__image __scale-player-wrap' ref={videoPreviewWrapperRef}>
             <div className='bili-video-card__image--wrap' style={{ overflow: 'hidden' }}>
+              <picture className='v-img bili-video-card__cover'>
+                <source srcSet={`${cover}@672w_378h_1c.webp`} type='image/webp' />
+                <img src={`${cover}@672w_378h_1c.webp`} alt={title} loading='lazy' />
+              </picture>
+
+              {/* <div className='v-inline-player'></div> */}
+
+              {/* preview */}
+              {isHovering && videoData?.pvideoData ? (
+                <PreviewImage
+                  className={styles.previewCardWrapper}
+                  item={item}
+                  pvideo={videoData?.pvideoData}
+                />
+              ) : null}
+
               <div
-                className='bili-watch-later'
+                className={`bili-watch-later ${styles.watchLater}`}
                 style={{ display: isHovering ? 'flex' : 'none' }}
                 ref={watchLaterRef}
                 onClick={onWatchLater}
@@ -122,22 +155,6 @@ export function VideoCard({ item }: { item: RecItem }) {
                   稍后再看
                 </span>
               </div>
-
-              <picture className='v-img bili-video-card__cover'>
-                <source srcSet={`${cover}@672w_378h_1c.webp`} type='image/webp' />
-                <img src={`${cover}@672w_378h_1c.webp`} alt={title} loading='lazy' />
-              </picture>
-
-              <div className='v-inline-player'></div>
-
-              {/* preview */}
-              {isHovering && videoData?.pvideoData ? (
-                <PreviewImage
-                  className={styles.previewCardWrapper}
-                  item={item}
-                  pvideo={videoData?.pvideoData}
-                />
-              ) : null}
             </div>
 
             <div className='bili-video-card__mask'>
@@ -148,29 +165,29 @@ export function VideoCard({ item }: { item: RecItem }) {
                     <svg className='bili-video-card__stats--icon'>
                       <use xlinkHref='#widget-play-count'></use>
                     </svg>
-                    <span className='bili-video-card__stats--text'>
-                      {/* 3.2万 */}
-                      {/* TODO: format */}
-                      {play}
-                    </span>
+                    <span className='bili-video-card__stats--text'>{playStr}</span>
                   </span>
                   {/* 点赞 */}
                   <span className='bili-video-card__stats--item'>
-                    <svg className='bili-video-card__stats--icon'>
-                      <use xlinkHref='#widget-agree'></use>
-                    </svg>
-                    <span className='bili-video-card__stats--text'>
-                      {/* TODO: format */}
-                      {like}
-                    </span>
+                    {goto === 'av' ? (
+                      <>
+                        <svg className='bili-video-card__stats--icon'>
+                          <use xlinkHref='#widget-agree'></use>
+                        </svg>
+                        <span className='bili-video-card__stats--text'>{likeStr}</span>
+                      </>
+                    ) : (
+                      <>
+                        <svg className='bili-video-card__stats--icon'>
+                          <use xlinkHref='#widget-agree'></use>
+                        </svg>
+                        <span className='bili-video-card__stats--text'>{favoriteStr}</span>
+                      </>
+                    )}
                   </span>
                 </div>
                 {/* 时长 */}
-                <span className='bili-video-card__stats__duration'>
-                  {/* 06:55 */}
-                  {/* TODO: format */}
-                  {duration}
-                </span>
+                <span className='bili-video-card__stats__duration'>{durationStr}</span>
               </div>
             </div>
           </div>
@@ -190,20 +207,34 @@ export function VideoCard({ item }: { item: RecItem }) {
               </h3>
             </a>
             <p className='bili-video-card__info--bottom'>
-              <a
-                className='bili-video-card__info--owner'
-                href='//space.bilibili.com/248381012'
-                target='_blank'
-                data-mod='partition_recommend'
-                data-idx='content'
-                data-ext='click'
-              >
-                <svg className='bili-video-card__info--owner__up'>
-                  <use xlinkHref='#widget-up'></use>
-                </svg>
-                <span className='bili-video-card__info--author'>{name}</span>
-                {cdate ? <span className='bili-video-card__info--date'>· {cdate}</span> : null}
-              </a>
+              {goto === 'av' ? (
+                <a
+                  className='bili-video-card__info--owner'
+                  href={`//space.bilibili.com/${mid}`}
+                  target='_blank'
+                  data-mod='partition_recommend'
+                  data-idx='content'
+                  data-ext='click'
+                >
+                  {rcmd_reason?.content ? (
+                    <span className={styles.recommendReason}>{rcmd_reason.content}</span>
+                  ) : (
+                    <svg className='bili-video-card__info--owner__up'>
+                      <use xlinkHref='#widget-up'></use>
+                    </svg>
+                  )}
+
+                  <span className='bili-video-card__info--author'>{name}</span>
+                  {cdate ? <span className='bili-video-card__info--date'>· {cdate}</span> : null}
+                </a>
+              ) : null}
+
+              {goto === 'bangumi' ? (
+                <a className='bili-video-card__info--owner' href={href} target='_blank'>
+                  <span className={styles.badge}>{badge}</span>
+                  <span className={styles.bangumiDesc}>{desc}</span>
+                </a>
+              ) : null}
             </p>
           </div>
         </div>

@@ -1,4 +1,3 @@
-import React from 'react'
 import { createRoot } from 'react-dom/client'
 import $ from 'jquery'
 import { SectionRecommend } from './components/section'
@@ -22,7 +21,7 @@ export default async function main() {
   const timeout = 10 * 1000 // 10s
 
   const has = () => $('.bili-layout > section.bili-grid').length > 0
-  while (!(has() || Date.now() - start < timeout)) {
+  while (!has() && Date.now() - start < timeout) {
     await sleep(100)
   }
   if (!has()) {
