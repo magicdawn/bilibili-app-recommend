@@ -1,5 +1,5 @@
-import React, { ComponentProps } from 'react'
-import { Button, Modal } from 'react-bootstrap'
+import { useEffect, useRef } from 'react'
+import { Modal } from 'react-bootstrap'
 import * as styles from './ModalFeed.module.less'
 import mockRecommendData from '@define/recommend.json'
 import { VideoCard } from './VideoCard'
@@ -11,14 +11,30 @@ interface IProps {
 }
 
 function ModalFeed({ show, onHide }: IProps) {
+  const wrapperRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const wrapper = wrapperRef.current
+    if (!wrapper) return
+
+    const content = wrapper.querySelector<HTMLDivElement>('.modal-content')
+    if (!content) return
+
+    Object.assign(content.style, {
+      backgroundColor: window.getComputedStyle(document.body)['background-color'],
+      color: window.getComputedStyle(document.body)['color'],
+    })
+  }, [show, wrapperRef.current])
+
   return (
-    <div>
+    <div ref={wrapperRef}>
       <Modal
         show={show}
         onHide={onHide}
         backdrop='static'
         className={styles.modal}
-        dialogClassName={styles.dialog}
+        dialogClassName={styles.modalDialog}
+        contentClassName={styles.modalContent}
       >
         <Modal.Header closeButton>
           <Modal.Title>Modal title</Modal.Title>
