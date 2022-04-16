@@ -131,9 +131,6 @@ export function VideoCard({ item }: { item: RecItem }) {
               <div className='v-inline-player'></div>
 
               {/* preview */}
-              {/* isHovering */}
-              {/* 297635747 */}
-              {/* id === '297635747' */}
               {isHovering && videoData?.pvideoData ? (
                 <PreviewImage
                   className={styles.previewCardWrapper}

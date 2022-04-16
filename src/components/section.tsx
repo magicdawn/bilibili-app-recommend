@@ -8,7 +8,7 @@ import { RecItem } from '../define/recommend'
 export function SectionRecommend() {
   return (
     <section className={cx('bili-grid no-margin', styles.grid)} data-area='App 推荐流'>
-      <div className='video-card-list is-full'>
+      <div className={`video-card-list is-full ${styles.videoCardList}`}>
         <div className='area-header'>
           <div className='left'>
             <a id='影视' className='the-world area-anchor' data-id='25'></a>

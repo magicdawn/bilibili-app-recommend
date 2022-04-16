@@ -14,6 +14,7 @@ if (env === 'development') {
 const config: Configuration = {
   entry: __dirname + '/src/main.tsx',
   output: {
+    clean: true,
     path: __dirname + '/dist/',
     filename: 'main.user.js',
   },
@@ -25,7 +26,7 @@ const config: Configuration = {
     'jquery': '$',
     'react': 'React',
     'react-dom': 'ReactDOM',
-    'react-dom/client': 'ReactDOM',
+    // 'react-dom/client': 'ReactDOM',
   },
 
   resolve: {

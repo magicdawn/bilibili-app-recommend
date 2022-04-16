@@ -71,16 +71,16 @@ export function PreviewImage({ className, item, pvideo }: IProps) {
   let startY = (indexRow - 1) * elementH
   let startX = (indexCol - 1) * elementW
 
-  console.log({
-    t,
-    indexRow,
-    indexCol,
-    img: pvideo.image,
-    // elementW,
-    // elementH,
-    // startX,
-    // startY,
-  })
+  // console.log({
+  //   t,
+  //   indexRow,
+  //   indexCol,
+  //   img: pvideo.image,
+  //   // elementW,
+  //   // elementH,
+  //   // startX,
+  //   // startY,
+  // })
 
   return (
     <div

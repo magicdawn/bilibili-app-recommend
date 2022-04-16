@@ -1,3 +1,14 @@
 .grid {
   color: default;
 }
+
+@media (min-width: 2200px) {
+  .video-card-list {
+    grid-column: span 7 !important;
+
+    :global(.video-card-body) {
+      grid-column: span 7 !important;
+      grid-template-columns: repeat(7, 1fr) !important;
+    }
+  }
+}
