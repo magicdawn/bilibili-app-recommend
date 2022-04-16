@@ -21,7 +21,7 @@ const getCdate = (ctime?: number) => {
 
 const toHttps = (url: string) => url.replace(/^http:\/\//, 'https://')
 
-export function VideoCard({ item }: { item: RecItem }) {
+export function VideoCard({ item, className }: { item: RecItem; className?: string }) {
   // 预览 hover state
   const videoPreviewWrapperRef = useRef(null)
   const isHovering = useHover(videoPreviewWrapperRef)
@@ -101,7 +101,10 @@ export function VideoCard({ item }: { item: RecItem }) {
   const favoriteStr = useMemo(() => getCountStr(favorite), [favorite])
 
   return (
-    <div className='bili-video-card' data-report='partition_recommend.content'>
+    <div
+      className={'bili-video-card' + ' ' + className || ''}
+      data-report='partition_recommend.content'
+    >
       <div className='bili-video-card__skeleton hide'>
         <div className='bili-video-card__skeleton--cover'></div>
         <div className='bili-video-card__skeleton--info'>

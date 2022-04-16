@@ -66,6 +66,23 @@ const config: Configuration = {
           'less-loader',
         ],
       },
+      {
+        test: /\.css$/i,
+        use: [
+          'style-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              modules: {
+                auto: true,
+                namedExport: true,
+                exportLocalsConvention: 'camelCaseOnly',
+                localIdentName: '[local]_[hash:base64:5]',
+              },
+            },
+          },
+        ],
+      },
     ],
   },
 

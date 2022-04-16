@@ -1,3 +1,4 @@
+import 'bootstrap/dist/css/bootstrap.min.css'
 import { createRoot } from 'react-dom/client'
 import $ from 'jquery'
 import { SectionRecommend } from './components/section'

@@ -8,6 +8,8 @@ import { auth } from '@utility/auth'
 import { getHomeRecommend } from '@service'
 
 import mockRecommendData from '../define/recommend.json'
+import { useState } from 'react'
+import ModalFeed from './ModalFeed'
 
 export function SectionRecommend() {
   const [accessKey, setAccessKey] = useSafeState(config.access_key)
@@ -34,6 +36,12 @@ export function SectionRecommend() {
 
   useMount(async () => {
     refresh()
+  })
+
+  const [showMore, setShowMore] = useState(false)
+
+  const onSeeMore = useMemoizedFn(() => {
+    setShowMore(true)
   })
 
   return (
@@ -64,18 +72,16 @@ export function SectionRecommend() {
               <span>换一换</span>
             </button>
 
-            <a
-              className='primary-btn see-more'
-              href='https://www.bilibili.com/v/cinephile'
-              target='_blank'
-            >
+            <button className='primary-btn see-more' onClick={onSeeMore}>
               <span>查看更多</span>
               <svg>
                 <use xlinkHref='#widget-arrow'></use>
               </svg>
-            </a>
+            </button>
           </div>
         </div>
+
+        <ModalFeed show={showMore} onHide={() => setShowMore(false)} />
 
         <div className='video-card-body more-class1 more-class2'>
           {items.map((item) => {
