@@ -58,7 +58,7 @@ async function getAuth() {
   }
 
   const result = await waitCallback
-  // cleanup()
+  cleanup()
 
   // {errmsg} | access_key
   return result

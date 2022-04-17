@@ -12,3 +12,8 @@
 ## Install
 
 https://greasyfork.org/zh-CN/scripts/443530-bilibili-app-recommend
+
+## Build
+
+- pnpm build
+- 按照提示, 复制 `file://` 链接, 在 chrome 中打开, 即可安装
