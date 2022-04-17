@@ -11,6 +11,8 @@ if (env === 'development') {
   banner = banner.replace(/production\.min/g, 'development')
 }
 
+const tsconfig = __dirname + '/tsconfig.json'
+
 const config: Configuration = {
   entry: __dirname + '/src/main.tsx',
   output: {
@@ -26,12 +28,11 @@ const config: Configuration = {
     'jquery': '$',
     'react': 'React',
     'react-dom': 'ReactDOM',
-    // 'react-dom/client': 'ReactDOM',
   },
 
   resolve: {
-    plugins: [new TsconfigPathsPlugin({ configFile: __dirname + '/tsconfig.json' })],
-    extensions: ['.js', '.cjs', '.mjs', '.json', '.wasm', '.ts', '.tsx'],
+    plugins: [new TsconfigPathsPlugin({ configFile: tsconfig })],
+    extensions: ['.ts', '.tsx', '.js', '.json'],
   },
 
   module: {
@@ -77,7 +78,7 @@ const config: Configuration = {
                 auto: true,
                 namedExport: true,
                 exportLocalsConvention: 'camelCaseOnly',
-                localIdentName: '[local]_[hash:base64:5]',
+                localIdentName: '[local]_[hash:hex:5]',
               },
             },
           },
@@ -92,8 +93,8 @@ const config: Configuration = {
       raw: true,
     }),
     new ProvidePlugin({
-      React: 'react', // auto import for React
-      GM: __dirname + '/src/GM.ts',
+      // auto import for React if using `React.createElement`
+      React: 'react',
     }),
   ],
 }

@@ -53,7 +53,7 @@ export function SectionRecommend() {
             <svg className='icon'>
               <use xlinkHref='#channel-cinephile'></use>
             </svg>
-            <a className='title' href='https://www.bilibili.com/v/cinephile' target='_blank'>
+            <a className='title' href='#'>
               <span>App 推荐流</span>
             </a>
           </div>

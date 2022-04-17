@@ -12,6 +12,7 @@
 // @grant         GM_getValue
 // @grant         GM_setValue
 // @grant         GM_deleteValue
+// @grant         GM.xmlHttpRequest
 //
 // @match         *://www.bilibili.com/*
 // @include       https://www.mcbbs.net/template/mcbbs/image/special_photo_bg.png?*
