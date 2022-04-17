@@ -2,6 +2,7 @@ import { BannerPlugin, Configuration, ProvidePlugin } from 'webpack'
 import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin'
 import { readFileSync } from 'fs'
 import chalk from 'chalk'
+import UglifyJsPlugin from 'uglifyjs-webpack-plugin'
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development'
 const env = process.env.NODE_ENV
@@ -97,6 +98,20 @@ const config: Configuration = {
       React: 'react',
     }),
   ],
+
+  // see https://github.com/webpack/webpack-cli/issues/312#issuecomment-409027910
+  optimization: {
+    minimizer: [
+      new UglifyJsPlugin({
+        uglifyOptions: {
+          output: {
+            beautify: false,
+            preamble: banner,
+          },
+        },
+      }),
+    ],
+  },
 }
 
 const url = `file://${config.output!.path}${config.output!.filename}`
