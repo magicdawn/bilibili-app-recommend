@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react'
+import { MouseEvent, useEffect, useMemo, useRef } from 'react'
 import { useHover, useMemoizedFn, useSafeState } from 'ahooks'
 import { getVideoData, VideoData } from './card.service'
 import { RecItem } from '../../define/recommend'
@@ -6,6 +6,7 @@ import dayjs from 'dayjs'
 import PreviewImage from './PreviewImage'
 import * as styles from './index.module.less'
 import { getCountStr, getDurationStr } from '@utility/video'
+import { toast } from '@utility/toast'
 
 const currentYear = dayjs().format('YYYY')
 const getCdate = (ctime?: number) => {
@@ -79,8 +80,9 @@ export function VideoCard({ item, className }: { item: RecItem; className?: stri
   }, [isHovering])
 
   // 稍候再看
-  const onWatchLater = useMemoizedFn(() => {
-    //
+  const onWatchLater = useMemoizedFn((e: MouseEvent) => {
+    e.preventDefault()
+    toast('暂未实现!!!')
   })
 
   // 不喜欢

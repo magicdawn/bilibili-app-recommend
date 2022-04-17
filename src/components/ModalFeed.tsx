@@ -81,12 +81,13 @@ function ModalFeed({ show, onHide }: IProps) {
           pageStart={0}
           loadMore={fetchMore}
           hasMore={true}
+          useWindow={false}
+          threshold={320} // 差不多一行高度
           loader={
             <div className='loader' style={{ textAlign: 'center' }} key={0}>
               加载中...
             </div>
           }
-          useWindow={false}
         >
           <div className={`video-card-list is-full ${styles.videoCardList}`}>
             <div className='video-card-body more-class1 more-class2'>
