@@ -6,6 +6,7 @@ import { RecItem } from '@define'
 import { VideoCard } from './VideoCard'
 import { getRecommendTimes } from '@service'
 import * as styles from './ModalFeed.module.less'
+import delay from 'delay'
 
 interface IProps {
   show: boolean
@@ -35,6 +36,16 @@ function ModalFeed({ show, onHide }: IProps) {
   const [items, setItems] = useSafeState<RecItem[]>([])
 
   const refresh = useMemoizedFn(async () => {
+    // scroll to top
+    const modalBody = (wrapperRef.current?.dialog as HTMLElement)?.querySelector<HTMLDivElement>(
+      '.modal-body'
+    )
+    if (modalBody) {
+      modalBody.scrollTop = 0
+    }
+
+    // load
+    await delay(50)
     setItems(await getRecommendTimes(2))
   })
 
