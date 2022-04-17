@@ -2,7 +2,7 @@
 // @name          bilibili-app-recommend
 // @namespace     https://magicdawn.fun
 // @version       0.0.1
-// @description   try to take over the world!
+// @description   bilibili app recommend
 // @author        magicdawn
 //
 // @grant         GM_registerMenuCommand
@@ -17,7 +17,6 @@
 // @match         *://www.bilibili.com/*
 // @include       https://www.mcbbs.net/template/mcbbs/image/special_photo_bg.png?*
 //
-// @connect       localhost
 // @connect       app.bilibili.com
 // @connect       passport.bilibili.com
 // @connect       link.acg.tv
@@ -27,4 +26,6 @@
 // @require       https://npm.elemecdn.com/jquery@3.4.1/dist/jquery.min.js
 // @require       https://npm.elemecdn.com/react@18/umd/react.production.min.js
 // @require       https://npm.elemecdn.com/react-dom@18/umd/react-dom.production.min.js
+//
+// @license       MIT
 // ==/UserScript==
