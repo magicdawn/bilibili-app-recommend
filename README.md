@@ -8,3 +8,7 @@
 
 - https://github.com/indefined/UserScripts/tree/master/bilibiliHome
 - https://github.com/indefined/UserScripts/issues/76
+
+## Install
+
+https://greasyfork.org/zh-CN/scripts/443530-bilibili-app-recommend
