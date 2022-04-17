@@ -16,6 +16,25 @@
       padding-top: 10px;
       padding-bottom: 10px;
       border-bottom: none;
+
+      .btn-refresh {
+        :global(body.dark) & {
+          color: #eee !important;
+          background-color: #333 !important;
+          border-color: transparent !important;
+          height: auto;
+          padding: 8px 12px;
+          line-height: 16px;
+          font-size: 13px;
+        }
+      }
+
+      .btn-close {
+        width: 20px;
+        height: 20px;
+        color: var(--c);
+        margin-left: 10px;
+      }
     }
 
     .modal-body {

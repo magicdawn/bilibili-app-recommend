@@ -59,14 +59,20 @@ function ModalFeed({ show, onHide }: IProps) {
       contentClassName={styles.modalContent}
       scrollable={false}
     >
-      <Modal.Header closeButton className={styles.modalHeader}>
+      <Modal.Header className={styles.modalHeader}>
         <Modal.Title>推荐</Modal.Title>
 
-        <button className='primary-btn roll-btn' onClick={refresh}>
+        <div className='space' style={{ flex: 1 }}></div>
+
+        <button className={`primary-btn roll-btn ${styles.btnRefresh}`} onClick={refresh}>
           <svg style={{ transform: 'rotate(0deg)' }}>
             <use xlinkHref='#widget-roll'></use>
           </svg>
           <span>换一换</span>
+        </button>
+
+        <button className={styles.btnClose} onClick={onHide}>
+          X
         </button>
       </Modal.Header>
 
