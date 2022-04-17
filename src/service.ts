@@ -1,7 +1,7 @@
 import axios from 'axios'
 import gmAdapter from 'axios-userscript-adapter'
 import { config } from '@settings'
-import { RecommendJson } from '@define'
+import { RecItem, RecommendJson } from '@define'
 
 export const gmrequest = axios.create({ adapter: gmAdapter })
 
@@ -21,6 +21,16 @@ export async function getRecommend() {
 
 // 一次10个不够
 export async function getHomeRecommend() {
-  const [arr1, arr2] = await Promise.all([getRecommend(), getRecommend()])
-  return [...arr1, ...arr2]
+  return getRecommendTimes(2)
+}
+
+// 一次10个不够
+export async function getModalFeedRecommend() {
+  return getRecommendTimes(3)
+}
+
+export async function getRecommendTimes(times: number) {
+  const ps = new Array(times).fill(0).map((_) => getRecommend())
+  const results = await Promise.all(ps)
+  return results.reduce((ret, cur) => ret.concat(cur), [])
 }

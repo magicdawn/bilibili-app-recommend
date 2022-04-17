@@ -51,6 +51,7 @@
     "lru-cache": "^7.8.1",
     "react": "^18",
     "react-bootstrap": "^2.2.3",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "react-infinite-scroller": "^1.2.6"
   }
 }

@@ -1,13 +1,27 @@
 .modal {
   z-index: 11000;
+  overflow: hidden;
 
   .modal-dialog {
-    width: 90vw;
+    width: calc(100vw - 50px);
     max-width: none !important;
-    margin-top: 60px;
+    margin-top: 25px;
+    height: calc(100vh - 50px);
 
     .modal-content {
-      color: inherit;
+      height: 100%;
+    }
+
+    .modal-header {
+      padding-top: 10px;
+      padding-bottom: 10px;
+      border-bottom: none;
+    }
+
+    .modal-body {
+      padding-top: 0;
+      flex-grow: 1;
+      overflow-y: scroll;
     }
   }
 }
@@ -18,4 +32,14 @@
 
 .card {
   color: inherit;
+}
+
+.video-card-list:global(.is-full) {
+  :global {
+    .video-card-body.more-class1.more-class2 {
+      > * {
+        display: block !important;
+      }
+    }
+  }
 }

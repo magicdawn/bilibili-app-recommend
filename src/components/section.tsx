@@ -6,10 +6,8 @@ import { VideoCard } from './VideoCard'
 import * as styles from './section.module.less'
 import { auth } from '@utility/auth'
 import { getHomeRecommend } from '@service'
-
-import mockRecommendData from '../define/recommend.json'
-import { useState } from 'react'
 import ModalFeed from './ModalFeed'
+import mockRecommendData from '../define/recommend.json'
 
 export function SectionRecommend() {
   const [accessKey, setAccessKey] = useSafeState(config.access_key)
@@ -38,7 +36,7 @@ export function SectionRecommend() {
     refresh()
   })
 
-  const [showMore, setShowMore] = useState(false)
+  const [showMore, setShowMore] = useSafeState(false)
 
   const onSeeMore = useMemoizedFn(() => {
     setShowMore(true)
