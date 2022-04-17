@@ -7,7 +7,6 @@ import * as styles from './section.module.less'
 import { auth } from '@utility/auth'
 import { getHomeRecommend } from '@service'
 import ModalFeed from './ModalFeed'
-import mockRecommendData from '../define/recommend.json'
 
 export function SectionRecommend() {
   const [accessKey, setAccessKey] = useSafeState(config.access_key)
@@ -85,7 +84,6 @@ export function SectionRecommend() {
           {items.map((item) => {
             return <VideoCard key={item.param} item={item} />
           })}
-
           {/* {mockRecommendData.data.map((item) => {
             // @ts-ignore
             return <VideoCard key={item.param} item={item} />
