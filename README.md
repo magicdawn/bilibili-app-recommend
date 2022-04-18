@@ -2,6 +2,10 @@
 
 > 添加 App 推荐内容
 
+## 源代码
+
+https://github.com/magicdawn/bilibili-app-recommend
+
 ## Credits
 
 代码 fork 自此处
@@ -36,7 +40,7 @@ https://greasyfork.org/zh-CN/scripts/443530-bilibili-app-recommend
 
 ## Changelog
 
-[CHANGELOG.md](CHANGELOG.md)
+[CHANGELOG.md](https://github.com/magicdawn/bilibili-app-recommend/blob/master/CHANGELOG.md)
 
 ## License
 
