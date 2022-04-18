@@ -82,8 +82,8 @@ function ModalFeed({ show, onHide }: IProps) {
           <span>换一换</span>
         </button>
 
-        <button className={styles.btnClose} onClick={onHide}>
-          X
+        <button className={`primary-btn roll-btn ${styles.btnClose}`} onClick={onHide}>
+          <span>关闭</span>
         </button>
       </Modal.Header>
 

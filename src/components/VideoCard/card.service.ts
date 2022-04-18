@@ -35,6 +35,9 @@ export async function pvideo(aid: string) {
 
 // dm
 export async function dm(aid: string) {
+  // 暂时没有支持弹幕预览, 不调用该接口
+  return []
+
   const res = await request.get('/x/v2/dm/ajax', { params: { aid } })
   const json = res.data as DmJson
 

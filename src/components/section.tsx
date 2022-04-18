@@ -42,7 +42,7 @@ export function SectionRecommend() {
   })
 
   return (
-    <section className={cx('bili-grid no-margin', styles.grid)} data-area='App 推荐流'>
+    <section className={cx('bili-grid no-margin', styles.grid)} data-area='推荐'>
       <div className={`video-card-list is-full ${styles.videoCardList}`}>
         <div className='area-header'>
           <div className='left'>
@@ -51,7 +51,7 @@ export function SectionRecommend() {
               <use xlinkHref='#channel-cinephile'></use>
             </svg>
             <a className='title' href='#'>
-              <span>App 推荐流</span>
+              <span>推荐</span>
             </a>
           </div>
 

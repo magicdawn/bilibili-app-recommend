@@ -3,11 +3,21 @@ import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin'
 import { readFileSync } from 'fs'
 import chalk from 'chalk'
 import UglifyJsPlugin from 'uglifyjs-webpack-plugin'
+import pkg from './package.json'
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development'
 const env = process.env.NODE_ENV
 
+/**
+ * process banner
+ */
+
 let banner = readFileSync(__dirname + '/banner.user.js', 'utf-8')
+
+// version number
+banner = banner.replace(/\/\/(\s+)@version(\s+)0\.0\.1$/m, `//$1@version$2${pkg.version}`)
+
+// use dev react
 if (env === 'development') {
   banner = banner.replace(/production\.min/g, 'development')
 }

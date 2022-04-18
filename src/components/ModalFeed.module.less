@@ -10,6 +10,9 @@
 
     .modal-content {
       height: 100%;
+      border: 1px solid #fa6a9d;
+      border-radius: 10px;
+      overflow: hidden;
     }
 
     .modal-header {
@@ -17,7 +20,8 @@
       padding-bottom: 10px;
       border-bottom: none;
 
-      .btn-refresh {
+      .btn-refresh,
+      .btn-close {
         :global(body.dark) & {
           color: #eee !important;
           background-color: #333 !important;
@@ -30,9 +34,6 @@
       }
 
       .btn-close {
-        width: 20px;
-        height: 20px;
-        color: var(--c);
         margin-left: 10px;
       }
     }
