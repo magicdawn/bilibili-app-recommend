@@ -1,6 +1,6 @@
 # bilibili-app-recommend
 
-> 添加 App 推荐内容
+> 为 B 站首页添加像 App 一样的推荐
 
 ## 源代码
 
