@@ -11,12 +11,9 @@ const env = process.env.NODE_ENV
 /**
  * process banner
  */
-
 let banner = readFileSync(__dirname + '/banner.user.js', 'utf-8')
-
 // version number
 banner = banner.replace(/\/\/(\s+)@version(\s+)0\.0\.1$/m, `//$1@version$2${pkg.version}`)
-
 // use dev react
 if (env === 'development') {
   banner = banner.replace(/production\.min/g, 'development')
@@ -39,11 +36,17 @@ const config: Configuration = {
     'jquery': '$',
     'react': 'React',
     'react-dom': 'ReactDOM',
+    'axios': 'axios',
+    'axios-userscript-adapter': 'axiosGmxhrAdapter',
+    'react-bootstrap': 'ReactBootstrap',
   },
 
   resolve: {
     plugins: [new TsconfigPathsPlugin({ configFile: tsconfig })],
     extensions: ['.ts', '.tsx', '.js', '.json'],
+    alias: {
+      lodash: 'lodash-es',
+    },
   },
 
   module: {
@@ -107,7 +110,7 @@ const config: Configuration = {
       // auto import for React if using `React.createElement`
       React: 'react',
     }),
-  ],
+  ].filter(Boolean),
 
   // see https://github.com/webpack/webpack-cli/issues/312#issuecomment-409027910
   optimization: {

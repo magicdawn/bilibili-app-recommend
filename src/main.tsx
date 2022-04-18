@@ -1,8 +1,16 @@
-import 'bootstrap/dist/css/bootstrap.min.css'
 import { createRoot } from 'react-dom/client'
 import $ from 'jquery'
 import { SectionRecommend } from './components/section'
 import sleep from 'delay'
+
+// declare global {
+//   interface Window {
+//     GM_addElement: (tag: string, attributes: Record<string, any>) => void
+//   }
+// }
+
+// import 'bootstrap/dist/css/bootstrap.min.css'
+const bootstrapCss = 'https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css'
 
 // fixme
 import * as settings from '@settings'
@@ -10,6 +18,9 @@ import * as settings from '@settings'
 
 main()
 export default async function main() {
+  // @ts-ignore
+  GM_addElement('link', { rel: 'stylesheet', href: bootstrapCss })
+
   // 用于获取授权
   if (
     location.href.startsWith('https://www.mcbbs.net/template/mcbbs/image/special_photo_bg.png?')
