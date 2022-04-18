@@ -6,14 +6,14 @@
 
 https://github.com/magicdawn/bilibili-app-recommend
 
-## Credits
+## 声明
 
 代码 fork 自此处
 
 - https://github.com/indefined/UserScripts/tree/master/bilibiliHome
 - https://github.com/indefined/UserScripts/issues/76
 
-## Install
+## 安装地址
 
 https://greasyfork.org/zh-CN/scripts/443530-bilibili-app-recommend
 
@@ -33,7 +33,7 @@ https://greasyfork.org/zh-CN/scripts/443530-bilibili-app-recommend
 - 稍候再看 / 不喜欢 / 撤销不喜欢, 这些功能暂时没做.
 - 弹幕预览, 这个也没做, 个人需求不是很大. (不好弄...)
 
-## Build
+## 开发 or 使用源代码构建最新版本
 
 - pnpm build
 - 按照提示, 复制 `file://` 链接, 在 chrome 中打开, 即可安装
