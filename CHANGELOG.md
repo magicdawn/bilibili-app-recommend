@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.0.3 2022-04-19
+
+- 去除 bootstrap, bootstrap 全局 css `.row` 影响了 bilibili-envoled 插件的显示, 这种全局 css 不是很好
+
 ## v0.0.2 2022-04-18
 
 - Modal 关闭按钮, 改为纯文字
