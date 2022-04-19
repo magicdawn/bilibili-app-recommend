@@ -1,12 +1,12 @@
-import { useEffect, useRef } from 'react'
-import { Modal } from 'react-bootstrap'
+import { useEffect, useId, useLayoutEffect, useMemo, useRef } from 'react'
+import { createPortal } from 'react-dom'
 import { useMemoizedFn, useSafeState } from 'ahooks'
+import delay from 'delay'
 import InfiniteScroll from 'react-infinite-scroller'
 import { RecItem } from '@define'
-import { VideoCard } from './VideoCard'
 import { getRecommendTimes } from '@service'
+import { VideoCard } from './VideoCard'
 import * as styles from './ModalFeed.module.less'
-import delay from 'delay'
 
 interface IProps {
   show: boolean
@@ -14,34 +14,30 @@ interface IProps {
 }
 
 function ModalFeed({ show, onHide }: IProps) {
-  const wrapperRef = useRef<any>(null)
+  const wrapperRef = useRef<HTMLDivElement>(null)
 
   // 打开时判断深色模式等
   useEffect(() => {
     const wrapper = wrapperRef.current
     if (!wrapper) return
 
-    const content = (wrapper.dialog as HTMLElement)?.querySelector<HTMLDivElement>('.modal-content')
-    if (!content) return
-
     const bg = window.getComputedStyle(document.body)['background-color']
     const c = window.getComputedStyle(document.body)['color']
 
-    content.style.setProperty('--bg', bg)
-    content.style.setProperty('--c', c)
-    content.style.setProperty('background-color', 'var(--bg)')
-    content.style.setProperty('color', 'var(--c)')
+    wrapper.style.setProperty('--bg', bg)
+    wrapper.style.setProperty('--c', c)
+    wrapper.style.setProperty('background-color', 'var(--bg)')
+    wrapper.style.setProperty('color', 'var(--c)')
   }, [show])
 
   const [items, setItems] = useSafeState<RecItem[]>([])
 
   const refresh = useMemoizedFn(async () => {
+    const wrapper = wrapperRef.current
+
     // scroll to top
-    const modalBody = (wrapperRef.current?.dialog as HTMLElement)?.querySelector<HTMLDivElement>(
-      '.modal-body'
-    )
-    if (modalBody) {
-      modalBody.scrollTop = 0
+    if (wrapper) {
+      wrapper.scrollTop = 0
     }
 
     // load
@@ -54,62 +50,72 @@ function ModalFeed({ show, onHide }: IProps) {
     setItems((items) => [...items, ...more])
   })
 
-  useEffect(() => {
-    // reset
-    if (!show) setItems([])
-  }, [show])
+  useLayoutEffect(() => {
+    if (show) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      setItems([]) // reset data
+      document.body.style.overflow = 'auto'
+    }
+  }, [show]) // Empty array ensures effect is only run on mount and unmount
 
-  return (
-    <Modal
-      ref={wrapperRef}
-      show={show}
-      onHide={onHide}
-      backdrop='static'
-      className={styles.modal}
-      dialogClassName={styles.modalDialog}
-      contentClassName={styles.modalContent}
-      scrollable={false}
-    >
-      <Modal.Header className={styles.modalHeader}>
-        <Modal.Title>推荐</Modal.Title>
+  const containerId = useId()
+  const container = useMemo(() => {
+    const div = document.createElement('div')
+    div.setAttribute('data-id', 'modal-feed-' + containerId)
+    document.body.appendChild(div)
+    return div
+  }, [])
 
-        <div className='space' style={{ flex: 1 }}></div>
+  if (!show) {
+    return null
+  }
 
-        <button className={`primary-btn roll-btn ${styles.btnRefresh}`} onClick={refresh}>
-          <svg style={{ transform: 'rotate(0deg)' }}>
-            <use xlinkHref='#widget-roll'></use>
-          </svg>
-          <span>换一换</span>
-        </button>
+  return createPortal(
+    <div className={styles.modalMask}>
+      <div className={styles.modal} ref={wrapperRef}>
+        <div className={styles.modalHeader}>
+          <div className={styles.modalTitle}>推荐</div>
 
-        <button className={`primary-btn roll-btn ${styles.btnClose}`} onClick={onHide}>
-          <span>关闭</span>
-        </button>
-      </Modal.Header>
+          <div className='space' style={{ flex: 1 }}></div>
 
-      <Modal.Body className={styles.modalBody}>
-        <InfiniteScroll
-          pageStart={0}
-          loadMore={fetchMore}
-          hasMore={true}
-          useWindow={false}
-          threshold={320} // 差不多一行高度
-          loader={
-            <div className='loader' style={{ textAlign: 'center' }} key={0}>
-              加载中...
+          <button className={`primary-btn roll-btn ${styles.btnRefresh}`} onClick={refresh}>
+            <svg style={{ transform: 'rotate(0deg)' }}>
+              <use xlinkHref='#widget-roll'></use>
+            </svg>
+            <span>换一换</span>
+          </button>
+
+          <button className={`primary-btn roll-btn ${styles.btnClose}`} onClick={onHide}>
+            <span>关闭</span>
+          </button>
+        </div>
+
+        <div className={styles.modalBody}>
+          <InfiniteScroll
+            pageStart={0}
+            loadMore={fetchMore}
+            hasMore={true}
+            useWindow={false}
+            threshold={320} // 差不多一行高度
+            loader={
+              <div className='loader' style={{ textAlign: 'center' }} key={0}>
+                加载中...
+              </div>
+            }
+          >
+            <div className={`video-card-list is-full ${styles.videoCardList}`}>
+              <div className='video-card-body more-class1 more-class2'>
+                {items.map((item) => {
+                  return <VideoCard key={item.param} item={item} />
+                })}
+              </div>
             </div>
-          }
-        >
-          <div className={`video-card-list is-full ${styles.videoCardList}`}>
-            <div className='video-card-body more-class1 more-class2'>
-              {items.map((item) => {
-                return <VideoCard key={item.param} item={item} />
-              })}
-            </div>
-          </div>
-        </InfiniteScroll>
-      </Modal.Body>
-    </Modal>
+          </InfiniteScroll>
+        </div>
+      </div>
+    </div>,
+    container
   )
 }
 

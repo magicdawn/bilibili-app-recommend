@@ -38,7 +38,6 @@ const config: Configuration = {
     'react-dom': 'ReactDOM',
     'axios': 'axios',
     'axios-userscript-adapter': 'axiosGmxhrAdapter',
-    'react-bootstrap': 'ReactBootstrap',
   },
 
   resolve: {

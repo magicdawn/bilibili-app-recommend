@@ -32,7 +32,6 @@
 // @require             https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js
 // @require             https://cdn.jsdelivr.net/npm/react@18/umd/react.production.min.js
 // @require             https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.production.min.js
-// @require             https://cdn.jsdelivr.net/npm/react-bootstrap@2.2.3/dist/react-bootstrap.min.js
 //
 // @license             MIT
 // ==/UserScript==

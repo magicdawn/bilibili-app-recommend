@@ -1,48 +1,65 @@
+.modal-mask {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 11000;
+
+  // make .model center
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .modal {
-  z-index: 11000 !important;
+  width: calc(100vw - 50px);
+  height: calc(100vh - 50px);
+  border: 1px solid #fa6a9d;
+  border-radius: 10px;
   overflow: hidden;
+  background-color: #fff;
+  padding: 0 15px 15px 15px;
 
-  .modal-dialog {
-    width: calc(100vw - 50px);
-    max-width: none !important;
-    margin-top: 25px;
-    height: calc(100vh - 50px);
+  display: flex;
+  flex-direction: column;
 
-    .modal-content {
-      height: 100%;
-      border: 1px solid #fa6a9d;
-      border-radius: 10px;
-      overflow: hidden;
+  .modal-header {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-bottom: none;
+    display: flex;
+    align-items: center;
+
+    .modal-title {
+      font-size: 1.5rem;
+      margin-bottom: 0;
+      line-height: 1.5;
     }
 
-    .modal-header {
-      padding-top: 10px;
-      padding-bottom: 10px;
-      border-bottom: none;
-
-      .btn-refresh,
-      .btn-close {
-        :global(body.dark) & {
-          color: #eee !important;
-          background-color: #333 !important;
-          border-color: transparent !important;
-          height: auto;
-          padding: 8px 12px;
-          line-height: 16px;
-          font-size: 13px;
-        }
-      }
-
-      .btn-close {
-        margin-left: 10px;
+    .btn-refresh,
+    .btn-close {
+      :global(body.dark) & {
+        color: #eee !important;
+        background-color: #333 !important;
+        border-color: transparent !important;
+        height: auto;
+        padding: 8px 12px;
+        line-height: 16px;
+        font-size: 13px;
       }
     }
 
-    .modal-body {
-      padding-top: 0;
-      flex-grow: 1;
-      overflow-y: scroll;
+    .btn-close {
+      margin-left: 10px;
     }
+  }
+
+  .modal-body {
+    padding-top: 0;
+    flex-grow: 1;
+    overflow-y: scroll;
   }
 }
 

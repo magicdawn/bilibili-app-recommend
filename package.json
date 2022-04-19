@@ -40,11 +40,9 @@
     "webpack-cli": "^4.9.2"
   },
   "dependencies": {
-    "@popperjs/core": "^2.11.5",
     "ahooks": "^3.3.8",
     "axios": "^0.26.1",
     "axios-userscript-adapter": "^0.1.11",
-    "bootstrap": "^5.1.3",
     "classnames": "^2.3.1",
     "dayjs": "^1.11.1",
     "delay": "^5.0.0",
@@ -53,7 +51,6 @@
     "lodash-es": "^4.17.21",
     "lru-cache": "^7.8.1",
     "react": "^18",
-    "react-bootstrap": "^2.2.3",
     "react-dom": "^18",
     "react-infinite-scroller": "^1.2.6"
   }
