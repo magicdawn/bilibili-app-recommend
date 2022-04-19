@@ -32,12 +32,11 @@ function ModalFeed({ show, onHide }: IProps) {
 
   const [items, setItems] = useSafeState<RecItem[]>([])
 
+  const scrollerRef = useRef<HTMLDivElement>(null)
   const refresh = useMemoizedFn(async () => {
-    const wrapper = wrapperRef.current
-
     // scroll to top
-    if (wrapper) {
-      wrapper.scrollTop = 0
+    if (scrollerRef.current) {
+      scrollerRef.current.scrollTop = 0
     }
 
     // load
@@ -91,7 +90,7 @@ function ModalFeed({ show, onHide }: IProps) {
           </button>
         </div>
 
-        <div className={styles.modalBody}>
+        <div className={styles.modalBody} ref={scrollerRef}>
           <InfiniteScroll
             pageStart={0}
             loadMore={fetchMore}
