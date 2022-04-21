@@ -56,7 +56,7 @@ function ModalFeed({ show, onHide }: IProps) {
       setItems([]) // reset data
       document.body.style.overflow = 'auto'
     }
-  }, [show]) // Empty array ensures effect is only run on mount and unmount
+  }, [show])
 
   const containerId = useId()
   const container = useMemo(() => {
