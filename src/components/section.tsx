@@ -35,7 +35,8 @@ export function SectionRecommend() {
     refresh()
   })
 
-  const [showMore, setShowMore] = useSafeState(false)
+  const [showMore, setShowMore] = useSafeState(true)
+  // const [showMore, setShowMore] = useSafeState(false)
 
   const onSeeMore = useMemoizedFn(() => {
     setShowMore(true)

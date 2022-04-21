@@ -3,7 +3,7 @@ import { useHover, useMemoizedFn, useSafeState } from 'ahooks'
 import { getVideoData, VideoData } from './card.service'
 import { RecItem } from '../../define/recommend'
 import dayjs from 'dayjs'
-import PreviewImage from './PreviewImage'
+import { PreviewImage } from './PreviewImage'
 import * as styles from './index.module.less'
 import { getCountStr, getDurationStr } from '@utility/video'
 import { toast } from '@utility/toast'
@@ -137,11 +137,13 @@ export function VideoCard({ item, className }: { item: RecItem; className?: stri
 
               {/* preview */}
               {isHovering && videoData?.pvideoData ? (
-                <PreviewImage
-                  className={styles.previewCardWrapper}
-                  item={item}
-                  pvideo={videoData?.pvideoData}
-                />
+                <>
+                  <PreviewImage
+                    className={styles.previewCardWrapper}
+                    item={item}
+                    pvideo={videoData?.pvideoData}
+                  />
+                </>
               ) : null}
 
               <div

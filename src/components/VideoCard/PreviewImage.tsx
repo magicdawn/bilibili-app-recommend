@@ -92,8 +92,29 @@ export function PreviewImage({ className, item, pvideo }: IProps) {
         backgroundPosition: `-${startX}px -${startY}px`,
         backgroundSize: `${newImgWidth}px ${newImgHeight}px`,
       }}
-    />
+    >
+      <SimplePregressBar progress={progress} />
+    </div>
   )
 }
 
-export default PreviewImage
+function SimplePregressBar({ progress }: { progress: number }) {
+  return (
+    <div
+      className='track'
+      style={{
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        backgroundColor: '#eee',
+        width: '100%',
+        height: 3,
+      }}
+    >
+      <div
+        className='bar'
+        style={{ backgroundColor: '#fa6a9d', height: '100%', width: `${progress * 100}%` }}
+      ></div>
+    </div>
+  )
+}
