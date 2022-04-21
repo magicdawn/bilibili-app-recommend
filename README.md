@@ -23,15 +23,20 @@ https://greasyfork.org/zh-CN/scripts/443530-bilibili-app-recommend
 
 ![image](https://user-images.githubusercontent.com/4067115/163818208-9090095d-1690-4d03-a0ff-bcca72b071ea.png)
 
+- [x] 点击获取 access_key, 以便调用推荐接口
+
 ### 更多 -> 模态框信息流
 
 ![image](https://user-images.githubusercontent.com/4067115/163818386-1550dcbd-69fb-4eec-9db2-fb4d538a7e20.png)
 
+- [x] 支持无限滚动, 加载更多
+
 ### 视频卡片
 
-- 支持鼠标滑动快速预览.
-- 稍候再看 / 不喜欢 / 撤销不喜欢, 这些功能暂时没做.
-- 弹幕预览, 这个也没做, 个人需求不是很大. (不好弄...)
+- [x] 支持鼠标滑动快速预览.
+- [x] 支持添加/移除「稍候再看」
+- [ ] 不喜欢 / 撤销不喜欢, 这些功能暂时没做.
+- [ ] 弹幕预览, 这个也没做, 个人需求不是很大. (不好弄...)
 
 ## 开发 or 使用源代码构建最新版本
 

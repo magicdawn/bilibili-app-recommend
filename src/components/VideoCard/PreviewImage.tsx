@@ -108,7 +108,7 @@ function SimplePregressBar({ progress }: { progress: number }) {
         left: 0,
         backgroundColor: '#eee',
         width: '100%',
-        height: 3,
+        height: 2,
       }}
     >
       <div

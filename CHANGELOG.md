@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.0.4 2022-04-21
+
+- impl 预览进度条
+- impl 添加/移除「稍后再看」
+
 ## v0.0.3 2022-04-19
 
 - 去除 bootstrap, bootstrap 全局 css `.row` 影响了 bilibili-envoled 插件的显示, 这种全局 css 不是很好

@@ -1,5 +1,6 @@
 import axios from 'axios'
 import LRUCache from 'lru-cache'
+import { getCsrfToken } from '@utility'
 import { PvideoJson } from '../../define/pvideo'
 import { DmJson } from '../../define/dm'
 
@@ -63,3 +64,31 @@ export async function getVideoData(id: string) {
 
   return { pvideoData, dmData }
 }
+
+/**
+ * 添加 "稍后再看"
+ */
+
+function watchLaterFactory(action: 'add' | 'del') {
+  return async function watchLaterOp(id: string) {
+    const form = new FormData()
+    form.append('aid', id)
+    form.append('csrf', getCsrfToken())
+
+    const res = await request.post('/x/v2/history/toview/' + action, form, {
+      withCredentials: true,
+    })
+
+    // {
+    //     "code": 0,
+    //     "message": "0",
+    //     "ttl": 1
+    // }
+    const json = res.data
+    const success = json?.code === 0 && json?.message === '0'
+    return success
+  }
+}
+
+export const watchLaterAdd = watchLaterFactory('add')
+export const watchLaterDel = watchLaterFactory('del')

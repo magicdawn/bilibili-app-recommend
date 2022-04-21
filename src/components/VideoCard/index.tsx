@@ -1,6 +1,6 @@
 import { MouseEvent, useEffect, useMemo, useRef } from 'react'
 import { useHover, useMemoizedFn, useSafeState } from 'ahooks'
-import { getVideoData, VideoData } from './card.service'
+import { getVideoData, VideoData, watchLaterAdd, watchLaterDel } from './card.service'
 import { RecItem } from '../../define/recommend'
 import dayjs from 'dayjs'
 import { PreviewImage } from './PreviewImage'
@@ -30,6 +30,9 @@ export function VideoCard({ item, className }: { item: RecItem; className?: stri
   // 稍后再看 hover state
   const watchLaterRef = useRef(null)
   const isWatchLaterHovering = useHover(watchLaterRef)
+
+  // watchLater added
+  const [watchingLater, setWatchingLater] = useSafeState(false)
 
   const {
     param: id, // 视频 id
@@ -80,9 +83,26 @@ export function VideoCard({ item, className }: { item: RecItem; className?: stri
   }, [isHovering])
 
   // 稍候再看
-  const onWatchLater = useMemoizedFn((e: MouseEvent) => {
+
+  let requesting = false
+
+  const onToggleWatchLater = useMemoizedFn(async (e: MouseEvent) => {
     e.preventDefault()
-    toast('暂未实现!!!')
+
+    if (requesting) return
+    requesting = true
+
+    const fn = watchingLater ? watchLaterDel : watchLaterAdd
+    let successed = false
+    try {
+      successed = await fn(id)
+    } finally {
+      requesting = false
+    }
+
+    if (successed) {
+      setWatchingLater((val) => !val)
+    }
   })
 
   // 不喜欢
@@ -150,16 +170,16 @@ export function VideoCard({ item, className }: { item: RecItem; className?: stri
                 className={`bili-watch-later ${styles.watchLater}`}
                 style={{ display: isHovering ? 'flex' : 'none' }}
                 ref={watchLaterRef}
-                onClick={onWatchLater}
+                onClick={onToggleWatchLater}
               >
                 <svg className='bili-watch-later__icon'>
-                  <use xlinkHref='#widget-watch-later'></use>
+                  <use xlinkHref={watchingLater ? '#widget-watch-save' : '#widget-watch-later'} />
                 </svg>
                 <span
                   className='bili-watch-later__tip'
                   style={{ display: isWatchLaterHovering ? 'block' : 'none' }}
                 >
-                  稍后再看
+                  {watchingLater ? '移除' : '稍后再看'}
                 </span>
               </div>
             </div>
