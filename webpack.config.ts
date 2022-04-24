@@ -4,6 +4,7 @@ import { readFileSync } from 'fs'
 import chalk from 'chalk'
 import UglifyJsPlugin from 'uglifyjs-webpack-plugin'
 import pkg from './package.json'
+import ejs from 'ejs'
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development'
 const env = process.env.NODE_ENV
@@ -11,13 +12,48 @@ const env = process.env.NODE_ENV
 /**
  * process banner
  */
-let banner = readFileSync(__dirname + '/banner.user.js', 'utf-8')
-// version number
-banner = banner.replace(/\/\/(\s+)@version(\s+)0\.0\.1$/m, `//$1@version$2${pkg.version}`)
-// use dev react
-if (env === 'development') {
-  banner = banner.replace(/production\.min/g, 'development')
+const locals = {
+  version: pkg.version,
+  meta: {
+    match: ['*://www.bilibili.com/*'],
+    include: ['https://www.mcbbs.net/template/mcbbs/image/special_photo_bg.png?*'],
+
+    connect: [
+      //
+      'app.bilibili.com',
+      'passport.bilibili.com',
+      'link.acg.tv',
+      'www.mcbbs.net',
+    ],
+
+    grant: [
+      'GM.xmlHttpRequest',
+      'GM_xmlhttpRequest',
+      'GM_getValue',
+      'GM_setValue',
+      'GM_deleteValue',
+      'unsafeWindow',
+    ],
+
+    require: [
+      'https://cdn.jsdelivr.net/npm/axios@0.22.0/dist/axios.min.js',
+      'https://cdn.jsdelivr.net/npm/axios-userscript-adapter@0.1.11/dist/axiosGmxhrAdapter.min.js',
+      'https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js',
+      'https://cdn.jsdelivr.net/npm/react@18/umd/react.production.min.js',
+      'https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.production.min.js',
+    ],
+  },
 }
+
+if (env === 'development') {
+  // use dev react
+  locals.meta.require = locals.meta.require.map((item) => {
+    return item.replace(/production\.min/g, 'development')
+  })
+}
+
+let banner = readFileSync(__dirname + '/banner.ejs', 'utf-8')
+banner = ejs.render(banner, locals)
 
 const tsconfig = __dirname + '/tsconfig.json'
 
