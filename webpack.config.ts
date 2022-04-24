@@ -55,6 +55,9 @@ if (env === 'development') {
 let banner = readFileSync(__dirname + '/banner.ejs', 'utf-8')
 banner = ejs.render(banner, locals)
 
+// console.log(banner)
+// process.exit(0)
+
 const tsconfig = __dirname + '/tsconfig.json'
 
 const config: Configuration = {
