@@ -2,11 +2,11 @@ import cx from 'classnames'
 import { useMemoizedFn, useMount, useSafeState } from 'ahooks'
 import { RecItem } from '@define'
 import { config } from '@settings'
-import { VideoCard } from './VideoCard'
-import * as styles from './section.module.less'
 import { auth } from '@utility/auth'
 import { getHomeRecommend } from '@service'
 import ModalFeed from './ModalFeed'
+import { VideoCard } from './VideoCard'
+import * as styles from './section.module.less'
 
 export function SectionRecommend() {
   const [accessKey, setAccessKey] = useSafeState(config.access_key)
@@ -25,10 +25,16 @@ export function SectionRecommend() {
   })
 
   const [items, setItems] = useSafeState<RecItem[]>([])
+  const [loading, setLoading] = useSafeState(false)
 
   const refresh = useMemoizedFn(async () => {
-    const items = await getHomeRecommend()
-    setItems(items)
+    setLoading(true)
+    try {
+      const items = await getHomeRecommend()
+      setItems(items)
+    } finally {
+      setLoading(false)
+    }
   })
 
   useMount(async () => {
@@ -84,7 +90,7 @@ export function SectionRecommend() {
 
         <div className='video-card-body more-class1 more-class2'>
           {items.map((item) => {
-            return <VideoCard key={item.param} item={item} />
+            return <VideoCard key={item.param} item={item} loading={loading} />
           })}
           {/* {mockRecommendData.data.map((item) => {
             // @ts-ignore

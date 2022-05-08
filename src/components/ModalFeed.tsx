@@ -21,13 +21,17 @@ function ModalFeed({ show, onHide }: IProps) {
     const wrapper = wrapperRef.current
     if (!wrapper) return
 
-    const bg = window.getComputedStyle(document.body)['background-color']
-    const c = window.getComputedStyle(document.body)['color']
-
-    wrapper.style.setProperty('--bg', bg)
-    wrapper.style.setProperty('--c', c)
-    wrapper.style.setProperty('background-color', 'var(--bg)')
-    wrapper.style.setProperty('color', 'var(--c)')
+    const isDark = document.body.classList.contains('dark')
+    if (isDark) {
+      const bg = window.getComputedStyle(document.body)['background-color']
+      const c = window.getComputedStyle(document.body)['color']
+      wrapper.style.setProperty('--bg', bg)
+      wrapper.style.setProperty('--c', c)
+      wrapper.style.setProperty('background-color', 'var(--bg)')
+      wrapper.style.setProperty('color', 'var(--c)')
+    } else {
+      // 白色不用特殊处理
+    }
   }, [show])
 
   const [items, setItems] = useSafeState<RecItem[]>([])
