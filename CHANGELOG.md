@@ -4,7 +4,7 @@
 
 - fix: 修复正常白色模式下模态框样式问题
 - feat: 使用 skeleton
-- more...
+- feat: 增加 access_key 管理: (重新获取 & 删除)
 
 ## v0.0.5
 

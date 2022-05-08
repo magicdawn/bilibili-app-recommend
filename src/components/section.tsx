@@ -1,8 +1,8 @@
 import cx from 'classnames'
-import { useMemoizedFn, useMount, useSafeState } from 'ahooks'
+import { useMemoizedFn, useMount, useSafeState, useToggle } from 'ahooks'
 import { RecItem } from '@define'
 import { config } from '@settings'
-import { auth } from '@utility/auth'
+import { auth, deleteAccessToken } from '@utility/auth'
 import { getHomeRecommend } from '@service'
 import ModalFeed from './ModalFeed'
 import { VideoCard } from './VideoCard'
@@ -11,8 +11,8 @@ import * as styles from './section.module.less'
 export function SectionRecommend() {
   const [accessKey, setAccessKey] = useSafeState(config.access_key)
 
-  const onGetAuth = useMemoizedFn(async () => {
-    if (config.access_key) {
+  const onGetAuth = useMemoizedFn(async (refresh = false) => {
+    if (!refresh && config.access_key) {
       setAccessKey(config.access_key)
       return
     }
@@ -22,6 +22,11 @@ export function SectionRecommend() {
       setAccessKey(accessKey)
       return
     }
+  })
+
+  const onDeleteAccessToken = useMemoizedFn(() => {
+    deleteAccessToken()
+    setAccessKey('')
   })
 
   const [items, setItems] = useSafeState<RecItem[]>([])
@@ -49,6 +54,8 @@ export function SectionRecommend() {
     setShowMore(true)
   })
 
+  const [buttonsExpanded, buttonsExpandedActions] = useToggle(false)
+
   return (
     <section className={cx('bili-grid no-margin', styles.grid)} data-area='推荐'>
       <div className={`video-card-list is-full ${styles.videoCardList}`}>
@@ -68,7 +75,29 @@ export function SectionRecommend() {
               <button className='primary-btn roll-btn' onClick={onGetAuth}>
                 <span>获取 access_key</span>
               </button>
-            ) : null}
+            ) : (
+              <>
+                <button
+                  className={cx('primary-btn', styles.expandBtn)}
+                  onClick={buttonsExpandedActions.toggle}
+                >
+                  <svg className={cx({ [styles.expanded]: buttonsExpanded })}>
+                    <use xlinkHref='#widget-arrow'></use>
+                  </svg>
+                </button>
+
+                {buttonsExpanded && (
+                  <>
+                    <button className='primary-btn roll-btn' onClick={() => onGetAuth(true)}>
+                      <span>重新获取 access_key</span>
+                    </button>
+                    <button className='primary-btn roll-btn' onClick={onDeleteAccessToken}>
+                      <span>删除 access_key</span>
+                    </button>
+                  </>
+                )}
+              </>
+            )}
 
             <button className='primary-btn roll-btn' onClick={refresh}>
               <svg style={{ transform: 'rotate(0deg)' }}>

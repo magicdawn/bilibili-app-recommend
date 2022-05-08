@@ -21,3 +21,20 @@
     }
   }
 }
+
+.expand-btn {
+  padding: 0;
+  width: 31px;
+  height: 31px;
+  border-radius: 50%;
+
+  svg {
+    width: 13px;
+    height: 13px;
+
+    transform: rotateZ(180deg);
+    &.expanded {
+      transform: rotateZ(0deg);
+    }
+  }
+}

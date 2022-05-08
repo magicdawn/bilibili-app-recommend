@@ -78,3 +78,8 @@ export async function auth() {
 
   return access_key
 }
+
+export function deleteAccessToken() {
+  updateConfig({ access_key: '' })
+  toast('已删除 access_key')
+}
