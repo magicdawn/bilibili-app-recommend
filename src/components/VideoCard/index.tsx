@@ -68,18 +68,30 @@ export function VideoCard({ item, className, loading }: IProps) {
     rcmd_reason,
   } = item
 
-  const cdate = getCdate(ctime)
-  const cover = toHttps(coverRaw)
+  const cdate = useMemo(() => getCdate(ctime), [ctime])
+  const cover = useMemo(() => toHttps(coverRaw), [coverRaw])
 
-  const [videoData, setVideoData] = useSafeState<VideoData | null>(null)
+  const [videoData, videoDataChange] = useSafeState<VideoData | null>(null)
+  const [isFetchingVideoData, isFetchingVideoDataChange] = useSafeState(false)
+
+  const tryFetchVideoData = useMemoizedFn(async () => {
+    // already fetched
+    if (videoData) return
+
+    // fetching
+    if (isFetchingVideoData) return
+
+    try {
+      isFetchingVideoDataChange(true)
+      const data = await getVideoData(id)
+      videoDataChange(data)
+    } finally {
+      isFetchingVideoDataChange(false)
+    }
+  })
 
   useEffect(() => {
-    if (isHovering) {
-      ;(async () => {
-        const data = await getVideoData(id)
-        setVideoData(data)
-      })()
-    }
+    if (isHovering) tryFetchVideoData()
   }, [isHovering])
 
   /**
