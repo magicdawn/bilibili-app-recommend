@@ -5,6 +5,7 @@
 - fix: 修复正常白色模式下模态框样式问题
 - feat: 使用 skeleton
 - feat: 增加 access_key 管理: (重新获取 & 删除)
+- feat: 视频预览使用二分查找优化 findIndex
 
 ## v0.0.5
 
