@@ -1,4 +1,15 @@
-## 授权
+## release 步骤
+
+- 完成 features
+- 完成 changelog
+- npm version patch
+- pnpm build
+- 上传 greasefork
+- git push origin master && git push origin --tags
+
+## 实现细节
+
+### 授权
 
 ```
 'https://passport.bilibili.com/login/app/third?appkey=27eb53fc9058f8c3' +
