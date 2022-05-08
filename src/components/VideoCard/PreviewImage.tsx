@@ -22,16 +22,9 @@ export function PreviewImage({ className, item, pvideo }: IProps) {
     t = Math.floor((item.duration || 0) * progress)
   }
 
-  // TODO: 二分
   let index = useMemo(() => {
-    let index = pvideo.index.findIndex((val, index, arr) => {
-      const nextVal = arr[index + 1]
-      if (val <= t && t < nextVal) {
-        return true
-      } else {
-        return false
-      }
-    })
+    const arr = pvideo?.index || []
+    let index = findIndex(arr, t)
 
     if (index !== -1) {
       return index
@@ -39,8 +32,8 @@ export function PreviewImage({ className, item, pvideo }: IProps) {
 
     // https://www.bilibili.com/video/av297635747
     // 没有后面的预览
-    if (t > pvideo.index[pvideo.index.length - 1]) {
-      index = Math.floor(pvideo.index.length * progress) - 1
+    if (t > arr[arr.length - 1]) {
+      index = Math.floor(arr.length * progress) - 1
       if (index < 0) index = 0
       return index
     }
@@ -55,7 +48,7 @@ export function PreviewImage({ className, item, pvideo }: IProps) {
   const snapshotIndex = Math.floor(index / countPerPreview) // 0 based, 第几张
   const indexInSnapshot = index - snapshotIndex * countPerPreview // 这一张的第几个, 1 based
 
-  const snapshotUrl = pvideo.image[snapshotIndex]
+  const snapshotUrl = pvideo.image?.[snapshotIndex] || ''
 
   const indexRow = Math.floor(indexInSnapshot / colCount) + 1 // 1 based
   const indexCol = indexInSnapshot - (indexRow - 1) * colCount // 1 based
@@ -117,4 +110,48 @@ function SimplePregressBar({ progress }: { progress: number }) {
       />
     </div>
   )
+}
+
+function findIndex(arr: number[], target: number): number {
+  // O(n)
+  // let index = arr.findIndex((val, index, arr) => {
+  //   const nextVal = arr[index + 1]
+  //   if (val <= target && target < nextVal) {
+  //     return true
+  //   } else {
+  //     return false
+  //   }
+  // })
+
+  let l = 0
+  let r = arr.length - 1
+  let possible = -1
+
+  while (l <= r) {
+    const mid = Math.floor((l + r) / 2)
+    const mv = arr[mid]
+
+    if (target === mv) {
+      return mid
+    }
+
+    if (mv < target) {
+      l = mid + 1
+      possible = mid
+    }
+    // target < mv
+    else {
+      r = mid - 1
+    }
+  }
+
+  if (possible === -1) return -1
+
+  const v = arr[possible]
+  const v1 = arr[possible + 1] ?? 0
+  if (v < target && target < v1) {
+    return possible
+  } else {
+    return -1
+  }
 }
