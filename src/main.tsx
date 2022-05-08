@@ -3,12 +3,7 @@ import $ from 'jquery'
 import { SectionRecommend } from './components/section'
 import sleep from 'delay'
 
-// fixme
-import * as settings from '@settings'
-;(unsafeWindow as any).settings = settings
-
-main()
-export default async function main() {
+void (function main() {
   // 用于获取授权
   if (
     location.href.startsWith('https://www.mcbbs.net/template/mcbbs/image/special_photo_bg.png?')
@@ -17,6 +12,12 @@ export default async function main() {
     return window.top?.postMessage(location.href, 'https://www.bilibili.com')
   }
 
+  if (location.pathname === '/') {
+    return initHomepage()
+  }
+})()
+
+async function initHomepage() {
   const start = Date.now()
   const timeout = 10 * 1000 // 10s
 
