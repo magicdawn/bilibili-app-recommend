@@ -36,6 +36,8 @@ function ModalFeed({ show, onHide }: IProps) {
 
   const [items, setItems] = useSafeState<RecItem[]>([])
 
+  const [loading, setLoading] = useSafeState(false)
+
   const scrollerRef = useRef<HTMLDivElement>(null)
   const refresh = useMemoizedFn(async () => {
     // scroll to top
@@ -45,7 +47,13 @@ function ModalFeed({ show, onHide }: IProps) {
 
     // load
     await delay(50)
-    setItems(await getRecommendTimes(2))
+
+    try {
+      setLoading(true)
+      setItems(await getRecommendTimes(2))
+    } finally {
+      setLoading(false)
+    }
   })
 
   const fetchMore = useMemoizedFn(async (page: number) => {
@@ -102,7 +110,7 @@ function ModalFeed({ show, onHide }: IProps) {
             useWindow={false}
             threshold={320} // 差不多一行高度
             loader={
-              <div className='loader' style={{ textAlign: 'center' }} key={0}>
+              <div className={styles.loader} key={0}>
                 加载中...
               </div>
             }
@@ -110,7 +118,7 @@ function ModalFeed({ show, onHide }: IProps) {
             <div className={`video-card-list is-full ${styles.videoCardList}`}>
               <div className='video-card-body more-class1 more-class2'>
                 {items.map((item) => {
-                  return <VideoCard key={item.param} item={item} />
+                  return <VideoCard key={item.param} item={item} loading={loading} />
                 })}
               </div>
             </div>
