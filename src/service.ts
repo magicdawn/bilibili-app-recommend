@@ -19,16 +19,11 @@ export async function getRecommend() {
   return json.data
 }
 
-// 一次10个不够
 export async function getHomeRecommend() {
   return getRecommendTimes(2)
 }
 
-// 一次10个不够
-export async function getModalFeedRecommend() {
-  return getRecommendTimes(3)
-}
-
+// 一次10个不够, 多来几次
 export async function getRecommendTimes(times: number) {
   const ps = new Array(times).fill(0).map((_) => getRecommend())
   const results = await Promise.all(ps)
