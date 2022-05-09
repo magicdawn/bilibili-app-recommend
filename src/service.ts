@@ -1,7 +1,7 @@
 import axios from 'axios'
 import gmAdapter from 'axios-userscript-adapter'
 import { config } from '@settings'
-import { RecItem, RecommendJson } from '@define'
+import { RecommendJson } from '@define'
 
 export const gmrequest = axios.create({ adapter: gmAdapter })
 
