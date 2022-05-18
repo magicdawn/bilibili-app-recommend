@@ -75,6 +75,8 @@ export function VideoCard({ item, className, loading }: IProps) {
   const [isFetchingVideoData, isFetchingVideoDataChange] = useSafeState(false)
 
   const tryFetchVideoData = useMemoizedFn(async () => {
+    console.log(item)
+
     // already fetched
     if (videoData) return
 
@@ -85,6 +87,7 @@ export function VideoCard({ item, className, loading }: IProps) {
       isFetchingVideoDataChange(true)
       const data = await getVideoData(id)
       videoDataChange(data)
+      console.log(data)
     } finally {
       isFetchingVideoDataChange(false)
     }
@@ -208,6 +211,7 @@ export function VideoCard({ item, className, loading }: IProps) {
                       </svg>
                       <span className='bili-video-card__stats--text'>{playStr}</span>
                     </span>
+
                     {/* 点赞 */}
                     <span className='bili-video-card__stats--item'>
                       {goto === 'av' ? (
@@ -227,6 +231,7 @@ export function VideoCard({ item, className, loading }: IProps) {
                       )}
                     </span>
                   </div>
+
                   {/* 时长 */}
                   <span className='bili-video-card__stats__duration'>{durationStr}</span>
                 </div>

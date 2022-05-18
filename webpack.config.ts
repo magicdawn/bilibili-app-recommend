@@ -12,6 +12,12 @@ const env = process.env.NODE_ENV
 /**
  * process banner
  */
+
+// 2022-05-18 down in china
+const NPM_CDN_HOST_JSDELIVR = 'https://cdn.jsdelivr.net/npm/'
+const NPM_CDN_HOST_ELEME = 'https://npm.elemecdn.com/'
+const NPM_CDN_HOST = NPM_CDN_HOST_ELEME
+
 const locals = {
   version: pkg.version,
   meta: {
@@ -36,12 +42,12 @@ const locals = {
     ],
 
     require: [
-      'https://cdn.jsdelivr.net/npm/axios@0.22.0/dist/axios.min.js',
-      'https://cdn.jsdelivr.net/npm/axios-userscript-adapter@0.1.11/dist/axiosGmxhrAdapter.min.js',
-      'https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js',
-      'https://cdn.jsdelivr.net/npm/react@18/umd/react.production.min.js',
-      'https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.production.min.js',
-    ],
+      'axios@0.22.0/dist/axios.min.js',
+      'axios-userscript-adapter@0.1.11/dist/axiosGmxhrAdapter.min.js',
+      'jquery@3.4.1/dist/jquery.min.js',
+      'react@18/umd/react.production.min.js',
+      'react-dom@18/umd/react-dom.production.min.js',
+    ].map((url) => NPM_CDN_HOST + url),
   },
 }
 
