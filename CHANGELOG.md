@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.0.8 未发布
+
+- fix: 推荐列表去重, 重复的时候出现 duplicate key, 导致空白
+- more...
+
 ## v0.0.7 2022-05-08
 
 - feat: 优化视频卡片 fetch video data 逻辑
