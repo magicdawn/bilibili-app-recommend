@@ -27,5 +27,21 @@ export async function getHomeRecommend() {
 export async function getRecommendTimes(times: number) {
   const ps = new Array(times).fill(0).map((_) => getRecommend())
   const results = await Promise.all(ps)
-  return results.reduce((ret, cur) => ret.concat(cur), [])
+  let list = results.reduce((ret, cur) => ret.concat(cur), [])
+
+  // 去重
+  // Warning: Encountered two children with the same key, `299170596`. Keys should be unique so that components maintain their identity across updates
+  const set = new Set<string>()
+  list = list.filter((item) => {
+    const { param } = item
+    if (set.has(param)) {
+      console.log('[getRecommendTimes]: duplicate', item)
+      return false
+    } else {
+      set.add(param)
+      return true
+    }
+  })
+
+  return list
 }
