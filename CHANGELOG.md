@@ -2,6 +2,7 @@
 
 ## v0.0.8 未发布
 
+- fix: @require script 使用 unpkg, jsdelivr 在大陆被屏蔽
 - fix: 推荐列表去重, 重复的时候出现 duplicate key, 导致空白
 - more...
 

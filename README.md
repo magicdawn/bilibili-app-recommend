@@ -17,6 +17,11 @@ https://github.com/magicdawn/bilibili-app-recommend
 
 https://greasyfork.org/zh-CN/scripts/443530-bilibili-app-recommend
 
+## 你可能不需要这个脚本 :)
+
+B 站桌面端已上线, 支持 MacOS / Windows, 首页包含推荐模块
+![image](https://user-images.githubusercontent.com/4067115/169683392-2ed72442-5d4a-42cc-aa6c-6398b4b0517b.png)
+
 ## 介绍
 
 ### 主页 "推荐" 块

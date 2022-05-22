@@ -10,6 +10,7 @@ import * as styles from './section.module.less'
 
 export function SectionRecommend() {
   const [accessKey, setAccessKey] = useSafeState(config.access_key)
+  const [buttonsExpanded, buttonsExpandedActions] = useToggle(false)
 
   const onGetAuth = useMemoizedFn(async (refresh = false) => {
     if (!refresh && config.access_key) {
@@ -20,6 +21,7 @@ export function SectionRecommend() {
     const accessKey = await auth()
     if (accessKey) {
       setAccessKey(accessKey)
+      buttonsExpandedActions.set(false)
       return
     }
   })
@@ -53,8 +55,6 @@ export function SectionRecommend() {
   const onSeeMore = useMemoizedFn(() => {
     setShowMore(true)
   })
-
-  const [buttonsExpanded, buttonsExpandedActions] = useToggle(false)
 
   return (
     <section className={cx('bili-grid no-margin', styles.grid)} data-area='推荐'>
