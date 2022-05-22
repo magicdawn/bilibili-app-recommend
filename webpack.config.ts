@@ -17,7 +17,7 @@ const env = process.env.NODE_ENV
 // eleme: not allowed in greasyfork.org
 const NPM_CDN_HOST_JSDELIVR = 'https://cdn.jsdelivr.net/npm/'
 const NPM_CDN_HOST_ELEME = 'https://npm.elemecdn.com/'
-const NPM_CDN_HOST_UNPKG = 'https://www.unpkg.com/'
+const NPM_CDN_HOST_UNPKG = 'https://unpkg.com/'
 const NPM_CDN_HOST = NPM_CDN_HOST_UNPKG
 
 const locals = {
