@@ -72,14 +72,14 @@ export async function auth() {
     return
   }
 
-  const access_key = res
-  updateConfig({ access_key })
+  const accessKey = res
+  updateConfig({ accessKey })
   toast('获取成功')
 
-  return access_key
+  return accessKey
 }
 
 export function deleteAccessToken() {
-  updateConfig({ access_key: '' })
+  updateConfig({ accessKey: '' })
   toast('已删除 access_key')
 }

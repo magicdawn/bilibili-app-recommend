@@ -56,6 +56,7 @@
     "lru-cache": "^7.8.1",
     "react": "^18",
     "react-dom": "^18",
-    "react-infinite-scroller": "^1.2.6"
+    "react-infinite-scroller": "^1.2.6",
+    "valtio": "^1.6.1"
   }
 }

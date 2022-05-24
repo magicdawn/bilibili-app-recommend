@@ -11,7 +11,7 @@ export async function getRecommend() {
       build: '1',
       mobi_app: 'android',
       idx: (Date.now() / 1000).toFixed(0),
-      access_key: config.access_key || '',
+      access_key: config.accessKey || '',
     },
   })
 

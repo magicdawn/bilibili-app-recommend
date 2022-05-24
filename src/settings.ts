@@ -1,8 +1,14 @@
-export const config = {
-  access_key: '',
-}
+import { proxy, useSnapshot } from 'valtio'
+
+export const config = proxy({
+  accessKey: '',
+})
 
 type Config = typeof config
+
+export const useConfigStore = function () {
+  return useSnapshot(config)
+}
 
 /**
  * storage

@@ -1,7 +1,7 @@
 import cx from 'classnames'
 import { useMemoizedFn, useMount, useSafeState, useToggle } from 'ahooks'
 import { RecItem } from '@define'
-import { config } from '@settings'
+import { useConfigStore } from '@settings'
 import { auth, deleteAccessToken } from '@utility/auth'
 import { getHomeRecommend } from '@service'
 import ModalFeed from './ModalFeed'
@@ -9,27 +9,18 @@ import { VideoCard } from './VideoCard'
 import * as styles from './section.module.less'
 
 export function SectionRecommend() {
-  const [accessKey, setAccessKey] = useSafeState(config.access_key)
   const [buttonsExpanded, buttonsExpandedActions] = useToggle(false)
 
-  const onGetAuth = useMemoizedFn(async (refresh = false) => {
-    if (!refresh && config.access_key) {
-      setAccessKey(config.access_key)
-      return
-    }
+  const { accessKey } = useConfigStore()
 
+  const onGetAuth = useMemoizedFn(async (refresh = false) => {
     const accessKey = await auth()
     if (accessKey) {
-      setAccessKey(accessKey)
       buttonsExpandedActions.set(false)
-      return
     }
   })
 
-  const onDeleteAccessToken = useMemoizedFn(() => {
-    deleteAccessToken()
-    setAccessKey('')
-  })
+  const onDeleteAccessToken = deleteAccessToken
 
   const [items, setItems] = useSafeState<RecItem[]>([])
   const [loading, setLoading] = useSafeState(false)
