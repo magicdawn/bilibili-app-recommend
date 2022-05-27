@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.0.9 2022-05-28
+
+- feat: 使用 valtio 管理 access_key 状态
+- feat: 实现提交不喜欢 / 撤销不喜欢, 简单实现了下 "不喜欢", 状态下的 UI
+- fix: 视频卡片, border 问题, 修改为预览时, 左上右上有圆角, 左下右下跟进度条一致, 无圆角
+
 ## v0.0.8 2022-05-22
 
 - fix: @require script 使用 unpkg, jsdelivr 在大陆被屏蔽
