@@ -121,12 +121,18 @@ export function VideoCard({ item, className, loading }: IProps) {
     }
   })
 
-  // 不喜欢
+  /**
+   * 不喜欢 / 撤销不喜欢
+   */
+
+  const onTriggerDislike = useMemoizedFn(() => {
+    //
+  })
+
   const onDislike = useMemoizedFn(() => {
     //
   })
 
-  // 撤销不喜欢
   const onCancelDislike = useMemoizedFn(() => {
     //
   })
@@ -164,10 +170,7 @@ export function VideoCard({ item, className, loading }: IProps) {
               className='bili-video-card__image __scale-player-wrap'
               ref={videoPreviewWrapperRef}
             >
-              <div
-                className='bili-video-card__image--wrap'
-                style={{ borderRadius: '6px', overflow: 'hidden' }}
-              >
+              <div className={cx('bili-video-card__image--wrap', styles.imageWrapper)}>
                 <picture className='v-img bili-video-card__cover'>
                   <source srcSet={`${cover}@672w_378h_1c.webp`} type='image/webp' />
                   <img src={`${cover}@672w_378h_1c.webp`} alt={title} loading='lazy' />
@@ -286,6 +289,12 @@ export function VideoCard({ item, className, loading }: IProps) {
                 ) : null}
               </p>
             </div>
+
+            <button className={styles.btnDislike} onClick={onTriggerDislike}>
+              <svg>
+                <use xlinkHref='#widget-close'></use>
+              </svg>
+            </button>
           </div>
         </div>
       )}

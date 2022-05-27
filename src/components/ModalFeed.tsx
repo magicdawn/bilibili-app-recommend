@@ -7,6 +7,7 @@ import { RecItem } from '@define'
 import { getRecommendTimes } from '@service'
 import { VideoCard } from './VideoCard'
 import * as styles from './ModalFeed.module.less'
+import BaseModal from './BaseModal'
 
 interface IProps {
   show: boolean
@@ -14,26 +15,6 @@ interface IProps {
 }
 
 function ModalFeed({ show, onHide }: IProps) {
-  const wrapperRef = useRef<HTMLDivElement>(null)
-
-  // 打开时判断深色模式等
-  useEffect(() => {
-    const wrapper = wrapperRef.current
-    if (!wrapper) return
-
-    const isDark = document.body.classList.contains('dark')
-    if (isDark) {
-      const bg = window.getComputedStyle(document.body)['background-color']
-      const c = window.getComputedStyle(document.body)['color']
-      wrapper.style.setProperty('--bg', bg)
-      wrapper.style.setProperty('--c', c)
-      wrapper.style.setProperty('background-color', 'var(--bg)')
-      wrapper.style.setProperty('color', 'var(--c)')
-    } else {
-      // 白色不用特殊处理
-    }
-  }, [show])
-
   const [items, setItems] = useSafeState<RecItem[]>([])
 
   const [loading, setLoading] = useSafeState(false)
@@ -61,72 +42,51 @@ function ModalFeed({ show, onHide }: IProps) {
     setItems((items) => [...items, ...more])
   })
 
-  useLayoutEffect(() => {
-    if (show) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      setItems([]) // reset data
-      document.body.style.overflow = 'auto'
-    }
-  }, [show])
+  return (
+    <BaseModal {...{ show, onHide }} clsModalMask={styles.modalMask} clsModal={styles.modal}>
+      <div className={styles.modalHeader}>
+        <div className={styles.modalTitle}>推荐</div>
 
-  const containerId = useId()
-  const container = useMemo(() => {
-    const div = document.createElement('div')
-    div.setAttribute('data-id', 'modal-feed-' + containerId)
-    document.body.appendChild(div)
-    return div
-  }, [])
+        <div className='space' style={{ flex: 1 }}></div>
 
-  if (!show) {
-    return null
-  }
+        <button className={`primary-btn roll-btn ${styles.btnRefresh}`} onClick={refresh}>
+          <svg style={{ transform: 'rotate(0deg)' }}>
+            <use xlinkHref='#widget-roll'></use>
+          </svg>
+          <span>换一换</span>
+        </button>
 
-  return createPortal(
-    <div className={styles.modalMask}>
-      <div className={styles.modal} ref={wrapperRef}>
-        <div className={styles.modalHeader}>
-          <div className={styles.modalTitle}>推荐</div>
-
-          <div className='space' style={{ flex: 1 }}></div>
-
-          <button className={`primary-btn roll-btn ${styles.btnRefresh}`} onClick={refresh}>
-            <svg style={{ transform: 'rotate(0deg)' }}>
-              <use xlinkHref='#widget-roll'></use>
-            </svg>
-            <span>换一换</span>
-          </button>
-
-          <button className={`primary-btn roll-btn ${styles.btnClose}`} onClick={onHide}>
-            <span>关闭</span>
-          </button>
-        </div>
-
-        <div className={styles.modalBody} ref={scrollerRef}>
-          <InfiniteScroll
-            pageStart={0}
-            loadMore={fetchMore}
-            hasMore={true}
-            useWindow={false}
-            threshold={320} // 差不多一行高度
-            loader={
-              <div className={styles.loader} key={0}>
-                加载中...
-              </div>
-            }
-          >
-            <div className={`video-card-list is-full ${styles.videoCardList}`}>
-              <div className='video-card-body more-class1 more-class2'>
-                {items.map((item) => {
-                  return <VideoCard key={item.param} item={item} loading={loading} />
-                })}
-              </div>
-            </div>
-          </InfiniteScroll>
-        </div>
+        <button className={`primary-btn roll-btn ${styles.btnClose}`} onClick={onHide}>
+          <svg style={{ transform: 'rotate(0deg)' }}>
+            <use xlinkHref='#widget-close'></use>
+          </svg>
+          <span>关闭</span>
+        </button>
       </div>
-    </div>,
-    container
+
+      <div className={styles.modalBody} ref={scrollerRef}>
+        <InfiniteScroll
+          pageStart={0}
+          loadMore={fetchMore}
+          hasMore={true}
+          useWindow={false}
+          threshold={320} // 差不多一行高度
+          loader={
+            <div className={styles.loader} key={0}>
+              加载中...
+            </div>
+          }
+        >
+          <div className={`video-card-list is-full ${styles.videoCardList}`}>
+            <div className='video-card-body more-class1 more-class2'>
+              {items.map((item) => {
+                return <VideoCard key={item.param} item={item} loading={loading} />
+              })}
+            </div>
+          </div>
+        </InfiniteScroll>
+      </div>
+    </BaseModal>
   )
 }
 
