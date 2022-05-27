@@ -4,6 +4,7 @@
 - 完成 changelog
 - npm version patch
 - pnpm build
+- 自测一遍 prod version script
 - 上传 greasefork
 - git push origin master && git push origin --tags
 
