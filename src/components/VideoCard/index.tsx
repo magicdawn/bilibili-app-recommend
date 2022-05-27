@@ -15,6 +15,7 @@ import {
 import * as styles from './index.module.less'
 import { dislikedIds, showModalDislike, useDislikedReason } from '@components/ModalDislike'
 import { toast } from '@utility/toast'
+import { useConfigStore } from '@settings'
 
 const currentYear = dayjs().format('YYYY')
 const getCdate = (ctime?: number) => {
@@ -47,6 +48,9 @@ export function VideoCard({ item, className, loading }: IProps) {
 
   // watchLater added
   const [watchLaterAdded, setWatchLaterAdded] = useSafeState(false)
+
+  const { accessKey } = useConfigStore()
+  const authed = Boolean(accessKey)
 
   const {
     param: id, // 视频 id
@@ -244,6 +248,7 @@ export function VideoCard({ item, className, loading }: IProps) {
                   />
                 ) : null}
 
+                {/* 稍后再看 */}
                 <div
                   className={`bili-watch-later ${styles.watchLater}`}
                   style={{ display: isHovering ? 'flex' : 'none' }}
@@ -263,22 +268,25 @@ export function VideoCard({ item, className, loading }: IProps) {
                   </span>
                 </div>
 
-                <div
-                  ref={btnDislikeRef}
-                  className={styles.btnDislike}
-                  onClick={onTriggerDislike}
-                  style={{ display: isHovering ? 'flex' : 'none' }}
-                >
-                  <svg className={styles.btnDislikeIcon}>
-                    <use xlinkHref='#widget-close'></use>
-                  </svg>
-                  <span
-                    className={styles.btnDislikeTip}
-                    style={{ display: isBtnDislikeHovering ? 'block' : 'none' }}
+                {/* 不喜欢 */}
+                {authed && (
+                  <div
+                    ref={btnDislikeRef}
+                    className={styles.btnDislike}
+                    onClick={onTriggerDislike}
+                    style={{ display: isHovering ? 'flex' : 'none' }}
                   >
-                    不喜欢
-                  </span>
-                </div>
+                    <svg className={styles.btnDislikeIcon}>
+                      <use xlinkHref='#widget-close'></use>
+                    </svg>
+                    <span
+                      className={styles.btnDislikeTip}
+                      style={{ display: isBtnDislikeHovering ? 'block' : 'none' }}
+                    >
+                      不喜欢
+                    </span>
+                  </div>
+                )}
               </div>
 
               <div className='bili-video-card__mask'>

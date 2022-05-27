@@ -22,6 +22,12 @@ export function SectionRecommend() {
 
   const onDeleteAccessToken = deleteAccessToken
 
+  const onExplainAccessKey = useMemoizedFn(() => {
+    const explainUrl =
+      'https://github.com/indefined/UserScripts/tree/master/bilibiliHome#%E6%8E%88%E6%9D%83%E8%AF%B4%E6%98%8E'
+    window.open(explainUrl, '_blank')
+  })
+
   const [items, setItems] = useSafeState<RecItem[]>([])
   const [loading, setLoading] = useSafeState(false)
 
@@ -63,9 +69,14 @@ export function SectionRecommend() {
 
           <div className='right'>
             {!accessKey ? (
-              <button className='primary-btn roll-btn' onClick={onGetAuth}>
-                <span>获取 access_key</span>
-              </button>
+              <>
+                <button className='primary-btn roll-btn' onClick={onExplainAccessKey}>
+                  <span>access_key 说明</span>
+                </button>
+                <button className='primary-btn roll-btn' onClick={onGetAuth}>
+                  <span>获取 access_key</span>
+                </button>
+              </>
             ) : (
               <>
                 <button
@@ -79,6 +90,9 @@ export function SectionRecommend() {
 
                 {buttonsExpanded && (
                   <>
+                    <button className='primary-btn roll-btn' onClick={onExplainAccessKey}>
+                      <span>access_key 说明</span>
+                    </button>
                     <button className='primary-btn roll-btn' onClick={() => onGetAuth(true)}>
                       <span>重新获取 access_key</span>
                     </button>
