@@ -2,7 +2,7 @@
 
 ## v0.1.0 2022-05-28
 
-- feat: 添加 access_key [使用说明](https://github.com/indefined/UserScripts/tree/master/bilibiliHome#:~:text=%E6%8E%88%E6%9D%83%E8%AF%B4%E6%98%8E,%E6%8E%88%E6%9D%83%E9%87%8D%E6%96%B0%E8%8E%B7%E5%8F%96%E3%80%82), 感谢原作者提供的文档
+- feat: 添加 access_key [使用说明](https://github.com/indefined/UserScripts/tree/master/bilibiliHome#%E6%8E%88%E6%9D%83%E8%AF%B4%E6%98%8E), 感谢原作者提供的文档
 - feat: 未授权状态, 不显示 "提交不喜欢" 入口
 
 ## v0.0.9 2022-05-28
