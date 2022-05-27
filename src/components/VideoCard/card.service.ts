@@ -84,11 +84,11 @@ export const watchLaterDel = watchLaterFactory('del')
 const dislikeFactory = (type: 'dislike' | 'cancel') => {
   const pathname = {
     dislike: '/x/feed/dislike',
-    cancel: '/x/feed/index/cancel',
+    cancel: '/x/feed/dislike/cancel',
   }[type]
 
   return async function (item: RecItem, reasonId: number) {
-    const res = await gmrequest.post(HOST_APP + pathname, null, {
+    const res = await gmrequest.get(HOST_APP + pathname, {
       params: {
         goto: item.goto,
         id: item.param,
@@ -97,6 +97,11 @@ const dislikeFactory = (type: 'dislike' | 'cancel') => {
         rid: item.tid,
         tag_id: item.tag?.tag_id,
         reason_id: reasonId,
+
+        // other stuffs
+        build: '1',
+        mobi_app: 'android',
+        idx: (Date.now() / 1000).toFixed(0),
       },
     })
 

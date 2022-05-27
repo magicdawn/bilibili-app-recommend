@@ -1,5 +1,6 @@
 import { cx } from '@libs'
-import { ReactNode, useEffect, useId, useLayoutEffect, useMemo, useRef } from 'react'
+import { useMemoizedFn } from 'ahooks'
+import { MouseEvent, ReactNode, useEffect, useId, useLayoutEffect, useMemo, useRef } from 'react'
 import { createPortal } from 'react-dom'
 
 interface IProps {
@@ -10,9 +11,28 @@ interface IProps {
   // classnames
   clsModalMask?: string
   clsModal?: string
+
+  // behaviors
+  hideWhenMaskOnClick?: boolean
 }
 
-export function BaseModal({ show, onHide, children, clsModalMask, clsModal }: IProps) {
+export function BaseModal({
+  show,
+  onHide,
+  children,
+  clsModalMask,
+  clsModal,
+  hideWhenMaskOnClick = false,
+}: IProps) {
+  // lock body scroll
+  useLayoutEffect(() => {
+    if (show) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'auto'
+    }
+  }, [show])
+
   const wrapperRef = useRef<HTMLDivElement>(null)
 
   // 打开时判断深色模式等
@@ -33,15 +53,6 @@ export function BaseModal({ show, onHide, children, clsModalMask, clsModal }: IP
     }
   }, [show])
 
-  // lock body scroll
-  useLayoutEffect(() => {
-    if (show) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = 'auto'
-    }
-  }, [show])
-
   const containerId = useId()
   const container = useMemo(() => {
     const div = document.createElement('div')
@@ -50,12 +61,23 @@ export function BaseModal({ show, onHide, children, clsModalMask, clsModal }: IP
     return div
   }, [])
 
+  const onMaskClick = useMemoizedFn((e: MouseEvent) => {
+    // click from .modal
+    if (wrapperRef.current?.contains(e.target as HTMLElement)) {
+      return
+    }
+
+    if (hideWhenMaskOnClick) {
+      onHide()
+    }
+  })
+
   if (!show) {
     return null
   }
 
   return createPortal(
-    <div className={cx(clsModalMask)}>
+    <div className={cx(clsModalMask)} onClick={onMaskClick}>
       <div className={cx(clsModal)} ref={wrapperRef}>
         {children}
       </div>
@@ -63,5 +85,3 @@ export function BaseModal({ show, onHide, children, clsModalMask, clsModal }: IP
     container
   )
 }
-
-export default BaseModal

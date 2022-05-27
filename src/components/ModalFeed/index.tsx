@@ -1,20 +1,19 @@
-import { useEffect, useId, useLayoutEffect, useMemo, useRef } from 'react'
-import { createPortal } from 'react-dom'
-import { useMemoizedFn, useSafeState } from 'ahooks'
-import delay from 'delay'
-import InfiniteScroll from 'react-infinite-scroller'
 import { RecItem } from '@define'
 import { getRecommendTimes } from '@service'
-import { VideoCard } from './VideoCard'
-import * as styles from './ModalFeed.module.less'
-import BaseModal from './BaseModal'
+import { useMemoizedFn, useSafeState } from 'ahooks'
+import delay from 'delay'
+import { useRef } from 'react'
+import InfiniteScroll from 'react-infinite-scroller'
+import { BaseModal } from '../BaseModal'
+import { VideoCard } from '../VideoCard'
+import * as styles from './index.module.less'
 
 interface IProps {
   show: boolean
   onHide: () => void
 }
 
-function ModalFeed({ show, onHide }: IProps) {
+export function ModalFeed({ show, onHide }: IProps) {
   const [items, setItems] = useSafeState<RecItem[]>([])
 
   const [loading, setLoading] = useSafeState(false)
@@ -89,5 +88,3 @@ function ModalFeed({ show, onHide }: IProps) {
     </BaseModal>
   )
 }
-
-export default ModalFeed

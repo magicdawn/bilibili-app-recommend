@@ -5,8 +5,16 @@ import cx from 'classnames'
 import { RecItem } from '@define/recommend'
 import { getCountStr, getDurationStr } from '@utility/video'
 import { PreviewImage } from './PreviewImage'
-import { getVideoData, VideoData, watchLaterAdd, watchLaterDel } from './card.service'
+import {
+  cancelDislike,
+  getVideoData,
+  VideoData,
+  watchLaterAdd,
+  watchLaterDel,
+} from './card.service'
 import * as styles from './index.module.less'
+import { dislikedIds, showModalDislike, useDislikedReason } from '@components/ModalDislike'
+import { toast } from '@utility/toast'
 
 const currentYear = dayjs().format('YYYY')
 const getCdate = (ctime?: number) => {
@@ -125,16 +133,35 @@ export function VideoCard({ item, className, loading }: IProps) {
    * 不喜欢 / 撤销不喜欢
    */
 
+  // const isDisliked = useIsDisliked(id)
+  // const isDisliked = true
+  const dislikedReason = useDislikedReason(id)
+  const isDisliked = Boolean(dislikedReason)
+
   const onTriggerDislike = useMemoizedFn(() => {
-    //
+    showModalDislike(item)
   })
 
-  const onDislike = useMemoizedFn(() => {
-    //
-  })
+  const onCancelDislike = useMemoizedFn(async () => {
+    if (!dislikedReason?.id) return
 
-  const onCancelDislike = useMemoizedFn(() => {
-    //
+    let success = false
+    let err: Error | null = null
+    try {
+      success = await cancelDislike(item, dislikedReason.id)
+    } catch (e) {
+      err = e
+    }
+
+    if (err) {
+      console.error(err.stack || err)
+      return toast('请求失败!')
+    }
+
+    toast(`撤销不喜欢: 操作${success ? '成功' : '失败'}!`)
+    if (success) {
+      dislikedIds.delete(id)
+    }
   })
 
   const href = item.goto === 'av' ? `/video/av${id}` : item.uri
@@ -144,21 +171,48 @@ export function VideoCard({ item, className, loading }: IProps) {
   const likeStr = useMemo(() => getCountStr(like), [like])
   const favoriteStr = useMemo(() => getCountStr(favorite), [favorite])
 
-  return (
-    <div className={cx('bili-video-card', className)} data-report='partition_recommend.content'>
-      <div className={cx('bili-video-card__skeleton', { hide: !loading })}>
-        <div className='bili-video-card__skeleton--cover'></div>
-        <div className='bili-video-card__skeleton--info'>
-          <div className='bili-video-card__skeleton--right'>
-            <p className='bili-video-card__skeleton--text'></p>
-            <p className='bili-video-card__skeleton--text short'></p>
-            <p className='bili-video-card__skeleton--light'></p>
-          </div>
+  const skeleton = (
+    <div className={cx('bili-video-card__skeleton', { hide: !loading })}>
+      <div className='bili-video-card__skeleton--cover'></div>
+      <div className='bili-video-card__skeleton--info'>
+        <div className='bili-video-card__skeleton--right'>
+          <p className='bili-video-card__skeleton--text'></p>
+          <p className='bili-video-card__skeleton--text short'></p>
+          <p className='bili-video-card__skeleton--light'></p>
         </div>
       </div>
+    </div>
+  )
 
-      {loading ? null : (
-        <div className='bili-video-card__wrap __scale-wrap'>
+  const dislikedContent = (
+    <div className={cx(styles.dislikedWrapper)}>
+      <div className={styles.dislikeContentCover}>
+        <div className={styles.dislikeContentCoverInner}>
+          <div className='icon'></div>
+          <div className={styles.dislikeReason}>{dislikedReason?.name}</div>
+          <div className={styles.dislikeDesc}>将减少此类内容推荐</div>
+        </div>
+      </div>
+      <div className={styles.dislikeContentAction}>
+        <button onClick={onCancelDislike}>撤销</button>
+      </div>
+    </div>
+  )
+
+  return (
+    <div
+      className={cx('bili-video-card', styles.biliVideoCard, className)}
+      data-report='partition_recommend.content'
+    >
+      {skeleton}
+
+      {!loading && isDisliked && dislikedContent}
+
+      {!loading && !isDisliked && (
+        <div
+          className='bili-video-card__wrap __scale-wrap'
+          style={{ backgroundColor: isDisliked ? 'red' : 'unset' }}
+        >
           <a
             href={href}
             target='_blank'
