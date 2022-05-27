@@ -164,7 +164,10 @@ export function VideoCard({ item, className, loading }: IProps) {
               className='bili-video-card__image __scale-player-wrap'
               ref={videoPreviewWrapperRef}
             >
-              <div className='bili-video-card__image--wrap' style={{ overflow: 'hidden' }}>
+              <div
+                className='bili-video-card__image--wrap'
+                style={{ borderRadius: '6px', overflow: 'hidden' }}
+              >
                 <picture className='v-img bili-video-card__cover'>
                   <source srcSet={`${cover}@672w_378h_1c.webp`} type='image/webp' />
                   <img src={`${cover}@672w_378h_1c.webp`} alt={title} loading='lazy' />

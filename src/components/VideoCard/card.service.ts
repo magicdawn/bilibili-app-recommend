@@ -76,6 +76,9 @@ export const watchLaterDel = watchLaterFactory('del')
 /**
  * 不喜欢 / 撤销不喜欢
  * https://github.com/indefined/UserScripts/blob/master/bilibiliHome/bilibiliHome.API.md
+ *
+ * 此类内容过多 reason_id = 12
+ * 推荐过 reason_id = 13
  */
 
 const dislikeFactory = (type: 'dislike' | 'cancel') => {

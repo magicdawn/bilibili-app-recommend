@@ -7,7 +7,14 @@
   right: 0;
   bottom: 0;
   z-index: @z + 1;
-  border-radius: inherit;
+  overflow: hidden;
+
+  // border-radius: inherit;
+  // 配合进度条, 底部不需要圆角
+  border-top-left-radius: inherit;
+  border-top-right-radius: inherit;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
 .watch-later {
