@@ -132,13 +132,16 @@ export function VideoCard({ item, className, loading }: IProps) {
   /**
    * 不喜欢 / 撤销不喜欢
    */
-
-  // const isDisliked = useIsDisliked(id)
-  // const isDisliked = true
   const dislikedReason = useDislikedReason(id)
   const isDisliked = Boolean(dislikedReason)
 
-  const onTriggerDislike = useMemoizedFn(() => {
+  // 不喜欢 hover state
+  const btnDislikeRef = useRef(null)
+  const isBtnDislikeHovering = useHover(btnDislikeRef)
+
+  const onTriggerDislike = useMemoizedFn((e: MouseEvent) => {
+    e.stopPropagation()
+    e.preventDefault()
     showModalDislike(item)
   })
 
@@ -259,6 +262,23 @@ export function VideoCard({ item, className, loading }: IProps) {
                     {watchLaterAdded ? '移除' : '稍后再看'}
                   </span>
                 </div>
+
+                <div
+                  ref={btnDislikeRef}
+                  className={styles.btnDislike}
+                  onClick={onTriggerDislike}
+                  style={{ display: isHovering ? 'flex' : 'none' }}
+                >
+                  <svg className={styles.btnDislikeIcon}>
+                    <use xlinkHref='#widget-close'></use>
+                  </svg>
+                  <span
+                    className={styles.btnDislikeTip}
+                    style={{ display: isBtnDislikeHovering ? 'block' : 'none' }}
+                  >
+                    不喜欢
+                  </span>
+                </div>
               </div>
 
               <div className='bili-video-card__mask'>
@@ -343,12 +363,6 @@ export function VideoCard({ item, className, loading }: IProps) {
                 ) : null}
               </p>
             </div>
-
-            <button className={styles.btnDislike} onClick={onTriggerDislike}>
-              <svg>
-                <use xlinkHref='#widget-close'></use>
-              </svg>
-            </button>
           </div>
         </div>
       )}
