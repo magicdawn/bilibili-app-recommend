@@ -1,17 +1,12 @@
-import axios from 'axios'
-import gmAdapter from 'axios-userscript-adapter'
-import { config } from '@settings'
-import { RecommendJson } from '@define'
-
-export const gmrequest = axios.create({ adapter: gmAdapter })
+import { RecommendJson } from './define'
+import { gmrequest, HOST_APP } from './request'
 
 export async function getRecommend() {
-  const res = await gmrequest.get('https://app.bilibili.com/x/feed/index', {
+  const res = await gmrequest.get(HOST_APP + '/x/feed/index', {
     params: {
       build: '1',
       mobi_app: 'android',
       idx: (Date.now() / 1000).toFixed(0),
-      access_key: config.accessKey || '',
     },
   })
 

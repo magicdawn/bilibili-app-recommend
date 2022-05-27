@@ -1,27 +1,7 @@
-import axios from 'axios'
-import LRUCache from 'lru-cache'
+import { request, gmrequest, HOST_APP } from '@request'
 import { getCsrfToken } from '@utility'
-import { PvideoJson } from '../../define/pvideo'
-import { DmJson } from '../../define/dm'
-
-export const HOST_API = 'https://api.bilibili.com'
-export const request = axios.create({
-  baseURL: HOST_API,
-})
-
-// Add a request interceptor
-request.interceptors.request.use(
-  function (config) {
-    if (!config.params?._) {
-      config.params = { ...config.params, _: Date.now() }
-    }
-    return config
-  },
-  function (error) {
-    // Do something with request error
-    return Promise.reject(error)
-  }
-)
+import LRUCache from 'lru-cache'
+import { DmJson, PvideoJson, RecItem } from '@define'
 
 // api.bilibili.com/pvideo?aid=${target.dataset.id}&_=${Date.now()
 // 视频预览
@@ -66,7 +46,7 @@ export async function getVideoData(id: string) {
 }
 
 /**
- * 添加 "稍后再看"
+ * 添加/删除 "稍后再看"
  */
 
 function watchLaterFactory(action: 'add' | 'del') {
@@ -92,3 +72,41 @@ function watchLaterFactory(action: 'add' | 'del') {
 
 export const watchLaterAdd = watchLaterFactory('add')
 export const watchLaterDel = watchLaterFactory('del')
+
+/**
+ * 不喜欢 / 撤销不喜欢
+ * https://github.com/indefined/UserScripts/blob/master/bilibiliHome/bilibiliHome.API.md
+ */
+
+const dislikeFactory = (type: 'dislike' | 'cancel') => {
+  const pathname = {
+    dislike: '/x/feed/dislike',
+    cancel: '/x/feed/index/cancel',
+  }[type]
+
+  return async function (item: RecItem, reasonId: number) {
+    const res = await gmrequest.post(HOST_APP + pathname, null, {
+      params: {
+        goto: item.goto,
+        id: item.param,
+
+        mid: item.mid,
+        rid: item.tid,
+        tag_id: item.tag?.tag_id,
+        reason_id: reasonId,
+      },
+    })
+
+    // {
+    //     "code": 0,
+    //     "message": "0",
+    //     "ttl": 1
+    // }
+    const json = res.data
+    const success = json?.code === 0 && json?.message === '0'
+    return success
+  }
+}
+
+export const dislike = dislikeFactory('dislike')
+export const cancelDislike = dislikeFactory('cancel')
