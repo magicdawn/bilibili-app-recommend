@@ -1,7 +1,8 @@
-import { createRoot } from 'react-dom/client'
-import $ from 'jquery'
-import { SectionRecommend } from './components/section'
+import 'virtual:vite-react-preamble'
 import sleep from 'delay'
+import $ from 'jquery'
+import { createRoot } from 'react-dom/client'
+import { SectionRecommend } from './components/SectionRecommend'
 
 void (function main() {
   // 用于获取授权

@@ -87,8 +87,6 @@ export function VideoCard({ item, className, loading }: IProps) {
   const [isFetchingVideoData, isFetchingVideoDataChange] = useSafeState(false)
 
   const tryFetchVideoData = useMemoizedFn(async () => {
-    console.log(item)
-
     // already fetched
     if (videoData) return
 
@@ -99,7 +97,6 @@ export function VideoCard({ item, className, loading }: IProps) {
       isFetchingVideoDataChange(true)
       const data = await getVideoData(id)
       videoDataChange(data)
-      console.log(data)
     } finally {
       isFetchingVideoDataChange(false)
     }

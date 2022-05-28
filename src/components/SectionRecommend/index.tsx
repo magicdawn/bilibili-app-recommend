@@ -4,9 +4,9 @@ import { RecItem } from '@define'
 import { useConfigStore } from '@settings'
 import { auth, deleteAccessToken } from '@utility/auth'
 import { getHomeRecommend } from '@service'
-import { ModalFeed } from './ModalFeed'
-import { VideoCard } from './VideoCard'
-import * as styles from './section.module.less'
+import { ModalFeed } from '../ModalFeed'
+import { VideoCard } from '../VideoCard'
+import * as styles from './index.module.less'
 
 export function SectionRecommend() {
   const [buttonsExpanded, buttonsExpandedActions] = useToggle(false)

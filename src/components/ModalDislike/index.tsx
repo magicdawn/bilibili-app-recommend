@@ -81,7 +81,10 @@ export function ModalDislike({ show, onHide, item }: IProps) {
       }}
     >
       <div className={styles.modalHeader}>
-        <div className={styles.modalTitle}>不喜欢</div>
+        <div className={styles.modalTitle}>
+          我不想看
+          <span className={styles.titleDesc}>(选择后将减少相似内容推荐)</span>
+        </div>
 
         <div className='space' style={{ flex: 1 }}></div>
 

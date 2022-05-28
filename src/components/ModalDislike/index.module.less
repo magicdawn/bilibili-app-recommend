@@ -37,8 +37,23 @@
       line-height: 1.5;
     }
 
-    .btn-refresh,
+    .title-desc {
+      margin-left: 5px;
+      font-size: 40%;
+      // line-height: 36px;
+      // vertical-align: baseline;
+    }
+
     .btn-close {
+      margin-left: 10px;
+
+      svg {
+        width: 10px;
+        height: 10px;
+        margin-right: 3px;
+        margin-top: -2px;
+      }
+
       :global(body.dark) & {
         color: #eee !important;
         background-color: #333 !important;
@@ -48,10 +63,6 @@
         line-height: 16px;
         font-size: 13px;
       }
-    }
-
-    .btn-close {
-      margin-left: 10px;
     }
   }
 
@@ -72,11 +83,16 @@
 .reason {
   color: inherit;
   width: 45%;
-
   text-align: center;
   line-height: 20px;
-  border: 1px solid #fa6a9d;
-  margin: 5px;
-  padding-top: 10px;
-  padding-bottom: 10px;
+
+  border: 1px solid #eee;
+  :global(body.dark) & {
+    border: 1px solid #333;
+  }
+
+  margin-top: 8px;
+  margin-bottom: 8px;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }

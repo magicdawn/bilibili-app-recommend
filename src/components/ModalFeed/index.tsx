@@ -49,14 +49,14 @@ export function ModalFeed({ show, onHide }: IProps) {
         <div className='space' style={{ flex: 1 }}></div>
 
         <button className={`primary-btn roll-btn ${styles.btnRefresh}`} onClick={refresh}>
-          <svg style={{ transform: 'rotate(0deg)' }}>
+          <svg>
             <use xlinkHref='#widget-roll'></use>
           </svg>
           <span>换一换</span>
         </button>
 
         <button className={`primary-btn roll-btn ${styles.btnClose}`} onClick={onHide}>
-          <svg style={{ transform: 'rotate(0deg)' }}>
+          <svg>
             <use xlinkHref='#widget-close'></use>
           </svg>
           <span>关闭</span>
