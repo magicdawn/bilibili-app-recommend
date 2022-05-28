@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.1.1 2022-05-28
+
+- feat: 使用 vite, 支持 HMR, 比较方便
+- chore: 样式优化
+
 ## v0.1.0 2022-05-28
 
 - feat: 添加 access_key [使用说明](https://github.com/indefined/UserScripts/tree/master/bilibiliHome#%E6%8E%88%E6%9D%83%E8%AF%B4%E6%98%8E), 感谢原作者提供的文档
