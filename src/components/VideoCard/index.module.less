@@ -116,8 +116,11 @@
   display: flex;
   flex-direction: column;
 
-  border: 1px solid #ccc;
   border-radius: 6px;
+  border: 1px solid #eee;
+  :global(body.dark) & {
+    border: 1px solid #333;
+  }
 
   .dislike-content-cover {
     border-top-left-radius: 6px;
@@ -158,7 +161,11 @@
   .dislike-content-action {
     flex: 1;
     width: 100%;
-    border-top: 1px solid #ccc;
+
+    border-top: 1px solid #eee;
+    :global(body.dark) & {
+      border-top: 1px solid #333;
+    }
 
     display: flex;
     align-items: center;
