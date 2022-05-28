@@ -6,7 +6,7 @@
   "scripts": {
     "dev:less": "tlm src --watch",
     "dev": "vite",
-    "build": "vite build"
+    "build": "vite build && ./scripts/install.ts"
   },
   "keywords": [],
   "author": "",

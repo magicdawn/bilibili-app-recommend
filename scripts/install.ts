@@ -1,4 +1,4 @@
-#!ts-node
+#!/usr/bin/env tsx
 
 import path from 'path'
 import { name } from '../package.json'
