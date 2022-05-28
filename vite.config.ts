@@ -1,5 +1,5 @@
 import react from '@vitejs/plugin-react'
-import { defineConfig, Plugin } from 'vite'
+import { defineConfig, Plugin, ResolvedConfig } from 'vite'
 import monkey, { MonkeyUserScript } from 'vite-plugin-monkey'
 import tsconfigPaths from 'vite-tsconfig-paths'
 import { version } from './package.json'
@@ -17,24 +17,31 @@ function viteReactPreamble(): Plugin {
   const virtualModuleId = 'virtual:vite-react-preamble'
   const resolvedVirtualModuleId = '\0' + virtualModuleId
 
-  let base = '/'
+  let resolvedConfig: ResolvedConfig
+
   return {
     name: 'vite-react-preamble', // required, will show up in warnings and errors
     configResolved(config) {
-      base = config.base
+      resolvedConfig = config
     },
+
     resolveId(id) {
       if (id === virtualModuleId) {
         return resolvedVirtualModuleId
       }
     },
+
     load(id) {
       if (id === resolvedVirtualModuleId) {
-        const preambleCode = react.preambleCode.replace(`__BASE__`, base)
-        return `
-          ${preambleCode}
-          ;console.log('[vite-react-preamble]: preamble loaded')
-        `
+        if (resolvedConfig.mode === 'development') {
+          const preambleCode = react.preambleCode.replace(`__BASE__`, resolvedConfig.base || '/')
+          return `
+            ${preambleCode}
+            ;console.log('[vite-react-preamble]: preamble loaded')
+          `
+        } else {
+          return ''
+        }
       }
     },
   }
@@ -46,6 +53,10 @@ export default defineConfig({
     modules: {
       localsConvention: 'camelCaseOnly',
     },
+  },
+
+  build: {
+    minify: 'esbuild',
   },
 
   plugins: [

@@ -29,7 +29,7 @@ export function BaseModal({
     if (show) {
       document.body.style.overflow = 'hidden'
     } else {
-      document.body.style.overflow = 'auto'
+      document.body.style.overflow = 'overlay'
     }
   }, [show])
 
@@ -56,7 +56,7 @@ export function BaseModal({
   const containerId = useId()
   const container = useMemo(() => {
     const div = document.createElement('div')
-    div.setAttribute('data-id', 'modal-feed-' + containerId)
+    div.setAttribute('data-id', 'base-modal-' + containerId)
     document.body.appendChild(div)
     return div
   }, [])
