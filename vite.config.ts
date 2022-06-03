@@ -3,6 +3,7 @@ import { defineConfig, Plugin, ResolvedConfig } from 'vite'
 import monkey, { MonkeyUserScript } from 'vite-plugin-monkey'
 import tsconfigPaths from 'vite-tsconfig-paths'
 import { version } from './package.json'
+import visualizer from 'rollup-plugin-visualizer'
 
 // jsdelivr: 2022-05-18 down in china
 // eleme: not allowed in greasyfork.org
@@ -64,6 +65,13 @@ export default defineConfig({
     viteReactPreamble(),
     tsconfigPaths(),
 
+    // visualize
+    process.env.NODE_ENV === 'production' &&
+      process.argv.some((arg) => arg === '--analyze') &&
+      visualizer({
+        open: true,
+      }),
+
     // https://github.com/lisonge/vite-plugin-monkey
     monkey({
       entry: 'src/main.tsx',
@@ -123,5 +131,5 @@ export default defineConfig({
         },
       },
     }),
-  ],
+  ].filter(Boolean),
 })

@@ -2,3 +2,6 @@ dist
 node_modules
 
 **/*.module.less.d.ts
+
+# visualizer
+/stats.html
