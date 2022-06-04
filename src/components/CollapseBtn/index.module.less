@@ -1,0 +1,25 @@
+.expand-btn {
+  padding: 0;
+  width: 31px;
+  height: 31px;
+  border-radius: 50%;
+
+  svg {
+    width: 13px;
+    height: 13px;
+
+    transform: rotateZ(180deg);
+    &.expanded {
+      transform: rotateZ(0deg);
+    }
+  }
+
+  :global(body.dark) & {
+    color: #eee !important;
+    border-color: transparent !important;
+    background-color: #333 !important;
+    &:hover {
+      background-color: #555 !important;
+    }
+  }
+}

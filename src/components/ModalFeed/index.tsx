@@ -1,8 +1,11 @@
+import { CollapseBtn } from '@components/CollapseBtn'
 import { RecItem } from '@define'
+import { cx } from '@libs'
 import { getRecommendTimes } from '@service'
+import { useConfigStore, updateConfig } from '@settings'
 import { useMemoizedFn, useSafeState } from 'ahooks'
 import delay from 'delay'
-import { useRef } from 'react'
+import { ChangeEventHandler, memo, useCallback, useMemo, useRef } from 'react'
 import InfiniteScroll from 'react-infinite-scroller'
 import { BaseModal } from '../BaseModal'
 import { VideoCard } from '../VideoCard'
@@ -13,7 +16,7 @@ interface IProps {
   onHide: () => void
 }
 
-export function ModalFeed({ show, onHide }: IProps) {
+export const ModalFeed = memo(function ModalFeed({ show, onHide }: IProps) {
   const [items, setItems] = useSafeState<RecItem[]>([])
 
   const [loading, setLoading] = useSafeState(false)
@@ -37,16 +40,42 @@ export function ModalFeed({ show, onHide }: IProps) {
   })
 
   const fetchMore = useMemoizedFn(async (page: number) => {
-    const more = await getRecommendTimes(2)
+    let more = await getRecommendTimes(2)
+    const set = new Set(items.map((item) => item.param))
+    more = more.filter((item) => {
+      return !set.has(item.param)
+    })
     setItems((items) => [...items, ...more])
   })
 
+  const { useNarrowMode } = useConfigStore()
+  const updateUseNarrowMode: ChangeEventHandler<HTMLInputElement> = useCallback((e) => {
+    const val = e.target.checked
+    updateConfig({ useNarrowMode: val })
+  }, [])
+
+  const narrowStyleObj = useMemo(() => ({ [styles.narrowMode]: useNarrowMode }), [useNarrowMode])
+
   return (
-    <BaseModal {...{ show, onHide }} clsModalMask={styles.modalMask} clsModal={styles.modal}>
+    <BaseModal
+      {...{ show, onHide }}
+      clsModalMask={cx(styles.modalMask, narrowStyleObj)}
+      clsModal={cx(styles.modal, narrowStyleObj)}
+    >
       <div className={styles.modalHeader}>
         <div className={styles.modalTitle}>推荐</div>
 
         <div className='space' style={{ flex: 1 }}></div>
+
+        <CollapseBtn>
+          <input
+            type='checkbox'
+            id={styles.useNarrowMode}
+            checked={useNarrowMode}
+            onChange={updateUseNarrowMode}
+          />
+          <label htmlFor={styles.useNarrowMode}>启用窄屏模式</label>
+        </CollapseBtn>
 
         <button className={`primary-btn roll-btn ${styles.btnRefresh}`} onClick={refresh}>
           <svg>
@@ -70,6 +99,7 @@ export function ModalFeed({ show, onHide }: IProps) {
           hasMore={true}
           useWindow={false}
           threshold={320} // 差不多一行高度
+          style={{ minHeight: '100%' }}
           loader={
             <div className={styles.loader} key={0}>
               加载中...
@@ -77,7 +107,7 @@ export function ModalFeed({ show, onHide }: IProps) {
           }
         >
           <div className={`video-card-list is-full ${styles.videoCardList}`}>
-            <div className='video-card-body more-class1 more-class2'>
+            <div id={styles.videoCardBody} className={cx('video-card-body', narrowStyleObj)}>
               {items.map((item) => {
                 return <VideoCard key={item.param} item={item} loading={loading} />
               })}
@@ -87,4 +117,4 @@ export function ModalFeed({ show, onHide }: IProps) {
       </div>
     </BaseModal>
   )
-}
+})

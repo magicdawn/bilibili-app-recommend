@@ -1,4 +1,4 @@
-import { MouseEvent, useEffect, useMemo, useRef } from 'react'
+import { MouseEvent, useEffect, useMemo, useRef, CSSProperties } from 'react'
 import { useHover, useMemoizedFn, useSafeState } from 'ahooks'
 import dayjs from 'dayjs'
 import cx from 'classnames'
@@ -32,12 +32,13 @@ const getCdate = (ctime?: number) => {
 const toHttps = (url: string) => url.replace(/^http:\/\//, 'https://')
 
 interface IProps {
+  style?: CSSProperties
   className?: string
   item: RecItem
   loading?: boolean
 }
 
-export function VideoCard({ item, className, loading }: IProps) {
+export function VideoCard({ style, className, item, loading }: IProps) {
   // 预览 hover state
   const videoPreviewWrapperRef = useRef(null)
   const isHovering = useHover(videoPreviewWrapperRef)
@@ -205,6 +206,7 @@ export function VideoCard({ item, className, loading }: IProps) {
 
   return (
     <div
+      style={style}
       className={cx('bili-video-card', styles.biliVideoCard, className)}
       data-report='partition_recommend.content'
     >

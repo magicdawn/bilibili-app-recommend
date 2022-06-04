@@ -2,6 +2,7 @@ import { proxy, useSnapshot } from 'valtio'
 
 export const config = proxy({
   accessKey: '',
+  useNarrowMode: false,
 })
 
 type Config = typeof config

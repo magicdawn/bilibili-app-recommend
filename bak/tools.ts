@@ -54,8 +54,6 @@ export function formatNumber(input: number, format: 'number' | 'time' = 'number'
 }
 
 export function watchLater(ev: MouseEvent) {
-  // TODO: refactor with axios `request`
-
   const target = ev.target as HTMLElement
   const action = target?.classList?.contains('added') ? 'del' : 'add'
 

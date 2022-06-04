@@ -7,16 +7,17 @@ import { getHomeRecommend } from '@service'
 import { ModalFeed } from '../ModalFeed'
 import { VideoCard } from '../VideoCard'
 import * as styles from './index.module.less'
+import { CollapseBtn, CollapseBtnRef } from '@components/CollapseBtn'
+import { useCallback, useRef } from 'react'
 
 export function SectionRecommend() {
-  const [buttonsExpanded, buttonsExpandedActions] = useToggle(false)
-
+  const collapseBtnRef = useRef<CollapseBtnRef>(null)
   const { accessKey } = useConfigStore()
 
   const onGetAuth = useMemoizedFn(async (refresh = false) => {
     const accessKey = await auth()
     if (accessKey) {
-      buttonsExpandedActions.set(false)
+      collapseBtnRef.current?.set(false)
     }
   })
 
@@ -49,9 +50,12 @@ export function SectionRecommend() {
   // const [showMore, setShowMore] = useSafeState(true)
   const [showMore, setShowMore] = useSafeState(false)
 
-  const onSeeMore = useMemoizedFn(() => {
+  const onSeeMore = useCallback(() => {
     setShowMore(true)
-  })
+  }, [])
+  const onModalFeedHide = useCallback(() => {
+    setShowMore(false)
+  }, [])
 
   return (
     <section className={cx('bili-grid no-margin', styles.grid)} data-area='推荐'>
@@ -78,30 +82,17 @@ export function SectionRecommend() {
                 </button>
               </>
             ) : (
-              <>
-                <button
-                  className={cx('primary-btn', styles.expandBtn)}
-                  onClick={buttonsExpandedActions.toggle}
-                >
-                  <svg className={cx({ [styles.expanded]: buttonsExpanded })}>
-                    <use xlinkHref='#widget-arrow'></use>
-                  </svg>
+              <CollapseBtn ref={collapseBtnRef}>
+                <button className='primary-btn roll-btn' onClick={onExplainAccessKey}>
+                  <span>access_key 说明</span>
                 </button>
-
-                {buttonsExpanded && (
-                  <>
-                    <button className='primary-btn roll-btn' onClick={onExplainAccessKey}>
-                      <span>access_key 说明</span>
-                    </button>
-                    <button className='primary-btn roll-btn' onClick={() => onGetAuth(true)}>
-                      <span>重新获取 access_key</span>
-                    </button>
-                    <button className='primary-btn roll-btn' onClick={onDeleteAccessToken}>
-                      <span>删除 access_key</span>
-                    </button>
-                  </>
-                )}
-              </>
+                <button className='primary-btn roll-btn' onClick={() => onGetAuth(true)}>
+                  <span>重新获取 access_key</span>
+                </button>
+                <button className='primary-btn roll-btn' onClick={onDeleteAccessToken}>
+                  <span>删除 access_key</span>
+                </button>
+              </CollapseBtn>
             )}
 
             <button className='primary-btn roll-btn' onClick={refresh}>
@@ -120,7 +111,7 @@ export function SectionRecommend() {
           </div>
         </div>
 
-        <ModalFeed show={showMore} onHide={() => setShowMore(false)} />
+        <ModalFeed show={showMore} onHide={onModalFeedHide} />
 
         <div className='video-card-body more-class1 more-class2'>
           {items.map((item) => {

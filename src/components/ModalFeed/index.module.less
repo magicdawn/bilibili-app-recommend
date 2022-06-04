@@ -4,8 +4,12 @@
   top: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
   z-index: 11000;
+
+  background-color: rgba(0, 0, 0, 0.5);
+  &.narrow-mode {
+    background-color: rgba(0, 0, 0, 0.9);
+  }
 
   // make .model center
   display: flex;
@@ -21,6 +25,13 @@
   overflow: hidden;
   background-color: #fff;
   padding: 0 15px 15px 15px;
+  padding-right: 0; // 滚动条右移
+
+  &.narrow-mode {
+    @card-width: 283px;
+    width: @card-width * 2 + 40px;
+    height: calc(100vh - 10px);
+  }
 
   display: flex;
   flex-direction: column;
@@ -29,6 +40,7 @@
     padding-top: 10px;
     padding-bottom: 10px;
     border-bottom: none;
+    padding-right: 15px;
     display: flex;
     align-items: center;
 
@@ -64,6 +76,7 @@
     padding-top: 0;
     flex-grow: 1;
     overflow-y: scroll;
+    padding-right: 15px;
   }
 }
 
@@ -75,13 +88,21 @@
   color: inherit;
 }
 
-.video-card-list:global(.is-full) {
-  :global {
-    .video-card-body.more-class1.more-class2 {
-      > * {
-        display: block !important;
-      }
-    }
+.video-card-list {
+  display: block !important;
+}
+
+// .video-card-body 会隐藏后面的卡片, 并且有 !important
+// 不处理, 会导致 InfiniteScroll 永远达不到 threshold, 会一直 loadMore
+// React.CSSProperties 无法 inline {display: 'block !important'}
+// 使用 #id + important 方便点
+#video-card-body {
+  > * {
+    display: block !important;
+  }
+
+  &.narrow-mode {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
@@ -89,4 +110,14 @@
   text-align: center;
   line-height: 60px;
   font-size: 120%;
+}
+
+#use-narrow-mode {
+  margin-left: 5px;
+  margin-top: 1px;
+
+  & + label {
+    margin-left: 2px;
+    user-select: none;
+  }
 }

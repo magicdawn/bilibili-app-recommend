@@ -1,4 +1,4 @@
-import { RecommendJson } from './define'
+import { RecItem, RecommendJson } from './define'
 import { gmrequest, HOST_APP } from './request'
 
 export async function getRecommend() {
@@ -20,6 +20,11 @@ export async function getHomeRecommend() {
 
 // 一次10个不够, 多来几次
 export async function getRecommendTimes(times: number) {
+  // let list: RecItem[] = []
+  // for (let i of new Array(times).fill(0)) {
+  //   list = list.concat(await getRecommend())
+  // }
+
   const ps = new Array(times).fill(0).map((_) => getRecommend())
   const results = await Promise.all(ps)
   let list = results.reduce((ret, cur) => ret.concat(cur), [])
