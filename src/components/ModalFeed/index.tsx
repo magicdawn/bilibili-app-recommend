@@ -2,8 +2,8 @@ import { CollapseBtn } from '@components/CollapseBtn'
 import { RecItem } from '@define'
 import { cx } from '@libs'
 import { getRecommendTimes } from '@service'
-import { useConfigStore, updateConfig } from '@settings'
-import { useMemoizedFn, useSafeState } from 'ahooks'
+import { updateConfig, useConfigStore } from '@settings'
+import { useKeyPress, useMemoizedFn, useSafeState } from 'ahooks'
 import delay from 'delay'
 import { ChangeEventHandler, memo, useCallback, useMemo, useRef } from 'react'
 import InfiniteScroll from 'react-infinite-scroller'
@@ -48,13 +48,68 @@ export const ModalFeed = memo(function ModalFeed({ show, onHide }: IProps) {
     setItems((items) => [...items, ...more])
   })
 
+  // 窄屏模式
   const { useNarrowMode } = useConfigStore()
   const updateUseNarrowMode: ChangeEventHandler<HTMLInputElement> = useCallback((e) => {
     const val = e.target.checked
     updateConfig({ useNarrowMode: val })
   }, [])
-
   const narrowStyleObj = useMemo(() => ({ [styles.narrowMode]: useNarrowMode }), [useNarrowMode])
+
+  // 快捷键
+  const [activeIndex, setActiveIndex] = useSafeState<number | null>(null)
+
+  const addActiveIndex = useMemoizedFn((step: number) => {
+    if (!show) return
+
+    let index = activeIndex === null ? getInitialIndex() : activeIndex + step
+    if (index < 0) index = 0
+    if (index > items.length - 1) index = items.length - 1
+
+    // console.log({ activeIndex, index, initialIndex: getInitialIndex() })
+    setActiveIndex(index)
+    makeVisible(index)
+  })
+
+  const prev = useCallback(() => {
+    addActiveIndex(-1)
+  }, [])
+  const next = useCallback(() => {
+    addActiveIndex(1)
+  }, [])
+
+  const open = useMemoizedFn(() => {
+    if (!activeIndex || !show) return
+    openVideoAt(activeIndex)
+  })
+  const clearActive = useMemoizedFn(() => {
+    if (!show) return
+    setActiveIndex(null)
+  })
+
+  // by 1
+  useKeyPress('leftarrow', prev)
+  useKeyPress('rightarrow', next)
+  // by row
+  useKeyPress('uparrow', prev)
+  useKeyPress('downarrow', next)
+
+  // actions
+  useKeyPress('enter', open)
+  useKeyPress('esc', clearActive)
+
+  // refresh
+  const onShortcutRefresh = useMemoizedFn(() => {
+    if (!show) return
+    refresh()
+  })
+  useKeyPress('r', onShortcutRefresh)
+
+  // TODO: vim mode
+  // h 向左移动一个字符。
+  // j 向下移动一个字符。
+  // k 向上移动一个字符。
+  // l 向右移动一个字符。
 
   return (
     <BaseModal
@@ -108,8 +163,15 @@ export const ModalFeed = memo(function ModalFeed({ show, onHide }: IProps) {
         >
           <div className={`video-card-list is-full ${styles.videoCardList}`}>
             <div id={styles.videoCardBody} className={cx('video-card-body', narrowStyleObj)}>
-              {items.map((item) => {
-                return <VideoCard key={item.param} item={item} loading={loading} />
+              {items.map((item, index) => {
+                return (
+                  <VideoCard
+                    key={item.param}
+                    item={item}
+                    loading={loading}
+                    className={cx(styles.card, { [styles.active]: index === activeIndex })}
+                  />
+                )
               })}
             </div>
           </div>
@@ -118,3 +180,42 @@ export const ModalFeed = memo(function ModalFeed({ show, onHide }: IProps) {
     </BaseModal>
   )
 })
+
+function getInitialIndex() {
+  const scroller = document.querySelector<HTMLDivElement>(`.${styles.modalBody}`)
+  if (!scroller) return 0
+  const scrollerRect = scroller.getBoundingClientRect()
+
+  const cards = [...document.querySelectorAll<HTMLDivElement>(`.${styles.card}`)]
+  for (let i = 0; i < cards.length; i++) {
+    const card = cards[i]
+    const rect = card.getBoundingClientRect()
+
+    // first fully visible card
+    if (rect.top >= scrollerRect.top) {
+      return i
+    }
+  }
+
+  return 0
+}
+
+function getCardAt(index: number) {
+  const cards = [...document.querySelectorAll<HTMLDivElement>(`.${styles.card}`)]
+  return cards[index]
+}
+
+function makeVisible(index: number) {
+  const card = getCardAt(index)
+  ;(card as any)?.scrollIntoViewIfNeeded?.(false)
+}
+
+function openVideoAt(index: number) {
+  const card = getCardAt(index)
+  if (!card) return
+
+  const videoLink = card.querySelector<HTMLAnchorElement>('.bili-video-card__wrap > a')
+  videoLink?.click()
+}
+
+// ;(window as any).getInitialIndex = getInitialIndex

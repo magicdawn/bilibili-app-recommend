@@ -1,3 +1,5 @@
+@import '../../common/vars.less';
+
 .modal-mask {
   position: fixed;
   left: 0;
@@ -20,7 +22,7 @@
 .modal {
   width: calc(100vw - 50px);
   height: calc(100vh - 50px);
-  border: 1px solid #fa6a9d;
+  border: 1px solid @bili-pink;
   border-radius: 10px;
   overflow: hidden;
   background-color: #fff;
@@ -85,7 +87,11 @@
 }
 
 .card {
-  color: inherit;
+  border: 2px solid transparent;
+  &.active {
+    border-color: @bili-pink;
+    border-radius: 6px;
+  }
 }
 
 .video-card-list {
