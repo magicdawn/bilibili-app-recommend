@@ -104,7 +104,7 @@ export const ModalFeed = memo(function ModalFeed({ show, onHide }: IProps) {
     if (!show) return
     refresh()
   })
-  useKeyPress('r', onShortcutRefresh)
+  useKeyPress('r', onShortcutRefresh, { exactMatch: true }) // prevent refresh when cmd+R reload page
 
   // TODO: vim mode
   // h 向左移动一个字符。
