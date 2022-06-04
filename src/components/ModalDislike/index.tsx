@@ -25,7 +25,8 @@ export function useDislikedReason(id: string) {
   const map = useDislikedIds()
   return map.get(id)
 }
-export function resetDisliked() {
+// 不能清理, 因为有两处在同时使用, refresh 之后清理影响其他地方比较奇怪
+function clearDislikedIds() {
   dislikedIds.clear()
 }
 
