@@ -16,6 +16,19 @@ interface IProps {
   hideWhenMaskOnClick?: boolean
 }
 
+let showedCount = 0
+const modalShowCheck = () => {
+  showedCount++
+  document.body.style.overflow = 'hidden' // lock
+}
+const modalHideCheck = () => {
+  showedCount--
+  if (showedCount < 0) showedCount = 0
+  if (showedCount === 0) {
+    document.body.style.overflow = 'overlay' // unlock
+  }
+}
+
 export function BaseModal({
   show,
   onHide,
@@ -27,9 +40,9 @@ export function BaseModal({
   // lock body scroll
   useLayoutEffect(() => {
     if (show) {
-      document.body.style.overflow = 'hidden'
+      modalShowCheck()
     } else {
-      document.body.style.overflow = 'overlay'
+      modalHideCheck()
     }
   }, [show])
 
