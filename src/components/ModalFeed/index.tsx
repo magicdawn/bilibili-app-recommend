@@ -34,6 +34,7 @@ export const ModalFeed = memo(function ModalFeed({ show, onHide }: IProps) {
     try {
       setLoading(true)
       setItems(await getRecommendTimes(2))
+      clearActive()
     } finally {
       setLoading(false)
     }
