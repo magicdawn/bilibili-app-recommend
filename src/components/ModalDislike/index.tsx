@@ -1,8 +1,8 @@
 import { BaseModal } from '@components/BaseModal'
 import { RecItem } from '@define'
 import { toast } from '@utility/toast'
-import { useMemoizedFn, useSafeState } from 'ahooks'
-import { useMemo } from 'react'
+import { useMemoizedFn } from 'ahooks'
+import { useMemo, useState } from 'react'
 import { createRoot, Root } from 'react-dom/client'
 import { useSnapshot } from 'valtio'
 import { proxyMap } from 'valtio/utils'
@@ -31,7 +31,7 @@ function clearDislikedIds() {
 }
 
 export function ModalDislike({ show, onHide, item }: IProps) {
-  const [isRequesting, setIsRequesting] = useSafeState(false)
+  const [isRequesting, setIsRequesting] = useState(false)
 
   const onDislike = useMemoizedFn(async (reasonId: number, reasonName: string) => {
     if (!item) return

@@ -1,5 +1,5 @@
-import { MouseEvent, useEffect, useMemo, useRef, CSSProperties, memo } from 'react'
-import { useHover, useMemoizedFn, useSafeState } from 'ahooks'
+import { MouseEvent, useEffect, useMemo, useRef, CSSProperties, memo, useState } from 'react'
+import { useHover, useMemoizedFn } from 'ahooks'
 import dayjs from 'dayjs'
 import cx from 'classnames'
 import { RecItem } from '@define/recommend'
@@ -48,7 +48,7 @@ export const VideoCard = memo(function ({ style, className, item, loading }: IPr
   const isWatchLaterHovering = useHover(watchLaterRef)
 
   // watchLater added
-  const [watchLaterAdded, setWatchLaterAdded] = useSafeState(false)
+  const [watchLaterAdded, setWatchLaterAdded] = useState(false)
 
   const { accessKey } = useConfigStore()
   const authed = Boolean(accessKey)
@@ -84,8 +84,8 @@ export const VideoCard = memo(function ({ style, className, item, loading }: IPr
   const cdate = useMemo(() => getCdate(ctime), [ctime])
   const cover = useMemo(() => toHttps(coverRaw), [coverRaw])
 
-  const [videoData, videoDataChange] = useSafeState<VideoData | null>(null)
-  const [isFetchingVideoData, isFetchingVideoDataChange] = useSafeState(false)
+  const [videoData, videoDataChange] = useState<VideoData | null>(null)
+  const [isFetchingVideoData, isFetchingVideoDataChange] = useState(false)
 
   const tryFetchVideoData = useMemoizedFn(async () => {
     // already fetched

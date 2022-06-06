@@ -1,5 +1,5 @@
 import cx from 'classnames'
-import { useMemoizedFn, useMount, useSafeState, useToggle } from 'ahooks'
+import { useMemoizedFn, useMount, useToggle } from 'ahooks'
 import { RecItem, RecItemWithUniqId } from '@define'
 import { useConfigStore } from '@settings'
 import { auth, deleteAccessToken } from '@utility/auth'
@@ -8,7 +8,7 @@ import { ModalFeed } from '../ModalFeed'
 import { VideoCard } from '../VideoCard'
 import * as styles from './index.module.less'
 import { CollapseBtn, CollapseBtnRef } from '@components/CollapseBtn'
-import { useCallback, useRef } from 'react'
+import { useCallback, useRef, useState } from 'react'
 
 export function SectionRecommend() {
   const collapseBtnRef = useRef<CollapseBtnRef>(null)
@@ -29,8 +29,8 @@ export function SectionRecommend() {
     window.open(explainUrl, '_blank')
   })
 
-  const [items, setItems] = useSafeState<RecItemWithUniqId[]>([])
-  const [loading, setLoading] = useSafeState(false)
+  const [items, setItems] = useState<RecItemWithUniqId[]>([])
+  const [loading, setLoading] = useState(false)
 
   const refresh = useMemoizedFn(async () => {
     setLoading(true)
@@ -47,8 +47,8 @@ export function SectionRecommend() {
   })
 
   // FIXME: restore when release
-  // const [showMore, setShowMore] = useSafeState(true)
-  const [showMore, setShowMore] = useSafeState(false)
+  // const [showMore, setShowMore] = useState(true)
+  const [showMore, setShowMore] = useState(false)
 
   const onSeeMore = useCallback(() => {
     setShowMore(true)

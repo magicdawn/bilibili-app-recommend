@@ -3,9 +3,9 @@ import { RecItem, RecItemWithUniqId } from '@define'
 import { cx } from '@libs'
 import { getRecommendTimes, uniqRecList } from '@service'
 import { updateConfig, useConfigStore, config } from '@settings'
-import { useKeyPress, useMemoizedFn, useSafeState } from 'ahooks'
+import { useKeyPress, useMemoizedFn } from 'ahooks'
 import delay from 'delay'
-import { ChangeEventHandler, memo, useCallback, useMemo, useRef } from 'react'
+import { ChangeEventHandler, memo, useCallback, useMemo, useRef, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroller'
 import { BaseModal } from '../BaseModal'
 import { VideoCard } from '../VideoCard'
@@ -17,9 +17,9 @@ interface IProps {
 }
 
 export const ModalFeed = memo(function ModalFeed({ show, onHide }: IProps) {
-  const [items, setItems] = useSafeState<RecItemWithUniqId[]>([])
+  const [items, setItems] = useState<RecItemWithUniqId[]>([])
 
-  const [loading, setLoading] = useSafeState(false)
+  const [loading, setLoading] = useState(false)
 
   const scrollerRef = useRef<HTMLDivElement>(null)
   const refresh = useMemoizedFn(async () => {
@@ -55,7 +55,7 @@ export const ModalFeed = memo(function ModalFeed({ show, onHide }: IProps) {
   const narrowStyleObj = useMemo(() => ({ [styles.narrowMode]: useNarrowMode }), [useNarrowMode])
 
   // 快捷键
-  const [activeIndex, setActiveIndex] = useSafeState<number | null>(null)
+  const [activeIndex, setActiveIndex] = useState<number | null>(null)
 
   const activeIndexIsValid = useMemoizedFn(() => {
     if (activeIndex === null) {
