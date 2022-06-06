@@ -9,6 +9,7 @@ import { VideoCard } from '../VideoCard'
 import * as styles from './index.module.less'
 import { CollapseBtn, CollapseBtnRef } from '@components/CollapseBtn'
 import { useCallback, useRef, useState } from 'react'
+import { useMemo } from 'react'
 
 export function SectionRecommend() {
   const collapseBtnRef = useRef<CollapseBtnRef>(null)
@@ -31,6 +32,12 @@ export function SectionRecommend() {
 
   const [items, setItems] = useState<RecItemWithUniqId[]>([])
   const [loading, setLoading] = useState(false)
+
+  const skeletonPlaceholders = useMemo(() => {
+    return new Array(20).fill(0).map(() => {
+      return crypto.randomUUID()
+    })
+  }, [])
 
   const refresh = useMemoizedFn(async () => {
     setLoading(true)
@@ -114,13 +121,11 @@ export function SectionRecommend() {
         <ModalFeed show={showMore} onHide={onModalFeedHide} />
 
         <div className='video-card-body more-class1 more-class2'>
-          {items.map((item) => {
-            return <VideoCard key={item.uniqId} item={item} loading={loading} />
-          })}
-          {/* {mockRecommendData.data.map((item) => {
-            // @ts-ignore
-            return <VideoCard key={item.param} item={item} />
-          })} */}
+          {loading
+            ? skeletonPlaceholders.map((id) => <VideoCard key={id} />)
+            : items.map((item) => {
+                return <VideoCard key={item.uniqId} item={item} />
+              })}
         </div>
       </div>
     </section>
