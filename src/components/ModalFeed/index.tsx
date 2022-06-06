@@ -1,7 +1,7 @@
 import { CollapseBtn } from '@components/CollapseBtn'
-import { RecItem } from '@define'
+import { RecItem, RecItemWithUniqId } from '@define'
 import { cx } from '@libs'
-import { getRecommendTimes } from '@service'
+import { getRecommendTimes, uniqRecList } from '@service'
 import { updateConfig, useConfigStore } from '@settings'
 import { useKeyPress, useMemoizedFn, useSafeState } from 'ahooks'
 import delay from 'delay'
@@ -17,7 +17,7 @@ interface IProps {
 }
 
 export const ModalFeed = memo(function ModalFeed({ show, onHide }: IProps) {
-  const [items, setItems] = useSafeState<RecItem[]>([])
+  const [items, setItems] = useSafeState<RecItemWithUniqId[]>([])
 
   const [loading, setLoading] = useSafeState(false)
 
@@ -33,19 +33,16 @@ export const ModalFeed = memo(function ModalFeed({ show, onHide }: IProps) {
 
     try {
       setLoading(true)
+      clearActive() // before
       setItems(await getRecommendTimes(2))
-      clearActive()
+      clearActive() // and after
     } finally {
       setLoading(false)
     }
   })
 
   const fetchMore = useMemoizedFn(async (page: number) => {
-    let more = await getRecommendTimes(2)
-    const set = new Set(items.map((item) => item.param))
-    more = more.filter((item) => {
-      return !set.has(item.param)
-    })
+    const more = await getRecommendTimes(2)
     setItems((items) => [...items, ...more])
   })
 
@@ -167,7 +164,7 @@ export const ModalFeed = memo(function ModalFeed({ show, onHide }: IProps) {
               {items.map((item, index) => {
                 return (
                   <VideoCard
-                    key={item.param}
+                    key={item.uniqId}
                     item={item}
                     loading={loading}
                     className={cx(styles.card, { [styles.active]: index === activeIndex })}

@@ -1,6 +1,6 @@
 import cx from 'classnames'
 import { useMemoizedFn, useMount, useSafeState, useToggle } from 'ahooks'
-import { RecItem } from '@define'
+import { RecItem, RecItemWithUniqId } from '@define'
 import { useConfigStore } from '@settings'
 import { auth, deleteAccessToken } from '@utility/auth'
 import { getHomeRecommend } from '@service'
@@ -29,7 +29,7 @@ export function SectionRecommend() {
     window.open(explainUrl, '_blank')
   })
 
-  const [items, setItems] = useSafeState<RecItem[]>([])
+  const [items, setItems] = useSafeState<RecItemWithUniqId[]>([])
   const [loading, setLoading] = useSafeState(false)
 
   const refresh = useMemoizedFn(async () => {
@@ -115,7 +115,7 @@ export function SectionRecommend() {
 
         <div className='video-card-body more-class1 more-class2'>
           {items.map((item) => {
-            return <VideoCard key={item.param} item={item} loading={loading} />
+            return <VideoCard key={item.uniqId} item={item} loading={loading} />
           })}
           {/* {mockRecommendData.data.map((item) => {
             // @ts-ignore
