@@ -1,4 +1,4 @@
-import { MouseEvent, useEffect, useMemo, useRef, CSSProperties } from 'react'
+import { MouseEvent, useEffect, useMemo, useRef, CSSProperties, memo } from 'react'
 import { useHover, useMemoizedFn, useSafeState } from 'ahooks'
 import dayjs from 'dayjs'
 import cx from 'classnames'
@@ -38,7 +38,7 @@ interface IProps {
   loading?: boolean
 }
 
-export function VideoCard({ style, className, item, loading }: IProps) {
+export const VideoCard = memo(function ({ style, className, item, loading }: IProps) {
   // 预览 hover state
   const videoPreviewWrapperRef = useRef(null)
   const isHovering = useHover(videoPreviewWrapperRef)
@@ -375,4 +375,4 @@ export function VideoCard({ style, className, item, loading }: IProps) {
       )}
     </div>
   )
-}
+})

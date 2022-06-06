@@ -2,7 +2,8 @@
 
 ## v0.2.2 2022-06-06
 
-- 使用 `crypto.randomUUID` 解决因推荐重复 + 使用视频 id 作为列表 key 导致的 react duplicate key, 导致的卡片状态异常的情况
+- optimize: 使用 `crypto.randomUUID` 解决因推荐重复 + 使用视频 id 作为列表 key 导致的 react duplicate key, 导致的卡片状态异常的情况
+- optimize: 使用 `React.memo(VideoCard)`
 
 ## v0.2.1 2022-06-05
 
