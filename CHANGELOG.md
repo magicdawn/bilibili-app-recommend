@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.3.1 未发布
+## v0.3.1 2022-06-06
 
 - fix: prevent arrow up/down default action when scroller focused
 - optimize: 优化 VideoCard, 优化初始加载时 / 刷新时 线框图的显示. (之前首页第一次推荐接口成功之前显示为空白)
