@@ -1,6 +1,6 @@
 import { BaseModal } from '@components/BaseModal'
 import { RecItem } from '@define'
-import { toast } from '@utility/toast'
+import { toast, toastOperationFail, toastRequestFail } from '@utility/toast'
 import { useMemoizedFn } from 'ahooks'
 import { useMemo, useState } from 'react'
 import { createRoot, Root } from 'react-dom/client'
@@ -49,12 +49,11 @@ export function ModalDislike({ show, onHide, item }: IProps) {
     }
 
     if (err) {
-      toast('请求失败, 请重试 !!!')
       console.error(err.stack || err)
-      return
+      return toastRequestFail()
     }
 
-    toast(success ? '已标记不想看' : '操作失败, 请重试 !!!')
+    success ? toast('已标记不想看') : toastOperationFail()
     if (success) {
       dislikedIds.set(item.param, { id: reasonId, name: reasonName })
       onHide()

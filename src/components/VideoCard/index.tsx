@@ -14,7 +14,7 @@ import {
 } from './card.service'
 import * as styles from './index.module.less'
 import { dislikedIds, Reason, showModalDislike, useDislikedReason } from '@components/ModalDislike'
-import { toast } from '@utility/toast'
+import { toast, toastOperationFail, toastRequestFail } from '@utility/toast'
 import { useConfigStore } from '@settings'
 
 const currentYear = dayjs().format('YYYY')
@@ -99,10 +99,10 @@ const DislikedCard = memo(function DislikedCard({ dislikedReason, item }: Disabl
 
     if (err) {
       console.error(err.stack || err)
-      return toast('请求失败, 请重试 !!!')
+      return toastRequestFail()
     }
 
-    toast(success ? '已撤销' : '操作失败, 请重试 !!!')
+    success ? toast('已撤销') : toastOperationFail()
     if (success) {
       dislikedIds.delete(item.param)
     }
