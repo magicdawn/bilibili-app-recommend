@@ -2,9 +2,10 @@
 
 > 为 B 站首页添加像 App 一样的推荐
 
-## 源代码
+## 链接
 
-https://github.com/magicdawn/bilibili-app-recommend
+- 安装地址 https://greasyfork.org/zh-CN/scripts/443530-bilibili-app-recommend
+- 源代码 https://github.com/magicdawn/bilibili-app-recommend 如果对你有用,请来个 Star :)
 
 ## 声明
 
@@ -12,10 +13,6 @@ https://github.com/magicdawn/bilibili-app-recommend
 
 - https://github.com/indefined/UserScripts/tree/master/bilibiliHome
 - https://github.com/indefined/UserScripts/issues/76
-
-## 安装地址
-
-https://greasyfork.org/zh-CN/scripts/443530-bilibili-app-recommend
 
 ## 你可能不需要这个脚本 :)
 
