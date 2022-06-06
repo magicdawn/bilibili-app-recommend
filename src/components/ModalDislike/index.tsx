@@ -49,13 +49,12 @@ export function ModalDislike({ show, onHide, item }: IProps) {
     }
 
     if (err) {
-      toast('标记不喜欢: 请求失败, 请重试!')
+      toast('请求失败, 请重试 !!!')
       console.error(err.stack || err)
       return
     }
 
-    toast('标记不喜欢: ' + (success ? '成功' : '失败'))
-
+    toast(success ? '已标记不想看' : '操作失败, 请重试 !!!')
     if (success) {
       dislikedIds.set(item.param, { id: reasonId, name: reasonName })
       onHide()

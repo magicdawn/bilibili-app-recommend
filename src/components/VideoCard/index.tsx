@@ -99,10 +99,10 @@ const DislikedCard = memo(function DislikedCard({ dislikedReason, item }: Disabl
 
     if (err) {
       console.error(err.stack || err)
-      return toast('请求失败!')
+      return toast('请求失败, 请重试 !!!')
     }
 
-    toast(`撤销不喜欢: 操作${success ? '成功' : '失败'}!`)
+    toast(success ? '已撤销' : '操作失败, 请重试 !!!')
     if (success) {
       dislikedIds.delete(item.param)
     }
@@ -282,7 +282,7 @@ const VideoCardInner = memo(function VideoCardInner({ item }: VideoCardInnerProp
               </span>
             </div>
 
-            {/* 不喜欢 */}
+            {/*  我不想看 */}
             {authed && (
               <div
                 ref={btnDislikeRef}
@@ -297,7 +297,7 @@ const VideoCardInner = memo(function VideoCardInner({ item }: VideoCardInnerProp
                   className={styles.btnDislikeTip}
                   style={{ display: isBtnDislikeHovering ? 'block' : 'none' }}
                 >
-                  不喜欢
+                  我不想看
                 </span>
               </div>
             )}
