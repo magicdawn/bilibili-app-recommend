@@ -2,7 +2,7 @@ import { CollapseBtn } from '@components/CollapseBtn'
 import { RecItem, RecItemWithUniqId } from '@define'
 import { cx } from '@libs'
 import { getRecommendTimes, uniqRecList } from '@service'
-import { updateConfig, useConfigStore } from '@settings'
+import { updateConfig, useConfigStore, config } from '@settings'
 import { useKeyPress, useMemoizedFn, useSafeState } from 'ahooks'
 import delay from 'delay'
 import { ChangeEventHandler, memo, useCallback, useMemo, useRef } from 'react'
@@ -57,23 +57,57 @@ export const ModalFeed = memo(function ModalFeed({ show, onHide }: IProps) {
   // 快捷键
   const [activeIndex, setActiveIndex] = useSafeState<number | null>(null)
 
+  const activeIndexIsValid = useMemoizedFn(() => {
+    if (activeIndex === null) {
+      return false
+    }
+
+    const activeCard = document.querySelector<HTMLDivElement>(`${CARDS_SELECTOR}.${styles.active}`)
+    const scroller = document.querySelector<HTMLDivElement>(`.${styles.modalBody}`)
+    if (!activeCard || !scroller) return false
+    const scrollerRect = scroller.getBoundingClientRect()
+    const rect = activeCard.getBoundingClientRect()
+
+    // active 在 scroller 上方, 超过一屏
+    if (rect.top - scrollerRect.top < -(scrollerRect.height + rect.height)) {
+      return false
+    }
+    // active 在 scroller 下方, 超过一屏
+    if (rect.top - scrollerRect.top > scrollerRect.height * 2 + rect.height) {
+      return false
+    }
+
+    return true
+  })
+
   const addActiveIndex = useMemoizedFn((step: number) => {
     if (!show) return
 
-    let index = activeIndex === null ? getInitialIndex() : activeIndex + step
-    if (index < 0) index = 0
-    if (index > items.length - 1) index = items.length - 1
+    let index = activeIndexIsValid() ? activeIndex! + step : getInitialIndex()
+    // overflow
+    if (index < 0 || index > items.length - 1) {
+      return
+    }
 
     // console.log({ activeIndex, index, initialIndex: getInitialIndex() })
     setActiveIndex(index)
     makeVisible(index)
   })
 
+  // by 1
   const prev = useCallback(() => {
     addActiveIndex(-1)
   }, [])
   const next = useCallback(() => {
     addActiveIndex(1)
+  }, [])
+
+  // by row
+  const prevRow = useCallback(() => {
+    addActiveIndex(-getColCount())
+  }, [])
+  const nextRow = useCallback(() => {
+    addActiveIndex(getColCount())
   }, [])
 
   const open = useMemoizedFn(() => {
@@ -89,8 +123,8 @@ export const ModalFeed = memo(function ModalFeed({ show, onHide }: IProps) {
   useKeyPress('leftarrow', prev)
   useKeyPress('rightarrow', next)
   // by row
-  useKeyPress('uparrow', prev)
-  useKeyPress('downarrow', next)
+  useKeyPress('uparrow', prevRow)
+  useKeyPress('downarrow', nextRow)
 
   // actions
   useKeyPress('enter', open)
@@ -102,12 +136,6 @@ export const ModalFeed = memo(function ModalFeed({ show, onHide }: IProps) {
     refresh()
   })
   useKeyPress('r', onShortcutRefresh, { exactMatch: true }) // prevent refresh when cmd+R reload page
-
-  // TODO: vim mode
-  // h 向左移动一个字符。
-  // j 向下移动一个字符。
-  // k 向上移动一个字符。
-  // l 向右移动一个字符。
 
   return (
     <BaseModal
@@ -151,7 +179,7 @@ export const ModalFeed = memo(function ModalFeed({ show, onHide }: IProps) {
           loadMore={fetchMore}
           hasMore={true}
           useWindow={false}
-          threshold={320} // 差不多一行高度
+          threshold={360} // 差不多一行高度
           style={{ minHeight: '100%' }}
           loader={
             <div className={styles.loader} key={0}>
@@ -184,7 +212,7 @@ function getInitialIndex() {
   if (!scroller) return 0
   const scrollerRect = scroller.getBoundingClientRect()
 
-  const cards = [...document.querySelectorAll<HTMLDivElement>(`.${styles.card}`)]
+  const cards = getCards()
   for (let i = 0; i < cards.length; i++) {
     const card = cards[i]
     const rect = card.getBoundingClientRect()
@@ -198,9 +226,12 @@ function getInitialIndex() {
   return 0
 }
 
+const CARDS_SELECTOR = `#${styles.videoCardBody} .${styles.card}`
+function getCards() {
+  return [...document.querySelectorAll<HTMLDivElement>(CARDS_SELECTOR)]
+}
 function getCardAt(index: number) {
-  const cards = [...document.querySelectorAll<HTMLDivElement>(`.${styles.card}`)]
-  return cards[index]
+  return getCards()[index]
 }
 
 function makeVisible(index: number) {
@@ -216,4 +247,31 @@ function openVideoAt(index: number) {
   videoLink?.click()
 }
 
-// ;(window as any).getInitialIndex = getInitialIndex
+// use window.innerHeight as cache key
+const countCache = new Map<number, number>()
+
+function getColCount() {
+  if (config.useNarrowMode) return 2
+
+  let count = countCache.get(window.innerWidth)
+  if (count) {
+    return count
+  }
+
+  const firstCard = document.querySelector<HTMLDivElement>(CARDS_SELECTOR)
+  if (!firstCard) {
+    throw new Error('expect found first card')
+  }
+
+  count = 1
+  let top = firstCard.getBoundingClientRect().top
+
+  let next = firstCard.nextElementSibling
+  while (next && next.getBoundingClientRect().top === top) {
+    count++
+    next = next.nextElementSibling
+  }
+
+  countCache.set(window.innerWidth, count)
+  return count
+}
