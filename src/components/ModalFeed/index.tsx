@@ -20,11 +20,6 @@ interface IProps {
 export const ModalFeed = memo(function ModalFeed({ show, onHide }: IProps) {
   const [items, setItems] = useState<RecItemWithUniqId[]>([])
   const [loading, setLoading] = useState(false)
-  const skeletonPlaceholders = useMemo(() => {
-    return new Array(25).fill(0).map(() => {
-      return crypto.randomUUID()
-    })
-  }, [])
 
   const scrollerRef = useRef<HTMLDivElement>(null)
   const refresh = useMemoizedFn(async () => {
@@ -118,19 +113,16 @@ export const ModalFeed = memo(function ModalFeed({ show, onHide }: IProps) {
         >
           <div className={`video-card-list is-full ${styles.videoCardList}`}>
             <div id={styles.videoCardBody} className={cx('video-card-body', narrowStyleObj)}>
-              {loading
-                ? skeletonPlaceholders.map((id) => (
-                    <VideoCard key={id} className={cx(styles.card)} />
-                  ))
-                : items.map((item, index) => {
-                    return (
-                      <VideoCard
-                        key={item.uniqId}
-                        item={item}
-                        className={cx(styles.card, { [styles.active]: index === activeIndex })}
-                      />
-                    )
-                  })}
+              {items.map((item, index) => {
+                return (
+                  <VideoCard
+                    key={item.uniqId}
+                    loading={loading}
+                    item={item}
+                    className={cx(styles.card, { [styles.active]: index === activeIndex })}
+                  />
+                )
+              })}
             </div>
           </div>
         </InfiniteScroll>
