@@ -1,0 +1,168 @@
+import { RecItemWithUniqId } from '@define'
+import { config } from '@settings'
+import { useMemoizedFn, useKeyPress } from 'ahooks'
+import { useState, useCallback } from 'react'
+import * as styles from './index.module.less'
+
+interface IOptions {
+  show: boolean
+  refresh: () => void | Promise<void>
+  minIndex?: number
+  maxIndex: number
+}
+
+export function useShortcut({ show, refresh, minIndex = 0, maxIndex }: IOptions) {
+  // 快捷键
+  const [activeIndex, setActiveIndex] = useState<number | null>(null)
+
+  const activeIndexIsValid = useMemoizedFn(() => {
+    if (activeIndex === null) {
+      return false
+    }
+
+    const activeCard = document.querySelector<HTMLDivElement>(`${CARDS_SELECTOR}.${styles.active}`)
+    const scroller = document.querySelector<HTMLDivElement>(`.${styles.modalBody}`)
+    if (!activeCard || !scroller) return false
+    const scrollerRect = scroller.getBoundingClientRect()
+    const rect = activeCard.getBoundingClientRect()
+
+    // active 在 scroller 上方, 超过一屏
+    if (rect.top - scrollerRect.top < -(scrollerRect.height + rect.height)) {
+      return false
+    }
+    // active 在 scroller 下方, 超过一屏
+    if (rect.top - scrollerRect.top > scrollerRect.height * 2 + rect.height) {
+      return false
+    }
+
+    return true
+  })
+
+  const addActiveIndex = useMemoizedFn((step: number) => {
+    if (!show) return
+
+    let index = activeIndexIsValid() ? activeIndex! + step : getInitialIndex()
+    // overflow
+    if (index < minIndex || index > maxIndex) {
+      return
+    }
+
+    // console.log({ activeIndex, index, initialIndex: getInitialIndex() })
+    setActiveIndex(index)
+    makeVisible(index)
+  })
+
+  // by 1
+  const prev = useCallback(() => {
+    addActiveIndex(-1)
+  }, [])
+  const next = useCallback(() => {
+    addActiveIndex(1)
+  }, [])
+
+  // by row
+  const prevRow = useCallback(() => {
+    addActiveIndex(-getColCount())
+  }, [])
+  const nextRow = useCallback(() => {
+    addActiveIndex(getColCount())
+  }, [])
+
+  const open = useMemoizedFn(() => {
+    if (!activeIndex || !show) return
+    openVideoAt(activeIndex)
+  })
+  const clearActiveIndex = useMemoizedFn(() => {
+    if (!show) return
+    setActiveIndex(null)
+  })
+
+  // by 1
+  useKeyPress('leftarrow', prev)
+  useKeyPress('rightarrow', next)
+  // by row
+  useKeyPress('uparrow', prevRow)
+  useKeyPress('downarrow', nextRow)
+
+  // actions
+  useKeyPress('enter', open)
+  useKeyPress('esc', clearActiveIndex)
+
+  // refresh
+  const onShortcutRefresh = useMemoizedFn(() => {
+    if (!show) return
+    refresh()
+  })
+  useKeyPress('r', onShortcutRefresh, { exactMatch: true }) // prevent refresh when cmd+R reload page
+
+  return { activeIndex, clearActiveIndex }
+}
+
+function getInitialIndex() {
+  const scroller = document.querySelector<HTMLDivElement>(`.${styles.modalBody}`)
+  if (!scroller) return 0
+  const scrollerRect = scroller.getBoundingClientRect()
+
+  const cards = getCards()
+  for (let i = 0; i < cards.length; i++) {
+    const card = cards[i]
+    const rect = card.getBoundingClientRect()
+
+    // first fully visible card
+    if (rect.top >= scrollerRect.top) {
+      return i
+    }
+  }
+
+  return 0
+}
+
+const CARDS_SELECTOR = `#${styles.videoCardBody} .${styles.card}`
+function getCards() {
+  return [...document.querySelectorAll<HTMLDivElement>(CARDS_SELECTOR)]
+}
+function getCardAt(index: number) {
+  return getCards()[index]
+}
+
+function makeVisible(index: number) {
+  const card = getCardAt(index)
+  ;(card as any)?.scrollIntoViewIfNeeded?.(false)
+}
+
+function openVideoAt(index: number) {
+  const card = getCardAt(index)
+  if (!card) return
+
+  const videoLink = card.querySelector<HTMLAnchorElement>('.bili-video-card__wrap > a')
+  videoLink?.click()
+}
+
+// use window.innerHeight as cache key
+const countCache = new Map<number, number>()
+
+function getColCount() {
+  if (config.useNarrowMode) return 2
+
+  let count = countCache.get(window.innerWidth)
+  if (count) {
+    return count
+  }
+
+  const firstCard = document.querySelector<HTMLDivElement>(CARDS_SELECTOR)
+  if (!firstCard) {
+    throw new Error('expect found first card')
+  }
+
+  count = 1
+  let top = firstCard.getBoundingClientRect().top
+
+  let next = firstCard.nextElementSibling
+  while (next && next.getBoundingClientRect().top === top) {
+    count++
+    next = next.nextElementSibling
+  }
+
+  countCache.set(window.innerWidth, count)
+  return count
+}
