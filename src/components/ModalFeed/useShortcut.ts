@@ -1,7 +1,6 @@
-import { RecItemWithUniqId } from '@define'
 import { config } from '@settings'
-import { useMemoizedFn, useKeyPress } from 'ahooks'
-import { useState, useCallback } from 'react'
+import { useKeyPress, useMemoizedFn } from 'ahooks'
+import { useCallback, useState } from 'react'
 import * as styles from './index.module.less'
 
 interface IOptions {
@@ -38,8 +37,11 @@ export function useShortcut({ show, refresh, minIndex = 0, maxIndex }: IOptions)
     return true
   })
 
-  const addActiveIndex = useMemoizedFn((step: number) => {
+  const addActiveIndex = useMemoizedFn((step: number, e?: KeyboardEvent) => {
     if (!show) return
+
+    // 防止 scroller focus 的情况下, 因键盘产生滑动, 进而页面抖动
+    e?.preventDefault()
 
     let index = activeIndexIsValid() ? activeIndex! + step : getInitialIndex()
     // overflow
@@ -53,21 +55,26 @@ export function useShortcut({ show, refresh, minIndex = 0, maxIndex }: IOptions)
   })
 
   // by 1
-  const prev = useCallback(() => {
-    addActiveIndex(-1)
+  const prev = useCallback((e: KeyboardEvent) => {
+    addActiveIndex(-1, e)
   }, [])
-  const next = useCallback(() => {
-    addActiveIndex(1)
+  const next = useCallback((e: KeyboardEvent) => {
+    addActiveIndex(1, e)
   }, [])
+  useKeyPress('leftarrow', prev)
+  useKeyPress('rightarrow', next)
 
   // by row
-  const prevRow = useCallback(() => {
-    addActiveIndex(-getColCount())
+  const prevRow = useCallback((e: KeyboardEvent) => {
+    addActiveIndex(-getColCount(), e)
   }, [])
-  const nextRow = useCallback(() => {
-    addActiveIndex(getColCount())
+  const nextRow = useCallback((e: KeyboardEvent) => {
+    addActiveIndex(getColCount(), e)
   }, [])
+  useKeyPress('uparrow', prevRow)
+  useKeyPress('downarrow', nextRow)
 
+  // actions
   const open = useMemoizedFn(() => {
     if (!activeIndex || !show) return
     openVideoAt(activeIndex)
@@ -76,15 +83,6 @@ export function useShortcut({ show, refresh, minIndex = 0, maxIndex }: IOptions)
     if (!show) return
     setActiveIndex(null)
   })
-
-  // by 1
-  useKeyPress('leftarrow', prev)
-  useKeyPress('rightarrow', next)
-  // by row
-  useKeyPress('uparrow', prevRow)
-  useKeyPress('downarrow', nextRow)
-
-  // actions
   useKeyPress('enter', open)
   useKeyPress('esc', clearActiveIndex)
 
