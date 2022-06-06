@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.3.1 未发布
+
+- fix: prevent arrow up/down default action when scroller focused
+
 ## v0.3.0 2022-06-06
 
 - optimize: 方向键使用体验优化, 上下方向键行为实现为"真" 上下移动
