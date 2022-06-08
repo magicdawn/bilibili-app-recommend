@@ -32,6 +32,7 @@ B 站桌面端已上线, 支持 MacOS / Windows, 首页包含推荐模块
 ![image](https://user-images.githubusercontent.com/4067115/163818386-1550dcbd-69fb-4eec-9db2-fb4d538a7e20.png)
 
 - [x] 支持无限滚动, 加载更多
+- [x] 深色模式, 与 [Bilibili-Evolved](https://github.com/the1812/Bilibili-Evolved) 提供的深色模式兼容
 - [x] 支持窄屏模式, 全屏浏览在显示器下需要左右扭脖子(治好了你们多年的颈椎病), 如果没有颈椎病可以用窄屏模式(像手机一样的双列模式)
 - [x] 支持快捷键
 
