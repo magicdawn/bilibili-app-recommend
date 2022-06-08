@@ -1,6 +1,6 @@
 {
   "name": "bilibili-app-recommend",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "",
   "main": "src/main.js",
   "scripts": {
