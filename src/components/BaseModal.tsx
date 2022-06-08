@@ -1,7 +1,9 @@
 import { cx } from '@libs'
 import { useMemoizedFn } from 'ahooks'
+import { CSSProperties } from 'react'
 import { MouseEvent, ReactNode, useEffect, useId, useLayoutEffect, useMemo, useRef } from 'react'
 import { createPortal } from 'react-dom'
+import { proxy, useSnapshot } from 'valtio'
 
 interface IProps {
   show: boolean
@@ -29,6 +31,22 @@ const modalHideCheck = () => {
   }
 }
 
+// Bilibili-evoled toggle dark mode
+// document.querySelector('[data-name=darkMode] .main-content').click()
+const getIsDarkMode = () => document.body.classList.contains('dark')
+const isDarkModeState = proxy({ value: getIsDarkMode() })
+const useIsDarkMode = function () {
+  return useSnapshot(isDarkModeState)
+}
+
+const ob = new MutationObserver(function () {
+  isDarkModeState.value = getIsDarkMode()
+})
+ob.observe(document.body, {
+  attributes: true,
+  attributeFilter: ['class'],
+})
+
 export function BaseModal({
   show,
   onHide,
@@ -48,23 +66,26 @@ export function BaseModal({
 
   const wrapperRef = useRef<HTMLDivElement>(null)
 
-  // 打开时判断深色模式等
-  useEffect(() => {
-    const wrapper = wrapperRef.current
-    if (!wrapper) return
+  // 深色模式
+  const { value: isDarkMode } = useIsDarkMode()
 
-    const isDark = document.body.classList.contains('dark')
-    if (isDark) {
-      const bg = window.getComputedStyle(document.body)['background-color']
-      const c = window.getComputedStyle(document.body)['color']
-      wrapper.style.setProperty('--bg', bg)
-      wrapper.style.setProperty('--c', c)
-      wrapper.style.setProperty('background-color', 'var(--bg)')
-      wrapper.style.setProperty('color', 'var(--c)')
-    } else {
-      // 白色不用特殊处理
-    }
-  }, [show])
+  const { bg, c } = useMemo(() => {
+    const bg = window.getComputedStyle(document.body)['background-color']
+    const c = window.getComputedStyle(document.body)['color']
+    return { bg, c }
+  }, [isDarkMode])
+
+  const wrapperStyle: CSSProperties = useMemo(() => {
+    return isDarkMode
+      ? {
+          '--bg': bg,
+          '--c': c,
+          'backgroundColor': bg,
+          'color': c,
+        }
+      : // 白色不用特殊处理
+        {}
+  }, [bg, c, isDarkMode])
 
   const containerId = useId()
   const container = useMemo(() => {
@@ -91,7 +112,7 @@ export function BaseModal({
 
   return createPortal(
     <div className={cx(clsModalMask)} onClick={onMaskClick}>
-      <div className={cx(clsModal)} ref={wrapperRef}>
+      <div className={cx(clsModal)} style={wrapperStyle} ref={wrapperRef}>
         {children}
       </div>
     </div>,
