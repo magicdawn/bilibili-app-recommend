@@ -1,6 +1,7 @@
-import { config } from '@settings'
 import { useKeyPress, useMemoizedFn } from 'ahooks'
 import { useCallback, useState } from 'react'
+//
+import { config } from '@settings'
 import * as styles from './index.module.less'
 
 interface IOptions {

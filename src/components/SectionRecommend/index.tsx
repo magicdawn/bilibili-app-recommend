@@ -1,15 +1,14 @@
+import { useMemoizedFn, useRequest } from 'ahooks'
 import cx from 'classnames'
-import { useMemoizedFn, useMount, useToggle } from 'ahooks'
-import { RecItem, RecItemWithUniqId } from '@define'
+import { useCallback, useMemo, useRef, useState } from 'react'
+// local
+import { getHomeRecommend } from '@service'
 import { useConfigStore } from '@settings'
 import { auth, deleteAccessToken } from '@utility/auth'
-import { getHomeRecommend } from '@service'
+import { CollapseBtn, CollapseBtnRef } from '../CollapseBtn'
 import { ModalFeed } from '../ModalFeed'
 import { VideoCard } from '../VideoCard'
 import * as styles from './index.module.less'
-import { CollapseBtn, CollapseBtnRef } from '@components/CollapseBtn'
-import { useCallback, useRef, useState } from 'react'
-import { useMemo } from 'react'
 
 export function SectionRecommend() {
   const collapseBtnRef = useRef<CollapseBtnRef>(null)
@@ -30,28 +29,18 @@ export function SectionRecommend() {
     window.open(explainUrl, '_blank')
   })
 
-  const [items, setItems] = useState<RecItemWithUniqId[]>([])
-  const [loading, setLoading] = useState(false)
-
   const skeletonPlaceholders = useMemo(() => {
     return new Array(20).fill(0).map(() => {
       return crypto.randomUUID()
     })
   }, [])
 
-  const refresh = useMemoizedFn(async () => {
-    setLoading(true)
-    try {
-      const items = await getHomeRecommend()
-      setItems(items)
-    } finally {
-      setLoading(false)
-    }
-  })
+  const { data: items, loading, error, refresh } = useRequest(getHomeRecommend)
 
-  useMount(async () => {
-    refresh()
-  })
+  // log error
+  if (error) {
+    console.error(error.stack || error)
+  }
 
   // FIXME: restore when release
   // const [showMore, setShowMore] = useState(true)
@@ -121,9 +110,9 @@ export function SectionRecommend() {
         <ModalFeed show={showMore} onHide={onModalFeedHide} />
 
         <div className='video-card-body more-class1 more-class2'>
-          {loading
+          {loading || error
             ? skeletonPlaceholders.map((id) => <VideoCard key={id} />)
-            : items.map((item) => {
+            : items!.map((item) => {
                 return <VideoCard key={item.uniqId} item={item} />
               })}
         </div>
