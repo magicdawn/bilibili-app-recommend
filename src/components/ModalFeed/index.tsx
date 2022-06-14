@@ -12,6 +12,7 @@ import { CollapseBtn } from '../CollapseBtn'
 import { VideoCard } from '../VideoCard'
 import * as styles from './index.module.less'
 import { useShortcut } from './useShortcut'
+import { useUUID } from '@common/hooks/useUUID'
 
 interface IProps {
   show: boolean
@@ -48,10 +49,14 @@ export const ModalFeed = memo(function ModalFeed({ show, onHide }: IProps) {
   })
 
   // 窄屏模式
-  const { useNarrowMode } = useConfigStore()
+  const { useNarrowMode, initialShowMore } = useConfigStore()
   const updateUseNarrowMode: ChangeEventHandler<HTMLInputElement> = useCallback((e) => {
     const val = e.target.checked
     updateConfig({ useNarrowMode: val })
+  }, [])
+  const updateInitialShowMore: ChangeEventHandler<HTMLInputElement> = useCallback((e) => {
+    const val = e.target.checked
+    updateConfig({ initialShowMore: val })
   }, [])
   const narrowStyleObj = useMemo(() => ({ [styles.narrowMode]: useNarrowMode }), [useNarrowMode])
 
@@ -61,6 +66,9 @@ export const ModalFeed = memo(function ModalFeed({ show, onHide }: IProps) {
     refresh,
     maxIndex: items.length - 1,
   })
+
+  const checkboxNarrowModeId = useUUID()
+  const checkboxInitialShowMoreId = useUUID()
 
   return (
     <BaseModal
@@ -76,11 +84,21 @@ export const ModalFeed = memo(function ModalFeed({ show, onHide }: IProps) {
         <CollapseBtn>
           <input
             type='checkbox'
-            id={styles.useNarrowMode}
+            className={styles.checkbox}
+            id={checkboxInitialShowMoreId}
+            checked={initialShowMore}
+            onChange={updateInitialShowMore}
+          />
+          <label htmlFor={checkboxInitialShowMoreId}>自动查看更多</label>
+
+          <input
+            type='checkbox'
+            className={styles.checkbox}
+            id={checkboxNarrowModeId}
             checked={useNarrowMode}
             onChange={updateUseNarrowMode}
           />
-          <label htmlFor={styles.useNarrowMode}>启用窄屏模式</label>
+          <label htmlFor={checkboxNarrowModeId}>启用窄屏模式</label>
         </CollapseBtn>
 
         <button className={`primary-btn roll-btn ${styles.btnRefresh}`} onClick={refresh}>

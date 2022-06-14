@@ -34,9 +34,9 @@ const modalHideCheck = () => {
 // Bilibili-evoled toggle dark mode
 // document.querySelector('[data-name=darkMode] .main-content').click()
 const getIsDarkMode = () => document.body.classList.contains('dark')
-const isDarkModeState = proxy({ value: getIsDarkMode() })
+const isDarkModeState = proxy({ value: getIsDarkMode() }) // like vue3 ref()
 const useIsDarkMode = function () {
-  return useSnapshot(isDarkModeState)
+  return useSnapshot(isDarkModeState).value
 }
 
 const ob = new MutationObserver(function () {
@@ -67,7 +67,7 @@ export function BaseModal({
   const wrapperRef = useRef<HTMLDivElement>(null)
 
   // 深色模式
-  const { value: isDarkMode } = useIsDarkMode()
+  const isDarkMode = useIsDarkMode()
 
   const { bg, c } = useMemo(() => {
     const bg = window.getComputedStyle(document.body)['background-color']

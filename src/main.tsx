@@ -1,4 +1,7 @@
+// import order matters
 import 'virtual:vite-react-preamble'
+import './settings' // load config
+
 import sleep from 'delay'
 import $ from 'jquery'
 import { createRoot } from 'react-dom/client'

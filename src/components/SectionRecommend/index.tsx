@@ -3,7 +3,7 @@ import cx from 'classnames'
 import { useCallback, useMemo, useRef, useState } from 'react'
 // local
 import { getHomeRecommend } from '@service'
-import { useConfigStore } from '@settings'
+import { useConfigStore, config } from '@settings'
 import { auth, deleteAccessToken } from '@utility/auth'
 import { CollapseBtn, CollapseBtnRef } from '../CollapseBtn'
 import { ModalFeed } from '../ModalFeed'
@@ -42,10 +42,7 @@ export function SectionRecommend() {
     console.error(error.stack || error)
   }
 
-  // FIXME: restore when release
-  // const [showMore, setShowMore] = useState(true)
-  const [showMore, setShowMore] = useState(false)
-
+  const [showMore, setShowMore] = useState(() => config.initialShowMore)
   const onSeeMore = useCallback(() => {
     setShowMore(true)
   }, [])

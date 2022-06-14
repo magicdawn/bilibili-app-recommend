@@ -2,7 +2,12 @@ import { proxy, useSnapshot } from 'valtio'
 
 export const config = proxy({
   accessKey: '',
+
+  // 窄屏模式
   useNarrowMode: false,
+
+  // 自动查看更多
+  initialShowMore: false,
 })
 
 type Config = typeof config
