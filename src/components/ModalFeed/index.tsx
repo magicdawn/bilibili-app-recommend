@@ -13,6 +13,7 @@ import { VideoCard } from '../VideoCard'
 import * as styles from './index.module.less'
 import { useShortcut } from './useShortcut'
 import { useUUID } from '@common/hooks/useUUID'
+import { toast } from '@utility/toast'
 
 interface IProps {
   show: boolean
@@ -57,6 +58,9 @@ export const ModalFeed = memo(function ModalFeed({ show, onHide }: IProps) {
   const updateInitialShowMore: ChangeEventHandler<HTMLInputElement> = useCallback((e) => {
     const val = e.target.checked
     updateConfig({ initialShowMore: val })
+    if (val) {
+      toast('已开启自动查看更多: 下次打开首页时将直接展示本推荐弹框')
+    }
   }, [])
   const narrowStyleObj = useMemo(() => ({ [styles.narrowMode]: useNarrowMode }), [useNarrowMode])
 
