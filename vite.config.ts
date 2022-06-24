@@ -88,8 +88,10 @@ export default defineConfig({
         downloadURL:
           'https://greasyfork.org/scripts/443530-bilibili-app-recommend/code/bilibili-app-recommend.user.js',
         license: 'MIT',
-        match: ['*://www.bilibili.com/*'],
-        include: ['https://www.mcbbs.net/template/mcbbs/image/special_photo_bg.png?*'],
+        match: [
+          'https://www.mcbbs.net/template/mcbbs/image/special_photo_bg.png',
+          '*://www.bilibili.com/',
+        ],
         connect: [
           //
           'app.bilibili.com',
