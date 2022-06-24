@@ -56,8 +56,14 @@ export default defineConfig({
     },
   },
 
+  resolve: {
+    alias: {
+      lodash: 'lodash-es',
+    },
+  },
+
   build: {
-    minify: 'esbuild',
+    minify: process.argv.includes('--no-minify') ? false : 'esbuild',
   },
 
   plugins: [
@@ -67,7 +73,7 @@ export default defineConfig({
 
     // visualize
     process.env.NODE_ENV === 'production' &&
-      process.argv.some((arg) => arg === '--analyze') &&
+      process.argv.includes('--analyze') &&
       visualizer({
         open: true,
       }),
