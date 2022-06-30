@@ -36,3 +36,20 @@ gmrequest.interceptors.request.use(
     return Promise.reject(error)
   }
 )
+
+gmrequest.interceptors.response.use((res) => {
+  // content-type: "application/json; charset=utf-8"
+  // responseData 是 ArrayBuffer
+  if (res.config.responseType === 'json' && res.data && res.data instanceof ArrayBuffer) {
+    const decoder = new TextDecoder()
+    const u8arr = new Uint8Array(res.data)
+    const text = decoder.decode(u8arr)
+    res.data = text
+    try {
+      res.data = JSON.parse(text)
+    } catch (e) {
+      // noop
+    }
+  }
+  return res
+})

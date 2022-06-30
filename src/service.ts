@@ -3,6 +3,7 @@ import { gmrequest, HOST_APP } from './request'
 
 export async function getRecommend() {
   const res = await gmrequest.get(HOST_APP + '/x/feed/index', {
+    responseType: 'json',
     params: {
       build: '1',
       mobi_app: 'android',
