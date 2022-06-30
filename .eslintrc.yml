@@ -1,12 +1,14 @@
 # root
 root: true
-
-parserOptions:
-  sourceType: 'module'
-
-env:
-  browser: true
-  greasemonkey: true
+parser: '@typescript-eslint/parser'
+plugins: ['@typescript-eslint']
 
 extends:
-  - '@magicdawn'
+  - 'eslint:recommended'
+  - 'plugin:@typescript-eslint/recommended'
+  - 'prettier'
+
+rules:
+  '@typescript-eslint/ban-ts-comment': off
+  '@typescript-eslint/no-unused-vars': off
+  '@typescript-eslint/no-non-null-assertion': off
