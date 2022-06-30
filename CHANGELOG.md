@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.3.4 2022-06-30
+
+- 5442ddd - chore: fix eslint
+- c489c2e - fix: 修复有些情况无法获取 json 的情况
+- 1dca2b0 - chore: setup git hook & eslint
+- 2a223c9 - chore: fix lodash => lodash-es
+- 5e08c5d - feat: use @match only
+
 ## v0.3.3 2022-06-14
 
 - chore: 样式调整
