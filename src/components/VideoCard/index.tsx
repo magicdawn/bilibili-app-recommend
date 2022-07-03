@@ -46,7 +46,7 @@ export const VideoCard = memo(function VideoCard({
   // loading defaults to
   // true when item is not provided
   // false when item provided
-  loading = loading ?? !Boolean(item)
+  loading = loading ?? !item
 
   const skeleton = (
     <div className={cx('bili-video-card__skeleton', { hide: !loading })}>

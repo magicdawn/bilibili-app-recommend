@@ -61,8 +61,8 @@ export function PreviewImage({ className, item, pvideo }: IProps) {
   const newImgWidth = elementW * colCount
   const newImgHeight = elementH * rowCount
 
-  let startY = (indexRow - 1) * elementH
-  let startX = (indexCol - 1) * elementW
+  const startY = (indexRow - 1) * elementH
+  const startX = (indexCol - 1) * elementW
 
   // console.log({
   //   t,

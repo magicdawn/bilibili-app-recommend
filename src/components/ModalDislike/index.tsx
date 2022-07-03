@@ -117,7 +117,7 @@ export function ModalDislike({ show, onHide, item }: IProps) {
   )
 }
 
-let currentProps: IProps = {
+const currentProps: IProps = {
   show: false,
   onHide,
   item: null,

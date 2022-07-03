@@ -44,9 +44,14 @@ export function useShortcut({ show, refresh, minIndex = 0, maxIndex }: IOptions)
     // 防止 scroller focus 的情况下, 因键盘产生滑动, 进而页面抖动
     e?.preventDefault()
 
-    let index = activeIndexIsValid() ? activeIndex! + step : getInitialIndex()
+    const index = activeIndexIsValid() ? activeIndex! + step : getInitialIndex()
     // overflow
-    if (index < minIndex || index > maxIndex) {
+    if (index < minIndex) {
+      return
+    }
+    if (index > maxIndex) {
+      // 滚动到最后一项: 防止不能向下移动, 也不会加载更多, 卡死状态
+      makeVisible(maxIndex)
       return
     }
 
@@ -154,7 +159,7 @@ function getColCount() {
   }
 
   count = 1
-  let top = firstCard.getBoundingClientRect().top
+  const top = firstCard.getBoundingClientRect().top
 
   let next = firstCard.nextElementSibling
   while (next && next.getBoundingClientRect().top === top) {
