@@ -7,6 +7,25 @@
 - 安装地址 https://greasyfork.org/zh-CN/scripts/443530-bilibili-app-recommend
 - 源代码 https://github.com/magicdawn/bilibili-app-recommend 如果对你有用,请来个 Star :)
 
+## Monkey 插件
+
+TamperMonkey 的 @match 有些问题, 推荐使用 ViolentMonkey
+
+<details>
+  <summary>详情</summary>
+
+TamperMonkey `https://www.bilibili.com` 或者 `https://www.bilibili.com/?` 都可以匹配, 但是加上其他 query, 如 `https://www.bilibili.com/?abc` 不能匹配
+按照 chrome [match](https://developer.chrome.com/docs/extensions/mv2/match_patterns/) 规则, query 不参与匹配
+
+### 案例
+
+- https://greasyfork.org/zh-CN/scripts/443530-bilibili-app-recommend/discussions/140539
+- https://github.com/Tampermonkey/tampermonkey/issues/1531
+- https://github.com/Tampermonkey/tampermonkey/issues/1527
+- https://github.com/Tampermonkey/tampermonkey/issues/1522
+
+</details>
+
 ## 声明
 
 代码 fork 自此处

@@ -9,8 +9,8 @@
     "esModuleInterop": true,
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "target": "ES2020",
-    "module": "ES6",
+    "target": "ES2021",
+    "module": "ES2020",
     "strictNullChecks": true,
     "jsx": "react-jsx"
   },
