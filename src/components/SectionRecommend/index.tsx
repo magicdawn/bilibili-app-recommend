@@ -3,7 +3,7 @@ import cx from 'classnames'
 import { useCallback, useMemo, useRef, useState } from 'react'
 // local
 import { getHomeRecommend } from '@service'
-import { useConfigStore, config } from '@settings'
+import { useConfigSnapshot, config } from '@settings'
 import { auth, deleteAccessToken } from '@utility/auth'
 import { CollapseBtn, CollapseBtnRef } from '../CollapseBtn'
 import { ModalFeed } from '../ModalFeed'
@@ -12,7 +12,7 @@ import * as styles from './index.module.less'
 
 export function SectionRecommend() {
   const collapseBtnRef = useRef<CollapseBtnRef>(null)
-  const { accessKey } = useConfigStore()
+  const { accessKey } = useConfigSnapshot()
 
   const onGetAuth = useMemoizedFn(async (refresh = false) => {
     const accessKey = await auth()

@@ -6,7 +6,7 @@ import InfiniteScroll from 'react-infinite-scroller'
 // local
 import { RecItemWithUniqId } from '@define'
 import { getRecommendTimes } from '@service'
-import { updateConfig, useConfigStore } from '@settings'
+import { updateConfig, useConfigSnapshot } from '@settings'
 import { BaseModal } from '../BaseModal'
 import { CollapseBtn } from '../CollapseBtn'
 import { VideoCard } from '../VideoCard'
@@ -50,7 +50,7 @@ export const ModalFeed = memo(function ModalFeed({ show, onHide }: IProps) {
   })
 
   // 窄屏模式
-  const { useNarrowMode, initialShowMore } = useConfigStore()
+  const { useNarrowMode, initialShowMore } = useConfigSnapshot()
   const updateUseNarrowMode: ChangeEventHandler<HTMLInputElement> = useCallback((e) => {
     const val = e.target.checked
     updateConfig({ useNarrowMode: val })

@@ -1,6 +1,7 @@
-import { proxy, useSnapshot } from 'valtio'
+import { pick } from 'lodash'
+import { proxy, subscribe, useSnapshot } from 'valtio'
 
-export const config = proxy({
+const initialConfig = {
   accessKey: '',
 
   // 窄屏模式
@@ -8,11 +9,13 @@ export const config = proxy({
 
   // 自动查看更多
   initialShowMore: false,
-})
+}
+const allowedConfigKeys = Object.keys(initialConfig)
 
-type Config = typeof config
+type Config = typeof initialConfig
+export const config = proxy(initialConfig)
 
-export const useConfigStore = function () {
+export const useConfigSnapshot = function () {
   return useSnapshot(config)
 }
 
@@ -26,11 +29,16 @@ const key = `${nsp}.config`
 export function load() {
   const val = GM_getValue<Config>(key)
   if (val && typeof val === 'object') {
-    Object.assign(config, val)
+    Object.assign(config, pick(val, allowedConfigKeys))
   }
+
+  // persist when config change
+  subscribe(config, () => {
+    save()
+  })
 }
 export function save() {
-  GM_setValue(key, config)
+  GM_setValue(key, pick(config, allowedConfigKeys))
 }
 export function clean() {
   GM_deleteValue(key)
@@ -41,7 +49,6 @@ export function clean() {
  */
 export function updateConfig(c: Partial<Config>) {
   Object.assign(config, c)
-  save()
 }
 
 /**

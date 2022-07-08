@@ -1,6 +1,6 @@
 import request from 'axios'
 import $ from 'jquery'
-import { updateConfig } from '@settings'
+import { config } from '@settings'
 import { toast } from './toast'
 
 /**
@@ -41,9 +41,16 @@ async function getAuth() {
       resolve(key[1] as string)
     })
 
+    // 授权超时, 单位(s)
+    // 5s 有人反馈超时 https://greasyfork.org/zh-CN/scripts/443530-bilibili-app-recommend/discussions/140661
+    // 改成 10s
+    let authTimeout = Number(GM_getValue('authTimeout') || 10)
+    if (isNaN(authTimeout)) authTimeout = 10
+    console.log('[bilibili-app-recommend]: authTimeout = %s(s)', authTimeout)
+
     timeout = setTimeout(() => {
       resolve({ errmsg: '获取授权超时' })
-    }, 5000)
+    }, authTimeout * 1000)
   })
 
   const $iframe = $(`<iframe src='${confirm_uri}' style="display: none;" />`)
@@ -73,13 +80,13 @@ export async function auth() {
   }
 
   const accessKey = res
-  updateConfig({ accessKey })
+  config.accessKey = accessKey
   toast('获取成功')
 
   return accessKey
 }
 
 export function deleteAccessToken() {
-  updateConfig({ accessKey: '' })
+  config.accessKey = ''
   toast('已删除 access_key')
 }

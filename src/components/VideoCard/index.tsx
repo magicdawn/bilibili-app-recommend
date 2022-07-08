@@ -15,7 +15,7 @@ import {
 import * as styles from './index.module.less'
 import { dislikedIds, Reason, showModalDislike, useDislikedReason } from '@components/ModalDislike'
 import { toast, toastOperationFail, toastRequestFail } from '@utility/toast'
-import { useConfigStore } from '@settings'
+import { useConfigSnapshot } from '@settings'
 
 const currentYear = dayjs().format('YYYY')
 const getCdate = (ctime?: number) => {
@@ -139,7 +139,7 @@ const VideoCardInner = memo(function VideoCardInner({ item }: VideoCardInnerProp
   // watchLater added
   const [watchLaterAdded, setWatchLaterAdded] = useState(false)
 
-  const { accessKey } = useConfigStore()
+  const { accessKey } = useConfigSnapshot()
   const authed = Boolean(accessKey)
 
   const {
