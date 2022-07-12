@@ -14,8 +14,10 @@ export function SectionRecommend() {
   const collapseBtnRef = useRef<CollapseBtnRef>(null)
   const { accessKey } = useConfigSnapshot()
 
-  const onGetAuth = useMemoizedFn(async (refresh = false) => {
-    const accessKey = await auth()
+  const useAuthRequest = useRequest(auth, { manual: true })
+
+  const onGetAuth = useMemoizedFn(async () => {
+    const accessKey = await useAuthRequest.runAsync()
     if (accessKey) {
       collapseBtnRef.current?.set(false)
     }
@@ -70,7 +72,11 @@ export function SectionRecommend() {
                 <button className='primary-btn roll-btn' onClick={onExplainAccessKey}>
                   <span>access_key 说明</span>
                 </button>
-                <button className='primary-btn roll-btn' onClick={onGetAuth}>
+                <button
+                  className='primary-btn roll-btn'
+                  onClick={onGetAuth}
+                  disabled={useAuthRequest.loading}
+                >
                   <span>获取 access_key</span>
                 </button>
               </>
@@ -79,7 +85,11 @@ export function SectionRecommend() {
                 <button className='primary-btn roll-btn' onClick={onExplainAccessKey}>
                   <span>access_key 说明</span>
                 </button>
-                <button className='primary-btn roll-btn' onClick={() => onGetAuth(true)}>
+                <button
+                  className='primary-btn roll-btn'
+                  onClick={() => onGetAuth()}
+                  disabled={useAuthRequest.loading}
+                >
                   <span>重新获取 access_key</span>
                 </button>
                 <button className='primary-btn roll-btn' onClick={onDeleteAccessToken}>
