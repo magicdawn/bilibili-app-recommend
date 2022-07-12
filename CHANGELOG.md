@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.3.7 2022-07-12
+
+- chore: 防止 onGetAuth 多次触发
+
 ## v0.3.6 2022-07-08
 
 - fix: access_key timeout 默认 5s -> 10s, 并可以通过脚本设置 `authTimeout` 项调整, 单位秒, 可设置成 20 即为 20 秒
