@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.4.1 2022-07-28
+
+- chore: back to @match, TamperMonkey @match 需要加 `?*` 即可
+
 ## v0.4.0 2022-07-28
 
 - chore: add @include block for TamperMonkey bad support for @match
