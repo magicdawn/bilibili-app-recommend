@@ -1,10 +1,9 @@
+import { getHomeRecommend } from '$service'
+import { config, useConfigSnapshot } from '$settings'
+import { auth, deleteAccessToken } from '$utility/auth'
 import { useMemoizedFn, useRequest } from 'ahooks'
 import cx from 'classnames'
 import { useCallback, useMemo, useRef, useState } from 'react'
-// local
-import { getHomeRecommend } from '$service'
-import { useConfigSnapshot, config } from '$settings'
-import { auth, deleteAccessToken } from '$utility/auth'
 import { CollapseBtn, CollapseBtnRef } from '../CollapseBtn'
 import { ModalFeed } from '../ModalFeed'
 import { VideoCard } from '../VideoCard'
