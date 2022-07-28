@@ -35,3 +35,22 @@ credentials: 'include',
 
 拿到 confirm_uri, 创建一个 iframe, iframe 会向当前窗口 postMessage
 从 message 中拿到 access token, 并存储
+
+## match & include
+
+```txt
+@match '*://www.bilibili.com/',
+@match 'https://www.mcbbs.net/template/mcbbs/image/special_photo_bg.png',
+```
+
+这样写
+
+- ViolentMonkey 都正常
+- TamperMonkey
+  - 不支持 www.bilibili.com/?abc
+  - 不支持 后面的 special_photo_bg.png
+
+可以看出 TamperMonkey 对 @match 支持很差, 而且
+
+- ViolentMonkey 如果有 @match 会忽略 @include
+- TamperMonkey 都会采用
