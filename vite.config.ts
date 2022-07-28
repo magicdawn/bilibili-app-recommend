@@ -96,13 +96,8 @@ export default defineConfig({
         license: 'MIT',
         match: [
           '*://www.bilibili.com/',
+          '*://www.bilibili.com/?*',
           'https://www.mcbbs.net/template/mcbbs/image/special_photo_bg.png',
-        ],
-        include: [
-          'https://www.bilibili.com',
-          'https://www.bilibili.com/',
-          'https://www.bilibili.com?*',
-          'https://www.bilibili.com/?*',
           'https://www.mcbbs.net/template/mcbbs/image/special_photo_bg.png?*',
         ],
         connect: [
