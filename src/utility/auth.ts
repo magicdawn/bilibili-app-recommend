@@ -1,6 +1,6 @@
 import request from 'axios'
 import $ from 'jquery'
-import { config } from '@settings'
+import { config } from '$settings'
 import { toast } from './toast'
 
 /**

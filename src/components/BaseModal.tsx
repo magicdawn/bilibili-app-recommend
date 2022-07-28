@@ -1,4 +1,4 @@
-import { cx } from '@libs'
+import { cx } from '$libs'
 import { useMemoizedFn } from 'ahooks'
 import { CSSProperties } from 'react'
 import { MouseEvent, ReactNode, useEffect, useId, useLayoutEffect, useMemo, useRef } from 'react'

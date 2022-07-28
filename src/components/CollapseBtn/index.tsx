@@ -1,4 +1,4 @@
-import { cx } from '@libs'
+import { cx } from '$libs'
 import { useToggle } from 'ahooks'
 import type { Actions } from 'ahooks/lib/useToggle'
 import { forwardRef, ReactNode, useImperativeHandle } from 'react'

@@ -2,8 +2,8 @@ import { MouseEvent, useEffect, useMemo, useRef, CSSProperties, memo, useState }
 import { useHover, useMemoizedFn } from 'ahooks'
 import dayjs from 'dayjs'
 import cx from 'classnames'
-import { RecItem } from '@define/recommend'
-import { getCountStr, getDurationStr } from '@utility/video'
+import { RecItem } from '$define/recommend'
+import { getCountStr, getDurationStr } from '$utility/video'
 import { PreviewImage } from './PreviewImage'
 import {
   cancelDislike,
@@ -13,9 +13,9 @@ import {
   watchLaterDel,
 } from './card.service'
 import * as styles from './index.module.less'
-import { dislikedIds, Reason, showModalDislike, useDislikedReason } from '@components/ModalDislike'
-import { toast, toastOperationFail, toastRequestFail } from '@utility/toast'
-import { useConfigSnapshot } from '@settings'
+import { dislikedIds, Reason, showModalDislike, useDislikedReason } from '$components/ModalDislike'
+import { toast, toastOperationFail, toastRequestFail } from '$utility/toast'
+import { useConfigSnapshot } from '$settings'
 
 const currentYear = dayjs().format('YYYY')
 const getCdate = (ctime?: number) => {

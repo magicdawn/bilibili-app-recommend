@@ -1,19 +1,19 @@
-import { cx } from '@libs'
+import { cx } from '$libs'
 import { useMemoizedFn } from 'ahooks'
 import delay from 'delay'
 import { ChangeEventHandler, memo, useCallback, useMemo, useRef, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroller'
 // local
-import { RecItemWithUniqId } from '@define'
-import { getRecommendTimes } from '@service'
-import { updateConfig, useConfigSnapshot } from '@settings'
+import { RecItemWithUniqId } from '$define'
+import { getRecommendTimes } from '$service'
+import { updateConfig, useConfigSnapshot } from '$settings'
 import { BaseModal } from '../BaseModal'
 import { CollapseBtn } from '../CollapseBtn'
 import { VideoCard } from '../VideoCard'
 import * as styles from './index.module.less'
 import { useShortcut } from './useShortcut'
-import { useUUID } from '@common/hooks/useUUID'
-import { toast } from '@utility/toast'
+import { useUUID } from '$common/hooks/useUUID'
+import { toast } from '$utility/toast'
 
 interface IProps {
   show: boolean
