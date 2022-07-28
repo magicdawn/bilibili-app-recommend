@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.4.0 2022-07-28
+
+- chore: add @include block for TamperMonkey bad support for @match
+
 ## v0.3.7 2022-07-12
 
 - chore: 防止 onGetAuth 多次触发
