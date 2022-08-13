@@ -121,6 +121,7 @@ export default defineConfig({
         open: false,
         // prefix: (name) => name + ':dev', // ViolentMonkey 设置成按字典序排序, dev & prod script 接近
         prefix: (name) => name, // 一样的, 避免切换
+        mountGmApi: true,
       },
 
       build: {
