@@ -383,7 +383,7 @@ const VideoCardInner = memo(function VideoCardInner({ item }: VideoCardInnerProp
               </a>
             )}
 
-            {goto === 'bangumi' && (
+            {isBangumi && (
               <a className='bili-video-card__info--owner' href={href} target='_blank'>
                 <span className={styles.badge}>{badge}</span>
                 <span className={styles.bangumiDesc}>{desc}</span>

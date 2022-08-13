@@ -4,8 +4,5 @@
 import cx from 'classnames'
 export { cx }
 
-import $ from 'jquery'
-export { $ }
-
 import axios from 'axios'
 export { axios }

@@ -126,7 +126,6 @@ export default defineConfig({
 
       build: {
         externalGlobals: {
-          'jquery': ['$', (version) => `${NPM_CDN_HOST}jquery@${version}/dist/jquery.min.js`],
           'axios': ['axios', (version) => `${NPM_CDN_HOST}axios@${version}/dist/axios.min.js`],
           'axios-userscript-adapter': [
             'axiosGmxhrAdapter',

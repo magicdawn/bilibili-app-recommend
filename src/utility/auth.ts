@@ -1,5 +1,4 @@
 import request from 'axios'
-import $ from 'jquery'
 import { config } from '$settings'
 import { toast } from './toast'
 
@@ -53,11 +52,14 @@ async function getAuth() {
     }, authTimeout * 1000)
   })
 
-  const $iframe = $(`<iframe src='${confirm_uri}' style="display: none;" />`)
-  $iframe.appendTo(document.body)
+  const iframe = document.createElement('iframe')
+  iframe.src = confirm_uri
+  iframe.style.display = 'none'
+  document.body.appendChild(iframe)
 
   function cleanup() {
-    $iframe.remove()
+    iframe.remove()
+
     if (timeout) {
       clearTimeout(timeout)
       timeout = null

@@ -3,7 +3,6 @@ import 'virtual:vite-react-preamble'
 import './settings' // load config
 
 import sleep from 'delay'
-import $ from 'jquery'
 import { createRoot } from 'react-dom/client'
 import { SectionRecommend } from './components/SectionRecommend'
 
@@ -25,7 +24,7 @@ async function initHomepage() {
   const start = Date.now()
   const timeout = 10 * 1000 // 10s
 
-  const has = () => $('.bili-layout > section.bili-grid').length > 0
+  const has = () => document.querySelectorAll('.bili-layout > section.bili-grid').length > 0
   while (!has() && Date.now() - start < timeout) {
     await sleep(100)
   }
@@ -34,11 +33,10 @@ async function initHomepage() {
     return
   }
 
-  const firstSection = $('.bili-layout > section.bili-grid').eq(0)
-  const recommendSection = $('<section></section>')
-  recommendSection.insertAfter(firstSection)
-  const container = recommendSection[0]
+  const firstSection = document.querySelector('.bili-layout > section.bili-grid')
+  const recommendContainer = document.createElement('section')
+  firstSection?.insertAdjacentElement('afterend', recommendContainer)
 
-  const root = createRoot(container)
+  const root = createRoot(recommendContainer)
   root.render(<SectionRecommend />)
 }
