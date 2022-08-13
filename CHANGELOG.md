@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.4.2 2022-08-13
+
+- 去除番剧时长 `00:00` 显示
+- 升级依赖, 升级 vite / vite-plugin-monkey
+
 ## v0.4.1 2022-07-28
 
 - chore: back to @match, TamperMonkey @match 需要加 `?*` 即可
