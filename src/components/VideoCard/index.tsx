@@ -231,7 +231,10 @@ const VideoCardInner = memo(function VideoCardInner({ item }: VideoCardInnerProp
     showModalDislike(item)
   })
 
-  const href = item.goto === 'av' ? `/video/av${id}` : item.uri
+  const isBangumi = item.goto === 'bangumi'
+  const isNormalVideo = item.goto === 'av'
+
+  const href = isNormalVideo ? `/video/av${id}` : item.uri
   const durationStr = useMemo(() => getDurationStr(duration), [duration])
   const playStr = useMemo(() => getCountStr(play), [play])
   const likeStr = useMemo(() => getCountStr(like), [like])
@@ -335,7 +338,10 @@ const VideoCardInner = memo(function VideoCardInner({ item }: VideoCardInnerProp
               </div>
 
               {/* 时长 */}
-              <span className='bili-video-card__stats__duration'>{durationStr}</span>
+              {/* 番剧没有 duration 字段 */}
+              <span className='bili-video-card__stats__duration'>
+                {isNormalVideo && durationStr}
+              </span>
             </div>
           </div>
         </div>
