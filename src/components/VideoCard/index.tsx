@@ -3,7 +3,7 @@ import { RecItem } from '$define/recommend'
 import { useConfigSnapshot } from '$settings'
 import { toast, toastOperationFail, toastRequestFail } from '$utility/toast'
 import { getCountStr, getDurationStr } from '$utility/video'
-import { useHover, useMemoizedFn } from 'ahooks'
+import { useEventListener, useHover, useMemoizedFn } from 'ahooks'
 import cx from 'classnames'
 import dayjs from 'dayjs'
 import { CSSProperties, memo, MouseEvent, useEffect, useMemo, useRef, useState } from 'react'
@@ -129,7 +129,28 @@ type VideoCardInnerProps = {
 }
 const VideoCardInner = memo(function VideoCardInner({ item }: VideoCardInnerProps) {
   // 预览 hover state
-  const videoPreviewWrapperRef = useRef(null)
+  const videoPreviewWrapperRef = useRef<HTMLDivElement>(null)
+  const [enterMousePosition, setEnterMousePosition] = useState<{
+    width: number
+    height: number
+    relativeX: number
+  }>(() => ({ width: 0, height: 0, relativeX: 0 }))
+  useEventListener(
+    'mouseenter',
+    (e: MouseEvent) => {
+      const rect = videoPreviewWrapperRef.current?.getBoundingClientRect()
+      if (!rect) return
+
+      const { width, height, x } = rect
+      setEnterMousePosition({
+        width,
+        height,
+        // https://github.com/alibaba/hooks/blob/v3.7.0/packages/hooks/src/useMouse/index.ts#L62
+        relativeX: e.pageX - window.pageXOffset - x,
+      })
+    },
+    { target: videoPreviewWrapperRef }
+  )
   const isHovering = useHover(videoPreviewWrapperRef)
 
   // 稍后再看 hover state
@@ -259,7 +280,13 @@ const VideoCardInner = memo(function VideoCardInner({ item }: VideoCardInnerProp
             {/* <div className='v-inline-player'></div> */}
 
             {/* preview */}
-            {isHovering && <PreviewImage item={item} pvideo={videoData?.pvideoData} />}
+            {isHovering && (
+              <PreviewImage
+                item={item}
+                pvideo={videoData?.pvideoData}
+                enterCursorState={enterMousePosition}
+              />
+            )}
 
             {/* 稍后再看 */}
             <div

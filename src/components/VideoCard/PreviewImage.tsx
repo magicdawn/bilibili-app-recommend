@@ -1,24 +1,39 @@
 import { PvideoData, RecItem } from '$define'
 import { cx } from '$libs'
 import { useMouse } from 'ahooks'
-import { CursorState } from 'ahooks/lib/useMouse'
 import { useMemo, useRef } from 'react'
-import { SetRequired } from 'type-fest'
 import * as styles from './index.module.less'
 
 interface IProps {
   className?: string
   item: RecItem
   pvideo?: PvideoData
+
+  // hover => listen mousemove of PreviewImage div ref
+  // 如果没有移动鼠标, 后面 mousemove 无法触发, 这个时候需要从前面 mouseenter 中读取 enterCursorState
+  enterCursorState: { width: number; height: number; relativeX: number }
 }
 
-export function PreviewImage({ className, item, pvideo }: IProps) {
+function fallbackWhenNan(val: number, fallback: number) {
+  return isNaN(val) ? fallback : val
+}
+
+export function PreviewImage({ className, item, pvideo, enterCursorState }: IProps) {
   const ref = useRef<HTMLDivElement>(null)
   const cursorState = useMouse(ref)
 
+  const innerProps = {
+    item,
+    pvideo: pvideo!,
+    cursorState,
+    elWidth: fallbackWhenNan(cursorState.elementW, enterCursorState.width),
+    elHeight: fallbackWhenNan(cursorState.elementH, enterCursorState.height),
+    relativeX: fallbackWhenNan(cursorState.elementX, enterCursorState.relativeX),
+  }
+
   return (
     <div ref={ref} className={cx(styles.previewCardWrapper, className)}>
-      {pvideo ? <PreviewImageInner {...{ item, cursorState, pvideo: pvideo! }} /> : false}
+      {pvideo ? <PreviewImageInner {...innerProps} /> : false}
     </div>
   )
 }
@@ -26,17 +41,20 @@ export function PreviewImage({ className, item, pvideo }: IProps) {
 function PreviewImageInner({
   item,
   pvideo,
-  cursorState,
+  elWidth,
+  elHeight,
+  relativeX,
 }: {
   item: RecItem
   pvideo: PvideoData
-  cursorState: CursorState
+  elWidth: number
+  elHeight: number
+  relativeX: number
 }) {
-  const { elementW, elementH, elementX } = cursorState
   let progress = 0
   let t = 0
-  if (elementW && elementX && !isNaN(elementX) && !isNaN(elementW)) {
-    progress = elementX / elementW
+  if (elWidth && relativeX && !isNaN(relativeX) && !isNaN(elWidth)) {
+    progress = relativeX / elWidth
     if (progress < 0) progress = 0
     if (progress > 1) progress = 1
     t = Math.floor((item.duration || 0) * progress)
@@ -78,11 +96,11 @@ function PreviewImageInner({
   // 缩放到 elementW * elementH, 放入 background 中
   // see https://stackoverflow.com/questions/50301190/how-to-scale-css-sprites-when-used-as-background-image
 
-  const newImgWidth = elementW * colCount
-  const newImgHeight = elementH * rowCount
+  const newImgWidth = elWidth * colCount
+  const newImgHeight = elHeight * rowCount
 
-  const startY = (indexRow - 1) * elementH
-  const startX = (indexCol - 1) * elementW
+  const startY = (indexRow - 1) * elHeight
+  const startX = (indexCol - 1) * elWidth
 
   // console.log({
   //   t,
@@ -111,7 +129,7 @@ function PreviewImageInner({
 }
 
 function SimplePregressBar({ progress }: { progress: number }) {
-  // console.log('[SimplePregressBar] progress=%s', progress)
+  console.log('[SimplePregressBar] progress=%s', progress)
 
   return (
     <div
