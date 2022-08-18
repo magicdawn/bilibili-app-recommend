@@ -361,7 +361,7 @@ const VideoCardInner = memo(function VideoCardInner({ item }: VideoCardInnerProp
             </h3>
           </a>
           <p className='bili-video-card__info--bottom'>
-            {goto === 'av' && (
+            {isNormalVideo && (
               <a
                 className='bili-video-card__info--owner'
                 href={`//space.bilibili.com/${mid}`}
