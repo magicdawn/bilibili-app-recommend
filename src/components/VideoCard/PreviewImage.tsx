@@ -1,17 +1,16 @@
-import { useMouse } from 'ahooks'
-import { useMemo, useRef } from 'react'
-import { PvideoData, RecItem } from '../../define'
+import { PvideoData, RecItem } from '$define'
+import { type CursorState } from 'ahooks/lib/useMouse'
+import { useMemo } from 'react'
 
 interface IProps {
   className?: string
   item: RecItem
   pvideo: PvideoData
+  cursorState: CursorState
 }
 
-export function PreviewImage({ className, item, pvideo }: IProps) {
-  const ref = useRef(null)
-  const mouse = useMouse(ref.current)
-  const { elementW, elementH, elementX } = mouse
+export function PreviewImage({ className, item, pvideo, cursorState }: IProps) {
+  const { elementW, elementH, elementX } = cursorState
 
   let progress = 0
   let t = 0
@@ -77,7 +76,6 @@ export function PreviewImage({ className, item, pvideo }: IProps) {
 
   return (
     <div
-      ref={ref}
       className={className}
       style={{
         backgroundColor: 'black', // 防止加载过程中闪屏

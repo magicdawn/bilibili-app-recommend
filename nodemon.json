@@ -1,6 +1,0 @@
-{
-  "verbose": true,
-  "watch": ["nodemon.json"],
-  "ext": "js,ts,json",
-  "exec": "pnpm run build"
-}

@@ -1,5 +1,5 @@
 import { MouseEvent, useEffect, useMemo, useRef, CSSProperties, memo, useState } from 'react'
-import { useHover, useMemoizedFn } from 'ahooks'
+import { useHover, useMemoizedFn, useMouse } from 'ahooks'
 import dayjs from 'dayjs'
 import cx from 'classnames'
 import { RecItem } from '$define/recommend'
@@ -139,6 +139,8 @@ const VideoCardInner = memo(function VideoCardInner({ item }: VideoCardInnerProp
   // watchLater added
   const [watchLaterAdded, setWatchLaterAdded] = useState(false)
 
+  const cursorState = useMouse(videoPreviewWrapperRef)
+
   const { accessKey } = useConfigSnapshot()
   const authed = Boolean(accessKey)
 
@@ -264,6 +266,7 @@ const VideoCardInner = memo(function VideoCardInner({ item }: VideoCardInnerProp
                 className={styles.previewCardWrapper}
                 item={item}
                 pvideo={videoData?.pvideoData}
+                cursorState={cursorState}
               />
             )}
 
