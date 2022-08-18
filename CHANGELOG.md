@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.4.3 2022-08-18
+
+- 修复移动到视频卡片, 停留, 视频预览显示不正确的问题. ([没有进度条, 预览显示不正确](https://github.com/magicdawn/bilibili-app-recommend/issues/5#issuecomment-1216453427))
+
 ## v0.4.2 2022-08-13
 
 - 去除番剧时长 `00:00` 显示
