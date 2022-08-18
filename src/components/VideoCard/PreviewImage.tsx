@@ -129,7 +129,7 @@ function PreviewImageInner({
 }
 
 function SimplePregressBar({ progress }: { progress: number }) {
-  console.log('[SimplePregressBar] progress=%s', progress)
+  // console.log('[SimplePregressBar] progress=%s', progress)
 
   return (
     <div
