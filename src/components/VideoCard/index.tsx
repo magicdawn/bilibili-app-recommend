@@ -1,10 +1,12 @@
-import { MouseEvent, useEffect, useMemo, useRef, CSSProperties, memo, useState } from 'react'
-import { useHover, useMemoizedFn, useMouse } from 'ahooks'
-import dayjs from 'dayjs'
-import cx from 'classnames'
+import { dislikedIds, Reason, showModalDislike, useDislikedReason } from '$components/ModalDislike'
 import { RecItem } from '$define/recommend'
+import { useConfigSnapshot } from '$settings'
+import { toast, toastOperationFail, toastRequestFail } from '$utility/toast'
 import { getCountStr, getDurationStr } from '$utility/video'
-import { PreviewImage } from './PreviewImage'
+import { useHover, useMemoizedFn } from 'ahooks'
+import cx from 'classnames'
+import dayjs from 'dayjs'
+import { CSSProperties, memo, MouseEvent, useEffect, useMemo, useRef, useState } from 'react'
 import {
   cancelDislike,
   getVideoData,
@@ -13,9 +15,7 @@ import {
   watchLaterDel,
 } from './card.service'
 import * as styles from './index.module.less'
-import { dislikedIds, Reason, showModalDislike, useDislikedReason } from '$components/ModalDislike'
-import { toast, toastOperationFail, toastRequestFail } from '$utility/toast'
-import { useConfigSnapshot } from '$settings'
+import { PreviewImage } from './PreviewImage'
 
 const currentYear = dayjs().format('YYYY')
 const getCdate = (ctime?: number) => {
@@ -139,8 +139,6 @@ const VideoCardInner = memo(function VideoCardInner({ item }: VideoCardInnerProp
   // watchLater added
   const [watchLaterAdded, setWatchLaterAdded] = useState(false)
 
-  const cursorState = useMouse(videoPreviewWrapperRef)
-
   const { accessKey } = useConfigSnapshot()
   const authed = Boolean(accessKey)
 
@@ -261,14 +259,7 @@ const VideoCardInner = memo(function VideoCardInner({ item }: VideoCardInnerProp
             {/* <div className='v-inline-player'></div> */}
 
             {/* preview */}
-            {isHovering && videoData?.pvideoData && (
-              <PreviewImage
-                className={styles.previewCardWrapper}
-                item={item}
-                pvideo={videoData?.pvideoData}
-                cursorState={cursorState}
-              />
-            )}
+            {isHovering && <PreviewImage item={item} pvideo={videoData?.pvideoData} />}
 
             {/* 稍后再看 */}
             <div

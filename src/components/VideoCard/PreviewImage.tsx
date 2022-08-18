@@ -1,17 +1,38 @@
 import { PvideoData, RecItem } from '$define'
-import { type CursorState } from 'ahooks/lib/useMouse'
-import { useMemo } from 'react'
+import { cx } from '$libs'
+import { useMouse } from 'ahooks'
+import { CursorState } from 'ahooks/lib/useMouse'
+import { useMemo, useRef } from 'react'
+import { SetRequired } from 'type-fest'
+import * as styles from './index.module.less'
 
 interface IProps {
   className?: string
   item: RecItem
-  pvideo: PvideoData
-  cursorState: CursorState
+  pvideo?: PvideoData
 }
 
-export function PreviewImage({ className, item, pvideo, cursorState }: IProps) {
-  const { elementW, elementH, elementX } = cursorState
+export function PreviewImage({ className, item, pvideo }: IProps) {
+  const ref = useRef<HTMLDivElement>(null)
+  const cursorState = useMouse(ref)
 
+  return (
+    <div ref={ref} className={cx(styles.previewCardWrapper, className)}>
+      {pvideo ? <PreviewImageInner {...{ item, cursorState, pvideo: pvideo! }} /> : false}
+    </div>
+  )
+}
+
+function PreviewImageInner({
+  item,
+  pvideo,
+  cursorState,
+}: {
+  item: RecItem
+  pvideo: PvideoData
+  cursorState: CursorState
+}) {
+  const { elementW, elementH, elementX } = cursorState
   let progress = 0
   let t = 0
   if (elementW && elementX && !isNaN(elementX) && !isNaN(elementW)) {
@@ -76,7 +97,7 @@ export function PreviewImage({ className, item, pvideo, cursorState }: IProps) {
 
   return (
     <div
-      className={className}
+      className={styles.previewCardInner}
       style={{
         backgroundColor: 'black', // 防止加载过程中闪屏
         backgroundImage: `url(${snapshotUrl})`,
@@ -90,6 +111,8 @@ export function PreviewImage({ className, item, pvideo, cursorState }: IProps) {
 }
 
 function SimplePregressBar({ progress }: { progress: number }) {
+  // console.log('[SimplePregressBar] progress=%s', progress)
+
   return (
     <div
       className='track'

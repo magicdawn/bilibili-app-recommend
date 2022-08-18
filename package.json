@@ -37,6 +37,7 @@
     "rollup-plugin-visualizer": "^5.7.1",
     "ts-node": "10.9.1",
     "tslib": "2.4.0",
+    "type-fest": "^2.18.0",
     "typescript": "4.7.4",
     "vite": "^3.0.8",
     "vite-plugin-monkey": "^2.1.1",
