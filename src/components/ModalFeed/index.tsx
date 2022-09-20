@@ -31,12 +31,9 @@ export const ModalFeed = memo(function ModalFeed({ show, onHide }: IProps) {
       scrollerRef.current.scrollTop = 0
     }
 
-    // load
-    await delay(50)
-
     try {
-      setLoading(true)
       clearActiveIndex() // before
+      setLoading(true)
       setItems(await getRecommendTimes(2))
       clearActiveIndex() // and after
     } finally {

@@ -7,7 +7,7 @@ export async function getRecommend() {
     params: {
       build: '1',
       mobi_app: 'android',
-      idx: (Date.now() / 1000).toFixed(0),
+      idx: (Date.now() / 1000).toFixed(0) + '0' + (Math.random() * 10).toFixed(0),
     },
   })
 
