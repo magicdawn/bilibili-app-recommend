@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.4.4 2022-09-21
+
+- 修复由于 getRecommend 参数一致导致的请求排队的情况. optimize for #9
+
 ## v0.4.3 2022-08-18
 
 - 修复移动到视频卡片, 停留, 视频预览显示不正确的问题. ([没有进度条, 预览显示不正确](https://github.com/magicdawn/bilibili-app-recommend/issues/5#issuecomment-1216453427))
