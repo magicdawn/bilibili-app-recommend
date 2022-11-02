@@ -13,8 +13,8 @@ specifiers:
   '@typescript-eslint/parser': ^5.42.0
   '@vitejs/plugin-react': ^2.2.0
   ahooks: 3.7.2
-  axios: 1.1.3
-  axios-userscript-adapter: 0.2.0
+  axios: '0'
+  axios-userscript-adapter: '0'
   chalk: '4'
   classnames: ^2.3.2
   dayjs: 1.11.6
@@ -45,8 +45,8 @@ specifiers:
 
 dependencies:
   ahooks: 3.7.2_react@18.2.0
-  axios: 1.1.3
-  axios-userscript-adapter: 0.2.0_axios@1.1.3
+  axios: 0.27.2
+  axios-userscript-adapter: 0.2.0_axios@0.27.2
   classnames: 2.3.2
   dayjs: 1.11.6
   delay: 5.0.0
@@ -1032,20 +1032,20 @@ packages:
     resolution: {integrity: sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==}
     dev: false
 
-  /axios-userscript-adapter/0.2.0_axios@1.1.3:
+  /axios-userscript-adapter/0.2.0_axios@0.27.2:
     resolution: {integrity: sha512-PvAO+HaWzesWhU//lO2x6OuO1/LIVn4IKwTBR/zHTrW6uprSFsD11zZlJAY3KKaHoCMdGMS5vcqw09CP+3MSyA==}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     peerDependencies:
       axios: ^0.27.0
     dependencies:
-      axios: 1.1.3
+      axios: 0.27.2
     dev: false
 
-  /axios/1.1.3:
-    resolution: {integrity: sha512-00tXVRwKx/FZr/IDVFt4C+f9FYairX517WoGCL6dpOntqLkZofjhu43F/Xl44UOpqa+9sLFDrG/XAnFsUYgkDA==}
+  /axios/0.27.2:
+    resolution: {integrity: sha512-t+yRIyySRTp/wua5xEr+z1q60QmLq8ABsS5O9Me1AsE5dfKqgnCFzwiCZZ/cGNd1lq4/7akDWMxdhVlucjmnOQ==}
     dependencies:
       follow-redirects: 1.15.2
       form-data: 4.0.0
-      proxy-from-env: 1.1.0
     transitivePeerDependencies:
       - debug
     dev: false
@@ -2719,10 +2719,6 @@ packages:
 
   /proxy-compare/2.3.0:
     resolution: {integrity: sha512-c3L2CcAi7f7pvlD0D7xsF+2CQIW8C3HaYx2Pfgq8eA4HAl3GAH6/dVYsyBbYF/0XJs2ziGLrzmz5fmzPm6A0pQ==}
-    dev: false
-
-  /proxy-from-env/1.1.0:
-    resolution: {integrity: sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==}
     dev: false
 
   /prr/1.0.1:
