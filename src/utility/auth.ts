@@ -40,16 +40,9 @@ async function getAuth() {
       resolve(key[1] as string)
     })
 
-    // 授权超时, 单位(s)
-    // 5s 有人反馈超时 https://greasyfork.org/zh-CN/scripts/443530-bilibili-app-recommend/discussions/140661
-    // 改成 10s
-    let authTimeout = Number(GM_getValue('authTimeout') || 10)
-    if (isNaN(authTimeout)) authTimeout = 10
-    console.log('[bilibili-app-recommend]: authTimeout = %s(s)', authTimeout)
-
     timeout = setTimeout(() => {
       resolve({ errmsg: '获取授权超时' })
-    }, authTimeout * 1000)
+    }, 10 * 1000) // 10 s
   })
 
   const iframe = document.createElement('iframe')
