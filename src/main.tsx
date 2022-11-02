@@ -1,3 +1,5 @@
+/* eslint-disable no-constant-condition */
+
 // import order matters
 import 'virtual:vite-react-preamble'
 import './settings' // load config
@@ -21,22 +23,47 @@ void (function main() {
 })()
 
 async function initHomepage() {
-  const start = Date.now()
   const timeout = 10 * 1000 // 10s
+  const timeoutTs = Date.now() + timeout
 
-  const has = () => document.querySelectorAll('.bili-layout > section.bili-grid').length > 0
-  while (!has() && Date.now() - start < timeout) {
+  let previousElement: HTMLElement | null = null
+  let internalTesting = false
+
+  while (true) {
+    if (document.querySelector('.bili-layout > section.bili-grid')) {
+      previousElement = document.querySelector('.bili-layout > section.bili-grid')
+      break
+    }
+
+    if (isInternalTesting() && document.querySelector('.recommended-container')) {
+      internalTesting = true
+      previousElement = document.querySelector('.recommended-container')
+      break
+    }
+
+    if (Date.now() > timeoutTs) break
     await sleep(100)
   }
-  if (!has()) {
+
+  if (!previousElement) {
     console.error('[bilibili-app-recommend]: init fail')
     return
   }
 
-  const firstSection = document.querySelector('.bili-layout > section.bili-grid')
+  // attach to dom
   const recommendContainer = document.createElement('section')
-  firstSection?.insertAdjacentElement('afterend', recommendContainer)
+  previousElement.insertAdjacentElement('afterend', recommendContainer)
 
+  // react render
   const root = createRoot(recommendContainer)
-  root.render(<SectionRecommend />)
+  root.render(<SectionRecommend internalTesting={internalTesting} />)
+}
+
+/**
+ * 是否是内测页面
+ */
+function isInternalTesting() {
+  return (
+    document.querySelector<HTMLButtonElement>('button.go-back')?.innerText.trim() === '退出内测'
+  )
 }

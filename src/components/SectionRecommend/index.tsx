@@ -9,7 +9,7 @@ import { ModalFeed } from '../ModalFeed'
 import { VideoCard } from '../VideoCard'
 import * as styles from './index.module.less'
 
-export function SectionRecommend() {
+export function SectionRecommend({ internalTesting = false }) {
   const collapseBtnRef = useRef<CollapseBtnRef>(null)
   const { accessKey } = useConfigSnapshot()
 
@@ -52,7 +52,10 @@ export function SectionRecommend() {
   }, [])
 
   return (
-    <section className={cx('bili-grid no-margin', styles.grid)} data-area='推荐'>
+    <section
+      className={cx('bili-grid', { 'no-margin': !internalTesting }, styles.grid)}
+      data-area='推荐'
+    >
       <div className={`video-card-list is-full ${styles.videoCardList}`}>
         <div className='area-header'>
           <div className='left'>
