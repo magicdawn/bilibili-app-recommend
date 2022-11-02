@@ -2,7 +2,7 @@
 
 ## v0.5.0 2022-11-02
 
-- chore: auth timeout 固定 5s
+- chore: auth timeout 固定 10s
 - feat: 支持 bilibili 内测首页
 - chore: update deps
 
