@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.5.0 2022-11-02
+
+- chore: auth timeout 固定 5s
+- feat: 支持 bilibili 内测首页
+- chore: update deps
+
 ## v0.4.4 2022-09-21
 
 - 修复由于 getRecommend 参数一致导致的请求排队的情况. optimize for #9
