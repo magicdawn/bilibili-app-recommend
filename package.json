@@ -44,6 +44,7 @@
     "vite-tsconfig-paths": "^3.5.2"
   },
   "dependencies": {
+    "@icon-park/react": "^1.4.2",
     "ahooks": "3.7.2",
     "axios": "0",
     "axios-userscript-adapter": "0",
