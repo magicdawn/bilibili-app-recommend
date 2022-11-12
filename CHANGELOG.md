@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.5.1 2022-11-12
+
+- feat: add dislike 界面 icon, 使用 icon-park 的图标
+
 ## v0.5.0 2022-11-02
 
 - chore: auth timeout 固定 10s
