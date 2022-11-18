@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.5.2 2022-11-18
+
+- c472bb5 feat: add turbo
+- 7a361d3 feat: add retry to getRecommend when 鉴权失败
+- 70d09ef chore: simplify vite config
+
 ## v0.5.1 2022-11-12
 
 - feat: add dislike 界面 icon, 使用 icon-park 的图标
