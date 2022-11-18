@@ -1,5 +1,5 @@
 {
-  "include": ["src/**/*", "banner.user.js"],
+  "include": ["src/**/*"],
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
@@ -9,13 +9,12 @@
     "esModuleInterop": true,
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "target": "ES2021",
+    "target": "ES2020",
     "module": "ES2020",
     "strictNullChecks": true,
     "jsx": "react-jsx"
   },
   "ts-node": {
-    "transpileOnly": true,
     "swc": true,
     "compilerOptions": {
       "module": "CommonJS"

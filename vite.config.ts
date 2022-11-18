@@ -1,52 +1,9 @@
 import react from '@vitejs/plugin-react'
-import { defineConfig, Plugin, ResolvedConfig } from 'vite'
-import monkey, { MonkeyUserScript } from 'vite-plugin-monkey'
+import visualizer from 'rollup-plugin-visualizer'
+import { defineConfig } from 'vite'
+import monkey, { cdn, MonkeyUserScript } from 'vite-plugin-monkey'
 import tsconfigPaths from 'vite-tsconfig-paths'
 import { version } from './package.json'
-import visualizer from 'rollup-plugin-visualizer'
-
-// jsdelivr: 2022-05-18 down in china
-// eleme: not allowed in greasyfork.org
-const NPM_CDN_HOST_JSDELIVR = 'https://cdn.jsdelivr.net/npm/'
-const NPM_CDN_HOST_ELEME = 'https://npm.elemecdn.com/'
-const NPM_CDN_HOST_UNPKG = 'https://unpkg.com/'
-const NPM_CDN_HOST = NPM_CDN_HOST_UNPKG
-
-// https://github.com/vitejs/vite/blob/v2.9.9/packages/plugin-react/src/index.ts#L324-L334
-// https://github.com/vitejs/vite/blob/v2.9.9/packages/plugin-react/src/fast-refresh.ts#L29-L35
-function viteReactPreamble(): Plugin {
-  const virtualModuleId = 'virtual:vite-react-preamble'
-  const resolvedVirtualModuleId = '\0' + virtualModuleId
-
-  let resolvedConfig: ResolvedConfig
-
-  return {
-    name: 'vite-react-preamble', // required, will show up in warnings and errors
-    configResolved(config) {
-      resolvedConfig = config
-    },
-
-    resolveId(id) {
-      if (id === virtualModuleId) {
-        return resolvedVirtualModuleId
-      }
-    },
-
-    load(id) {
-      if (id === resolvedVirtualModuleId) {
-        if (resolvedConfig.mode === 'development') {
-          const preambleCode = react.preambleCode.replace(`__BASE__`, resolvedConfig.base || '/')
-          return `
-            ${preambleCode}
-            ;console.log('[vite-react-preamble]: preamble loaded')
-          `
-        } else {
-          return ''
-        }
-      }
-    },
-  }
-}
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -68,7 +25,6 @@ export default defineConfig({
 
   plugins: [
     react(),
-    viteReactPreamble(),
     tsconfigPaths(),
 
     // visualize
@@ -118,28 +74,20 @@ export default defineConfig({
       },
 
       server: {
-        open: false,
-        // prefix: (name) => name + ':dev', // ViolentMonkey 设置成按字典序排序, dev & prod script 接近
+        open: true,
         prefix: (name) => name, // 一样的, 避免切换
         mountGmApi: true,
       },
 
       build: {
         externalGlobals: {
-          'axios': ['axios', (version) => `${NPM_CDN_HOST}axios@${version}/dist/axios.min.js`],
-          'axios-userscript-adapter': [
+          'axios': cdn.unpkg('axios', 'dist/axios.min.js'),
+          'axios-userscript-adapter': cdn.unpkg(
             'axiosGmxhrAdapter',
-            (version) =>
-              `${NPM_CDN_HOST}axios-userscript-adapter@${version}/dist/axiosGmxhrAdapter.min.js`,
-          ],
-          'react': [
-            'React',
-            (version) => `${NPM_CDN_HOST}react@${version}/umd/react.production.min.js`,
-          ],
-          'react-dom': [
-            'ReactDOM',
-            (version) => `${NPM_CDN_HOST}react-dom@${version}/umd/react-dom.production.min.js`,
-          ],
+            'dist/axiosGmxhrAdapter.min.js'
+          ),
+          'react': cdn.unpkg('React', 'umd/react.production.min.js'),
+          'react-dom': cdn.unpkg('ReactDOM', 'umd/react-dom.production.min.js'),
         },
       },
     }),

@@ -38,7 +38,9 @@ export function load() {
   })
 }
 export function save() {
-  GM_setValue(key, pick(config, allowedConfigKeys))
+  const newVal = pick(config, allowedConfigKeys)
+  // console.log('GM_setValue newVal = %o', newVal)
+  GM_setValue(key, newVal)
 }
 export function clean() {
   GM_deleteValue(key)
