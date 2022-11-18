@@ -7,7 +7,7 @@
 export interface RecommendJson {
   code: number
   config: Config
-  data: RecItem[]
+  data?: RecItem[]
   message: string
 }
 
