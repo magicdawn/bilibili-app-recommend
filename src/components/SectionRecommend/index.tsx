@@ -1,34 +1,87 @@
+import { ModalConfig } from '$components/ModalConfig'
+import { PureRecommend } from '$components/PureRecommend'
 import { getHomeRecommend } from '$service'
 import { config, useConfigSnapshot } from '$settings'
-import { auth, deleteAccessToken } from '$utility/auth'
-import { useMemoizedFn, useRequest } from 'ahooks'
+import Config from '@icon-park/react/lib/icons/Config'
+import { useRequest } from 'ahooks'
 import cx from 'classnames'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { CollapseBtn, CollapseBtnRef } from '../CollapseBtn'
 import { ModalFeed } from '../ModalFeed'
 import { VideoCard } from '../VideoCard'
+import { AccessKeyManage } from './AccessKeyManage'
 import * as styles from './index.module.less'
 
-export function SectionRecommend({ internalTesting = false }) {
-  const collapseBtnRef = useRef<CollapseBtnRef>(null)
+export function RecHeader({ onRefresh }: { onRefresh: () => void | Promise<void> }) {
   const { accessKey } = useConfigSnapshot()
+  const collapseBtnRef = useRef<CollapseBtnRef>(null)
 
-  const useAuthRequest = useRequest(auth, { manual: true })
+  const [showMore, setShowMore] = useState(() => config.initialShowMore)
+  const onSeeMore = useCallback(() => {
+    setShowMore(true)
+  }, [])
+  const onModalFeedHide = useCallback(() => {
+    setShowMore(false)
+  }, [])
 
-  const onGetAuth = useMemoizedFn(async () => {
-    const accessKey = await useAuthRequest.runAsync()
-    if (accessKey) {
-      collapseBtnRef.current?.set(false)
-    }
-  })
+  const [modalConfigVisible, setModalConfigVisible] = useState(false)
+  const showModalConfig = useCallback(() => {
+    setModalConfigVisible(true)
+  }, [])
+  const hideModalConfig = useCallback(() => {
+    setModalConfigVisible(false)
+  }, [])
 
-  const onDeleteAccessToken = deleteAccessToken
+  return (
+    <>
+      <div className='area-header'>
+        <div className='left'>
+          <a id='影视' className='the-world area-anchor' data-id='25'></a>
+          <svg className='icon'>
+            <use xlinkHref='#channel-cinephile'></use>
+          </svg>
+          <a className='title' href='#'>
+            <span>推荐</span>
+          </a>
+        </div>
 
-  const onExplainAccessKey = useMemoizedFn(() => {
-    const explainUrl =
-      'https://github.com/indefined/UserScripts/tree/master/bilibiliHome#%E6%8E%88%E6%9D%83%E8%AF%B4%E6%98%8E'
-    window.open(explainUrl, '_blank')
-  })
+        <div className='right'>
+          <button className={cx('primary-btn', styles.configBtn)} onClick={showModalConfig}>
+            <Config theme='outline' size='24' fill='#333' className={styles.configIcon} />
+          </button>
+
+          {!accessKey ? (
+            <AccessKeyManage />
+          ) : (
+            <CollapseBtn ref={collapseBtnRef}>
+              <AccessKeyManage />
+            </CollapseBtn>
+          )}
+
+          <button className='primary-btn roll-btn' onClick={onRefresh}>
+            <svg style={{ transform: 'rotate(0deg)' }}>
+              <use xlinkHref='#widget-roll'></use>
+            </svg>
+            <span>换一换</span>
+          </button>
+
+          <button className='primary-btn see-more' onClick={onSeeMore}>
+            <span>查看更多</span>
+            <svg>
+              <use xlinkHref='#widget-arrow'></use>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <ModalFeed show={showMore} onHide={onModalFeedHide} />
+      <ModalConfig show={modalConfigVisible} onHide={hideModalConfig} />
+    </>
+  )
+}
+
+export function SectionRecommend({ internalTesting = false }) {
+  const { accessKey, pureRecommend } = useConfigSnapshot()
+  const collapseBtnRef = useRef<CollapseBtnRef>(null)
 
   const skeletonPlaceholders = useMemo(() => {
     return new Array(20).fill(0).map(() => {
@@ -51,73 +104,21 @@ export function SectionRecommend({ internalTesting = false }) {
     setShowMore(false)
   }, [])
 
+  const [modalConfigVisible, setModalConfigVisible] = useState(false)
+  const showModalConfig = useCallback(() => {
+    setModalConfigVisible(true)
+  }, [])
+  const hideModalConfig = useCallback(() => {
+    setModalConfigVisible(false)
+  }, [])
+
   return (
     <section
       className={cx('bili-grid', { 'no-margin': !internalTesting }, styles.grid)}
       data-area='推荐'
     >
       <div className={`video-card-list is-full ${styles.videoCardList}`}>
-        <div className='area-header'>
-          <div className='left'>
-            <a id='影视' className='the-world area-anchor' data-id='25'></a>
-            <svg className='icon'>
-              <use xlinkHref='#channel-cinephile'></use>
-            </svg>
-            <a className='title' href='#'>
-              <span>推荐</span>
-            </a>
-          </div>
-
-          <div className='right'>
-            {!accessKey ? (
-              <>
-                <button className='primary-btn roll-btn' onClick={onExplainAccessKey}>
-                  <span>access_key 说明</span>
-                </button>
-                <button
-                  className='primary-btn roll-btn'
-                  onClick={onGetAuth}
-                  disabled={useAuthRequest.loading}
-                >
-                  <span>获取 access_key</span>
-                </button>
-              </>
-            ) : (
-              <CollapseBtn ref={collapseBtnRef}>
-                <button className='primary-btn roll-btn' onClick={onExplainAccessKey}>
-                  <span>access_key 说明</span>
-                </button>
-                <button
-                  className='primary-btn roll-btn'
-                  onClick={() => onGetAuth()}
-                  disabled={useAuthRequest.loading}
-                >
-                  <span>重新获取 access_key</span>
-                </button>
-                <button className='primary-btn roll-btn' onClick={onDeleteAccessToken}>
-                  <span>删除 access_key</span>
-                </button>
-              </CollapseBtn>
-            )}
-
-            <button className='primary-btn roll-btn' onClick={refresh}>
-              <svg style={{ transform: 'rotate(0deg)' }}>
-                <use xlinkHref='#widget-roll'></use>
-              </svg>
-              <span>换一换</span>
-            </button>
-
-            <button className='primary-btn see-more' onClick={onSeeMore}>
-              <span>查看更多</span>
-              <svg>
-                <use xlinkHref='#widget-arrow'></use>
-              </svg>
-            </button>
-          </div>
-        </div>
-
-        <ModalFeed show={showMore} onHide={onModalFeedHide} />
-
+        <RecHeader onRefresh={refresh} />
         <div className='video-card-body more-class1 more-class2'>
           {loading || error
             ? skeletonPlaceholders.map((id) => <VideoCard key={id} />)

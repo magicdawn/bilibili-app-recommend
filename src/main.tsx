@@ -5,6 +5,8 @@ import './settings' // load config
 import sleep from 'delay'
 import { createRoot } from 'react-dom/client'
 import { SectionRecommend } from './components/SectionRecommend'
+import { config } from './settings'
+import { Rec } from '$components/Rec'
 
 void (function main() {
   // 用于获取授权
@@ -21,6 +23,14 @@ void (function main() {
 })()
 
 async function initHomepage() {
+  if (config.pureRecommend) {
+    return initHomepagePureRecommend()
+  } else {
+    return initHomepageSection()
+  }
+}
+
+async function initHomepageSection() {
   const timeout = 10 * 1000 // 10s
   const timeoutTs = Date.now() + timeout
 
@@ -64,4 +74,25 @@ function isInternalTesting() {
   return (
     document.querySelector<HTMLButtonElement>('button.go-back')?.innerText.trim() === '退出内测'
   )
+}
+
+async function initHomepagePureRecommend() {
+  document.querySelector('.bili-layout')?.remove()
+  document.querySelector('.bili-footer')?.remove()
+
+  const biliLayout = document.createElement('div')
+  biliLayout.classList.add('bili-layout', 'pure-recommend')
+
+  const header = document.querySelector('.bili-header')
+  header?.appendChild(biliLayout)
+
+  const recommendContainer = document.createElement('section')
+  biliLayout?.appendChild(recommendContainer)
+
+  const internalTesting = isInternalTesting()
+
+  // react render
+  const root = createRoot(recommendContainer)
+  // root.render(<SectionRecommend internalTesting={internalTesting} />)
+  root.render(<Rec />)
 }

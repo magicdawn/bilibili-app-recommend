@@ -9,6 +9,9 @@ const initialConfig = {
 
   // 自动查看更多
   initialShowMore: false,
+
+  // 纯享模式
+  pureRecommend: false,
 }
 const allowedConfigKeys = Object.keys(initialConfig)
 
