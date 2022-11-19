@@ -1,6 +1,6 @@
 import utilityStyles from '$common/utility.module.less'
 import { BaseModal } from '$components/BaseModal'
-import { AccessKeyManage } from '$components/SectionRecommend/AccessKeyManage'
+import { AccessKeyManage } from '$components/AccessKeyManage'
 import { cx } from '$libs'
 import { config, useConfigSnapshot } from '$settings'
 import Config from '@icon-park/react/lib/icons/Config'

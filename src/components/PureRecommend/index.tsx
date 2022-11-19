@@ -42,7 +42,7 @@ export function PureRecommend({ header }: { header?: ReactNode }) {
 
   // 快捷键
   const { activeIndex, clearActiveIndex } = useShortcut({
-    show: true,
+    enabled: true,
     refresh,
     maxIndex: items.length - 1,
   })

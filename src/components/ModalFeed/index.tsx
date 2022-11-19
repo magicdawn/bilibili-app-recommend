@@ -63,7 +63,7 @@ export const ModalFeed = memo(function ModalFeed({ show, onHide }: IProps) {
 
   // 快捷键
   const { activeIndex, clearActiveIndex } = useShortcut({
-    show,
+    enabled: show,
     refresh,
     maxIndex: items.length - 1,
   })

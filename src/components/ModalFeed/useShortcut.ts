@@ -5,13 +5,13 @@ import { config } from '$settings'
 import * as styles from './index.module.less'
 
 interface IOptions {
-  show: boolean
+  enabled: boolean
   refresh: () => void | Promise<void>
   minIndex?: number
   maxIndex: number
 }
 
-export function useShortcut({ show, refresh, minIndex = 0, maxIndex }: IOptions) {
+export function useShortcut({ enabled, refresh, minIndex = 0, maxIndex }: IOptions) {
   // 快捷键
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
 
@@ -39,7 +39,7 @@ export function useShortcut({ show, refresh, minIndex = 0, maxIndex }: IOptions)
   })
 
   const addActiveIndex = useMemoizedFn((step: number, e?: KeyboardEvent) => {
-    if (!show) return
+    if (!enabled) return
 
     // 防止 scroller focus 的情况下, 因键盘产生滑动, 进而页面抖动
     e?.preventDefault()
@@ -82,11 +82,11 @@ export function useShortcut({ show, refresh, minIndex = 0, maxIndex }: IOptions)
 
   // actions
   const open = useMemoizedFn(() => {
-    if (!activeIndex || !show) return
+    if (!activeIndex || !enabled) return
     openVideoAt(activeIndex)
   })
   const clearActiveIndex = useMemoizedFn(() => {
-    if (!show) return
+    if (!enabled) return
     setActiveIndex(null)
   })
   useKeyPress('enter', open)
@@ -94,7 +94,7 @@ export function useShortcut({ show, refresh, minIndex = 0, maxIndex }: IOptions)
 
   // refresh
   const onShortcutRefresh = useMemoizedFn(() => {
-    if (!show) return
+    if (!enabled) return
     refresh()
   })
   useKeyPress('r', onShortcutRefresh, { exactMatch: true }) // prevent refresh when cmd+R reload page
