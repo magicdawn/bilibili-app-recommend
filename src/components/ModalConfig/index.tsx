@@ -7,6 +7,8 @@ import Config from '@icon-park/react/lib/icons/Config'
 import { useId } from 'react'
 import styles from './index.module.less'
 import { ConfigCheck } from '$components/piece'
+import { toast } from '$utility/toast'
+import delay from 'delay'
 
 export function ModalConfig({ show, onHide }: { show: boolean; onHide: () => void }) {
   const pureRecommendId = useId()
@@ -55,8 +57,11 @@ export function ModalConfig({ show, onHide }: { show: boolean; onHide: () => voi
               className={utilityStyles.checkbox}
               id={pureRecommendId}
               checked={pureRecommend}
-              onChange={(e) => {
+              onChange={async (e) => {
                 config.pureRecommend = (e.target as HTMLInputElement).checked
+                toast('即将刷新网页')
+                await delay(1000)
+                location.reload()
               }}
             />
             <label htmlFor={pureRecommendId}>开启纯享模式</label>
