@@ -6,14 +6,14 @@ import { proxy, useSnapshot } from 'valtio'
  * 是否是内测页面
  */
 
-export const checkInternalTesting = once(() => {
+export const isInternalTesting = once(() => {
   return (
     document.querySelector<HTMLButtonElement>('button.go-back')?.innerText.trim() === '退出内测'
   )
 })
 
 export const useIsInternalTesting = function () {
-  return useMemo(() => checkInternalTesting(), [])
+  return useMemo(() => isInternalTesting(), [])
 }
 
 /**
@@ -36,8 +36,18 @@ export const HEADER_HEIGHT = isUsingCustomHeader ? 50 : 64
 const getIsDarkMode = () => document.body.classList.contains('dark')
 const isDarkModeState = proxy({ value: getIsDarkMode() }) // like vue3 ref()
 
-export const useIsDarkMode = function () {
+export function useIsDarkMode() {
   return useSnapshot(isDarkModeState).value
+}
+
+export function useColors() {
+  const isDarkMode = useIsDarkMode()
+  const { bg, c } = useMemo(() => {
+    const bg = window.getComputedStyle(document.body).backgroundColor
+    const c = window.getComputedStyle(document.body).color
+    return { bg, c }
+  }, [isDarkMode])
+  return { bg, c }
 }
 
 const bodyOb = new MutationObserver(function () {

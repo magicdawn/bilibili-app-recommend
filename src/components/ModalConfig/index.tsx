@@ -9,11 +9,12 @@ import styles from './index.module.less'
 import { ConfigCheck } from '$components/piece'
 import { toast } from '$utility/toast'
 import delay from 'delay'
+import { useIsDarkMode } from '$platform'
 
 export function ModalConfig({ show, onHide }: { show: boolean; onHide: () => void }) {
   const pureRecommendId = useId()
-
   const { pureRecommend } = useConfigSnapshot()
+  const isDarkMode = useIsDarkMode()
 
   return (
     <BaseModal
@@ -27,7 +28,12 @@ export function ModalConfig({ show, onHide }: { show: boolean; onHide: () => voi
     >
       <div className={styles.modalHeader}>
         <div className={styles.modalTitle}>
-          <Config theme='outline' size='24' fill='#333' className={styles.configIcon} />
+          <Config
+            theme='outline'
+            size='24'
+            fill={isDarkMode ? '#fff' : '#333'}
+            className={styles.configIcon}
+          />
           设置项
         </div>
 
@@ -64,7 +70,7 @@ export function ModalConfig({ show, onHide }: { show: boolean; onHide: () => voi
                 location.reload()
               }}
             />
-            <label htmlFor={pureRecommendId}>开启纯享模式</label>
+            <label htmlFor={pureRecommendId}>开启纯分享模式</label>
 
             <ConfigCheck
               configKey={'initialShowMore'}

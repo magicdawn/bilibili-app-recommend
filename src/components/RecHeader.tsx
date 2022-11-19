@@ -8,7 +8,7 @@ import { AccessKeyManage } from './AccessKeyManage'
 import { CollapseBtn, CollapseBtnRef } from './CollapseBtn'
 import { ModalFeed } from './ModalFeed'
 import { useSticky } from 'react-use-sticky'
-import { HEADER_HEIGHT } from '$platform'
+import { HEADER_HEIGHT, useIsDarkMode } from '$platform'
 
 const configStyles = {
   btn: css`
@@ -56,6 +56,8 @@ export function RecHeader({ onRefresh }: { onRefresh: () => void | Promise<void>
 
   const [stickyRef, sticky] = useSticky<HTMLDivElement>()
 
+  const isDarkMode = useIsDarkMode()
+
   return (
     <>
       <div
@@ -92,7 +94,12 @@ export function RecHeader({ onRefresh }: { onRefresh: () => void | Promise<void>
 
         <div className='right'>
           <button className='primary-btn' css={configStyles.btn} onClick={showModalConfig}>
-            <Config theme='outline' size='24' fill='#333' css={configStyles.icon} />
+            <Config
+              theme='outline'
+              size='24'
+              fill={isDarkMode ? '#fff' : '#333'}
+              css={configStyles.icon}
+            />
           </button>
 
           {!accessKey ? (

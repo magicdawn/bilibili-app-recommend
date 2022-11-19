@@ -118,7 +118,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
         threshold={360} // 差不多一行高度
         style={{ minHeight: '100%' }}
         loader={
-          <div css={cls.loader} key={0}>
+          <div className={cls.loader} key={0}>
             加载中...
           </div>
         }

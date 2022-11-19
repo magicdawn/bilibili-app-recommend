@@ -7,6 +7,7 @@ import './common/global.less'
 import { PureRecommend } from './components/PureRecommend'
 import { SectionRecommend } from './components/SectionRecommend'
 import { config } from './settings'
+import { isInternalTesting } from './platform'
 
 void (function main() {
   // 用于获取授权
@@ -68,21 +69,19 @@ async function initHomepageSection() {
   root.render(<SectionRecommend />)
 }
 
-/**
- * 是否是内测页面
- */
-function isInternalTesting() {
-  return (
-    document.querySelector<HTMLButtonElement>('button.go-back')?.innerText.trim() === '退出内测'
-  )
-}
-
 async function initHomepagePureRecommend() {
   document.querySelector('.bili-layout')?.remove()
   document.querySelector('.bili-footer')?.remove()
 
+  // 新版 bili-feed4
+  document.querySelector('.bili-feed4 .header-channel')?.remove()
+  document.querySelector('.bili-feed4 .bili-feed4-layout')?.remove()
+
   const biliLayout = document.createElement('div')
-  biliLayout.classList.add('bili-layout', 'pure-recommend')
+  biliLayout.classList.add(
+    isInternalTesting() ? 'bili-feed4-layout' : 'bili-layout',
+    'pure-recommend'
+  )
 
   const header = document.querySelector('.bili-header')
   header?.insertAdjacentElement('afterend', biliLayout)
