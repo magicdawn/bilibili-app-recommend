@@ -7,7 +7,7 @@
     "prepare": "husky install",
     "dev:less": "tlm src --watch",
     "dev": "concurrently -k npm:dev:less vite",
-    "build": "turbo build:type-check build:real-build && pnpm preview",
+    "build": "turbo build:real-build && pnpm preview",
     "build:type-check": "tsc --noEmit",
     "build:real-build": "vite build",
     "preview": "vite preview"

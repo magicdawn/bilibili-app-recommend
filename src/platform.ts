@@ -6,10 +6,9 @@ import { proxy, useSnapshot } from 'valtio'
  * 是否是内测页面
  */
 
+// document.querySelector<HTMLButtonElement>('button.go-back')?.innerText.trim() === '退出内测'
 export const isInternalTesting = once(() => {
-  return (
-    document.querySelector<HTMLButtonElement>('button.go-back')?.innerText.trim() === '退出内测'
-  )
+  return !!document.querySelectorAll('.bili-feed4').length
 })
 
 export const useIsInternalTesting = function () {

@@ -8,6 +8,7 @@ import { PureRecommend } from './components/PureRecommend'
 import { SectionRecommend } from './components/SectionRecommend'
 import { config } from './settings'
 import { isInternalTesting } from './platform'
+import { tryToRemove } from '$utility/dom'
 
 void (function main() {
   // 用于获取授权
@@ -70,12 +71,14 @@ async function initHomepageSection() {
 }
 
 async function initHomepagePureRecommend() {
-  document.querySelector('.bili-layout')?.remove()
-  document.querySelector('.bili-footer')?.remove()
-
-  // 新版 bili-feed4
-  document.querySelector('.bili-feed4 .header-channel')?.remove()
-  document.querySelector('.bili-feed4 .bili-feed4-layout')?.remove()
+  if (isInternalTesting()) {
+    // 新版 bili-feed4
+    document.querySelector('.bili-feed4 .bili-feed4-layout')?.remove()
+    tryToRemove('.bili-feed4 .header-channel')
+  } else {
+    document.querySelector('.bili-layout')?.remove()
+    tryToRemove('.bili-footer') // build 版本, .bili-footer 还不存在, 后来出来的
+  }
 
   const biliLayout = document.createElement('div')
   biliLayout.classList.add(
