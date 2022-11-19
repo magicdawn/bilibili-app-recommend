@@ -5,12 +5,13 @@
 import { VideoCard } from '$components/VideoCard'
 import { RecItemWithUniqId } from '$define'
 import { css, cx } from '$libs'
+import { useIsInternalTesting } from '$platform'
 import { getRecommendTimes } from '$service'
 import { useConfigSnapshot } from '$settings'
 import { useMemoizedFn } from 'ahooks'
 import { forwardRef, useImperativeHandle, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroller'
-import { narrowMode, videoGrid } from '../video-grid.module.less'
+import { internalTesting, narrowMode, videoGrid } from '../video-grid.module.less'
 import { useShortcut } from './useShortcut'
 
 const emotionStyles = {
@@ -45,10 +46,11 @@ export type RecGridProps = {
   shortcutEnabled: boolean
   infiteScrollUseWindow: boolean
   onScrollToTop?: () => void | Promise<void>
+  className?: string
 }
 
 export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
-  ({ infiteScrollUseWindow, shortcutEnabled, onScrollToTop }, ref) => {
+  ({ infiteScrollUseWindow, shortcutEnabled, onScrollToTop, className }, ref) => {
     const [items, setItems] = useState<RecItemWithUniqId[]>([])
     const [loading, setLoading] = useState(false)
 
@@ -57,8 +59,6 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
         refresh,
       }
     })
-
-    let [hasMore, setHasMore] = useState(true)
 
     const refresh = useMemoizedFn(async () => {
       // scroll to top
@@ -69,10 +69,6 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
         setLoading(true)
         setItems(await getRecommendTimes(2))
         clearActiveIndex() // and after
-
-        if (items.length > 20) {
-          setHasMore(false)
-        }
       } finally {
         setLoading(false)
       }
@@ -93,11 +89,13 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
       maxIndex: items.length - 1,
     })
 
+    const isInisInternalTesting = useIsInternalTesting()
+
     return (
       <InfiniteScroll
         pageStart={0}
         loadMore={fetchMore}
-        hasMore={hasMore}
+        hasMore={true}
         useWindow={infiteScrollUseWindow}
         threshold={360} // 差不多一行高度
         style={{ minHeight: '100%' }}
@@ -108,7 +106,14 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
         }
       >
         {/* 这里只定义列数, 宽度 100% */}
-        <div className={cx(videoGrid, { [narrowMode]: useNarrowMode })}>
+        <div
+          className={cx(
+            videoGrid,
+            { [internalTesting]: isInisInternalTesting },
+            { [narrowMode]: useNarrowMode },
+            className
+          )}
+        >
           {items.map((item, index) => {
             return (
               <VideoCard

@@ -8,17 +8,6 @@ import { useId } from 'react'
 import styles from './index.module.less'
 import { ConfigCheck } from '$components/piece'
 
-const style = {
-  check: css`
-    margin-left: 20px;
-    /* min-width: 150px; */
-
-    &:first-child {
-      margin-left: 0;
-    }
-  `,
-}
-
 export function ModalConfig({ show, onHide }: { show: boolean; onHide: () => void }) {
   const pureRecommendId = useId()
 
@@ -72,8 +61,16 @@ export function ModalConfig({ show, onHide }: { show: boolean; onHide: () => voi
             />
             <label htmlFor={pureRecommendId}>开启纯享模式</label>
 
-            <ConfigCheck configKey={'initialShowMore'} label='自动查看更多' css={style.check} />
-            <ConfigCheck configKey={'useNarrowMode'} label='启用窄屏模式' css={style.check} />
+            <ConfigCheck
+              configKey={'initialShowMore'}
+              label='自动查看更多'
+              className={styles.check}
+            />
+            <ConfigCheck
+              configKey={'useNarrowMode'}
+              label='启用窄屏模式'
+              className={styles.check}
+            />
           </div>
         </div>
       </main>

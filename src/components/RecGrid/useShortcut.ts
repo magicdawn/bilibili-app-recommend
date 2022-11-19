@@ -1,7 +1,6 @@
+import { config } from '$settings'
 import { useKeyPress, useMemoizedFn } from 'ahooks'
 import { useCallback, useState } from 'react'
-//
-import { config } from '$settings'
 import styles from '../ModalFeed/index.module.less'
 
 interface IOptions {

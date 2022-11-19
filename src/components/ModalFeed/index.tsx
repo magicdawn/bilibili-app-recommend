@@ -1,10 +1,9 @@
-import { cx } from '$libs'
-import { useMemoizedFn } from 'ahooks'
-import { memo, useMemo, useRef } from 'react'
-// local
 import { ModalFeedConfigChecks } from '$components/piece'
 import { RecGrid, RecGridRef } from '$components/RecGrid'
+import { cx } from '$libs'
 import { useConfigSnapshot } from '$settings'
+import { useMemoizedFn } from 'ahooks'
+import { memo, useMemo, useRef } from 'react'
 import { BaseModal } from '../BaseModal'
 import { CollapseBtn } from '../CollapseBtn'
 import styles from './index.module.less'

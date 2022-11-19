@@ -7,6 +7,13 @@
 在B站自己的首页中, .bili-grid > 2200px 是分 7 列, .video-card-body > 2200px 分6列
 */
 
+.video-grid {
+  display: grid;
+  position: relative;
+  width: 100%;
+  grid-gap: 20px 12px;
+}
+
 @media (max-width: 1099.9px) {
   .video-grid {
     grid-template-columns: repeat(4, 1fr);
@@ -15,8 +22,7 @@
     display: none !important;
   }
 }
-
-@media (min-width: 1100px) and (max-width: 1366.9px) {
+@media (min-width: 1100px) and (max-width: 1700.9px) {
   .video-grid {
     grid-template-columns: repeat(5, 1fr);
   }
@@ -24,17 +30,7 @@
     display: none !important;
   }
 }
-
-@media (min-width: 1367px) and (max-width: 1700.9px) {
-  .video-grid {
-    grid-template-columns: repeat(5, 1fr);
-  }
-  .video-grid.limit-two-lines > *:nth-of-type(1n + 11) {
-    display: none !important;
-  }
-}
-
-@media (min-width: 1701px) and (max-width: 2199.9px) {
+@media (min-width: 1701px) {
   .video-grid {
     grid-template-columns: repeat(6, 1fr);
   }
@@ -43,21 +39,44 @@
   }
 }
 
-@media (min-width: 2200px) {
-  .video-grid {
-    grid-template-columns: repeat(6, 1fr);
+/**
+ * 内测页面
+ * 取自 .battle-feed-area .battle-feed-body
+ */
+
+.video-grid.internal-testing {
+  // grid-gap: 60px 20px; // original
+  grid-gap: 20px 20px;
+}
+
+@media (max-width: 1399.9px) {
+  .video-grid.internal-testing {
+    grid-template-columns: repeat(4, 1fr);
+
+    &.limit-one-line > *:nth-of-type(1n + 5) {
+      display: none !important;
+    }
+    &.limit-two-lines > *:nth-of-type(1n + 9) {
+      display: none !important;
+    }
   }
-  .video-grid.limit-two-lines > *:nth-of-type(1n + 13) {
-    display: none !important;
+}
+@media (min-width: 1400px) {
+  .video-grid.internal-testing {
+    grid-template-columns: repeat(5, 1fr);
+
+    &.limit-one-line > *:nth-of-type(1n + 6) {
+      display: none !important;
+    }
+    &.limit-two-lines > *:nth-of-type(1n + 11) {
+      display: none !important;
+    }
   }
 }
 
-.video-grid {
-  display: grid;
-  width: 100%;
-  grid-gap: 20px 12px;
-}
-
+/**
+ * 双列模式
+ */
 .narrow-mode {
   grid-template-columns: repeat(2, 1fr);
 }

@@ -3,17 +3,15 @@ import { toast } from '$utility/toast'
 import { css } from '@emotion/react'
 import { ChangeEventHandler, useCallback, useId } from 'react'
 
-const styles = {
+const checkStyles = {
   container: css`
     display: inline-flex;
     align-items: center;
   `,
-
   checkbox: css`
     cursor: pointer;
     outline: none;
   `,
-
   label: css`
     margin-left: 2px;
     user-select: none;
@@ -50,9 +48,15 @@ export function ConfigCheck({
   const id = useId()
 
   return (
-    <span css={styles.container} className={className}>
-      <input type='checkbox' id={id} checked={checked} onChange={onChange} css={styles.checkbox} />
-      <label htmlFor={id} css={styles.label}>
+    <span css={checkStyles.container} className={className}>
+      <input
+        type='checkbox'
+        id={id}
+        checked={checked}
+        onChange={onChange}
+        css={checkStyles.checkbox}
+      />
+      <label htmlFor={id} css={checkStyles.label}>
         {label || configKey}
       </label>
     </span>

@@ -1,81 +1,42 @@
-import { useShortcut } from '$components/RecGrid/useShortcut'
-import { VideoCard } from '$components/VideoCard'
-import { RecItemWithUniqId } from '$define'
-import { cx } from '$libs'
-import { getRecommendTimes } from '$service'
+import { RecGrid, RecGridRef } from '$components/RecGrid'
+import { RecHeader } from '$components/RecHeader'
+import { css } from '$libs'
 import { useConfigSnapshot } from '$settings'
 import { useMemoizedFn } from 'ahooks'
-import { ReactNode, useMemo, useRef, useState } from 'react'
-import InfiniteScroll from 'react-infinite-scroller'
-import styles from '../ModalFeed/index.module.less'
+import { useRef } from 'react'
 
-export function PureRecommend({ header }: { header?: ReactNode }) {
-  const [items, setItems] = useState<RecItemWithUniqId[]>([])
-  const [loading, setLoading] = useState(false)
+const narrowStyle = {
+  grid: css`
+    /* card=299 col-gap=20  */
+    width: ${299 * 2 + 20}px;
+    margin: 0 auto;
+  `,
+}
 
-  const scrollerRef = useRef<HTMLDivElement>(null)
-  const refresh = useMemoizedFn(async () => {
-    // scroll to top
-    if (scrollerRef.current) {
-      scrollerRef.current.scrollTop = 0
-    }
-
-    try {
-      clearActiveIndex() // before
-      setLoading(true)
-      setItems(await getRecommendTimes(2))
-      clearActiveIndex() // and after
-    } finally {
-      setLoading(false)
-    }
-  })
-
-  const fetchMore = useMemoizedFn(async (page: number) => {
-    const more = await getRecommendTimes(2)
-    setItems((items) => [...items, ...more])
-  })
+export function PureRecommend() {
+  const recGrid = useRef<RecGridRef>(null)
 
   // 窄屏模式
   const { useNarrowMode } = useConfigSnapshot()
 
-  const narrowStyleObj = useMemo(() => ({ [styles.narrowMode]: useNarrowMode }), [useNarrowMode])
+  const onRefresh = useMemoizedFn(() => {
+    return recGrid.current?.refresh()
+  })
 
-  // 快捷键
-  const { activeIndex, clearActiveIndex } = useShortcut({
-    enabled: true,
-    refresh,
-    maxIndex: items.length - 1,
+  const onScrollToTop = useMemoizedFn(() => {
+    document.body.scrollTop = 0
   })
 
   return (
-    <InfiniteScroll
-      pageStart={0}
-      loadMore={fetchMore}
-      hasMore={true}
-      useWindow={true}
-      threshold={360} // 差不多一行高度
-      style={{ minHeight: '100%' }}
-      loader={
-        <div className={styles.loader} key={0}>
-          加载中...
-        </div>
-      }
-    >
-      <div className={`video-card-list is-full ${styles.videoCardList}`}>
-        {header}
-        <div id={styles.videoCardBody} className={cx('video-card-body', narrowStyleObj)}>
-          {items.map((item, index) => {
-            return (
-              <VideoCard
-                key={item.uniqId}
-                loading={loading}
-                item={item}
-                className={cx(styles.card, { [styles.active]: index === activeIndex })}
-              />
-            )
-          })}
-        </div>
-      </div>
-    </InfiniteScroll>
+    <section data-area='推荐'>
+      <RecHeader onRefresh={onRefresh} />
+      <RecGrid
+        ref={recGrid}
+        css={[useNarrowMode && narrowStyle.grid]}
+        shortcutEnabled={false}
+        infiteScrollUseWindow={true}
+        onScrollToTop={onScrollToTop}
+      />
+    </section>
   )
 }

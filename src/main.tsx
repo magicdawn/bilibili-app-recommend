@@ -1,10 +1,10 @@
 // load config first
 import './settings'
 
-import { Rec } from '$components/Rec'
 import sleep from 'delay'
 import { createRoot } from 'react-dom/client'
 import './common/global.less'
+import { PureRecommend } from './components/PureRecommend'
 import { SectionRecommend } from './components/SectionRecommend'
 import { config } from './settings'
 
@@ -65,7 +65,7 @@ async function initHomepageSection() {
 
   // react render
   const root = createRoot(recommendContainer)
-  root.render(<SectionRecommend internalTesting={internalTesting} />)
+  root.render(<SectionRecommend />)
 }
 
 /**
@@ -85,15 +85,12 @@ async function initHomepagePureRecommend() {
   biliLayout.classList.add('bili-layout', 'pure-recommend')
 
   const header = document.querySelector('.bili-header')
-  header?.appendChild(biliLayout)
+  header?.insertAdjacentElement('afterend', biliLayout)
 
   const recommendContainer = document.createElement('section')
   biliLayout?.appendChild(recommendContainer)
 
-  const internalTesting = isInternalTesting()
-
   // react render
   const root = createRoot(recommendContainer)
-  // root.render(<SectionRecommend internalTesting={internalTesting} />)
-  root.render(<Rec />)
+  root.render(<PureRecommend />)
 }
