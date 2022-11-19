@@ -1,11 +1,23 @@
 import utilityStyles from '$common/utility.module.less'
 import { BaseModal } from '$components/BaseModal'
 import { AccessKeyManage } from '$components/AccessKeyManage'
-import { cx } from '$libs'
+import { css, cx } from '$libs'
 import { config, useConfigSnapshot } from '$settings'
 import Config from '@icon-park/react/lib/icons/Config'
 import { useId } from 'react'
 import styles from './index.module.less'
+import { ConfigCheck } from '$components/piece'
+
+const style = {
+  check: css`
+    margin-left: 20px;
+    /* min-width: 150px; */
+
+    &:first-child {
+      margin-left: 0;
+    }
+  `,
+}
 
 export function ModalConfig({ show, onHide }: { show: boolean; onHide: () => void }) {
   const pureRecommendId = useId()
@@ -40,14 +52,14 @@ export function ModalConfig({ show, onHide }: { show: boolean; onHide: () => voi
 
       <main className={styles.modalBody}>
         <div className={styles.settingsGroup}>
-          <div className={styles.settingsGroupTitle}>access_key</div>
+          <div className={styles.settingsGroupTitle}>Auth</div>
           <div className={cx(styles.settingsGroupContent, styles.row)}>
             <AccessKeyManage />
           </div>
         </div>
 
         <div className={styles.settingsGroup}>
-          <div className={styles.settingsGroupTitle}>Feature 开关</div>
+          <div className={styles.settingsGroupTitle}>开关</div>
           <div className={cx(styles.settingsGroupContent, styles.row)}>
             <input
               type='checkbox'
@@ -59,6 +71,9 @@ export function ModalConfig({ show, onHide }: { show: boolean; onHide: () => voi
               }}
             />
             <label htmlFor={pureRecommendId}>开启纯享模式</label>
+
+            <ConfigCheck configKey={'initialShowMore'} label='自动查看更多' css={style.check} />
+            <ConfigCheck configKey={'useNarrowMode'} label='启用窄屏模式' css={style.check} />
           </div>
         </div>
       </main>

@@ -12,7 +12,14 @@
     "target": "ES2020",
     "module": "ES2020",
     "strictNullChecks": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "jsxImportSource": "@emotion/react",
+    "plugins": [
+      {
+        "name": "typescript-styled-plugin",
+        "tags": ["styled", "css", "sty", "cssCls"]
+      }
+    ]
   },
   "ts-node": {
     "swc": true,

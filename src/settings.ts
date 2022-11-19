@@ -13,10 +13,12 @@ const initialConfig = {
   // 纯享模式
   pureRecommend: false,
 }
-const allowedConfigKeys = Object.keys(initialConfig)
 
-type Config = typeof initialConfig
+export type Config = typeof initialConfig
 export const config = proxy(initialConfig)
+
+export type ConfigKey = keyof Config
+const allowedConfigKeys = Object.keys(initialConfig) as ConfigKey[]
 
 export const useConfigSnapshot = function () {
   return useSnapshot(config)

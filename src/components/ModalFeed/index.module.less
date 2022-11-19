@@ -91,60 +91,20 @@
   }
 }
 
-.list {
-  color: inherit;
-}
+// .video-card-list {
+//   display: block !important;
+// }
 
-.card {
-  border: 2px solid transparent;
+// // .video-card-body 会隐藏后面的卡片, 并且有 !important
+// // 不处理, 会导致 InfiniteScroll 永远达不到 threshold, 会一直 loadMore
+// // React.CSSProperties 无法 inline {display: 'block !important'}
+// // 使用 #id + important 方便点
+// #video-card-body {
+//   > * {
+//     display: block !important;
+//   }
 
-  :global(.bili-video-card__info) {
-    padding-left: 2px;
-    padding-bottom: 1px;
-    margin-top: calc(var(--info-margin-top) - 1px);
-    // padding-top: -2px;
-  }
-
-  &.active {
-    border-color: @bili-pink;
-    border-radius: 6px;
-    overflow: hidden;
-  }
-}
-
-.video-card-list {
-  display: block !important;
-}
-
-// .video-card-body 会隐藏后面的卡片, 并且有 !important
-// 不处理, 会导致 InfiniteScroll 永远达不到 threshold, 会一直 loadMore
-// React.CSSProperties 无法 inline {display: 'block !important'}
-// 使用 #id + important 方便点
-#video-card-body {
-  > * {
-    display: block !important;
-  }
-
-  &.narrow-mode {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-.loader {
-  text-align: center;
-  line-height: 60px;
-  font-size: 120%;
-}
-
-.checkbox {
-  margin-left: 5px;
-  margin-top: 1px;
-  cursor: pointer;
-  outline: none;
-
-  & + label {
-    margin-left: 2px;
-    user-select: none;
-    cursor: pointer;
-  }
-}
+//   &.narrow-mode {
+//     grid-template-columns: repeat(2, 1fr);
+//   }
+// }

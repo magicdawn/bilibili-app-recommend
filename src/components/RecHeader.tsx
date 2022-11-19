@@ -1,12 +1,26 @@
 import { ModalConfig } from '$components/ModalConfig'
+import { css } from '$libs'
 import { config, useConfigSnapshot } from '$settings'
 import Config from '@icon-park/react/lib/icons/Config'
-import cx from 'classnames'
 import { useCallback, useRef, useState } from 'react'
 import { AccessKeyManage } from './AccessKeyManage'
 import { CollapseBtn, CollapseBtnRef } from './CollapseBtn'
 import { ModalFeed } from './ModalFeed'
-import styles from './SectionRecommend/index.module.less'
+
+const configStyles = {
+  btn: css`
+    padding: 0;
+    width: 31px;
+    height: 31px;
+    border-radius: 50%;
+  `,
+  icon: css`
+    svg {
+      width: 14px;
+      height: 14px;
+    }
+  `,
+}
 
 export function RecHeader({ onRefresh }: { onRefresh: () => void | Promise<void> }) {
   const { accessKey } = useConfigSnapshot()
@@ -42,8 +56,8 @@ export function RecHeader({ onRefresh }: { onRefresh: () => void | Promise<void>
         </div>
 
         <div className='right'>
-          <button className={cx('primary-btn', styles.configBtn)} onClick={showModalConfig}>
-            <Config theme='outline' size='24' fill='#333' className={styles.configIcon} />
+          <button className='primary-btn' css={configStyles.btn} onClick={showModalConfig}>
+            <Config theme='outline' size='24' fill='#333' css={configStyles.icon} />
           </button>
 
           {!accessKey ? (

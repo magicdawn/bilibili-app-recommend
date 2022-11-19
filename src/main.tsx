@@ -1,12 +1,12 @@
-/* eslint-disable no-constant-condition */
+// load config first
+import './settings'
 
-import './settings' // load config
-
+import { Rec } from '$components/Rec'
 import sleep from 'delay'
 import { createRoot } from 'react-dom/client'
+import './common/global.less'
 import { SectionRecommend } from './components/SectionRecommend'
 import { config } from './settings'
-import { Rec } from '$components/Rec'
 
 void (function main() {
   // 用于获取授权
@@ -37,6 +37,7 @@ async function initHomepageSection() {
   let previousElement: HTMLElement | null = null
   let internalTesting = false
 
+  /* eslint-disable no-constant-condition */
   while (true) {
     if (document.querySelector('.bili-layout > section.bili-grid')) {
       previousElement = document.querySelector('.bili-layout > section.bili-grid')

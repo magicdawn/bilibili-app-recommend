@@ -1,4 +1,4 @@
-import { useShortcut } from '$components/ModalFeed/useShortcut'
+import { useShortcut } from '$components/RecGrid/useShortcut'
 import { VideoCard } from '$components/VideoCard'
 import { RecItemWithUniqId } from '$define'
 import { cx } from '$libs'

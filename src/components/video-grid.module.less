@@ -1,0 +1,63 @@
+/*
+使用的是 .video-card-body 的样式
+.video-card-list.is-full .video-card-body {
+  position: relative
+}
+
+在B站自己的首页中, .bili-grid > 2200px 是分 7 列, .video-card-body > 2200px 分6列
+*/
+
+@media (max-width: 1099.9px) {
+  .video-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .video-grid.limit-two-lines > *:nth-of-type(1n + 9) {
+    display: none !important;
+  }
+}
+
+@media (min-width: 1100px) and (max-width: 1366.9px) {
+  .video-grid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+  .video-grid.limit-two-lines > *:nth-of-type(1n + 11) {
+    display: none !important;
+  }
+}
+
+@media (min-width: 1367px) and (max-width: 1700.9px) {
+  .video-grid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+  .video-grid.limit-two-lines > *:nth-of-type(1n + 11) {
+    display: none !important;
+  }
+}
+
+@media (min-width: 1701px) and (max-width: 2199.9px) {
+  .video-grid {
+    grid-template-columns: repeat(6, 1fr);
+  }
+  .video-grid.limit-two-lines > *:nth-of-type(1n + 13) {
+    display: none !important;
+  }
+}
+
+@media (min-width: 2200px) {
+  .video-grid {
+    grid-template-columns: repeat(6, 1fr);
+  }
+  .video-grid.limit-two-lines > *:nth-of-type(1n + 13) {
+    display: none !important;
+  }
+}
+
+.video-grid {
+  display: grid;
+  width: 100%;
+  grid-gap: 20px 12px;
+}
+
+.narrow-mode {
+  grid-template-columns: repeat(2, 1fr);
+}
