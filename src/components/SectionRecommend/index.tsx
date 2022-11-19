@@ -5,7 +5,7 @@ import cx from 'classnames'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { CollapseBtnRef } from '../CollapseBtn'
 import { VideoCard } from '../VideoCard'
-import * as styles from './index.module.less'
+import styles from './index.module.less'
 import { RecHeader } from '../RecHeader'
 
 export function SectionRecommend({ internalTesting = false }) {

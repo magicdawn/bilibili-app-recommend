@@ -16,7 +16,7 @@ import {
   watchLaterAdd,
   watchLaterDel,
 } from './card.service'
-import * as styles from './index.module.less'
+import styles from './index.module.less'
 import { PreviewImage } from './PreviewImage'
 
 const currentYear = dayjs().format('YYYY')

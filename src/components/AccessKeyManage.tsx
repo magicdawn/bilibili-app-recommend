@@ -1,4 +1,4 @@
-import { CollapseBtn, CollapseBtnRef } from '$components/CollapseBtn'
+import { CollapseBtnRef } from '$components/CollapseBtn'
 import { useConfigSnapshot } from '$settings'
 import { auth, deleteAccessToken } from '$utility/auth'
 import { useMemoizedFn, useRequest } from 'ahooks'

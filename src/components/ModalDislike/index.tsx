@@ -7,7 +7,7 @@ import { createRoot, Root } from 'react-dom/client'
 import { useSnapshot } from 'valtio'
 import { proxyMap } from 'valtio/utils'
 import { dislike } from '../VideoCard/card.service'
-import * as styles from './index.module.less'
+import styles from './index.module.less'
 
 interface IProps {
   show: boolean

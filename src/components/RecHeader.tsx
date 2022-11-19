@@ -6,7 +6,7 @@ import { useCallback, useRef, useState } from 'react'
 import { AccessKeyManage } from './AccessKeyManage'
 import { CollapseBtn, CollapseBtnRef } from './CollapseBtn'
 import { ModalFeed } from './ModalFeed'
-import * as styles from './SectionRecommend/index.module.less'
+import styles from './SectionRecommend/index.module.less'
 
 export function RecHeader({ onRefresh }: { onRefresh: () => void | Promise<void> }) {
   const { accessKey } = useConfigSnapshot()
@@ -69,6 +69,7 @@ export function RecHeader({ onRefresh }: { onRefresh: () => void | Promise<void>
           </button>
         </div>
       </div>
+
       <ModalFeed show={showMore} onHide={onModalFeedHide} />
       <ModalConfig show={modalConfigVisible} onHide={hideModalConfig} />
     </>
