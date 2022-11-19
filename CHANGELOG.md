@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.6.0 2022-11-19
+
+- feat: 设置面板
+- feat: 纯分享模式, 侵入极强.
+
 ## v0.5.2 2022-11-18
 
 - c472bb5 feat: add turbo
