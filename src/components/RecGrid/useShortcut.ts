@@ -1,6 +1,6 @@
 import { config } from '$settings'
 import { useKeyPress, useMemoizedFn } from 'ahooks'
-import { useCallback, useState } from 'react'
+import { Ref, RefObject, useCallback, useState } from 'react'
 import styles from '../ModalFeed/index.module.less'
 
 interface IOptions {
@@ -8,22 +8,30 @@ interface IOptions {
   refresh: () => void | Promise<void>
   minIndex?: number
   maxIndex: number
+  containerRef: RefObject<HTMLElement>
+  getScrollerRect: () => DOMRect | null | undefined
 }
 
-export function useShortcut({ enabled, refresh, minIndex = 0, maxIndex }: IOptions) {
-  // 快捷键
+// 快捷键
+export function useShortcut({
+  enabled,
+  refresh,
+  minIndex = 0,
+  maxIndex,
+  containerRef,
+  getScrollerRect,
+}: IOptions) {
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
 
   const activeIndexIsValid = useMemoizedFn(() => {
-    if (activeIndex === null) {
-      return false
-    }
+    if (activeIndex === null) return false
+    if (!containerRef.current) return false
 
-    const activeCard = document.querySelector<HTMLDivElement>(`${CARDS_SELECTOR}.${styles.active}`)
-    const scroller = document.querySelector<HTMLDivElement>(`.${styles.modalBody}`)
-    if (!activeCard || !scroller) return false
-    const scrollerRect = scroller.getBoundingClientRect()
-    const rect = activeCard.getBoundingClientRect()
+    const scrollerRect = getScrollerRect()
+    const rect = containerRef.current
+      .querySelector<HTMLDivElement>(`.card.active`)
+      ?.getBoundingClientRect()
+    if (!scrollerRect || !rect) return false
 
     // active 在 scroller 上方, 超过一屏
     if (rect.top - scrollerRect.top < -(scrollerRect.height + rect.height)) {
@@ -98,74 +106,64 @@ export function useShortcut({ enabled, refresh, minIndex = 0, maxIndex }: IOptio
   })
   useKeyPress('r', onShortcutRefresh, { exactMatch: true }) // prevent refresh when cmd+R reload page
 
-  return { activeIndex, clearActiveIndex }
-}
+  function getInitialIndex() {
+    const scrollerRect = getScrollerRect()
+    if (!scrollerRect) return 0
 
-function getInitialIndex() {
-  const scroller = document.querySelector<HTMLDivElement>(`.${styles.modalBody}`)
-  if (!scroller) return 0
-  const scrollerRect = scroller.getBoundingClientRect()
+    const cards = getCards()
+    for (let i = 0; i < cards.length; i++) {
+      const card = cards[i]
+      const rect = card.getBoundingClientRect()
 
-  const cards = getCards()
-  for (let i = 0; i < cards.length; i++) {
-    const card = cards[i]
-    const rect = card.getBoundingClientRect()
-
-    // first fully visible card
-    if (rect.top >= scrollerRect.top) {
-      return i
+      // first fully visible card
+      if (rect.top >= scrollerRect.top) {
+        return i
+      }
     }
+
+    return 0
   }
 
-  return 0
-}
+  const CARDS_SELECTOR = `.card`
+  function getCards() {
+    return [...(containerRef.current?.querySelectorAll<HTMLDivElement>(CARDS_SELECTOR) || [])]
+  }
+  function getCardAt(index: number) {
+    return getCards()[index]
+  }
 
-const CARDS_SELECTOR = `#${styles.videoCardBody} .${styles.card}`
-function getCards() {
-  return [...document.querySelectorAll<HTMLDivElement>(CARDS_SELECTOR)]
-}
-function getCardAt(index: number) {
-  return getCards()[index]
-}
+  function makeVisible(index: number) {
+    const card = getCardAt(index)
+    ;(card as any)?.scrollIntoViewIfNeeded?.(false)
+  }
 
-function makeVisible(index: number) {
-  const card = getCardAt(index)
-  ;(card as any)?.scrollIntoViewIfNeeded?.(false)
-}
+  function openVideoAt(index: number) {
+    const card = getCardAt(index)
+    if (!card) return
+    const videoLink = card.querySelector<HTMLAnchorElement>('.bili-video-card__wrap > a')
+    videoLink?.click()
+  }
 
-function openVideoAt(index: number) {
-  const card = getCardAt(index)
-  if (!card) return
+  function getColCount() {
+    if (config.useNarrowMode) return 2
 
-  const videoLink = card.querySelector<HTMLAnchorElement>('.bili-video-card__wrap > a')
-  videoLink?.click()
+    let count = countCache.get(window.innerWidth)
+    if (count) {
+      return count
+    }
+
+    const container = containerRef.current
+    if (!container) return 0
+    const style = window.getComputedStyle(container)
+    if (style.display !== 'grid') return 0
+    count = style.gridTemplateColumns.split(' ').length
+
+    countCache.set(window.innerWidth, count)
+    return count
+  }
+
+  return { activeIndex, clearActiveIndex }
 }
 
 // use window.innerHeight as cache key
 const countCache = new Map<number, number>()
-
-function getColCount() {
-  if (config.useNarrowMode) return 2
-
-  let count = countCache.get(window.innerWidth)
-  if (count) {
-    return count
-  }
-
-  const firstCard = document.querySelector<HTMLDivElement>(CARDS_SELECTOR)
-  if (!firstCard) {
-    throw new Error('expect found first card')
-  }
-
-  count = 1
-  const top = firstCard.getBoundingClientRect().top
-
-  let next = firstCard.nextElementSibling
-  while (next && next.getBoundingClientRect().top === top) {
-    count++
-    next = next.nextElementSibling
-  }
-
-  countCache.set(window.innerWidth, count)
-  return count
-}

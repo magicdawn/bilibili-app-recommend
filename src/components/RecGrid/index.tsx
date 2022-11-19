@@ -9,7 +9,7 @@ import { useIsInternalTesting } from '$platform'
 import { getRecommendTimes } from '$service'
 import { useConfigSnapshot } from '$settings'
 import { useMemoizedFn } from 'ahooks'
-import { forwardRef, useImperativeHandle, useState } from 'react'
+import { forwardRef, RefObject, useImperativeHandle, useRef, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroller'
 import { internalTesting, narrowMode, videoGrid } from '../video-grid.module.less'
 import { useShortcut } from './useShortcut'
@@ -47,10 +47,11 @@ export type RecGridProps = {
   infiteScrollUseWindow: boolean
   onScrollToTop?: () => void | Promise<void>
   className?: string
+  scrollerRef?: RefObject<HTMLElement | null>
 }
 
 export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
-  ({ infiteScrollUseWindow, shortcutEnabled, onScrollToTop, className }, ref) => {
+  ({ infiteScrollUseWindow, shortcutEnabled, onScrollToTop, className, scrollerRef }, ref) => {
     const [items, setItems] = useState<RecItemWithUniqId[]>([])
     const [loading, setLoading] = useState(false)
 
@@ -82,11 +83,28 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
     // 窄屏模式
     const { useNarrowMode } = useConfigSnapshot()
 
+    // .video-grid
+    const containerRef = useRef<HTMLDivElement>(null)
+
+    const getScrollerRect = useMemoizedFn(() => {
+      // use window
+      if (infiteScrollUseWindow) {
+        const headerHight = 64
+        return new DOMRect(0, headerHight, window.innerWidth, window.innerHeight - headerHight)
+      }
+      // use in a scroller
+      else {
+        return scrollerRef?.current?.getBoundingClientRect()
+      }
+    })
+
     // 快捷键
     const { activeIndex, clearActiveIndex } = useShortcut({
       enabled: shortcutEnabled,
       refresh,
       maxIndex: items.length - 1,
+      containerRef,
+      getScrollerRect,
     })
 
     const isInisInternalTesting = useIsInternalTesting()
@@ -107,6 +125,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
       >
         {/* 这里只定义列数, 宽度 100% */}
         <div
+          ref={containerRef}
           className={cx(
             videoGrid,
             { [internalTesting]: isInisInternalTesting },
@@ -121,6 +140,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
                 loading={loading}
                 item={item}
                 css={[emotionStyles.card, index === activeIndex && emotionStyles.cardActive]}
+                className={cx('card', { active: index === activeIndex })}
               />
             )
           })}

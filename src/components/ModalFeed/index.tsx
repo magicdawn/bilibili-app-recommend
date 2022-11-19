@@ -14,20 +14,20 @@ interface IProps {
 }
 
 export const ModalFeed = memo(function ModalFeed({ show, onHide }: IProps) {
-  const scroller = useRef<HTMLDivElement>(null)
-  const recGrid = useRef<RecGridRef>(null)
+  const scrollerRef = useRef<HTMLDivElement>(null)
+  const recGridRef = useRef<RecGridRef>(null)
 
   // 窄屏模式
   const { useNarrowMode } = useConfigSnapshot()
   const narrowStyleObj = useMemo(() => ({ [styles.narrowMode]: useNarrowMode }), [useNarrowMode])
 
   const onRefresh = useMemoizedFn(() => {
-    return recGrid.current?.refresh()
+    return recGridRef.current?.refresh()
   })
 
   const onScrollToTop = useMemoizedFn(() => {
-    if (scroller.current) {
-      scroller.current.scrollTop = 0
+    if (scrollerRef.current) {
+      scrollerRef.current.scrollTop = 0
     }
   })
 
@@ -61,12 +61,13 @@ export const ModalFeed = memo(function ModalFeed({ show, onHide }: IProps) {
         </button>
       </div>
 
-      <div className={styles.modalBody} ref={scroller}>
+      <div className={styles.modalBody} ref={scrollerRef}>
         <RecGrid
-          ref={recGrid}
+          ref={recGridRef}
           shortcutEnabled={show}
-          infiteScrollUseWindow={false}
           onScrollToTop={onScrollToTop}
+          infiteScrollUseWindow={false}
+          scrollerRef={scrollerRef}
         />
       </div>
     </BaseModal>

@@ -1,8 +1,9 @@
 import { RecGrid, RecGridRef } from '$components/RecGrid'
-import { RecHeader } from '$components/RecHeader'
+import { RecHeader, useHeaderState } from '$components/RecHeader'
 import { css } from '$libs'
 import { useConfigSnapshot } from '$settings'
 import { useMemoizedFn } from 'ahooks'
+import { state as headerState } from '../RecHeader'
 import { useRef } from 'react'
 
 const narrowStyle = {
@@ -14,17 +15,18 @@ const narrowStyle = {
 }
 
 export function PureRecommend() {
-  const recGrid = useRef<RecGridRef>(null)
-
   // 窄屏模式
   const { useNarrowMode } = useConfigSnapshot()
 
+  // 是否已经打开 "查看更多" 即 ModalFeed
+  const { showMore: modalFeedVisible } = useHeaderState()
+
+  const recGrid = useRef<RecGridRef>(null)
   const onRefresh = useMemoizedFn(() => {
     return recGrid.current?.refresh()
   })
-
   const onScrollToTop = useMemoizedFn(() => {
-    document.body.scrollTop = 0
+    document.documentElement.scrollTop = 0
   })
 
   return (
@@ -33,7 +35,7 @@ export function PureRecommend() {
       <RecGrid
         ref={recGrid}
         css={[useNarrowMode && narrowStyle.grid]}
-        shortcutEnabled={false}
+        shortcutEnabled={!modalFeedVisible}
         infiteScrollUseWindow={true}
         onScrollToTop={onScrollToTop}
       />

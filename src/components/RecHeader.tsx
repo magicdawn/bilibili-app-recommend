@@ -3,6 +3,7 @@ import { css } from '$libs'
 import { config, useConfigSnapshot } from '$settings'
 import Config from '@icon-park/react/lib/icons/Config'
 import { useCallback, useRef, useState } from 'react'
+import { proxy, useSnapshot } from 'valtio'
 import { AccessKeyManage } from './AccessKeyManage'
 import { CollapseBtn, CollapseBtnRef } from './CollapseBtn'
 import { ModalFeed } from './ModalFeed'
@@ -22,16 +23,24 @@ const configStyles = {
   `,
 }
 
+export const state = proxy({
+  showMore: config.initialShowMore,
+})
+
+export const useHeaderState = function () {
+  return useSnapshot(state)
+}
+
 export function RecHeader({ onRefresh }: { onRefresh: () => void | Promise<void> }) {
   const { accessKey } = useConfigSnapshot()
   const collapseBtnRef = useRef<CollapseBtnRef>(null)
 
-  const [showMore, setShowMore] = useState(() => config.initialShowMore)
+  const { showMore } = useSnapshot(state)
   const onSeeMore = useCallback(() => {
-    setShowMore(true)
+    state.showMore = true
   }, [])
   const onModalFeedHide = useCallback(() => {
-    setShowMore(false)
+    state.showMore = false
   }, [])
 
   const [modalConfigVisible, setModalConfigVisible] = useState(false)
