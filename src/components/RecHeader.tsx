@@ -7,6 +7,8 @@ import { proxy, useSnapshot } from 'valtio'
 import { AccessKeyManage } from './AccessKeyManage'
 import { CollapseBtn, CollapseBtnRef } from './CollapseBtn'
 import { ModalFeed } from './ModalFeed'
+import { useSticky } from 'react-use-sticky'
+import { HEADER_HEIGHT } from '$platform'
 
 const configStyles = {
   btn: css`
@@ -31,17 +33,18 @@ export const useHeaderState = function () {
   return useSnapshot(state)
 }
 
+const onSeeMore = () => {
+  state.showMore = true
+}
+const onModalFeedHide = () => {
+  state.showMore = false
+}
+
 export function RecHeader({ onRefresh }: { onRefresh: () => void | Promise<void> }) {
-  const { accessKey } = useConfigSnapshot()
+  const { accessKey, pureRecommend } = useConfigSnapshot()
   const collapseBtnRef = useRef<CollapseBtnRef>(null)
 
   const { showMore } = useSnapshot(state)
-  const onSeeMore = useCallback(() => {
-    state.showMore = true
-  }, [])
-  const onModalFeedHide = useCallback(() => {
-    state.showMore = false
-  }, [])
 
   const [modalConfigVisible, setModalConfigVisible] = useState(false)
   const showModalConfig = useCallback(() => {
@@ -51,9 +54,32 @@ export function RecHeader({ onRefresh }: { onRefresh: () => void | Promise<void>
     setModalConfigVisible(false)
   }, [])
 
+  const [stickyRef, sticky] = useSticky<HTMLDivElement>()
+
   return (
     <>
-      <div className='area-header'>
+      <div
+        ref={stickyRef}
+        className='area-header'
+        css={[
+          css`
+            margin-bottom: 0;
+            height: 50px;
+          `,
+          pureRecommend &&
+            css`
+              position: sticky;
+              top: ${HEADER_HEIGHT}px;
+              z-index: 1000;
+            `,
+          pureRecommend &&
+            sticky &&
+            css`
+              background-color: var(--bg1_float);
+              box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
+            `,
+        ]}
+      >
         <div className='left'>
           <a id='影视' className='the-world area-anchor' data-id='25'></a>
           <svg className='icon'>

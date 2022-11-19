@@ -1,9 +1,16 @@
 import { cx } from '$libs'
+import { useIsDarkMode } from '$platform'
 import { useMemoizedFn } from 'ahooks'
-import { CSSProperties } from 'react'
-import { MouseEvent, ReactNode, useEffect, useId, useLayoutEffect, useMemo, useRef } from 'react'
+import {
+  CSSProperties,
+  MouseEvent,
+  ReactNode,
+  useId,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+} from 'react'
 import { createPortal } from 'react-dom'
-import { proxy, useSnapshot } from 'valtio'
 
 interface IProps {
   show: boolean
@@ -30,22 +37,6 @@ const modalHideCheck = () => {
     document.body.style.overflow = 'overlay' // unlock
   }
 }
-
-// Bilibili-evoled toggle dark mode
-// document.querySelector('[data-name=darkMode] .main-content').click()
-const getIsDarkMode = () => document.body.classList.contains('dark')
-const isDarkModeState = proxy({ value: getIsDarkMode() }) // like vue3 ref()
-const useIsDarkMode = function () {
-  return useSnapshot(isDarkModeState).value
-}
-
-const ob = new MutationObserver(function () {
-  isDarkModeState.value = getIsDarkMode()
-})
-ob.observe(document.body, {
-  attributes: true,
-  attributeFilter: ['class'],
-})
 
 export function BaseModal({
   show,

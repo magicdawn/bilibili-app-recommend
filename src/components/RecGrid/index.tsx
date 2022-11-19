@@ -4,8 +4,8 @@
 
 import { VideoCard } from '$components/VideoCard'
 import { RecItemWithUniqId } from '$define'
-import { css, cx } from '$libs'
-import { useIsInternalTesting } from '$platform'
+import { cssCls, cx } from '$libs'
+import { HEADER_HEIGHT, useIsInternalTesting } from '$platform'
 import { getRecommendTimes } from '$service'
 import { useConfigSnapshot } from '$settings'
 import { useMemoizedFn } from 'ahooks'
@@ -14,14 +14,14 @@ import InfiniteScroll from 'react-infinite-scroller'
 import { internalTesting, narrowMode, videoGrid } from '../video-grid.module.less'
 import { useShortcut } from './useShortcut'
 
-const emotionStyles = {
-  loader: css`
+export const cls = {
+  loader: cssCls`
     text-align: center;
     line-height: 60px;
     font-size: 120%;
   `,
 
-  card: css`
+  card: cssCls`
     border: 2px solid transparent;
 
     /* global class under .card */
@@ -31,7 +31,7 @@ const emotionStyles = {
       margin-top: calc(var(--info-margin-top) - 1px);
     }
   `,
-  cardActive: css`
+  cardActive: cssCls`
     border-color: #fb7299;
     border-radius: 6px;
     overflow: hidden;
@@ -89,7 +89,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
     const getScrollerRect = useMemoizedFn(() => {
       // use window
       if (infiteScrollUseWindow) {
-        const headerHight = 64
+        const headerHight = HEADER_HEIGHT + 50 // 50 RecHeader height
         return new DOMRect(0, headerHight, window.innerWidth, window.innerHeight - headerHight)
       }
       // use in a scroller
@@ -118,7 +118,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
         threshold={360} // 差不多一行高度
         style={{ minHeight: '100%' }}
         loader={
-          <div css={emotionStyles.loader} key={0}>
+          <div css={cls.loader} key={0}>
             加载中...
           </div>
         }
@@ -139,8 +139,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
                 key={item.uniqId}
                 loading={loading}
                 item={item}
-                css={[emotionStyles.card, index === activeIndex && emotionStyles.cardActive]}
-                className={cx('card', { active: index === activeIndex })}
+                className={cx(cls.card, { [cls.cardActive]: index === activeIndex })}
               />
             )
           })}

@@ -60,7 +60,7 @@ export function ModalConfig({ show, onHide }: { show: boolean; onHide: () => voi
               onChange={async (e) => {
                 config.pureRecommend = (e.target as HTMLInputElement).checked
                 toast('即将刷新网页')
-                await delay(1000)
+                await delay(500)
                 location.reload()
               }}
             />

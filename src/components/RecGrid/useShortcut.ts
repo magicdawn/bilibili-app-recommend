@@ -1,7 +1,7 @@
 import { config } from '$settings'
 import { useKeyPress, useMemoizedFn } from 'ahooks'
-import { Ref, RefObject, useCallback, useState } from 'react'
-import styles from '../ModalFeed/index.module.less'
+import { RefObject, useCallback, useState } from 'react'
+import { cls } from './index'
 
 interface IOptions {
   enabled: boolean
@@ -29,7 +29,7 @@ export function useShortcut({
 
     const scrollerRect = getScrollerRect()
     const rect = containerRef.current
-      .querySelector<HTMLDivElement>(`.card.active`)
+      .querySelector<HTMLDivElement>(`.${cls.card}.${cls.cardActive}`)
       ?.getBoundingClientRect()
     if (!scrollerRect || !rect) return false
 
@@ -124,7 +124,7 @@ export function useShortcut({
     return 0
   }
 
-  const CARDS_SELECTOR = `.card`
+  const CARDS_SELECTOR = `.${cls.card}`
   function getCards() {
     return [...(containerRef.current?.querySelectorAll<HTMLDivElement>(CARDS_SELECTOR) || [])]
   }
