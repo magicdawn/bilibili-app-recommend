@@ -1,12 +1,15 @@
 import { toastContainer } from './toast.module.less'
+import ms from 'ms'
 
-export function toast(msg: string, duration = 2000) {
+export function toast(msg: string, duration: number | string = 2000) {
+  let d = typeof duration === 'number' ? duration : ms(duration)
+
   const div = document.createElement('div')
   div.className = toastContainer
   div.innerText = msg
 
   document.body.appendChild(div)
-  setTimeout(() => div.remove(), duration)
+  setTimeout(() => div.remove(), d)
 }
 
 export const REQUEST_FAIL_MSG = '请求失败, 请重试 !!!'

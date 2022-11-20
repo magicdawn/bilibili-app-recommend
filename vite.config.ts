@@ -16,6 +16,7 @@ export default defineConfig({
   resolve: {
     alias: {
       lodash: 'lodash-es',
+      util: 'rollup-plugin-node-polyfills/polyfills/util',
     },
   },
 
