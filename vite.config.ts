@@ -80,7 +80,7 @@ export default defineConfig({
       },
 
       server: {
-        open: true,
+        open: false, //
         prefix: (name) => name, // 一样的, 避免切换
         mountGmApi: true,
       },

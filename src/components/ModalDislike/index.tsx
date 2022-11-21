@@ -1,4 +1,4 @@
-import { BaseModal } from '$components/BaseModal'
+import { BaseModal, BaseModalClass } from '$components/BaseModal'
 import { RecItem } from '$define'
 import { toast, toastOperationFail, toastRequestFail } from '$utility/toast'
 import { useMemoizedFn } from 'ahooks'
@@ -75,20 +75,19 @@ export function ModalDislike({ show, onHide, item }: IProps) {
       {...{
         show,
         onHide,
-        clsModalMask: styles.modalMask,
         clsModal: styles.modal,
         hideWhenMaskOnClick: true,
       }}
     >
-      <div className={styles.modalHeader}>
-        <div className={styles.modalTitle}>
+      <div className={BaseModalClass.modalHeader}>
+        <div className={BaseModalClass.modalTitle}>
           我不想看
           <span className={styles.titleDesc}>(选择后将减少相似内容推荐)</span>
         </div>
 
         <div className='space' style={{ flex: 1 }}></div>
 
-        <button className={`primary-btn roll-btn ${styles.btnClose}`} onClick={onHide}>
+        <button className={`primary-btn roll-btn ${BaseModalClass.btnClose}`} onClick={onHide}>
           <svg style={{ transform: 'rotate(0deg)' }}>
             <use xlinkHref='#widget-close'></use>
           </svg>
@@ -96,7 +95,7 @@ export function ModalDislike({ show, onHide, item }: IProps) {
         </button>
       </div>
 
-      <div className={styles.modalBody}>
+      <div className={BaseModalClass.modalBody}>
         <div className={styles.reasonList}>
           {reasons.map((r) => {
             return (

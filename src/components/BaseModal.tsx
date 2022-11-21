@@ -11,6 +11,9 @@ import {
   useRef,
 } from 'react'
 import { createPortal } from 'react-dom'
+import BaseModalClass from './BaseModal.module.less'
+
+export { BaseModalClass }
 
 interface IProps {
   show: boolean
@@ -102,8 +105,8 @@ export function BaseModal({
   }
 
   return createPortal(
-    <div className={cx(clsModalMask)} onClick={onMaskClick}>
-      <div className={cx(clsModal)} style={wrapperStyle} ref={wrapperRef}>
+    <div className={cx(BaseModalClass.modalMask, clsModalMask)} onClick={onMaskClick}>
+      <div className={cx(BaseModalClass.modal, clsModal)} style={wrapperStyle} ref={wrapperRef}>
         {children}
       </div>
     </div>,

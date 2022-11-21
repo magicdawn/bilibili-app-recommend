@@ -1,31 +1,15 @@
 @import '../../common/vars.less';
 
 .modal-mask {
-  position: fixed;
-  left: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 11000;
-
-  background-color: rgba(0, 0, 0, 0.5);
   &.narrow-mode {
     background-color: rgba(0, 0, 0, 0.9);
   }
-
-  // make .model center
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .modal {
   width: calc(100vw - 30px);
   height: calc(100vh - 30px);
-  border-radius: 10px;
-  overflow: hidden;
-  background-color: #fff;
-  padding: 0 15px 15px 15px;
+  max-height: unset;
   padding-right: 0; // 滚动条右移
 
   // 只有 "dark mode" + "全屏弹框", 需要 border, 看不清边界
@@ -43,50 +27,22 @@
       border: none;
     }
   }
+}
 
-  display: flex;
-  flex-direction: column;
+// 滚动条右移
+.modal-header,
+.modal-body {
+  padding-right: 15px;
+}
 
-  .modal-header {
-    padding-top: 10px;
-    padding-bottom: 10px;
-    border-bottom: none;
-    padding-right: 15px;
-    display: flex;
-    align-items: center;
-
-    .modal-title {
-      font-size: 1.5rem;
-      margin-bottom: 0;
-      line-height: 1.5;
-    }
-
-    .btn-refresh,
-    .btn-close {
-      :global(body.dark) & {
-        color: #eee !important;
-        background-color: #333 !important;
-        border-color: transparent !important;
-        height: auto;
-        padding: 8px 12px;
-        line-height: 16px;
-        font-size: 13px;
-      }
-    }
-
-    .btn-close {
-      margin-left: 10px;
-      svg {
-        width: 10px;
-        height: 10px;
-      }
-    }
-  }
-
-  .modal-body {
-    padding-top: 0;
-    flex-grow: 1;
-    overflow-y: scroll;
-    padding-right: 15px;
+.btn-refresh {
+  :global(body.dark) & {
+    color: #eee !important;
+    background-color: #333 !important;
+    border-color: transparent !important;
+    height: auto;
+    padding: 8px 12px;
+    line-height: 16px;
+    font-size: 13px;
   }
 }

@@ -1,15 +1,15 @@
 import utilityStyles from '$common/utility.module.less'
-import { BaseModal } from '$components/BaseModal'
 import { AccessKeyManage } from '$components/AccessKeyManage'
-import { css, cx } from '$libs'
+import { BaseModal, BaseModalClass } from '$components/BaseModal'
+import { ConfigCheck } from '$components/piece'
+import { cx } from '$libs'
+import { useIsDarkMode } from '$platform'
 import { config, useConfigSnapshot } from '$settings'
+import { toast } from '$utility/toast'
 import Config from '@icon-park/react/lib/icons/Config'
+import delay from 'delay'
 import { useId } from 'react'
 import styles from './index.module.less'
-import { ConfigCheck } from '$components/piece'
-import { toast } from '$utility/toast'
-import delay from 'delay'
-import { useIsDarkMode } from '$platform'
 
 export function ModalConfig({ show, onHide }: { show: boolean; onHide: () => void }) {
   const pureRecommendId = useId()
@@ -17,17 +17,9 @@ export function ModalConfig({ show, onHide }: { show: boolean; onHide: () => voi
   const isDarkMode = useIsDarkMode()
 
   return (
-    <BaseModal
-      {...{
-        show,
-        onHide,
-        clsModalMask: styles.modalMask,
-        clsModal: styles.modal,
-        hideWhenMaskOnClick: true,
-      }}
-    >
-      <div className={styles.modalHeader}>
-        <div className={styles.modalTitle}>
+    <BaseModal {...{ show, onHide, hideWhenMaskOnClick: true }}>
+      <div className={BaseModalClass.modalHeader}>
+        <div className={BaseModalClass.modalTitle}>
           <Config
             theme='outline'
             size='24'
@@ -39,7 +31,7 @@ export function ModalConfig({ show, onHide }: { show: boolean; onHide: () => voi
 
         <div className='space' style={{ flex: 1 }}></div>
 
-        <button className={`primary-btn roll-btn ${styles.btnClose}`} onClick={onHide}>
+        <button className={`primary-btn roll-btn ${BaseModalClass.btnClose}`} onClick={onHide}>
           <svg style={{ transform: 'rotate(0deg)' }}>
             <use xlinkHref='#widget-close'></use>
           </svg>
@@ -47,7 +39,7 @@ export function ModalConfig({ show, onHide }: { show: boolean; onHide: () => voi
         </button>
       </div>
 
-      <main className={styles.modalBody}>
+      <main className={BaseModalClass.modalBody}>
         <div className={styles.settingsGroup}>
           <div className={styles.settingsGroupTitle}>Auth</div>
           <div className={cx(styles.settingsGroupContent, styles.row)}>
