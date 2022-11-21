@@ -1,10 +1,10 @@
 import { dislikedIds, Reason, showModalDislike, useDislikedReason } from '$components/ModalDislike'
 import { RecItem } from '$define/recommend'
+import { IconPark } from '$icon-park'
 import { useConfigSnapshot } from '$settings'
 import { toast, toastOperationFail, toastRequestFail } from '$utility/toast'
 import { getCountStr, getDurationStr } from '$utility/video'
-import DistraughtFace from '@icon-park/react/lib/icons/DistraughtFace'
-import Return from '@icon-park/react/lib/icons/Return'
+
 import { useEventListener, useHover, useMemoizedFn } from 'ahooks'
 import cx from 'classnames'
 import dayjs from 'dayjs'
@@ -114,19 +114,14 @@ const DislikedCard = memo(function DislikedCard({ dislikedReason, item }: Disabl
     <div className={cx(styles.dislikedWrapper)}>
       <div className={styles.dislikeContentCover}>
         <div className={styles.dislikeContentCoverInner}>
-          <DistraughtFace theme='outline' size='32' fill='#333' className={styles.dislikeIcon} />
+          <IconPark name='DistraughtFace' size={32} className={styles.dislikeIcon} />
           <div className={styles.dislikeReason}>{dislikedReason?.name}</div>
           <div className={styles.dislikeDesc}>将减少此类内容推荐</div>
         </div>
       </div>
       <div className={styles.dislikeContentAction}>
         <button onClick={onCancelDislike}>
-          <Return
-            theme='outline'
-            size='16'
-            fill='#333'
-            style={{ marginRight: 4, fontSize: 0, marginTop: -2 }}
-          />
+          <IconPark name='Return' size='16' style={{ marginRight: 4, marginTop: -2 }} />
           撤销
         </button>
       </div>

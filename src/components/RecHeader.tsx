@@ -1,7 +1,6 @@
 import { ModalConfig } from '$components/ModalConfig'
 import { css } from '$libs'
 import { config, useConfigSnapshot } from '$settings'
-import Config from '@icon-park/react/lib/icons/Config'
 import { useCallback, useRef, useState } from 'react'
 import { proxy, useSnapshot } from 'valtio'
 import { AccessKeyManage } from './AccessKeyManage'
@@ -9,6 +8,7 @@ import { CollapseBtn, CollapseBtnRef } from './CollapseBtn'
 import { ModalFeed } from './ModalFeed'
 import { useSticky } from 'react-use-sticky'
 import { HEADER_HEIGHT, useIsDarkMode } from '$platform'
+import { IconPark } from '$icon-park'
 
 const configStyles = {
   btn: css`
@@ -94,12 +94,7 @@ export function RecHeader({ onRefresh }: { onRefresh: () => void | Promise<void>
 
         <div className='right'>
           <button className='primary-btn' css={configStyles.btn} onClick={showModalConfig}>
-            <Config
-              theme='outline'
-              size='24'
-              fill={isDarkMode ? '#fff' : '#333'}
-              css={configStyles.icon}
-            />
+            <IconPark name='Config' css={configStyles.icon} />
           </button>
 
           {!accessKey ? (

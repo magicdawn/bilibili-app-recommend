@@ -1,4 +1,4 @@
-import { BaseModal, BaseModalClass } from '$components/BaseModal'
+import { BaseModal, BaseModalClass, ModalClose } from '$components/BaseModal'
 import { RecItem } from '$define'
 import { toast, toastOperationFail, toastRequestFail } from '$utility/toast'
 import { useMemoizedFn } from 'ahooks'
@@ -87,12 +87,14 @@ export function ModalDislike({ show, onHide, item }: IProps) {
 
         <div className='space' style={{ flex: 1 }}></div>
 
-        <button className={`primary-btn roll-btn ${BaseModalClass.btnClose}`} onClick={onHide}>
+        {/* <button className={`primary-btn roll-btn ${BaseModalClass.btnClose}`} onClick={onHide}>
           <svg style={{ transform: 'rotate(0deg)' }}>
             <use xlinkHref='#widget-close'></use>
           </svg>
           <span>关闭</span>
-        </button>
+        </button> */}
+
+        <ModalClose onClick={onHide} />
       </div>
 
       <div className={BaseModalClass.modalBody}>

@@ -1,5 +1,5 @@
-import { toastContainer } from './toast.module.less'
 import ms from 'ms'
+import { singleLine, toastContainer } from './toast.module.less'
 
 export function toast(msg: string, duration: number | string = 2000) {
   let d = typeof duration === 'number' ? duration : ms(duration)
@@ -7,6 +7,10 @@ export function toast(msg: string, duration: number | string = 2000) {
   const div = document.createElement('div')
   div.className = toastContainer
   div.innerText = msg
+
+  if (!msg.includes('\n') && !msg.includes('<br')) {
+    div.classList.add(singleLine)
+  }
 
   document.body.appendChild(div)
   setTimeout(() => div.remove(), d)

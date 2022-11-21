@@ -1,12 +1,12 @@
 import utilityStyles from '$common/utility.module.less'
 import { AccessKeyManage } from '$components/AccessKeyManage'
-import { BaseModal, BaseModalClass } from '$components/BaseModal'
+import { BaseModal, BaseModalClass, ModalClose } from '$components/BaseModal'
 import { ConfigCheck } from '$components/piece'
+import { IconPark } from '$icon-park'
 import { cx } from '$libs'
 import { useIsDarkMode } from '$platform'
 import { config, useConfigSnapshot } from '$settings'
 import { toast } from '$utility/toast'
-import Config from '@icon-park/react/lib/icons/Config'
 import delay from 'delay'
 import { useId } from 'react'
 import styles from './index.module.less'
@@ -20,23 +20,20 @@ export function ModalConfig({ show, onHide }: { show: boolean; onHide: () => voi
     <BaseModal {...{ show, onHide, hideWhenMaskOnClick: true }}>
       <div className={BaseModalClass.modalHeader}>
         <div className={BaseModalClass.modalTitle}>
-          <Config
-            theme='outline'
-            size='24'
-            fill={isDarkMode ? '#fff' : '#333'}
-            className={styles.configIcon}
-          />
+          <IconPark name='Config' className={styles.configIcon} />
           设置项
         </div>
 
         <div className='space' style={{ flex: 1 }}></div>
 
-        <button className={`primary-btn roll-btn ${BaseModalClass.btnClose}`} onClick={onHide}>
+        {/* <button className={`primary-btn roll-btn ${BaseModalClass.btnClose}`} onClick={onHide}>
           <svg style={{ transform: 'rotate(0deg)' }}>
             <use xlinkHref='#widget-close'></use>
           </svg>
           <span>关闭</span>
-        </button>
+        </button> */}
+
+        <ModalClose onClick={onHide} />
       </div>
 
       <main className={BaseModalClass.modalBody}>

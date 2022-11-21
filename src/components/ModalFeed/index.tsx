@@ -4,7 +4,7 @@ import { cx } from '$libs'
 import { useConfigSnapshot } from '$settings'
 import { useMemoizedFn } from 'ahooks'
 import { memo, useMemo, useRef } from 'react'
-import { BaseModal, BaseModalClass } from '../BaseModal'
+import { BaseModal, BaseModalClass, ModalClose } from '../BaseModal'
 import { CollapseBtn } from '../CollapseBtn'
 import styles from './index.module.less'
 
@@ -53,12 +53,14 @@ export const ModalFeed = memo(function ModalFeed({ show, onHide }: IProps) {
           <span>换一换</span>
         </button>
 
-        <button className={`primary-btn roll-btn ${BaseModalClass.btnClose}`} onClick={onHide}>
+        {/* <button className={`primary-btn roll-btn ${BaseModalClass.btnClose}`} onClick={onHide}>
           <svg>
             <use xlinkHref='#widget-close'></use>
           </svg>
           <span>关闭</span>
-        </button>
+        </button> */}
+
+        <ModalClose onClick={onHide} />
       </div>
 
       <div className={cx(BaseModalClass.modalBody, styles.modalBody)} ref={scrollerRef}>

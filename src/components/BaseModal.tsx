@@ -1,7 +1,9 @@
+import { IconPark } from '$icon-park'
 import { cx } from '$libs'
 import { useIsDarkMode } from '$platform'
 import { useMemoizedFn } from 'ahooks'
 import {
+  ComponentProps,
   CSSProperties,
   MouseEvent,
   ReactNode,
@@ -111,5 +113,20 @@ export function BaseModal({
       </div>
     </div>,
     container
+  )
+}
+
+export const ModalClose = (props: Omit<ComponentProps<typeof IconPark>, 'name'>) => {
+  return (
+    <IconPark
+      {...props}
+      name='Close'
+      size={18}
+      style={{
+        cursor: 'pointer',
+        marginLeft: 10,
+        ...props.style,
+      }}
+    />
   )
 }
