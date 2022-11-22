@@ -4,7 +4,6 @@ import { BaseModal, BaseModalClass, ModalClose } from '$components/BaseModal'
 import { ConfigCheck } from '$components/piece'
 import { IconPark } from '$icon-park'
 import { cx } from '$libs'
-import { useIsDarkMode } from '$platform'
 import { config, useConfigSnapshot } from '$settings'
 import { toast } from '$utility/toast'
 import delay from 'delay'
@@ -14,10 +13,9 @@ import styles from './index.module.less'
 export function ModalConfig({ show, onHide }: { show: boolean; onHide: () => void }) {
   const pureRecommendId = useId()
   const { pureRecommend } = useConfigSnapshot()
-  const isDarkMode = useIsDarkMode()
 
   return (
-    <BaseModal {...{ show, onHide, hideWhenMaskOnClick: true }}>
+    <BaseModal {...{ show, onHide, hideWhenMaskOnClick: true, hideWhenEsc: true }}>
       <div className={BaseModalClass.modalHeader}>
         <div className={BaseModalClass.modalTitle}>
           <IconPark name='Config' className={styles.configIcon} />

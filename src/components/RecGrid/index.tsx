@@ -2,6 +2,7 @@
  * 推荐内容, 无限滚动
  */
 
+import { showModalDislike, useModalDislikeVisible } from '$components/ModalDislike'
 import { VideoCard } from '$components/VideoCard'
 import { RecItemWithUniqId } from '$define'
 import { cssCls, cx } from '$libs'
@@ -98,13 +99,19 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
       }
     })
 
+    // 不喜欢弹框
+    const modalDislikeVisible = useModalDislikeVisible()
+
     // 快捷键
     const { activeIndex, clearActiveIndex } = useShortcut({
-      enabled: shortcutEnabled,
+      enabled: shortcutEnabled && !modalDislikeVisible,
       refresh,
       maxIndex: items.length - 1,
       containerRef,
       getScrollerRect,
+      openDislikeAt(index) {
+        showModalDislike(items[index])
+      },
     })
 
     const isInisInternalTesting = useIsInternalTesting()

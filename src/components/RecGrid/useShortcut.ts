@@ -10,6 +10,7 @@ interface IOptions {
   maxIndex: number
   containerRef: RefObject<HTMLElement>
   getScrollerRect: () => DOMRect | null | undefined
+  openDislikeAt: (index: number) => void
 }
 
 // 快捷键
@@ -20,6 +21,7 @@ export function useShortcut({
   maxIndex,
   containerRef,
   getScrollerRect,
+  openDislikeAt,
 }: IOptions) {
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
 
@@ -88,16 +90,22 @@ export function useShortcut({
   useKeyPress('downarrow', nextRow)
 
   // actions
-  const open = useMemoizedFn(() => {
-    if (!activeIndex || !enabled) return
-    openVideoAt(activeIndex)
-  })
   const clearActiveIndex = useMemoizedFn(() => {
     if (!enabled) return
     setActiveIndex(null)
   })
-  useKeyPress('enter', open)
+  const open = useMemoizedFn(() => {
+    if (!enabled || typeof activeIndex !== 'number') return
+    openVideoAt(activeIndex)
+  })
+  const dislike = useMemoizedFn(() => {
+    if (!enabled || typeof activeIndex !== 'number') return
+    openDislikeAt(activeIndex)
+  })
+
   useKeyPress('esc', clearActiveIndex)
+  useKeyPress('enter', open)
+  useKeyPress('backspace', dislike)
 
   // refresh
   const onShortcutRefresh = useMemoizedFn(() => {

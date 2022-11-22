@@ -1,7 +1,7 @@
 import { IconPark } from '$icon-park'
 import { cx } from '$libs'
 import { useIsDarkMode } from '$platform'
-import { useMemoizedFn } from 'ahooks'
+import { useKeyPress, useMemoizedFn } from 'ahooks'
 import {
   ComponentProps,
   CSSProperties,
@@ -28,6 +28,7 @@ interface IProps {
 
   // behaviors
   hideWhenMaskOnClick?: boolean
+  hideWhenEsc?: boolean
 }
 
 let showedCount = 0
@@ -50,6 +51,7 @@ export function BaseModal({
   clsModalMask,
   clsModal,
   hideWhenMaskOnClick = false,
+  hideWhenEsc = false,
 }: IProps) {
   // lock body scroll
   useLayoutEffect(() => {
@@ -100,6 +102,11 @@ export function BaseModal({
     if (hideWhenMaskOnClick) {
       onHide()
     }
+  })
+
+  useKeyPress('esc', () => {
+    if (!show) return
+    if (hideWhenEsc) onHide()
   })
 
   if (!show) {

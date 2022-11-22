@@ -4,7 +4,7 @@ import { toast, toastOperationFail, toastRequestFail } from '$utility/toast'
 import { useMemoizedFn } from 'ahooks'
 import { useMemo, useState } from 'react'
 import { createRoot, Root } from 'react-dom/client'
-import { useSnapshot } from 'valtio'
+import { proxy, useSnapshot } from 'valtio'
 import { proxyMap } from 'valtio/utils'
 import { dislike } from '../VideoCard/card.service'
 import styles from './index.module.less'
@@ -77,6 +77,7 @@ export function ModalDislike({ show, onHide, item }: IProps) {
         onHide,
         clsModal: styles.modal,
         hideWhenMaskOnClick: true,
+        hideWhenEsc: true,
       }}
     >
       <div className={BaseModalClass.modalHeader}>
@@ -124,12 +125,22 @@ const currentProps: IProps = {
   item: null,
 }
 
+// for outside consumer
+const modalDislikeVisibleState = proxy({
+  value: currentProps.show,
+})
+
+export const useModalDislikeVisible = function () {
+  return useSnapshot(modalDislikeVisibleState).value
+}
+
 function onHide() {
   updateProps({ show: false, item: null })
 }
 
 function updateProps(newProps: Partial<IProps>) {
   Object.assign(currentProps, newProps)
+  modalDislikeVisibleState.value = currentProps.show
   getRoot().render(<ModalDislike {...currentProps} onHide={onHide} />)
 }
 
