@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.6.1 2022-11-22
+
+- 350ea14 feat: add backspace & esc key listener
+- fd7ce55 chore: add more icons
+- a579334 feat: more consitant modal style
+- 43bca35 feat: refactor Modal styles
+- 69f7667 chore: update deps
+- d17db21 chore: toast min width
+- 0882b04 feat: add more error report
+
 ## v0.6.0 2022-11-19
 
 - feat: 设置面板
