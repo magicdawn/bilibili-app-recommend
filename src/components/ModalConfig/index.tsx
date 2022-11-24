@@ -66,7 +66,7 @@ export function ModalConfig({ show, onHide }: { show: boolean; onHide: () => voi
             />
             <ConfigCheck
               configKey={'useNarrowMode'}
-              label='启用窄屏模式'
+              label='启用居中模式(居中两列)'
               className={styles.check}
             />
           </div>

@@ -70,7 +70,11 @@ export const ModalFeedConfigChecks = function () {
   return (
     <>
       <ConfigCheck configKey={'initialShowMore'} label='自动查看更多' css={inModalFeedStyle} />
-      <ConfigCheck configKey={'useNarrowMode'} label='启用窄屏模式' css={inModalFeedStyle} />
+      <ConfigCheck
+        configKey={'useNarrowMode'}
+        label='启用居中模式(居中两列)'
+        css={inModalFeedStyle}
+      />
     </>
   )
 }
