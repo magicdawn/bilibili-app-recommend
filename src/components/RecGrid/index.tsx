@@ -112,6 +112,19 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
       openDislikeAt(index) {
         showModalDislike(items[index])
       },
+      changeScrollY: infiteScrollUseWindow
+        ? function ({ offset, absolute }) {
+            const scroller = document.documentElement
+            if (typeof offset === 'number') {
+              scroller.scrollTop += offset
+              return
+            }
+            if (typeof absolute === 'number') {
+              scroller.scrollTop = absolute
+              return
+            }
+          }
+        : undefined,
     })
 
     const isInisInternalTesting = useIsInternalTesting()

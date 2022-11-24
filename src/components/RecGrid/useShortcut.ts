@@ -8,9 +8,18 @@ interface IOptions {
   refresh: () => void | Promise<void>
   minIndex?: number
   maxIndex: number
+
+  /** 用于获取 cards */
   containerRef: RefObject<HTMLElement>
-  getScrollerRect: () => DOMRect | null | undefined
+
+  /** cards action */
   openDislikeAt: (index: number) => void
+
+  /** 判断 active card 与 scroller 关系, 判定 activeIndex 是否有效 */
+  getScrollerRect: () => DOMRect | null | undefined
+
+  /** 调整 scrollY  */
+  changeScrollY?: (options: { offset?: number; absolute?: number }) => void
 }
 
 // 快捷键
@@ -22,6 +31,7 @@ export function useShortcut({
   containerRef,
   getScrollerRect,
   openDislikeAt,
+  changeScrollY,
 }: IOptions) {
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
 
@@ -56,6 +66,7 @@ export function useShortcut({
     const index = activeIndexIsValid() ? activeIndex! + step : getInitialIndex()
     // overflow
     if (index < minIndex) {
+      makeVisible(minIndex)
       return
     }
     if (index > maxIndex) {
@@ -143,6 +154,26 @@ export function useShortcut({
   function makeVisible(index: number) {
     const card = getCardAt(index)
     ;(card as any)?.scrollIntoViewIfNeeded?.(false)
+
+    /**
+     * for PureRecommend 手动检测
+     */
+    const scrollerRect = getScrollerRect()
+    const rect = card.getBoundingClientRect()
+    if (!scrollerRect || !rect) return
+
+    // 上部遮挡
+    if (rect.top <= scrollerRect.top) {
+      const offset = -(scrollerRect.top - rect.top + 10)
+      changeScrollY?.({ offset })
+      return
+    }
+    // 下面
+    if (scrollerRect.bottom - rect.bottom < 10) {
+      const offset = 10 - (scrollerRect.bottom - rect.bottom)
+      changeScrollY?.({ offset })
+      return
+    }
   }
 
   function openVideoAt(index: number) {
