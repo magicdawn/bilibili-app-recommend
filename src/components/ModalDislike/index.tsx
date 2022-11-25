@@ -124,7 +124,7 @@ export function ModalDislike({ show, onHide, item }: IProps) {
 
         <div className={styles.tips}>
           <IconPark name='Info' size={15} style={{ marginRight: 5 }} />
-          使用数字键选择, Esc 关闭
+          使用删除键打开弹框, 数字键选择, Esc 关闭
         </div>
       </div>
     </BaseModal>
@@ -168,6 +168,9 @@ function getRoot() {
 }
 
 export function showModalDislike(item: RecItem) {
+  // 已经是 dislike 状态
+  if (item?.param && dislikedIds.has(item.param)) return
+
   updateProps({ show: true, item })
 }
 
