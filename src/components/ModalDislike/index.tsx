@@ -1,7 +1,8 @@
 import { BaseModal, BaseModalClass, ModalClose } from '$components/BaseModal'
 import { RecItem } from '$define'
+import { IconPark } from '$icon-park'
 import { toast, toastOperationFail, toastRequestFail } from '$utility/toast'
-import { useMemoizedFn } from 'ahooks'
+import { useKeyPress, useMemoizedFn } from 'ahooks'
 import { useMemo, useState } from 'react'
 import { createRoot, Root } from 'react-dom/client'
 import { proxy, useSnapshot } from 'valtio'
@@ -70,6 +71,20 @@ export function ModalDislike({ show, onHide, item }: IProps) {
     ]
   }, [item])
 
+  const KEYS = ['1', '2', '3', '4', '5', '6']
+  useKeyPress(KEYS, (e) => {
+    if (!show) return
+    if (!item) return
+    if (!KEYS.includes(e.key)) return
+
+    // 使用 btn.click 无需 isRequesting 判断
+    // if (isRequesting) return
+
+    const index = Number(e.key) - 1
+    const btn = document.querySelectorAll<HTMLButtonElement>(`.${styles.reason}`)[index] || null
+    btn?.click()
+  })
+
   return (
     <BaseModal
       {...{
@@ -85,22 +100,13 @@ export function ModalDislike({ show, onHide, item }: IProps) {
           我不想看
           <span className={styles.titleDesc}>(选择后将减少相似内容推荐)</span>
         </div>
-
         <div className='space' style={{ flex: 1 }}></div>
-
-        {/* <button className={`primary-btn roll-btn ${BaseModalClass.btnClose}`} onClick={onHide}>
-          <svg style={{ transform: 'rotate(0deg)' }}>
-            <use xlinkHref='#widget-close'></use>
-          </svg>
-          <span>关闭</span>
-        </button> */}
-
         <ModalClose onClick={onHide} />
       </div>
 
       <div className={BaseModalClass.modalBody}>
         <div className={styles.reasonList}>
-          {reasons.map((r) => {
+          {reasons.map((r, index) => {
             return (
               <button
                 className={styles.reason}
@@ -109,10 +115,16 @@ export function ModalDislike({ show, onHide, item }: IProps) {
                 disabled={isRequesting}
                 key={r.reason_id}
               >
+                <span className={styles.reasonNo}>{index + 1}</span>
                 {r.reason_name}
               </button>
             )
           })}
+        </div>
+
+        <div className={styles.tips}>
+          <IconPark name='Info' size={15} style={{ marginRight: 5 }} />
+          使用数字键选择, Esc 关闭
         </div>
       </div>
     </BaseModal>
@@ -158,3 +170,8 @@ function getRoot() {
 export function showModalDislike(item: RecItem) {
   updateProps({ show: true, item })
 }
+
+// setTimeout(() => {
+//   // @ts-ignore
+//   showModalDislike(null)
+// }, 1000)

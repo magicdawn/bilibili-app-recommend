@@ -6,9 +6,10 @@ import { ComponentProps } from 'react'
 import Close from '@icon-park/react/lib/icons/Close'
 import Config from '@icon-park/react/lib/icons/Config'
 import DistraughtFace from '@icon-park/react/lib/icons/DistraughtFace'
-import Return from '@icon-park/react/lib/icons/Return'
-import LoadingThree from '@icon-park/react/lib/icons/LoadingThree'
+import Info from '@icon-park/react/lib/icons/Info'
 import Loading from '@icon-park/react/lib/icons/Loading'
+import LoadingThree from '@icon-park/react/lib/icons/LoadingThree'
+import Return from '@icon-park/react/lib/icons/Return'
 
 const ImportedIcons = {
   Close,
@@ -17,6 +18,7 @@ const ImportedIcons = {
   Return,
   Loading,
   LoadingThree,
+  Info,
 }
 // prettier fails this
 // satisfies Record<string, Icon>

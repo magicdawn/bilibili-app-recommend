@@ -1,3 +1,5 @@
+@import '../../common/vars.less';
+
 .modal {
   width: 500px;
 }
@@ -18,17 +20,43 @@
 
 .reason {
   color: inherit;
-  width: 45%;
+  width: 48%;
   text-align: center;
   line-height: 20px;
+  position: relative;
 
   border: 1px solid #eee;
   :global(body.dark) & {
     border: 1px solid #333;
   }
 
-  margin-top: 8px;
-  margin-bottom: 8px;
   padding-top: 5px;
   padding-bottom: 5px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.reason-no {
+  position: absolute;
+  left: 6px;
+
+  @size: 20px;
+  width: @size;
+  height: @size;
+  border-radius: 50%;
+  top: (32px/2 - @size / 2);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: slateblue;
+  background-color: @bili-pink;
+  color: #fff;
+}
+
+.tips {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
 }
