@@ -40,7 +40,8 @@ B 站桌面端已上线, 支持 MacOS / Windows, 首页包含推荐模块
 - 与 Bilibili-Evolved 的自定义顶栏兼容, (高度 50 写死...)
 
 默认关闭, 在开关内打开
-![image](https://user-images.githubusercontent.com/4067115/202859778-c110e4b2-7a14-488c-9c62-bd89907ffb43.png)
+
+![image](https://user-images.githubusercontent.com/4067115/203917748-bce30561-80cf-4389-ab15-31d7cf79c9a2.png)
 
 ### 查看更多 -> 全屏弹框推荐
 
