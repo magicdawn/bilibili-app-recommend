@@ -10,7 +10,7 @@ const initialConfig = {
   // 自动查看更多
   initialShowMore: false,
 
-  // 纯享模式
+  // 纯推荐模式
   pureRecommend: false,
 }
 

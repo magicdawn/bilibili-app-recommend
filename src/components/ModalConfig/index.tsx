@@ -57,8 +57,7 @@ export function ModalConfig({ show, onHide }: { show: boolean; onHide: () => voi
                 location.reload()
               }}
             />
-            <label htmlFor={pureRecommendId}>开启纯分享模式</label>
-
+            <label htmlFor={pureRecommendId}>开启纯推荐模式</label>
             <ConfigCheck
               configKey={'initialShowMore'}
               label='自动查看更多'
