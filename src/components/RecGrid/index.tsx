@@ -159,6 +159,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
                 key={item.uniqId}
                 loading={loading}
                 item={item}
+                // tabIndex={index}
                 className={cx(cls.card, { [cls.cardActive]: index === activeIndex })}
               />
             )

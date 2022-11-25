@@ -4,11 +4,19 @@ import { IconPark } from '$icon-park'
 import { useConfigSnapshot } from '$settings'
 import { toast, toastOperationFail, toastRequestFail } from '$utility/toast'
 import { getCountStr, getDurationStr } from '$utility/video'
-
 import { useEventListener, useHover, useMemoizedFn } from 'ahooks'
 import cx from 'classnames'
 import dayjs from 'dayjs'
-import { CSSProperties, memo, MouseEvent, useEffect, useMemo, useRef, useState } from 'react'
+import {
+  ComponentProps,
+  CSSProperties,
+  memo,
+  MouseEvent,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import {
   cancelDislike,
   getVideoData,
@@ -38,12 +46,14 @@ type VideoCardProps = {
   className?: string
   item?: RecItem
   loading?: boolean
-}
+} & ComponentProps<'div'>
+
 export const VideoCard = memo(function VideoCard({
   style,
   className,
   item,
   loading,
+  ...restProps
 }: VideoCardProps) {
   // loading defaults to
   // true when item is not provided
@@ -70,6 +80,7 @@ export const VideoCard = memo(function VideoCard({
       style={style}
       className={cx('bili-video-card', styles.biliVideoCard, className)}
       data-report='partition_recommend.content'
+      {...restProps}
     >
       {skeleton}
       {!loading &&
