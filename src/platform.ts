@@ -7,13 +7,9 @@ import { proxy, useSnapshot } from 'valtio'
  */
 
 // document.querySelector<HTMLButtonElement>('button.go-back')?.innerText.trim() === '退出内测'
-export const isInternalTesting = once(() => {
+export const getIsInternalTesting = once(() => {
   return !!document.querySelectorAll('.bili-feed4').length
 })
-
-export const useIsInternalTesting = function () {
-  return useMemo(() => isInternalTesting(), [])
-}
 
 /**
  * BILIBILI-Evolved header

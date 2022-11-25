@@ -6,7 +6,7 @@ import { showModalDislike, useModalDislikeVisible } from '$components/ModalDisli
 import { VideoCard } from '$components/VideoCard'
 import { RecItemWithUniqId } from '$define'
 import { cssCls, cx } from '$libs'
-import { HEADER_HEIGHT, useIsInternalTesting } from '$platform'
+import { getIsInternalTesting, HEADER_HEIGHT } from '$platform'
 import { getRecommendTimes } from '$service'
 import { useConfigSnapshot } from '$settings'
 import { useMemoizedFn } from 'ahooks'
@@ -127,7 +127,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
         : undefined,
     })
 
-    const isInisInternalTesting = useIsInternalTesting()
+    const isInisInternalTesting = getIsInternalTesting()
 
     return (
       <InfiniteScroll

@@ -7,7 +7,7 @@ import './common/global.less'
 import { PureRecommend } from './components/PureRecommend'
 import { SectionRecommend } from './components/SectionRecommend'
 import { config } from './settings'
-import { isInternalTesting } from './platform'
+import { getIsInternalTesting } from './platform'
 import { tryToRemove } from '$utility/dom'
 
 void (function main() {
@@ -46,7 +46,7 @@ async function initHomepageSection() {
       break
     }
 
-    if (isInternalTesting() && document.querySelector('.recommended-container')) {
+    if (getIsInternalTesting() && document.querySelector('.recommended-container')) {
       internalTesting = true
       previousElement = document.querySelector('.recommended-container')
       break
@@ -71,7 +71,7 @@ async function initHomepageSection() {
 }
 
 async function initHomepagePureRecommend() {
-  if (isInternalTesting()) {
+  if (getIsInternalTesting()) {
     // 新版 bili-feed4
     document.querySelector('.bili-feed4 .bili-feed4-layout')?.remove()
     tryToRemove('.bili-feed4 .header-channel')
@@ -82,7 +82,7 @@ async function initHomepagePureRecommend() {
 
   const biliLayout = document.createElement('div')
   biliLayout.classList.add(
-    isInternalTesting() ? 'bili-feed4-layout' : 'bili-layout',
+    getIsInternalTesting() ? 'bili-feed4-layout' : 'bili-layout',
     'pure-recommend'
   )
 

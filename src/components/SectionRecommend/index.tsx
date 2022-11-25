@@ -1,6 +1,6 @@
-import { limitTwoLines, videoGrid, internalTesting } from '$components/video-grid.module.less'
+import { internalTesting, limitTwoLines, videoGrid } from '$components/video-grid.module.less'
 import { cx } from '$libs'
-import { useIsInternalTesting } from '$platform'
+import { getIsInternalTesting } from '$platform'
 import { getHomeRecommend } from '$service'
 import { useRequest } from 'ahooks'
 import { useMemo } from 'react'
@@ -20,7 +20,7 @@ export function SectionRecommend() {
     console.error(error.stack || error)
   }
 
-  const isInternalTesting = useIsInternalTesting()
+  const isInternalTesting = getIsInternalTesting()
 
   return (
     <section data-area='推荐'>
