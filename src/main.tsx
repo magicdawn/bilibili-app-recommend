@@ -78,6 +78,7 @@ async function initHomepagePureRecommend() {
   } else {
     document.querySelector('.bili-layout')?.remove()
     tryToRemove('.bili-footer') // build 版本, .bili-footer 还不存在, 后来出来的
+    tryToRemove('.adblock-tips') // 提示有插件影响
   }
 
   const biliLayout = document.createElement('div')
