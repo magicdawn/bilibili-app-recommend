@@ -8,7 +8,7 @@ import { PureRecommend } from './components/PureRecommend'
 import { SectionRecommend } from './components/SectionRecommend'
 import { config } from './settings'
 import { getIsInternalTesting } from './platform'
-import { tryToRemove } from '$utility/dom'
+import { tryAction, tryToRemove } from '$utility/dom'
 
 void (function main() {
   // 用于获取授权
@@ -25,6 +25,11 @@ void (function main() {
 })()
 
 async function initHomepage() {
+  // 提示有插件影响
+  tryToRemove('.adblock-tips')
+  // 变灰
+  tryAction('html.gray', (el) => el.classList.remove('gray'))
+
   if (config.pureRecommend) {
     return initHomepagePureRecommend()
   } else {
@@ -78,7 +83,6 @@ async function initHomepagePureRecommend() {
   } else {
     document.querySelector('.bili-layout')?.remove()
     tryToRemove('.bili-footer') // build 版本, .bili-footer 还不存在, 后来出来的
-    tryToRemove('.adblock-tips') // 提示有插件影响
   }
 
   const biliLayout = document.createElement('div')

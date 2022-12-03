@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.6.5 2022-12-04
+
+- feat: 在所有模式下,尝试移除 adblock-tips
+- feat: remove gray
+
 ## v0.6.4 2022-11-29
 
 - fix: 纯推荐模式下, 移除首页顶部 .adblock-tips 条
