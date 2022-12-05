@@ -11,6 +11,7 @@ export async function tryAction(
   const query = () => {
     arr = Array.from(document.querySelectorAll<HTMLElement>(selector))
   }
+  query()
 
   const start = performance.now()
   let elapsed = 0
