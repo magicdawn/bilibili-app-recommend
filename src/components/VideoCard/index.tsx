@@ -277,8 +277,14 @@ const VideoCardInner = memo(function VideoCardInner({ item }: VideoCardInnerProp
   const likeStr = useMemo(() => getCountStr(like), [like])
   const favoriteStr = useMemo(() => getCountStr(favorite), [favorite])
 
-  const onContextMenu = useMemoizedFn(() => {
+  const onContextMenu = useMemoizedFn((e: MouseEvent) => {
     if (!settings.openInIINAWhenRightClick) return
+
+    const fullHref = new URL(href, location.href).href
+    const iinaUrl = `iina://open?url=${encodeURIComponent(fullHref)}`
+    window.open(iinaUrl, '_self')
+
+    e.preventDefault()
   })
 
   return (

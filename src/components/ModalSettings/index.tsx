@@ -10,7 +10,7 @@ import delay from 'delay'
 import { useId } from 'react'
 import styles from './index.module.less'
 
-export function ModalConfig({ show, onHide }: { show: boolean; onHide: () => void }) {
+export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => void }) {
   const pureRecommendId = useId()
   const { pureRecommend } = useSettingsSnapshot()
 

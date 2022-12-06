@@ -1,4 +1,4 @@
-import { ModalConfig } from '$components/ModalConfig'
+import { ModalSettings } from '$components/ModalSettings'
 import { css } from '$libs'
 import { settings, useSettingsSnapshot } from '$settings'
 import { useCallback, useRef, useState } from 'react'
@@ -122,7 +122,7 @@ export function RecHeader({ onRefresh }: { onRefresh: () => void | Promise<void>
       </div>
 
       <ModalFeed show={showMore} onHide={onModalFeedHide} />
-      <ModalConfig show={modalConfigVisible} onHide={hideModalConfig} />
+      <ModalSettings show={modalConfigVisible} onHide={hideModalConfig} />
     </>
   )
 }
