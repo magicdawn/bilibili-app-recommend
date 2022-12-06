@@ -20,10 +20,10 @@ const checkStyles = {
 }
 
 /**
- * Config 上的功能开关
+ * Settings 上的功能开关
  */
 
-export function ConfigCheck({
+export function SettingsCheck({
   configKey,
   label,
   className,
@@ -69,8 +69,8 @@ export const ModalFeedConfigChecks = function () {
   `
   return (
     <>
-      <ConfigCheck configKey={'initialShowMore'} label='自动查看更多' css={inModalFeedStyle} />
-      <ConfigCheck
+      <SettingsCheck configKey={'initialShowMore'} label='自动查看更多' css={inModalFeedStyle} />
+      <SettingsCheck
         configKey={'useNarrowMode'}
         label='启用居中模式(居中两列)'
         css={inModalFeedStyle}

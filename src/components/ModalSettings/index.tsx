@@ -1,7 +1,7 @@
 import utilityStyles from '$common/utility.module.less'
 import { AccessKeyManage } from '$components/AccessKeyManage'
 import { BaseModal, BaseModalClass, ModalClose } from '$components/BaseModal'
-import { ConfigCheck } from '$components/piece'
+import { SettingsCheck } from '$components/piece'
 import { IconPark } from '$icon-park'
 import { cx } from '$libs'
 import { settings, useSettingsSnapshot } from '$settings'
@@ -58,12 +58,12 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
               }}
             />
             <label htmlFor={pureRecommendId}>开启纯推荐模式</label>
-            <ConfigCheck
+            <SettingsCheck
               configKey={'initialShowMore'}
               label='自动查看更多'
               className={styles.check}
             />
-            <ConfigCheck
+            <SettingsCheck
               configKey={'useNarrowMode'}
               label='启用居中模式(居中两列)'
               className={styles.check}
@@ -74,7 +74,7 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
         <div className={styles.settingsGroup}>
           <div className={styles.settingsGroupTitle}>IINA</div>
           <div className={styles.settingsGroupContent}>
-            <ConfigCheck
+            <SettingsCheck
               configKey={'openInIINAWhenRightClick'}
               label='右键在 IINA 中打开'
               className={styles.check}
