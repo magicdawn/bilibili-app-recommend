@@ -1,4 +1,4 @@
-import { ConfigKey, updateConfig, useConfigSnapshot } from '$settings'
+import { ConfigKey, updateSettings, useSettingsSnapshot } from '$settings'
 import { toast } from '$utility/toast'
 import { css } from '@emotion/react'
 import { ChangeEventHandler, useCallback, useId } from 'react'
@@ -32,12 +32,12 @@ export function ConfigCheck({
   label?: string
   className?: string
 }) {
-  const snap = useConfigSnapshot()
+  const snap = useSettingsSnapshot()
 
   const checked = !!snap[configKey]
   const onChange: ChangeEventHandler = useCallback((e) => {
     const val = (e.target as HTMLInputElement).checked
-    updateConfig({ [configKey]: val })
+    updateSettings({ [configKey]: val })
 
     // extra action
     if (val && configKey === 'initialShowMore') {

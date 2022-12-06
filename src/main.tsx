@@ -6,7 +6,7 @@ import { createRoot } from 'react-dom/client'
 import './common/global.less'
 import { PureRecommend } from './components/PureRecommend'
 import { SectionRecommend } from './components/SectionRecommend'
-import { config } from './settings'
+import { settings } from './settings'
 import { getIsInternalTesting } from './platform'
 import { tryAction, tryToRemove } from '$utility/dom'
 
@@ -30,7 +30,7 @@ async function initHomepage() {
   // 变灰
   tryAction('html.gray', (el) => el.classList.remove('gray'))
 
-  if (config.pureRecommend) {
+  if (settings.pureRecommend) {
     return initHomepagePureRecommend()
   } else {
     return initHomepageSection()

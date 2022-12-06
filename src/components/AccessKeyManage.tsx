@@ -1,12 +1,12 @@
 import { CollapseBtnRef } from '$components/CollapseBtn'
-import { useConfigSnapshot } from '$settings'
+import { useSettingsSnapshot } from '$settings'
 import { auth, deleteAccessToken } from '$utility/auth'
 import { useMemoizedFn, useRequest } from 'ahooks'
 import { useRef } from 'react'
 
 export function AccessKeyManage() {
   const collapseBtnRef = useRef<CollapseBtnRef>(null)
-  const { accessKey } = useConfigSnapshot()
+  const { accessKey } = useSettingsSnapshot()
 
   const useAuthRequest = useRequest(auth, { manual: true })
 

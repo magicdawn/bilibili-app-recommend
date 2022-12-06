@@ -1,6 +1,6 @@
 import { ModalConfig } from '$components/ModalConfig'
 import { css } from '$libs'
-import { config, useConfigSnapshot } from '$settings'
+import { settings, useSettingsSnapshot } from '$settings'
 import { useCallback, useRef, useState } from 'react'
 import { proxy, useSnapshot } from 'valtio'
 import { AccessKeyManage } from './AccessKeyManage'
@@ -26,7 +26,7 @@ const configStyles = {
 }
 
 export const state = proxy({
-  showMore: config.initialShowMore,
+  showMore: settings.initialShowMore,
 })
 
 export const useHeaderState = function () {
@@ -41,7 +41,7 @@ const onModalFeedHide = () => {
 }
 
 export function RecHeader({ onRefresh }: { onRefresh: () => void | Promise<void> }) {
-  const { accessKey, pureRecommend } = useConfigSnapshot()
+  const { accessKey, pureRecommend } = useSettingsSnapshot()
   const collapseBtnRef = useRef<CollapseBtnRef>(null)
 
   const { showMore } = useSnapshot(state)

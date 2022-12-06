@@ -1,7 +1,7 @@
 import { RecGrid, RecGridRef } from '$components/RecGrid'
 import { RecHeader, useHeaderState } from '$components/RecHeader'
 import { css } from '$libs'
-import { useConfigSnapshot } from '$settings'
+import { useSettingsSnapshot } from '$settings'
 import { useMemoizedFn } from 'ahooks'
 import { state as headerState } from '../RecHeader'
 import { useRef } from 'react'
@@ -16,7 +16,7 @@ const narrowStyle = {
 
 export function PureRecommend() {
   // 窄屏模式
-  const { useNarrowMode } = useConfigSnapshot()
+  const { useNarrowMode } = useSettingsSnapshot()
 
   // 是否已经打开 "查看更多" 即 ModalFeed
   const { showMore: modalFeedVisible } = useHeaderState()

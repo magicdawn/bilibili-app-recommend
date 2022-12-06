@@ -1,7 +1,7 @@
 import { dislikedIds, Reason, showModalDislike, useDislikedReason } from '$components/ModalDislike'
 import { RecItem } from '$define/recommend'
 import { IconPark } from '$icon-park'
-import { useConfigSnapshot } from '$settings'
+import { useSettingsSnapshot, settings } from '$settings'
 import { toast, toastOperationFail, toastRequestFail } from '$utility/toast'
 import { getCountStr, getDurationStr } from '$utility/video'
 import { useEventListener, useHover, useMemoizedFn } from 'ahooks'
@@ -176,7 +176,7 @@ const VideoCardInner = memo(function VideoCardInner({ item }: VideoCardInnerProp
   // watchLater added
   const [watchLaterAdded, setWatchLaterAdded] = useState(false)
 
-  const { accessKey } = useConfigSnapshot()
+  const { accessKey } = useSettingsSnapshot()
   const authed = Boolean(accessKey)
 
   const {
@@ -277,8 +277,12 @@ const VideoCardInner = memo(function VideoCardInner({ item }: VideoCardInnerProp
   const likeStr = useMemo(() => getCountStr(like), [like])
   const favoriteStr = useMemo(() => getCountStr(favorite), [favorite])
 
+  const onContextMenu = useMemoizedFn(() => {
+    if (!settings.openInIINAWhenRightClick) return
+  })
+
   return (
-    <div className='bili-video-card__wrap __scale-wrap'>
+    <div className='bili-video-card__wrap __scale-wrap' onContextMenu={onContextMenu}>
       <a
         href={href}
         target='_blank'

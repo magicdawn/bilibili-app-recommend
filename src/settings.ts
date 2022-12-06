@@ -1,7 +1,7 @@
 import { pick } from 'lodash'
 import { proxy, subscribe, useSnapshot } from 'valtio'
 
-const initialConfig = {
+const initialSettings = {
   accessKey: '',
 
   // 窄屏模式
@@ -12,16 +12,19 @@ const initialConfig = {
 
   // 纯推荐模式
   pureRecommend: false,
+
+  // 右键在 IINA 中打开
+  openInIINAWhenRightClick: false,
 }
 
-export type Config = typeof initialConfig
-export const config = proxy(initialConfig)
+export type Config = typeof initialSettings
+export const settings = proxy(initialSettings)
 
 export type ConfigKey = keyof Config
-const allowedConfigKeys = Object.keys(initialConfig) as ConfigKey[]
+const allowedConfigKeys = Object.keys(initialSettings) as ConfigKey[]
 
-export const useConfigSnapshot = function () {
-  return useSnapshot(config)
+export const useSettingsSnapshot = function () {
+  return useSnapshot(settings)
 }
 
 /**
@@ -29,21 +32,32 @@ export const useConfigSnapshot = function () {
  */
 
 const nsp = 'bilibili-app-recommend'
-const key = `${nsp}.config`
+const legacyKey = `${nsp}.config`
+const key = `${nsp}.settings`
 
 export function load() {
+  // 迁移到新 key, 后续移除
+  // TODO: remove 数据迁移代码
+  if (
+    Object.keys(GM_getValue(legacyKey) || {}).length &&
+    !Object.keys(GM_getValue(key) || {}).length
+  ) {
+    GM_setValue(key, GM_getValue(legacyKey))
+    GM_deleteValue(legacyKey)
+  }
+
   const val = GM_getValue<Config>(key)
   if (val && typeof val === 'object') {
-    Object.assign(config, pick(val, allowedConfigKeys))
+    Object.assign(settings, pick(val, allowedConfigKeys))
   }
 
   // persist when config change
-  subscribe(config, () => {
+  subscribe(settings, () => {
     save()
   })
 }
 export function save() {
-  const newVal = pick(config, allowedConfigKeys)
+  const newVal = pick(settings, allowedConfigKeys)
   // console.log('GM_setValue newVal = %o', newVal)
   GM_setValue(key, newVal)
 }
@@ -54,8 +68,8 @@ export function clean() {
 /**
  * update & persist
  */
-export function updateConfig(c: Partial<Config>) {
-  Object.assign(config, c)
+export function updateSettings(c: Partial<Config>) {
+  Object.assign(settings, c)
 }
 
 /**

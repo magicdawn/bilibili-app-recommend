@@ -1,7 +1,7 @@
 import { ModalFeedConfigChecks } from '$components/piece'
 import { RecGrid, RecGridRef } from '$components/RecGrid'
 import { cx } from '$libs'
-import { useConfigSnapshot } from '$settings'
+import { useSettingsSnapshot } from '$settings'
 import { useMemoizedFn } from 'ahooks'
 import { memo, useMemo, useRef } from 'react'
 import { BaseModal, BaseModalClass, ModalClose } from '../BaseModal'
@@ -18,7 +18,7 @@ export const ModalFeed = memo(function ModalFeed({ show, onHide }: IProps) {
   const recGridRef = useRef<RecGridRef>(null)
 
   // 窄屏模式
-  const { useNarrowMode } = useConfigSnapshot()
+  const { useNarrowMode } = useSettingsSnapshot()
   const narrowStyleObj = useMemo(() => ({ [styles.narrowMode]: useNarrowMode }), [useNarrowMode])
 
   const onRefresh = useMemoizedFn(() => {

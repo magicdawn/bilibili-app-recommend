@@ -1,5 +1,5 @@
 import request from 'axios'
-import { config } from '$settings'
+import { settings } from '$settings'
 import { toast } from './toast'
 
 /**
@@ -75,13 +75,13 @@ export async function auth() {
   }
 
   const accessKey = res
-  config.accessKey = accessKey
+  settings.accessKey = accessKey
   toast('获取成功')
 
   return accessKey
 }
 
 export function deleteAccessToken() {
-  config.accessKey = ''
+  settings.accessKey = ''
   toast('已删除 access_key')
 }

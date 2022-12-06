@@ -4,7 +4,7 @@ import { BaseModal, BaseModalClass, ModalClose } from '$components/BaseModal'
 import { ConfigCheck } from '$components/piece'
 import { IconPark } from '$icon-park'
 import { cx } from '$libs'
-import { config, useConfigSnapshot } from '$settings'
+import { settings, useSettingsSnapshot } from '$settings'
 import { toast } from '$utility/toast'
 import delay from 'delay'
 import { useId } from 'react'
@@ -12,7 +12,7 @@ import styles from './index.module.less'
 
 export function ModalConfig({ show, onHide }: { show: boolean; onHide: () => void }) {
   const pureRecommendId = useId()
-  const { pureRecommend } = useConfigSnapshot()
+  const { pureRecommend } = useSettingsSnapshot()
 
   return (
     <BaseModal {...{ show, onHide, hideWhenMaskOnClick: true, hideWhenEsc: true }}>
@@ -51,7 +51,7 @@ export function ModalConfig({ show, onHide }: { show: boolean; onHide: () => voi
               id={pureRecommendId}
               checked={pureRecommend}
               onChange={async (e) => {
-                config.pureRecommend = (e.target as HTMLInputElement).checked
+                settings.pureRecommend = (e.target as HTMLInputElement).checked
                 toast('即将刷新网页')
                 await delay(500)
                 location.reload()
@@ -66,6 +66,17 @@ export function ModalConfig({ show, onHide }: { show: boolean; onHide: () => voi
             <ConfigCheck
               configKey={'useNarrowMode'}
               label='启用居中模式(居中两列)'
+              className={styles.check}
+            />
+          </div>
+        </div>
+
+        <div className={styles.settingsGroup}>
+          <div className={styles.settingsGroupTitle}>IINA</div>
+          <div className={styles.settingsGroupContent}>
+            <ConfigCheck
+              configKey={'openInIINAWhenRightClick'}
+              label='右键在 IINA 中打开'
               className={styles.check}
             />
           </div>

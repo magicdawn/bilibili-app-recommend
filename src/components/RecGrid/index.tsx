@@ -8,7 +8,7 @@ import { RecItemWithUniqId } from '$define'
 import { cssCls, cx } from '$libs'
 import { getIsInternalTesting, HEADER_HEIGHT } from '$platform'
 import { getRecommendTimes } from '$service'
-import { useConfigSnapshot } from '$settings'
+import { useSettingsSnapshot } from '$settings'
 import { useMemoizedFn } from 'ahooks'
 import { forwardRef, RefObject, useImperativeHandle, useRef, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroller'
@@ -82,7 +82,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
     })
 
     // 窄屏模式
-    const { useNarrowMode } = useConfigSnapshot()
+    const { useNarrowMode } = useSettingsSnapshot()
 
     // .video-grid
     const containerRef = useRef<HTMLDivElement>(null)

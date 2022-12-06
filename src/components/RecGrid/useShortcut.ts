@@ -1,4 +1,4 @@
-import { config } from '$settings'
+import { settings } from '$settings'
 import { useKeyPress, useMemoizedFn } from 'ahooks'
 import { RefObject, useCallback, useState } from 'react'
 import { cls } from './index'
@@ -184,7 +184,7 @@ export function useShortcut({
   }
 
   function getColCount() {
-    if (config.useNarrowMode) return 2
+    if (settings.useNarrowMode) return 2
 
     let count = countCache.get(window.innerWidth)
     if (count) {

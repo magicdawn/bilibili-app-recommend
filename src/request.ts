@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { config as $config } from './settings'
+import { settings as $config } from './settings'
 
 export const HOST_API = 'https://api.bilibili.com'
 export const HOST_APP = 'https://app.bilibili.com'
