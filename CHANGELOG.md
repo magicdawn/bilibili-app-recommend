@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.6.6 2022-12-09
+
+- 119b005 chore: add getRecommendParallelRequest option
+- 741483a chore: ncu-safe
+- 7605eb7 chore: rename config -> settings
+- a67f1f8 chore: tryAction do not wait for first 200ms
+
 ## v0.6.5 2022-12-04
 
 - feat: 在所有模式下,尝试移除 adblock-tips
