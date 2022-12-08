@@ -4,11 +4,24 @@ import { BaseModal, BaseModalClass, ModalClose } from '$components/BaseModal'
 import { SettingsCheck } from '$components/piece'
 import { IconPark } from '$icon-park'
 import { cx } from '$libs'
-import { settings, useSettingsSnapshot } from '$settings'
+import { settings, useSettingsSnapshot, resetSettings } from '$settings'
 import { toast } from '$utility/toast'
 import delay from 'delay'
 import { useId } from 'react'
 import styles from './index.module.less'
+
+async function toastAndReload() {
+  toast('即将刷新网页')
+  await delay(500)
+  location.reload()
+}
+
+function onResetSettings() {
+  const yes = window.confirm('确定?')
+  if (!yes) return
+  resetSettings()
+  return toastAndReload()
+}
 
 export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => void }) {
   const pureRecommendId = useId()
@@ -50,11 +63,9 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
               className={utilityStyles.checkbox}
               id={pureRecommendId}
               checked={pureRecommend}
-              onChange={async (e) => {
+              onChange={(e) => {
                 settings.pureRecommend = (e.target as HTMLInputElement).checked
-                toast('即将刷新网页')
-                await delay(500)
-                location.reload()
+                return toastAndReload()
               }}
             />
             <label htmlFor={pureRecommendId}>开启纯推荐模式</label>
@@ -72,13 +83,33 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
         </div>
 
         <div className={styles.settingsGroup}>
-          <div className={styles.settingsGroupTitle}>IINA</div>
-          <div className={styles.settingsGroupContent}>
-            <SettingsCheck
-              configKey={'openInIINAWhenRightClick'}
-              label='右键在 IINA 中打开'
-              className={styles.check}
-            />
+          <div className={styles.settingsGroupTitle}>高级</div>
+          <div className={cx(styles.settingsGroupContent)}>
+            <div className={styles.row}>
+              <button
+                className='primary-btn roll-btn'
+                style={{ display: 'inline-flex' }}
+                onClick={onResetSettings}
+              >
+                <span>恢复默认设置</span>
+              </button>
+            </div>
+
+            <div className={styles.row} style={{ marginTop: 10 }}>
+              <SettingsCheck
+                configKey={'openInIINAWhenRightClick'}
+                label='右键在 IINA 中打开'
+                className={styles.check}
+              />
+            </div>
+
+            <div className={styles.row} style={{ marginTop: 10 }}>
+              <SettingsCheck
+                configKey={'getRecommendParallelRequest'}
+                label='推荐接口使用并行请求'
+                className={styles.check}
+              />
+            </div>
           </div>
         </div>
       </main>

@@ -1,7 +1,7 @@
 import { pick } from 'lodash'
 import { proxy, subscribe, useSnapshot } from 'valtio'
 
-const initialSettings = {
+export const initialSettings = {
   accessKey: '',
 
   // 窄屏模式
@@ -15,10 +15,13 @@ const initialSettings = {
 
   // 右键在 IINA 中打开
   openInIINAWhenRightClick: false,
+
+  // getRecommend 并发请求
+  getRecommendParallelRequest: true,
 }
 
 export type Config = typeof initialSettings
-export const settings = proxy(initialSettings)
+export const settings = proxy({ ...initialSettings })
 
 export type ConfigKey = keyof Config
 const allowedConfigKeys = Object.keys(initialSettings) as ConfigKey[]
@@ -70,6 +73,13 @@ export function clean() {
  */
 export function updateSettings(c: Partial<Config>) {
   Object.assign(settings, c)
+}
+
+/**
+ * reset
+ */
+export function resetSettings() {
+  return updateSettings(initialSettings)
 }
 
 /**

@@ -1,3 +1,4 @@
+import { settings } from '$settings'
 import { toast } from '$utility/toast'
 import pretry, { RetryError } from 'promise.retry'
 import { format as fmt } from 'util'
@@ -77,9 +78,20 @@ export async function getHomeRecommend() {
 
 // 一次10个不够, 多来几次
 export async function getRecommendTimes(times: number) {
-  const ps = new Array(times).fill(0).map((_) => tryGetRecommend())
-  const results = await Promise.all(ps)
-  let list = results.reduce((ret, cur) => ret.concat(cur || []), [])
+  let list: RecItem[] = []
+
+  // 并行: 快, 但是易出错
+  if (settings.getRecommendParallelRequest) {
+    const ps = new Array(times).fill(0).map((_) => tryGetRecommend())
+    const results = await Promise.all(ps)
+    list = results.reduce((ret, cur) => ret.concat(cur || []), [])
+  }
+  // 串行
+  else {
+    for (let i = 1; i <= times; i++) {
+      list = list.concat(await tryGetRecommend())
+    }
+  }
 
   // make api unique
   list = uniqRecList(list)
