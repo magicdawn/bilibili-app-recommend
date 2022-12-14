@@ -6,7 +6,7 @@ import styles from './index.module.less'
 
 interface IProps {
   className?: string
-  item: RecItem
+  videoDuration: number
   pvideo?: PvideoData
 
   // hover => listen mousemove of PreviewImage div ref
@@ -18,12 +18,12 @@ function fallbackWhenNan(val: number, fallback: number) {
   return isNaN(val) ? fallback : val
 }
 
-export function PreviewImage({ className, item, pvideo, enterCursorState }: IProps) {
+export function PreviewImage({ className, videoDuration, pvideo, enterCursorState }: IProps) {
   const ref = useRef<HTMLDivElement>(null)
   const cursorState = useMouse(ref)
 
   const innerProps = {
-    item,
+    videoDuration,
     pvideo: pvideo!,
     cursorState,
     elWidth: fallbackWhenNan(cursorState.elementW, enterCursorState.width),
@@ -39,13 +39,13 @@ export function PreviewImage({ className, item, pvideo, enterCursorState }: IPro
 }
 
 function PreviewImageInner({
-  item,
+  videoDuration,
   pvideo,
   elWidth,
   elHeight,
   relativeX,
 }: {
-  item: RecItem
+  videoDuration: number
   pvideo: PvideoData
   elWidth: number
   elHeight: number
@@ -57,7 +57,7 @@ function PreviewImageInner({
     progress = relativeX / elWidth
     if (progress < 0) progress = 0
     if (progress > 1) progress = 1
-    t = Math.floor((item.duration || 0) * progress)
+    t = Math.floor((videoDuration || 0) * progress)
   }
 
   let index = useMemo(() => {

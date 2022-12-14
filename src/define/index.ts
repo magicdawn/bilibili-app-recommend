@@ -11,3 +11,9 @@ export { PvideoJson, PvideoData }
 import { DmJson } from './dm'
 type DmData = DmJson['data']
 export { DmJson, DmData }
+
+export { PcRecommendJson, PcRecItem } from './pc-recommend'
+import { PcRecItem } from './pc-recommend'
+export interface PcRecItemWithUniqId extends PcRecItem {
+  uniqId: string
+}

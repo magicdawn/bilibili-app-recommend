@@ -4,13 +4,14 @@
 
 import { showModalDislike, useModalDislikeVisible } from '$components/ModalDislike'
 import { VideoCard } from '$components/VideoCard'
-import { RecItemWithUniqId } from '$define'
+import { PcRecItemWithUniqId, RecItemWithUniqId } from '$define'
 import { cssCls, cx } from '$libs'
 import { getIsInternalTesting, HEADER_HEIGHT } from '$platform'
 import { getRecommendTimes } from '$service'
+import { getPcRecommendTimes } from '$service-pc'
 import { useSettingsSnapshot } from '$settings'
 import { useMemoizedFn } from 'ahooks'
-import { forwardRef, RefObject, useImperativeHandle, useRef, useState } from 'react'
+import { forwardRef, RefObject, useImperativeHandle, useMemo, useRef, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroller'
 import { internalTesting, narrowMode, videoGrid } from '../video-grid.module.less'
 import { useShortcut } from './useShortcut'
@@ -53,7 +54,7 @@ export type RecGridProps = {
 
 export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
   ({ infiteScrollUseWindow, shortcutEnabled, onScrollToTop, className, scrollerRef }, ref) => {
-    const [items, setItems] = useState<RecItemWithUniqId[]>([])
+    const [items, setItems] = useState<PcRecItemWithUniqId[]>([])
     const [loading, setLoading] = useState(false)
 
     useImperativeHandle(ref, () => {
@@ -62,6 +63,8 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
       }
     })
 
+    const pageRef = useMemo(() => ({ page: 1 }), [])
+
     const refresh = useMemoizedFn(async () => {
       // scroll to top
       await onScrollToTop?.()
@@ -69,15 +72,16 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
       try {
         clearActiveIndex() // before
         setLoading(true)
-        setItems(await getRecommendTimes(2))
+        pageRef.page = 1
+        setItems(await getPcRecommendTimes(2, pageRef))
         clearActiveIndex() // and after
       } finally {
         setLoading(false)
       }
     })
 
-    const fetchMore = useMemoizedFn(async (page: number) => {
-      const more = await getRecommendTimes(2)
+    const fetchMore = useMemoizedFn(async () => {
+      const more = await getPcRecommendTimes(2, pageRef)
       setItems((items) => [...items, ...more])
     })
 

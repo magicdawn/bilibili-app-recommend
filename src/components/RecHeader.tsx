@@ -97,13 +97,13 @@ export function RecHeader({ onRefresh }: { onRefresh: () => void | Promise<void>
             <IconPark name='Config' css={configStyles.icon} />
           </button>
 
-          {!accessKey ? (
+          {/* {!accessKey ? (
             <AccessKeyManage />
           ) : (
             <CollapseBtn ref={collapseBtnRef}>
               <AccessKeyManage />
             </CollapseBtn>
-          )}
+          )} */}
 
           <button className='primary-btn roll-btn' onClick={onRefresh}>
             <svg style={{ transform: 'rotate(0deg)' }}>

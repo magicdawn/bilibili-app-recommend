@@ -1,7 +1,7 @@
-import { dislikedIds, Reason, showModalDislike, useDislikedReason } from '$components/ModalDislike'
-import { RecItem } from '$define/recommend'
+import { dislikedIds, Reason } from '$components/ModalDislike'
+import { PcRecItem } from '$define'
 import { IconPark } from '$icon-park'
-import { useSettingsSnapshot, settings } from '$settings'
+import { settings, useSettingsSnapshot } from '$settings'
 import { toast, toastOperationFail, toastRequestFail } from '$utility/toast'
 import { getCountStr, getDurationStr } from '$utility/video'
 import { useEventListener, useHover, useMemoizedFn } from 'ahooks'
@@ -28,10 +28,10 @@ import styles from './index.module.less'
 import { PreviewImage } from './PreviewImage'
 
 const currentYear = dayjs().format('YYYY')
-const getCdate = (ctime?: number) => {
-  if (!ctime) return ''
+const formatTimeStamp = (unixTs?: number) => {
+  if (!unixTs) return ''
 
-  const dayCtime = dayjs.unix(ctime)
+  const dayCtime = dayjs.unix(unixTs)
   if (dayCtime.format('YYYY') === currentYear) {
     return dayCtime.format('M-D')
   } else {
@@ -44,7 +44,7 @@ const toHttps = (url: string) => url.replace(/^http:\/\//, 'https://')
 type VideoCardProps = {
   style?: CSSProperties
   className?: string
-  item?: RecItem
+  item?: PcRecItem
   loading?: boolean
 } & ComponentProps<'div'>
 
@@ -73,8 +73,6 @@ export const VideoCard = memo(function VideoCard({
     </div>
   )
 
-  const dislikedReason = useDislikedReason(item?.param)
-
   return (
     <div
       style={style}
@@ -83,19 +81,13 @@ export const VideoCard = memo(function VideoCard({
       {...restProps}
     >
       {skeleton}
-      {!loading &&
-        item &&
-        (dislikedReason ? (
-          <DislikedCard item={item} dislikedReason={dislikedReason!} />
-        ) : (
-          <VideoCardInner item={item} />
-        ))}
+      {!loading && item && <VideoCardInner item={item} />}
     </div>
   )
 })
 
 type DisabledCardProps = {
-  item: RecItem
+  item: PcRecItem
   dislikedReason: Reason
 }
 const DislikedCard = memo(function DislikedCard({ dislikedReason, item }: DisabledCardProps) {
@@ -141,7 +133,7 @@ const DislikedCard = memo(function DislikedCard({ dislikedReason, item }: Disabl
 })
 
 type VideoCardInnerProps = {
-  item: RecItem
+  item: PcRecItem
 }
 const VideoCardInner = memo(function VideoCardInner({ item }: VideoCardInnerProps) {
   // 预览 hover state
@@ -179,35 +171,37 @@ const VideoCardInner = memo(function VideoCardInner({ item }: VideoCardInnerProp
   const { accessKey } = useSettingsSnapshot()
   const authed = Boolean(accessKey)
 
-  const {
-    param: id, // 视频 id
+  let {
+    bvid,
     title,
-    cover: coverRaw,
+    pic: coverRaw,
 
     goto,
 
-    play,
-    like,
-    coin,
-    desc,
-    danmaku,
-    ctime,
+    // play,
+    // like,
+    stat: { view: play, like },
+
+    // desc,
+    // danmaku,
+    pubdate,
     duration,
 
     // author
-    name,
-    face,
-    mid,
+    owner: { name, face, mid },
 
     // bangumi
-    favorite,
-    badge,
+    // favorite,
+    // badge,
 
     // 推荐理由
     rcmd_reason,
   } = item
 
-  const cdate = useMemo(() => getCdate(ctime), [ctime])
+  // id = avid
+  const id = String(item.id)
+
+  const pubdateDisplay = useMemo(() => formatTimeStamp(pubdate), [pubdate])
   const cover = useMemo(() => toHttps(coverRaw), [coverRaw])
 
   const [videoData, videoDataChange] = useState<VideoData | null>(null)
@@ -265,17 +259,18 @@ const VideoCardInner = memo(function VideoCardInner({ item }: VideoCardInnerProp
   const onTriggerDislike = useMemoizedFn((e: MouseEvent) => {
     e.stopPropagation()
     e.preventDefault()
-    showModalDislike(item)
+    // showModalDislike(item)
   })
 
-  const isBangumi = item.goto === 'bangumi'
+  const isBangumi = false // item.goto === 'bangumi'
   const isNormalVideo = item.goto === 'av'
 
-  const href = isNormalVideo ? `/video/av${id}` : item.uri
+  const href = isNormalVideo ? `/video/${bvid}` : item.uri
   const durationStr = useMemo(() => getDurationStr(duration), [duration])
   const playStr = useMemo(() => getCountStr(play), [play])
   const likeStr = useMemo(() => getCountStr(like), [like])
-  const favoriteStr = useMemo(() => getCountStr(favorite), [favorite])
+  // const favoriteStr = useMemo(() => getCountStr(favorite), [favorite])
+  const favoriteStr = likeStr
 
   const onContextMenu = useMemoizedFn((e: MouseEvent) => {
     if (!settings.openInIINAWhenRightClick) return
@@ -299,8 +294,19 @@ const VideoCardInner = memo(function VideoCardInner({ item }: VideoCardInnerProp
         <div className='bili-video-card__image __scale-player-wrap' ref={videoPreviewWrapperRef}>
           <div className={cx('bili-video-card__image--wrap', styles.imageWrapper)}>
             <picture className='v-img bili-video-card__cover'>
-              <source srcSet={`${cover}@672w_378h_1c.webp`} type='image/webp' />
-              <img src={`${cover}@672w_378h_1c.webp`} alt={title} loading='lazy' />
+              <source
+                srcSet={`${cover}@672w_378h_1c_!web-home-common-cover.avif`}
+                type='image/avif'
+              />
+              <source
+                srcSet={`${cover}@672w_378h_1c_!web-home-common-cover.webp`}
+                type='image/webp'
+              />
+              <img
+                src={`${cover}@672w_378h_1c_!web-home-common-cover`}
+                alt={title}
+                loading='eager'
+              />
             </picture>
 
             {/* <div className='v-inline-player'></div> */}
@@ -308,7 +314,7 @@ const VideoCardInner = memo(function VideoCardInner({ item }: VideoCardInnerProp
             {/* preview */}
             {isHovering && (
               <PreviewImage
-                item={item}
+                videoDuration={duration}
                 pvideo={videoData?.pvideoData}
                 enterCursorState={enterMousePosition}
               />
@@ -333,7 +339,7 @@ const VideoCardInner = memo(function VideoCardInner({ item }: VideoCardInnerProp
             </div>
 
             {/*  我不想看 */}
-            {authed && (
+            {false && authed && (
               <div
                 ref={btnDislikeRef}
                 className={styles.btnDislike}
@@ -426,14 +432,16 @@ const VideoCardInner = memo(function VideoCardInner({ item }: VideoCardInnerProp
                 )}
 
                 <span className='bili-video-card__info--author'>{name}</span>
-                {cdate && <span className='bili-video-card__info--date'>· {cdate}</span>}
+                {pubdateDisplay && (
+                  <span className='bili-video-card__info--date'>· {pubdateDisplay}</span>
+                )}
               </a>
             )}
 
-            {isBangumi && (
+            {isBangumi && false && (
               <a className='bili-video-card__info--owner' href={href} target='_blank'>
-                <span className={styles.badge}>{badge}</span>
-                <span className={styles.bangumiDesc}>{desc}</span>
+                <span className={styles.badge}>{'badge'}</span>
+                <span className={styles.bangumiDesc}>{'desc'}</span>
               </a>
             )}
           </p>

@@ -1,10 +1,9 @@
 import utilityStyles from '$common/utility.module.less'
-import { AccessKeyManage } from '$components/AccessKeyManage'
 import { BaseModal, BaseModalClass, ModalClose } from '$components/BaseModal'
 import { SettingsCheck } from '$components/piece'
 import { IconPark } from '$icon-park'
 import { cx } from '$libs'
-import { settings, useSettingsSnapshot, resetSettings } from '$settings'
+import { resetSettings, settings, useSettingsSnapshot } from '$settings'
 import { toast } from '$utility/toast'
 import delay from 'delay'
 import { useId } from 'react'
@@ -37,23 +36,16 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
 
         <div className='space' style={{ flex: 1 }}></div>
 
-        {/* <button className={`primary-btn roll-btn ${BaseModalClass.btnClose}`} onClick={onHide}>
-          <svg style={{ transform: 'rotate(0deg)' }}>
-            <use xlinkHref='#widget-close'></use>
-          </svg>
-          <span>关闭</span>
-        </button> */}
-
         <ModalClose onClick={onHide} />
       </div>
 
       <main className={BaseModalClass.modalBody}>
-        <div className={styles.settingsGroup}>
+        {/* <div className={styles.settingsGroup}>
           <div className={styles.settingsGroupTitle}>Auth</div>
           <div className={cx(styles.settingsGroupContent, styles.row)}>
             <AccessKeyManage />
           </div>
-        </div>
+        </div> */}
 
         <div className={styles.settingsGroup}>
           <div className={styles.settingsGroupTitle}>开关</div>
@@ -103,13 +95,13 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
               />
             </div>
 
-            <div className={styles.row} style={{ marginTop: 10 }}>
+            {/* <div className={styles.row} style={{ marginTop: 10 }}>
               <SettingsCheck
                 configKey={'getRecommendParallelRequest'}
                 label='推荐接口使用并行请求'
                 className={styles.check}
               />
-            </div>
+            </div> */}
           </div>
         </div>
       </main>

@@ -1,0 +1,350 @@
+{
+  "code": 0,
+  "message": "0",
+  "ttl": 1,
+  "data": {
+    "item": [
+      {
+        "id": 986816405,
+        "bvid": "BV17t4y1u7Jq",
+        "cid": 869767445,
+        "goto": "av",
+        "uri": "https://www.bilibili.com/video/BV17t4y1u7Jq",
+        "pic": "http://i0.hdslb.com/bfs/archive/923b122dbad4fe6245aee112ab5a9714bbbf7739.jpg",
+        "title": "大海退潮后，大庆赶海遇到一只正在开花的大海葵，好像萝卜一样",
+        "duration": 377,
+        "pubdate": 1666517423,
+        "owner": {
+          "mid": 524704055,
+          "name": "大庆赶海",
+          "face": "http://i2.hdslb.com/bfs/face/f119348814f30c6bbbcc60bd63c12b8215d19d2f.jpg"
+        },
+        "stat": {
+          "view": 1638068,
+          "like": 75437,
+          "danmaku": 3396
+        },
+        "av_feature": null,
+        "is_followed": 1,
+        "rcmd_reason": {
+          "reason_type": 1
+        },
+        "show_info": 1,
+        "track_id": "web_pegasus_5.shylf-ai-recsys-647.1671024526175.620",
+        "pos": 0,
+        "room_info": null,
+        "ogv_info": null,
+        "business_info": null,
+        "is_stock": 0
+      },
+      {
+        "id": 563145519,
+        "bvid": "BV1Jv4y1d72z",
+        "cid": 908595225,
+        "goto": "av",
+        "uri": "https://www.bilibili.com/video/BV1Jv4y1d72z",
+        "pic": "http://i2.hdslb.com/bfs/archive/230e8fc3e97947dc72c4ecb03bca0988e1283ee5.jpg",
+        "title": "一天涨粉1000万，我看不懂这个新顶流",
+        "duration": 702,
+        "pubdate": 1669869242,
+        "owner": {
+          "mid": 12713781,
+          "name": "独立鱼电影",
+          "face": "https://i0.hdslb.com/bfs/face/3d27f058b50918c933a2210c51c4fd0ee3e1a79d.jpg"
+        },
+        "stat": {
+          "view": 903611,
+          "like": 38865,
+          "danmaku": 4563
+        },
+        "av_feature": null,
+        "is_followed": 1,
+        "rcmd_reason": {
+          "reason_type": 1
+        },
+        "show_info": 1,
+        "track_id": "web_pegasus_5.shylf-ai-recsys-647.1671024526175.620",
+        "pos": 0,
+        "room_info": null,
+        "ogv_info": null,
+        "business_info": null,
+        "is_stock": 0
+      },
+      {
+        "id": 563267713,
+        "bvid": "BV1Zv4y1d7wp",
+        "cid": 910250089,
+        "goto": "av",
+        "uri": "https://www.bilibili.com/video/BV1Zv4y1d7wp",
+        "pic": "http://i2.hdslb.com/bfs/archive/cd245c507673f3a9d619565a9b1739e7f28e9067.jpg",
+        "title": "来马来西亚第二大城市，溜达一圈【东南亚30】",
+        "duration": 1218,
+        "pubdate": 1670058000,
+        "owner": {
+          "mid": 59670797,
+          "name": "壮哥破产了",
+          "face": "https://i2.hdslb.com/bfs/face/03b5ba73de1ca7ac021bb1fc13448a75c46cd651.jpg"
+        },
+        "stat": {
+          "view": 35735,
+          "like": 1356,
+          "danmaku": 571
+        },
+        "av_feature": null,
+        "is_followed": 0,
+        "rcmd_reason": {
+          "reason_type": 0
+        },
+        "show_info": 1,
+        "track_id": "web_pegasus_5.shylf-ai-recsys-647.1671024526175.620",
+        "pos": 0,
+        "room_info": null,
+        "ogv_info": null,
+        "business_info": null,
+        "is_stock": 0
+      },
+      {
+        "id": 945510910,
+        "bvid": "BV1AW4y1s71D",
+        "cid": 905202041,
+        "goto": "av",
+        "uri": "https://www.bilibili.com/video/BV1AW4y1s71D",
+        "pic": "http://i0.hdslb.com/bfs/archive/7e7d9865f2c1774986f77db57bfaa9507a4ed129.jpg",
+        "title": "我见过候鸟就这么去了南方",
+        "duration": 91,
+        "pubdate": 1669601100,
+        "owner": {
+          "mid": 6421869,
+          "name": "喵与茶",
+          "face": "https://i0.hdslb.com/bfs/face/316473c4ccc3178a201df2c99316f6e3dab046e8.jpg"
+        },
+        "stat": {
+          "view": 3270174,
+          "like": 326174,
+          "danmaku": 1025
+        },
+        "av_feature": null,
+        "is_followed": 0,
+        "rcmd_reason": {
+          "content": "32万点赞",
+          "reason_type": 3
+        },
+        "show_info": 1,
+        "track_id": "web_pegasus_5.shylf-ai-recsys-647.1671024526175.620",
+        "pos": 0,
+        "room_info": null,
+        "ogv_info": null,
+        "business_info": null,
+        "is_stock": 0
+      },
+      {
+        "id": 647194649,
+        "bvid": "BV1ge4y1t7Zw",
+        "cid": 880002328,
+        "goto": "av",
+        "uri": "https://www.bilibili.com/video/BV1ge4y1t7Zw",
+        "pic": "http://i0.hdslb.com/bfs/archive/48b765131a5210b1ee8c759034462fa87ab89d51.jpg",
+        "title": "姐妹腿都那么长？不确定，再看看！",
+        "duration": 81,
+        "pubdate": 1667474400,
+        "owner": {
+          "mid": 18841842,
+          "name": "慕慕有奶糖",
+          "face": "https://i0.hdslb.com/bfs/face/090341d1fda514f1636e37ead905cbe67375136e.jpg"
+        },
+        "stat": {
+          "view": 940401,
+          "like": 32255,
+          "danmaku": 295
+        },
+        "av_feature": null,
+        "is_followed": 0,
+        "rcmd_reason": {
+          "reason_type": 0
+        },
+        "show_info": 1,
+        "track_id": "web_pegasus_5.shylf-ai-recsys-647.1671024526175.620",
+        "pos": 0,
+        "room_info": null,
+        "ogv_info": null,
+        "business_info": null,
+        "is_stock": 0
+      },
+      {
+        "id": 432313352,
+        "bvid": "BV1XG411c7Ux",
+        "cid": 883015404,
+        "goto": "av",
+        "uri": "https://www.bilibili.com/video/BV1XG411c7Ux",
+        "pic": "http://i2.hdslb.com/bfs/archive/a5be12303ec7a2b5dabbb243a4adcaa13012b322.jpg",
+        "title": "全程感受山东北部的普通农村婚礼",
+        "duration": 308,
+        "pubdate": 1667641857,
+        "owner": {
+          "mid": 315683013,
+          "name": "谷轩良",
+          "face": "https://i0.hdslb.com/bfs/face/7d8d0608cf475b5b8d65c525529839e1be68352d.jpg"
+        },
+        "stat": {
+          "view": 3205914,
+          "like": 211449,
+          "danmaku": 12188
+        },
+        "av_feature": null,
+        "is_followed": 0,
+        "rcmd_reason": {
+          "reason_type": 0
+        },
+        "show_info": 1,
+        "track_id": "web_pegasus_5.shylf-ai-recsys-647.1671024526175.620",
+        "pos": 0,
+        "room_info": null,
+        "ogv_info": null,
+        "business_info": null,
+        "is_stock": 0
+      },
+      {
+        "id": 689300955,
+        "bvid": "BV15m4y1w7wP",
+        "cid": 869519919,
+        "goto": "av",
+        "uri": "https://www.bilibili.com/video/BV15m4y1w7wP",
+        "pic": "http://i1.hdslb.com/bfs/archive/2ca90908e9c0672efe6b501ae42b86ab12e0e008.jpg",
+        "title": "可恶！又被胖虎刀了！",
+        "duration": 322,
+        "pubdate": 1666499140,
+        "owner": {
+          "mid": 421251972,
+          "name": "百花街萌鼠屋",
+          "face": "https://i0.hdslb.com/bfs/face/90442ce45c03aaddff2c538510317314d825d45c.jpg"
+        },
+        "stat": {
+          "view": 953241,
+          "like": 42408,
+          "danmaku": 3297
+        },
+        "av_feature": null,
+        "is_followed": 0,
+        "rcmd_reason": {
+          "reason_type": 0
+        },
+        "show_info": 1,
+        "track_id": "web_pegasus_5.shylf-ai-recsys-647.1671024526175.620",
+        "pos": 0,
+        "room_info": null,
+        "ogv_info": null,
+        "business_info": null,
+        "is_stock": 0
+      },
+      {
+        "id": 605264497,
+        "bvid": "BV1484y1177s",
+        "cid": 898486074,
+        "goto": "av",
+        "uri": "https://www.bilibili.com/video/BV1484y1177s",
+        "pic": "http://i0.hdslb.com/bfs/archive/a2e6b0393745c8674efac34f4f0b19e8484110ad.jpg",
+        "title": "【4K60FPS】瑞奇·马丁《The Cup Of Life》世界名曲！永恒的生命之杯！",
+        "duration": 268,
+        "pubdate": 1669028998,
+        "owner": {
+          "mid": 229733301,
+          "name": "音乐私藏馆",
+          "face": "https://i0.hdslb.com/bfs/face/91a6526445f61e2d491523242b532d5e76f0435a.jpg"
+        },
+        "stat": {
+          "view": 2368700,
+          "like": 97507,
+          "danmaku": 2942
+        },
+        "av_feature": null,
+        "is_followed": 0,
+        "rcmd_reason": {
+          "reason_type": 0
+        },
+        "show_info": 1,
+        "track_id": "web_pegasus_5.shylf-ai-recsys-647.1671024526175.620",
+        "pos": 0,
+        "room_info": null,
+        "ogv_info": null,
+        "business_info": null,
+        "is_stock": 0
+      },
+      {
+        "id": 432958106,
+        "bvid": "BV1B3411f7J6",
+        "cid": 901217451,
+        "goto": "av",
+        "uri": "https://www.bilibili.com/video/BV1B3411f7J6",
+        "pic": "http://i2.hdslb.com/bfs/archive/af13b02c3ef60f35e5cbb93a73c0065c4465feac.jpg",
+        "title": "今天，有点甜！",
+        "duration": 229,
+        "pubdate": 1669265646,
+        "owner": {
+          "mid": 38407276,
+          "name": "邓园长",
+          "face": "https://i1.hdslb.com/bfs/face/f85fbedb0a6bfebedba167791a816e1b36f757d9.jpg"
+        },
+        "stat": {
+          "view": 521591,
+          "like": 24626,
+          "danmaku": 661
+        },
+        "av_feature": null,
+        "is_followed": 0,
+        "rcmd_reason": {
+          "content": "2万点赞",
+          "reason_type": 3
+        },
+        "show_info": 1,
+        "track_id": "web_pegasus_5.shylf-ai-recsys-647.1671024526175.620",
+        "pos": 0,
+        "room_info": null,
+        "ogv_info": null,
+        "business_info": null,
+        "is_stock": 0
+      },
+      {
+        "id": 221212537,
+        "bvid": "BV1e8411V71m",
+        "cid": 922787460,
+        "goto": "av",
+        "uri": "https://www.bilibili.com/video/BV1e8411V71m",
+        "pic": "http://i2.hdslb.com/bfs/archive/0d5b166dd79acdf639d68d1286dd08854973a780.jpg",
+        "title": "《贺炜解说语录》！格子军团——克罗地亚！",
+        "duration": 240,
+        "pubdate": 1670967000,
+        "owner": {
+          "mid": 24697174,
+          "name": "罗马诺plus",
+          "face": "https://i1.hdslb.com/bfs/face/7b33548b655ebda2acf4bfacc2a7f8b4132d250a.jpg"
+        },
+        "stat": {
+          "view": 13535,
+          "like": 497,
+          "danmaku": 256
+        },
+        "av_feature": null,
+        "is_followed": 0,
+        "rcmd_reason": {
+          "reason_type": 0
+        },
+        "show_info": 1,
+        "track_id": "web_pegasus_5.shylf-ai-recsys-647.1671024526175.620",
+        "pos": 0,
+        "room_info": null,
+        "ogv_info": null,
+        "business_info": null,
+        "is_stock": 0
+      }
+    ],
+    "business_card": null,
+    "floor_info": null,
+    "user_feature": null,
+    "abtest": {
+      "group": "b"
+    },
+    "preload_expose_pct": 0,
+    "preload_floor_expose_pct": 0,
+    "mid": 38112129
+  }
+}

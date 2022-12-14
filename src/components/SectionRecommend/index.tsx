@@ -1,8 +1,9 @@
 import { internalTesting, limitTwoLines, videoGrid } from '$components/video-grid.module.less'
 import { cx } from '$libs'
 import { getIsInternalTesting } from '$platform'
-import { getHomeRecommend } from '$service'
-import { useRequest } from 'ahooks'
+import { getRecommendForHome } from '$service'
+import { getPcRecommendForHome } from '$service-pc'
+import { useMemoizedFn, useRequest } from 'ahooks'
 import { useMemo } from 'react'
 import { RecHeader } from '../RecHeader'
 import { VideoCard } from '../VideoCard'
@@ -14,13 +15,14 @@ export function SectionRecommend() {
     })
   }, [])
 
-  const { data: items, loading, error, refresh } = useRequest(getHomeRecommend)
-  // log error
+  const isInternalTesting = getIsInternalTesting()
+  const pageRef = useMemo(() => ({ page: 1 }), [])
+
+  // getRecommendForHome
+  const { data: items, loading, error, refresh } = useRequest(() => getPcRecommendForHome(pageRef))
   if (error) {
     console.error(error.stack || error)
   }
-
-  const isInternalTesting = getIsInternalTesting()
 
   return (
     <section data-area='推荐'>

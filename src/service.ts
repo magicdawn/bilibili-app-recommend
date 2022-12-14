@@ -1,11 +1,11 @@
+import { APP_NAME } from '$common'
 import { settings } from '$settings'
 import { toast } from '$utility/toast'
+import { uniqBy } from 'lodash'
 import pretry, { RetryError } from 'promise.retry'
 import { format as fmt } from 'util'
 import { RecItem, RecItemWithUniqId, RecommendJson } from './define'
 import { gmrequest, HOST_APP } from './request'
-
-const APP_NAME = 'bilibili-app-recommend'
 
 class RecReqError extends Error {
   json: RecommendJson
@@ -72,7 +72,7 @@ export async function tryGetRecommend() {
   }
 }
 
-export async function getHomeRecommend() {
+export async function getRecommendForHome() {
   return getRecommendTimes(2)
 }
 
@@ -94,30 +94,10 @@ export async function getRecommendTimes(times: number) {
   }
 
   // make api unique
-  list = uniqRecList(list)
+  list = uniqBy(list, (item) => item.param)
 
   // add uuid
   return list.map((item) => {
     return { ...item, uniqId: item.param + '-' + crypto.randomUUID() } as RecItemWithUniqId
   })
-}
-
-// 去重
-// Warning: Encountered two children with the same key, `299170596`. Keys should be unique so that components maintain their identity across updates
-export function uniqRecList<T extends RecItem>(list: T[]) {
-  const set = new Set<string>()
-
-  list = list.filter((item) => {
-    const { param } = item
-
-    if (set.has(param)) {
-      console.log('[%s]: [uniqRecList]: duplicate', APP_NAME, item)
-      return false
-    }
-
-    set.add(param)
-    return true
-  })
-
-  return list
 }
