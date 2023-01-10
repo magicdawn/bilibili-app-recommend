@@ -1,4 +1,4 @@
-import { PcRecItemWithUniqId, PcRecommendJson } from '$define'
+import { PcRecItemExtend, PcRecommendJson } from '$define'
 import { uniqBy } from 'lodash'
 import { request, HOST_API } from './request'
 
@@ -8,7 +8,7 @@ import { request, HOST_API } from './request'
 
 export type PageRef = { page: number }
 
-async function getPcRecommend(pageRef: PageRef) {
+async function getRecommend(pageRef: PageRef) {
   const curpage = pageRef.page++
   const res = await request.get('/x/web-interface/index/top/rcmd', {
     baseURL: HOST_API,
@@ -28,8 +28,8 @@ async function getPcRecommend(pageRef: PageRef) {
   return items
 }
 
-export async function getPcRecommendTimes(times: number, pageRef: PageRef) {
-  let list = (await Promise.all(new Array(times).fill(0).map(() => getPcRecommend(pageRef)))).flat()
+export async function _getRecommendTimes(times: number, pageRef: PageRef) {
+  let list = (await Promise.all(new Array(times).fill(0).map(() => getRecommend(pageRef)))).flat()
   list = uniqBy(list, (item) => item.id)
 
   // 推荐理由补全
@@ -40,10 +40,14 @@ export async function getPcRecommendTimes(times: number, pageRef: PageRef) {
   })
 
   return list.map((item) => {
-    return { ...item, uniqId: item.id + '-' + crypto.randomUUID() } as PcRecItemWithUniqId
+    return {
+      ...item,
+      uniqId: item.id + '-' + crypto.randomUUID(),
+      api: 'pc',
+    } as PcRecItemExtend
   })
 }
 
-export async function getPcRecommendForHome(pageRef: PageRef) {
-  return getPcRecommendTimes(1, pageRef)
+export async function _getRecommendForHome(pageRef: PageRef) {
+  return _getRecommendTimes(1, pageRef)
 }

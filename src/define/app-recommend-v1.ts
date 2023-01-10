@@ -4,10 +4,10 @@
 //
 //   "Set quicktype target language"
 
-export interface RecommendJson {
+export interface AppRecommendJson {
   code: number
   config: Config
-  data?: RecItem[]
+  data?: AppRecItem[]
   message: string
 }
 
@@ -15,7 +15,7 @@ export interface Config {
   feed_clean_abtest: number
 }
 
-export interface RecItem {
+export interface AppRecItem {
   title: string
   cover: string
   uri: string

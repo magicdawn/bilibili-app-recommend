@@ -2,6 +2,8 @@ import request from 'axios'
 import { settings } from '$settings'
 import { toast } from './toast'
 
+export const appkey = '27eb53fc9058f8c3'
+
 /**
  * 获取 access_key
  */
@@ -9,7 +11,7 @@ import { toast } from './toast'
 async function getAuth() {
   const res = await request.get('https://passport.bilibili.com/login/app/third', {
     params: {
-      appkey: '27eb53fc9058f8c3',
+      appkey,
       api: 'https://www.mcbbs.net/template/mcbbs/image/special_photo_bg.png',
       sign: '04224646d1fea004e79606d3b038c84a',
     },

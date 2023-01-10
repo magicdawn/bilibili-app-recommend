@@ -22,11 +22,13 @@ request.interceptors.request.use(
 
 // 可以跨域
 import gmAdapter from 'axios-userscript-adapter'
+import { appkey } from '$utility/auth'
 export const gmrequest = axios.create({ adapter: gmAdapter })
 
 gmrequest.interceptors.request.use(
   function (config) {
     config.params = {
+      appkey,
       access_key: $config.accessKey || '',
       ...config.params,
     }

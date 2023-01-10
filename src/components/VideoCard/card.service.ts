@@ -1,7 +1,7 @@
 import { request, gmrequest, HOST_APP } from '$request'
 import { getCsrfToken } from '$utility'
 import LRUCache from 'lru-cache'
-import { DmJson, PvideoJson, RecItem } from '$define'
+import { DmJson, PvideoJson, AppRecItem } from '$define'
 import { toast } from '$utility/toast'
 
 // api.bilibili.com/pvideo?aid=${target.dataset.id}&_=${Date.now()
@@ -93,7 +93,7 @@ const dislikeFactory = (type: 'dislike' | 'cancel') => {
     cancel: '/x/feed/dislike/cancel',
   }[type]
 
-  return async function (item: RecItem, reasonId: number) {
+  return async function (item: AppRecItem, reasonId: number) {
     const res = await gmrequest.get(HOST_APP + pathname, {
       params: {
         goto: item.goto,

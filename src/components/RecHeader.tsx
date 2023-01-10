@@ -1,14 +1,14 @@
 import { ModalSettings } from '$components/ModalSettings'
+import { IconPark } from '$icon-park'
 import { css } from '$libs'
+import { HEADER_HEIGHT } from '$platform'
 import { settings, useSettingsSnapshot } from '$settings'
 import { useCallback, useRef, useState } from 'react'
+import { useSticky } from 'react-use-sticky'
 import { proxy, useSnapshot } from 'valtio'
 import { AccessKeyManage } from './AccessKeyManage'
 import { CollapseBtn, CollapseBtnRef } from './CollapseBtn'
 import { ModalFeed } from './ModalFeed'
-import { useSticky } from 'react-use-sticky'
-import { HEADER_HEIGHT, useIsDarkMode } from '$platform'
-import { IconPark } from '$icon-park'
 
 const configStyles = {
   btn: css`
@@ -41,7 +41,7 @@ const onModalFeedHide = () => {
 }
 
 export function RecHeader({ onRefresh }: { onRefresh: () => void | Promise<void> }) {
-  const { accessKey, pureRecommend } = useSettingsSnapshot()
+  const { accessKey, pureRecommend, usePcDesktopApi } = useSettingsSnapshot()
   const collapseBtnRef = useRef<CollapseBtnRef>(null)
 
   const { showMore } = useSnapshot(state)
@@ -55,8 +55,6 @@ export function RecHeader({ onRefresh }: { onRefresh: () => void | Promise<void>
   }, [])
 
   const [stickyRef, sticky] = useSticky<HTMLDivElement>()
-
-  const isDarkMode = useIsDarkMode()
 
   return (
     <>
@@ -93,17 +91,18 @@ export function RecHeader({ onRefresh }: { onRefresh: () => void | Promise<void>
         </div>
 
         <div className='right'>
+          {!usePcDesktopApi &&
+            (!accessKey ? (
+              <AccessKeyManage />
+            ) : (
+              <CollapseBtn ref={collapseBtnRef}>
+                <AccessKeyManage />
+              </CollapseBtn>
+            ))}
+
           <button className='primary-btn' css={configStyles.btn} onClick={showModalConfig}>
             <IconPark name='Config' css={configStyles.icon} />
           </button>
-
-          {/* {!accessKey ? (
-            <AccessKeyManage />
-          ) : (
-            <CollapseBtn ref={collapseBtnRef}>
-              <AccessKeyManage />
-            </CollapseBtn>
-          )} */}
 
           <button className='primary-btn roll-btn' onClick={onRefresh}>
             <svg style={{ transform: 'rotate(0deg)' }}>

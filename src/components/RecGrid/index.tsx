@@ -4,11 +4,10 @@
 
 import { showModalDislike, useModalDislikeVisible } from '$components/ModalDislike'
 import { VideoCard } from '$components/VideoCard'
-import { PcRecItemWithUniqId, RecItemWithUniqId } from '$define'
+import { PcRecItemExtend, AppRecItemExtend } from '$define'
 import { cssCls, cx } from '$libs'
 import { getIsInternalTesting, HEADER_HEIGHT } from '$platform'
 import { getRecommendTimes } from '$service'
-import { getPcRecommendTimes } from '$service-pc'
 import { useSettingsSnapshot } from '$settings'
 import { useMemoizedFn } from 'ahooks'
 import { forwardRef, RefObject, useImperativeHandle, useMemo, useRef, useState } from 'react'
@@ -54,7 +53,7 @@ export type RecGridProps = {
 
 export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
   ({ infiteScrollUseWindow, shortcutEnabled, onScrollToTop, className, scrollerRef }, ref) => {
-    const [items, setItems] = useState<PcRecItemWithUniqId[]>([])
+    const [items, setItems] = useState<(PcRecItemExtend | AppRecItemExtend)[]>([])
     const [loading, setLoading] = useState(false)
 
     useImperativeHandle(ref, () => {
@@ -73,7 +72,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
         clearActiveIndex() // before
         setLoading(true)
         pageRef.page = 1
-        setItems(await getPcRecommendTimes(2, pageRef))
+        setItems(await getRecommendTimes(2, pageRef))
         clearActiveIndex() // and after
       } finally {
         setLoading(false)
@@ -81,7 +80,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
     })
 
     const fetchMore = useMemoizedFn(async () => {
-      const more = await getPcRecommendTimes(2, pageRef)
+      const more = await getRecommendTimes(2, pageRef)
       setItems((items) => [...items, ...more])
     })
 
@@ -114,7 +113,8 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
       containerRef,
       getScrollerRect,
       openDislikeAt(index) {
-        showModalDislike(items[index])
+        const item = items[index]
+        item.api === 'app' && showModalDislike(item)
       },
       changeScrollY: infiteScrollUseWindow
         ? function ({ offset, absolute }) {

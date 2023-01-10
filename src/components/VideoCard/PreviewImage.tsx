@@ -1,4 +1,4 @@
-import { PvideoData, RecItem } from '$define'
+import { PvideoData, AppRecItem } from '$define'
 import { cx } from '$libs'
 import { useMouse } from 'ahooks'
 import { useMemo, useRef } from 'react'

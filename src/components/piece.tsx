@@ -23,6 +23,43 @@ const checkStyles = {
  * Settings 上的功能开关
  */
 
+export function SettingsCheckUi({
+  className,
+  label,
+  checked,
+  onChange,
+}: {
+  className?: string
+  label: string
+  checked: boolean
+  onChange: (val: boolean) => void
+}) {
+  const onChangeHandler: ChangeEventHandler = useCallback(
+    (e) => {
+      const val = (e.target as HTMLInputElement).checked
+      onChange(val)
+    },
+    [onChange]
+  )
+
+  const id = useId()
+
+  return (
+    <span css={checkStyles.container} className={className}>
+      <input
+        type='checkbox'
+        id={id}
+        checked={checked}
+        onChange={onChangeHandler}
+        css={checkStyles.checkbox}
+      />
+      <label htmlFor={id} css={checkStyles.label}>
+        {label}
+      </label>
+    </span>
+  )
+}
+
 export function SettingsCheck({
   configKey,
   label,
@@ -35,8 +72,7 @@ export function SettingsCheck({
   const snap = useSettingsSnapshot()
 
   const checked = !!snap[configKey]
-  const onChange: ChangeEventHandler = useCallback((e) => {
-    const val = (e.target as HTMLInputElement).checked
+  const onChange = useCallback((val: boolean) => {
     updateSettings({ [configKey]: val })
 
     // extra action
@@ -45,21 +81,13 @@ export function SettingsCheck({
     }
   }, [])
 
-  const id = useId()
-
   return (
-    <span css={checkStyles.container} className={className}>
-      <input
-        type='checkbox'
-        id={id}
-        checked={checked}
-        onChange={onChange}
-        css={checkStyles.checkbox}
-      />
-      <label htmlFor={id} css={checkStyles.label}>
-        {label || configKey}
-      </label>
-    </span>
+    <SettingsCheckUi
+      className={className}
+      label={label || configKey}
+      checked={checked}
+      onChange={onChange}
+    />
   )
 }
 

@@ -1,5 +1,5 @@
-import { dislikedIds, Reason } from '$components/ModalDislike'
-import { PcRecItem } from '$define'
+import { dislikedIds, Reason, showModalDislike, useDislikedReason } from '$components/ModalDislike'
+import { AppRecItem, AppRecItemExtend, PcRecItemExtend } from '$define'
 import { IconPark } from '$icon-park'
 import { settings, useSettingsSnapshot } from '$settings'
 import { toast, toastOperationFail, toastRequestFail } from '$utility/toast'
@@ -39,12 +39,12 @@ const formatTimeStamp = (unixTs?: number) => {
   }
 }
 
-const toHttps = (url: string) => url.replace(/^http:\/\//, 'https://')
+const toHttps = (url: string) => (url || '').replace(/^http:\/\//, 'https://')
 
 type VideoCardProps = {
   style?: CSSProperties
   className?: string
-  item?: PcRecItem
+  item?: PcRecItemExtend | AppRecItemExtend
   loading?: boolean
 } & ComponentProps<'div'>
 
@@ -73,6 +73,8 @@ export const VideoCard = memo(function VideoCard({
     </div>
   )
 
+  const dislikedReason = useDislikedReason(item?.api === 'app' && item.param)
+
   return (
     <div
       style={style}
@@ -81,13 +83,19 @@ export const VideoCard = memo(function VideoCard({
       {...restProps}
     >
       {skeleton}
-      {!loading && item && <VideoCardInner item={item} />}
+      {!loading &&
+        item &&
+        (dislikedReason ? (
+          <DislikedCard item={item as AppRecItemExtend} dislikedReason={dislikedReason!} />
+        ) : (
+          <VideoCardInner item={item!} />
+        ))}
     </div>
   )
 })
 
 type DisabledCardProps = {
-  item: PcRecItem
+  item: AppRecItem
   dislikedReason: Reason
 }
 const DislikedCard = memo(function DislikedCard({ dislikedReason, item }: DisabledCardProps) {
@@ -119,7 +127,7 @@ const DislikedCard = memo(function DislikedCard({ dislikedReason, item }: Disabl
         <div className={styles.dislikeContentCoverInner}>
           <IconPark name='DistraughtFace' size={32} className={styles.dislikeIcon} />
           <div className={styles.dislikeReason}>{dislikedReason?.name}</div>
-          <div className={styles.dislikeDesc}>将减少此类内容推荐</div>
+          <div className={styles.dislikeDesc}>{dislikedReason?.toast || '将减少此类内容推荐'}</div>
         </div>
       </div>
       <div className={styles.dislikeContentAction}>
@@ -133,7 +141,7 @@ const DislikedCard = memo(function DislikedCard({ dislikedReason, item }: Disabl
 })
 
 type VideoCardInnerProps = {
-  item: PcRecItem
+  item: PcRecItemExtend | AppRecItemExtend
 }
 const VideoCardInner = memo(function VideoCardInner({ item }: VideoCardInnerProps) {
   // 预览 hover state
@@ -171,35 +179,46 @@ const VideoCardInner = memo(function VideoCardInner({ item }: VideoCardInnerProp
   const { accessKey } = useSettingsSnapshot()
   const authed = Boolean(accessKey)
 
-  let {
-    bvid,
-    title,
-    pic: coverRaw,
+  /**
+   * raw data
+   */
 
-    goto,
-
-    // play,
-    // like,
-    stat: { view: play, like },
-
-    // desc,
-    // danmaku,
-    pubdate,
-    duration,
-
-    // author
-    owner: { name, face, mid },
-
-    // bangumi
-    // favorite,
-    // badge,
-
-    // 推荐理由
-    rcmd_reason,
-  } = item
+  const isPc = item.api === 'pc'
+  const isApp = item.api === 'app'
 
   // id = avid
-  const id = String(item.id)
+  const id = isPc ? String(item.id) : String(item.param)
+  const bvid = isPc ? item.bvid : ''
+  const goto = item.goto
+
+  // stat
+  const play = isPc ? item.stat.view : undefined
+  const like = isPc ? item.stat.like : undefined
+  const coin = isPc ? undefined : undefined
+  const danmaku = isPc ? undefined : undefined
+
+  // video info
+  const title = item.title
+  const coverRaw = isPc ? item.pic : item.cover
+  const pubdate = isPc ? item.pubdate : undefined // 获取不到发布时间
+  const duration = (isPc ? item.duration : item.player_args?.duration) || 0
+
+  // video owner info
+  const name = isPc ? item.owner.name : item.args.up_name
+  const face = isPc ? item.owner.face : undefined
+  const mid = isPc ? item.owner.mid : item.args.up_id
+
+  // bangumi
+  const favorite = isPc ? undefined : undefined
+  const bangumiBadge = isPc ? undefined : item.badge
+  const bangumiDesc = isPc ? undefined : item.desc_button?.text || ''
+
+  // 推荐理由
+  const rcmd_reason = isPc ? item.rcmd_reason?.content : item.rcmd_reason
+
+  /**
+   * transformed
+   */
 
   const pubdateDisplay = useMemo(() => formatTimeStamp(pubdate), [pubdate])
   const cover = useMemo(() => toHttps(coverRaw), [coverRaw])
@@ -259,18 +278,27 @@ const VideoCardInner = memo(function VideoCardInner({ item }: VideoCardInnerProp
   const onTriggerDislike = useMemoizedFn((e: MouseEvent) => {
     e.stopPropagation()
     e.preventDefault()
-    // showModalDislike(item)
+
+    if (!isApp) return
+    showModalDislike(item)
   })
 
-  const isBangumi = false // item.goto === 'bangumi'
+  const isBangumi = item.goto === 'bangumi'
   const isNormalVideo = item.goto === 'av'
 
-  const href = isNormalVideo ? `/video/${bvid}` : item.uri
+  const href = isPc
+    ? isNormalVideo && bvid
+      ? `/video/${bvid}`
+      : item.uri
+    : isNormalVideo
+    ? `/video/av${item.param}`
+    : item.uri
+
   const durationStr = useMemo(() => getDurationStr(duration), [duration])
   const playStr = useMemo(() => getCountStr(play), [play])
   const likeStr = useMemo(() => getCountStr(like), [like])
-  // const favoriteStr = useMemo(() => getCountStr(favorite), [favorite])
-  const favoriteStr = likeStr
+  const _favoriteStr = useMemo(() => getCountStr(favorite), [favorite])
+  const favoriteStr = isPc ? likeStr : _favoriteStr
 
   const onContextMenu = useMemoizedFn((e: MouseEvent) => {
     if (!settings.openInIINAWhenRightClick) return
@@ -281,6 +309,35 @@ const VideoCardInner = memo(function VideoCardInner({ item }: VideoCardInnerProp
 
     e.preventDefault()
   })
+
+  const statItem = ({ text, iconSvgName }: { text: string; iconSvgName: string }) => (
+    <span className='bili-video-card__stats--item'>
+      <svg className='bili-video-card__stats--icon'>
+        <use xlinkHref={iconSvgName}></use>
+      </svg>
+      <span className='bili-video-card__stats--text'>{text}</span>
+    </span>
+  )
+
+  const iconSvgNames = {
+    play: '#widget-video-play-count', // or #widget-play-count
+    danmaku: '#widget-video-danmaku',
+    like: '#widget-agree',
+    bangumiFollow: '#widget-agree', // TODO: icon for this
+  }
+
+  // app icon
+  const appIconMap: Record<number, keyof typeof iconSvgNames> = {
+    1: 'play',
+    2: 'like', // 没出现过, 猜的
+    3: 'danmaku',
+    4: 'bangumiFollow', // 追番
+  }
+
+  const svgIconNameForId = (id: number) => {
+    const key = appIconMap[id] || appIconMap[1] // TODO: 不认识的图标使用 play
+    return iconSvgNames[key]
+  }
 
   return (
     <div className='bili-video-card__wrap __scale-wrap' onContextMenu={onContextMenu}>
@@ -338,8 +395,8 @@ const VideoCardInner = memo(function VideoCardInner({ item }: VideoCardInnerProp
               </span>
             </div>
 
-            {/*  我不想看 */}
-            {false && authed && (
+            {/* 我不想看 */}
+            {isApp && authed && (
               <div
                 ref={btnDislikeRef}
                 className={styles.btnDislike}
@@ -362,32 +419,28 @@ const VideoCardInner = memo(function VideoCardInner({ item }: VideoCardInnerProp
           <div className='bili-video-card__mask'>
             <div className='bili-video-card__stats'>
               <div className='bili-video-card__stats--left'>
-                {/* 播放 */}
-                <span className='bili-video-card__stats--item'>
-                  <svg className='bili-video-card__stats--icon'>
-                    <use xlinkHref='#widget-play-count'></use>
-                  </svg>
-                  <span className='bili-video-card__stats--text'>{playStr}</span>
-                </span>
-
-                {/* 点赞 */}
-                <span className='bili-video-card__stats--item'>
-                  {goto === 'av' ? (
-                    <>
-                      <svg className='bili-video-card__stats--icon'>
-                        <use xlinkHref='#widget-agree'></use>
-                      </svg>
-                      <span className='bili-video-card__stats--text'>{likeStr}</span>
-                    </>
-                  ) : (
-                    <>
-                      <svg className='bili-video-card__stats--icon'>
-                        <use xlinkHref='#widget-agree'></use>
-                      </svg>
-                      <span className='bili-video-card__stats--text'>{favoriteStr}</span>
-                    </>
-                  )}
-                </span>
+                {isPc ? (
+                  <>
+                    {/* 播放 */}
+                    {statItem({ text: playStr, iconSvgName: iconSvgNames.play })}
+                    {/* 点赞 */}
+                    {statItem({
+                      text: goto === 'av' ? likeStr : favoriteStr,
+                      iconSvgName: iconSvgNames.like,
+                    })}
+                  </>
+                ) : (
+                  <>
+                    {statItem({
+                      iconSvgName: svgIconNameForId(item.cover_left_icon_1),
+                      text: item.cover_left_text_1,
+                    })}
+                    {statItem({
+                      iconSvgName: svgIconNameForId(item.cover_left_icon_2),
+                      text: item.cover_left_text_2,
+                    })}
+                  </>
+                )}
               </div>
 
               {/* 时长 */}
@@ -423,8 +476,8 @@ const VideoCardInner = memo(function VideoCardInner({ item }: VideoCardInnerProp
                 data-idx='content'
                 data-ext='click'
               >
-                {rcmd_reason?.content ? (
-                  <span className={styles.recommendReason}>{rcmd_reason.content}</span>
+                {rcmd_reason ? (
+                  <span className={styles.recommendReason}>{rcmd_reason}</span>
                 ) : (
                   <svg className='bili-video-card__info--owner__up'>
                     <use xlinkHref='#widget-up'></use>
@@ -438,10 +491,10 @@ const VideoCardInner = memo(function VideoCardInner({ item }: VideoCardInnerProp
               </a>
             )}
 
-            {isBangumi && false && (
+            {isBangumi && (
               <a className='bili-video-card__info--owner' href={href} target='_blank'>
-                <span className={styles.badge}>{'badge'}</span>
-                <span className={styles.bangumiDesc}>{'desc'}</span>
+                <span className={styles.badge}>{bangumiBadge || ''}</span>
+                <span className={styles.bangumiDesc}>{bangumiDesc || ''}</span>
               </a>
             )}
           </p>
