@@ -35,6 +35,23 @@ export function useShortcut({
 }: IOptions) {
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
 
+  const isEnabled = useMemoizedFn(() => {
+    if (!enabled) return false
+
+    // if activeElement is input, disable shortcut
+    const activeTagName = (document.activeElement?.tagName || '').toLowerCase()
+    if (['input', 'textarea'].includes(activeTagName)) {
+      return false
+    }
+
+    // if search panel is open, disable shortcut
+    if (document.querySelector('.center-search__bar.is-focus')) {
+      return false
+    }
+
+    return true
+  })
+
   const activeIndexIsValid = useMemoizedFn(() => {
     if (activeIndex === null) return false
     if (!containerRef.current) return false
@@ -58,7 +75,7 @@ export function useShortcut({
   })
 
   const addActiveIndex = useMemoizedFn((step: number, e?: KeyboardEvent) => {
-    if (!enabled) return
+    if (!isEnabled()) return
 
     // 防止 scroller focus 的情况下, 因键盘产生滑动, 进而页面抖动
     e?.preventDefault()
@@ -102,15 +119,15 @@ export function useShortcut({
 
   // actions
   const clearActiveIndex = useMemoizedFn(() => {
-    if (!enabled) return
+    if (!isEnabled()) return
     setActiveIndex(null)
   })
   const open = useMemoizedFn(() => {
-    if (!enabled || typeof activeIndex !== 'number') return
+    if (!isEnabled() || typeof activeIndex !== 'number') return
     openVideoAt(activeIndex)
   })
   const dislike = useMemoizedFn(() => {
-    if (!enabled || typeof activeIndex !== 'number') return
+    if (!isEnabled() || typeof activeIndex !== 'number') return
     openDislikeAt(activeIndex)
   })
 
@@ -120,7 +137,7 @@ export function useShortcut({
 
   // refresh
   const onShortcutRefresh = useMemoizedFn(() => {
-    if (!enabled) return
+    if (!isEnabled()) return
     refresh()
   })
   useKeyPress('r', onShortcutRefresh, { exactMatch: true }) // prevent refresh when cmd+R reload page
