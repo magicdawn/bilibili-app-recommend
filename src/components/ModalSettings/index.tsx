@@ -40,14 +40,22 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
       </div>
 
       <main className={BaseModalClass.modalBody}>
-        {!usePcDesktopApi && (
-          <div className={styles.settingsGroup}>
-            <div className={styles.settingsGroupTitle}>Auth</div>
-            <div className={cx(styles.settingsGroupContent, styles.row)}>
-              <AccessKeyManage />
-            </div>
+        <div className={styles.settingsGroup}>
+          <div className={styles.settingsGroupTitle}>接口切换</div>
+          <div className={cx(styles.settingsGroupContent)}>
+            <SettingsCheck
+              configKey={'usePcDesktopApi'}
+              label='使用桌面端接口(默认使用 App 端接口)'
+              className={styles.check}
+            />
+
+            {!usePcDesktopApi && (
+              <div className={styles.row}>
+                <AccessKeyManage />
+              </div>
+            )}
           </div>
-        )}
+        </div>
 
         <div className={styles.settingsGroup}>
           <div className={styles.settingsGroupTitle}>开关</div>
@@ -71,12 +79,6 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
             <SettingsCheck
               configKey={'useNarrowMode'}
               label='启用居中模式(居中两列)'
-              className={styles.check}
-            />
-
-            <SettingsCheck
-              configKey={'usePcDesktopApi'}
-              label='使用桌面端接口(默认使用 App 端接口)'
               className={styles.check}
             />
           </div>
