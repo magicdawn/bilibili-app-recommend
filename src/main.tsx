@@ -41,34 +41,34 @@ async function initHomepageSection() {
   const timeout = 10 * 1000 // 10s
   const timeoutTs = Date.now() + timeout
 
-  let previousElement: HTMLElement | null = null
-  let internalTesting = false
+  let insert: ((reactNode: HTMLElement) => void) | null = null
 
   /* eslint-disable no-constant-condition */
   while (true) {
     if (document.querySelector('.bili-layout > section.bili-grid')) {
-      previousElement = document.querySelector('.bili-layout > section.bili-grid')
+      const previousElement = document.querySelector('.bili-layout > section.bili-grid')
+      insert = (reactNode) => previousElement?.insertAdjacentElement('afterend', reactNode)
       break
     }
 
-    if (getIsInternalTesting() && document.querySelector('.recommended-container')) {
-      internalTesting = true
-      previousElement = document.querySelector('.recommended-container')
+    if (getIsInternalTesting() && document.querySelector('.bili-feed4-layout')) {
+      insert = (reactNode) =>
+        document.querySelector('.bili-feed4-layout')?.insertAdjacentElement('afterbegin', reactNode)
       break
     }
 
     if (Date.now() > timeoutTs) break
-    await sleep(100)
+    await sleep(200)
   }
 
-  if (!previousElement) {
+  if (!insert) {
     console.error('[bilibili-app-recommend]: init fail')
     return
   }
 
   // attach to dom
   const recommendContainer = document.createElement('section')
-  previousElement.insertAdjacentElement('afterend', recommendContainer)
+  insert(recommendContainer)
 
   // react render
   const root = createRoot(recommendContainer)
