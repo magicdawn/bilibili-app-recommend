@@ -111,12 +111,14 @@ export function RecHeader({ onRefresh }: { onRefresh: () => void | Promise<void>
             <span>换一换</span>
           </button>
 
-          <button className='primary-btn see-more' onClick={onSeeMore}>
-            <span>查看更多</span>
-            <svg>
-              <use xlinkHref='#widget-arrow'></use>
-            </svg>
-          </button>
+          {!pureRecommend && (
+            <button className='primary-btn see-more' onClick={onSeeMore}>
+              <span>查看更多</span>
+              <svg>
+                <use xlinkHref='#widget-arrow'></use>
+              </svg>
+            </button>
+          )}
         </div>
       </div>
 
