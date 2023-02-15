@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.8.2 2023-02-15
+
+- feat: hide ModalFeed in pureRecommend mode
+- fix: fix 内测模式 react node insert point
+
 ## v0.8.1 2023-02-13
 
 - 修复搜索框回车被识别成打开推荐视频的问题
