@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.8.3 2023-02-27
+
+- fix: fix BaseModal lock body scroll in firefox, close #20
+
 ## v0.8.2 2023-02-15
 
 - feat: hide ModalFeed in pureRecommend mode
