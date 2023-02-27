@@ -40,7 +40,7 @@ const modalHideCheck = () => {
   showedCount--
   if (showedCount < 0) showedCount = 0
   if (showedCount === 0) {
-    document.body.style.overflow = 'overlay' // unlock
+    document.body.style.overflow = '' // unlock
   }
 }
 
