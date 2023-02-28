@@ -30,7 +30,7 @@
     "@types/tampermonkey": "^4.0.10",
     "@typescript-eslint/eslint-plugin": "^5.54.0",
     "@typescript-eslint/parser": "^5.54.0",
-    "@vitejs/plugin-react": "^2.2.0",
+    "@vitejs/plugin-react": "^3.1.0",
     "chalk": "4",
     "concurrently": "^7.6.0",
     "esbuild": "0.17.10",
@@ -49,9 +49,9 @@
     "type-fest": "^3.6.1",
     "typescript": "4.9.5",
     "typescript-styled-plugin": "^0.18.2",
-    "vite": "^3.2.5",
+    "vite": "^4.1.4",
     "vite-plugin-monkey": "^2.12.1",
-    "vite-tsconfig-paths": "^3.6.0"
+    "vite-tsconfig-paths": "^4.0.5"
   },
   "dependencies": {
     "@emotion/css": "^11.10.6",
