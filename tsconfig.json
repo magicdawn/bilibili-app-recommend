@@ -20,7 +20,7 @@
         "tags": ["styled", "css", "sty", "cssCls"]
       }
     ],
-    "types": ["vite/client", "@violentmonkey/types"]
+    "types": ["vite/client", "@violentmonkey/types", "node"]
   },
   "ts-node": {
     "swc": true,

@@ -1,6 +1,6 @@
 import { PcRecItemExtend, PcRecommendJson } from '$define'
 import { uniqBy } from 'lodash'
-import { request, HOST_API } from './request'
+import { HOST_API, request } from './request'
 
 /**
  * 使用 web api 获取推荐

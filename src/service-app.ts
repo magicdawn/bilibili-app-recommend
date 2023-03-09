@@ -1,5 +1,4 @@
 import { APP_NAME } from '$common'
-import { settings } from '$settings'
 import { toast } from '$utility/toast'
 import { uniqBy } from 'lodash'
 import pretry, { RetryError } from 'promise.retry'
