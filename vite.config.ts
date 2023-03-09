@@ -1,7 +1,8 @@
 import react from '@vitejs/plugin-react'
+// import reactSwc from '@vitejs/plugin-react-swc'
 import visualizer from 'rollup-plugin-visualizer'
 import { defineConfig } from 'vite'
-import monkey, { cdn, MonkeyUserScript } from 'vite-plugin-monkey'
+import monkey, { cdn } from 'vite-plugin-monkey'
 import tsconfigPaths from 'vite-tsconfig-paths'
 import { version } from './package.json'
 
@@ -69,19 +70,12 @@ export default defineConfig({
           'link.acg.tv',
           'www.mcbbs.net',
         ],
-        grant: [
-          'GM.xmlHttpRequest',
-          'GM_xmlhttpRequest',
-          'GM_getValue',
-          'GM_setValue',
-          'GM_deleteValue',
-          'unsafeWindow',
-        ] as MonkeyUserScript['grant'],
+        grant: ['GM.xmlHttpRequest'],
       },
 
       server: {
-        open: false, //
-        prefix: (name) => name, // 一样的, 避免切换
+        open: true, //
+        prefix: false, // 一样的, 避免切换
         mountGmApi: true,
       },
 

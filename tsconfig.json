@@ -19,7 +19,8 @@
         "name": "typescript-styled-plugin",
         "tags": ["styled", "css", "sty", "cssCls"]
       }
-    ]
+    ],
+    "types": ["vite/client", "@violentmonkey/types"]
   },
   "ts-node": {
     "swc": true,
