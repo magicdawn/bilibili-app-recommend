@@ -36,20 +36,9 @@ export const useSettingsSnapshot = function () {
  */
 
 const nsp = 'bilibili-app-recommend'
-const legacyKey = `${nsp}.config`
 const key = `${nsp}.settings`
 
 export function load() {
-  // 迁移到新 key, 后续移除
-  // TODO: remove 数据迁移代码
-  if (
-    Object.keys(GM_getValue(legacyKey) || {}).length &&
-    !Object.keys(GM_getValue(key) || {}).length
-  ) {
-    GM_setValue(key, GM_getValue(legacyKey))
-    GM_deleteValue(legacyKey)
-  }
-
   const val = GM_getValue<Config>(key)
   if (val && typeof val === 'object') {
     Object.assign(settings, pick(val, allowedConfigKeys))
