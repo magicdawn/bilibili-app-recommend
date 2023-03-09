@@ -70,12 +70,15 @@ export default defineConfig({
           'link.acg.tv',
           'www.mcbbs.net',
         ],
-        grant: ['GM.xmlHttpRequest'],
+        grant: [
+          // axios gm adapter use
+          'GM.xmlHttpRequest',
+        ],
       },
 
       server: {
-        open: true, //
         prefix: false, // 一样的, 避免切换
+        open: true,
         mountGmApi: true,
       },
 
