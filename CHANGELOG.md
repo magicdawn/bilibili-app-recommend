@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.9.0 2023-03-23
+
+- 添加更多快捷键支持: 方向键+回车选择不喜欢理由, `s` 键切换稍候再看
+- 修复弹框直接 `esc` 键的影响, 如设置弹框 esc 关闭键会清除视频列表的选中状态.
+
 ## v0.8.3 2023-02-27
 
 - fix: fix BaseModal lock body scroll in firefox, close #20
