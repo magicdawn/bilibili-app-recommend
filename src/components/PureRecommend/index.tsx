@@ -19,7 +19,7 @@ export function PureRecommend() {
   const { useNarrowMode } = useSettingsSnapshot()
 
   // 是否已经打开 "查看更多" 即 ModalFeed
-  const { showMore: modalFeedVisible } = useHeaderState()
+  const { modalFeedVisible: modalFeedVisible } = useHeaderState()
 
   const recGrid = useRef<RecGridRef>(null)
   const onRefresh = useMemoizedFn(() => {

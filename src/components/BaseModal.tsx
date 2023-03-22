@@ -104,9 +104,16 @@ export function BaseModal({
     }
   })
 
-  useKeyPress('esc', () => {
+  useKeyPress('esc', (e) => {
     if (!show) return
-    if (hideWhenEsc) onHide()
+    if (hideWhenEsc) {
+      // prevent other esc handler run
+      e.preventDefault()
+      e.stopImmediatePropagation()
+
+      // wait the unpreventable esc handlers run, close in next tick
+      setTimeout(onHide)
+    }
   })
 
   if (!show) {

@@ -26,33 +26,33 @@ const configStyles = {
 }
 
 export const state = proxy({
-  showMore: settings.initialShowMore,
+  modalFeedVisible: settings.initialShowMore,
+  modalConfigVisible: false,
 })
 
 export const useHeaderState = function () {
   return useSnapshot(state)
 }
 
-const onSeeMore = () => {
-  state.showMore = true
+const showModalFeed = () => {
+  state.modalFeedVisible = true
 }
-const onModalFeedHide = () => {
-  state.showMore = false
+const hideModalFeed = () => {
+  state.modalFeedVisible = false
+}
+
+const showModalConfig = () => {
+  state.modalConfigVisible = true
+}
+const hideModalConfig = () => {
+  state.modalConfigVisible = false
 }
 
 export function RecHeader({ onRefresh }: { onRefresh: () => void | Promise<void> }) {
   const { accessKey, pureRecommend, usePcDesktopApi } = useSettingsSnapshot()
   const collapseBtnRef = useRef<CollapseBtnRef>(null)
 
-  const { showMore } = useSnapshot(state)
-
-  const [modalConfigVisible, setModalConfigVisible] = useState(false)
-  const showModalConfig = useCallback(() => {
-    setModalConfigVisible(true)
-  }, [])
-  const hideModalConfig = useCallback(() => {
-    setModalConfigVisible(false)
-  }, [])
+  const { modalFeedVisible, modalConfigVisible } = useSnapshot(state)
 
   const [stickyRef, sticky] = useSticky<HTMLDivElement>()
 
@@ -112,7 +112,7 @@ export function RecHeader({ onRefresh }: { onRefresh: () => void | Promise<void>
           </button>
 
           {!pureRecommend && (
-            <button className='primary-btn see-more' onClick={onSeeMore}>
+            <button className='primary-btn see-more' onClick={showModalFeed}>
               <span>查看更多</span>
               <svg>
                 <use xlinkHref='#widget-arrow'></use>
@@ -122,7 +122,7 @@ export function RecHeader({ onRefresh }: { onRefresh: () => void | Promise<void>
         </div>
       </div>
 
-      <ModalFeed show={showMore} onHide={onModalFeedHide} />
+      <ModalFeed show={modalFeedVisible} onHide={hideModalFeed} />
       <ModalSettings show={modalConfigVisible} onHide={hideModalConfig} />
     </>
   )

@@ -53,8 +53,8 @@ specifiers:
   typescript: 5.0.2
   typescript-styled-plugin: ^0.18.2
   valtio: ^1.10.3
-  vite: ^4.2.1
-  vite-plugin-monkey: ^3.0.2
+  vite: ^4.1.4
+  vite-plugin-monkey: ^2.12.1
   vite-tsconfig-paths: ^4.0.7
 
 dependencies:
@@ -113,7 +113,7 @@ devDependencies:
   typescript: 5.0.2
   typescript-styled-plugin: 0.18.2
   vite: 4.2.1_v57xivhexqggy552d4l7tn74xu
-  vite-plugin-monkey: 3.0.2_vite@4.2.1
+  vite-plugin-monkey: 2.12.1_vite@4.2.1
   vite-tsconfig-paths: 4.0.7_bi7wsi5xkno72wnymskyicz4pu
 
 packages:
@@ -2520,13 +2520,6 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.14
     dev: true
 
-  /magic-string/0.30.0:
-    resolution: {integrity: sha512-LA+31JYDJLs82r2ScLrlz1GjSgu66ZV518eyWT+S8VhyQn/JL0u9MeBOvQMGYiPk1DBiSN9DDMOcXvigJZaViQ==}
-    engines: {node: '>=12'}
-    dependencies:
-      '@jridgewell/sourcemap-codec': 1.4.14
-    dev: true
-
   /make-dir/2.1.0:
     resolution: {integrity: sha512-LS9X+dc8KLxXCb8dni79fLIIUA5VyZoyjSMCwTluaXA0o27cCK0bhXkpgw+sTXVpPy/lSO57ilRixqk0vDmtRA==}
     engines: {node: '>=6'}
@@ -2690,6 +2683,15 @@ packages:
     engines: {node: '>=12'}
     dependencies:
       mimic-fn: 4.0.0
+    dev: true
+
+  /open/8.4.1:
+    resolution: {integrity: sha512-/4b7qZNhv6Uhd7jjnREh1NjnPxlTq+XNWPG88Ydkj5AILcA5m3ajvcg57pB24EQjKv0dK62XnDqk9c/hkIG5Kg==}
+    engines: {node: '>=12'}
+    dependencies:
+      define-lazy-prop: 2.0.0
+      is-docker: 2.2.1
+      is-wsl: 2.2.0
     dev: true
 
   /open/8.4.2:
@@ -3330,10 +3332,6 @@ packages:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
 
-  /systemjs/6.14.1:
-    resolution: {integrity: sha512-8ftwWd+XnQtZ/aGbatrN4QFNGrKJzmbtixW+ODpci7pyoTajg4sonPP8aFLESAcuVxaC1FyDESt+SpfFCH9rZQ==}
-    dev: true
-
   /text-table/0.2.0:
     resolution: {integrity: sha512-N+8UisAXDGk8PFXP4HAzVR9nbfmVJ3zYLAWiTIoqC5v5isinhr+r5uaO8+7r3BMfuNIufIsA7RdpVgacC2cSpw==}
     dev: true
@@ -3572,21 +3570,18 @@ packages:
       use-sync-external-store: 1.2.0_react@18.2.0
     dev: false
 
-  /vite-plugin-monkey/3.0.2_vite@4.2.1:
-    resolution: {integrity: sha512-+fJg6mjuGMRgenPk+EmfFNp+Q1b2AhKWqbIfKo175JYHirAlx09fQN4xnEnO/zFDdx47nd04vCVasxbqxW9LXA==}
+  /vite-plugin-monkey/2.12.1_vite@4.2.1:
+    resolution: {integrity: sha512-nIGyVI+bKCU5zrw7UqsN86ZVSvfHaUfJoPoEdeCmciuJXMV7p0A/ymb7N/8lWnSVnwP/yQ/gIDe5/kBONlczSQ==}
     engines: {node: ^14.18 || >= 16, pnpm: '>=6'}
     peerDependencies:
       vite: '>=3.0.0'
     dependencies:
-      acorn-walk: 8.2.0
       cross-spawn: 7.0.3
       detect-port: 1.5.1
       htmlparser2: 8.0.1
-      magic-string: 0.30.0
       mrmime: 1.0.1
-      open: 8.4.2
+      open: 8.4.1
       picocolors: 1.0.0
-      systemjs: 6.14.1
       vite: 4.2.1_v57xivhexqggy552d4l7tn74xu
     transitivePeerDependencies:
       - supports-color

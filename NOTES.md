@@ -63,3 +63,6 @@ include: [
   'https://www.mcbbs.net/template/mcbbs/image/special_photo_bg.png?*',
 ],
 ```
+
+"vite": "^4.1.4",
+"vite-plugin-monkey": "^2.12.1",

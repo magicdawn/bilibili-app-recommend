@@ -50,8 +50,8 @@
     "type-fest": "^3.6.1",
     "typescript": "5.0.2",
     "typescript-styled-plugin": "^0.18.2",
-    "vite": "^4.2.1",
-    "vite-plugin-monkey": "^3.0.2",
+    "vite": "^4.1.4",
+    "vite-plugin-monkey": "^2.12.1",
     "vite-tsconfig-paths": "^4.0.7"
   },
   "dependencies": {

@@ -2,6 +2,7 @@ import { settings } from '$settings'
 import { useKeyPress, useMemoizedFn } from 'ahooks'
 import { RefObject, useCallback, useState } from 'react'
 import { cls } from './index'
+import { VideoCardActions } from '$components/VideoCard'
 
 interface IOptions {
   enabled: boolean
@@ -12,14 +13,14 @@ interface IOptions {
   /** 用于获取 cards */
   containerRef: RefObject<HTMLElement>
 
-  /** cards action */
-  openDislikeAt: (index: number) => void
-
   /** 判断 active card 与 scroller 关系, 判定 activeIndex 是否有效 */
   getScrollerRect: () => DOMRect | null | undefined
 
   /** 调整 scrollY  */
   changeScrollY?: (options: { offset?: number; absolute?: number }) => void
+
+  /** video-card */
+  videoCardRefs: Array<VideoCardActions | undefined | null>
 }
 
 // 快捷键
@@ -30,8 +31,8 @@ export function useShortcut({
   maxIndex,
   containerRef,
   getScrollerRect,
-  openDislikeAt,
   changeScrollY,
+  videoCardRefs,
 }: IOptions) {
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
 
@@ -74,7 +75,7 @@ export function useShortcut({
     return true
   })
 
-  const addActiveIndex = useMemoizedFn((step: number, e?: KeyboardEvent) => {
+  const addActiveIndex = (step: number) => (e?: KeyboardEvent) => {
     if (!isEnabled()) return
 
     // 防止 scroller focus 的情况下, 因键盘产生滑动, 进而页面抖动
@@ -95,52 +96,50 @@ export function useShortcut({
     // console.log({ activeIndex, index, initialIndex: getInitialIndex() })
     setActiveIndex(index)
     makeVisible(index)
-  })
+  }
 
   // by 1
-  const prev = useCallback((e: KeyboardEvent) => {
-    addActiveIndex(-1, e)
-  }, [])
-  const next = useCallback((e: KeyboardEvent) => {
-    addActiveIndex(1, e)
-  }, [])
-  useKeyPress('leftarrow', prev)
-  useKeyPress('rightarrow', next)
-
+  useKeyPress('leftarrow', addActiveIndex(-1))
+  useKeyPress('rightarrow', addActiveIndex(1))
   // by row
-  const prevRow = useCallback((e: KeyboardEvent) => {
-    addActiveIndex(-getColCount(), e)
-  }, [])
-  const nextRow = useCallback((e: KeyboardEvent) => {
-    addActiveIndex(getColCount(), e)
-  }, [])
-  useKeyPress('uparrow', prevRow)
-  useKeyPress('downarrow', nextRow)
+  useKeyPress('uparrow', addActiveIndex(-getColCount()))
+  useKeyPress('downarrow', addActiveIndex(getColCount()))
 
   // actions
-  const clearActiveIndex = useMemoizedFn(() => {
+  const clearActiveIndex = () => {
     if (!isEnabled()) return
     setActiveIndex(null)
-  })
-  const open = useMemoizedFn(() => {
+  }
+
+  useKeyPress('esc', clearActiveIndex)
+  useKeyPress('enter', () => {
     if (!isEnabled() || typeof activeIndex !== 'number') return
     openVideoAt(activeIndex)
   })
-  const dislike = useMemoizedFn(() => {
+  useKeyPress('backspace', () => {
     if (!isEnabled() || typeof activeIndex !== 'number') return
-    openDislikeAt(activeIndex)
+    videoCardRefs[activeIndex]?.onTriggerDislike()
   })
-
-  useKeyPress('esc', clearActiveIndex)
-  useKeyPress('enter', open)
-  useKeyPress('backspace', dislike)
 
   // refresh
-  const onShortcutRefresh = useMemoizedFn(() => {
-    if (!isEnabled()) return
-    refresh()
-  })
-  useKeyPress('r', onShortcutRefresh, { exactMatch: true }) // prevent refresh when cmd+R reload page
+  useKeyPress(
+    'r',
+    () => {
+      if (!isEnabled()) return
+      refresh()
+    },
+    { exactMatch: true }
+  ) // prevent refresh when cmd+R reload page
+
+  // 稍候再看
+  useKeyPress(
+    's',
+    () => {
+      if (!isEnabled() || typeof activeIndex !== 'number') return
+      videoCardRefs[activeIndex]?.onToggleWatchLater()
+    },
+    { exactMatch: true }
+  )
 
   function getInitialIndex() {
     const scrollerRect = getScrollerRect()

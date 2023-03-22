@@ -1,4 +1,3 @@
-import utilityStyles from '$common/utility.module.less'
 import { AccessKeyManage } from '$components/AccessKeyManage'
 import { BaseModal, BaseModalClass, ModalClose } from '$components/BaseModal'
 import { SettingsCheck, SettingsCheckUi } from '$components/piece'
@@ -7,7 +6,6 @@ import { cx } from '$libs'
 import { resetSettings, settings, useSettingsSnapshot } from '$settings'
 import { toast } from '$utility/toast'
 import delay from 'delay'
-import { useId } from 'react'
 import styles from './index.module.less'
 
 async function toastAndReload() {
@@ -103,6 +101,29 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                 label='右键在 IINA 中打开'
                 className={styles.check}
               />
+            </div>
+          </div>
+        </div>
+
+        <div className={styles.settingsGroup}>
+          <div className={styles.settingsGroupTitle}>帮助</div>
+          <div className={cx(styles.settingsGroupContent)}>
+            <div className={styles.row}>
+              <a
+                className='primary-btn roll-btn'
+                href='https://github.com/magicdawn/bilibili-app-recommend#%E5%BF%AB%E6%8D%B7%E9%94%AE%E8%AF%B4%E6%98%8E'
+                target='_blank'
+              >
+                快捷键使用说明
+              </a>
+
+              <a
+                className='primary-btn roll-btn'
+                target='_blank'
+                href='https://github.com/indefined/UserScripts/tree/master/bilibiliHome#%E6%8E%88%E6%9D%83%E8%AF%B4%E6%98%8E'
+              >
+                access_key 说明
+              </a>
             </div>
           </div>
         </div>

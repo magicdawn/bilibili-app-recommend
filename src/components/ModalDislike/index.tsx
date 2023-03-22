@@ -1,10 +1,11 @@
 import { BaseModal, BaseModalClass, ModalClose } from '$components/BaseModal'
 import { AppRecItem, AppRecItemExtend } from '$define'
 import { IconPark } from '$icon-park'
+import { cx } from '$libs'
 import { toast, toastOperationFail, toastRequestFail } from '$utility/toast'
-import { useKeyPress, useMemoizedFn } from 'ahooks'
+import { useKeyPress, useMemoizedFn, useUpdateLayoutEffect } from 'ahooks'
 import { useMemo, useState } from 'react'
-import { createRoot, Root } from 'react-dom/client'
+import { Root, createRoot } from 'react-dom/client'
 import { proxy, useSnapshot } from 'valtio'
 import { proxyMap } from 'valtio/utils'
 import { dislike } from '../VideoCard/card.service'
@@ -67,19 +68,50 @@ export function ModalDislike({ show, onHide, item }: IProps) {
     return item?.three_point?.dislike_reasons || []
   }, [item])
 
+  const keyPressEnabled = () => !!show && !!item
+
   const KEYS = ['1', '2', '3', '4', '5', '6']
   useKeyPress(KEYS, (e) => {
-    if (!show) return
-    if (!item) return
+    if (!keyPressEnabled()) return
     if (!KEYS.includes(e.key)) return
 
-    // 使用 btn.click 无需 isRequesting 判断
-    // if (isRequesting) return
-
     const index = Number(e.key) - 1
+    setActiveIndex(index)
+
     const btn = document.querySelectorAll<HTMLButtonElement>(`.${styles.reason}`)[index] || null
     btn?.click()
   })
+
+  const [activeIndex, setActiveIndex] = useState(reasons.length - 1)
+  useUpdateLayoutEffect(() => {
+    setActiveIndex(reasons.length - 1)
+  }, [reasons])
+
+  const increaseIndex = (by: number) => {
+    return () => {
+      if (!keyPressEnabled()) return
+      const newIndex = activeIndex + by
+      if (newIndex < 0 || newIndex > reasons.length - 1) return
+      setActiveIndex(newIndex)
+    }
+  }
+
+  useKeyPress('leftarrow', increaseIndex(-1))
+  useKeyPress('rightarrow', increaseIndex(1))
+  useKeyPress('uparrow', increaseIndex(-2))
+  useKeyPress('downarrow', increaseIndex(2))
+
+  useKeyPress('enter', (e) => {
+    if (!keyPressEnabled()) return
+    if (activeIndex < 0 || activeIndex > reasons.length - 1) return
+    e.preventDefault()
+    e.stopImmediatePropagation()
+    document.querySelector<HTMLButtonElement>(`.${styles.reason}.${styles.active}`)?.click()
+  })
+
+  const activeReasonName = useMemo(() => {
+    return reasons[activeIndex]?.name || ''
+  }, [reasons, activeIndex])
 
   return (
     <BaseModal
@@ -105,7 +137,7 @@ export function ModalDislike({ show, onHide, item }: IProps) {
           {reasons.map((reason, index) => {
             return (
               <button
-                className={styles.reason}
+                className={cx(styles.reason, { [styles.active]: index === activeIndex })}
                 key={reason.id}
                 data-id={reason.id}
                 onClick={() => onDislike(reason)}
@@ -118,9 +150,17 @@ export function ModalDislike({ show, onHide, item }: IProps) {
           })}
         </div>
 
-        <div className={styles.tips}>
-          <IconPark name='Info' size={15} style={{ marginRight: 5 }} />
-          使用删除键打开弹框, 数字键选择, Esc 关闭
+        <div className={styles.tipsContainer}>
+          <div className={styles.tips}>
+            <IconPark name='Info' size={15} style={{ marginRight: 5 }} />
+            使用删除键打开弹框, 数字键选择, Esc 关闭
+          </div>
+          {activeReasonName && (
+            <div className={styles.tips}>
+              <IconPark name='Info' size={15} style={{ marginRight: 5 }} />
+              已选择「{activeReasonName}」, 回车键提交
+            </div>
+          )}
         </div>
       </div>
     </BaseModal>
@@ -143,7 +183,10 @@ export const useModalDislikeVisible = function () {
 }
 
 function onHide() {
-  updateProps({ show: false, item: null })
+  // esc 关闭, 等一个 tick, esc 先处理完
+  setTimeout(() => {
+    updateProps({ show: false, item: null })
+  })
 }
 
 function updateProps(newProps: Partial<IProps>) {

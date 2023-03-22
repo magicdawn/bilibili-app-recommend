@@ -30,6 +30,11 @@
     border: 1px solid #333;
   }
 
+  &.active {
+    border-color: @bili-pink;
+    border-radius: 4px;
+  }
+
   padding-top: 5px;
   padding-bottom: 5px;
   margin-top: 5px;
@@ -55,8 +60,11 @@
   color: #fff;
 }
 
-.tips {
+.tips-container {
   margin-top: 20px;
+}
+
+.tips {
   display: flex;
   align-items: center;
 }

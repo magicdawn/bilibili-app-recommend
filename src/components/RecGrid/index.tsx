@@ -2,15 +2,15 @@
  * 推荐内容, 无限滚动
  */
 
-import { showModalDislike, useModalDislikeVisible } from '$components/ModalDislike'
-import { VideoCard } from '$components/VideoCard'
-import { PcRecItemExtend, AppRecItemExtend } from '$define'
+import { useModalDislikeVisible } from '$components/ModalDislike'
+import { VideoCard, VideoCardActions } from '$components/VideoCard'
+import { AppRecItemExtend, PcRecItemExtend } from '$define'
 import { cssCls, cx } from '$libs'
-import { getIsInternalTesting, HEADER_HEIGHT } from '$platform'
+import { HEADER_HEIGHT, getIsInternalTesting } from '$platform'
 import { getRecommendTimes } from '$service'
 import { useSettingsSnapshot } from '$settings'
 import { useMemoizedFn } from 'ahooks'
-import { forwardRef, RefObject, useImperativeHandle, useMemo, useRef, useState } from 'react'
+import { RefObject, forwardRef, useImperativeHandle, useMemo, useRef, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroller'
 import { internalTesting, narrowMode, videoGrid } from '../video-grid.module.less'
 import { useShortcut } from './useShortcut'
@@ -56,11 +56,13 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
     const [items, setItems] = useState<(PcRecItemExtend | AppRecItemExtend)[]>([])
     const [loading, setLoading] = useState(false)
 
-    useImperativeHandle(ref, () => {
-      return {
+    useImperativeHandle(
+      ref,
+      () => ({
         refresh,
-      }
-    })
+      }),
+      []
+    )
 
     const pageRef = useMemo(() => ({ page: 1 }), [])
 
@@ -105,6 +107,10 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
     // 不喜欢弹框
     const modalDislikeVisible = useModalDislikeVisible()
 
+    const videoCardRefs = useMemo(() => {
+      return new Array<VideoCardActions | undefined | null>(items.length).fill(undefined)
+    }, [items.length])
+
     // 快捷键
     const { activeIndex, clearActiveIndex } = useShortcut({
       enabled: shortcutEnabled && !modalDislikeVisible,
@@ -112,10 +118,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
       maxIndex: items.length - 1,
       containerRef,
       getScrollerRect,
-      openDislikeAt(index) {
-        const item = items[index]
-        item.api === 'app' && showModalDislike(item)
-      },
+      videoCardRefs,
       changeScrollY: infiteScrollUseWindow
         ? function ({ offset, absolute }) {
             const scroller = document.documentElement
@@ -139,7 +142,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
         loadMore={fetchMore}
         hasMore={true}
         useWindow={infiteScrollUseWindow}
-        threshold={360} // 差不多一行高度
+        threshold={window.innerHeight} // 一屏
         style={{ minHeight: '100%' }}
         loader={
           <div className={cls.loader} key={0}>
@@ -157,14 +160,19 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
             className
           )}
         >
+          {/* <VideoCard key={1} loading={true} className={cx(cls.card)} />
+          <VideoCard key={2} loading={true} className={cx(cls.card)} /> */}
+
           {items.map((item, index) => {
+            const active = index === activeIndex
             return (
               <VideoCard
+                ref={(val) => (videoCardRefs[index] = val)}
                 key={item.uniqId}
+                className={cx(cls.card, { [cls.cardActive]: active })}
                 loading={loading}
                 item={item}
-                // tabIndex={index}
-                className={cx(cls.card, { [cls.cardActive]: index === activeIndex })}
+                active={active}
               />
             )
           })}

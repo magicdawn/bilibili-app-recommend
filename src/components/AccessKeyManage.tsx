@@ -19,19 +19,21 @@ export function AccessKeyManage() {
 
   const onDeleteAccessToken = deleteAccessToken
 
-  const onExplainAccessKey = useMemoizedFn(() => {
-    const explainUrl =
-      'https://github.com/indefined/UserScripts/tree/master/bilibiliHome#%E6%8E%88%E6%9D%83%E8%AF%B4%E6%98%8E'
-    window.open(explainUrl, '_blank')
-  })
+  const accessKeyLinkBtn = (
+    <a
+      className='primary-btn roll-btn'
+      target='_blank'
+      href='https://github.com/indefined/UserScripts/tree/master/bilibiliHome#%E6%8E%88%E6%9D%83%E8%AF%B4%E6%98%8E'
+    >
+      access_key 说明
+    </a>
+  )
 
   return (
     <>
       {!accessKey ? (
         <>
-          <button className='primary-btn roll-btn' onClick={onExplainAccessKey}>
-            <span>access_key 说明</span>
-          </button>
+          {accessKeyLinkBtn}
           <button
             className='primary-btn roll-btn'
             onClick={onGetAuth}
@@ -42,9 +44,7 @@ export function AccessKeyManage() {
         </>
       ) : (
         <>
-          <button className='primary-btn roll-btn' onClick={onExplainAccessKey}>
-            <span>access_key 说明</span>
-          </button>
+          {accessKeyLinkBtn}
           <button
             className='primary-btn roll-btn'
             onClick={() => onGetAuth()}
