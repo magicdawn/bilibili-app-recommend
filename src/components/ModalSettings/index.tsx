@@ -1,4 +1,4 @@
-import { AccessKeyManage } from '$components/AccessKeyManage'
+import { AccessKeyManage, accessKeyLinkBtn } from '$components/AccessKeyManage'
 import { BaseModal, BaseModalClass, ModalClose } from '$components/BaseModal'
 import { SettingsCheck, SettingsCheckUi } from '$components/piece'
 import { IconPark } from '$icon-park'
@@ -114,16 +114,9 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                 href='https://github.com/magicdawn/bilibili-app-recommend#%E5%BF%AB%E6%8D%B7%E9%94%AE%E8%AF%B4%E6%98%8E'
                 target='_blank'
               >
-                快捷键使用说明
+                查看可用的快捷键
               </a>
-
-              <a
-                className='primary-btn roll-btn'
-                target='_blank'
-                href='https://github.com/indefined/UserScripts/tree/master/bilibiliHome#%E6%8E%88%E6%9D%83%E8%AF%B4%E6%98%8E'
-              >
-                access_key 说明
-              </a>
+              {accessKeyLinkBtn}
             </div>
           </div>
         </div>

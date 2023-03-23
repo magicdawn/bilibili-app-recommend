@@ -99,9 +99,10 @@ const dislikeFactory = (type: 'dislike' | 'cancel') => {
         goto: item.goto,
         id: item.param,
 
-        mid: item.mid,
-        rid: item.tid,
-        tag_id: item.tag?.tag_id,
+        // mid: item.mid,
+        // rid: item.tid,
+        // tag_id: item.tag?.tag_id,
+
         reason_id: reasonId,
 
         // other stuffs

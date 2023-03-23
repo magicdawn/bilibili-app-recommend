@@ -140,7 +140,10 @@ export function ModalDislike({ show, onHide, item }: IProps) {
                 className={cx(styles.reason, { [styles.active]: index === activeIndex })}
                 key={reason.id}
                 data-id={reason.id}
-                onClick={() => onDislike(reason)}
+                onClick={() => {
+                  setActiveIndex(index)
+                  onDislike(reason)
+                }}
                 disabled={isRequesting}
               >
                 <span className={styles.reasonNo}>{index + 1}</span>
