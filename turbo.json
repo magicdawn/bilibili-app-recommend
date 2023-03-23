@@ -1,8 +1,11 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "pipeline": {
-    "build:real-build": {
+    "build:vite": {
       "outputs": ["dist/**"]
+    },
+    "build:type-check": {
+      "inputs": ["src/**", "tsconfig.json"]
     }
   }
 }
