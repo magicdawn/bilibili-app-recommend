@@ -99,11 +99,11 @@ export function useShortcut({
   }
 
   // by 1
-  useKeyPress('leftarrow', addActiveIndex(-1))
-  useKeyPress('rightarrow', addActiveIndex(1))
+  useKeyPress('leftarrow', addActiveIndex(-1), { exactMatch: true })
+  useKeyPress('rightarrow', addActiveIndex(1), { exactMatch: true })
   // by row
-  useKeyPress('uparrow', addActiveIndex(-getColCount()))
-  useKeyPress('downarrow', addActiveIndex(getColCount()))
+  useKeyPress('uparrow', addActiveIndex(-getColCount()), { exactMatch: true })
+  useKeyPress('downarrow', addActiveIndex(getColCount()), { exactMatch: true })
 
   // actions
   const clearActiveIndex = () => {
