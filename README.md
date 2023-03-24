@@ -84,7 +84,7 @@ B 站桌面端已上线, 支持 MacOS / Windows, 首页包含推荐模块
 - [x] `Enter`: 打开选中的视频
 - [x] `Backspace`: 即删除键, 打开标记不喜欢弹框
 - [x] `r`: 刷新, 效果同顶部 "换一换" 按钮, 取自 `refresh`
-- [x] `s`: 添加/移除 稍候再看, 取自 `save`
+- [x] `s` / `w`: 添加/移除 稍候再看, 取自 `save` / `watch`. `s` 与 Bilibili-Evolved 快捷键冲突, 你可以使用 `w`
 
 #### 各种其他弹框
 
