@@ -37,7 +37,7 @@ export async function getRecommend() {
     // 未知错误, 不重试
     toast(
       `${APP_NAME}: 未知错误, 请联系开发者\n\n  code=${json.code} message=${json.message || ''}`,
-      '5s'
+      5000
     )
     return []
   }
@@ -65,7 +65,7 @@ export async function tryGetRecommend() {
         '',
         '请重新获取 access_key 后重试~',
       ].join('\n')
-      toast(msg, '5s')
+      toast(msg, 5000)
     }
 
     throw e

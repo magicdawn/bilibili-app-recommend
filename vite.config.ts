@@ -53,7 +53,7 @@ export default defineConfig({
         // 'description:zh-CN': '为B站首页添加像App一样的推荐',
         author: 'magicdawn',
         supportURL: 'https://github.com/magicdawn/bilibili-app-recommend/issues',
-        homepageURL: 'https://github.com/magicdawn/bilibili-app-recommend',
+        homepageURL: 'https://greasyfork.org/zh-CN/scripts/443530-bilibili-app-recommend',
         downloadURL:
           'https://greasyfork.org/scripts/443530-bilibili-app-recommend/code/bilibili-app-recommend.user.js',
         license: 'MIT',

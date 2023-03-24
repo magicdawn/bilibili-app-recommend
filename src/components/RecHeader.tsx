@@ -3,11 +3,9 @@ import { IconPark } from '$icon-park'
 import { css } from '$libs'
 import { HEADER_HEIGHT } from '$platform'
 import { settings, useSettingsSnapshot } from '$settings'
-import { useCallback, useRef, useState } from 'react'
 import { useSticky } from 'react-use-sticky'
 import { proxy, useSnapshot } from 'valtio'
 import { AccessKeyManage } from './AccessKeyManage'
-import { CollapseBtn, CollapseBtnRef } from './CollapseBtn'
 import { ModalFeed } from './ModalFeed'
 
 const configStyles = {
@@ -50,7 +48,6 @@ const hideModalConfig = () => {
 
 export function RecHeader({ onRefresh }: { onRefresh: () => void | Promise<void> }) {
   const { accessKey, pureRecommend, usePcDesktopApi } = useSettingsSnapshot()
-  const collapseBtnRef = useRef<CollapseBtnRef>(null)
 
   const { modalFeedVisible, modalConfigVisible } = useSnapshot(state)
 
@@ -91,14 +88,7 @@ export function RecHeader({ onRefresh }: { onRefresh: () => void | Promise<void>
         </div>
 
         <div className='right'>
-          {!usePcDesktopApi &&
-            (!accessKey ? (
-              <AccessKeyManage />
-            ) : (
-              <CollapseBtn ref={collapseBtnRef}>
-                <AccessKeyManage />
-              </CollapseBtn>
-            ))}
+          {!usePcDesktopApi && !accessKey && <AccessKeyManage style={{ marginLeft: 5 }} />}
 
           <button className='primary-btn' css={configStyles.btn} onClick={showModalConfig}>
             <IconPark name='Config' css={configStyles.icon} />

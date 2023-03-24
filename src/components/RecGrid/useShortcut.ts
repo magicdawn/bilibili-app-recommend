@@ -132,8 +132,9 @@ export function useShortcut({
   ) // prevent refresh when cmd+R reload page
 
   // 稍候再看
+  // s 与 BILIBILI-Envoled 快捷键冲突
   useKeyPress(
-    's',
+    ['s', 'w'],
     () => {
       if (!isEnabled() || typeof activeIndex !== 'number') return
       videoCardRefs[activeIndex]?.onToggleWatchLater()

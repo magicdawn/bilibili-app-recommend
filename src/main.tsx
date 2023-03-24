@@ -9,6 +9,7 @@ import { SectionRecommend } from './components/SectionRecommend'
 import { settings } from './settings'
 import { getIsInternalTesting } from './platform'
 import { tryAction, tryToRemove } from '$utility/dom'
+import { AntdApp } from '$components/AntdApp'
 
 void (function main() {
   // 用于获取授权
@@ -72,7 +73,11 @@ async function initHomepageSection() {
 
   // react render
   const root = createRoot(recommendContainer)
-  root.render(<SectionRecommend />)
+  root.render(
+    <AntdApp>
+      <SectionRecommend />
+    </AntdApp>
+  )
 }
 
 async function initHomepagePureRecommend() {
@@ -99,5 +104,9 @@ async function initHomepagePureRecommend() {
 
   // react render
   const root = createRoot(recommendContainer)
-  root.render(<PureRecommend />)
+  root.render(
+    <AntdApp>
+      <PureRecommend />
+    </AntdApp>
+  )
 }

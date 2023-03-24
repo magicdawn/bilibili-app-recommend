@@ -2,19 +2,25 @@ import { CollapseBtnRef } from '$components/CollapseBtn'
 import { useSettingsSnapshot } from '$settings'
 import { auth, deleteAccessToken } from '$utility/auth'
 import { useMemoizedFn, useRequest } from 'ahooks'
-import { useRef } from 'react'
+import { Button, Space } from 'antd'
+import { CSSProperties, useRef } from 'react'
 
 export const accessKeyLinkBtn = (
-  <a
-    className='primary-btn roll-btn'
+  <Button
     target='_blank'
     href='https://github.com/indefined/UserScripts/tree/master/bilibiliHome#%E6%8E%88%E6%9D%83%E8%AF%B4%E6%98%8E'
   >
     access_key 说明
-  </a>
+  </Button>
 )
 
-export function AccessKeyManage() {
+export function AccessKeyManage({
+  style,
+  className,
+}: {
+  style?: CSSProperties
+  className?: string
+}) {
   const { runAsync, loading } = useRequest(auth, { manual: true })
   const { accessKey } = useSettingsSnapshot()
 
@@ -29,25 +35,24 @@ export function AccessKeyManage() {
   const onDeleteAccessToken = deleteAccessToken
 
   return (
-    <>
+    <Space size='small' style={style} className={className}>
       {!accessKey ? (
         <>
           {accessKeyLinkBtn}
-          <button className='primary-btn roll-btn' onClick={onGetAuth} disabled={loading}>
+          <Button onClick={onGetAuth} disabled={loading} size='middle'>
             <span>获取 access_key</span>
-          </button>
+          </Button>
         </>
       ) : (
         <>
-          {accessKeyLinkBtn}
-          <button className='primary-btn roll-btn' onClick={() => onGetAuth()} disabled={loading}>
+          <Button onClick={() => onGetAuth()} disabled={loading}>
             <span>重新获取 access_key</span>
-          </button>
-          <button className='primary-btn roll-btn' onClick={onDeleteAccessToken}>
+          </Button>
+          <Button onClick={onDeleteAccessToken}>
             <span>删除 access_key</span>
-          </button>
+          </Button>
         </>
       )}
-    </>
+    </Space>
   )
 }

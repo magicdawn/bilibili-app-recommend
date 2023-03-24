@@ -2,6 +2,8 @@ import { ConfigKey, updateSettings, useSettingsSnapshot } from '$settings'
 import { toast } from '$utility/toast'
 import { css } from '@emotion/react'
 import { ChangeEventHandler, useCallback, useId } from 'react'
+import { Checkbox } from 'antd'
+import { CheckboxChangeEvent } from 'antd/es/checkbox'
 
 const checkStyles = {
   container: css`
@@ -19,75 +21,30 @@ const checkStyles = {
   `,
 }
 
-/**
- * Settings 上的功能开关
- */
-
-export function SettingsCheckUi({
-  className,
-  label,
-  checked,
-  onChange,
-}: {
-  className?: string
-  label: string
-  checked: boolean
-  onChange: (val: boolean) => void
-}) {
-  const onChangeHandler: ChangeEventHandler = useCallback(
-    (e) => {
-      const val = (e.target as HTMLInputElement).checked
-      onChange(val)
-    },
-    [onChange]
-  )
-
-  const id = useId()
-
-  return (
-    <span css={checkStyles.container} className={className}>
-      <input
-        type='checkbox'
-        id={id}
-        checked={checked}
-        onChange={onChangeHandler}
-        css={checkStyles.checkbox}
-      />
-      <label htmlFor={id} css={checkStyles.label}>
-        {label}
-      </label>
-    </span>
-  )
-}
-
-export function SettingsCheck({
+export function FlagSettingItem({
   configKey,
   label,
   className,
+  extraAction,
 }: {
   configKey: ConfigKey
   label?: string
   className?: string
+  extraAction?: (val: boolean) => void | Promise<void>
 }) {
   const snap = useSettingsSnapshot()
 
   const checked = !!snap[configKey]
-  const onChange = useCallback((val: boolean) => {
+  const onChange = useCallback((e: CheckboxChangeEvent) => {
+    const val = e.target.checked
     updateSettings({ [configKey]: val })
-
-    // extra action
-    if (val && configKey === 'initialShowMore') {
-      toast('已开启自动查看更多: 下次打开首页时将直接展示推荐弹框')
-    }
+    extraAction?.(val)
   }, [])
 
   return (
-    <SettingsCheckUi
-      className={className}
-      label={label || configKey}
-      checked={checked}
-      onChange={onChange}
-    />
+    <Checkbox className={className} checked={checked} onChange={onChange}>
+      {label || configKey}
+    </Checkbox>
   )
 }
 
@@ -97,8 +54,8 @@ export const ModalFeedConfigChecks = function () {
   `
   return (
     <>
-      <SettingsCheck configKey={'initialShowMore'} label='自动查看更多' css={inModalFeedStyle} />
-      <SettingsCheck
+      <FlagSettingItem configKey={'initialShowMore'} label='自动查看更多' css={inModalFeedStyle} />
+      <FlagSettingItem
         configKey={'useNarrowMode'}
         label='启用居中模式(居中两列)'
         css={inModalFeedStyle}

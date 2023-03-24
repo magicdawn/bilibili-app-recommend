@@ -1,10 +1,11 @@
 import { AccessKeyManage, accessKeyLinkBtn } from '$components/AccessKeyManage'
 import { BaseModal, BaseModalClass, ModalClose } from '$components/BaseModal'
-import { SettingsCheck, SettingsCheckUi } from '$components/piece'
+import { FlagSettingItem } from '$components/piece'
 import { IconPark } from '$icon-park'
 import { cx } from '$libs'
 import { resetSettings, settings, useSettingsSnapshot } from '$settings'
 import { toast } from '$utility/toast'
+import { Button, Radio, Space } from 'antd'
 import delay from 'delay'
 import styles from './index.module.less'
 
@@ -41,14 +42,20 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
         <div className={styles.settingsGroup}>
           <div className={styles.settingsGroupTitle}>接口切换</div>
           <div className={cx(styles.settingsGroupContent)}>
-            <SettingsCheck
-              configKey={'usePcDesktopApi'}
-              label='使用桌面端接口(默认使用 App 端接口)'
-              className={styles.check}
-            />
+            <Radio.Group
+              buttonStyle='solid'
+              value={usePcDesktopApi ? 'desktop' : 'app'}
+              onChange={(e) => {
+                const newValue = e.target.value
+                settings.usePcDesktopApi = newValue === 'desktop'
+              }}
+            >
+              <Radio.Button value='desktop'>使用桌面端接口</Radio.Button>
+              <Radio.Button value='app'>使用 App 端接口</Radio.Button>
+            </Radio.Group>
 
             {!usePcDesktopApi && (
-              <div className={styles.row}>
+              <div className={styles.row} style={{ marginTop: 5 }}>
                 <AccessKeyManage />
               </div>
             )}
@@ -58,23 +65,25 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
         <div className={styles.settingsGroup}>
           <div className={styles.settingsGroupTitle}>开关</div>
           <div className={cx(styles.settingsGroupContent, styles.row)}>
-            <SettingsCheckUi
+            <FlagSettingItem
+              configKey='pureRecommend'
               label='开启纯推荐模式'
-              checked={pureRecommend}
               className={styles.check}
-              onChange={(val) => {
-                settings.pureRecommend = val
-                return toastAndReload()
-              }}
+              extraAction={toastAndReload}
             />
 
-            <SettingsCheck
+            <FlagSettingItem
               configKey={'initialShowMore'}
               label='自动查看更多'
               className={styles.check}
+              extraAction={(val) => {
+                if (val) {
+                  toast('已开启自动查看更多: 下次打开首页时将直接展示推荐弹框')
+                }
+              }}
             />
 
-            <SettingsCheck
+            <FlagSettingItem
               configKey={'useNarrowMode'}
               label='启用居中模式(居中两列)'
               className={styles.check}
@@ -86,17 +95,13 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
           <div className={styles.settingsGroupTitle}>高级</div>
           <div className={cx(styles.settingsGroupContent)}>
             <div className={styles.row}>
-              <button
-                className='primary-btn roll-btn'
-                style={{ display: 'inline-flex' }}
-                onClick={onResetSettings}
-              >
-                <span>恢复默认设置</span>
-              </button>
+              <Button onClick={onResetSettings} type='primary' danger>
+                恢复默认设置
+              </Button>
             </div>
 
             <div className={styles.row} style={{ marginTop: 10 }}>
-              <SettingsCheck
+              <FlagSettingItem
                 configKey={'openInIINAWhenRightClick'}
                 label='右键在 IINA 中打开'
                 className={styles.check}
@@ -109,14 +114,15 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
           <div className={styles.settingsGroupTitle}>帮助</div>
           <div className={cx(styles.settingsGroupContent)}>
             <div className={styles.row}>
-              <a
-                className='primary-btn roll-btn'
-                href='https://github.com/magicdawn/bilibili-app-recommend#%E5%BF%AB%E6%8D%B7%E9%94%AE%E8%AF%B4%E6%98%8E'
-                target='_blank'
-              >
-                查看可用的快捷键
-              </a>
-              {accessKeyLinkBtn}
+              <Space size='small'>
+                <Button
+                  href='https://github.com/magicdawn/bilibili-app-recommend#%E5%BF%AB%E6%8D%B7%E9%94%AE%E8%AF%B4%E6%98%8E'
+                  target='_blank'
+                >
+                  查看可用的快捷键
+                </Button>
+                {accessKeyLinkBtn}
+              </Space>
             </div>
           </div>
         </div>
