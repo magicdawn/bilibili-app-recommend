@@ -95,7 +95,7 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
           <div className={styles.settingsGroupTitle}>高级</div>
           <div className={cx(styles.settingsGroupContent)}>
             <div className={styles.row}>
-              <Button onClick={onResetSettings} type='primary' danger>
+              <Button onClick={onResetSettings} danger>
                 恢复默认设置
               </Button>
             </div>
