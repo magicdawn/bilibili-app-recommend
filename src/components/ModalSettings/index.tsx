@@ -23,7 +23,7 @@ function onResetSettings() {
 }
 
 export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => void }) {
-  const { pureRecommend, usePcDesktopApi } = useSettingsSnapshot()
+  const { usePcDesktopApi } = useSettingsSnapshot()
 
   return (
     <BaseModal {...{ show, onHide, hideWhenMaskOnClick: true, hideWhenEsc: true }}>
