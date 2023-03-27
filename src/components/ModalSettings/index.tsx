@@ -68,6 +68,13 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
             <FlagSettingItem
               configKey='pureRecommend'
               label='开启纯推荐模式'
+              tooltip={
+                <>
+                  首页只保留推荐
+                  <br />
+                  P.S 需要刷新网页~
+                </>
+              }
               className={styles.check}
               extraAction={toastAndReload}
             />
@@ -75,6 +82,7 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
             <FlagSettingItem
               configKey={'initialShowMore'}
               label='自动查看更多'
+              tooltip='打开首页时默认打开推荐弹框'
               className={styles.check}
               extraAction={(val) => {
                 if (val) {
@@ -85,7 +93,21 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
 
             <FlagSettingItem
               configKey={'useNarrowMode'}
-              label='启用居中模式(居中两列)'
+              label='启用居中模式'
+              tooltip='居中两列'
+              className={styles.check}
+            />
+
+            <FlagSettingItem
+              configKey='useParallelRequest'
+              label='批量请求时使用并行'
+              tooltip={
+                <>
+                  并行快但可能有重复
+                  <br />
+                  推荐视频大量重复时关闭这个试试~
+                </>
+              }
               className={styles.check}
             />
           </div>

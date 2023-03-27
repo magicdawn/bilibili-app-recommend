@@ -1,4 +1,5 @@
-import { PcRecItemExtend, PcRecommendJson } from '$define'
+import { PcRecItem, PcRecItemExtend, PcRecommendJson } from '$define'
+import { settings } from '$settings'
 import { uniqBy } from 'lodash'
 import { HOST_API, request } from './request'
 
@@ -29,7 +30,19 @@ async function getRecommend(pageRef: PageRef) {
 }
 
 export async function _getRecommendTimes(times: number, pageRef: PageRef) {
-  let list = (await Promise.all(new Array(times).fill(0).map(() => getRecommend(pageRef)))).flat()
+  let list: PcRecItem[] = []
+
+  const parallel = async () => {
+    list = (await Promise.all(new Array(times).fill(0).map(() => getRecommend(pageRef)))).flat()
+  }
+  const sequence = async () => {
+    for (let x = 1; x <= times; x++) {
+      list = list.concat(await getRecommend(pageRef))
+    }
+  }
+
+  await (settings.useParallelRequest ? parallel : sequence)()
+
   list = uniqBy(list, (item) => item.id)
 
   // 推荐理由补全

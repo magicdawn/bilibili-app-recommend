@@ -19,6 +19,9 @@ export const initialSettings = {
   // 是否使用 PC 端接口
   // https://github.com/magicdawn/bilibili-app-recommend/issues/16
   usePcDesktopApi: false,
+
+  // 并行请求
+  useParallelRequest: true,
 }
 
 export type Config = typeof initialSettings

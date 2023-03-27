@@ -1,10 +1,11 @@
 import { APP_NAME } from '$common'
+import { settings } from '$settings'
 import { toast } from '$utility/toast'
 import { uniqBy } from 'lodash'
 import pretry, { RetryError } from 'promise.retry'
 import { format as fmt } from 'util'
 import { AppRecItem, AppRecItemExtend, AppRecommendJson } from './define'
-import { gmrequest, HOST_APP } from './request'
+import { HOST_APP, gmrequest } from './request'
 
 class RecReqError extends Error {
   json: AppRecommendJson
@@ -76,10 +77,17 @@ export async function tryGetRecommend() {
 export async function _getRecommendTimes(times: number) {
   let list: AppRecItem[] = []
 
-  // 并行: 快, 但是易出错
-  const ps = new Array(times).fill(0).map((_) => tryGetRecommend())
-  const results = await Promise.all(ps)
-  list = results.reduce((ret, cur) => ret.concat(cur || []), [])
+  const parallel = async () => {
+    list = (await Promise.all(new Array(times).fill(0).map(() => tryGetRecommend()))).flat()
+  }
+  const sequence = async () => {
+    for (let x = 1; x <= times; x++) {
+      list = list.concat(await tryGetRecommend())
+    }
+  }
+
+  // 并行: 快,but 好多重复啊
+  await (settings.useParallelRequest ? parallel : sequence)()
 
   // make api unique
   list = uniqBy(list, (item) => item.param)

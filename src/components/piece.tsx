@@ -1,9 +1,8 @@
 import { ConfigKey, updateSettings, useSettingsSnapshot } from '$settings'
-import { toast } from '$utility/toast'
 import { css } from '@emotion/react'
-import { ChangeEventHandler, useCallback, useId } from 'react'
-import { Checkbox } from 'antd'
+import { Checkbox, Tooltip } from 'antd'
 import { CheckboxChangeEvent } from 'antd/es/checkbox'
+import { ReactNode, useCallback } from 'react'
 
 const checkStyles = {
   container: css`
@@ -26,11 +25,13 @@ export function FlagSettingItem({
   label,
   className,
   extraAction,
+  tooltip,
 }: {
   configKey: ConfigKey
   label?: string
   className?: string
   extraAction?: (val: boolean) => void | Promise<void>
+  tooltip?: ReactNode
 }) {
   const snap = useSettingsSnapshot()
 
@@ -41,9 +42,17 @@ export function FlagSettingItem({
     extraAction?.(val)
   }, [])
 
+  let inner: ReactNode = label || configKey
+  if (tooltip)
+    inner = (
+      <Tooltip title={tooltip} zIndex={11100}>
+        {inner}
+      </Tooltip>
+    )
+
   return (
     <Checkbox className={className} checked={checked} onChange={onChange}>
-      {label || configKey}
+      {inner}
     </Checkbox>
   )
 }
@@ -55,11 +64,7 @@ export const ModalFeedConfigChecks = function () {
   return (
     <>
       <FlagSettingItem configKey={'initialShowMore'} label='自动查看更多' css={inModalFeedStyle} />
-      <FlagSettingItem
-        configKey={'useNarrowMode'}
-        label='启用居中模式(居中两列)'
-        css={inModalFeedStyle}
-      />
+      <FlagSettingItem configKey={'useNarrowMode'} label='启用居中模式' css={inModalFeedStyle} />
     </>
   )
 }
