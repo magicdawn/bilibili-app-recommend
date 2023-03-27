@@ -1,8 +1,8 @@
+import { VideoCardActions } from '$components/VideoCard'
 import { settings } from '$settings'
 import { useKeyPress, useMemoizedFn } from 'ahooks'
-import { RefObject, useCallback, useState } from 'react'
+import { RefObject, useState } from 'react'
 import { cls } from './index'
-import { VideoCardActions } from '$components/VideoCard'
 
 interface IOptions {
   enabled: boolean
@@ -138,6 +138,15 @@ export function useShortcut({
     () => {
       if (!isEnabled() || typeof activeIndex !== 'number') return
       videoCardRefs[activeIndex]?.onToggleWatchLater()
+    },
+    { exactMatch: true }
+  )
+
+  useKeyPress(
+    'period',
+    () => {
+      if (!isEnabled() || typeof activeIndex !== 'number') return
+      videoCardRefs[activeIndex]?.onStartPreviewAnimation()
     },
     { exactMatch: true }
   )

@@ -4,7 +4,14 @@ import { IconPark } from '$icon-park'
 import { settings, useSettingsSnapshot } from '$settings'
 import { toast, toastOperationFail, toastRequestFail } from '$utility/toast'
 import { getCountStr, getDurationStr } from '$utility/video'
-import { useEventListener, useHover, useMemoizedFn } from 'ahooks'
+import {
+  useEventListener,
+  useHover,
+  useMemoizedFn,
+  useRafState,
+  useUnmountedRef,
+  useUpdateEffect,
+} from 'ahooks'
 import cx from 'classnames'
 import dayjs from 'dayjs'
 import {
@@ -98,6 +105,9 @@ export const VideoCard = memo(
           },
           onTriggerDislike() {
             videoCardInnerRef.current?.onTriggerDislike()
+          },
+          onStartPreviewAnimation() {
+            videoCardInnerRef.current?.onStartPreviewAnimation()
           },
         }
       },
@@ -193,6 +203,7 @@ type VideoCardInnerProps = {
 type VideoCardInnerActions = {
   onToggleWatchLater: () => Promise<void>
   onTriggerDislike: () => void
+  onStartPreviewAnimation: () => void
 }
 const VideoCardInner = memo(
   forwardRef<VideoCardInnerActions, VideoCardInnerProps>(function VideoCardInner(
@@ -202,20 +213,15 @@ const VideoCardInner = memo(
     // 预览 hover state
     const videoPreviewWrapperRef = useRef<HTMLDivElement>(null)
     const [enterMousePosition, setEnterMousePosition] = useState<{
-      width: number
-      height: number
       relativeX: number
-    }>(() => ({ width: 0, height: 0, relativeX: 0 }))
+    }>(() => ({ relativeX: 0 }))
     useEventListener(
       'mouseenter',
       (e: MouseEvent) => {
         const rect = videoPreviewWrapperRef.current?.getBoundingClientRect()
         if (!rect) return
-
-        const { width, height, x } = rect
+        const { x } = rect
         setEnterMousePosition({
-          width,
-          height,
           // https://github.com/alibaba/hooks/blob/v3.7.0/packages/hooks/src/useMouse/index.ts#L62
           relativeX: e.pageX - window.pageXOffset - x,
         })
@@ -223,6 +229,77 @@ const VideoCardInner = memo(
       { target: videoPreviewWrapperRef }
     )
     const isHovering = useHover(videoPreviewWrapperRef)
+
+    /**
+     * 自动以动画方式预览
+     */
+    const [previewAnimationProgress, setPreviewAnimationProgress] = useRafState<number | undefined>(
+      undefined
+    )
+
+    const unmounted = useUnmountedRef()
+
+    // 停止动画
+    //  鼠标动了
+    //  不再 active
+    //  组件卸载了
+    const shouldStopAnimation = useMemoizedFn(() => {
+      if (enterMousePosition.relativeX) return true
+      if (!active) return true
+      if (unmounted.current) return true
+      return false
+    })
+
+    // TODO: make it configurable
+    const onStartPreviewAnimation = useMemoizedFn(() => {
+      setEnterMousePosition({ relativeX: 0 })
+      tryFetchVideoData()
+
+      // ms
+      const start = performance.now()
+      const runDuration = 8e3
+
+      let id = 0
+
+      const updateProgressInterval = 400
+      let lastUpdateAt = 0
+
+      function run() {
+        // 停止动画
+        if (shouldStopAnimation()) {
+          if (id) cancelAnimationFrame(id)
+          id = 0
+          setPreviewAnimationProgress(undefined)
+          return
+        }
+
+        const update = () => {
+          const elapsed = performance.now() - start
+          const p = Math.min((elapsed % runDuration) / runDuration, 1)
+          // console.log('p', p)
+          setPreviewAnimationProgress(p)
+        }
+
+        if (updateProgressInterval) {
+          if (!lastUpdateAt || performance.now() - lastUpdateAt >= updateProgressInterval) {
+            lastUpdateAt = performance.now()
+            update()
+          }
+        } else {
+          update()
+        }
+
+        id = requestAnimationFrame(run)
+      }
+
+      id = requestAnimationFrame(run)
+    })
+
+    useUpdateEffect(() => {
+      if (!active) return
+      // 眼花了
+      // onStartPreviewAnimation()
+    }, [active])
 
     // 稍后再看 hover state
     const watchLaterRef = useRef(null)
@@ -242,6 +319,7 @@ const VideoCardInner = memo(
       () => ({
         onToggleWatchLater,
         onTriggerDislike,
+        onStartPreviewAnimation,
       }),
       []
     )
@@ -436,11 +514,12 @@ const VideoCardInner = memo(
               {/* <div className='v-inline-player'></div> */}
 
               {/* preview */}
-              {isHovering && (
+              {(isHovering || (active && previewAnimationProgress)) && (
                 <PreviewImage
                   videoDuration={duration}
                   pvideo={videoData?.pvideoData}
                   enterCursorState={enterMousePosition}
+                  previewAnimationProgress={previewAnimationProgress}
                 />
               )}
 

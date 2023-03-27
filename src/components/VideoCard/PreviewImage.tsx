@@ -1,7 +1,7 @@
-import { PvideoData, AppRecItem } from '$define'
+import { PvideoData } from '$define'
 import { cx } from '$libs'
-import { useMouse } from 'ahooks'
-import { useMemo, useRef } from 'react'
+import { useMount, useMouse } from 'ahooks'
+import { useMemo, useRef, useState } from 'react'
 import styles from './index.module.less'
 
 interface IProps {
@@ -11,29 +11,60 @@ interface IProps {
 
   // hover => listen mousemove of PreviewImage div ref
   // 如果没有移动鼠标, 后面 mousemove 无法触发, 这个时候需要从前面 mouseenter 中读取 enterCursorState
-  enterCursorState: { width: number; height: number; relativeX: number }
+  enterCursorState: { relativeX: number }
+
+  previewAnimationProgress?: number
 }
 
-function fallbackWhenNan(val: number, fallback: number) {
-  return isNaN(val) ? fallback : val
+function fallbackWhenNan(...args: number[]) {
+  for (const num of args) {
+    if (isNaN(num)) continue
+    return num
+  }
+  return 0
 }
 
-export function PreviewImage({ className, videoDuration, pvideo, enterCursorState }: IProps) {
+export function PreviewImage({
+  className,
+  videoDuration,
+  pvideo,
+  enterCursorState,
+  previewAnimationProgress,
+}: IProps) {
   const ref = useRef<HTMLDivElement>(null)
   const cursorState = useMouse(ref)
+  const [size, setSize] = useState(() => ({ width: 0, height: 0 }))
+  // console.log('cursorState:', cursorState)
+
+  useMount(() => {
+    const rect = ref.current?.getBoundingClientRect()
+    if (!rect) return
+    setSize({ width: rect.width, height: rect.height })
+  })
+
+  let progress = 0
+  if (previewAnimationProgress) {
+    progress = previewAnimationProgress
+  } else {
+    const relativeX = fallbackWhenNan(cursorState.elementX, enterCursorState.relativeX)
+    if (size.width && relativeX && !isNaN(relativeX)) {
+      progress = relativeX / size.width
+      if (progress < 0) progress = 0
+      if (progress > 1) progress = 1
+    }
+  }
 
   const innerProps = {
     videoDuration,
     pvideo: pvideo!,
-    cursorState,
-    elWidth: fallbackWhenNan(cursorState.elementW, enterCursorState.width),
-    elHeight: fallbackWhenNan(cursorState.elementH, enterCursorState.height),
-    relativeX: fallbackWhenNan(cursorState.elementX, enterCursorState.relativeX),
+    elWidth: size.width,
+    elHeight: size.height,
+    progress,
   }
 
   return (
     <div ref={ref} className={cx(styles.previewCardWrapper, className)}>
-      {pvideo ? <PreviewImageInner {...innerProps} /> : false}
+      {!!(pvideo && size.width && size.height && progress) && <PreviewImageInner {...innerProps} />}
     </div>
   )
 }
@@ -43,22 +74,15 @@ function PreviewImageInner({
   pvideo,
   elWidth,
   elHeight,
-  relativeX,
+  progress,
 }: {
   videoDuration: number
   pvideo: PvideoData
   elWidth: number
   elHeight: number
-  relativeX: number
+  progress: number
 }) {
-  let progress = 0
-  let t = 0
-  if (elWidth && relativeX && !isNaN(relativeX) && !isNaN(elWidth)) {
-    progress = relativeX / elWidth
-    if (progress < 0) progress = 0
-    if (progress > 1) progress = 1
-    t = Math.floor((videoDuration || 0) * progress)
-  }
+  const t = Math.floor((videoDuration || 0) * progress)
 
   let index = useMemo(() => {
     const arr = pvideo?.index || []
