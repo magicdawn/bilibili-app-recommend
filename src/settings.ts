@@ -22,6 +22,9 @@ export const initialSettings = {
 
   // 并行请求
   useParallelRequest: true,
+
+  // 自动开始预览
+  autoPreviewWhenKeyboardSelect: false,
 }
 
 export type Config = typeof initialSettings

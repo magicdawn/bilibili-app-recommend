@@ -297,8 +297,11 @@ const VideoCardInner = memo(
 
     useUpdateEffect(() => {
       if (!active) return
-      // 眼花了
-      // onStartPreviewAnimation()
+
+      // 自动开始预览
+      if (settings.autoPreviewWhenKeyboardSelect) {
+        onStartPreviewAnimation()
+      }
     }, [active])
 
     // 稍后再看 hover state

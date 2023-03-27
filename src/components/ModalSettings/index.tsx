@@ -78,7 +78,6 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
               className={styles.check}
               extraAction={toastAndReload}
             />
-
             <FlagSettingItem
               configKey={'initialShowMore'}
               label='自动查看更多'
@@ -90,14 +89,12 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                 }
               }}
             />
-
             <FlagSettingItem
               configKey={'useNarrowMode'}
               label='启用居中模式'
               tooltip='居中两列'
               className={styles.check}
             />
-
             <FlagSettingItem
               configKey='useParallelRequest'
               label='批量请求时使用并行'
@@ -108,6 +105,12 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                   推荐视频大量重复时关闭这个试试~
                 </>
               }
+              className={styles.check}
+            />
+
+            <FlagSettingItem
+              configKey='autoPreviewWhenKeyboardSelect'
+              label='键盘选中后自动开始预览'
               className={styles.check}
             />
           </div>
