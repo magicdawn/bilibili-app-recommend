@@ -5,7 +5,11 @@
       "outputs": ["dist/**"]
     },
     "build:type-check": {
-      "inputs": ["src/**", "tsconfig.json"]
+      "dependsOn": ["build:less"],
+      "inputs": ["src/**/*.{ts,tsx}", "tsconfig.json"]
+    },
+    "build:less": {
+      "inputs": ["src/**/*.less"]
     }
   }
 }

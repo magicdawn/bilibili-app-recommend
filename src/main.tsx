@@ -1,15 +1,15 @@
 // load config first
 import './settings'
 
+import { AntdApp } from '$components/AntdApp'
+import { tryAction, tryToRemove } from '$utility/dom'
 import sleep from 'delay'
 import { createRoot } from 'react-dom/client'
 import './common/global.less'
 import { PureRecommend } from './components/PureRecommend'
 import { SectionRecommend } from './components/SectionRecommend'
-import { settings } from './settings'
 import { getIsInternalTesting } from './platform'
-import { tryAction, tryToRemove } from '$utility/dom'
-import { AntdApp } from '$components/AntdApp'
+import { settings } from './settings'
 
 void (function main() {
   // 用于获取授权
