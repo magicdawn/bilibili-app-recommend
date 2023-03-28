@@ -1,4 +1,4 @@
-import { ConfigKey, updateSettings, useSettingsSnapshot } from '$settings'
+import { BooleanConfigKey, updateSettings, useSettingsSnapshot } from '$settings'
 import { css } from '@emotion/react'
 import { Checkbox, Tooltip } from 'antd'
 import { CheckboxChangeEvent } from 'antd/es/checkbox'
@@ -27,7 +27,7 @@ export function FlagSettingItem({
   extraAction,
   tooltip,
 }: {
-  configKey: ConfigKey
+  configKey: BooleanConfigKey
   label?: string
   className?: string
   extraAction?: (val: boolean) => void | Promise<void>

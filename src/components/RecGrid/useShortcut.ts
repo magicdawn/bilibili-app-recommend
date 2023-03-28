@@ -75,13 +75,15 @@ export function useShortcut({
     return true
   })
 
-  const addActiveIndex = (step: number) => (e?: KeyboardEvent) => {
+  const addActiveIndex = (step: number | (() => number)) => (e?: KeyboardEvent) => {
     if (!isEnabled()) return
 
     // 防止 scroller focus 的情况下, 因键盘产生滑动, 进而页面抖动
     e?.preventDefault()
 
-    const index = activeIndexIsValid() ? activeIndex! + step : getInitialIndex()
+    let _step = typeof step === 'number' ? step : step()
+    const index = activeIndexIsValid() ? activeIndex! + _step : getInitialIndex()
+
     // overflow
     if (index < minIndex) {
       makeVisible(minIndex)
@@ -102,8 +104,13 @@ export function useShortcut({
   useKeyPress('leftarrow', addActiveIndex(-1), { exactMatch: true })
   useKeyPress('rightarrow', addActiveIndex(1), { exactMatch: true })
   // by row
-  useKeyPress('uparrow', addActiveIndex(-getColCount()), { exactMatch: true })
-  useKeyPress('downarrow', addActiveIndex(getColCount()), { exactMatch: true })
+  // 在 render 时调用 getColCount 会出现 useNarrowMode:false, UI 还没更新, 返回还是两列的情况
+  useKeyPress(
+    'uparrow',
+    addActiveIndex(() => -getColCount()),
+    { exactMatch: true }
+  )
+  useKeyPress('downarrow', addActiveIndex(getColCount), { exactMatch: true })
 
   // actions
   const clearActiveIndex = () => {

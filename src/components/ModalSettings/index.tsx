@@ -3,9 +3,10 @@ import { BaseModal, BaseModalClass, ModalClose } from '$components/BaseModal'
 import { FlagSettingItem } from '$components/piece'
 import { IconPark } from '$icon-park'
 import { cx } from '$libs'
-import { resetSettings, settings, useSettingsSnapshot } from '$settings'
+import { BooleanConfigKey, resetSettings, settings, useSettingsSnapshot } from '$settings'
 import { toast } from '$utility/toast'
-import { Button, Radio, Space } from 'antd'
+import { useKeyPress } from 'ahooks'
+import { Button, Radio, Space, Tag } from 'antd'
 import delay from 'delay'
 import styles from './index.module.less'
 
@@ -22,8 +23,27 @@ function onResetSettings() {
   return toastAndReload()
 }
 
+function useHotkeyForConfig(hotkey: string | string[], configKey: BooleanConfigKey, label: string) {
+  return useKeyPress(
+    hotkey,
+    () => {
+      settings[configKey] = !settings[configKey]
+      const isCancel = !settings[configKey]
+      toast(`已${isCancel ? '禁用' : '启用'}「${label}」`)
+    },
+    { exactMatch: true }
+  )
+}
+
 export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => void }) {
   const { usePcDesktopApi } = useSettingsSnapshot()
+
+  useHotkeyForConfig(
+    ['alt.p', 'ctrl.alt.p'],
+    'autoPreviewWhenKeyboardSelect',
+    '键盘选中后自动开始预览'
+  )
+  useHotkeyForConfig(['alt.c', 'ctrl.alt.c'], 'useNarrowMode', '居中模式')
 
   return (
     <BaseModal {...{ show, onHide, hideWhenMaskOnClick: true, hideWhenEsc: true }}>
@@ -92,7 +112,13 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
             <FlagSettingItem
               configKey={'useNarrowMode'}
               label='启用居中模式'
-              tooltip='居中两列'
+              tooltip={
+                <>
+                  居中两列
+                  <br />
+                  切换设置快捷键: <Tag color='green'>alt+c</Tag>
+                </>
+              }
               className={styles.check}
             />
             <FlagSettingItem
@@ -112,6 +138,14 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
               configKey='autoPreviewWhenKeyboardSelect'
               label='键盘选中后自动开始预览'
               className={styles.check}
+              tooltip={
+                <>
+                  手动预览快捷键 <Tag color='green'>.</Tag> (period 句号键)
+                  <br />
+                  切换设置快捷键: <Tag color='green'>ctrl+alt+p</Tag> /{' '}
+                  <Tag color='green'>alt+p</Tag>
+                </>
+              }
             />
           </div>
         </div>

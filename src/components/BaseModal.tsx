@@ -3,8 +3,8 @@ import { cx } from '$libs'
 import { useIsDarkMode } from '$platform'
 import { useKeyPress, useMemoizedFn } from 'ahooks'
 import {
-  ComponentProps,
   CSSProperties,
+  ComponentProps,
   MouseEvent,
   ReactNode,
   useId,

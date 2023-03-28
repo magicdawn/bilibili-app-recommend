@@ -33,6 +33,10 @@ export const settings = proxy({ ...initialSettings })
 export type ConfigKey = keyof Config
 const allowedConfigKeys = Object.keys(initialSettings) as ConfigKey[]
 
+export type BooleanConfigKey = {
+  [k in ConfigKey]: Config[k] extends boolean ? k : never
+}[ConfigKey]
+
 export const useSettingsSnapshot = function () {
   return useSnapshot(settings)
 }
