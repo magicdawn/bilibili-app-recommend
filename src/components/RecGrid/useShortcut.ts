@@ -150,7 +150,7 @@ export function useShortcut({
   )
 
   useKeyPress(
-    'period',
+    ['period', 'p'],
     () => {
       if (!isEnabled() || typeof activeIndex !== 'number') return
       videoCardRefs[activeIndex]?.onStartPreviewAnimation()
