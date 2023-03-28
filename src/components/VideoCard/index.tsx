@@ -250,16 +250,20 @@ const VideoCardInner = memo(
       return false
     })
 
+    const stopAnimation = useRef<() => void>()
+
     // TODO: make it configurable
     const onStartPreviewAnimation = useMemoizedFn(() => {
       setEnterMousePosition({ relativeX: 0 })
       tryFetchVideoData()
+      stopAnimation.current?.()
+      stopAnimation.current = undefined
 
       // ms
       const start = performance.now()
       const runDuration = 8e3
 
-      let id = 0
+      let id: number | undefined
 
       const updateProgressInterval = 400
       let lastUpdateAt = 0
@@ -267,9 +271,8 @@ const VideoCardInner = memo(
       function run() {
         // 停止动画
         if (shouldStopAnimation()) {
-          if (id) cancelAnimationFrame(id)
-          id = 0
-          setPreviewAnimationProgress(undefined)
+          stopAnimation.current?.()
+          stopAnimation.current = undefined
           return
         }
 
@@ -293,6 +296,11 @@ const VideoCardInner = memo(
       }
 
       id = requestAnimationFrame(run)
+      stopAnimation.current = () => {
+        if (id) cancelAnimationFrame(id)
+        id = undefined
+        setPreviewAnimationProgress(undefined)
+      }
     })
 
     useUpdateEffect(() => {
