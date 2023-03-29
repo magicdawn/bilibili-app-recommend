@@ -37,3 +37,22 @@ export async function tryAction(
 export function tryToRemove(selector: string) {
   return tryAction(selector, (el) => el.remove())
 }
+
+/**
+ * input 输入种, 用于拦截快捷键处理
+ */
+
+export function isCurrentTyping() {
+  // if activeElement is input, disable shortcut
+  const activeTagName = (document.activeElement?.tagName || '').toLowerCase()
+  if (['input', 'textarea'].includes(activeTagName)) {
+    return true
+  }
+
+  // if search panel is open, disable shortcut
+  if (document.querySelector('.center-search__bar.is-focus')) {
+    return true
+  }
+
+  return false
+}

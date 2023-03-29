@@ -3,7 +3,6 @@ import { RecHeader, useHeaderState } from '$components/RecHeader'
 import { css } from '$libs'
 import { useSettingsSnapshot } from '$settings'
 import { useMemoizedFn } from 'ahooks'
-import { state as headerState } from '../RecHeader'
 import { useRef } from 'react'
 
 const narrowStyle = {
@@ -19,7 +18,7 @@ export function PureRecommend() {
   const { useNarrowMode } = useSettingsSnapshot()
 
   // 是否已经打开 "查看更多" 即 ModalFeed
-  const { modalFeedVisible: modalFeedVisible } = useHeaderState()
+  const { modalFeedVisible, modalConfigVisible } = useHeaderState()
 
   const recGrid = useRef<RecGridRef>(null)
   const onRefresh = useMemoizedFn(() => {
@@ -31,7 +30,10 @@ export function PureRecommend() {
 
   return (
     <section data-area='推荐'>
-      <RecHeader onRefresh={onRefresh} />
+      <RecHeader
+        onRefresh={onRefresh}
+        refreshHotkeyEnabled={!(modalConfigVisible || modalFeedVisible)}
+      />
       <RecGrid
         ref={recGrid}
         css={[useNarrowMode && narrowStyle.grid]}

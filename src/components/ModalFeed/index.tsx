@@ -1,5 +1,6 @@
-import { ModalFeedConfigChecks } from '$components/piece'
 import { RecGrid, RecGridRef } from '$components/RecGrid'
+import { RefreshButton } from '$components/RecHeader'
+import { ModalFeedConfigChecks } from '$components/piece'
 import { cx } from '$libs'
 import { useSettingsSnapshot } from '$settings'
 import { useMemoizedFn } from 'ahooks'
@@ -46,19 +47,11 @@ export const ModalFeed = memo(function ModalFeed({ show, onHide }: IProps) {
           <ModalFeedConfigChecks />
         </CollapseBtn>
 
-        <button className={`primary-btn roll-btn ${styles.btnRefresh}`} onClick={onRefresh}>
-          <svg>
-            <use xlinkHref='#widget-roll'></use>
-          </svg>
-          <span>换一换</span>
-        </button>
-
-        {/* <button className={`primary-btn roll-btn ${BaseModalClass.btnClose}`} onClick={onHide}>
-          <svg>
-            <use xlinkHref='#widget-close'></use>
-          </svg>
-          <span>关闭</span>
-        </button> */}
+        <RefreshButton
+          onClick={onRefresh}
+          className={styles.btnRefresh}
+          refreshHotkeyEnabled={show}
+        />
 
         <ModalClose onClick={onHide} />
       </div>

@@ -38,12 +38,8 @@ function useHotkeyForConfig(hotkey: string | string[], configKey: BooleanConfigK
 export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => void }) {
   const { usePcDesktopApi } = useSettingsSnapshot()
 
-  useHotkeyForConfig(
-    ['alt.p', 'ctrl.alt.p'],
-    'autoPreviewWhenKeyboardSelect',
-    '键盘选中后自动开始预览'
-  )
-  useHotkeyForConfig(['alt.c', 'ctrl.alt.c'], 'useNarrowMode', '居中模式')
+  useHotkeyForConfig(['shift.p'], 'autoPreviewWhenKeyboardSelect', '键盘选中后自动开始预览')
+  useHotkeyForConfig(['shift.c'], 'useNarrowMode', '居中模式')
 
   return (
     <BaseModal {...{ show, onHide, hideWhenMaskOnClick: true, hideWhenEsc: true }}>
@@ -116,7 +112,7 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                 <>
                   居中两列
                   <br />
-                  切换设置快捷键: <Tag color='green'>alt+c</Tag>
+                  切换设置快捷键: <Tag color='green'>shift+c</Tag>
                 </>
               }
               className={styles.check}
@@ -140,10 +136,9 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
               className={styles.check}
               tooltip={
                 <>
-                  手动预览快捷键 <Tag color='green'>.</Tag> (period 句号键)
+                  手动预览快捷键: <Tag color='green'>.</Tag> or <Tag color='green'>p</Tag>
                   <br />
-                  切换设置快捷键: <Tag color='green'>ctrl+alt+p</Tag> /{' '}
-                  <Tag color='green'>alt+p</Tag>
+                  切换设置快捷键: <Tag color='green'>shift+p</Tag>
                 </>
               }
             />

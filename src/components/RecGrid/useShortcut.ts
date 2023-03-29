@@ -1,5 +1,6 @@
 import { VideoCardActions } from '$components/VideoCard'
 import { settings } from '$settings'
+import { isCurrentTyping } from '$utility/dom'
 import { useKeyPress, useMemoizedFn } from 'ahooks'
 import { RefObject, useState } from 'react'
 import { cls } from './index'
@@ -34,27 +35,16 @@ export function useShortcut({
   changeScrollY,
   videoCardRefs,
 }: IOptions) {
-  const [activeIndex, setActiveIndex] = useState<number | null>(null)
+  const [activeIndex, setActiveIndex] = useState<number | undefined>(undefined)
 
   const isEnabled = useMemoizedFn(() => {
     if (!enabled) return false
-
-    // if activeElement is input, disable shortcut
-    const activeTagName = (document.activeElement?.tagName || '').toLowerCase()
-    if (['input', 'textarea'].includes(activeTagName)) {
-      return false
-    }
-
-    // if search panel is open, disable shortcut
-    if (document.querySelector('.center-search__bar.is-focus')) {
-      return false
-    }
-
+    if (isCurrentTyping()) return false
     return true
   })
 
   const activeIndexIsValid = useMemoizedFn(() => {
-    if (activeIndex === null) return false
+    if (typeof activeIndex !== 'number') return false
     if (!containerRef.current) return false
 
     const scrollerRect = getScrollerRect()
@@ -115,7 +105,7 @@ export function useShortcut({
   // actions
   const clearActiveIndex = () => {
     if (!isEnabled()) return
-    setActiveIndex(null)
+    setActiveIndex(undefined)
   }
 
   useKeyPress('esc', clearActiveIndex)
@@ -127,16 +117,6 @@ export function useShortcut({
     if (!isEnabled() || typeof activeIndex !== 'number') return
     videoCardRefs[activeIndex]?.onTriggerDislike()
   })
-
-  // refresh
-  useKeyPress(
-    'r',
-    () => {
-      if (!isEnabled()) return
-      refresh()
-    },
-    { exactMatch: true }
-  ) // prevent refresh when cmd+R reload page
 
   // 稍候再看
   // s 与 BILIBILI-Envoled 快捷键冲突

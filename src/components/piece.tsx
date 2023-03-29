@@ -4,22 +4,6 @@ import { Checkbox, Tooltip } from 'antd'
 import { CheckboxChangeEvent } from 'antd/es/checkbox'
 import { ReactNode, useCallback } from 'react'
 
-const checkStyles = {
-  container: css`
-    display: inline-flex;
-    align-items: center;
-  `,
-  checkbox: css`
-    cursor: pointer;
-    outline: none;
-  `,
-  label: css`
-    margin-left: 2px;
-    user-select: none;
-    cursor: pointer;
-  `,
-}
-
 export function FlagSettingItem({
   configKey,
   label,
@@ -45,7 +29,11 @@ export function FlagSettingItem({
   let inner: ReactNode = label || configKey
   if (tooltip)
     inner = (
-      <Tooltip title={tooltip} zIndex={11100}>
+      <Tooltip
+        title={tooltip}
+        zIndex={11100}
+        overlayStyle={{ width: 'max-content', maxWidth: '50vw' }}
+      >
         {inner}
       </Tooltip>
     )

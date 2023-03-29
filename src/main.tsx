@@ -42,7 +42,7 @@ async function initHomepageSection() {
   const timeout = 10 * 1000 // 10s
   const timeoutTs = Date.now() + timeout
 
-  let insert: ((reactNode: HTMLElement) => void) | null = null
+  let insert: ((reactNode: HTMLElement) => void) | undefined
 
   /* eslint-disable no-constant-condition */
   while (true) {

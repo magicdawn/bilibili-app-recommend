@@ -1,5 +1,5 @@
-import request from 'axios'
 import { settings } from '$settings'
+import request from 'axios'
 import { toast } from './toast'
 
 export const appkey = '27eb53fc9058f8c3'
@@ -28,7 +28,7 @@ async function getAuth() {
   }
 
   const confirm_uri = json.data.confirm_uri
-  let timeout: ReturnType<typeof setTimeout> | null
+  let timeout: ReturnType<typeof setTimeout> | undefined
 
   const waitCallback = new Promise<string | { errmsg: string }>((resolve) => {
     window.addEventListener('message', (e) => {
@@ -57,7 +57,7 @@ async function getAuth() {
 
     if (timeout) {
       clearTimeout(timeout)
-      timeout = null
+      timeout = undefined
     }
   }
 

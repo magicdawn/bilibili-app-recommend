@@ -56,14 +56,6 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
     const [items, setItems] = useState<(PcRecItemExtend | AppRecItemExtend)[]>([])
     const [loading, setLoading] = useState(false)
 
-    useImperativeHandle(
-      ref,
-      () => ({
-        refresh,
-      }),
-      []
-    )
-
     const pageRef = useMemo(() => ({ page: 1 }), [])
 
     const refresh = useMemoizedFn(async () => {
@@ -80,6 +72,13 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
         setLoading(false)
       }
     })
+    useImperativeHandle(
+      ref,
+      () => ({
+        refresh,
+      }),
+      []
+    )
 
     const fetchMore = useMemoizedFn(async () => {
       const more = await getRecommendTimes(2, pageRef)

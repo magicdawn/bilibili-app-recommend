@@ -154,7 +154,7 @@ const DislikedCard = memo(
       if (!dislikedReason?.id) return
 
       let success = false
-      let err: Error | null = null
+      let err: Error | undefined
       try {
         success = await cancelDislike(item, dislikedReason.id)
       } catch (e) {

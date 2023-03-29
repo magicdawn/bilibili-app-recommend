@@ -5,7 +5,7 @@ import { getIsInternalTesting } from '$platform'
 import { getRecommendForHome } from '$service'
 import { useRequest } from 'ahooks'
 import { useMemo } from 'react'
-import { RecHeader } from '../RecHeader'
+import { RecHeader, useHeaderState } from '../RecHeader'
 import { VideoCard } from '../VideoCard'
 
 export function SectionRecommend() {
@@ -22,9 +22,14 @@ export function SectionRecommend() {
     console.error(error.stack || error)
   }
 
+  const { modalConfigVisible, modalFeedVisible } = useHeaderState()
+
   return (
     <section data-area='推荐'>
-      <RecHeader onRefresh={refresh} />
+      <RecHeader
+        onRefresh={refresh}
+        refreshHotkeyEnabled={!(modalConfigVisible || modalFeedVisible)}
+      />
       <div
         className={cx(videoGrid, limitTwoLines, { [internalTesting]: isInternalTesting })}
         style={{ marginBottom: isInternalTesting ? 30 : 0 }}

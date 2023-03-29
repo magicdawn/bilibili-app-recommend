@@ -3,6 +3,17 @@ import { IconPark } from '$icon-park'
 import { css } from '$libs'
 import { HEADER_HEIGHT } from '$platform'
 import { settings, useSettingsSnapshot } from '$settings'
+import { isCurrentTyping } from '$utility/dom'
+import { useKeyPress, useMemoizedFn } from 'ahooks'
+import {
+  CSSProperties,
+  MouseEvent,
+  MouseEventHandler,
+  forwardRef,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react'
 import { useSticky } from 'react-use-sticky'
 import { proxy, useSnapshot } from 'valtio'
 import { AccessKeyManage } from './AccessKeyManage'
@@ -23,33 +34,40 @@ const configStyles = {
   `,
 }
 
-export const state = proxy({
+export const headerState = proxy({
   modalFeedVisible: settings.initialShowMore,
   modalConfigVisible: false,
 })
 
 export const useHeaderState = function () {
-  return useSnapshot(state)
+  return useSnapshot(headerState)
 }
 
 const showModalFeed = () => {
-  state.modalFeedVisible = true
+  headerState.modalFeedVisible = true
 }
 const hideModalFeed = () => {
-  state.modalFeedVisible = false
+  headerState.modalFeedVisible = false
 }
 
 const showModalConfig = () => {
-  state.modalConfigVisible = true
+  headerState.modalConfigVisible = true
 }
 const hideModalConfig = () => {
-  state.modalConfigVisible = false
+  headerState.modalConfigVisible = false
 }
 
-export function RecHeader({ onRefresh }: { onRefresh: () => void | Promise<void> }) {
+type RecHeaderActions = {
+  clickRefreshButton: () => void
+}
+type RecHeaderProps = {
+  onRefresh: () => void | Promise<void>
+  refreshHotkeyEnabled?: boolean
+}
+export function RecHeader({ onRefresh, refreshHotkeyEnabled }: RecHeaderProps) {
   const { accessKey, pureRecommend, usePcDesktopApi } = useSettingsSnapshot()
 
-  const { modalFeedVisible, modalConfigVisible } = useSnapshot(state)
+  const { modalFeedVisible, modalConfigVisible } = useSnapshot(headerState)
 
   const [stickyRef, sticky] = useSticky<HTMLDivElement>()
 
@@ -94,12 +112,7 @@ export function RecHeader({ onRefresh }: { onRefresh: () => void | Promise<void>
             <IconPark name='Config' css={configStyles.icon} />
           </button>
 
-          <button className='primary-btn roll-btn' onClick={onRefresh}>
-            <svg style={{ transform: 'rotate(0deg)' }}>
-              <use xlinkHref='#widget-roll'></use>
-            </svg>
-            <span>换一换</span>
-          </button>
+          <RefreshButton onClick={onRefresh} refreshHotkeyEnabled={refreshHotkeyEnabled} />
 
           {!pureRecommend && (
             <button className='primary-btn see-more' onClick={showModalFeed}>
@@ -117,3 +130,71 @@ export function RecHeader({ onRefresh }: { onRefresh: () => void | Promise<void>
     </>
   )
 }
+
+export type RefreshButtonActions = { click: () => void }
+export type RefreshButtonProps = {
+  style?: CSSProperties
+  className?: string
+  onClick?: (e?: MouseEvent) => void
+  refreshHotkeyEnabled?: boolean
+}
+export const RefreshButton = forwardRef<RefreshButtonActions, RefreshButtonProps>(function (
+  { onClick, className = '', style, refreshHotkeyEnabled },
+  ref
+) {
+  refreshHotkeyEnabled ??= true
+
+  const [deg, setDeg] = useState(0)
+
+  const _onClick: MouseEventHandler = useMemoizedFn((e?: MouseEvent) => {
+    setDeg((d) => d + 360)
+    return onClick?.(e)
+  })
+
+  // click from outside
+  const btn = useRef<HTMLButtonElement>(null)
+  useImperativeHandle(
+    ref,
+    () => ({
+      click() {
+        btn.current?.click()
+      },
+    }),
+    []
+  )
+
+  // refresh
+  useKeyPress(
+    'r',
+    () => {
+      if (!refreshHotkeyEnabled) return
+      if (isCurrentTyping()) return
+      btn.current?.click()
+    },
+    { exactMatch: true }
+  )
+
+  return (
+    <button
+      className={`primary-btn roll-btn ${className}`}
+      onClick={_onClick}
+      style={style}
+      ref={btn}
+    >
+      <svg
+        style={{
+          transform: `rotate(${deg}deg)`,
+          width: '10px',
+          height: '10px',
+          transition: deg === 360 ? 'transform .5s ease' : 'unset',
+        }}
+        onTransitionEnd={() => {
+          setDeg(0)
+        }}
+      >
+        <use xlinkHref='#widget-roll'></use>
+      </svg>
+      <span>换一换</span>
+    </button>
+  )
+})
