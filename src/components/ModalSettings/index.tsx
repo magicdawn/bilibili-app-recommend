@@ -6,7 +6,7 @@ import { cx } from '$libs'
 import { BooleanConfigKey, resetSettings, settings, useSettingsSnapshot } from '$settings'
 import { toast } from '$utility/toast'
 import { useKeyPress } from 'ahooks'
-import { Button, Radio, Space, Tag } from 'antd'
+import { Button, Radio, Slider, Space, Tag } from 'antd'
 import delay from 'delay'
 import styles from './index.module.less'
 
@@ -36,7 +36,7 @@ function useHotkeyForConfig(hotkey: string | string[], configKey: BooleanConfigK
 }
 
 export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => void }) {
-  const { usePcDesktopApi } = useSettingsSnapshot()
+  const { usePcDesktopApi, autoPreviewUpdateInterval } = useSettingsSnapshot()
 
   useHotkeyForConfig(['shift.p'], 'autoPreviewWhenKeyboardSelect', '键盘选中后自动开始预览')
   useHotkeyForConfig(['shift.c'], 'useNarrowMode', '居中模式')
@@ -142,6 +142,20 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                 </>
               }
             />
+
+            <div style={{ width: '100%', display: 'flex', alignItems: 'center' }}>
+              预览更新间隔
+              <Slider
+                style={{ flex: 1, margin: '0 15px' }}
+                min={0}
+                max={1000}
+                keyboard
+                onChange={(val) => (settings.autoPreviewUpdateInterval = val)}
+                value={autoPreviewUpdateInterval}
+                tooltip={{ open: true }}
+              />
+              <span style={{ width: '65px' }}>({autoPreviewUpdateInterval}ms)</span>
+            </div>
           </div>
         </div>
 

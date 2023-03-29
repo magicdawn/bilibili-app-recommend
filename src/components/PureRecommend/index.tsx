@@ -32,12 +32,12 @@ export function PureRecommend() {
     <section data-area='推荐'>
       <RecHeader
         onRefresh={onRefresh}
-        refreshHotkeyEnabled={!(modalConfigVisible || modalFeedVisible)}
+        refreshHotkeyEnabled={!(modalFeedVisible || modalConfigVisible)}
       />
       <RecGrid
         ref={recGrid}
         css={[useNarrowMode && narrowStyle.grid]}
-        shortcutEnabled={!modalFeedVisible}
+        shortcutEnabled={!(modalFeedVisible || modalConfigVisible)}
         infiteScrollUseWindow={true}
         onScrollToTop={onScrollToTop}
       />

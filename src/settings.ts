@@ -25,6 +25,9 @@ export const initialSettings = {
 
   // 自动开始预览
   autoPreviewWhenKeyboardSelect: false,
+
+  // 自动预览更新间隔
+  autoPreviewUpdateInterval: 400,
 }
 
 export type Config = typeof initialSettings

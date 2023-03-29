@@ -6,6 +6,7 @@ import { toast, toastOperationFail, toastRequestFail } from '$utility/toast'
 import { getCountStr, getDurationStr } from '$utility/video'
 import {
   useEventListener,
+  useGetState,
   useHover,
   useMemoizedFn,
   useRafState,
@@ -20,6 +21,7 @@ import {
   forwardRef,
   memo,
   MouseEvent,
+  RefObject,
   useEffect,
   useImperativeHandle,
   useMemo,
@@ -108,6 +110,9 @@ export const VideoCard = memo(
           },
           onStartPreviewAnimation() {
             videoCardInnerRef.current?.onStartPreviewAnimation()
+          },
+          onHotkeyPreviewAnimation() {
+            videoCardInnerRef.current?.onHotkeyPreviewAnimation()
           },
         }
       },
@@ -204,137 +209,13 @@ type VideoCardInnerActions = {
   onToggleWatchLater: () => Promise<void>
   onTriggerDislike: () => void
   onStartPreviewAnimation: () => void
+  onHotkeyPreviewAnimation: () => void
 }
 const VideoCardInner = memo(
   forwardRef<VideoCardInnerActions, VideoCardInnerProps>(function VideoCardInner(
     { item, active = false },
     ref
   ) {
-    // 预览 hover state
-    const videoPreviewWrapperRef = useRef<HTMLDivElement>(null)
-    const [enterMousePosition, setEnterMousePosition] = useState<{
-      relativeX: number
-    }>(() => ({ relativeX: 0 }))
-    useEventListener(
-      'mouseenter',
-      (e: MouseEvent) => {
-        const rect = videoPreviewWrapperRef.current?.getBoundingClientRect()
-        if (!rect) return
-        const { x } = rect
-        setEnterMousePosition({
-          // https://github.com/alibaba/hooks/blob/v3.7.0/packages/hooks/src/useMouse/index.ts#L62
-          relativeX: e.pageX - window.pageXOffset - x,
-        })
-      },
-      { target: videoPreviewWrapperRef }
-    )
-    const isHovering = useHover(videoPreviewWrapperRef)
-
-    /**
-     * 自动以动画方式预览
-     */
-    const [previewAnimationProgress, setPreviewAnimationProgress] = useRafState<number | undefined>(
-      undefined
-    )
-
-    const unmounted = useUnmountedRef()
-
-    // 停止动画
-    //  鼠标动了
-    //  不再 active
-    //  组件卸载了
-    const shouldStopAnimation = useMemoizedFn(() => {
-      if (enterMousePosition.relativeX) return true
-      if (!active) return true
-      if (unmounted.current) return true
-      return false
-    })
-
-    const stopAnimation = useRef<() => void>()
-
-    // TODO: make it configurable
-    const onStartPreviewAnimation = useMemoizedFn(() => {
-      setEnterMousePosition({ relativeX: 0 })
-      tryFetchVideoData()
-      stopAnimation.current?.()
-      stopAnimation.current = undefined
-
-      // ms
-      const start = performance.now()
-      const runDuration = 8e3
-
-      let id: number | undefined
-
-      const updateProgressInterval = 400
-      let lastUpdateAt = 0
-
-      function run() {
-        // 停止动画
-        if (shouldStopAnimation()) {
-          stopAnimation.current?.()
-          stopAnimation.current = undefined
-          return
-        }
-
-        const update = () => {
-          const elapsed = performance.now() - start
-          const p = Math.min((elapsed % runDuration) / runDuration, 1)
-          // console.log('p', p)
-          setPreviewAnimationProgress(p)
-        }
-
-        if (updateProgressInterval) {
-          if (!lastUpdateAt || performance.now() - lastUpdateAt >= updateProgressInterval) {
-            lastUpdateAt = performance.now()
-            update()
-          }
-        } else {
-          update()
-        }
-
-        id = requestAnimationFrame(run)
-      }
-
-      id = requestAnimationFrame(run)
-      stopAnimation.current = () => {
-        if (id) cancelAnimationFrame(id)
-        id = undefined
-        setPreviewAnimationProgress(undefined)
-      }
-    })
-
-    useUpdateEffect(() => {
-      if (!active) return
-
-      // 自动开始预览
-      if (settings.autoPreviewWhenKeyboardSelect) {
-        onStartPreviewAnimation()
-      }
-    }, [active])
-
-    // 稍后再看 hover state
-    const watchLaterRef = useRef(null)
-    const isWatchLaterHovering = useHover(watchLaterRef)
-
-    // watchLater added
-    const [watchLaterAdded, setWatchLaterAdded] = useState(false)
-
-    const { accessKey } = useSettingsSnapshot()
-    const authed = Boolean(accessKey)
-
-    /**
-     * expose actions
-     */
-    useImperativeHandle(
-      ref,
-      () => ({
-        onToggleWatchLater,
-        onTriggerDislike,
-        onStartPreviewAnimation,
-      }),
-      []
-    )
-
     /**
      * raw data
      */
@@ -398,9 +279,70 @@ const VideoCardInner = memo(
       }
     })
 
+    /**
+     * 预览 hover state
+     */
+
+    const videoPreviewWrapperRef = useRef<HTMLDivElement>(null)
+    const [mouseEnterRelativeX, setMouseEnterRelativeX] = useState<number | undefined>(undefined)
+    useEventListener(
+      'mouseenter',
+      (e: MouseEvent) => {
+        const rect = videoPreviewWrapperRef.current?.getBoundingClientRect()
+        if (!rect) return
+
+        // https://github.com/alibaba/hooks/blob/v3.7.0/packages/hooks/src/useMouse/index.ts#L62
+        const { x } = rect
+        const relativeX = e.pageX - window.pageXOffset - x
+        setMouseEnterRelativeX(relativeX)
+      },
+      { target: videoPreviewWrapperRef }
+    )
+    const isHovering = useHover(videoPreviewWrapperRef)
+
+    const { onStartPreviewAnimation, onHotkeyPreviewAnimation, previewAnimationProgress } =
+      usePreviewAnimation({
+        active,
+        tryFetchVideoData,
+        videoPreviewWrapperRef,
+      })
+
+    useUpdateEffect(() => {
+      if (!active) return
+
+      // 自动开始预览
+      if (settings.autoPreviewWhenKeyboardSelect) {
+        onStartPreviewAnimation()
+      }
+    }, [active])
+
+    // 稍后再看 hover state
+    const watchLaterRef = useRef(null)
+    const isWatchLaterHovering = useHover(watchLaterRef)
+
+    // watchLater added
+    const [watchLaterAdded, setWatchLaterAdded] = useState(false)
+
+    const { accessKey } = useSettingsSnapshot()
+    const authed = Boolean(accessKey)
+
     useEffect(() => {
       if (isHovering) tryFetchVideoData()
     }, [isHovering])
+
+    /**
+     * expose actions
+     */
+    useImperativeHandle(
+      ref,
+      () => ({
+        onToggleWatchLater,
+        onTriggerDislike,
+        onStartPreviewAnimation,
+        onHotkeyPreviewAnimation,
+      }),
+      []
+    )
 
     /**
      * 稍候再看
@@ -529,7 +471,7 @@ const VideoCardInner = memo(
                 <PreviewImage
                   videoDuration={duration}
                   pvideo={videoData?.pvideoData}
-                  enterCursorState={enterMousePosition}
+                  mouseEnterRelativeX={mouseEnterRelativeX}
                   previewAnimationProgress={previewAnimationProgress}
                 />
               )}
@@ -663,3 +605,137 @@ const VideoCardInner = memo(
     )
   })
 )
+
+/**
+ * 自动以动画方式预览
+ */
+
+function usePreviewAnimation({
+  active,
+  tryFetchVideoData,
+  videoPreviewWrapperRef,
+}: {
+  active: boolean
+  tryFetchVideoData: () => Promise<void>
+  videoPreviewWrapperRef: RefObject<HTMLDivElement>
+}) {
+  const [previewAnimationProgress, setPreviewAnimationProgress] = useRafState<number | undefined>(
+    undefined
+  )
+
+  const [mouseMoved, setMouseMoved] = useState(false)
+  useEventListener(
+    'mousemove',
+    (e: MouseEvent) => {
+      setMouseMoved(true)
+      stopAnimation()
+    },
+    { target: videoPreviewWrapperRef }
+  )
+
+  const unmounted = useUnmountedRef()
+
+  // raf id
+  const idRef = useRef<number | undefined>(undefined)
+
+  // 停止动画
+  //  鼠标动了
+  //  不再 active
+  //  组件卸载了
+  const shouldStopAnimation = useMemoizedFn(() => {
+    if (mouseMoved) return true
+    if (!active) return true
+    if (unmounted.current) return true
+    return false
+  })
+
+  const stopAnimation = useMemoizedFn(() => {
+    if (idRef.current) cancelAnimationFrame(idRef.current)
+    idRef.current = undefined
+    setPreviewAnimationProgress(undefined)
+    setAnimationPaused(false)
+  })
+
+  const [animationPaused, setAnimationPaused, getAnimationPaused] = useGetState(false)
+
+  const resumeAnimationInner = useRef<(progress: number) => void>()
+
+  const onHotkeyPreviewAnimation = useMemoizedFn(() => {
+    // console.log('hotkey preview', animationPaused)
+
+    if (!idRef.current) {
+      onStartPreviewAnimation()
+      return
+    }
+
+    // toggle
+    setAnimationPaused((val) => !val)
+
+    if (animationPaused) {
+      // to resume
+      resumeAnimationInner.current?.(previewAnimationProgress || 0)
+    } else {
+      // to pause
+    }
+  })
+
+  const getProgress = useMemoizedFn(() => {
+    return previewAnimationProgress || 0
+  })
+
+  const onStartPreviewAnimation = useMemoizedFn(() => {
+    setMouseMoved(false)
+    setAnimationPaused(false)
+    tryFetchVideoData()
+    stopAnimation() // clear existing
+
+    // ms
+    const runDuration = 8e3
+    const updateProgressInterval = () =>
+      typeof settings.autoPreviewUpdateInterval === 'number'
+        ? settings.autoPreviewUpdateInterval
+        : 400
+
+    let start = performance.now()
+    let lastUpdateAt = 0
+
+    // 闭包这里获取不到最新 previewAnimationProgress
+    resumeAnimationInner.current = () => {
+      start = performance.now() - getProgress() * runDuration
+    }
+
+    function run(t: number) {
+      // console.log('in raf run %s', t)
+
+      // 停止动画
+      if (shouldStopAnimation()) {
+        stopAnimation()
+        return
+      }
+
+      const update = () => {
+        const elapsed = performance.now() - start
+        const p = Math.min((elapsed % runDuration) / runDuration, 1)
+        // console.log('p', p)
+        setPreviewAnimationProgress(p)
+      }
+
+      if (!getAnimationPaused()) {
+        if (updateProgressInterval()) {
+          if (!lastUpdateAt || performance.now() - lastUpdateAt >= updateProgressInterval()) {
+            lastUpdateAt = performance.now()
+            update()
+          }
+        } else {
+          update()
+        }
+      }
+
+      idRef.current = requestAnimationFrame(run)
+    }
+
+    idRef.current = requestAnimationFrame(run)
+  })
+
+  return { onHotkeyPreviewAnimation, onStartPreviewAnimation, previewAnimationProgress }
+}

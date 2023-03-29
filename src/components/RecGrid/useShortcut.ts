@@ -133,7 +133,7 @@ export function useShortcut({
     ['period', 'p'],
     () => {
       if (!isEnabled() || typeof activeIndex !== 'number') return
-      videoCardRefs[activeIndex]?.onStartPreviewAnimation()
+      videoCardRefs[activeIndex]?.onHotkeyPreviewAnimation()
     },
     { exactMatch: true }
   )

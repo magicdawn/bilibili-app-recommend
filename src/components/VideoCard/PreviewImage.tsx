@@ -11,7 +11,7 @@ interface IProps {
 
   // hover => listen mousemove of PreviewImage div ref
   // 如果没有移动鼠标, 后面 mousemove 无法触发, 这个时候需要从前面 mouseenter 中读取 enterCursorState
-  enterCursorState: { relativeX: number }
+  mouseEnterRelativeX: number | undefined
 
   previewAnimationProgress?: number
 }
@@ -28,7 +28,7 @@ export function PreviewImage({
   className,
   videoDuration,
   pvideo,
-  enterCursorState,
+  mouseEnterRelativeX,
   previewAnimationProgress,
 }: IProps) {
   const ref = useRef<HTMLDivElement>(null)
@@ -46,7 +46,7 @@ export function PreviewImage({
   if (previewAnimationProgress) {
     progress = previewAnimationProgress
   } else {
-    const relativeX = fallbackWhenNan(cursorState.elementX, enterCursorState.relativeX)
+    const relativeX = fallbackWhenNan(cursorState.elementX, mouseEnterRelativeX || 0)
     if (size.width && relativeX && !isNaN(relativeX)) {
       progress = relativeX / size.width
       if (progress < 0) progress = 0
