@@ -29,9 +29,10 @@ async function getAuth() {
 
   const confirm_uri = json.data.confirm_uri
   let timeout: ReturnType<typeof setTimeout> | undefined
+  let removeEventHandler: (() => void) | undefined
 
   const waitCallback = new Promise<string | { errmsg: string }>((resolve) => {
-    window.addEventListener('message', (e) => {
+    const handleEvent = (e: MessageEvent) => {
       if (e.origin != 'https://www.mcbbs.net' || !e.data) return
 
       const key = e.data.match(/access_key=([0-9a-z]{32})/)
@@ -40,7 +41,10 @@ async function getAuth() {
       }
 
       resolve(key[1] as string)
-    })
+    }
+
+    window.addEventListener('message', handleEvent)
+    removeEventHandler = () => window.removeEventListener('message', handleEvent)
 
     timeout = setTimeout(() => {
       resolve({ errmsg: '获取授权超时' })
@@ -53,7 +57,10 @@ async function getAuth() {
   document.body.appendChild(iframe)
 
   function cleanup() {
-    iframe.remove()
+    iframe?.remove()
+
+    removeEventHandler?.()
+    removeEventHandler = undefined
 
     if (timeout) {
       clearTimeout(timeout)
