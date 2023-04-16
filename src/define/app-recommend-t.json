@@ -1,0 +1,47 @@
+{
+  "card_type": "small_cover_v2",
+  "card_goto": "picture",
+  "goto": "picture",
+  "param": "779803384976769078",
+  "cover": "http://i0.hdslb.com/bfs/aistory/2023-04-02-095527385779803384976769078_16_12.jpg",
+  "title": "坠后的曼达洛人。",
+  "uri": "https://t.bilibili.com/779803384976769078?detail_view_bits=1",
+  "args": {},
+  "idx": 168162787616,
+  "three_point_v2": [
+    {
+      "title": "不感兴趣",
+      "subtitle": "(选择后将减少相似内容推荐)",
+      "reasons": [
+        {
+          "id": 4,
+          "name": "UP主:iLetyoudown33",
+          "toast": "将减少相似内容推荐"
+        },
+        {
+          "id": 1,
+          "name": "不感兴趣",
+          "toast": "将减少相似内容推荐"
+        }
+      ],
+      "type": "dislike"
+    }
+  ],
+  "track_id": "all_20.router-pegasus-1117729-644f96f7-xnm6x.1681627876338.57",
+  "talk_back": ",坠后的曼达洛人。,点赞,,",
+  "cover_left_text_1": "39",
+  "cover_left_icon_1": 20,
+  "cover_left_1_content_description": "点赞",
+  "badge": "图文",
+  "badge_style": {
+    "text": "图文",
+    "text_color": "#FB7299",
+    "border_color": "#FB7299",
+    "text_color_night": "#BB5B76",
+    "border_color_night": "#BB5B76",
+    "bg_style": 2
+  },
+  "desc": "iLetyoudown33",
+  "api": "app",
+  "uniqId": "779803384976769078-37edc3f9-90cb-446e-8b3e-f5514ac29162"
+}

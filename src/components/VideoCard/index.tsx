@@ -228,6 +228,10 @@ const VideoCardInner = memo(
     const bvid = isPc ? item.bvid : ''
     const goto = item.goto
 
+    if (!['av', 'bangumi'].includes(goto)) {
+      console.warn('[bilibili-app-recommend]: none (av,bangumi) goto type %s', goto, item)
+    }
+
     // stat
     const play = isPc ? item.stat.view : undefined
     const like = isPc ? item.stat.like : undefined
@@ -435,6 +439,7 @@ const VideoCardInner = memo(
       2: 'like', // 没出现过, 猜的
       3: 'danmaku',
       4: 'bangumiFollow', // 追番
+      20: 'like', // 动态点赞
     }
 
     const svgIconNameForId = (id: number) => {
@@ -538,14 +543,24 @@ const VideoCardInner = memo(
                     </>
                   ) : (
                     <>
-                      {statItem({
-                        iconSvgName: svgIconNameForId(item.cover_left_icon_1),
-                        text: item.cover_left_text_1,
-                      })}
-                      {statItem({
-                        iconSvgName: svgIconNameForId(item.cover_left_icon_2),
-                        text: item.cover_left_text_2,
-                      })}
+                      {item.cover_left_text_1 &&
+                        statItem({
+                          iconSvgName: svgIconNameForId(item.cover_left_icon_1),
+                          text:
+                            goto === 'picture'
+                              ? item.cover_left_text_1 +
+                                (item.cover_left_1_content_description || '')
+                              : item.cover_left_text_1,
+                        })}
+                      {item.cover_left_text_2 &&
+                        statItem({
+                          iconSvgName: svgIconNameForId(item.cover_left_icon_2),
+                          text:
+                            goto === 'picture'
+                              ? item.cover_left_text_2 +
+                                (item.cover_left_2_content_description || '')
+                              : item.cover_left_text_2,
+                        })}
                     </>
                   )}
                 </div>
