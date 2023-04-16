@@ -299,9 +299,14 @@ const VideoCardInner = memo(
       { target: videoPreviewWrapperRef }
     )
     const isHovering = useHover(videoPreviewWrapperRef)
+    const { autoPreviewWhenHover } = useSettingsSnapshot()
 
     const { onStartPreviewAnimation, onHotkeyPreviewAnimation, previewAnimationProgress } =
       usePreviewAnimation({
+        id,
+        title,
+        isHovering,
+        autoPreviewWhenHover,
         active,
         tryFetchVideoData,
         videoPreviewWrapperRef,
@@ -467,7 +472,8 @@ const VideoCardInner = memo(
               {/* <div className='v-inline-player'></div> */}
 
               {/* preview */}
-              {(isHovering || (active && previewAnimationProgress)) && (
+              {/* follow-mouse or manual-control */}
+              {(isHovering || typeof previewAnimationProgress === 'number') && (
                 <PreviewImage
                   videoDuration={duration}
                   pvideo={videoData?.pvideoData}
@@ -611,24 +617,52 @@ const VideoCardInner = memo(
  */
 
 function usePreviewAnimation({
+  id,
+  title,
+  isHovering,
+  autoPreviewWhenHover,
   active,
   tryFetchVideoData,
   videoPreviewWrapperRef,
 }: {
+  id: string
+  title: string
+  isHovering: boolean
+  autoPreviewWhenHover: boolean
   active: boolean
   tryFetchVideoData: () => Promise<void>
   videoPreviewWrapperRef: RefObject<HTMLDivElement>
 }) {
+  const DEBUG_ANIMATION = false
+
   const [previewAnimationProgress, setPreviewAnimationProgress] = useRafState<number | undefined>(
     undefined
   )
 
   const [mouseMoved, setMouseMoved] = useState(false)
+  const [startByHover, setStartByHover] = useState(false)
+
+  // 在 pvideodata 加载的时候, isHovering 会有变化, so 不使用 mouseenter 自己处理
+  useEffect(() => {
+    if (autoPreviewWhenHover && isHovering && !idRef.current) {
+      DEBUG_ANIMATION &&
+        console.log(
+          '[bilibili-app-recommend]: [animation] mouseenter onStartPreviewAnimation id=%s title=%s',
+          id,
+          title
+        )
+      setStartByHover(true)
+      onStartPreviewAnimation()
+    }
+  }, [isHovering, autoPreviewWhenHover])
+
   useEventListener(
     'mousemove',
     (e: MouseEvent) => {
       setMouseMoved(true)
-      stopAnimation()
+      if (!autoPreviewWhenHover) {
+        stopAnimation()
+      }
     },
     { target: videoPreviewWrapperRef }
   )
@@ -643,13 +677,30 @@ function usePreviewAnimation({
   //  不再 active
   //  组件卸载了
   const shouldStopAnimation = useMemoizedFn(() => {
-    if (mouseMoved) return true
-    if (!active) return true
     if (unmounted.current) return true
+
+    if (autoPreviewWhenHover) {
+      if (!isHovering && !active) return true
+    } else {
+      if (!active) return true
+      if (mouseMoved) return true
+    }
+
     return false
   })
 
-  const stopAnimation = useMemoizedFn(() => {
+  const stopAnimation = useMemoizedFn((isClear = false) => {
+    if (!isClear) {
+      DEBUG_ANIMATION &&
+        console.log('[bilibili-app-recommend]: [animation] stopAnimation: %o', isClear, {
+          autoPreviewWhenHover,
+          unmounted: unmounted.current,
+          isHovering,
+          active,
+          mouseMoved,
+        })
+    }
+
     if (idRef.current) cancelAnimationFrame(idRef.current)
     idRef.current = undefined
     setPreviewAnimationProgress(undefined)
@@ -687,7 +738,8 @@ function usePreviewAnimation({
     setMouseMoved(false)
     setAnimationPaused(false)
     tryFetchVideoData()
-    stopAnimation() // clear existing
+    stopAnimation(true) // clear existing
+    setPreviewAnimationProgress((val) => (typeof val === 'undefined' ? 0 : val)) // get rid of undefined
 
     // ms
     const runDuration = 8e3
@@ -704,7 +756,7 @@ function usePreviewAnimation({
       start = performance.now() - getProgress() * runDuration
     }
 
-    function run(t: number) {
+    function frame(t: number) {
       // console.log('in raf run %s', t)
 
       // 停止动画
@@ -731,10 +783,10 @@ function usePreviewAnimation({
         }
       }
 
-      idRef.current = requestAnimationFrame(run)
+      idRef.current = requestAnimationFrame(frame)
     }
 
-    idRef.current = requestAnimationFrame(run)
+    idRef.current = requestAnimationFrame(frame)
   })
 
   return { onHotkeyPreviewAnimation, onStartPreviewAnimation, previewAnimationProgress }

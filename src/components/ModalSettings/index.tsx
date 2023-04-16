@@ -39,6 +39,7 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
   const { usePcDesktopApi, autoPreviewUpdateInterval } = useSettingsSnapshot()
 
   useHotkeyForConfig(['shift.p'], 'autoPreviewWhenKeyboardSelect', '键盘选中后自动开始预览')
+  useHotkeyForConfig(['shift.m'], 'autoPreviewWhenHover', '鼠标悬浮后自动开始预览')
   useHotkeyForConfig(['shift.c'], 'useNarrowMode', '居中模式')
 
   return (
@@ -129,7 +130,12 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
               }
               className={styles.check}
             />
+          </div>
+        </div>
 
+        <div className={styles.settingsGroup}>
+          <div className={styles.settingsGroupTitle}>预览</div>
+          <div className={cx(styles.settingsGroupContent, styles.row)}>
             <FlagSettingItem
               configKey='autoPreviewWhenKeyboardSelect'
               label='键盘选中后自动开始预览'
@@ -139,6 +145,18 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                   手动预览快捷键: <Tag color='green'>.</Tag> or <Tag color='green'>p</Tag>
                   <br />
                   切换设置快捷键: <Tag color='green'>shift+p</Tag>
+                </>
+              }
+            />
+
+            <FlagSettingItem
+              configKey='autoPreviewWhenHover'
+              label='鼠标悬浮后自动开始预览'
+              className={styles.check}
+              tooltip={
+                <>
+                  鼠标悬浮后自动开始预览, 预览不再跟随鼠标位置 <br />
+                  切换设置快捷键: <Tag color='green'>shift+m</Tag>
                 </>
               }
             />

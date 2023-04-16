@@ -28,6 +28,10 @@ export const initialSettings = {
 
   // 自动预览更新间隔
   autoPreviewUpdateInterval: 400,
+
+  // 鼠标悬浮自动预览, 不再跟随鼠标位置
+  // 默认: 跟随鼠标
+  autoPreviewWhenHover: false,
 }
 
 export type Config = typeof initialSettings

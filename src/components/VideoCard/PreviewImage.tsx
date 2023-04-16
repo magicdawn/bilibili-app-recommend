@@ -43,7 +43,7 @@ export function PreviewImage({
   })
 
   let progress = 0
-  if (previewAnimationProgress) {
+  if (typeof previewAnimationProgress === 'number') {
     progress = previewAnimationProgress
   } else {
     const relativeX = fallbackWhenNan(cursorState.elementX, mouseEnterRelativeX || 0)
