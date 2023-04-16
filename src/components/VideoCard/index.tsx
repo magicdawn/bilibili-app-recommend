@@ -264,22 +264,20 @@ const VideoCardInner = memo(
     const pubdateDisplay = useMemo(() => formatTimeStamp(pubdate), [pubdate])
     const cover = useMemo(() => toHttps(coverRaw), [coverRaw])
 
-    const [videoData, videoDataChange] = useState<VideoData | null>(null)
-    const [isFetchingVideoData, isFetchingVideoDataChange] = useState(false)
+    const [videoData, setVideoData] = useState<VideoData | null>(null)
+    const isFetchingVideoData = useRef(false)
 
     const tryFetchVideoData = useMemoizedFn(async () => {
       // already fetched
       if (videoData) return
-
       // fetching
-      if (isFetchingVideoData) return
+      if (isFetchingVideoData.current) return
 
       try {
-        isFetchingVideoDataChange(true)
-        const data = await getVideoData(id)
-        videoDataChange(data)
+        isFetchingVideoData.current = true
+        setVideoData(await getVideoData(id))
       } finally {
-        isFetchingVideoDataChange(false)
+        isFetchingVideoData.current = false
       }
     })
 
