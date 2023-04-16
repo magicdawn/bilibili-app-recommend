@@ -309,7 +309,6 @@ const VideoCardInner = memo(
       usePreviewAnimation({
         id,
         title,
-        isHovering,
         autoPreviewWhenHover,
         active,
         tryFetchVideoData,
@@ -634,7 +633,6 @@ const VideoCardInner = memo(
 function usePreviewAnimation({
   id,
   title,
-  isHovering,
   autoPreviewWhenHover,
   active,
   tryFetchVideoData,
@@ -642,34 +640,47 @@ function usePreviewAnimation({
 }: {
   id: string
   title: string
-  isHovering: boolean
   autoPreviewWhenHover: boolean
   active: boolean
   tryFetchVideoData: () => Promise<void>
   videoPreviewWrapperRef: RefObject<HTMLDivElement>
 }) {
-  const DEBUG_ANIMATION = false
+  const DEBUG_ANIMATION = process.env.NODE_ENV !== 'production' && false
 
   const [previewAnimationProgress, setPreviewAnimationProgress] = useRafState<number | undefined>(
     undefined
   )
 
   const [mouseMoved, setMouseMoved] = useState(false)
-  const [startByHover, setStartByHover] = useState(false)
 
-  // 在 pvideodata 加载的时候, isHovering 会有变化, so 不使用 mouseenter 自己处理
-  useEffect(() => {
-    if (autoPreviewWhenHover && isHovering && !idRef.current) {
-      DEBUG_ANIMATION &&
-        console.log(
-          '[bilibili-app-recommend]: [animation] mouseenter onStartPreviewAnimation id=%s title=%s',
-          id,
-          title
-        )
-      setStartByHover(true)
-      onStartPreviewAnimation()
-    }
-  }, [isHovering, autoPreviewWhenHover])
+  // 在 pvideodata 加载的时候, useHover 会有变化, so 使用 mouseenter/mouseleave 自己处理
+  const isHovering = useRef(false)
+  const startByHover = useRef(false)
+
+  useEventListener(
+    'mouseenter',
+    (e) => {
+      isHovering.current = true
+
+      if (autoPreviewWhenHover && !idRef.current) {
+        DEBUG_ANIMATION &&
+          console.log(
+            '[bilibili-app-recommend]: [animation] mouseenter onStartPreviewAnimation id=%s title=%s',
+            id,
+            title
+          )
+        onStartPreviewAnimation(true)
+      }
+    },
+    { target: videoPreviewWrapperRef }
+  )
+  useEventListener(
+    'mouseleave',
+    (e) => {
+      isHovering.current = false
+    },
+    { target: videoPreviewWrapperRef }
+  )
 
   useEventListener(
     'mousemove',
@@ -694,9 +705,16 @@ function usePreviewAnimation({
   const shouldStopAnimation = useMemoizedFn(() => {
     if (unmounted.current) return true
 
+    // mixed keyboard & mouse control
     if (autoPreviewWhenHover) {
-      if (!isHovering && !active) return true
-    } else {
+      if (startByHover.current) {
+        if (!isHovering.current) return true
+      } else {
+        if (!active) return true
+      }
+    }
+    // normal keyboard control
+    else {
       if (!active) return true
       if (mouseMoved) return true
     }
@@ -705,15 +723,14 @@ function usePreviewAnimation({
   })
 
   const stopAnimation = useMemoizedFn((isClear = false) => {
-    if (!isClear) {
-      DEBUG_ANIMATION &&
-        console.log('[bilibili-app-recommend]: [animation] stopAnimation: %o', isClear, {
-          autoPreviewWhenHover,
-          unmounted: unmounted.current,
-          isHovering,
-          active,
-          mouseMoved,
-        })
+    if (!isClear && DEBUG_ANIMATION) {
+      console.log('[bilibili-app-recommend]: [animation] stopAnimation: %o', {
+        autoPreviewWhenHover,
+        unmounted: unmounted.current,
+        isHovering: isHovering.current,
+        active,
+        mouseMoved,
+      })
     }
 
     if (idRef.current) cancelAnimationFrame(idRef.current)
@@ -749,7 +766,8 @@ function usePreviewAnimation({
     return previewAnimationProgress || 0
   })
 
-  const onStartPreviewAnimation = useMemoizedFn(() => {
+  const onStartPreviewAnimation = useMemoizedFn((_startByHover = false) => {
+    startByHover.current = _startByHover
     setMouseMoved(false)
     setAnimationPaused(false)
     tryFetchVideoData()
