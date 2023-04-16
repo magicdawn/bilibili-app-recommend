@@ -32,6 +32,19 @@ export const initialSettings = {
   // 鼠标悬浮自动预览, 不再跟随鼠标位置
   // 默认: 跟随鼠标
   autoPreviewWhenHover: false,
+
+  /**
+   * 过滤器模块
+   * 使用 flat config 方便使用 FlagSettingItem
+   */
+
+  // 最少播放量
+  filterMinPlayCountEnabled: false,
+  filterMinPlayCount: 10000,
+
+  // 时长
+  filterMinDurationEnabled: false,
+  filterMinDuration: 60, // 60s
 }
 
 export type Config = typeof initialSettings

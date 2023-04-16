@@ -19,9 +19,7 @@ const ImportedIcons = {
   Loading,
   LoadingThree,
   Info,
-}
-// prettier fails this
-// satisfies Record<string, Icon>
+} satisfies Record<string, Icon>
 
 export function IconPark({
   name,

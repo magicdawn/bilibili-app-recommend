@@ -1,6 +1,6 @@
 import { useIsDarkMode } from '$platform'
-import { ConfigProvider, theme } from 'antd'
-import { ReactNode } from 'react'
+import { ConfigProvider, Tooltip, theme } from 'antd'
+import { ComponentProps, ReactNode } from 'react'
 
 export function AntdApp({ children }: { children: ReactNode }) {
   const dark = useIsDarkMode()
@@ -16,5 +16,17 @@ export function AntdApp({ children }: { children: ReactNode }) {
     >
       {children}
     </ConfigProvider>
+  )
+}
+
+export function AntdTooltip(props: ComponentProps<typeof Tooltip>) {
+  return (
+    <Tooltip
+      {...props}
+      zIndex={11100}
+      overlayStyle={{ width: 'max-content', maxWidth: '50vw', ...props.overlayInnerStyle }}
+    >
+      {props.children}
+    </Tooltip>
   )
 }

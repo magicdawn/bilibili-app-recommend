@@ -37,6 +37,7 @@ import {
 } from './card.service'
 import styles from './index.module.less'
 import { PreviewImage } from './PreviewImage'
+import { normalizeCardData } from './process/normalize'
 
 const currentYear = dayjs().format('YYYY')
 const formatTimeStamp = (unixTs?: number) => {
@@ -51,6 +52,22 @@ const formatTimeStamp = (unixTs?: number) => {
 }
 
 const toHttps = (url: string) => (url || '').replace(/^http:\/\//, 'https://')
+
+export const AppRecIconSvgNames = {
+  play: '#widget-video-play-count', // or #widget-play-count
+  danmaku: '#widget-video-danmaku',
+  like: '#widget-agree',
+  bangumiFollow: '#widget-agree', // TODO: icon for this
+}
+
+// app icon
+export const AppRecIconMap: Record<number, keyof typeof AppRecIconSvgNames> = {
+  1: 'play',
+  2: 'like', // 没出现过, 猜的
+  3: 'danmaku',
+  4: 'bangumiFollow', // 追番
+  20: 'like', // 动态点赞
+}
 
 export type VideoCardProps = {
   style?: CSSProperties
@@ -216,46 +233,38 @@ const VideoCardInner = memo(
     { item, active = false },
     ref
   ) {
-    /**
-     * raw data
-     */
-
     const isPc = item.api === 'pc'
     const isApp = item.api === 'app'
 
-    // id = avid
-    const id = isPc ? String(item.id) : String(item.param)
-    const bvid = isPc ? item.bvid : ''
-    const goto = item.goto
+    const {
+      id,
+      bvid,
+      goto,
+
+      play,
+      like,
+      coin,
+      danmaku,
+
+      title,
+      coverRaw,
+      pubdate,
+      duration,
+
+      name,
+      face,
+      mid,
+
+      favorite,
+      bangumiBadge,
+      bangumiDesc,
+
+      rcmd_reason,
+    } = normalizeCardData(item)
 
     if (!['av', 'bangumi'].includes(goto)) {
       console.warn('[bilibili-app-recommend]: none (av,bangumi) goto type %s', goto, item)
     }
-
-    // stat
-    const play = isPc ? item.stat.view : undefined
-    const like = isPc ? item.stat.like : undefined
-    const coin = isPc ? undefined : undefined
-    const danmaku = isPc ? undefined : undefined
-
-    // video info
-    const title = item.title
-    const coverRaw = isPc ? item.pic : item.cover
-    const pubdate = isPc ? item.pubdate : undefined // 获取不到发布时间
-    const duration = (isPc ? item.duration : item.player_args?.duration) || 0
-
-    // video owner info
-    const name = isPc ? item.owner.name : item.args.up_name
-    const face = isPc ? item.owner.face : undefined
-    const mid = isPc ? item.owner.mid : item.args.up_id
-
-    // bangumi
-    const favorite = isPc ? undefined : undefined
-    const bangumiBadge = isPc ? undefined : item.badge
-    const bangumiDesc = isPc ? undefined : item.desc_button?.text || ''
-
-    // 推荐理由
-    const rcmd_reason = isPc ? item.rcmd_reason?.content : item.rcmd_reason
 
     /**
      * transformed
@@ -423,25 +432,9 @@ const VideoCardInner = memo(
       </span>
     )
 
-    const iconSvgNames = {
-      play: '#widget-video-play-count', // or #widget-play-count
-      danmaku: '#widget-video-danmaku',
-      like: '#widget-agree',
-      bangumiFollow: '#widget-agree', // TODO: icon for this
-    }
-
-    // app icon
-    const appIconMap: Record<number, keyof typeof iconSvgNames> = {
-      1: 'play',
-      2: 'like', // 没出现过, 猜的
-      3: 'danmaku',
-      4: 'bangumiFollow', // 追番
-      20: 'like', // 动态点赞
-    }
-
     const svgIconNameForId = (id: number) => {
-      const key = appIconMap[id] || appIconMap[1] // TODO: 不认识的图标使用 play
-      return iconSvgNames[key]
+      const key = AppRecIconMap[id] || AppRecIconMap[1] // TODO: 不认识的图标使用 play
+      return AppRecIconSvgNames[key]
     }
 
     return (
@@ -531,11 +524,11 @@ const VideoCardInner = memo(
                   {isPc ? (
                     <>
                       {/* 播放 */}
-                      {statItem({ text: playStr, iconSvgName: iconSvgNames.play })}
+                      {statItem({ text: playStr, iconSvgName: AppRecIconSvgNames.play })}
                       {/* 点赞 */}
                       {statItem({
                         text: goto === 'av' ? likeStr : favoriteStr,
-                        iconSvgName: iconSvgNames.like,
+                        iconSvgName: AppRecIconSvgNames.like,
                       })}
                     </>
                   ) : (

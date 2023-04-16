@@ -33,3 +33,13 @@ export function getCountStr(count?: number) {
   _10k = _10k.replace(/\.0$/, '') // 81.0 -> 81
   return `${_10k}万`
 }
+
+export function getCountFromStr(str: string) {
+  if (!str) return undefined
+  if (/^\d+$/.test(str)) return Number(str)
+  if (/^\d+(\.\d+?)?万$/.test(str)) return Number(str.slice(0, -1)) * 10000
+}
+
+// console.log(getCountFromStr('10000'))
+// console.log(getCountFromStr('1.2万'))
+// console.log(getCountFromStr('2万'))

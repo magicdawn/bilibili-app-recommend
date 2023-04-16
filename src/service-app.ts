@@ -17,6 +17,8 @@ class RecReqError extends Error {
   }
 }
 
+export const PAGE_SIZE = 10
+
 export async function getRecommend() {
   // /x/feed/index
   const res = await gmrequest.get(HOST_APP + '/x/v2/feed/index', {

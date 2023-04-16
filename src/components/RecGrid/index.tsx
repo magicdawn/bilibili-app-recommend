@@ -7,9 +7,9 @@ import { VideoCard, VideoCardActions } from '$components/VideoCard'
 import { AppRecItemExtend, PcRecItemExtend } from '$define'
 import { cssCls, cx } from '$libs'
 import { HEADER_HEIGHT, getIsInternalTesting } from '$platform'
-import { getRecommendTimes } from '$service'
+import { getRecommendForGrid, getRecommendTimes } from '$service'
 import { useSettingsSnapshot } from '$settings'
-import { useMemoizedFn } from 'ahooks'
+import { useMemoizedFn, useMount } from 'ahooks'
 import { RefObject, forwardRef, useImperativeHandle, useMemo, useRef, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroller'
 import { internalTesting, narrowMode, videoGrid } from '../video-grid.module.less'
@@ -66,7 +66,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
         clearActiveIndex() // before
         setLoading(true)
         pageRef.page = 1
-        setItems(await getRecommendTimes(2, pageRef))
+        setItems(await getRecommendForGrid(pageRef))
         clearActiveIndex() // and after
       } finally {
         setLoading(false)
@@ -79,6 +79,8 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
       }),
       []
     )
+
+    useMount(refresh)
 
     const fetchMore = useMemoizedFn(async () => {
       const more = await getRecommendTimes(2, pageRef)
@@ -159,8 +161,11 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
             className
           )}
         >
-          {/* <VideoCard key={1} loading={true} className={cx(cls.card)} />
-          <VideoCard key={2} loading={true} className={cx(cls.card)} /> */}
+          {/* skeleton loading */}
+          {!items.length &&
+            new Array(24).fill(undefined).map((_, index) => {
+              return <VideoCard key={index} loading={true} className={cx(cls.card)} />
+            })}
 
           {items.map((item, index) => {
             const active = index === activeIndex

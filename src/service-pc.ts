@@ -9,6 +9,8 @@ import { HOST_API, request } from './request'
 
 export type PageRef = { page: number }
 
+export const PAGE_SIZE = 14
+
 async function getRecommend(pageRef: PageRef) {
   const curpage = pageRef.page++
   const res = await request.get('/x/web-interface/index/top/rcmd', {
@@ -17,7 +19,7 @@ async function getRecommend(pageRef: PageRef) {
     params: {
       fresh_type: 3,
       version: 1,
-      ps: 14, // >14 errors
+      ps: PAGE_SIZE, // >14 errors
       fresh_idx: curpage,
       fresh_idx_1h: curpage,
       homepage_ver: 1,

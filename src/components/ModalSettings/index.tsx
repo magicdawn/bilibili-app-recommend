@@ -1,12 +1,19 @@
 import { AccessKeyManage, accessKeyLinkBtn } from '$components/AccessKeyManage'
+import { AntdTooltip } from '$components/AntdApp'
 import { BaseModal, BaseModalClass, ModalClose } from '$components/BaseModal'
 import { FlagSettingItem } from '$components/piece'
 import { IconPark } from '$icon-park'
 import { cx } from '$libs'
-import { BooleanConfigKey, resetSettings, settings, useSettingsSnapshot } from '$settings'
+import {
+  BooleanConfigKey,
+  resetSettings,
+  settings,
+  updateSettings,
+  useSettingsSnapshot,
+} from '$settings'
 import { toast } from '$utility/toast'
 import { useKeyPress } from 'ahooks'
-import { Button, Radio, Slider, Space, Tag } from 'antd'
+import { Button, InputNumber, Radio, Slider, Space, Tag } from 'antd'
 import delay from 'delay'
 import styles from './index.module.less'
 
@@ -36,14 +43,21 @@ function useHotkeyForConfig(hotkey: string | string[], configKey: BooleanConfigK
 }
 
 export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => void }) {
-  const { usePcDesktopApi, autoPreviewUpdateInterval } = useSettingsSnapshot()
+  const {
+    usePcDesktopApi,
+    autoPreviewUpdateInterval,
+    filterMinPlayCount,
+    filterMinPlayCountEnabled,
+    filterMinDuration,
+    filterMinDurationEnabled,
+  } = useSettingsSnapshot()
 
   useHotkeyForConfig(['shift.p'], 'autoPreviewWhenKeyboardSelect', '键盘选中后自动开始预览')
   useHotkeyForConfig(['shift.m'], 'autoPreviewWhenHover', '鼠标悬浮后自动开始预览')
   useHotkeyForConfig(['shift.c'], 'useNarrowMode', '居中模式')
 
   return (
-    <BaseModal {...{ show, onHide, hideWhenMaskOnClick: true, hideWhenEsc: true }}>
+    <BaseModal {...{ show, onHide, hideWhenMaskOnClick: true, hideWhenEsc: true, width: '700px' }}>
       <div className={BaseModalClass.modalHeader}>
         <div className={BaseModalClass.modalTitle}>
           <IconPark name='Config' className={styles.configIcon} />
@@ -173,6 +187,50 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                 tooltip={{ open: true }}
               />
               <span style={{ width: '65px' }}>({autoPreviewUpdateInterval}ms)</span>
+            </div>
+          </div>
+        </div>
+
+        <div className={styles.settingsGroup}>
+          <div className={styles.settingsGroupTitle}>
+            视频过滤器
+            <AntdTooltip title={'启用视频过滤器会大幅降低加载速度, 谨慎开启!'}>
+              <IconPark style={{ marginLeft: 4, cursor: 'pointer' }} name={'Info'} />
+            </AntdTooltip>
+          </div>
+          <div className={cx(styles.settingsGroupContent)}>
+            <div className={styles.row}>
+              <FlagSettingItem
+                configKey='filterMinPlayCountEnabled'
+                label='按播放量过滤'
+                tooltip={<>不显示播放量很少的视频</>}
+              />
+              <InputNumber
+                size='small'
+                min={1}
+                step={1000}
+                value={filterMinPlayCount}
+                onChange={(val) => val && updateSettings({ filterMinPlayCount: val })}
+                disabled={!filterMinPlayCountEnabled}
+              />
+            </div>
+
+            <div className={styles.row} style={{ marginTop: 8 }}>
+              <FlagSettingItem
+                configKey='filterMinDurationEnabled'
+                label='按视频时长过滤'
+                tooltip={<>不显示短视频</>}
+              />
+              <InputNumber
+                style={{ width: 150 }}
+                size='small'
+                min={1}
+                step={10}
+                addonAfter={'单位:秒'}
+                value={filterMinDuration}
+                onChange={(val) => val && updateSettings({ filterMinDuration: val })}
+                disabled={!filterMinDurationEnabled}
+              />
             </div>
           </div>
         </div>
