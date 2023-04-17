@@ -1,4 +1,4 @@
-import { APP_KEY_PREFIX } from '$common'
+import { APP_KEY_PREFIX, APP_NAME } from '$common'
 import { Reason, dislikedIds, showModalDislike, useDislikedReason } from '$components/ModalDislike'
 import { AppRecItem, AppRecItemExtend, PcRecItemExtend } from '$define'
 import { IconPark } from '$icon-park'
@@ -264,7 +264,7 @@ const VideoCardInner = memo(
     } = normalizeCardData(item)
 
     if (!['av', 'bangumi'].includes(goto)) {
-      console.warn('[bilibili-app-recommend]: none (av,bangumi) goto type %s', goto, item)
+      console.warn(`[${APP_NAME}]: none (av,bangumi) goto type %s`, goto, item)
     }
 
     /**
@@ -660,7 +660,7 @@ function usePreviewAnimation({
       if (autoPreviewWhenHover && !idRef.current) {
         DEBUG_ANIMATION &&
           console.log(
-            '[bilibili-app-recommend]: [animation] mouseenter onStartPreviewAnimation id=%s title=%s',
+            `[${APP_NAME}]: [animation] mouseenter onStartPreviewAnimation id=%s title=%s`,
             id,
             title
           )
@@ -719,7 +719,7 @@ function usePreviewAnimation({
 
   const stopAnimation = useMemoizedFn((isClear = false) => {
     if (!isClear && DEBUG_ANIMATION) {
-      console.log('[bilibili-app-recommend]: [animation] stopAnimation: %o', {
+      console.log(`[${APP_NAME}]: [animation] stopAnimation: %o`, {
         autoPreviewWhenHover,
         unmounted: unmounted.current,
         isHovering: isHovering.current,

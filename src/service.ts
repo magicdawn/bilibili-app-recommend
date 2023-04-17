@@ -25,18 +25,18 @@ async function getMinCount(count: number, pageRef: pc.PageRef) {
   return items
 }
 
-export async function getRecommendTimes(times: number, pageRef: pc.PageRef) {
-  let items: (PcRecItemExtend | AppRecItemExtend)[] = settings.usePcDesktopApi
-    ? await pc._getRecommendTimes(times, pageRef)
-    : await app._getRecommendTimes(times)
-  items = filterVideos(items)
-  return items
-}
-
 export async function getRecommendForHome(pageRef: pc.PageRef) {
   return getMinCount(12, pageRef) // 2 row
 }
 
 export async function getRecommendForGrid(pageRef: pc.PageRef) {
   return getMinCount(18, pageRef) // 3 row, 1 screen
+}
+
+export async function getRecommendTimes(times: number, pageRef: pc.PageRef) {
+  let items: (PcRecItemExtend | AppRecItemExtend)[] = settings.usePcDesktopApi
+    ? await pc._getRecommendTimes(times, pageRef)
+    : await app._getRecommendTimes(times)
+  items = filterVideos(items)
+  return items
 }

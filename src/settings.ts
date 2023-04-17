@@ -1,3 +1,4 @@
+import { APP_NAME } from '$common'
 import { pick } from 'lodash'
 import { proxy, subscribe, useSnapshot } from 'valtio'
 
@@ -65,7 +66,7 @@ export const useSettingsSnapshot = function () {
  * storage
  */
 
-const nsp = 'bilibili-app-recommend'
+const nsp = APP_NAME
 const key = `${nsp}.settings`
 
 export function load() {

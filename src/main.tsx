@@ -1,6 +1,7 @@
 // load config first
 import './settings'
 
+import { APP_NAME } from '$common'
 import { AntdApp } from '$components/AntdApp'
 import { tryAction, tryToRemove } from '$utility/dom'
 import sleep from 'delay'
@@ -61,7 +62,7 @@ async function initHomepageSection() {
   }
 
   if (!insert) {
-    console.error('[bilibili-app-recommend]: init fail')
+    console.error(`[${APP_NAME}]: init fail`)
     return
   }
 

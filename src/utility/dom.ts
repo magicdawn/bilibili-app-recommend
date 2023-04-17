@@ -1,3 +1,4 @@
+import { APP_NAME } from '$common'
 import delay from 'delay'
 
 const TIMEOUT = 10 * 1000
@@ -21,7 +22,7 @@ export async function tryAction(
   }
 
   if (!arr.length) {
-    console.log('[bilibili-app-recommend]: tryAction timeout, selector = %s', selector)
+    console.log(`[${APP_NAME}]: tryAction timeout, selector = %s`, selector)
     return
   }
 
