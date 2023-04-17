@@ -1,4 +1,5 @@
-import { dislikedIds, Reason, showModalDislike, useDislikedReason } from '$components/ModalDislike'
+import { APP_KEY_PREFIX } from '$common'
+import { Reason, dislikedIds, showModalDislike, useDislikedReason } from '$components/ModalDislike'
 import { AppRecItem, AppRecItemExtend, PcRecItemExtend } from '$define'
 import { IconPark } from '$icon-park'
 import { settings, useSettingsSnapshot } from '$settings'
@@ -16,27 +17,27 @@ import {
 import cx from 'classnames'
 import dayjs from 'dayjs'
 import {
-  ComponentProps,
   CSSProperties,
-  forwardRef,
-  memo,
+  ComponentProps,
   MouseEvent,
   RefObject,
+  forwardRef,
+  memo,
   useEffect,
   useImperativeHandle,
   useMemo,
   useRef,
   useState,
 } from 'react'
+import { PreviewImage } from './PreviewImage'
 import {
+  VideoData,
   cancelDislike,
   getVideoData,
-  VideoData,
   watchLaterAdd,
   watchLaterDel,
 } from './card.service'
 import styles from './index.module.less'
-import { PreviewImage } from './PreviewImage'
 import { normalizeCardData } from './process/normalize'
 
 const currentYear = dayjs().format('YYYY')
@@ -324,6 +325,9 @@ const VideoCardInner = memo(
 
     useUpdateEffect(() => {
       if (!active) return
+
+      // update global item data for debug
+      unsafeWindow[`${APP_KEY_PREFIX}_activeItem`] = item
 
       // 自动开始预览
       if (settings.autoPreviewWhenKeyboardSelect) {

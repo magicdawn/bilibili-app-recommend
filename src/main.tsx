@@ -40,12 +40,11 @@ async function initHomepage() {
 
 async function initHomepageSection() {
   const timeout = 10 * 1000 // 10s
-  const timeoutTs = Date.now() + timeout
+  const timeoutAt = Date.now() + timeout
 
   let insert: ((reactNode: HTMLElement) => void) | undefined
 
-  /* eslint-disable no-constant-condition */
-  while (true) {
+  while (Date.now() <= timeoutAt) {
     if (document.querySelector('.bili-layout > section.bili-grid')) {
       const previousElement = document.querySelector('.bili-layout > section.bili-grid')
       insert = (reactNode) => previousElement?.insertAdjacentElement('afterend', reactNode)
@@ -58,7 +57,6 @@ async function initHomepageSection() {
       break
     }
 
-    if (Date.now() > timeoutTs) break
     await sleep(200)
   }
 
@@ -81,13 +79,14 @@ async function initHomepageSection() {
 }
 
 async function initHomepagePureRecommend() {
+  // 新版 bili-feed4
   if (getIsInternalTesting()) {
-    // 新版 bili-feed4
     document.querySelector('.bili-feed4 .bili-feed4-layout')?.remove()
     tryToRemove('.bili-feed4 .header-channel')
   } else {
     document.querySelector('.bili-layout')?.remove()
     tryToRemove('.bili-footer') // build 版本, .bili-footer 还不存在, 后来出来的
+    tryToRemove('.palette-button-wrap > .primary-btn:first-child') // 分区按钮
   }
 
   const biliLayout = document.createElement('div')

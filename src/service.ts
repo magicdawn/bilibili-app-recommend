@@ -9,17 +9,17 @@ type RecItem = PcRecItemExtend | AppRecItemExtend
 async function getMinCount(count: number, pageRef: pc.PageRef) {
   let items: RecItem[] = []
 
-  let addMore = async (times?: number) => {
+  let addMore = async (restCount: number) => {
     let cur: RecItem[] = settings.usePcDesktopApi
-      ? await pc._getRecommendTimes(times ?? Math.ceil(count / pc.PAGE_SIZE), pageRef)
-      : await app._getRecommendTimes(times ?? Math.ceil(count / app.PAGE_SIZE))
+      ? await pc._getRecommendTimes(Math.ceil(restCount / pc.PAGE_SIZE), pageRef)
+      : await app._getRecommendTimes(Math.ceil(restCount / app.PAGE_SIZE))
     cur = filterVideos(cur)
     items = items.concat(cur)
   }
 
-  await addMore()
+  await addMore(count)
   while (items.length < count) {
-    await addMore(1)
+    await addMore(count - items.length)
   }
 
   return items
@@ -38,5 +38,5 @@ export async function getRecommendForHome(pageRef: pc.PageRef) {
 }
 
 export async function getRecommendForGrid(pageRef: pc.PageRef) {
-  return getMinCount(24, pageRef) // 4 row, 1 screen
+  return getMinCount(18, pageRef) // 3 row, 1 screen
 }

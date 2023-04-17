@@ -2,6 +2,7 @@
  * 推荐内容, 无限滚动
  */
 
+import { APP_NAME } from '$common'
 import { useModalDislikeVisible } from '$components/ModalDislike'
 import { VideoCard, VideoCardActions } from '$components/VideoCard'
 import { AppRecItemExtend, PcRecItemExtend } from '$define'
@@ -55,6 +56,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
   ({ infiteScrollUseWindow, shortcutEnabled, onScrollToTop, className, scrollerRef }, ref) => {
     const [items, setItems] = useState<(PcRecItemExtend | AppRecItemExtend)[]>([])
     const [loading, setLoading] = useState(false)
+    const [isRefreshing, setIsRefreshing] = useState(false)
 
     const pageRef = useMemo(() => ({ page: 1 }), [])
 
@@ -63,13 +65,21 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
       await onScrollToTop?.()
 
       try {
+        const start = performance.now()
         clearActiveIndex() // before
         setLoading(true)
+        setIsRefreshing(true)
+        setItems([])
         pageRef.page = 1
         setItems(await getRecommendForGrid(pageRef))
         clearActiveIndex() // and after
+        const cost = performance.now() - start
+        if (process.env.NODE_ENV === 'development') {
+          console.log(`[${APP_NAME}]: refresh cost %s ms`, cost.toFixed(0))
+        }
       } finally {
         setLoading(false)
+        setIsRefreshing(false)
       }
     })
     useImperativeHandle(
@@ -162,7 +172,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
           )}
         >
           {/* skeleton loading */}
-          {!items.length &&
+          {isRefreshing &&
             new Array(24).fill(undefined).map((_, index) => {
               return <VideoCard key={index} loading={true} className={cx(cls.card)} />
             })}

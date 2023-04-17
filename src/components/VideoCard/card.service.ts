@@ -1,8 +1,8 @@
-import { request, gmrequest, HOST_APP } from '$request'
+import { AppRecItem, DmJson, PvideoJson } from '$define'
+import { HOST_APP, gmrequest, request } from '$request'
 import { getCsrfToken } from '$utility'
-import LRUCache from 'lru-cache'
-import { DmJson, PvideoJson, AppRecItem } from '$define'
 import { toast } from '$utility/toast'
+import { LRUCache } from 'lru-cache'
 
 // api.bilibili.com/pvideo?aid=${target.dataset.id}&_=${Date.now()
 // 视频预览

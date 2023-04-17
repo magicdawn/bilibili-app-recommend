@@ -26,7 +26,12 @@ export async function getRecommend() {
     params: {
       build: '1',
       mobi_app: 'android',
-      idx: (Date.now() / 1000).toFixed(0) + '0' + (Math.random() * 10).toFixed(0),
+      idx:
+        (Date.now() / 1000).toFixed(0) +
+        '0' +
+        Math.trunc(Math.random() * 1000)
+          .toString()
+          .padStart(3, '0'),
     },
   })
   const json = res.data as AppRecommendJson
