@@ -21,7 +21,7 @@ export const CollapseBtn = forwardRef<CollapseBtnRef, IProps>(function CollapseB
   const btn = (
     <button className={cx('primary-btn', styles.expandBtn)} onClick={buttonsExpandedActions.toggle}>
       <svg className={cx({ [styles.expanded]: buttonsExpanded })}>
-        <use xlinkHref='#widget-arrow'></use>
+        <use href='#widget-arrow'></use>
       </svg>
     </button>
   )

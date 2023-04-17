@@ -98,7 +98,7 @@ export function RecHeader({ onRefresh, refreshHotkeyEnabled }: RecHeaderProps) {
         <div className='left'>
           <a id='影视' className='the-world area-anchor' data-id='25'></a>
           <svg className='icon'>
-            <use xlinkHref='#channel-cinephile'></use>
+            <use href='#channel-cinephile'></use>
           </svg>
           <a className='title' href='#'>
             <span>推荐</span>
@@ -118,7 +118,7 @@ export function RecHeader({ onRefresh, refreshHotkeyEnabled }: RecHeaderProps) {
             <button className='primary-btn see-more' onClick={showModalFeed}>
               <span>查看更多</span>
               <svg>
-                <use xlinkHref='#widget-arrow'></use>
+                <use href='#widget-arrow'></use>
               </svg>
             </button>
           )}
@@ -192,7 +192,7 @@ export const RefreshButton = forwardRef<RefreshButtonActions, RefreshButtonProps
           setDeg(0)
         }}
       >
-        <use xlinkHref='#widget-roll'></use>
+        <use href='#widget-roll'></use>
       </svg>
       <span>换一换</span>
     </button>

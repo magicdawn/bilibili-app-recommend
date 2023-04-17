@@ -58,7 +58,7 @@ export const AppRecIconSvgNames = {
   play: '#widget-video-play-count', // or #widget-play-count
   danmaku: '#widget-video-danmaku',
   like: '#widget-agree',
-  bangumiFollow: '#widget-agree', // TODO: icon for this
+  bangumiFollow: '#widget-followed', // TODO: icon for this
 }
 
 // app icon
@@ -68,6 +68,10 @@ export const AppRecIconMap: Record<number, keyof typeof AppRecIconSvgNames> = {
   3: 'danmaku',
   4: 'bangumiFollow', // 追番
   20: 'like', // 动态点赞
+}
+
+export const AppRecIconScaleMap: Partial<Record<keyof typeof AppRecIconSvgNames, number>> = {
+  bangumiFollow: 1.3,
 }
 
 export type VideoCardProps = {
@@ -427,18 +431,35 @@ const VideoCardInner = memo(
       e.preventDefault()
     })
 
-    const statItem = ({ text, iconSvgName }: { text: string; iconSvgName: string }) => (
-      <span className='bili-video-card__stats--item'>
-        <svg className='bili-video-card__stats--icon'>
-          <use xlinkHref={iconSvgName}></use>
-        </svg>
-        <span className='bili-video-card__stats--text'>{text}</span>
-      </span>
-    )
+    const statItem = ({
+      text,
+      iconSvgName,
+      iconScale,
+    }: {
+      text: string
+      iconSvgName: string
+      iconScale?: number
+    }) => {
+      return (
+        <span className='bili-video-card__stats--item'>
+          <svg
+            className='bili-video-card__stats--icon'
+            style={{ transform: iconScale ? `scale(${iconScale})` : undefined }}
+          >
+            <use href={iconSvgName}></use>
+          </svg>
+          <span className='bili-video-card__stats--text'>{text}</span>
+        </span>
+      )
+    }
 
     const svgIconNameForId = (id: number) => {
       const key = AppRecIconMap[id] || AppRecIconMap[1] // TODO: 不认识的图标使用 play
       return AppRecIconSvgNames[key]
+    }
+    const svgIconScaleForId = (id: number) => {
+      const key = AppRecIconMap[id] || AppRecIconMap[1] // TODO: 不认识的图标使用 play
+      return AppRecIconScaleMap[key]
     }
 
     return (
@@ -491,7 +512,7 @@ const VideoCardInner = memo(
                 onClick={onToggleWatchLater}
               >
                 <svg className='bili-watch-later__icon'>
-                  <use xlinkHref={watchLaterAdded ? '#widget-watch-save' : '#widget-watch-later'} />
+                  <use href={watchLaterAdded ? '#widget-watch-save' : '#widget-watch-later'} />
                 </svg>
                 <span
                   className='bili-watch-later__tip'
@@ -510,7 +531,7 @@ const VideoCardInner = memo(
                   style={{ display: isHovering ? 'flex' : 'none' }}
                 >
                   <svg className={styles.btnDislikeIcon}>
-                    <use xlinkHref='#widget-close'></use>
+                    <use href='#widget-close'></use>
                   </svg>
                   <span
                     className={styles.btnDislikeTip}
@@ -540,6 +561,7 @@ const VideoCardInner = memo(
                       {item.cover_left_text_1 &&
                         statItem({
                           iconSvgName: svgIconNameForId(item.cover_left_icon_1),
+                          iconScale: svgIconScaleForId(item.cover_left_icon_1),
                           text:
                             goto === 'picture'
                               ? item.cover_left_text_1 +
@@ -549,6 +571,7 @@ const VideoCardInner = memo(
                       {item.cover_left_text_2 &&
                         statItem({
                           iconSvgName: svgIconNameForId(item.cover_left_icon_2),
+                          iconScale: svgIconScaleForId(item.cover_left_icon_2),
                           text:
                             goto === 'picture'
                               ? item.cover_left_text_2 +
@@ -596,7 +619,7 @@ const VideoCardInner = memo(
                     <span className={styles.recommendReason}>{rcmd_reason}</span>
                   ) : (
                     <svg className='bili-video-card__info--owner__up'>
-                      <use xlinkHref='#widget-up'></use>
+                      <use href='#widget-up'></use>
                     </svg>
                   )}
 
