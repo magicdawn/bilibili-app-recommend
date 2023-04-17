@@ -1,6 +1,7 @@
 import { filterVideos } from '$components/VideoCard/process/filter'
 import { AppRecItemExtend, PcRecItemExtend } from '$define'
 import { settings } from '$settings'
+import { uniqBy } from 'lodash'
 import * as app from './service-app'
 import * as pc from './service-pc'
 
@@ -15,6 +16,7 @@ async function getMinCount(count: number, pageRef: pc.PageRef) {
       : await app._getRecommendTimes(Math.ceil(restCount / app.PAGE_SIZE))
     cur = filterVideos(cur)
     items = items.concat(cur)
+    items = uniqBy(items, (item) => (item.api === 'pc' ? item.id : item.param))
   }
 
   await addMore(count)
