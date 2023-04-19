@@ -44,7 +44,7 @@
     "rollup-plugin-visualizer": "^5.9.0",
     "ts-node": "10.9.1",
     "tslib": "2.5.0",
-    "turbo": "^1.9.1",
+    "turbo": "^1.9.3",
     "type-fest": "^3.8.0",
     "typescript": "5.0.4",
     "typescript-styled-plugin": "^0.18.2",
