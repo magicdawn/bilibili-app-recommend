@@ -2,8 +2,12 @@ import { AppRecItemExtend, PcRecItemExtend } from '$define'
 import { settings } from '$settings'
 import { normalizeCardData } from './normalize'
 
+export function anyFilterEnabled() {
+  return settings.filterMinDurationEnabled || settings.filterMinPlayCountEnabled
+}
+
 export function filterVideos(items: Array<PcRecItemExtend | AppRecItemExtend>) {
-  if (!(settings.filterMinDurationEnabled || settings.filterMinPlayCountEnabled)) {
+  if (!anyFilterEnabled()) {
     return items
   }
 

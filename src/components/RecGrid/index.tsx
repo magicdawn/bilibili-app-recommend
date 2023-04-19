@@ -8,7 +8,7 @@ import { VideoCard, VideoCardActions } from '$components/VideoCard'
 import { AppRecItemExtend, PcRecItemExtend } from '$define'
 import { cssCls, cx } from '$libs'
 import { HEADER_HEIGHT, getIsInternalTesting } from '$platform'
-import { getRecommendForGrid, getRecommendTimes } from '$service'
+import { getRecommendForGrid, getRecommendTimes, uniqConcat } from '$service'
 import { useSettingsSnapshot } from '$settings'
 import { useMemoizedFn, useMount } from 'ahooks'
 import { RefObject, forwardRef, useImperativeHandle, useMemo, useRef, useState } from 'react'
@@ -94,7 +94,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
 
     const fetchMore = useMemoizedFn(async () => {
       const more = await getRecommendTimes(2, pageRef)
-      setItems((items) => [...items, ...more])
+      setItems((items) => uniqConcat(items, more))
     })
 
     // 窄屏模式
