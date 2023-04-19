@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.10.4 2023-04-20
+
+- feat: RecGrid 去重
+- feat: RecGrid / SectionRecommend 使用倍数优化初始请求, 大基数过滤. (so 不要关闭 parallelRequest)
+
 ## v0.10.3 2023-04-17
 
 - 移除分区按钮
