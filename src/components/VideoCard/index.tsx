@@ -4,7 +4,7 @@ import { AppRecItem, AppRecItemExtend, PcRecItemExtend } from '$define'
 import { IconPark } from '$icon-park'
 import { settings, useSettingsSnapshot } from '$settings'
 import { toast, toastOperationFail, toastRequestFail } from '$utility/toast'
-import { getCountStr, getDurationStr } from '$utility/video'
+import { formatCount, formatDuration } from '$utility/video'
 import {
   useEventListener,
   useGetState,
@@ -30,6 +30,7 @@ import {
   useState,
 } from 'react'
 import { PreviewImage } from './PreviewImage'
+import { AppRecIconSvgNameMap, statItemForId } from './app-rec-icon'
 import {
   VideoData,
   cancelDislike,
@@ -53,26 +54,6 @@ const formatTimeStamp = (unixTs?: number) => {
 }
 
 const toHttps = (url: string) => (url || '').replace(/^http:\/\//, 'https://')
-
-export const AppRecIconSvgNames = {
-  play: '#widget-video-play-count', // or #widget-play-count
-  danmaku: '#widget-video-danmaku',
-  like: '#widget-agree',
-  bangumiFollow: '#widget-followed', // TODO: icon for this
-}
-
-// app icon
-export const AppRecIconMap: Record<number, keyof typeof AppRecIconSvgNames> = {
-  1: 'play',
-  2: 'like', // 没出现过, 猜的
-  3: 'danmaku',
-  4: 'bangumiFollow', // 追番
-  20: 'like', // 动态点赞
-}
-
-export const AppRecIconScaleMap: Partial<Record<keyof typeof AppRecIconSvgNames, number>> = {
-  bangumiFollow: 1.3,
-}
 
 export type VideoCardProps = {
   style?: CSSProperties
@@ -415,10 +396,10 @@ const VideoCardInner = memo(
       ? `/video/av${item.param}`
       : item.uri
 
-    const durationStr = useMemo(() => getDurationStr(duration), [duration])
-    const playStr = useMemo(() => getCountStr(play), [play])
-    const likeStr = useMemo(() => getCountStr(like), [like])
-    const _favoriteStr = useMemo(() => getCountStr(favorite), [favorite])
+    const durationStr = useMemo(() => formatDuration(duration), [duration])
+    const playStr = useMemo(() => formatCount(play), [play])
+    const likeStr = useMemo(() => formatCount(like), [like])
+    const _favoriteStr = useMemo(() => formatCount(favorite), [favorite])
     const favoriteStr = isPc ? likeStr : _favoriteStr
 
     const onContextMenu = useMemoizedFn((e: MouseEvent) => {
@@ -434,32 +415,23 @@ const VideoCardInner = memo(
     const statItem = ({
       text,
       iconSvgName,
-      iconScale,
+      iconSvgScale,
     }: {
       text: string
       iconSvgName: string
-      iconScale?: number
+      iconSvgScale?: number
     }) => {
       return (
         <span className='bili-video-card__stats--item'>
           <svg
             className='bili-video-card__stats--icon'
-            style={{ transform: iconScale ? `scale(${iconScale})` : undefined }}
+            style={{ transform: iconSvgScale ? `scale(${iconSvgScale})` : undefined }}
           >
             <use href={iconSvgName}></use>
           </svg>
           <span className='bili-video-card__stats--text'>{text}</span>
         </span>
       )
-    }
-
-    const svgIconNameForId = (id: number) => {
-      const key = AppRecIconMap[id] || AppRecIconMap[1] // TODO: 不认识的图标使用 play
-      return AppRecIconSvgNames[key]
-    }
-    const svgIconScaleForId = (id: number) => {
-      const key = AppRecIconMap[id] || AppRecIconMap[1] // TODO: 不认识的图标使用 play
-      return AppRecIconScaleMap[key]
     }
 
     return (
@@ -549,19 +521,18 @@ const VideoCardInner = memo(
                   {isPc ? (
                     <>
                       {/* 播放 */}
-                      {statItem({ text: playStr, iconSvgName: AppRecIconSvgNames.play })}
+                      {statItem({ text: playStr, iconSvgName: AppRecIconSvgNameMap.play })}
                       {/* 点赞 */}
                       {statItem({
                         text: goto === 'av' ? likeStr : favoriteStr,
-                        iconSvgName: AppRecIconSvgNames.like,
+                        iconSvgName: AppRecIconSvgNameMap.like,
                       })}
                     </>
                   ) : (
                     <>
                       {item.cover_left_text_1 &&
                         statItem({
-                          iconSvgName: svgIconNameForId(item.cover_left_icon_1),
-                          iconScale: svgIconScaleForId(item.cover_left_icon_1),
+                          ...statItemForId(item.cover_left_icon_1),
                           text:
                             goto === 'picture'
                               ? item.cover_left_text_1 +
@@ -570,8 +541,7 @@ const VideoCardInner = memo(
                         })}
                       {item.cover_left_text_2 &&
                         statItem({
-                          iconSvgName: svgIconNameForId(item.cover_left_icon_2),
-                          iconScale: svgIconScaleForId(item.cover_left_icon_2),
+                          ...statItemForId(item.cover_left_icon_2),
                           text:
                             goto === 'picture'
                               ? item.cover_left_text_2 +

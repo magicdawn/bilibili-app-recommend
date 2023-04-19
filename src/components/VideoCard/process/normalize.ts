@@ -1,6 +1,6 @@
 import { AppRecItemExtend, PcRecItemExtend } from '$define'
-import { getCountFromStr } from '$utility/video'
-import { AppRecIconMap } from '..'
+import { parseCount } from '$utility/video'
+import { AppRecIconField, AppRecIconMap } from '../app-rec-icon'
 
 export function normalizeCardData(item: PcRecItemExtend | AppRecItemExtend) {
   /**
@@ -15,29 +15,24 @@ export function normalizeCardData(item: PcRecItemExtend | AppRecItemExtend) {
   const bvid = isPc ? item.bvid : ''
   const goto = item.goto
 
+  const extractCountFor = (target: AppRecIconField) => {
+    if (isPc) return undefined
+
+    const { cover_left_icon_1, cover_left_text_1, cover_left_icon_2, cover_left_text_2 } = item
+    if (cover_left_icon_1 && AppRecIconMap[cover_left_icon_1] === target) {
+      return parseCount(cover_left_text_1)
+    }
+    if (cover_left_icon_2 && AppRecIconMap[cover_left_icon_2] === target) {
+      return parseCount(cover_left_text_2)
+    }
+  }
+
   // stat
-  const play = isPc
-    ? item.stat.view
-    : (() => {
-        const {
-          cover_left_icon_1,
-          cover_left_text_1,
-          cover_left_1_content_description,
-          cover_left_icon_2,
-          cover_left_text_2,
-          cover_left_2_content_description,
-        } = item
-        if (AppRecIconMap[cover_left_icon_1] === 'play') {
-          return getCountFromStr(cover_left_text_1)
-        }
-        if (AppRecIconMap[cover_left_icon_2] === 'play') {
-          return getCountFromStr(cover_left_text_2)
-        }
-      })()
+  const play = isPc ? item.stat.view : extractCountFor('play')
 
   const like = isPc ? item.stat.like : undefined
   const coin = isPc ? undefined : undefined
-  const danmaku = isPc ? undefined : undefined
+  const danmaku = isPc ? item.stat.danmaku : extractCountFor('danmaku')
 
   // video info
   const title = item.title
