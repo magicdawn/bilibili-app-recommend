@@ -1,9 +1,8 @@
-import { CollapseBtnRef } from '$components/CollapseBtn'
 import { useSettingsSnapshot } from '$settings'
 import { auth, deleteAccessToken } from '$utility/auth'
-import { useMemoizedFn, useRequest } from 'ahooks'
+import { useRequest } from 'ahooks'
 import { Button, Space } from 'antd'
-import { CSSProperties, useRef } from 'react'
+import { CSSProperties } from 'react'
 
 export const accessKeyLinkBtn = (
   <Button
@@ -23,15 +22,6 @@ export function AccessKeyManage({
 }) {
   const { runAsync, loading } = useRequest(auth, { manual: true })
   const { accessKey } = useSettingsSnapshot()
-
-  const collapseBtnRef = useRef<CollapseBtnRef>(null)
-  const onGetAuth = useMemoizedFn(async () => {
-    const accessKey = await runAsync()
-    if (accessKey) {
-      collapseBtnRef.current?.set(false)
-    }
-  })
-
   const onDeleteAccessToken = deleteAccessToken
 
   return (
@@ -39,13 +29,13 @@ export function AccessKeyManage({
       {!accessKey ? (
         <>
           {accessKeyLinkBtn}
-          <Button onClick={onGetAuth} disabled={loading} size='middle'>
+          <Button onClick={runAsync} disabled={loading} size='middle'>
             <span>获取 access_key</span>
           </Button>
         </>
       ) : (
         <>
-          <Button onClick={() => onGetAuth()} disabled={loading}>
+          <Button onClick={runAsync} disabled={loading}>
             <span>重新获取 access_key</span>
           </Button>
           <Button onClick={onDeleteAccessToken}>
