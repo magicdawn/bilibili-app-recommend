@@ -30,11 +30,19 @@
     display: none !important;
   }
 }
-@media (min-width: 1701px) {
+@media (min-width: 1701px) and (max-width: 2199.9px) {
   .video-grid {
     grid-template-columns: repeat(6, 1fr);
   }
   .video-grid.limit-two-lines > *:nth-of-type(1n + 13) {
+    display: none !important;
+  }
+}
+@media (min-width: 2200px) {
+  .video-grid {
+    grid-template-columns: repeat(7, 1fr);
+  }
+  .video-grid.limit-two-lines > *:nth-of-type(1n + 15) {
     display: none !important;
   }
 }

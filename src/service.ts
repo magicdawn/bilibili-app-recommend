@@ -49,11 +49,11 @@ async function getMinCount(count: number, pageRef: pc.PageRef, filterMultiplier)
 }
 
 export async function getRecommendForHome(pageRef: pc.PageRef) {
-  return getMinCount(12, pageRef, 2) // 2 row
+  return getMinCount(14, pageRef, 2) // 7 * 2-row
 }
 
 export async function getRecommendForGrid(pageRef: pc.PageRef) {
-  return getMinCount(18, pageRef, 5) // 3 row, 1 screen
+  return getMinCount(21, pageRef, 5) // 7 * 3-row, 1 screen
 }
 
 export async function getRecommendTimes(times: number, pageRef: pc.PageRef) {
