@@ -1,4 +1,5 @@
 import { APP_NAME } from '$common'
+import { getColumnCount } from '$components/RecGrid/useShortcut'
 import { anyFilterEnabled, filterVideos } from '$components/VideoCard/process/filter'
 import { AppRecItemExtend, PcRecItemExtend } from '$define'
 import { settings } from '$settings'
@@ -24,16 +25,27 @@ async function getMinCount(count: number, pageRef: pc.PageRef, filterMultiplier)
   let items: RecItem[] = []
 
   let addMore = async (restCount: number) => {
-    if (process.env.NODE_ENV === 'development') {
-      console.log(`[${APP_NAME}] [getMinCount]: addMore(restCount = %s)`, restCount)
-    }
+    const pagesize = settings.usePcDesktopApi ? pc.PAGE_SIZE : app.PAGE_SIZE
 
     const multipler = anyFilterEnabled()
       ? filterMultiplier // 过滤, 需要大基数
       : 1.2 // 可能有重复, so not 1.0
+
+    const times = Math.ceil((restCount * multipler) / pagesize)
+
+    if (process.env.NODE_ENV === 'development') {
+      console.log(
+        `[${APP_NAME}] [getMinCount]: addMore(restCount = %s) multipler=%s pagesize=%s times=%s`,
+        restCount,
+        filterMultiplier,
+        pagesize,
+        times
+      )
+    }
+
     let cur: RecItem[] = settings.usePcDesktopApi
-      ? await pc._getRecommendTimes(Math.ceil((restCount / pc.PAGE_SIZE) * multipler), pageRef)
-      : await app._getRecommendTimes(Math.ceil((restCount / app.PAGE_SIZE) * multipler))
+      ? await pc._getRecommendTimes(times, pageRef)
+      : await app._getRecommendTimes(times)
 
     cur = filterVideos(cur)
     items = items.concat(cur)
@@ -49,11 +61,11 @@ async function getMinCount(count: number, pageRef: pc.PageRef, filterMultiplier)
 }
 
 export async function getRecommendForHome(pageRef: pc.PageRef) {
-  return getMinCount(14, pageRef, 2) // 7 * 2-row
+  return getMinCount(getColumnCount() * 2, pageRef, 3) // 7 * 2-row
 }
 
 export async function getRecommendForGrid(pageRef: pc.PageRef) {
-  return getMinCount(21, pageRef, 5) // 7 * 3-row, 1 screen
+  return getMinCount(getColumnCount() * 3, pageRef, 5) // 7 * 3-row, 1 screen
 }
 
 export async function getRecommendTimes(times: number, pageRef: pc.PageRef) {

@@ -3,6 +3,7 @@ import { settings } from '$settings'
 import { isCurrentTyping } from '$utility/dom'
 import { useKeyPress, useMemoizedFn } from 'ahooks'
 import { RefObject, useState } from 'react'
+import { videoGrid } from '../video-grid.module.less'
 import { cls } from './index'
 
 interface IOptions {
@@ -95,12 +96,13 @@ export function useShortcut({
   useKeyPress('rightarrow', addActiveIndex(1), { exactMatch: true })
   // by row
   // 在 render 时调用 getColCount 会出现 useNarrowMode:false, UI 还没更新, 返回还是两列的情况
+  const _getColCount = () => getColumnCount(containerRef.current)
   useKeyPress(
     'uparrow',
-    addActiveIndex(() => -getColCount()),
+    addActiveIndex(() => -_getColCount()),
     { exactMatch: true }
   )
-  useKeyPress('downarrow', addActiveIndex(getColCount), { exactMatch: true })
+  useKeyPress('downarrow', addActiveIndex(_getColCount), { exactMatch: true })
 
   // actions
   const clearActiveIndex = () => {
@@ -196,26 +198,27 @@ export function useShortcut({
     videoLink?.click()
   }
 
-  function getColCount() {
-    if (settings.useNarrowMode) return 2
-
-    let count = countCache.get(window.innerWidth)
-    if (count) {
-      return count
-    }
-
-    const container = containerRef.current
-    if (!container) return 0
-    const style = window.getComputedStyle(container)
-    if (style.display !== 'grid') return 0
-    count = style.gridTemplateColumns.split(' ').length
-
-    countCache.set(window.innerWidth, count)
-    return count
-  }
-
   return { activeIndex, clearActiveIndex }
 }
 
 // use window.innerHeight as cache key
 const countCache = new Map<number, number>()
+
+export function getColumnCount(container?: HTMLElement | null) {
+  if (settings.useNarrowMode) return 2
+
+  let count = countCache.get(window.innerWidth)
+  if (count) {
+    return count
+  }
+
+  container ||= document.querySelector<HTMLElement>(`.${videoGrid}`)
+  if (!container) return 0
+
+  const style = window.getComputedStyle(container)
+  if (style.display !== 'grid') return 0
+  count = style.gridTemplateColumns.split(' ').length
+
+  countCache.set(window.innerWidth, count)
+  return count
+}
