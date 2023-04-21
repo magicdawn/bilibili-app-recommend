@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.10.5 2023-04-21
+
+- ceab046 chore: use getColumnCount
+- a522d74 feat: update grid css when width >= 2200px
+- 5884d45 chore: clean up
+
 ## v0.10.4 2023-04-20
 
 - feat: RecGrid 去重
