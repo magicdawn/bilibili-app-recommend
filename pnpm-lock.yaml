@@ -93,6 +93,9 @@ devDependencies:
   '@types/react-dom':
     specifier: 18.0.11
     version: 18.0.11
+  '@types/react-infinite-scroller':
+    specifier: ^1.2.3
+    version: 1.2.3
   '@typescript-eslint/eslint-plugin':
     specifier: ^5.58.0
     version: 5.58.0(@typescript-eslint/parser@5.58.0)(eslint@8.38.0)(typescript@5.0.4)
@@ -1188,6 +1191,12 @@ packages:
 
   /@types/react-dom@18.0.11:
     resolution: {integrity: sha512-O38bPbI2CWtgw/OoQoY+BRelw7uysmXbWvw3nLWO21H1HSh+GOlqPuXshJfjmpNlKiiSDG9cc1JZAaMmVdcTlw==}
+    dependencies:
+      '@types/react': 18.0.35
+    dev: true
+
+  /@types/react-infinite-scroller@1.2.3:
+    resolution: {integrity: sha512-l60JckVoO+dxmKW2eEG7jbliEpITsTJvRPTe97GazjF5+ylagAuyYdXl8YY9DQsTP9QjhqGKZROknzgscGJy0A==}
     dependencies:
       '@types/react': 18.0.35
     dev: true
