@@ -6,23 +6,24 @@ const DELAY_INTERVAL = 200
 
 export async function tryAction(
   selector: string,
-  action: (el: HTMLElement) => void | Promise<void>
+  action: (el: HTMLElement) => void | Promise<void>,
+  selectorPredicate: (el: HTMLElement) => boolean = () => true
 ) {
   let arr: HTMLElement[] = []
   const query = () => {
-    arr = Array.from(document.querySelectorAll<HTMLElement>(selector))
+    arr = Array.from(document.querySelectorAll<HTMLElement>(selector)).filter(selectorPredicate)
   }
   query()
 
   const start = performance.now()
-  let elapsed = 0
-  while (!arr.length && (elapsed = performance.now() - start) < TIMEOUT) {
+  const timeoutAt = start + TIMEOUT
+  while (!arr.length && performance.now() < timeoutAt) {
     await delay(DELAY_INTERVAL)
     query()
   }
 
   if (!arr.length) {
-    console.log(`[${APP_NAME}]: tryAction timeout, selector = %s`, selector)
+    console.warn(`[${APP_NAME}]: tryAction timeout, selector = %s`, selector)
     return
   }
 
@@ -35,8 +36,8 @@ export async function tryAction(
  * 尝试移除元素
  */
 
-export function tryToRemove(selector: string) {
-  return tryAction(selector, (el) => el.remove())
+export function tryToRemove(selector: string, selectorPredicate?: (el: HTMLElement) => boolean) {
+  return tryAction(selector, (el) => el.remove(), selectorPredicate)
 }
 
 /**
