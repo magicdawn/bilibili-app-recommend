@@ -2,7 +2,7 @@
  * 推荐内容, 无限滚动
  */
 
-import { APP_NAME } from '$common'
+import { APP_NAME, baseDebug } from '$common'
 import { useModalDislikeVisible } from '$components/ModalDislike'
 import { VideoCard, VideoCardActions } from '$components/VideoCard'
 import { AppRecItemExtend, PcRecItemExtend } from '$define'
@@ -14,7 +14,9 @@ import { useMemoizedFn, useMount } from 'ahooks'
 import { RefObject, forwardRef, useImperativeHandle, useMemo, useRef, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroller'
 import { internalTesting, narrowMode, videoGrid } from '../video-grid.module.less'
-import { useShortcut } from './useShortcut'
+import { getColumnCount, useShortcut } from './useShortcut'
+
+const debug = baseDebug.extend('components:RecGrid')
 
 export const cls = {
   loader: cssCls`
@@ -55,19 +57,19 @@ export type RecGridProps = {
 export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
   ({ infiteScrollUseWindow, shortcutEnabled, onScrollToTop, className, scrollerRef }, ref) => {
     const [items, setItems] = useState<(PcRecItemExtend | AppRecItemExtend)[]>([])
-    const [loading, setLoading] = useState(false)
     const [isRefreshing, setIsRefreshing] = useState(false)
 
     const pageRef = useMemo(() => ({ page: 1 }), [])
 
     const refresh = useMemoizedFn(async () => {
+      debug('call refresh()')
+
       // scroll to top
       await onScrollToTop?.()
 
       try {
         const start = performance.now()
         clearActiveIndex() // before
-        setLoading(true)
         setIsRefreshing(true)
         setItems([])
         pageRef.page = 1
@@ -78,23 +80,27 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
           console.log(`[${APP_NAME}]: refresh cost %s ms`, cost.toFixed(0))
         }
       } finally {
-        setLoading(false)
         setIsRefreshing(false)
       }
     })
-    useImperativeHandle(
-      ref,
-      () => ({
-        refresh,
-      }),
-      []
-    )
 
+    useImperativeHandle(ref, () => ({ refresh }), [])
     useMount(refresh)
 
     const fetchMore = useMemoizedFn(async () => {
-      const more = await getRecommendTimes(2, pageRef)
-      setItems((items) => uniqConcat(items, more))
+      debug('call fetchMore: current page = %s', pageRef.page)
+
+      const col = getColumnCount()
+      const leastCount = Math.ceil(items.length / col) * col + 1 // 至少换行, 不换行 infinite-scroll 有问题
+
+      let newItems = items
+      while (newItems.length < leastCount) {
+        const more = await getRecommendTimes(2, pageRef)
+        newItems = uniqConcat(newItems, more)
+      }
+
+      debug('fetchMore: len %s -> %s', items.length, newItems.length)
+      setItems(newItems)
     })
 
     // 窄屏模式
@@ -150,13 +156,14 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
     return (
       <InfiniteScroll
         pageStart={0}
+        hasMore={!isRefreshing}
         loadMore={fetchMore}
-        hasMore={true}
+        initialLoad={false}
         useWindow={infiteScrollUseWindow}
         threshold={window.innerHeight} // 一屏
         style={{ minHeight: '100%' }}
         loader={
-          <div className={cls.loader} key={0}>
+          <div className={cls.loader} key={-1}>
             加载中...
           </div>
         }
@@ -171,25 +178,24 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
             className
           )}
         >
-          {/* skeleton loading */}
-          {isRefreshing &&
-            new Array(24).fill(undefined).map((_, index) => {
-              return <VideoCard key={index} loading={true} className={cx(cls.card)} />
-            })}
-
-          {items.map((item, index) => {
-            const active = index === activeIndex
-            return (
-              <VideoCard
-                ref={(val) => (videoCardRefs[index] = val)}
-                key={item.uniqId}
-                className={cx(cls.card, { [cls.cardActive]: active })}
-                loading={loading}
-                item={item}
-                active={active}
-              />
-            )
-          })}
+          {isRefreshing
+            ? //skeleton loading
+              new Array(24).fill(undefined).map((_, index) => {
+                return <VideoCard key={index} loading={true} className={cx(cls.card)} />
+              })
+            : // items
+              items.map((item, index) => {
+                const active = index === activeIndex
+                return (
+                  <VideoCard
+                    ref={(val) => (videoCardRefs[index] = val)}
+                    key={item.uniqId}
+                    className={cx(cls.card, { [cls.cardActive]: active })}
+                    item={item}
+                    active={active}
+                  />
+                )
+              })}
         </div>
       </InfiniteScroll>
     )

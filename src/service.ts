@@ -1,4 +1,4 @@
-import { APP_NAME } from '$common'
+import { baseDebug } from '$common'
 import { getColumnCount } from '$components/RecGrid/useShortcut'
 import { anyFilterEnabled, filterVideos } from '$components/VideoCard/process/filter'
 import { AppRecItemExtend, PcRecItemExtend } from '$define'
@@ -7,8 +7,9 @@ import { uniqBy } from 'lodash'
 import * as app from './service-app'
 import * as pc from './service-pc'
 
-export type RecItem = PcRecItemExtend | AppRecItemExtend
+const debug = baseDebug.extend('service')
 
+export type RecItem = PcRecItemExtend | AppRecItemExtend
 export const recItemUniqer = (item: RecItem) => (item.api === 'pc' ? item.id : item.param)
 
 export function uniqConcat(existing: RecItem[], newItems: RecItem[]) {
@@ -21,7 +22,7 @@ export function uniqConcat(existing: RecItem[], newItems: RecItem[]) {
   )
 }
 
-async function getMinCount(count: number, pageRef: pc.PageRef, filterMultiplier) {
+export async function getMinCount(count: number, pageRef: pc.PageRef, filterMultiplier = 5) {
   let items: RecItem[] = []
 
   let addMore = async (restCount: number) => {
@@ -34,8 +35,8 @@ async function getMinCount(count: number, pageRef: pc.PageRef, filterMultiplier)
     const times = Math.ceil((restCount * multipler) / pagesize)
 
     if (process.env.NODE_ENV === 'development') {
-      console.log(
-        `[${APP_NAME}] [getMinCount]: addMore(restCount = %s) multipler=%s pagesize=%s times=%s`,
+      debug(
+        'getMinCount: addMore(restCount = %s) multipler=%s pagesize=%s times=%s',
         restCount,
         filterMultiplier,
         pagesize,
