@@ -96,7 +96,7 @@ export interface Style {
 export enum CardGoto {
   AV = 'av',
   Bangumi = 'bangumi',
-  Picture = 'picture',
+  Picture = 'picture', // 动态
 }
 
 export enum CardType {

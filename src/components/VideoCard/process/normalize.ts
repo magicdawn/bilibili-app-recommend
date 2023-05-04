@@ -47,11 +47,13 @@ export function normalizeCardData(item: PcRecItemExtend | AppRecItemExtend) {
 
   // bangumi
   const favorite = isPc ? undefined : undefined
-  const bangumiBadge = isPc ? undefined : item.badge
-  const bangumiDesc = isPc ? undefined : item.desc_button?.text || ''
+  const appBadge = isPc ? undefined : item.badge
+  const appBadgeDesc = isPc ? undefined : item.desc_button?.text || item.desc || ''
+  const appBadgeStyleConfig = isPc ? undefined : item.badge_style
 
   // 推荐理由
-  const rcmd_reason = isPc ? item.rcmd_reason?.content : item.rcmd_reason
+  const recommendReason = isPc ? item.rcmd_reason?.content : item.rcmd_reason
+  const recommendReasonStyleConfig = isPc ? undefined : item.rcmd_reason_style
 
   return {
     isPc,
@@ -76,9 +78,11 @@ export function normalizeCardData(item: PcRecItemExtend | AppRecItemExtend) {
     mid,
 
     favorite,
-    bangumiBadge,
-    bangumiDesc,
+    recommendReason,
+    recommendReasonStyleConfig,
 
-    rcmd_reason,
+    appBadge,
+    appBadgeDesc,
+    appBadgeStyleConfig,
   }
 }

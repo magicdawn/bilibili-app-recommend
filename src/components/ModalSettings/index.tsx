@@ -11,6 +11,7 @@ import {
   updateSettings,
   useSettingsSnapshot,
 } from '$settings'
+import { isCurrentTyping } from '$utility/dom'
 import { toast } from '$utility/toast'
 import { useKeyPress } from 'ahooks'
 import { Button, InputNumber, Radio, Slider, Space, Tag } from 'antd'
@@ -33,7 +34,9 @@ function onResetSettings() {
 function useHotkeyForConfig(hotkey: string | string[], configKey: BooleanConfigKey, label: string) {
   return useKeyPress(
     hotkey,
-    () => {
+    (e) => {
+      if (isCurrentTyping()) return
+
       settings[configKey] = !settings[configKey]
       const isCancel = !settings[configKey]
       toast(`已${isCancel ? '禁用' : '启用'}「${label}」`)

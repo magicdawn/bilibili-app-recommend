@@ -241,15 +241,20 @@ const VideoCardInner = memo(
       face,
       mid,
 
+      recommendReason,
+      recommendReasonStyleConfig,
+
       favorite,
-      bangumiBadge,
-      bangumiDesc,
+      appBadge,
+      appBadgeDesc,
+      appBadgeStyleConfig,
+    } = useMemo(() => normalizeCardData(item), [item])
 
-      rcmd_reason,
-    } = normalizeCardData(item)
-
-    if (!['av', 'bangumi'].includes(goto)) {
-      console.warn(`[${APP_NAME}]: none (av,bangumi) goto type %s`, goto, item)
+    const isNormalVideo = item.goto === 'av'
+    const isBangumi = item.goto === 'bangumi'
+    const isPicture = item.goto === 'picture'
+    if (!['av', 'bangumi', 'picture'].includes(goto)) {
+      console.warn(`[${APP_NAME}]: none (av,bangumi,picture) goto type %s`, goto, item)
     }
 
     /**
@@ -385,16 +390,43 @@ const VideoCardInner = memo(
       showModalDislike(item)
     })
 
-    const isBangumi = item.goto === 'bangumi'
-    const isNormalVideo = item.goto === 'av'
+    const href = useMemo(() => {
+      return isPc
+        ? isNormalVideo && bvid
+          ? `/video/${bvid}`
+          : item.uri
+        : (() => {
+            // valid uri
+            if (item.uri.startsWith('http://') || item.uri.startsWith('https://')) {
+              return item.uri
+            }
 
-    const href = isPc
-      ? isNormalVideo && bvid
-        ? `/video/${bvid}`
-        : item.uri
-      : isNormalVideo
-      ? `/video/av${item.param}`
-      : item.uri
+            // more see https://github.com/magicdawn/bilibili-app-recommend/issues/23#issuecomment-1533079590
+
+            if (isNormalVideo) {
+              return `/video/av${item.param}`
+            }
+
+            if (isBangumi) {
+              console.warn(
+                `[${APP_NAME}]: bangumi uri should not starts with 'bilibili://': %s`,
+                item.uri
+              )
+              return item.uri
+            }
+
+            // goto = picture, 可能是专栏 or 动态
+            // 动态的 url 是 https://t.bilibili.com, 使用 uri
+            // 专栏的 url 是 bilibili://article/<id>
+            if (isPicture) {
+              const id = /^bilibili:\/\/article\/(\d+)$/.exec(item.uri)?.[1]
+              if (id) return `/read/cv${id}`
+              return item.uri
+            }
+
+            return item.uri
+          })()
+    }, [item])
 
     const durationStr = useMemo(() => formatDuration(duration), [duration])
     const playStr = useMemo(() => formatCount(play), [play])
@@ -576,7 +608,7 @@ const VideoCardInner = memo(
               </h3>
             </a>
             <p className='bili-video-card__info--bottom'>
-              {isNormalVideo && (
+              {isNormalVideo ? (
                 <a
                   className='bili-video-card__info--owner'
                   href={`//space.bilibili.com/${mid}`}
@@ -585,8 +617,8 @@ const VideoCardInner = memo(
                   data-idx='content'
                   data-ext='click'
                 >
-                  {rcmd_reason ? (
-                    <span className={styles.recommendReason}>{rcmd_reason}</span>
+                  {recommendReason ? (
+                    <span className={styles.recommendReason}>{recommendReason}</span>
                   ) : (
                     <svg className='bili-video-card__info--owner__up'>
                       <use href='#widget-up'></use>
@@ -598,14 +630,12 @@ const VideoCardInner = memo(
                     <span className='bili-video-card__info--date'>· {pubdateDisplay}</span>
                   )}
                 </a>
-              )}
-
-              {isBangumi && (
+              ) : appBadge || appBadgeDesc ? (
                 <a className='bili-video-card__info--owner' href={href} target='_blank'>
-                  <span className={styles.badge}>{bangumiBadge || ''}</span>
-                  <span className={styles.bangumiDesc}>{bangumiDesc || ''}</span>
+                  <span className={styles.badge}>{appBadge || ''}</span>
+                  <span className={styles.bangumiDesc}>{appBadgeDesc || ''}</span>
                 </a>
-              )}
+              ) : null}
             </p>
           </div>
         </div>
