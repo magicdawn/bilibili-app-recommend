@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.10.6 2023-05-04
+
+- fix 非普通视频 badge
+
 ## v0.10.5 2023-04-21
 
 - ceab046 chore: use getColumnCount

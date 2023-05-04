@@ -92,7 +92,7 @@ async function initHomepagePureRecommend() {
   } else {
     document.querySelector('.bili-layout')?.remove()
     tryToRemove('.bili-footer') // build 版本, .bili-footer 还不存在, 后来出来的
-    tryToRemove('.palette-button-wrap > .primary-btn', (el) => el.innerText.includes('分区')) // 分区按钮
+    tryToRemove('.palette-button-wrap > .primary-btn', (el) => el.innerText.includes('分区'), 2000) // 分区按钮o
   }
 
   const biliLayout = document.createElement('div')

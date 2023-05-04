@@ -36,7 +36,12 @@ export async function tryAction(
  * 尝试移除元素
  */
 
-export function tryToRemove(selector: string, selectorPredicate?: (el: HTMLElement) => boolean) {
+export async function tryToRemove(
+  selector: string,
+  selectorPredicate?: (el: HTMLElement) => boolean,
+  delayMs?: number
+) {
+  if (typeof delayMs === 'number') await delay(delayMs)
   return tryAction(selector, (el) => el.remove(), selectorPredicate)
 }
 
