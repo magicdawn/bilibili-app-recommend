@@ -92,7 +92,18 @@ async function initHomepagePureRecommend() {
   } else {
     document.querySelector('.bili-layout')?.remove()
     tryToRemove('.bili-footer') // build 版本, .bili-footer 还不存在, 后来出来的
-    tryToRemove('.palette-button-wrap > .primary-btn', (el) => el.innerText.includes('分区'), 2000) // 分区按钮o
+
+    // rm 分区按钮, 显示其他按钮
+    tryToRemove(
+      '.palette-button-wrap > .primary-btn',
+      (el) => el.innerText.includes('分区'),
+      2000
+    ).then(() => {
+      document.querySelectorAll('.palette-button-wrap .primary-btn').forEach((el) => {
+        el.classList.remove('hidden')
+        if (el.classList.contains('top-btn')) el.classList.remove('top-btn')
+      })
+    })
   }
 
   const biliLayout = document.createElement('div')
