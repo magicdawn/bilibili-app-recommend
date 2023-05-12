@@ -3,6 +3,7 @@
   "pipeline": {
     "build:vite": {
       "dependsOn": ["build:less"],
+      "inputs": ["src/**/*.{ts,tsx}", "tsconfig.json", "vite.config.ts", "package.json"],
       "outputs": ["dist/**"]
     },
     "build:type-check": {
