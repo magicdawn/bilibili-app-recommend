@@ -1,4 +1,4 @@
-import { AccessKeyManage, accessKeyLinkBtn } from '$components/AccessKeyManage'
+import { AccessKeyManage } from '$components/AccessKeyManage'
 import { AntdTooltip } from '$components/AntdApp'
 import { BaseModal, BaseModalClass, ModalClose } from '$components/BaseModal'
 import { FlagSettingItem } from '$components/piece'
@@ -262,13 +262,21 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
           <div className={cx(styles.settingsGroupContent)}>
             <div className={styles.row}>
               <Space size='small'>
+                <Button href='https://github.com/magicdawn/bilibili-app-recommend' target='_blank'>
+                  GitHub 主页
+                </Button>
+                <Button
+                  href='https://greasyfork.org/zh-CN/scripts/443530-bilibili-app-recommend'
+                  target='_blank'
+                >
+                  greasyfork 主页
+                </Button>
                 <Button
                   href='https://github.com/magicdawn/bilibili-app-recommend#%E5%BF%AB%E6%8D%B7%E9%94%AE%E8%AF%B4%E6%98%8E'
                   target='_blank'
                 >
                   查看可用的快捷键
                 </Button>
-                {accessKeyLinkBtn}
               </Space>
             </div>
           </div>

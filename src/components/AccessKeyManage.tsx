@@ -4,7 +4,7 @@ import { useRequest } from 'ahooks'
 import { Button, Space } from 'antd'
 import { CSSProperties } from 'react'
 
-export const accessKeyLinkBtn = (
+const btnAccessKeyHelpLink = (
   <Button
     target='_blank'
     href='https://github.com/indefined/UserScripts/tree/master/bilibiliHome#%E6%8E%88%E6%9D%83%E8%AF%B4%E6%98%8E'
@@ -28,10 +28,10 @@ export function AccessKeyManage({
     <Space size='small' style={style} className={className}>
       {!accessKey ? (
         <>
-          {accessKeyLinkBtn}
           <Button onClick={runAsync} disabled={loading} size='middle'>
             <span>获取 access_key</span>
           </Button>
+          {btnAccessKeyHelpLink}
         </>
       ) : (
         <>
@@ -41,6 +41,7 @@ export function AccessKeyManage({
           <Button onClick={onDeleteAccessToken}>
             <span>删除 access_key</span>
           </Button>
+          {btnAccessKeyHelpLink}
         </>
       )}
     </Space>
