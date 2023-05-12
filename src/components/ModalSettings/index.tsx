@@ -269,7 +269,7 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                   href='https://greasyfork.org/zh-CN/scripts/443530-bilibili-app-recommend'
                   target='_blank'
                 >
-                  greasyfork 主页
+                  GreasyFork 主页
                 </Button>
                 <Button
                   href='https://github.com/magicdawn/bilibili-app-recommend#%E5%BF%AB%E6%8D%B7%E9%94%AE%E8%AF%B4%E6%98%8E'
