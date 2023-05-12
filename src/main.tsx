@@ -26,7 +26,7 @@ void (function main() {
     return window.top?.postMessage(location.href, 'https://www.bilibili.com')
   }
 
-  if (location.pathname === '/') {
+  if (location.pathname === '/' || location.pathname === '/index.html') {
     return initHomepage()
   }
 })()

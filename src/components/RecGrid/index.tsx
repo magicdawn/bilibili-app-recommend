@@ -10,7 +10,7 @@ import { cssCls, cx } from '$libs'
 import { HEADER_HEIGHT, getIsInternalTesting } from '$platform'
 import { getRecommendForGrid, getRecommendTimes, uniqConcat } from '$service'
 import { useSettingsSnapshot } from '$settings'
-import { useGetState, useMemoizedFn, useMount, useUpdateEffect } from 'ahooks'
+import { useGetState, useMemoizedFn, useMount } from 'ahooks'
 import { RefObject, forwardRef, useImperativeHandle, useMemo, useRef, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroller'
 import { internalTesting, narrowMode, videoGrid } from '../video-grid.module.less'
@@ -56,63 +56,94 @@ export type RecGridProps = {
 
 export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
   ({ infiteScrollUseWindow, shortcutEnabled, onScrollToTop, className, scrollerRef }, ref) => {
-    const [items, setItems, getItems] = useGetState<(PcRecItemExtend | AppRecItemExtend)[]>([])
-    const [isRefreshing, setIsRefreshing] = useState(false)
+    const pageRef = useRef({ page: 1 })
 
-    const pageRef = useMemo(() => ({ page: 1 }), [])
-
-    // 已加载完成的 load call count
+    // 已加载完成的 load call count, 类似 page
     const [loadCompleteCount, setLoadCompleteCount, getLoadCompleteCount] = useGetState(0)
 
+    const [items, setItems, getItems] = useGetState<(PcRecItemExtend | AppRecItemExtend)[]>([])
+    const [isRefreshing, setIsRefreshing] = useState(false)
+    const [refreshedAt, setRefreshedAt, getRefreshedAt] = useGetState<number>(() => Date.now())
+
     const refresh = useMemoizedFn(async () => {
+      const start = performance.now()
       debug('call refresh()')
 
       // scroll to top
       await onScrollToTop?.()
 
+      setIsRefreshing(true)
+      setRefreshedAt(Date.now())
+      clearActiveIndex() // before
+      setItems([])
+      pageRef.current.page = 1
+
       try {
-        const start = performance.now()
-        clearActiveIndex() // before
-        setIsRefreshing(true)
-        setItems([])
-        pageRef.page = 1
-        setItems(await getRecommendForGrid(pageRef))
-        setLoadCompleteCount(1)
-        clearActiveIndex() // and after
-        const cost = performance.now() - start
-        debug('refresh cost %s ms', cost.toFixed(0))
-      } finally {
+        setItems(await getRecommendForGrid(pageRef.current))
+      } catch (e) {
         setIsRefreshing(false)
+        throw e
       }
+
+      setLoadCompleteCount(1)
+      clearActiveIndex() // and after
+      setIsRefreshing(false)
+
+      const cost = performance.now() - start
+      debug('refresh cost %s ms', cost.toFixed(0))
+
+      // check need loadMore
+      triggerScroll()
     })
-    useImperativeHandle(ref, () => ({ refresh }), [])
+
     useMount(refresh)
+    useImperativeHandle(ref, () => ({ refresh }), [])
 
     const requesting = useRef(false)
 
     const fetchMore = useMemoizedFn(async () => {
+      if (isRefreshing) return
       if (requesting.current) return
       requesting.current = true
 
-      let newItems = [...items]
+      const refreshAtWhenStart = getRefreshedAt()
+
+      let newItems = items
       try {
         // fetchMore 至少 load 一项, 需要触发 InfiniteScroll.componentDidUpdate
         while (!(newItems.length > items.length)) {
-          const more = await getRecommendTimes(2, pageRef)
+          const more = await getRecommendTimes(2, pageRef.current)
           newItems = uniqConcat(newItems, more)
         }
-
-        debug(
-          'fetchMore: seq(%s) len %s -> %s',
-          getLoadCompleteCount() + 1,
-          items.length,
-          newItems.length
-        )
-        setItems(newItems)
-        setLoadCompleteCount((c) => c + 1)
-      } finally {
+      } catch (e) {
         requesting.current = false
+        throw e
       }
+
+      // loadMore 发出请求了, 但稍候刷新了, setItems 时可能
+      //  - 在刷新
+      //  - 刷新结束了
+      if (refreshAtWhenStart !== getRefreshedAt()) {
+        debug(
+          'fetchMore: skip update for mismatch refreshedAt, %s != %s',
+          refreshAtWhenStart,
+          getRefreshedAt()
+        )
+        requesting.current = false
+        return
+      }
+
+      debug(
+        'fetchMore: seq(%s) len %s -> %s',
+        getLoadCompleteCount() + 1,
+        items.length,
+        newItems.length
+      )
+
+      setItems(newItems)
+      setLoadCompleteCount((c) => c + 1)
+      triggerScroll() // check
+      requesting.current = false
     })
 
     //
@@ -124,12 +155,12 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
     // 问题在于, loadMore 结束后还需要再 loadMore, 这时需要手动 scroll 一下
     // 这里模拟一下 scroll event
     //
-    useUpdateEffect(() => {
+    const triggerScroll = useMemoizedFn(() => {
       setTimeout(() => {
         const scroller = infiteScrollUseWindow ? window : scrollerRef?.current
         scroller?.dispatchEvent(new CustomEvent('scroll'))
-      }, 10)
-    }, [loadCompleteCount])
+      })
+    })
 
     // 窄屏模式
     const { useNarrowMode } = useSettingsSnapshot()
