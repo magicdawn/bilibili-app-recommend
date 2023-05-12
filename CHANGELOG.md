@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.10.8 2023-05-12
+
+- revert to v0.10.6. untaged.
+
 ## v0.10.7 2023-05-12
 
 - af7e677 settings: add more to help section
