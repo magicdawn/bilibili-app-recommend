@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.10.7 2023-05-12
+
+- af7e677 settings: add more to help section
+- e36b3ed feat: RecGrid loadMore 优化, 至少换行 -> 加载完 trigger scroll check
+
 ## v0.10.6 2023-05-04
 
 - fix: 非普通视频 badge
