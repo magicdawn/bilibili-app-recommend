@@ -2,7 +2,7 @@
  * 推荐内容, 无限滚动
  */
 
-import { APP_NAME, baseDebug } from '$common'
+import { baseDebug } from '$common'
 import { useModalDislikeVisible } from '$components/ModalDislike'
 import { VideoCard, VideoCardActions } from '$components/VideoCard'
 import { AppRecItemExtend, PcRecItemExtend } from '$define'
@@ -10,11 +10,11 @@ import { cssCls, cx } from '$libs'
 import { HEADER_HEIGHT, getIsInternalTesting } from '$platform'
 import { getRecommendForGrid, getRecommendTimes, uniqConcat } from '$service'
 import { useSettingsSnapshot } from '$settings'
-import { useMemoizedFn, useMount } from 'ahooks'
+import { useGetState, useMemoizedFn, useMount, useUpdateEffect } from 'ahooks'
 import { RefObject, forwardRef, useImperativeHandle, useMemo, useRef, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroller'
 import { internalTesting, narrowMode, videoGrid } from '../video-grid.module.less'
-import { getColumnCount, useShortcut } from './useShortcut'
+import { useShortcut } from './useShortcut'
 
 const debug = baseDebug.extend('components:RecGrid')
 
@@ -56,10 +56,13 @@ export type RecGridProps = {
 
 export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
   ({ infiteScrollUseWindow, shortcutEnabled, onScrollToTop, className, scrollerRef }, ref) => {
-    const [items, setItems] = useState<(PcRecItemExtend | AppRecItemExtend)[]>([])
+    const [items, setItems, getItems] = useGetState<(PcRecItemExtend | AppRecItemExtend)[]>([])
     const [isRefreshing, setIsRefreshing] = useState(false)
 
     const pageRef = useMemo(() => ({ page: 1 }), [])
+
+    // 已加载完成的 load call count
+    const [loadCompleteCount, setLoadCompleteCount, getLoadCompleteCount] = useGetState(0)
 
     const refresh = useMemoizedFn(async () => {
       debug('call refresh()')
@@ -74,34 +77,59 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
         setItems([])
         pageRef.page = 1
         setItems(await getRecommendForGrid(pageRef))
+        setLoadCompleteCount(1)
         clearActiveIndex() // and after
         const cost = performance.now() - start
-        if (process.env.NODE_ENV === 'development') {
-          console.log(`[${APP_NAME}]: refresh cost %s ms`, cost.toFixed(0))
-        }
+        debug('refresh cost %s ms', cost.toFixed(0))
       } finally {
         setIsRefreshing(false)
       }
     })
-
     useImperativeHandle(ref, () => ({ refresh }), [])
     useMount(refresh)
 
+    const requesting = useRef(false)
+
     const fetchMore = useMemoizedFn(async () => {
-      debug('call fetchMore: current page = %s', pageRef.page)
+      if (requesting.current) return
+      requesting.current = true
 
-      const col = getColumnCount()
-      const leastCount = Math.ceil(items.length / col) * col + 1 // 至少换行, 不换行 infinite-scroll 有问题
+      let newItems = [...items]
+      try {
+        // fetchMore 至少 load 一项, 需要触发 InfiniteScroll.componentDidUpdate
+        while (!(newItems.length > items.length)) {
+          const more = await getRecommendTimes(2, pageRef)
+          newItems = uniqConcat(newItems, more)
+        }
 
-      let newItems = items
-      while (newItems.length < leastCount) {
-        const more = await getRecommendTimes(2, pageRef)
-        newItems = uniqConcat(newItems, more)
+        debug(
+          'fetchMore: seq(%s) len %s -> %s',
+          getLoadCompleteCount() + 1,
+          items.length,
+          newItems.length
+        )
+        setItems(newItems)
+        setLoadCompleteCount((c) => c + 1)
+      } finally {
+        requesting.current = false
       }
-
-      debug('fetchMore: len %s -> %s', items.length, newItems.length)
-      setItems(newItems)
     })
+
+    //
+    // loadMore may need more loadMore
+    // 例如大屏的初始化问题: https://greasyfork.org/zh-CN/scripts/443530-bilibili-app-recommend/discussions/182834
+    //
+    // react-infinite-scroll 的使用方法
+    // check threshold -> detach scroll, loadMore -> loadMore 引发数据变化 -> InfiniteScroll.componentDidUpdate -> re-bind scroll event
+    // 问题在于, loadMore 结束后还需要再 loadMore, 这时需要手动 scroll 一下
+    // 这里模拟一下 scroll event
+    //
+    useUpdateEffect(() => {
+      setTimeout(() => {
+        const scroller = infiteScrollUseWindow ? window : scrollerRef?.current
+        scroller?.dispatchEvent(new CustomEvent('scroll'))
+      }, 10)
+    }, [loadCompleteCount])
 
     // 窄屏模式
     const { useNarrowMode } = useSettingsSnapshot()
@@ -156,7 +184,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
     return (
       <InfiniteScroll
         pageStart={0}
-        hasMore={!isRefreshing}
+        hasMore={true}
         loadMore={fetchMore}
         initialLoad={false}
         useWindow={infiteScrollUseWindow}
