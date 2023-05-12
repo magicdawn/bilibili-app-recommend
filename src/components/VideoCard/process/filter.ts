@@ -12,7 +12,12 @@ export function filterVideos(items: Array<PcRecItemExtend | AppRecItemExtend>) {
   }
 
   return items.filter((item) => {
-    const { play, duration } = normalizeCardData(item)
+    const { play, duration, recommendReason } = normalizeCardData(item)
+
+    // 已关注不过滤
+    if (recommendReason === '已关注' || /关注/.exec(recommendReason || '')) {
+      return true
+    }
 
     if (typeof play === 'number') {
       if (settings.filterMinPlayCountEnabled && settings.filterMinPlayCount) {

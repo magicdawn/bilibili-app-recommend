@@ -101,6 +101,11 @@ export function BaseModal({
       return
     }
 
+    // click from antd tooltip
+    if ((e.target as HTMLElement).closest('.ant-tooltip-inner[role="tooltip"]')) {
+      return
+    }
+
     if (hideWhenMaskOnClick) {
       onHide()
     }

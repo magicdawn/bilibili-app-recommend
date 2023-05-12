@@ -197,7 +197,15 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
         <div className={styles.settingsGroup}>
           <div className={styles.settingsGroupTitle}>
             视频过滤器
-            <AntdTooltip title={'启用视频过滤器会大幅降低加载速度, 谨慎开启!'}>
+            <AntdTooltip
+              title={
+                <>
+                  启用视频过滤器会大幅降低加载速度, 谨慎开启!
+                  <br />
+                  P.S「已关注」视频不会被过滤掉!
+                </>
+              }
+            >
               <IconPark style={{ marginLeft: 4, cursor: 'pointer' }} name={'Info'} />
             </AntdTooltip>
           </div>
