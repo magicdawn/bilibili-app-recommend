@@ -14,9 +14,9 @@ export function filterVideos(items: Array<PcRecItemExtend | AppRecItemExtend>) {
   return items.filter((item) => {
     const { play, duration, recommendReason } = normalizeCardData(item)
 
-    // 已关注不过滤
-    if (recommendReason === '已关注' || /关注/.exec(recommendReason || '')) {
-      return true
+    if (!settings.enableFilterForFollowed) {
+      const isFollowed = recommendReason === '已关注' || recommendReason?.includes('关注')
+      if (isFollowed) return true
     }
 
     if (typeof play === 'number') {

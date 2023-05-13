@@ -46,6 +46,9 @@ export const initialSettings = {
   // 时长
   filterMinDurationEnabled: false,
   filterMinDuration: 60, // 60s
+
+  // 已关注UP的推荐视频, 默认不参与过滤
+  enableFilterForFollowed: false,
 }
 
 export type Config = typeof initialSettings
