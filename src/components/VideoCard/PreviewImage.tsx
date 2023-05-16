@@ -1,3 +1,4 @@
+import { useCurrentTheme } from '$components/ModalSettings/theme'
 import { PvideoData } from '$define'
 import { cx } from '$libs'
 import { useMount, useMouse } from 'ahooks'
@@ -153,7 +154,7 @@ function PreviewImageInner({
 }
 
 function SimplePregressBar({ progress }: { progress: number }) {
-  // console.log('[SimplePregressBar] progress=%s', progress)
+  const { colorPrimary } = useCurrentTheme()
 
   return (
     <div
@@ -169,7 +170,7 @@ function SimplePregressBar({ progress }: { progress: number }) {
     >
       <div
         className='bar'
-        style={{ backgroundColor: '#fa6a9d', height: '100%', width: `${progress * 100}%` }}
+        style={{ backgroundColor: colorPrimary, height: '100%', width: `${progress * 100}%` }}
       />
     </div>
   )

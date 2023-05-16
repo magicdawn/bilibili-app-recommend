@@ -1,16 +1,18 @@
 import { useIsDarkMode } from '$platform'
 import { ConfigProvider, Tooltip, theme } from 'antd'
 import { ComponentProps, ReactNode } from 'react'
+import { useCurrentTheme } from './ModalSettings/theme'
 
 export function AntdApp({ children }: { children: ReactNode }) {
   const dark = useIsDarkMode()
+  const { colorPrimary } = useCurrentTheme()
 
   return (
     <ConfigProvider
       theme={{
         algorithm: dark ? theme.darkAlgorithm : theme.defaultAlgorithm,
         token: {
-          colorPrimary: '#ff6699',
+          colorPrimary,
         },
       }}
     >

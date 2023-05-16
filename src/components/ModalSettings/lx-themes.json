@@ -1,0 +1,122 @@
+[
+  {
+    "id": "green",
+    "name": "绿意盎然",
+    "isDark": false,
+    "isCustom": false,
+    "colorPrimary": "rgb(77, 175, 124)",
+    "colorTheme": "rgb(77, 175, 124)"
+  },
+  {
+    "id": "blue",
+    "name": "蓝田生玉",
+    "isDark": false,
+    "isCustom": false,
+    "colorPrimary": "rgb(52, 152, 219)",
+    "colorTheme": "rgb(52, 152, 219)"
+  },
+  {
+    "id": "blue_plus",
+    "name": "蛋雅深蓝",
+    "isDark": false,
+    "isCustom": false,
+    "colorPrimary": "rgb(77, 131, 175)",
+    "colorTheme": "rgb(77, 131, 175)"
+  },
+  {
+    "id": "orange",
+    "name": "橙黄橘绿",
+    "isDark": false,
+    "isCustom": false,
+    "colorPrimary": "rgb(245, 171, 53)",
+    "colorTheme": "rgb(245, 171, 53)"
+  },
+  {
+    "id": "red",
+    "name": "热情似火",
+    "isDark": false,
+    "isCustom": false,
+    "colorPrimary": "rgb(214, 69, 65)",
+    "colorTheme": "rgb(214, 69, 65)"
+  },
+  {
+    "id": "pink",
+    "name": "粉装玉琢",
+    "isDark": false,
+    "isCustom": false,
+    "colorPrimary": "rgb(241, 130, 141)",
+    "colorTheme": "rgb(241, 130, 141)"
+  },
+  {
+    "id": "purple",
+    "name": "重斤球紫",
+    "isDark": false,
+    "isCustom": false,
+    "colorPrimary": "rgb(155, 89, 182)",
+    "colorTheme": "rgb(155, 89, 182)"
+  },
+  {
+    "id": "grey",
+    "name": "灰常美丽",
+    "isDark": false,
+    "isCustom": false,
+    "colorPrimary": "rgb(108, 122, 137)",
+    "colorTheme": "rgb(108, 122, 137)"
+  },
+  {
+    "id": "ming",
+    "name": "青出于黑",
+    "isDark": false,
+    "isCustom": false,
+    "colorPrimary": "rgb(51, 110, 123)",
+    "colorTheme": "rgb(51, 110, 123)"
+  },
+  {
+    "id": "blue2",
+    "name": "清热板蓝",
+    "isDark": false,
+    "isCustom": false,
+    "colorPrimary": "rgb(79, 98, 208)",
+    "colorTheme": "rgb(79, 98, 208)"
+  },
+  {
+    "id": "black",
+    "name": "黑灯瞎火",
+    "isDark": true,
+    "isCustom": false,
+    "colorPrimary": "rgb(150, 150, 150)",
+    "colorTheme": "rgb(59,59,59)"
+  },
+  {
+    "id": "mid_autumn",
+    "name": "月里嫦娥",
+    "isDark": false,
+    "isCustom": false,
+    "colorPrimary": "rgb(74, 55, 82)",
+    "colorTheme": "rgb(74, 55, 82)"
+  },
+  {
+    "id": "naruto",
+    "name": "木叶之村",
+    "isDark": false,
+    "isCustom": false,
+    "colorPrimary": "rgb(87, 144, 167)",
+    "colorTheme": "rgb(87, 144, 167)"
+  },
+  {
+    "id": "china_ink",
+    "name": "近墨者黑",
+    "isDark": false,
+    "isCustom": false,
+    "colorPrimary": "rgba(47, 47, 47, 1)",
+    "colorTheme": "rgba(47, 47, 47, 1)"
+  },
+  {
+    "id": "happy_new_year",
+    "name": "新年快乐",
+    "isDark": false,
+    "isCustom": false,
+    "colorPrimary": "rgb(192, 57, 43)",
+    "colorTheme": "rgb(192, 57, 43)"
+  }
+]

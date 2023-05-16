@@ -34,6 +34,7 @@
     "@vitejs/plugin-react-swc": "^3.3.0",
     "chalk": "4",
     "concurrently": "^8.0.1",
+    "dl-vampire": "^1.4.0",
     "esbuild": "0.17.18",
     "eslint": "^8.39.0",
     "eslint-config-prettier": "^8.8.0",

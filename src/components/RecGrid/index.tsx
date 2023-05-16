@@ -4,6 +4,7 @@
 
 import { baseDebug } from '$common'
 import { useModalDislikeVisible } from '$components/ModalDislike'
+import { useCurrentTheme } from '$components/ModalSettings/theme'
 import { VideoCard, VideoCardActions } from '$components/VideoCard'
 import { AppRecItemExtend, PcRecItemExtend } from '$define'
 import { cssCls, cx } from '$libs'
@@ -212,6 +213,8 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
 
     const isInisInternalTesting = getIsInternalTesting()
 
+    const { colorPrimary } = useCurrentTheme()
+
     return (
       <InfiniteScroll
         pageStart={0}
@@ -250,6 +253,9 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
                     ref={(val) => (videoCardRefs[index] = val)}
                     key={item.uniqId}
                     className={cx(cls.card, { [cls.cardActive]: active })}
+                    style={{
+                      ...(active && { borderColor: colorPrimary }),
+                    }}
                     item={item}
                     active={active}
                   />

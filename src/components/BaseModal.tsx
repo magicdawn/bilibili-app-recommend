@@ -25,6 +25,8 @@ interface IProps {
   // classnames
   clsModalMask?: string
   clsModal?: string
+  styleModalMask?: CSSProperties
+  styleModal?: CSSProperties
   width?: CSSProperties['width']
 
   // behaviors
@@ -49,8 +51,12 @@ export function BaseModal({
   show,
   onHide,
   children,
+
+  styleModalMask,
   clsModalMask,
+  styleModal,
   clsModal,
+
   width,
   hideWhenMaskOnClick = false,
   hideWhenEsc = false,
@@ -128,10 +134,14 @@ export function BaseModal({
   }
 
   return createPortal(
-    <div className={cx(BaseModalClass.modalMask, clsModalMask)} onClick={onMaskClick}>
+    <div
+      className={cx(BaseModalClass.modalMask, clsModalMask)}
+      style={styleModalMask}
+      onClick={onMaskClick}
+    >
       <div
         className={cx(BaseModalClass.modal, clsModal)}
-        style={{ ...wrapperStyle, width }}
+        style={{ ...wrapperStyle, width, ...styleModal }}
         ref={wrapperRef}
       >
         {children}

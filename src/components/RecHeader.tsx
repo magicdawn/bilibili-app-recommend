@@ -71,6 +71,15 @@ export function RecHeader({ onRefresh, refreshHotkeyEnabled }: RecHeaderProps) {
 
   const [stickyRef, sticky] = useSticky<HTMLDivElement>()
 
+  useKeyPress(
+    ['shift.comma'],
+    (e) => {
+      if (isCurrentTyping()) return
+      headerState.modalConfigVisible = !headerState.modalConfigVisible
+    },
+    { exactMatch: true }
+  )
+
   return (
     <>
       <div

@@ -34,6 +34,9 @@ export const initialSettings = {
   // 默认: 跟随鼠标
   autoPreviewWhenHover: false,
 
+  // 颜色主题
+  theme: '',
+
   /**
    * 过滤器模块
    * 使用 flat config 方便使用 FlagSettingItem

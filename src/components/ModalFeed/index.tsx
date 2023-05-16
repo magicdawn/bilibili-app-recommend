@@ -1,10 +1,12 @@
+import { useCurrentTheme } from '$components/ModalSettings/theme'
 import { RecGrid, RecGridRef } from '$components/RecGrid'
 import { RefreshButton } from '$components/RecHeader'
 import { ModalFeedConfigChecks } from '$components/piece'
 import { cx } from '$libs'
+import { useIsDarkMode } from '$platform'
 import { useSettingsSnapshot } from '$settings'
 import { useMemoizedFn } from 'ahooks'
-import { memo, useMemo, useRef } from 'react'
+import { CSSProperties, memo, useMemo, useRef } from 'react'
 import { BaseModal, BaseModalClass, ModalClose } from '../BaseModal'
 import { CollapseBtn } from '../CollapseBtn'
 import styles from './index.module.less'
@@ -32,11 +34,21 @@ export const ModalFeed = memo(function ModalFeed({ show, onHide }: IProps) {
     }
   })
 
+  const dark = useIsDarkMode()
+  const { colorPrimary } = useCurrentTheme()
+  const modalBorderStyle: CSSProperties | undefined = useMemo(
+    () => (dark ? { border: `1px solid ${colorPrimary}` } : undefined),
+    [dark, colorPrimary]
+  )
+
   return (
     <BaseModal
       {...{ show, onHide }}
       clsModalMask={cx(narrowStyleObj)}
       clsModal={cx(styles.modal, narrowStyleObj)}
+      styleModal={{
+        ...modalBorderStyle,
+      }}
     >
       <div className={cx(BaseModalClass.modalHeader, styles.modalHeader)}>
         <div className={BaseModalClass.modalTitle}>推荐</div>
