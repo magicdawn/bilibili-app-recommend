@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.11.1 2023-05-17
+
+- UI tweak: 统一 button 实现到 `antd.Button`, toast 等会使用所选的主题色
+
 ## v0.11.0 2023-05-16
 
 - feat: 设置弹框使用 Tab 分割
