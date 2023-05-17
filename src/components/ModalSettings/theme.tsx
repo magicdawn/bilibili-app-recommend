@@ -50,7 +50,7 @@ export function ThemesSelect() {
             style={{
               minWidth: '70px',
               textAlign: 'center',
-              margin: '0 20px 20px 0',
+              margin: '0 15px 15px 0',
               cursor: 'pointer',
             }}
             onClick={(e) => {

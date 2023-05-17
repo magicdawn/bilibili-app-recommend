@@ -61,7 +61,15 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
   useHotkeyForConfig(['shift.c'], 'useNarrowMode', '居中模式')
 
   return (
-    <BaseModal {...{ show, onHide, hideWhenMaskOnClick: true, hideWhenEsc: true, width: '950px' }}>
+    <BaseModal
+      {...{
+        show,
+        onHide,
+        hideWhenMaskOnClick: true,
+        hideWhenEsc: true,
+        styleModal: { width: 800 },
+      }}
+    >
       <div className={BaseModalClass.modalHeader}>
         <div className={BaseModalClass.modalTitle}>
           <IconPark name='Config' className={styles.configIcon} />
@@ -77,13 +85,14 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
         <Tabs
           tabPosition='left'
           size='middle'
+          defaultActiveKey='normal'
           className={styles.settingTabs}
           items={[
             {
               label: '常规设置',
               key: 'normal',
               children: (
-                <>
+                <div className={styles.tabPane}>
                   <div className={styles.settingsGroup}>
                     <div className={styles.settingsGroupTitle}>接口切换</div>
                     <div className={cx(styles.settingsGroupContent)}>
@@ -232,14 +241,14 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                       </div>
                     </div>
                   </div>
-                </>
+                </div>
               ),
             },
             {
               label: '视频过滤',
               key: 'filter',
               children: (
-                <>
+                <div className={styles.tabPane}>
                   <div className={styles.settingsGroup}>
                     <div className={styles.settingsGroupTitle}>
                       视频过滤
@@ -291,14 +300,14 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                       </div>
                     </div>
                   </div>
-                </>
+                </div>
               ),
             },
             {
               label: '外观设置',
               key: 'UI',
               children: (
-                <>
+                <div className={styles.tabPane}>
                   <div className={styles.settingsGroup}>
                     <div className={styles.settingsGroupTitle} style={{ marginBottom: 15 }}>
                       主题选择
@@ -318,19 +327,19 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                       <ThemesSelect />
                     </div>
                   </div>
-                </>
+                </div>
               ),
             },
             {
               label: '高级设置',
               key: 'advance',
               children: (
-                <>
+                <div className={styles.tabPane}>
                   <div className={styles.settingsGroup}>
                     <div className={styles.settingsGroupTitle}>高级</div>
                     <div className={cx(styles.settingsGroupContent)}>
                       <div className={styles.row}>
-                        <Button onClick={onResetSettings} danger>
+                        <Button onClick={onResetSettings} danger type='primary'>
                           恢复默认设置
                         </Button>
                       </div>
@@ -344,7 +353,7 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                       </div>
                     </div>
                   </div>
-                </>
+                </div>
               ),
             },
           ]}
