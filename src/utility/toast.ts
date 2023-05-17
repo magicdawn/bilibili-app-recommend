@@ -1,9 +1,13 @@
+import { getCurrentTheme } from '$components/ModalSettings/theme'
 import { singleLine, toastContainer } from './toast.module.less'
 
 export function toast(msg: string, duration = 2000) {
   const div = document.createElement('div')
   div.className = toastContainer
   div.innerText = msg
+
+  const { colorPrimary } = getCurrentTheme()
+  div.style.backgroundColor = colorPrimary
 
   if (!msg.includes('\n') && !msg.includes('<br')) {
     div.classList.add(singleLine)

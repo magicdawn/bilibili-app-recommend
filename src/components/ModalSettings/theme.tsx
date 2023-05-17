@@ -6,7 +6,8 @@
  * http://www.apache.org/licenses/
  */
 
-import { updateSettings, useSettingsSnapshot } from '$settings'
+import { settings, updateSettings, useSettingsSnapshot } from '$settings'
+import { css } from '@emotion/react'
 import { useMemo } from 'react'
 import LX_THEMES from './lx-themes.json'
 
@@ -30,6 +31,19 @@ export const DEFAULT_BILI_PINK_THEME: LxTheme = {
 
 const ALL_THEMES = [DEFAULT_BILI_PINK_THEME, ...LX_THEMES]
 
+/**
+ * use outside React
+ */
+export function getCurrentTheme() {
+  return (
+    ALL_THEMES.find((t) => t.id === (settings.theme || DEFAULT_BILI_PINK_THEME.id)) ||
+    DEFAULT_BILI_PINK_THEME
+  )
+}
+
+/**
+ * react hook
+ */
 export function useCurrentTheme() {
   const themeId = useSettingsSnapshot().theme || DEFAULT_BILI_PINK_THEME.id
   return useMemo(() => {
@@ -47,36 +61,41 @@ export function ThemesSelect() {
         return (
           <div
             key={t.id}
-            style={{
-              minWidth: '70px',
-              textAlign: 'center',
-              margin: '0 15px 15px 0',
-              cursor: 'pointer',
-            }}
+            css={css`
+              min-width: 70px;
+              text-align: center;
+              margin: 0 15px 15px 0;
+              cursor: pointer;
+            `}
             onClick={(e) => {
               updateSettings({ theme: t.id })
             }}
           >
             <div
               className='preview-wrapper'
-              style={{
-                width: '50px',
-                height: '50px',
-                padding: '3px',
-                border: '2px solid transparent',
-                borderRadius: '5px',
-                margin: '0 auto',
-                borderColor: isActive ? `${t.colorPrimary}` : 'transparent',
-              }}
+              css={[
+                css`
+                  width: 50px;
+                  height: 50px;
+                  padding: 3px;
+                  border: 2px solid transparent;
+                  border-radius: 5px;
+                  margin: 0 auto;
+                `,
+                isActive &&
+                  css`
+                    border-color: ${t.colorPrimary};
+                  `,
+              ]}
             >
               <div
                 className='preview'
-                style={{
-                  height: '100%',
-                  width: '100%',
-                  backgroundColor: `${t.colorPrimary}`,
-                  borderRadius: '5px',
-                }}
+                css={css`
+                  width: 100%;
+                  height: 100%;
+                  background-color: ${t.colorPrimary};
+                  border-radius: 5px;
+                `}
               />
             </div>
             {t.name}

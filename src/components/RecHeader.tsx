@@ -5,6 +5,7 @@ import { HEADER_HEIGHT } from '$platform'
 import { settings, useSettingsSnapshot } from '$settings'
 import { isCurrentTyping } from '$utility/dom'
 import { useKeyPress, useMemoizedFn } from 'ahooks'
+import { Button, Space } from 'antd'
 import {
   CSSProperties,
   MouseEvent,
@@ -19,12 +20,19 @@ import { proxy, useSnapshot } from 'valtio'
 import { AccessKeyManage } from './AccessKeyManage'
 import { ModalFeed } from './ModalFeed'
 
+const verticalAlignStyle = css`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+
 const configStyles = {
   btn: css`
     padding: 0;
-    width: 31px;
-    height: 31px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
+    ${verticalAlignStyle}
   `,
   icon: css`
     svg {
@@ -68,9 +76,6 @@ export function RecHeader({ onRefresh, refreshHotkeyEnabled }: RecHeaderProps) {
   const { accessKey, pureRecommend, usePcDesktopApi } = useSettingsSnapshot()
 
   const { modalFeedVisible, modalConfigVisible } = useSnapshot(headerState)
-
-  const [stickyRef, sticky] = useSticky<HTMLDivElement>()
-
   useKeyPress(
     ['shift.comma'],
     (e) => {
@@ -79,6 +84,8 @@ export function RecHeader({ onRefresh, refreshHotkeyEnabled }: RecHeaderProps) {
     },
     { exactMatch: true }
   )
+
+  const [stickyRef, sticky] = useSticky<HTMLDivElement>()
 
   return (
     <>
@@ -115,22 +122,31 @@ export function RecHeader({ onRefresh, refreshHotkeyEnabled }: RecHeaderProps) {
         </div>
 
         <div className='right'>
-          {!usePcDesktopApi && !accessKey && <AccessKeyManage style={{ marginLeft: 5 }} />}
+          <Space size={'small'}>
+            {!usePcDesktopApi && !accessKey && <AccessKeyManage style={{ marginLeft: 5 }} />}
+            {/* css={configStyles.btn} */}
+            {/* css={configStyles.icon} */}
+            <Button onClick={showModalConfig} css={configStyles.btn}>
+              <IconPark name='Config' css={configStyles.icon} />
+            </Button>
 
-          <button className='primary-btn' css={configStyles.btn} onClick={showModalConfig}>
-            <IconPark name='Config' css={configStyles.icon} />
-          </button>
+            <RefreshButton onClick={onRefresh} refreshHotkeyEnabled={refreshHotkeyEnabled} />
 
-          <RefreshButton onClick={onRefresh} refreshHotkeyEnabled={refreshHotkeyEnabled} />
-
-          {!pureRecommend && (
-            <button className='primary-btn see-more' onClick={showModalFeed}>
-              <span>查看更多</span>
-              <svg>
-                <use href='#widget-arrow'></use>
-              </svg>
-            </button>
-          )}
+            {!pureRecommend && (
+              <Button css={verticalAlignStyle} onClick={showModalFeed}>
+                <span>查看更多</span>
+                <svg
+                  css={css`
+                    width: 12px;
+                    height: 12px;
+                    margin-left: 2px;
+                  `}
+                >
+                  <use href='#widget-arrow'></use>
+                </svg>
+              </Button>
+            )}
+          </Space>
         </div>
       </div>
 
@@ -184,17 +200,24 @@ export const RefreshButton = forwardRef<RefreshButtonActions, RefreshButtonProps
   )
 
   return (
-    <button
-      className={`primary-btn roll-btn ${className}`}
-      onClick={_onClick}
+    <Button
+      className={className}
       style={style}
+      css={css`
+        ${verticalAlignStyle}
+        &.ant-btn:not(:disabled):focus-visible {
+          outline: none;
+        }
+      `}
       ref={btn}
+      onClick={_onClick}
     >
       <svg
         style={{
           transform: `rotate(${deg}deg)`,
           width: '10px',
           height: '10px',
+          marginRight: 5,
           transition: deg === 360 ? 'transform .5s ease' : 'unset',
         }}
         onTransitionEnd={() => {
@@ -204,6 +227,6 @@ export const RefreshButton = forwardRef<RefreshButtonActions, RefreshButtonProps
         <use href='#widget-roll'></use>
       </svg>
       <span>换一换</span>
-    </button>
+    </Button>
   )
 })

@@ -62,7 +62,7 @@ export async function getMinCount(count: number, pageRef: pc.PageRef, filterMult
 }
 
 export async function getRecommendForHome(pageRef: pc.PageRef) {
-  return getMinCount(getColumnCount() * 2, pageRef, 3) // 7 * 2-row
+  return getMinCount(getColumnCount(undefined, false) * 2, pageRef, 3) // 7 * 2-row
 }
 
 export async function getRecommendForGrid(pageRef: pc.PageRef) {

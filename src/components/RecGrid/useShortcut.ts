@@ -4,7 +4,7 @@ import { isCurrentTyping } from '$utility/dom'
 import { useKeyPress, useMemoizedFn } from 'ahooks'
 import { RefObject, useState } from 'react'
 import { videoGrid } from '../video-grid.module.less'
-import { cls } from './index'
+import { CardClassNames } from './index'
 
 interface IOptions {
   enabled: boolean
@@ -50,7 +50,7 @@ export function useShortcut({
 
     const scrollerRect = getScrollerRect()
     const rect = containerRef.current
-      .querySelector<HTMLDivElement>(`.${cls.card}.${cls.cardActive}`)
+      .querySelector<HTMLDivElement>(`.${CardClassNames.card}.${CardClassNames.cardActive}`)
       ?.getBoundingClientRect()
     if (!scrollerRect || !rect) return false
 
@@ -158,7 +158,7 @@ export function useShortcut({
     return 0
   }
 
-  const CARDS_SELECTOR = `.${cls.card}`
+  const CARDS_SELECTOR = `.${CardClassNames.card}`
   function getCards() {
     return [...(containerRef.current?.querySelectorAll<HTMLDivElement>(CARDS_SELECTOR) || [])]
   }
@@ -204,8 +204,10 @@ export function useShortcut({
 // use window.innerHeight as cache key
 const countCache = new Map<number, number>()
 
-export function getColumnCount(container?: HTMLElement | null) {
-  if (settings.useNarrowMode) return 2
+// SectionRecommend 没有 narrow-mode
+// RecGrid 有 narrow mode
+export function getColumnCount(container?: HTMLElement | null, mayHaveNarrowMode = true) {
+  if (mayHaveNarrowMode && settings.useNarrowMode) return 2
 
   let count = countCache.get(window.innerWidth)
   if (count) {

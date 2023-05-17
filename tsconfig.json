@@ -17,8 +17,8 @@
     "jsxImportSource": "@emotion/react",
     "plugins": [
       {
-        "name": "typescript-styled-plugin",
-        "tags": ["styled", "css", "sty", "cssCls"]
+        "name": "@styled/typescript-styled-plugin",
+        "tags": ["css", "cssCls", "generateClassName"]
       }
     ],
     "types": ["vite/client", "@violentmonkey/types", "node"]

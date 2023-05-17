@@ -5,6 +5,7 @@ import { ModalFeedConfigChecks } from '$components/piece'
 import { cx } from '$libs'
 import { useIsDarkMode } from '$platform'
 import { useSettingsSnapshot } from '$settings'
+import { css } from '@emotion/react'
 import { useMemoizedFn } from 'ahooks'
 import { CSSProperties, memo, useMemo, useRef } from 'react'
 import { BaseModal, BaseModalClass, ModalClose } from '../BaseModal'
@@ -60,6 +61,9 @@ export const ModalFeed = memo(function ModalFeed({ show, onHide }: IProps) {
         </CollapseBtn>
 
         <RefreshButton
+          css={css`
+            margin-left: 8px;
+          `}
           onClick={onRefresh}
           className={styles.btnRefresh}
           refreshHotkeyEnabled={show}

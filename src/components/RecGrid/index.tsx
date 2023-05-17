@@ -7,10 +7,11 @@ import { useModalDislikeVisible } from '$components/ModalDislike'
 import { useCurrentTheme } from '$components/ModalSettings/theme'
 import { VideoCard, VideoCardActions } from '$components/VideoCard'
 import { AppRecItemExtend, PcRecItemExtend } from '$define'
-import { cssCls, cx } from '$libs'
+import { cx, generateClassName } from '$libs'
 import { HEADER_HEIGHT, getIsInternalTesting } from '$platform'
 import { getRecommendForGrid, getRecommendTimes, uniqConcat } from '$service'
 import { useSettingsSnapshot } from '$settings'
+import { css } from '@emotion/react'
 import { useGetState, useMemoizedFn, useMount } from 'ahooks'
 import { RefObject, forwardRef, useImperativeHandle, useMemo, useRef, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroller'
@@ -19,14 +20,8 @@ import { useShortcut } from './useShortcut'
 
 const debug = baseDebug.extend('components:RecGrid')
 
-export const cls = {
-  loader: cssCls`
-    text-align: center;
-    line-height: 60px;
-    font-size: 120%;
-  `,
-
-  card: cssCls`
+export const CardClassNames = {
+  card: generateClassName`
     border: 2px solid transparent;
 
     /* global class under .card */
@@ -36,7 +31,7 @@ export const cls = {
       margin-top: calc(var(--info-margin-top) - 1px);
     }
   `,
-  cardActive: cssCls`
+  cardActive: generateClassName`
     border-color: #fb7299;
     border-radius: 6px;
     overflow: hidden;
@@ -225,7 +220,14 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
         threshold={window.innerHeight} // 一屏
         style={{ minHeight: '100%' }}
         loader={
-          <div className={cls.loader} key={-1}>
+          <div
+            css={css`
+              text-align: center;
+              line-height: 60px;
+              font-size: 120%;
+            `}
+            key={-1}
+          >
             加载中...
           </div>
         }
@@ -243,7 +245,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
           {isRefreshing
             ? //skeleton loading
               new Array(24).fill(undefined).map((_, index) => {
-                return <VideoCard key={index} loading={true} className={cx(cls.card)} />
+                return <VideoCard key={index} loading={true} className={CardClassNames.card} />
               })
             : // items
               items.map((item, index) => {
@@ -252,10 +254,13 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
                   <VideoCard
                     ref={(val) => (videoCardRefs[index] = val)}
                     key={item.uniqId}
-                    className={cx(cls.card, { [cls.cardActive]: active })}
-                    style={{
-                      ...(active && { borderColor: colorPrimary }),
-                    }}
+                    className={cx(CardClassNames.card, { [CardClassNames.cardActive]: active })}
+                    css={[
+                      active &&
+                        css`
+                          border-color: ${colorPrimary};
+                        `,
+                    ]}
                     item={item}
                     active={active}
                   />
