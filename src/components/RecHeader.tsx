@@ -125,7 +125,10 @@ export function RecHeader({ onRefresh }: RecHeaderProps) {
               <IconPark name='Config' css={configStyles.icon} />
             </Button>
 
-            <RefreshButton onClick={onRefresh} />
+            <RefreshButton
+              onClick={onRefresh}
+              refreshHotkeyEnabled={!(modalConfigVisible || modalFeedVisible)}
+            />
 
             {!pureRecommend && (
               <Button css={verticalAlignStyle} onClick={showModalFeed}>
@@ -156,13 +159,13 @@ export type RefreshButtonProps = {
   style?: CSSProperties
   className?: string
   onClick?: (e?: MouseEvent) => void
+  refreshHotkeyEnabled?: boolean
 }
 export const RefreshButton = forwardRef<RefreshButtonActions, RefreshButtonProps>(function (
-  { onClick, className = '', style },
+  { onClick, className = '', style, refreshHotkeyEnabled },
   ref
 ) {
-  const { modalConfigVisible, modalFeedVisible } = useHeaderState()
-  const refreshHotkeyEnabled = !(modalConfigVisible || modalFeedVisible)
+  refreshHotkeyEnabled ??= true
 
   const [deg, setDeg] = useState(0)
 
