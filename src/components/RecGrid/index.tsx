@@ -64,6 +64,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
     const refresh = useMemoizedFn(async () => {
       const start = performance.now()
       debug('call refresh()')
+      if (isRefreshing) return
 
       // scroll to top
       await onScrollToTop?.()
