@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.11.2 2023-05-18
+
+- using BV id everywhere
+- clean up code
+
 ## v0.11.1 2023-05-17
 
 - UI tweak: 统一 button 实现到 `antd.Button`, toast 等会使用所选的主题色
