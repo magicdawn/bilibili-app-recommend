@@ -210,8 +210,8 @@ export const RefreshButton = forwardRef<RefreshButtonActions, RefreshButtonProps
       <svg
         style={{
           transform: `rotate(${deg}deg)`,
-          width: '10px',
-          height: '10px',
+          width: '11px',
+          height: '11px',
           marginRight: 5,
           transition: deg === 360 ? 'transform .5s ease' : 'unset',
         }}
