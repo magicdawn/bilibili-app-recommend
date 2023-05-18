@@ -30,10 +30,7 @@ export function PureRecommend() {
 
   return (
     <section data-area='推荐'>
-      <RecHeader
-        onRefresh={onRefresh}
-        refreshHotkeyEnabled={!(modalFeedVisible || modalConfigVisible)}
-      />
+      <RecHeader onRefresh={onRefresh} />
       <RecGrid
         ref={recGrid}
         css={[useNarrowMode && narrowStyle.grid]}

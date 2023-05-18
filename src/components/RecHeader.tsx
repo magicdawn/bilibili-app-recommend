@@ -65,14 +65,10 @@ const hideModalConfig = () => {
   headerState.modalConfigVisible = false
 }
 
-type RecHeaderActions = {
-  clickRefreshButton: () => void
-}
 type RecHeaderProps = {
   onRefresh: () => void | Promise<void>
-  refreshHotkeyEnabled?: boolean
 }
-export function RecHeader({ onRefresh, refreshHotkeyEnabled }: RecHeaderProps) {
+export function RecHeader({ onRefresh }: RecHeaderProps) {
   const { accessKey, pureRecommend, usePcDesktopApi } = useSettingsSnapshot()
 
   const { modalFeedVisible, modalConfigVisible } = useSnapshot(headerState)
@@ -124,13 +120,12 @@ export function RecHeader({ onRefresh, refreshHotkeyEnabled }: RecHeaderProps) {
         <div className='right'>
           <Space size={'small'}>
             {!usePcDesktopApi && !accessKey && <AccessKeyManage style={{ marginLeft: 5 }} />}
-            {/* css={configStyles.btn} */}
-            {/* css={configStyles.icon} */}
+
             <Button onClick={showModalConfig} css={configStyles.btn}>
               <IconPark name='Config' css={configStyles.icon} />
             </Button>
 
-            <RefreshButton onClick={onRefresh} refreshHotkeyEnabled={refreshHotkeyEnabled} />
+            <RefreshButton onClick={onRefresh} />
 
             {!pureRecommend && (
               <Button css={verticalAlignStyle} onClick={showModalFeed}>
@@ -161,17 +156,17 @@ export type RefreshButtonProps = {
   style?: CSSProperties
   className?: string
   onClick?: (e?: MouseEvent) => void
-  refreshHotkeyEnabled?: boolean
 }
 export const RefreshButton = forwardRef<RefreshButtonActions, RefreshButtonProps>(function (
-  { onClick, className = '', style, refreshHotkeyEnabled },
+  { onClick, className = '', style },
   ref
 ) {
-  refreshHotkeyEnabled ??= true
+  const { modalConfigVisible, modalFeedVisible } = useHeaderState()
+  const refreshHotkeyEnabled = !(modalConfigVisible || modalFeedVisible)
 
   const [deg, setDeg] = useState(0)
 
-  const _onClick: MouseEventHandler = useMemoizedFn((e?: MouseEvent) => {
+  const btnOnClickHandler: MouseEventHandler = useMemoizedFn((e?: MouseEvent) => {
     setDeg((d) => d + 360)
     return onClick?.(e)
   })
@@ -210,7 +205,7 @@ export const RefreshButton = forwardRef<RefreshButtonActions, RefreshButtonProps
         }
       `}
       ref={btn}
-      onClick={_onClick}
+      onClick={btnOnClickHandler}
     >
       <svg
         style={{
