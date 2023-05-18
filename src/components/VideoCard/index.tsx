@@ -3,6 +3,7 @@ import { Reason, dislikedIds, showModalDislike, useDislikedReason } from '$compo
 import { AppRecItem, AppRecItemExtend, PcRecItemExtend } from '$define'
 import { IconPark } from '$icon-park'
 import { settings, useSettingsSnapshot } from '$settings'
+import { BvCode } from '$utility/bv'
 import { toast, toastOperationFail, toastRequestFail } from '$utility/toast'
 import { formatCount, formatDuration } from '$utility/video'
 import {
@@ -126,7 +127,6 @@ export const VideoCard = memo(
       <div
         style={style}
         className={cx('bili-video-card', styles.biliVideoCard, className)}
-        data-report='partition_recommend.content'
         {...restProps}
       >
         {skeleton}
@@ -393,7 +393,7 @@ const VideoCardInner = memo(
     const href = useMemo(() => {
       return isPc
         ? isNormalVideo && bvid
-          ? `/video/${bvid}`
+          ? `/video/${bvid}/`
           : item.uri
         : (() => {
             // valid uri
@@ -404,7 +404,8 @@ const VideoCardInner = memo(
             // more see https://github.com/magicdawn/bilibili-app-recommend/issues/23#issuecomment-1533079590
 
             if (isNormalVideo) {
-              return `/video/av${item.param}`
+              // return `/video/av${item.param}`
+              return `/video/${BvCode.av2bv(Number(item.param))}/`
             }
 
             if (isBangumi) {
@@ -468,13 +469,7 @@ const VideoCardInner = memo(
 
     return (
       <div className='bili-video-card__wrap __scale-wrap' onContextMenu={onContextMenu}>
-        <a
-          href={href}
-          target='_blank'
-          data-mod='partition_recommend'
-          data-idx='content'
-          data-ext='click'
-        >
+        <a href={href} target='_blank'>
           <div className='bili-video-card__image __scale-player-wrap' ref={videoPreviewWrapperRef}>
             <div className={cx('bili-video-card__image--wrap', styles.imageWrapper)}>
               <picture className='v-img bili-video-card__cover'>

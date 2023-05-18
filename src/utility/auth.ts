@@ -8,7 +8,7 @@ export const appkey = '27eb53fc9058f8c3'
  * 获取 access_key
  */
 
-async function getAuth() {
+async function getAuth(): Promise<{ errmsg?: string; access_key?: string; json?: any }> {
   const res = await request.get('https://passport.bilibili.com/login/app/third', {
     params: {
       appkey,
@@ -31,7 +31,7 @@ async function getAuth() {
   let timeout: ReturnType<typeof setTimeout> | undefined
   let removeEventHandler: (() => void) | undefined
 
-  const waitCallback = new Promise<string | { errmsg: string }>((resolve) => {
+  const waitCallback = new Promise<{ errmsg?: string; access_key?: string }>((resolve) => {
     const handleEvent = (e: MessageEvent) => {
       if (e.origin != 'https://www.mcbbs.net' || !e.data) return
 
@@ -40,7 +40,7 @@ async function getAuth() {
         return resolve({ errmsg: '没有获得匹配的密钥' })
       }
 
-      resolve(key[1] as string)
+      resolve({ access_key: key[1] as string })
     }
 
     window.addEventListener('message', handleEvent)
@@ -71,22 +71,19 @@ async function getAuth() {
   const result = await waitCallback
   cleanup()
 
-  // {errmsg} | access_key
   return result
 }
 
 export async function auth() {
   const res = await getAuth()
 
-  if (typeof res === 'object' && 'errmsg' in res) {
-    toast(res.errmsg)
-    return
+  if (!res.access_key) {
+    return toast(res.errmsg || '')
   }
 
-  const accessKey = res
+  const accessKey = res.access_key
   settings.accessKey = accessKey
   toast('获取成功')
-
   return accessKey
 }
 
