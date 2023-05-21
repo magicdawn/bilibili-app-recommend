@@ -36,6 +36,7 @@ export const initialSettings = {
 
   // 颜色主题
   theme: '',
+  colorPickerThemeSelectedColor: '', // 自定义颜色
 
   /**
    * 过滤器模块
