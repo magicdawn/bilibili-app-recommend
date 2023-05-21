@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.11.3 2023-05-21
+
+- 814243c feat: add color-picker theme
+- e2b758f chore: take care of antd z-index
+- de2c61d chore: prevent multiple refresh
+
 ## v0.11.2 2023-05-18
 
 - using BV id everywhere
