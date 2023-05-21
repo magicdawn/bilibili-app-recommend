@@ -23,7 +23,7 @@ export interface LxTheme {
 
 export const DEFAULT_BILI_PINK_THEME: LxTheme = {
   id: 'default-bili-pink',
-  name: 'B站小粉红',
+  name: 'B站粉',
   isDark: false,
   isCustom: false,
   colorPrimary: '#ff6699',
