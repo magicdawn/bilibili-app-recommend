@@ -29,11 +29,7 @@ export function FlagSettingItem({
   let inner: ReactNode = label || configKey
   if (tooltip)
     inner = (
-      <Tooltip
-        title={tooltip}
-        zIndex={11100}
-        overlayStyle={{ width: 'max-content', maxWidth: '50vw' }}
-      >
+      <Tooltip title={tooltip} overlayStyle={{ width: 'max-content', maxWidth: '50vw' }}>
         {inner}
       </Tooltip>
     )

@@ -102,15 +102,16 @@ export function BaseModal({
   }, [])
 
   const onMaskClick = useMemoizedFn((e: MouseEvent) => {
+    const target = e.target as HTMLElement
+
     // click from .modal
-    if (wrapperRef.current?.contains(e.target as HTMLElement)) {
-      return
-    }
+    if (wrapperRef.current?.contains(target)) return
 
     // click from antd tooltip
-    if ((e.target as HTMLElement).closest('.ant-tooltip-inner[role="tooltip"]')) {
-      return
-    }
+    if (target.closest('.ant-tooltip-inner[role="tooltip"]')) return
+
+    // click from antd popconfirm
+    if (target.closest('.ant-popover-inner[role="tooltip"]')) return
 
     if (hideWhenMaskOnClick) {
       onHide()

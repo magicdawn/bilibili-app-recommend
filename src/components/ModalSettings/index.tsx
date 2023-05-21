@@ -14,7 +14,7 @@ import {
 import { isCurrentTyping } from '$utility/dom'
 import { toast } from '$utility/toast'
 import { useKeyPress } from 'ahooks'
-import { Button, InputNumber, Radio, Slider, Space, Tabs, Tag } from 'antd'
+import { Button, InputNumber, Popconfirm, Radio, Slider, Space, Tabs, Tag } from 'antd'
 import delay from 'delay'
 import styles from './index.module.less'
 import { ThemesSelect } from './theme'
@@ -26,8 +26,6 @@ async function toastAndReload() {
 }
 
 function onResetSettings() {
-  const yes = window.confirm('确定?')
-  if (!yes) return
   resetSettings()
   return toastAndReload()
 }
@@ -207,7 +205,6 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                           keyboard
                           onChange={(val) => (settings.autoPreviewUpdateInterval = val)}
                           value={autoPreviewUpdateInterval}
-                          tooltip={{ open: true }}
                         />
                         <span style={{ width: '65px' }}>({autoPreviewUpdateInterval}ms)</span>
                       </div>
@@ -339,9 +336,15 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                     <div className={styles.settingsGroupTitle}>高级</div>
                     <div className={cx(styles.settingsGroupContent)}>
                       <div className={styles.row}>
-                        <Button onClick={onResetSettings} danger type='primary'>
-                          恢复默认设置
-                        </Button>
+                        <Popconfirm
+                          title='确定'
+                          description='确定恢复默认设置? 该操作不可逆!'
+                          onConfirm={onResetSettings}
+                        >
+                          <Button danger type='primary'>
+                            恢复默认设置
+                          </Button>
+                        </Popconfirm>
                       </div>
 
                       <div className={styles.row} style={{ marginTop: 10 }}>
