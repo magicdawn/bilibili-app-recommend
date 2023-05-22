@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.11.4 2023-05-22
+
+- feat: add more themes
+  ![image](https://github.com/magicdawn/bilibili-app-recommend/assets/4067115/7884359f-6b35-4ca3-8842-9815a4487d04)
+
 ## v0.11.3 2023-05-21
 
 - 814243c feat: add color-picker theme
