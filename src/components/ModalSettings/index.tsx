@@ -84,8 +84,8 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
           tabPosition='left'
           size='middle'
           // FIXME: modify before release
-          // defaultActiveKey='normal'
-          defaultActiveKey='UI'
+          // defaultActiveKey='UI'
+          defaultActiveKey='normal'
           className={styles.settingTabs}
           items={[
             {
