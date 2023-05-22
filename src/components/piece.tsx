@@ -1,8 +1,10 @@
+import { IconPark } from '$icon-park'
 import { BooleanConfigKey, updateSettings, useSettingsSnapshot } from '$settings'
 import { css } from '@emotion/react'
 import { Checkbox, Tooltip } from 'antd'
 import { CheckboxChangeEvent } from 'antd/es/checkbox'
-import { ReactNode, useCallback } from 'react'
+import { CSSProperties, ReactNode, useCallback } from 'react'
+import { AntdTooltip } from './AntdApp'
 
 export function FlagSettingItem({
   configKey,
@@ -49,6 +51,30 @@ export const ModalFeedConfigChecks = function () {
     <>
       <FlagSettingItem configKey={'initialShowMore'} label='自动查看更多' css={inModalFeedStyle} />
       <FlagSettingItem configKey={'useNarrowMode'} label='启用居中模式' css={inModalFeedStyle} />
+    </>
+  )
+}
+
+export function HelpInfo({
+  tooltip,
+  iconStyle,
+  iconSize,
+}: {
+  tooltip?: ReactNode
+  iconStyle?: CSSProperties
+  iconSize?: number
+}) {
+  return (
+    <>
+      {tooltip && (
+        <AntdTooltip title={tooltip}>
+          <IconPark
+            style={{ cursor: 'pointer', marginLeft: '4px', ...iconStyle }}
+            name={'Info'}
+            size={iconSize}
+          />
+        </AntdTooltip>
+      )}
     </>
   )
 }

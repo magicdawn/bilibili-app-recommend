@@ -65,7 +65,7 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
         onHide,
         hideWhenMaskOnClick: true,
         hideWhenEsc: true,
-        styleModal: { width: 800 },
+        styleModal: { width: 900, maxHeight: 'unset' },
       }}
     >
       <div className={BaseModalClass.modalHeader}>
@@ -83,7 +83,9 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
         <Tabs
           tabPosition='left'
           size='middle'
-          defaultActiveKey='normal'
+          // FIXME: modify before release
+          // defaultActiveKey='normal'
+          defaultActiveKey='UI'
           className={styles.settingTabs}
           items={[
             {
@@ -308,17 +310,6 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                   <div className={styles.settingsGroup}>
                     <div className={styles.settingsGroupTitle} style={{ marginBottom: 15 }}>
                       主题选择
-                      <AntdTooltip
-                        title={
-                          <>
-                            提取自 https://github.com/lyswhut/lx-music-desktop/
-                            <br />
-                            Apache License 2.0
-                          </>
-                        }
-                      >
-                        <IconPark style={{ marginLeft: 4, cursor: 'pointer' }} name={'Info'} />
-                      </AntdTooltip>
                     </div>
                     <div className={cx(styles.settingsGroupContent)}>
                       <ThemesSelect />
