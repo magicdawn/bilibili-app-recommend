@@ -32,7 +32,11 @@
 
 ### Monkey 插件
 
-支持 ViolentMonkey(优先支持) 和 TamperMonkey.
+支持 ViolentMonkey(我使用的) 和 TamperMonkey.
+
+### 浏览器
+
+不支持 macOS safari TamperMonkey, 请使用 Chrome / Edge / Firefox.
 
 ### 你可能不需要这个脚本 :)
 
