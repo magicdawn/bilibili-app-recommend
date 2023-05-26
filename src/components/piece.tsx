@@ -3,7 +3,7 @@ import { BooleanConfigKey, updateSettings, useSettingsSnapshot } from '$settings
 import { css } from '@emotion/react'
 import { Checkbox, Tooltip } from 'antd'
 import { CheckboxChangeEvent } from 'antd/es/checkbox'
-import { CSSProperties, ReactNode, useCallback } from 'react'
+import { ComponentProps, ReactNode, useCallback } from 'react'
 import { AntdTooltip } from './AntdApp'
 
 export function FlagSettingItem({
@@ -57,21 +57,19 @@ export const ModalFeedConfigChecks = function () {
 
 export function HelpInfo({
   tooltip,
-  iconStyle,
-  iconSize,
+  iconProps,
 }: {
   tooltip?: ReactNode
-  iconStyle?: CSSProperties
-  iconSize?: number
+  iconProps?: Omit<ComponentProps<typeof IconPark>, 'name'>
 }) {
   return (
     <>
       {tooltip && (
         <AntdTooltip title={tooltip}>
           <IconPark
-            style={{ cursor: 'pointer', marginLeft: '4px', ...iconStyle }}
+            {...iconProps}
             name={'Info'}
-            size={iconSize}
+            style={{ cursor: 'pointer', marginLeft: '4px', ...iconProps?.style }}
           />
         </AntdTooltip>
       )}

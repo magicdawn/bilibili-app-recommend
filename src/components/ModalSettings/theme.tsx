@@ -78,7 +78,20 @@ const LongwashingThemes = toThemes(
 )
 
 const helpLinkCss = css`
-  text-decoration: underline;
+  body & {
+    color: #1677ff;
+    transition: color 0.3s;
+
+    &:visited {
+      color: #1677ff;
+    }
+    &:hover {
+      color: #69b1ff;
+    }
+    &:active {
+      color: #0958d9;
+    }
+  }
 `
 
 const ThemeGroups: { name: string; tooltip?: ReactNode; themes: LxTheme[] }[] = [
@@ -178,7 +191,7 @@ export function ThemesSelect() {
               `}
             >
               {name}
-              <HelpInfo tooltip={tooltip} iconSize={22} />
+              <HelpInfo tooltip={tooltip} iconProps={{ size: 22 }} />
             </div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2px 8px' }}>
               {themes.map((t) => {
