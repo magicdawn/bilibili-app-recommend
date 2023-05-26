@@ -77,23 +77,6 @@ const LongwashingThemes = toThemes(
   `
 )
 
-const helpLinkCss = css`
-  body & {
-    color: #1677ff;
-    transition: color 0.3s;
-
-    &:visited {
-      color: #1677ff;
-    }
-    &:hover {
-      color: #69b1ff;
-    }
-    &:active {
-      color: #0958d9;
-    }
-  }
-`
-
 const ThemeGroups: { name: string; tooltip?: ReactNode; themes: LxTheme[] }[] = [
   {
     name: 'App',
@@ -109,7 +92,7 @@ const ThemeGroups: { name: string; tooltip?: ReactNode; themes: LxTheme[] }[] = 
     tooltip: (
       <>
         提取自{' '}
-        <a target='_blank' href='https://github.com/lyswhut/lx-music-desktop/' css={helpLinkCss}>
+        <a target='_blank' href='https://github.com/lyswhut/lx-music-desktop/'>
           lx-music-desktop
         </a>
         <br />
@@ -123,11 +106,11 @@ const ThemeGroups: { name: string; tooltip?: ReactNode; themes: LxTheme[] }[] = 
     tooltip: (
       <>
         提取自{' '}
-        <a target='_blank' href='https://www.bilibili.com/video/BV1g3411u7Lg/' css={helpLinkCss}>
+        <a target='_blank' href='https://www.bilibili.com/video/BV1g3411u7Lg/'>
           BV1g3411u7Lg
         </a>{' '}
         &{' '}
-        <a target='_blank' href='https://www.bilibili.com/video/BV1xu411q7sU/' css={helpLinkCss}>
+        <a target='_blank' href='https://www.bilibili.com/video/BV1xu411q7sU/'>
           BV1xu411q7sU
         </a>
       </>
