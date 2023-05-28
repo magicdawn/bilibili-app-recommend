@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.11.5 2023-05-28
+
+- d2fc52f chore: add more readme
+- 866b40f chore: not supported note on safari
+- 39a86c6 chore: use global.less
+- 6c3cd45 chore: update deps
+- e965dfa fix tooltip link color
+
 ## v0.11.4 2023-05-22
 
 - feat: add more themes
