@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.11.6 2023-05-28
+
+- fix: 修复 内测模式首页 + SectionRecommend, channel header fixed 异常的问题(直接移除该 channel header)
+
 ## v0.11.5 2023-05-28
 
 - d2fc52f chore: add more readme

@@ -82,6 +82,14 @@ async function initHomepageSection() {
       <SectionRecommend />
     </AntdApp>
   )
+
+  // header
+  // https://github.com/magicdawn/bilibili-app-recommend/issues/30
+  // 内测模式 + SectionRecommend, 这个 header channel fixed 样式有问题
+  // 尝试修复太复杂了, 这里直接移除. 其功能有替代: 滚动到首页顶部查看分区
+  if (getIsInternalTesting()) {
+    tryToRemove('.bili-feed4 .header-channel')
+  }
 }
 
 async function initHomepagePureRecommend() {

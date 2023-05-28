@@ -1,5 +1,7 @@
-import { APP_NAME } from '$common'
+import { APP_NAME, baseDebug } from '$common'
 import delay from 'delay'
+
+const debug = baseDebug.extend('utility:dom')
 
 const TIMEOUT = 10 * 1000
 const DELAY_INTERVAL = 200
@@ -27,6 +29,7 @@ export async function tryAction(
     return
   }
 
+  debug('tryAction: selector=%s count=%s', selector, arr.length)
   for (const el of arr) {
     await Promise.resolve(action(el))
   }
