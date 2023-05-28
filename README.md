@@ -125,6 +125,13 @@ B 站桌面端已上线, 支持 MacOS / Windows, 首页包含推荐模块
 - pnpm build
 - 按照提示, 复制 `file://` 链接, 在 chrome 中打开, 即可安装
 
+## 支持
+
+- 如果对你有用,请来个 Star :)
+- 如果你喜欢这个项目, 可以 「[爱发电](https://afdian.net/a/magicdawn)」 支持一下
+
+![afdian-magicdawn_w375](https://ghproxy.com/https://raw.githubusercontent.com/magicdawn/magicdawn/master/images/afdian-magicdawn_w375.jpg)
+
 ## Changelog
 
 [CHANGELOG.md](https://github.com/magicdawn/bilibili-app-recommend/blob/master/CHANGELOG.md)
