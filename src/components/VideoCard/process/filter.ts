@@ -1,5 +1,6 @@
 import { AppRecItemExtend, PcRecItemExtend } from '$define'
 import { settings } from '$settings'
+import { hasLogined } from '$utility'
 import { normalizeCardData } from './normalize'
 
 export function anyFilterEnabled() {
@@ -21,7 +22,7 @@ export function filterVideos(items: Array<PcRecItemExtend | AppRecItemExtend>) {
      * 动态模式
      */
 
-    if (settings.dynamicMode) {
+    if (settings.dynamicMode && hasLogined()) {
       return isFollowed
     }
 

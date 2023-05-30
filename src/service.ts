@@ -3,6 +3,7 @@ import { getColumnCount } from '$components/RecGrid/useShortcut'
 import { anyFilterEnabled, filterVideos } from '$components/VideoCard/process/filter'
 import { AppRecItemExtend, PcRecItemExtend } from '$define'
 import { settings } from '$settings'
+import { hasLogined } from '$utility'
 import { uniqBy } from 'lodash'
 import * as app from './service-app'
 import * as pc from './service-pc'
@@ -22,7 +23,7 @@ export function uniqConcat(existing: RecItem[], newItems: RecItem[]) {
   )
 }
 
-export const usePcApi = () => settings.usePcDesktopApi || settings.dynamicMode
+export const usePcApi = () => settings.usePcDesktopApi || (settings.dynamicMode && hasLogined())
 
 export async function getMinCount(count: number, pageRef: pc.PageRef, filterMultiplier = 5) {
   let items: RecItem[] = []

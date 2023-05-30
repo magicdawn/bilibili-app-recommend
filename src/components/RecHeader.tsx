@@ -3,6 +3,7 @@ import { IconPark } from '$icon-park'
 import { css } from '$libs'
 import { HEADER_HEIGHT } from '$platform'
 import { settings, updateSettings, useSettingsSnapshot } from '$settings'
+import { useHasLogined } from '$utility'
 import { isCurrentTyping } from '$utility/dom'
 import { useKeyPress, useMemoizedFn } from 'ahooks'
 import { Button, Space, Switch } from 'antd'
@@ -156,6 +157,10 @@ export function RecHeader({ onRefresh }: { onRefresh: () => void | Promise<void>
 
 export function DynamicModeSwitch({ onRefresh }: { onRefresh: () => void | Promise<void> }) {
   const { dynamicMode } = useSettingsSnapshot()
+  const logined = useHasLogined()
+
+  if (!logined) return null
+
   return (
     <>
       <AntdTooltip
