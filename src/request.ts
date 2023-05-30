@@ -6,6 +6,7 @@ export const HOST_APP = 'https://app.bilibili.com'
 
 export const request = axios.create({
   baseURL: HOST_API,
+  withCredentials: true,
 })
 
 request.interceptors.request.use(
@@ -21,8 +22,8 @@ request.interceptors.request.use(
 )
 
 // 可以跨域
-import gmAdapter from 'axios-userscript-adapter'
 import { appkey } from '$utility/auth'
+import gmAdapter from 'axios-userscript-adapter'
 export const gmrequest = axios.create({ adapter: gmAdapter })
 
 gmrequest.interceptors.request.use(

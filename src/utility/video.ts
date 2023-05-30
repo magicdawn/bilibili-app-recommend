@@ -1,6 +1,27 @@
 import dayjs from 'dayjs'
 
 /**
+ * '01:23' -> 83 (s)
+ */
+export function parseDuration(d?: string) {
+  if (!d) return 0
+
+  const units = [1, 60, 360]
+  const splited = d
+    .split(':')
+    .map((s) => Number(s))
+    .reverse()
+
+  const total = splited.reduce((total, cur, index) => {
+    return total + cur * units[index]
+  }, 0)
+
+  return total
+}
+// console.log(parseDuration('01:23'))
+// console.log(parseDuration('00:01:23'))
+
+/**
  * xx秒 -> xx:xx:xx
  */
 export function formatDuration(d?: number) {

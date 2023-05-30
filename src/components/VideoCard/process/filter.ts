@@ -1,4 +1,4 @@
-import { AppRecItemExtend, PcRecItemExtend } from '$define'
+import { RecItemType } from '$define'
 import { settings } from '$settings'
 import { hasLogined } from '$utility'
 import { normalizeCardData } from './normalize'
@@ -9,7 +9,7 @@ export function anyFilterEnabled() {
   )
 }
 
-export function filterVideos(items: Array<PcRecItemExtend | AppRecItemExtend>) {
+export function filterVideos(items: RecItemType[]) {
   if (!anyFilterEnabled()) {
     return items
   }

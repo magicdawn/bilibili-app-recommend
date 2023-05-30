@@ -6,13 +6,14 @@ import { baseDebug } from '$common'
 import { useModalDislikeVisible } from '$components/ModalDislike'
 import { useCurrentTheme } from '$components/ModalSettings/theme'
 import { VideoCard, VideoCardActions } from '$components/VideoCard'
-import { AppRecItemExtend, PcRecItemExtend } from '$define'
+import { RecItemType } from '$define'
 import { cx, generateClassName } from '$libs'
 import { HEADER_HEIGHT, getIsInternalTesting } from '$platform'
 import { getRecommendForGrid, getRecommendTimes, uniqConcat } from '$service'
+import { PcDynamicFeedService } from '$service-pc-dynamic-feed'
 import { useSettingsSnapshot } from '$settings'
 import { css } from '@emotion/react'
-import { useGetState, useMemoizedFn, useMount } from 'ahooks'
+import { useGetState, useLatest, useMemoizedFn, useMount } from 'ahooks'
 import { RefObject, forwardRef, useImperativeHandle, useMemo, useRef, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroller'
 import { internalTesting, narrowMode, videoGrid } from '../video-grid.module.less'
@@ -53,13 +54,19 @@ export type RecGridProps = {
 export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
   ({ infiteScrollUseWindow, shortcutEnabled, onScrollToTop, className, scrollerRef }, ref) => {
     const pageRef = useRef({ page: 1 })
+    const { usePcDynamicApi } = useSettingsSnapshot()
+    const usePcDynamicApiRef = useLatest(usePcDynamicApi)
 
     // 已加载完成的 load call count, 类似 page
     const [loadCompleteCount, setLoadCompleteCount, getLoadCompleteCount] = useGetState(0)
 
-    const [items, setItems, getItems] = useGetState<(PcRecItemExtend | AppRecItemExtend)[]>([])
+    const [items, setItems, getItems] = useGetState<RecItemType[]>([])
     const [isRefreshing, setIsRefreshing] = useState(false)
     const [refreshedAt, setRefreshedAt, getRefreshedAt] = useGetState<number>(() => Date.now())
+
+    const [pcDynamicFeedService, setPcDynamicFeedService] = useState(
+      () => new PcDynamicFeedService()
+    )
 
     const refresh = useMemoizedFn(async () => {
       const start = performance.now()
@@ -75,8 +82,11 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
       setItems([])
       pageRef.current.page = 1
 
+      const _pcDynamicFeedService = new PcDynamicFeedService()
+      setPcDynamicFeedService(_pcDynamicFeedService)
+
       try {
-        setItems(await getRecommendForGrid(pageRef.current))
+        setItems(await getRecommendForGrid(pageRef.current, _pcDynamicFeedService))
       } catch (e) {
         setIsRefreshing(false)
         throw e
@@ -104,13 +114,17 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
       requesting.current = true
 
       const refreshAtWhenStart = getRefreshedAt()
-
       let newItems = items
+
       try {
-        // fetchMore 至少 load 一项, 需要触发 InfiniteScroll.componentDidUpdate
-        while (!(newItems.length > items.length)) {
-          const more = await getRecommendTimes(2, pageRef.current)
-          newItems = uniqConcat(newItems, more)
+        if (usePcDynamicApiRef.current) {
+          newItems = newItems.concat((await pcDynamicFeedService.next()) || [])
+        } else {
+          // fetchMore 至少 load 一项, 需要触发 InfiniteScroll.componentDidUpdate
+          while (!(newItems.length > items.length)) {
+            const more = await getRecommendTimes(2, pageRef.current)
+            newItems = uniqConcat(newItems, more)
+          }
         }
       } catch (e) {
         requesting.current = false

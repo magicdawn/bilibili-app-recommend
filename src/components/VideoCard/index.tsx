@@ -1,6 +1,6 @@
 import { APP_KEY_PREFIX, APP_NAME } from '$common'
 import { Reason, dislikedIds, showModalDislike, useDislikedReason } from '$components/ModalDislike'
-import { AppRecItem, AppRecItemExtend, PcRecItemExtend } from '$define'
+import { AppRecItem, AppRecItemExtend, RecItemType } from '$define'
 import { IconPark } from '$icon-park'
 import { settings, useSettingsSnapshot } from '$settings'
 import { BvCode } from '$utility/bv'
@@ -59,7 +59,7 @@ const toHttps = (url: string) => (url || '').replace(/^http:\/\//, 'https://')
 export type VideoCardProps = {
   style?: CSSProperties
   className?: string
-  item?: PcRecItemExtend | AppRecItemExtend
+  item?: RecItemType
   loading?: boolean
   active?: boolean // 键盘 active
 } & ComponentProps<'div'>
@@ -205,7 +205,7 @@ const DislikedCard = memo(
 )
 
 type VideoCardInnerProps = {
-  item: PcRecItemExtend | AppRecItemExtend
+  item: RecItemType
   active?: boolean
 }
 type VideoCardInnerActions = {
@@ -221,6 +221,7 @@ const VideoCardInner = memo(
   ) {
     const isPc = item.api === 'pc'
     const isApp = item.api === 'app'
+    const isPcDynamic = item.api === 'pc-dynamic'
 
     const {
       id,
@@ -250,9 +251,9 @@ const VideoCardInner = memo(
       appBadgeStyleConfig,
     } = useMemo(() => normalizeCardData(item), [item])
 
-    const isNormalVideo = item.goto === 'av'
-    const isBangumi = item.goto === 'bangumi'
-    const isPicture = item.goto === 'picture'
+    const isNormalVideo = isPcDynamic || item.goto === 'av'
+    const isBangumi = !isPcDynamic && item.goto === 'bangumi'
+    const isPicture = !isPcDynamic && item.goto === 'picture'
     if (!['av', 'bangumi', 'picture'].includes(goto)) {
       console.warn(`[${APP_NAME}]: none (av,bangumi,picture) goto type %s`, goto, item)
     }
@@ -391,42 +392,48 @@ const VideoCardInner = memo(
     })
 
     const href = useMemo(() => {
-      return isPc
-        ? isNormalVideo && bvid
-          ? `/video/${bvid}/`
-          : item.uri
-        : (() => {
-            // valid uri
-            if (item.uri.startsWith('http://') || item.uri.startsWith('https://')) {
-              return item.uri
-            }
+      if (isPc) {
+        return isNormalVideo && bvid ? `/video/${bvid}/` : item.uri
+      }
 
-            // more see https://github.com/magicdawn/bilibili-app-recommend/issues/23#issuecomment-1533079590
+      if (isPcDynamic) {
+        return `/video/${bvid}/`
+      }
 
-            if (isNormalVideo) {
-              // return `/video/av${item.param}`
-              return `/video/${BvCode.av2bv(Number(item.param))}/`
-            }
+      if (isApp) {
+        // valid uri
+        if (item.uri.startsWith('http://') || item.uri.startsWith('https://')) {
+          return item.uri
+        }
 
-            if (isBangumi) {
-              console.warn(
-                `[${APP_NAME}]: bangumi uri should not starts with 'bilibili://': %s`,
-                item.uri
-              )
-              return item.uri
-            }
+        // more see https://github.com/magicdawn/bilibili-app-recommend/issues/23#issuecomment-1533079590
 
-            // goto = picture, 可能是专栏 or 动态
-            // 动态的 url 是 https://t.bilibili.com, 使用 uri
-            // 专栏的 url 是 bilibili://article/<id>
-            if (isPicture) {
-              const id = /^bilibili:\/\/article\/(\d+)$/.exec(item.uri)?.[1]
-              if (id) return `/read/cv${id}`
-              return item.uri
-            }
+        if (isNormalVideo) {
+          // return `/video/av${item.param}`
+          return `/video/${BvCode.av2bv(Number(item.param))}/`
+        }
 
-            return item.uri
-          })()
+        if (isBangumi) {
+          console.warn(
+            `[${APP_NAME}]: bangumi uri should not starts with 'bilibili://': %s`,
+            item.uri
+          )
+          return item.uri
+        }
+
+        // goto = picture, 可能是专栏 or 动态
+        // 动态的 url 是 https://t.bilibili.com, 使用 uri
+        // 专栏的 url 是 bilibili://article/<id>
+        if (isPicture) {
+          const id = /^bilibili:\/\/article\/(\d+)$/.exec(item.uri)?.[1]
+          if (id) return `/read/cv${id}`
+          return item.uri
+        }
+
+        return item.uri
+      }
+
+      return ''
     }, [item])
 
     const durationStr = useMemo(() => formatDuration(duration), [duration])
@@ -545,7 +552,7 @@ const VideoCardInner = memo(
             <div className='bili-video-card__mask'>
               <div className='bili-video-card__stats'>
                 <div className='bili-video-card__stats--left'>
-                  {isPc ? (
+                  {isPc || isPcDynamic ? (
                     <>
                       {/* 播放 */}
                       {statItem({ text: playStr, iconSvgName: AppRecIconSvgNameMap.play })}
