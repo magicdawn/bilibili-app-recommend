@@ -161,7 +161,7 @@ export function DynamicModeSwitch({ onRefresh }: { onRefresh: () => void | Promi
       <AntdTooltip
         title={
           <>
-            动态模式: 只保留已关注推荐
+            动态模式: 只保留「已关注」
             <br />
             1. 动态模式使用更快的 PC 桌面端 API, 设置中 API 切换不影响动态模式.
             <br />

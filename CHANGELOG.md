@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.11.7 2023-05-30
+
+- feat: 动态模式, 只保留「已关注」
+
 ## v0.11.6 2023-05-28
 
 - fix: 修复 内测模式首页 + SectionRecommend, channel header fixed 异常的问题(直接移除该 channel header)
