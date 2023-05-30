@@ -3,6 +3,7 @@ import { AppRecItemExtend, PcRecItemExtend } from '$define'
 import { cx } from '$libs'
 import { getIsInternalTesting } from '$platform'
 import { getRecommendForHome } from '$service'
+import { PcDynamicFeedService } from '$service-pc-dynamic-feed'
 import { useRequest } from 'ahooks'
 import { useMemo } from 'react'
 import { RecHeader } from '../RecHeader'
@@ -17,7 +18,14 @@ export function SectionRecommend() {
 
   const isInternalTesting = getIsInternalTesting()
   const pageRef = useMemo(() => ({ page: 1 }), [])
-  const { data: items, loading, error, refresh } = useRequest(() => getRecommendForHome(pageRef))
+
+  const pcDynamicFeedService = useMemo(() => new PcDynamicFeedService(), [])
+  const {
+    data: items,
+    loading,
+    error,
+    refresh,
+  } = useRequest(() => getRecommendForHome(pageRef, pcDynamicFeedService))
   if (error) {
     console.error(error.stack || error)
   }

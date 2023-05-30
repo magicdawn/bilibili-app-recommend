@@ -552,7 +552,7 @@ const VideoCardInner = memo(
             <div className='bili-video-card__mask'>
               <div className='bili-video-card__stats'>
                 <div className='bili-video-card__stats--left'>
-                  {isPc || isPcDynamic ? (
+                  {isPc ? (
                     <>
                       {/* 播放 */}
                       {statItem({ text: playStr, iconSvgName: AppRecIconSvgNameMap.play })}
@@ -562,7 +562,7 @@ const VideoCardInner = memo(
                         iconSvgName: AppRecIconSvgNameMap.like,
                       })}
                     </>
-                  ) : (
+                  ) : isApp ? (
                     <>
                       {item.cover_left_text_1 &&
                         statItem({
@@ -582,6 +582,16 @@ const VideoCardInner = memo(
                                 (item.cover_left_2_content_description || '')
                               : item.cover_left_text_2,
                         })}
+                    </>
+                  ) : (
+                    <>
+                      {/* 播放 */}
+                      {statItem({ text: playStr, iconSvgName: AppRecIconSvgNameMap.play })}
+                      {/* 弹幕 */}
+                      {statItem({
+                        text: (danmaku || 0).toString(),
+                        iconSvgName: AppRecIconSvgNameMap.danmaku,
+                      })}
                     </>
                   )}
                 </div>

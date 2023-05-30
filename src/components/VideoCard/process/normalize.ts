@@ -74,7 +74,11 @@ export function normalizeCardData(
   const appBadgeStyleConfig = isPc ? undefined : isApp ? item.badge_style : undefined
 
   // 推荐理由
-  const recommendReason = isPc ? item.rcmd_reason?.content : isApp ? item.rcmd_reason : undefined
+  const recommendReason = isPc
+    ? item.rcmd_reason?.content
+    : isApp
+    ? item.rcmd_reason
+    : pcDynamicVideo?.badge.text
   const recommendReasonStyleConfig = isPc ? undefined : isApp ? item.rcmd_reason_style : undefined
 
   return {

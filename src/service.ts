@@ -53,7 +53,7 @@ export async function getMinCount(
     )
 
     let cur: RecItemType[] = []
-    if (settings.usePcDynamicApi) {
+    if (settings.usePcDynamicApi && hasLogined()) {
       cur = (await pcDynamicFeedService.next()) || []
     } else {
       cur = usePcApi()

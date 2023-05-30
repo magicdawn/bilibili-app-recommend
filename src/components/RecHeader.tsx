@@ -5,6 +5,7 @@ import { HEADER_HEIGHT } from '$platform'
 import { settings, updateSettings, useSettingsSnapshot } from '$settings'
 import { useHasLogined } from '$utility'
 import { isCurrentTyping } from '$utility/dom'
+import { toast } from '$utility/toast'
 import { useKeyPress, useMemoizedFn } from 'ahooks'
 import { Button, Radio, Space } from 'antd'
 import {
@@ -154,25 +155,38 @@ export function RecHeader({ onRefresh }: { onRefresh: () => void | Promise<void>
   )
 }
 
+function toastNeedLogin() {
+  return toast('你需要登录B站后使用该功能!')
+}
+
 export function DynamicModeSwitch({ onRefresh }: { onRefresh: () => void | Promise<void> }) {
   const { dynamicMode, usePcDynamicApi } = useSettingsSnapshot()
   const logined = useHasLogined()
-
-  if (!logined) return null
 
   return (
     <>
       <Radio.Group
         buttonStyle='solid'
         size='middle'
-        value={dynamicMode ? 'dynamicMode' : usePcDynamicApi ? 'dynamicApi' : 'normal'}
+        value={
+          logined
+            ? dynamicMode
+              ? 'dynamicMode'
+              : usePcDynamicApi
+              ? 'dynamicApi'
+              : 'normal'
+            : 'normal'
+        }
+        style={{ overflow: 'hidden' }}
         onChange={(e) => {
           const newValue = e.target.value
           switch (newValue) {
             case 'dynamicMode':
+              if (!logined) return toastNeedLogin()
               updateSettings({ dynamicMode: true, usePcDynamicApi: false })
               break
             case 'dynamicApi':
+              if (!logined) return toastNeedLogin()
               updateSettings({ dynamicMode: false, usePcDynamicApi: true })
               break
             case 'normal':
