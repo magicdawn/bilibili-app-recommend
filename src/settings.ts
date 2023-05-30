@@ -56,6 +56,9 @@ export const initialSettings = {
 
   // 动态模式, 只看已关注
   dynamicMode: false,
+
+  // 使用动态 API
+  usePcDynamicApi: false,
 }
 
 export type Config = typeof initialSettings

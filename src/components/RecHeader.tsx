@@ -6,8 +6,7 @@ import { settings, updateSettings, useSettingsSnapshot } from '$settings'
 import { useHasLogined } from '$utility'
 import { isCurrentTyping } from '$utility/dom'
 import { useKeyPress, useMemoizedFn } from 'ahooks'
-import { Button, Space, Switch } from 'antd'
-import delay from 'delay'
+import { Button, Radio, Space } from 'antd'
 import {
   CSSProperties,
   MouseEvent,
@@ -20,8 +19,8 @@ import {
 import { useSticky } from 'react-use-sticky'
 import { proxy, useSnapshot } from 'valtio'
 import { AccessKeyManage } from './AccessKeyManage'
-import { AntdTooltip } from './AntdApp'
 import { ModalFeed } from './ModalFeed'
+import { HelpInfo } from './piece'
 
 const verticalAlignStyle = css`
   display: flex;
@@ -112,9 +111,9 @@ export function RecHeader({ onRefresh }: { onRefresh: () => void | Promise<void>
           <svg className='icon'>
             <use href='#channel-cinephile'></use>
           </svg>
-          <a className='title' href='#'>
+          {/* <a className='title' href='#'>
             <span>推荐</span>
-          </a>
+          </a> */}
           <DynamicModeSwitch onRefresh={onRefresh} />
         </div>
 
@@ -156,17 +155,49 @@ export function RecHeader({ onRefresh }: { onRefresh: () => void | Promise<void>
 }
 
 export function DynamicModeSwitch({ onRefresh }: { onRefresh: () => void | Promise<void> }) {
-  const { dynamicMode } = useSettingsSnapshot()
+  const { dynamicMode, usePcDynamicApi } = useSettingsSnapshot()
   const logined = useHasLogined()
 
   if (!logined) return null
 
   return (
     <>
-      <AntdTooltip
-        title={
+      <Radio.Group
+        buttonStyle='solid'
+        size='middle'
+        value={dynamicMode ? 'dynamicMode' : usePcDynamicApi ? 'dynamicApi' : 'normal'}
+        onChange={(e) => {
+          const newValue = e.target.value
+          switch (newValue) {
+            case 'dynamicMode':
+              updateSettings({ dynamicMode: true, usePcDynamicApi: false })
+              break
+            case 'dynamicApi':
+              updateSettings({ dynamicMode: false, usePcDynamicApi: true })
+              break
+            case 'normal':
+            default:
+              updateSettings({ dynamicMode: false, usePcDynamicApi: false })
+              break
+          }
+
+          onRefresh()
+        }}
+      >
+        <Radio.Button value='normal'>推荐</Radio.Button>
+        <Radio.Button value='dynamicMode'>已关注</Radio.Button>
+        <Radio.Button value='dynamicApi'>动态</Radio.Button>
+      </Radio.Group>
+      <HelpInfo
+        tooltip={
           <>
-            动态模式: 只保留「已关注」
+            <ul>
+              <li> 推荐</li>
+              <li>已关注: 推荐只保留已关注</li>
+              <li> 动态: 视频投稿动态</li>
+            </ul>
+            <br />
+            已关注: 只保留「已关注」
             <br />
             1. 动态模式使用更快的 PC 桌面端 API, 设置中 API 切换不影响动态模式.
             <br />
@@ -175,18 +206,7 @@ export function DynamicModeSwitch({ onRefresh }: { onRefresh: () => void | Promi
             3. 视频筛选器不起作用
           </>
         }
-      >
-        <Switch
-          checked={dynamicMode}
-          checkedChildren='动态模式'
-          unCheckedChildren='常规模式'
-          onChange={async (v) => {
-            updateSettings({ dynamicMode: v })
-            delay(100)
-            onRefresh()
-          }}
-        />
-      </AntdTooltip>
+      />
     </>
   )
 }
