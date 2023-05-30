@@ -1,6 +1,6 @@
 import { useCurrentTheme } from '$components/ModalSettings/theme'
 import { RecGrid, RecGridRef } from '$components/RecGrid'
-import { RefreshButton } from '$components/RecHeader'
+import { DynamicModeSwitch, RefreshButton } from '$components/RecHeader'
 import { ModalFeedConfigChecks } from '$components/piece'
 import { cx } from '$libs'
 import { useIsDarkMode } from '$platform'
@@ -52,7 +52,16 @@ export const ModalFeed = memo(function ModalFeed({ show, onHide }: IProps) {
       }}
     >
       <div className={cx(BaseModalClass.modalHeader, styles.modalHeader)}>
-        <div className={BaseModalClass.modalTitle}>推荐</div>
+        <div
+          className={BaseModalClass.modalTitle}
+          css={css`
+            margin-right: 4px;
+          `}
+        >
+          推荐
+        </div>
+
+        <DynamicModeSwitch onRefresh={onRefresh} />
 
         <div className='space' style={{ flex: 1 }}></div>
 

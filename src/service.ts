@@ -22,6 +22,8 @@ export function uniqConcat(existing: RecItem[], newItems: RecItem[]) {
   )
 }
 
+export const usePcApi = () => settings.usePcDesktopApi || settings.dynamicMode
+
 export async function getMinCount(count: number, pageRef: pc.PageRef, filterMultiplier = 5) {
   let items: RecItem[] = []
 
@@ -44,7 +46,7 @@ export async function getMinCount(count: number, pageRef: pc.PageRef, filterMult
       )
     }
 
-    let cur: RecItem[] = settings.usePcDesktopApi
+    let cur: RecItem[] = usePcApi()
       ? await pc._getRecommendTimes(times, pageRef)
       : await app._getRecommendTimes(times)
 
@@ -70,7 +72,7 @@ export async function getRecommendForGrid(pageRef: pc.PageRef) {
 }
 
 export async function getRecommendTimes(times: number, pageRef: pc.PageRef) {
-  let items: (PcRecItemExtend | AppRecItemExtend)[] = settings.usePcDesktopApi
+  let items: (PcRecItemExtend | AppRecItemExtend)[] = usePcApi()
     ? await pc._getRecommendTimes(times, pageRef)
     : await app._getRecommendTimes(times)
   items = filterVideos(items)

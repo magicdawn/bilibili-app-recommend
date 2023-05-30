@@ -53,6 +53,9 @@ export const initialSettings = {
 
   // 已关注UP的推荐视频, 默认不参与过滤
   enableFilterForFollowed: false,
+
+  // 动态模式, 只看已关注
+  dynamicMode: false,
 }
 
 export type Config = typeof initialSettings

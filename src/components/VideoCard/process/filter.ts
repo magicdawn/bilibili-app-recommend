@@ -3,7 +3,9 @@ import { settings } from '$settings'
 import { normalizeCardData } from './normalize'
 
 export function anyFilterEnabled() {
-  return settings.filterMinDurationEnabled || settings.filterMinPlayCountEnabled
+  return (
+    settings.filterMinDurationEnabled || settings.filterMinPlayCountEnabled || settings.dynamicMode
+  )
 }
 
 export function filterVideos(items: Array<PcRecItemExtend | AppRecItemExtend>) {
@@ -13,9 +15,21 @@ export function filterVideos(items: Array<PcRecItemExtend | AppRecItemExtend>) {
 
   return items.filter((item) => {
     const { play, duration, recommendReason } = normalizeCardData(item)
+    const isFollowed = recommendReason === '已关注' || recommendReason?.includes('关注')
+
+    /**
+     * 动态模式
+     */
+
+    if (settings.dynamicMode) {
+      return isFollowed
+    }
+
+    /**
+     * 推荐筛选
+     */
 
     if (!settings.enableFilterForFollowed) {
-      const isFollowed = recommendReason === '已关注' || recommendReason?.includes('关注')
       if (isFollowed) return true
     }
 

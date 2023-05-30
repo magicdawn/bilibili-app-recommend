@@ -2,10 +2,11 @@ import { ModalSettings } from '$components/ModalSettings'
 import { IconPark } from '$icon-park'
 import { css } from '$libs'
 import { HEADER_HEIGHT } from '$platform'
-import { settings, useSettingsSnapshot } from '$settings'
+import { settings, updateSettings, useSettingsSnapshot } from '$settings'
 import { isCurrentTyping } from '$utility/dom'
 import { useKeyPress, useMemoizedFn } from 'ahooks'
-import { Button, Space } from 'antd'
+import { Button, Space, Switch } from 'antd'
+import delay from 'delay'
 import {
   CSSProperties,
   MouseEvent,
@@ -18,6 +19,7 @@ import {
 import { useSticky } from 'react-use-sticky'
 import { proxy, useSnapshot } from 'valtio'
 import { AccessKeyManage } from './AccessKeyManage'
+import { AntdTooltip } from './AntdApp'
 import { ModalFeed } from './ModalFeed'
 
 const verticalAlignStyle = css`
@@ -65,11 +67,8 @@ const hideModalConfig = () => {
   headerState.modalConfigVisible = false
 }
 
-type RecHeaderProps = {
-  onRefresh: () => void | Promise<void>
-}
-export function RecHeader({ onRefresh }: RecHeaderProps) {
-  const { accessKey, pureRecommend, usePcDesktopApi } = useSettingsSnapshot()
+export function RecHeader({ onRefresh }: { onRefresh: () => void | Promise<void> }) {
+  const { accessKey, pureRecommend, usePcDesktopApi, dynamicMode } = useSettingsSnapshot()
 
   const { modalFeedVisible, modalConfigVisible } = useSnapshot(headerState)
   useKeyPress(
@@ -115,6 +114,7 @@ export function RecHeader({ onRefresh }: RecHeaderProps) {
           <a className='title' href='#'>
             <span>推荐</span>
           </a>
+          <DynamicModeSwitch onRefresh={onRefresh} />
         </div>
 
         <div className='right'>
@@ -150,6 +150,38 @@ export function RecHeader({ onRefresh }: RecHeaderProps) {
 
       <ModalFeed show={modalFeedVisible} onHide={hideModalFeed} />
       <ModalSettings show={modalConfigVisible} onHide={hideModalConfig} />
+    </>
+  )
+}
+
+export function DynamicModeSwitch({ onRefresh }: { onRefresh: () => void | Promise<void> }) {
+  const { dynamicMode } = useSettingsSnapshot()
+  return (
+    <>
+      <AntdTooltip
+        title={
+          <>
+            动态模式: 只保留已关注推荐
+            <br />
+            1. 动态模式使用更快的 PC 桌面端 API, 设置中 API 切换不影响动态模式.
+            <br />
+            2. 动态模式是基于筛选, 并不是真正的动态
+            <br />
+            3. 视频筛选器不起作用
+          </>
+        }
+      >
+        <Switch
+          checked={dynamicMode}
+          checkedChildren='动态模式'
+          unCheckedChildren='常规模式'
+          onChange={async (v) => {
+            updateSettings({ dynamicMode: v })
+            delay(100)
+            onRefresh()
+          }}
+        />
+      </AntdTooltip>
     </>
   )
 }
