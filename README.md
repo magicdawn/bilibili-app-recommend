@@ -30,6 +30,10 @@
 
 ## 杂
 
+### B 站首页版本
+
+支持新版首页和内测首页. 旧版首页请看这里 https://github.com/indefined/UserScripts/tree/master/bilibiliHome
+
 ### Monkey 插件
 
 支持 ViolentMonkey(我使用的) 和 TamperMonkey.
@@ -44,17 +48,17 @@ B 站桌面端已上线, 支持 MacOS / Windows, 首页包含推荐模块
 
 ## 介绍
 
-### 接口切换
+### API 切换
 
-支持使用 App 或者 PC 接口
+支持使用 App API 或者 PC 桌面端 API
 
-#### App 接口, 默认
+#### App API, 默认
 
 - 需要 access_key
 - 可以使用标记不喜欢功能
 - 没有视频发布日期
 
-#### PC 桌面端接口
+#### PC 桌面端 API
 
 - 不需要 access_key 了
 - 标记不喜欢功能没了
