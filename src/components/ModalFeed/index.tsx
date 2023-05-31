@@ -1,6 +1,6 @@
 import { useCurrentTheme } from '$components/ModalSettings/theme'
 import { RecGrid, RecGridRef } from '$components/RecGrid'
-import { DynamicModeSwitch, RefreshButton } from '$components/RecHeader'
+import { RefreshButton, VideoSourceTab } from '$components/RecHeader'
 import { ModalFeedConfigChecks } from '$components/piece'
 import { cx } from '$libs'
 import { useIsDarkMode } from '$platform'
@@ -63,7 +63,7 @@ export const ModalFeed = memo(function ModalFeed({ show, onHide }: IProps) {
           推荐
         </div> */}
 
-        <DynamicModeSwitch refreshing={refreshing} onRefresh={onRefresh} />
+        <VideoSourceTab refreshing={refreshing} onRefresh={onRefresh} />
 
         <div className='space' style={{ flex: 1 }}></div>
 

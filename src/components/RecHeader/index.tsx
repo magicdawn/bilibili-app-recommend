@@ -121,7 +121,7 @@ export function RecHeader({
           {/* <a className='title' href='#'>
             推荐
           </a> */}
-          <DynamicModeSwitch refreshing={refreshing} onRefresh={onRefresh} />
+          <VideoSourceTab refreshing={refreshing} onRefresh={onRefresh} />
         </div>
 
         <div className='right'>
@@ -166,7 +166,7 @@ function toastNeedLogin() {
   return toast('你需要登录B站后使用该功能!')
 }
 
-export function DynamicModeSwitch({
+export function VideoSourceTab({
   onRefresh,
   refreshing,
 }: {
@@ -180,6 +180,7 @@ export function DynamicModeSwitch({
     <>
       <Radio.Group
         disabled={refreshing}
+        optionType='button'
         buttonStyle='solid'
         size='middle'
         value={tab}

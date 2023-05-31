@@ -51,3 +51,16 @@ export function parseCount(str: string) {
 // console.log(getCountFromStr('10000'))
 // console.log(getCountFromStr('1.2万'))
 // console.log(getCountFromStr('2万'))
+
+const currentYear = dayjs().format('YYYY')
+
+export function formatTimeStamp(unixTs?: number) {
+  if (!unixTs) return ''
+
+  const dayCtime = dayjs.unix(unixTs)
+  if (dayCtime.format('YYYY') === currentYear) {
+    return dayCtime.format('M-D')
+  } else {
+    return dayCtime.format('YY-M-D')
+  }
+}

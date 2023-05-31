@@ -15,7 +15,6 @@ import {
   useUpdateEffect,
 } from 'ahooks'
 import cx from 'classnames'
-import dayjs from 'dayjs'
 import {
   CSSProperties,
   ComponentProps,
@@ -40,18 +39,6 @@ import {
 } from './card.service'
 import styles from './index.module.less'
 import { normalizeCardData } from './process/normalize'
-
-const currentYear = dayjs().format('YYYY')
-const formatTimeStamp = (unixTs?: number) => {
-  if (!unixTs) return ''
-
-  const dayCtime = dayjs.unix(unixTs)
-  if (dayCtime.format('YYYY') === currentYear) {
-    return dayCtime.format('M-D')
-  } else {
-    return dayCtime.format('YY-M-D')
-  }
-}
 
 const toHttps = (url: string) => (url || '').replace(/^http:\/\//, 'https://')
 
@@ -260,8 +247,6 @@ const VideoCardInner = memo(
     /**
      * transformed
      */
-
-    const pubdateDisplay = useMemo(() => formatTimeStamp(pubdate), [pubdate])
     const cover = useMemo(() => toHttps(coverRaw), [coverRaw])
 
     const [videoData, setVideoData] = useState<VideoData | null>(null)
@@ -591,9 +576,7 @@ const VideoCardInner = memo(
                   )}
 
                   <span className='bili-video-card__info--author'>{authorName}</span>
-                  {pubdateDisplay && (
-                    <span className='bili-video-card__info--date'>· {pubdateDisplay}</span>
-                  )}
+                  {pubdate && <span className='bili-video-card__info--date'>· {pubdate}</span>}
                 </a>
               ) : appBadge || appBadgeDesc ? (
                 <a className='bili-video-card__info--owner' href={href} target='_blank'>

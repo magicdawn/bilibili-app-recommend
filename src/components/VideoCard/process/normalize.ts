@@ -1,7 +1,8 @@
 import { APP_NAME } from '$common'
 import { AppRecItemExtend, DynamicFeedItemExtend, PcRecItemExtend, RecItemType } from '$define'
 import { BvCode } from '$utility/bv'
-import { formatDuration, parseCount, parseDuration } from '$utility/video'
+import { formatDuration, formatTimeStamp, parseCount, parseDuration } from '$utility/video'
+import dayjs from 'dayjs'
 import { AppRecIconField, AppRecIconMap } from '../app-rec-icon'
 
 export interface IVideoCardData {
@@ -12,7 +13,8 @@ export interface IVideoCardData {
   href: string
   title: string
   coverRaw: string
-  pubdate?: number
+  pubts?: number // unix timestamp
+  pubdate?: string // for display
   duration: number
   durationStr: string
   recommendReason?: string
@@ -71,7 +73,8 @@ export function apiPcAdapter(item: PcRecItemExtend): IVideoCardData {
     href: item.goto === 'av' ? `/video/${item.bvid}/` : item.uri,
     title: item.title,
     coverRaw: item.pic,
-    pubdate: item.pubdate,
+    pubts: item.pubdate,
+    pubdate: formatTimeStamp(item.pubdate),
     duration: item.duration,
     durationStr: formatDuration(item.duration),
     recommendReason: item.rcmd_reason?.content,
@@ -141,6 +144,7 @@ export function apiAppAdapter(item: AppRecItemExtend): IVideoCardData {
     href,
     title: item.title,
     coverRaw: item.cover,
+    pubts: undefined,
     pubdate: undefined,
     duration: item.player_args?.duration || 0,
     durationStr: formatDuration(item.player_args?.duration),
@@ -167,6 +171,16 @@ export function apiDynamicAdapter(item: DynamicFeedItemExtend): IVideoCardData {
   const v = item.modules.module_dynamic.major.archive
   const author = item.modules.module_author
 
+  const oneDayAgo = dayjs().subtract(2, 'days').unix()
+  const pubdate = (() => {
+    const ts = author.pub_ts
+    if (ts > oneDayAgo) {
+      return author.pub_time
+    } else {
+      return formatTimeStamp(ts)
+    }
+  })()
+
   return {
     // video
     avid: v.aid,
@@ -175,7 +189,8 @@ export function apiDynamicAdapter(item: DynamicFeedItemExtend): IVideoCardData {
     href: `/video/${v.bvid}/`,
     title: v.title,
     coverRaw: v.cover,
-    pubdate: item.modules.module_author.pub_ts,
+    pubts: author.pub_ts,
+    pubdate,
     duration: parseDuration(v.duration_text) || 0,
     durationStr: v.duration_text,
     recommendReason: v.badge.text,
