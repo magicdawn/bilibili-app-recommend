@@ -28,10 +28,15 @@ export function getCsrfToken(): string {
 }
 
 export function hasLogined(): boolean {
+  // logout in default header
+  // but not included in bilibili-evolved
+  // return !!document.querySelector('.logout-item')
   const cookies = parseCookie()
   return !!cookies.DedeUserID // SESSDATA 是 httponly
 }
 
+// TODO: make it reactive
+// 找不到特征...
 export function useHasLogined() {
   return useMemo(() => hasLogined(), [document.cookie])
 }
