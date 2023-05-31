@@ -6,7 +6,7 @@
 //
 //   "Set quicktype target language"
 
-export interface PcDynamicFeedJson {
+export interface DynamicFeedJson {
   code: number
   message: string
   ttl: number
@@ -15,13 +15,13 @@ export interface PcDynamicFeedJson {
 
 export interface Data {
   has_more: boolean
-  items: PcDynamicFeedItem[]
+  items: DynamicFeedItem[]
   offset: string
   update_baseline: string
   update_num: number
 }
 
-export interface PcDynamicFeedItem {
+export interface DynamicFeedItem {
   basic: Basic
   id_str: string
   modules: Modules

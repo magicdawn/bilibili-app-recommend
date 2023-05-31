@@ -2,7 +2,7 @@ import { AppRecItem } from './app-recommend'
 import { PcRecItem } from './pc-recommend'
 
 export { AppRecItem, AppRecommendJson } from './app-recommend'
-export { PcDynamicFeedItem, PcDynamicFeedJson } from './pc-dynamic-feed'
+export { DynamicFeedItem, DynamicFeedJson } from './pc-dynamic-feed'
 export { PcRecItem, PcRecommendJson } from './pc-recommend'
 export { PvideoJson, PvideoData }
 export { DmJson, DmData }
@@ -17,16 +17,16 @@ export interface PcRecItemExtend extends PcRecItem {
   api: 'pc'
 }
 
-export interface PcDynamicFeedItemExtend extends PcDynamicFeedItem {
+export interface DynamicFeedItemExtend extends DynamicFeedItem {
   uniqId: string
-  api: 'pc-dynamic'
+  api: 'dynamic'
 }
 
 import { PvideoJson } from './pvideo'
 type PvideoData = PvideoJson['data']
 
 import { DmJson } from './dm'
-import { PcDynamicFeedItem } from './pc-dynamic-feed'
+import { DynamicFeedItem } from './pc-dynamic-feed'
 type DmData = DmJson['data']
 
-export type RecItemType = PcRecItemExtend | AppRecItemExtend | PcDynamicFeedItemExtend
+export type RecItemType = PcRecItemExtend | AppRecItemExtend | DynamicFeedItemExtend

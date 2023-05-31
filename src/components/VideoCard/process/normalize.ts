@@ -1,28 +1,97 @@
-import { AppRecItemExtend, PcDynamicFeedItemExtend, PcRecItemExtend } from '$define'
-import { parseCount, parseDuration } from '$utility/video'
+import { APP_NAME } from '$common'
+import { AppRecItemExtend, DynamicFeedItemExtend, PcRecItemExtend, RecItemType } from '$define'
+import { BvCode } from '$utility/bv'
+import { formatDuration, parseCount, parseDuration } from '$utility/video'
 import { AppRecIconField, AppRecIconMap } from '../app-rec-icon'
 
-export function normalizeCardData(
-  item: PcRecItemExtend | AppRecItemExtend | PcDynamicFeedItemExtend
-) {
+export interface IVideoCardData {
+  // video
+  avid: string
+  bvid: string
+  goto: string
+  href: string
+  title: string
+  coverRaw: string
+  pubdate?: number
+  duration: number
+  durationStr: string
+  recommendReason?: string
+
+  // stat
+  play?: number
+  like?: number
+  coin?: number
+  danmaku?: number
+  favorite?: number
+
+  // author
+  authorName?: string
+  authorFace?: string
+  authorMid?: string
+
+  // adpater specific
+  appBadge?: string
+  appBadgeDesc?: string
+}
+
+export function normalizeCardData(item: RecItemType) {
   /**
    * raw data
    */
 
   const isPc = item.api === 'pc'
   const isApp = item.api === 'app'
-  const isPcDynamic = item.api === 'pc-dynamic'
+  const isDynamic = item.api === 'dynamic'
 
-  const pcDynamicVideo = isPcDynamic ? item.modules.module_dynamic.major.archive : undefined
+  if (isPc) return apiPcAdapter(item)
+  if (isApp) return apiAppAdapter(item)
+  return apiDynamicAdapter(item)
 
-  // id = avid
-  const id = isPc ? String(item.id) : isApp ? String(item.param) : String(pcDynamicVideo?.aid)
-  const bvid = isPc ? item.bvid : isApp ? '' : pcDynamicVideo?.bvid
-  const goto = isPc ? item.goto : isApp ? item.goto : 'av'
+  function lookinto<T>({
+    pc,
+    app,
+    dynamic,
+  }: {
+    pc: (item: PcRecItemExtend) => T
+    app: (item: AppRecItemExtend) => T
+    dynamic: (item: DynamicFeedItemExtend) => T
+  }) {
+    if (isPc) return pc(item)
+    if (isApp) return app(item)
+    return dynamic(item)
+  }
+}
 
+export function apiPcAdapter(item: PcRecItemExtend): IVideoCardData {
+  return {
+    // video
+    avid: String(item.id),
+    bvid: item.bvid,
+    goto: item.goto,
+    href: item.goto === 'av' ? `/video/${item.bvid}/` : item.uri,
+    title: item.title,
+    coverRaw: item.pic,
+    pubdate: item.pubdate,
+    duration: item.duration,
+    durationStr: formatDuration(item.duration),
+    recommendReason: item.rcmd_reason?.content,
+
+    // stat
+    play: item.stat.view,
+    like: item.stat.like,
+    coin: undefined,
+    danmaku: item.stat.danmaku,
+    favorite: undefined,
+
+    // author
+    authorName: item.owner.name,
+    authorFace: item.owner.face,
+    authorMid: String(item.owner.mid),
+  }
+}
+
+export function apiAppAdapter(item: AppRecItemExtend): IVideoCardData {
   const extractCountFor = (target: AppRecIconField) => {
-    if (!isApp) return undefined
-
     const { cover_left_icon_1, cover_left_text_1, cover_left_icon_2, cover_left_text_2 } = item
     if (cover_left_icon_1 && AppRecIconMap[cover_left_icon_1] === target) {
       return parseCount(cover_left_text_1)
@@ -32,83 +101,95 @@ export function normalizeCardData(
     }
   }
 
-  // stat
-  const play = isPc
-    ? item.stat.view
-    : isApp
-    ? extractCountFor('play')
-    : parseCount(pcDynamicVideo?.stat.play || '0')
+  const avid = item.param
+  const bvid = BvCode.av2bv(Number(item.param))
 
-  const like = isPc ? item.stat.like : undefined
-  const coin = isPc ? undefined : undefined
-  const danmaku = isPc
-    ? item.stat.danmaku
-    : isApp
-    ? extractCountFor('danmaku')
-    : parseCount(pcDynamicVideo?.stat.danmaku || '0')
+  const href = (() => {
+    // valid uri
+    if (item.uri.startsWith('http://') || item.uri.startsWith('https://')) {
+      return item.uri
+    }
 
-  // video info
-  const title = isPc || isApp ? item.title : pcDynamicVideo!.title
-  const coverRaw = isPc ? item.pic : isApp ? item.cover : pcDynamicVideo!.cover
-  const pubdate = isPc ? item.pubdate : isApp ? undefined : item.modules.module_author.pub_ts // 获取不到发布时间
-  const duration =
-    (isPc
-      ? item.duration
-      : isApp
-      ? item.player_args?.duration
-      : parseDuration(pcDynamicVideo?.duration_text)) || 0
+    // more see https://github.com/magicdawn/bilibili-app-recommend/issues/23#issuecomment-1533079590
 
-  // video owner info
-  const name = isPc ? item.owner.name : isApp ? item.args.up_name : item.modules.module_author.name
-  const face = isPc ? item.owner.face : isApp ? undefined : item.modules.module_author.avatar
-  const mid = isPc ? item.owner.mid : isApp ? item.args.up_id : item.modules.module_author.mid
+    if (item.goto === 'av') {
+      return `/video/${bvid}/`
+    }
 
-  // bangumi
-  const favorite = isPc ? undefined : isApp ? undefined : undefined
-  const appBadge = isPc ? undefined : isApp ? item.badge : undefined
-  const appBadgeDesc = isPc
-    ? undefined
-    : isApp
-    ? item.desc_button?.text || item.desc || ''
-    : undefined
-  const appBadgeStyleConfig = isPc ? undefined : isApp ? item.badge_style : undefined
+    if (item.goto === 'bangumi') {
+      console.warn(`[${APP_NAME}]: bangumi uri should not starts with 'bilibili://': %s`, item.uri)
+      return item.uri
+    }
 
-  // 推荐理由
-  const recommendReason = isPc
-    ? item.rcmd_reason?.content
-    : isApp
-    ? item.rcmd_reason
-    : pcDynamicVideo?.badge.text
-  const recommendReasonStyleConfig = isPc ? undefined : isApp ? item.rcmd_reason_style : undefined
+    // goto = picture, 可能是专栏 or 动态
+    // 动态的 url 是 https://t.bilibili.com, 使用 uri
+    // 专栏的 url 是 bilibili://article/<id>
+    if (item.goto === 'picture') {
+      const id = /^bilibili:\/\/article\/(\d+)$/.exec(item.uri)?.[1]
+      if (id) return `/read/cv${id}`
+      return item.uri
+    }
+
+    return item.uri
+  })()
 
   return {
-    isPc,
-    isApp,
-
-    id,
+    // video
+    avid,
     bvid,
-    goto,
+    goto: item.goto,
+    href,
+    title: item.title,
+    coverRaw: item.cover,
+    pubdate: undefined,
+    duration: item.player_args?.duration || 0,
+    durationStr: formatDuration(item.player_args?.duration),
+    recommendReason: item.rcmd_reason,
 
-    play,
-    like,
-    coin,
-    danmaku,
+    // stat
+    play: extractCountFor('play'),
+    like: undefined,
+    coin: undefined,
+    danmaku: extractCountFor('danmaku'),
+    favorite: undefined,
 
-    title,
-    coverRaw,
-    pubdate,
-    duration,
+    // author
+    authorName: item.args.up_name,
+    authorFace: undefined,
+    authorMid: String(item.args.up_id!),
 
-    name,
-    face,
-    mid,
+    appBadge: item.badge,
+    appBadgeDesc: item.desc_button?.text || item.desc || '',
+  }
+}
 
-    favorite,
-    recommendReason,
-    recommendReasonStyleConfig,
+export function apiDynamicAdapter(item: DynamicFeedItemExtend): IVideoCardData {
+  const v = item.modules.module_dynamic.major.archive
+  const author = item.modules.module_author
 
-    appBadge,
-    appBadgeDesc,
-    appBadgeStyleConfig,
+  return {
+    // video
+    avid: v.aid,
+    bvid: v.bvid,
+    goto: 'av',
+    href: `/video/${v.bvid}/`,
+    title: v.title,
+    coverRaw: v.cover,
+    pubdate: item.modules.module_author.pub_ts,
+    duration: parseDuration(v.duration_text) || 0,
+    durationStr: v.duration_text,
+    recommendReason: v.badge.text,
+
+    // stat
+    play: parseCount(v.stat.play),
+    danmaku: parseCount(v.stat.danmaku),
+    like: undefined,
+    coin: undefined,
+    favorite: undefined,
+
+    // author
+    authorName: author.name,
+    authorFace: author.face,
+    authorMid: author.mid.toString(),
   }
 }

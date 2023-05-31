@@ -1,7 +1,7 @@
-import { PcDynamicFeedItemExtend, PcDynamicFeedJson } from '$define'
+import { DynamicFeedItemExtend, DynamicFeedJson } from '$define'
 import { request } from '$request'
 
-export class PcDynamicFeedService {
+export class DynamicFeedService {
   offset: string
   page = 0
   hasMore = true
@@ -24,16 +24,16 @@ export class PcDynamicFeedService {
     }
 
     const res = await request.get('/x/polymer/web-dynamic/v1/feed/all', { params })
-    const json = res.data as PcDynamicFeedJson
+    const json = res.data as DynamicFeedJson
 
     this.hasMore = json.data.has_more
     this.offset = json.data.offset
 
     const arr = json.data.items
-    const items: PcDynamicFeedItemExtend[] = arr.map((item) => {
+    const items: DynamicFeedItemExtend[] = arr.map((item) => {
       return {
         ...item,
-        api: 'pc-dynamic',
+        api: 'dynamic',
         uniqId: crypto.randomUUID(),
       }
     })

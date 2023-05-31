@@ -10,7 +10,8 @@ import { RecItemType } from '$define'
 import { cx, generateClassName } from '$libs'
 import { HEADER_HEIGHT, getIsInternalTesting } from '$platform'
 import { getRecommendForGrid, getRecommendTimes, uniqConcat } from '$service'
-import { PcDynamicFeedService } from '$service-pc-dynamic-feed'
+import { DynamicFeedService } from '$service-dynamic-feed'
+import { PcRecService } from '$service-pc'
 import { useSettingsSnapshot } from '$settings'
 import { css } from '@emotion/react'
 import { useGetState, useLatest, useMemoizedFn, useMount } from 'ahooks'
@@ -53,7 +54,6 @@ export type RecGridProps = {
 
 export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
   ({ infiteScrollUseWindow, shortcutEnabled, onScrollToTop, className, scrollerRef }, ref) => {
-    const pageRef = useRef({ page: 1 })
     const { usePcDynamicApi } = useSettingsSnapshot()
     const usePcDynamicApiRef = useLatest(usePcDynamicApi)
 
@@ -64,9 +64,8 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
     const [isRefreshing, setIsRefreshing] = useState(false)
     const [refreshedAt, setRefreshedAt, getRefreshedAt] = useGetState<number>(() => Date.now())
 
-    const [pcDynamicFeedService, setPcDynamicFeedService] = useState(
-      () => new PcDynamicFeedService()
-    )
+    const [pcRecService, setPcRecService] = useState(() => new PcRecService())
+    const [dynamicFeedService, setDynamicFeedService] = useState(() => new DynamicFeedService())
 
     const refresh = useMemoizedFn(async () => {
       const start = performance.now()
@@ -80,13 +79,15 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
       setRefreshedAt(Date.now())
       clearActiveIndex() // before
       setItems([])
-      pageRef.current.page = 1
 
-      const _pcDynamicFeedService = new PcDynamicFeedService()
-      setPcDynamicFeedService(_pcDynamicFeedService)
+      const _dynamicFeedService = new DynamicFeedService()
+      setDynamicFeedService(_dynamicFeedService)
+
+      const _pcRecService = new PcRecService()
+      setPcRecService(_pcRecService)
 
       try {
-        setItems(await getRecommendForGrid(pageRef.current, _pcDynamicFeedService))
+        setItems(await getRecommendForGrid(_pcRecService, _dynamicFeedService))
       } catch (e) {
         setIsRefreshing(false)
         throw e
@@ -118,11 +119,11 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
 
       try {
         if (usePcDynamicApiRef.current) {
-          newItems = newItems.concat((await pcDynamicFeedService.next()) || [])
+          newItems = newItems.concat((await dynamicFeedService.next()) || [])
         } else {
           // fetchMore 至少 load 一项, 需要触发 InfiniteScroll.componentDidUpdate
           while (!(newItems.length > items.length)) {
-            const more = await getRecommendTimes(2, pageRef.current)
+            const more = await getRecommendTimes(2, pcRecService)
             newItems = uniqConcat(newItems, more)
           }
         }

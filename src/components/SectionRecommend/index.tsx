@@ -3,7 +3,8 @@ import { AppRecItemExtend, PcRecItemExtend } from '$define'
 import { cx } from '$libs'
 import { getIsInternalTesting } from '$platform'
 import { getRecommendForHome } from '$service'
-import { PcDynamicFeedService } from '$service-pc-dynamic-feed'
+import { DynamicFeedService } from '$service-dynamic-feed'
+import { PcRecService } from '$service-pc'
 import { useRequest } from 'ahooks'
 import { useMemo } from 'react'
 import { RecHeader } from '../RecHeader'
@@ -17,15 +18,15 @@ export function SectionRecommend() {
   }, [])
 
   const isInternalTesting = getIsInternalTesting()
-  const pageRef = useMemo(() => ({ page: 1 }), [])
 
-  const pcDynamicFeedService = useMemo(() => new PcDynamicFeedService(), [])
+  const dynamicFeedService = useMemo(() => new DynamicFeedService(), [])
+  const pcRecService = useMemo(() => new PcRecService(), [])
   const {
     data: items,
     loading,
     error,
     refresh,
-  } = useRequest(() => getRecommendForHome(pageRef, pcDynamicFeedService))
+  } = useRequest(() => getRecommendForHome(pcRecService, dynamicFeedService))
   if (error) {
     console.error(error.stack || error)
   }
@@ -45,6 +46,4 @@ export function SectionRecommend() {
       </div>
     </section>
   )
-
-  // className={cx('bili-grid', { 'no-margin': !internalTesting }, styles.grid)}
 }

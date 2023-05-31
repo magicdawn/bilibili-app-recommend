@@ -2,12 +2,13 @@ import { baseDebug } from '$common'
 import { getColumnCount } from '$components/RecGrid/useShortcut'
 import { anyFilterEnabled, filterVideos } from '$components/VideoCard/process/filter'
 import { RecItemType } from '$define'
-import { PcDynamicFeedService } from '$service-pc-dynamic-feed'
+import { DynamicFeedService } from '$service-dynamic-feed'
 import { settings } from '$settings'
 import { hasLogined } from '$utility'
 import { uniqBy } from 'lodash'
 import * as app from './service-app'
 import * as pc from './service-pc'
+import { PcRecService } from './service-pc'
 
 const debug = baseDebug.extend('service')
 
@@ -32,8 +33,8 @@ export const usePcApi = () => settings.usePcDesktopApi || (settings.dynamicMode 
 
 export async function getMinCount(
   count: number,
-  pageRef: pc.PageRef,
-  pcDynamicFeedService: PcDynamicFeedService,
+  pcRecService: PcRecService,
+  dynamicFeedService: DynamicFeedService,
   filterMultiplier = 5
 ) {
   let items: RecItemType[] = []
@@ -54,10 +55,10 @@ export async function getMinCount(
 
     let cur: RecItemType[] = []
     if (settings.usePcDynamicApi && hasLogined()) {
-      cur = (await pcDynamicFeedService.next()) || []
+      cur = (await dynamicFeedService.next()) || []
     } else {
       cur = usePcApi()
-        ? await pc._getRecommendTimes(times, pageRef)
+        ? await pcRecService.getRecommendTimes(times)
         : await app._getRecommendTimes(times)
       cur = filterVideos(cur)
     }
@@ -75,22 +76,22 @@ export async function getMinCount(
 }
 
 export async function getRecommendForHome(
-  pageRef: pc.PageRef,
-  pcDynamicFeedService: PcDynamicFeedService
+  pcRecService: PcRecService,
+  dynamicFeedService: DynamicFeedService
 ) {
-  return getMinCount(getColumnCount(undefined, false) * 2, pageRef, pcDynamicFeedService, 3) // 7 * 2-row
+  return getMinCount(getColumnCount(undefined, false) * 2, pcRecService, dynamicFeedService, 3) // 7 * 2-row
 }
 
 export async function getRecommendForGrid(
-  pageRef: pc.PageRef,
-  pcDynamicFeedService: PcDynamicFeedService
+  pcRecService: PcRecService,
+  dynamicFeedService: DynamicFeedService
 ) {
-  return getMinCount(getColumnCount() * 3, pageRef, pcDynamicFeedService, 5) // 7 * 3-row, 1 screen
+  return getMinCount(getColumnCount() * 3, pcRecService, dynamicFeedService, 5) // 7 * 3-row, 1 screen
 }
 
-export async function getRecommendTimes(times: number, pageRef: pc.PageRef) {
+export async function getRecommendTimes(times: number, pcRecService: PcRecService) {
   let items: RecItemType[] = usePcApi()
-    ? await pc._getRecommendTimes(times, pageRef)
+    ? await pcRecService.getRecommendTimes(times)
     : await app._getRecommendTimes(times)
   items = filterVideos(items)
   return items

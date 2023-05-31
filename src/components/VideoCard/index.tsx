@@ -3,9 +3,8 @@ import { Reason, dislikedIds, showModalDislike, useDislikedReason } from '$compo
 import { AppRecItem, AppRecItemExtend, RecItemType } from '$define'
 import { IconPark } from '$icon-park'
 import { settings, useSettingsSnapshot } from '$settings'
-import { BvCode } from '$utility/bv'
 import { toast, toastOperationFail, toastRequestFail } from '$utility/toast'
-import { formatCount, formatDuration } from '$utility/video'
+import { formatCount } from '$utility/video'
 import {
   useEventListener,
   useGetState,
@@ -221,39 +220,39 @@ const VideoCardInner = memo(
   ) {
     const isPc = item.api === 'pc'
     const isApp = item.api === 'app'
-    const isPcDynamic = item.api === 'pc-dynamic'
+    const isDynamic = item.api === 'dynamic'
 
     const {
-      id,
+      // video
+      avid,
       bvid,
       goto,
-
-      play,
-      like,
-      coin,
-      danmaku,
-
+      href,
       title,
       coverRaw,
       pubdate,
       duration,
-
-      name,
-      face,
-      mid,
-
+      durationStr,
       recommendReason,
-      recommendReasonStyleConfig,
 
+      // stat
+      play,
+      like,
+      coin,
+      danmaku,
       favorite,
+
+      // author
+      authorName,
+      authorFace,
+      authorMid,
+
+      // adpater specific
       appBadge,
       appBadgeDesc,
-      appBadgeStyleConfig,
     } = useMemo(() => normalizeCardData(item), [item])
 
-    const isNormalVideo = isPcDynamic || item.goto === 'av'
-    const isBangumi = !isPcDynamic && item.goto === 'bangumi'
-    const isPicture = !isPcDynamic && item.goto === 'picture'
+    const isNormalVideo = isDynamic || item.goto === 'av'
     if (!['av', 'bangumi', 'picture'].includes(goto)) {
       console.warn(`[${APP_NAME}]: none (av,bangumi,picture) goto type %s`, goto, item)
     }
@@ -276,7 +275,7 @@ const VideoCardInner = memo(
 
       try {
         isFetchingVideoData.current = true
-        setVideoData(await getVideoData(id))
+        setVideoData(await getVideoData(avid))
       } finally {
         isFetchingVideoData.current = false
       }
@@ -306,7 +305,7 @@ const VideoCardInner = memo(
 
     const { onStartPreviewAnimation, onHotkeyPreviewAnimation, previewAnimationProgress } =
       usePreviewAnimation({
-        id,
+        bvid,
         title,
         autoPreviewWhenHover,
         active,
@@ -368,7 +367,7 @@ const VideoCardInner = memo(
       const fn = watchLaterAdded ? watchLaterDel : watchLaterAdd
       let successed = false
       try {
-        successed = await fn(id)
+        successed = await fn(avid)
       } finally {
         setRequestingWatchLaterApi(false)
       }
@@ -391,52 +390,6 @@ const VideoCardInner = memo(
       showModalDislike(item)
     })
 
-    const href = useMemo(() => {
-      if (isPc) {
-        return isNormalVideo && bvid ? `/video/${bvid}/` : item.uri
-      }
-
-      if (isPcDynamic) {
-        return `/video/${bvid}/`
-      }
-
-      if (isApp) {
-        // valid uri
-        if (item.uri.startsWith('http://') || item.uri.startsWith('https://')) {
-          return item.uri
-        }
-
-        // more see https://github.com/magicdawn/bilibili-app-recommend/issues/23#issuecomment-1533079590
-
-        if (isNormalVideo) {
-          // return `/video/av${item.param}`
-          return `/video/${BvCode.av2bv(Number(item.param))}/`
-        }
-
-        if (isBangumi) {
-          console.warn(
-            `[${APP_NAME}]: bangumi uri should not starts with 'bilibili://': %s`,
-            item.uri
-          )
-          return item.uri
-        }
-
-        // goto = picture, 可能是专栏 or 动态
-        // 动态的 url 是 https://t.bilibili.com, 使用 uri
-        // 专栏的 url 是 bilibili://article/<id>
-        if (isPicture) {
-          const id = /^bilibili:\/\/article\/(\d+)$/.exec(item.uri)?.[1]
-          if (id) return `/read/cv${id}`
-          return item.uri
-        }
-
-        return item.uri
-      }
-
-      return ''
-    }, [item])
-
-    const durationStr = useMemo(() => formatDuration(duration), [duration])
     const playStr = useMemo(() => formatCount(play), [play])
     const likeStr = useMemo(() => formatCount(like), [like])
     const _favoriteStr = useMemo(() => formatCount(favorite), [favorite])
@@ -623,7 +576,7 @@ const VideoCardInner = memo(
               {isNormalVideo ? (
                 <a
                   className='bili-video-card__info--owner'
-                  href={`//space.bilibili.com/${mid}`}
+                  href={`//space.bilibili.com/${authorMid}`}
                   target='_blank'
                   data-mod='partition_recommend'
                   data-idx='content'
@@ -637,7 +590,7 @@ const VideoCardInner = memo(
                     </svg>
                   )}
 
-                  <span className='bili-video-card__info--author'>{name}</span>
+                  <span className='bili-video-card__info--author'>{authorName}</span>
                   {pubdateDisplay && (
                     <span className='bili-video-card__info--date'>· {pubdateDisplay}</span>
                   )}
@@ -661,14 +614,14 @@ const VideoCardInner = memo(
  */
 
 function usePreviewAnimation({
-  id,
+  bvid,
   title,
   autoPreviewWhenHover,
   active,
   tryFetchVideoData,
   videoPreviewWrapperRef,
 }: {
-  id: string
+  bvid: string
   title: string
   autoPreviewWhenHover: boolean
   active: boolean
@@ -695,8 +648,8 @@ function usePreviewAnimation({
       if (autoPreviewWhenHover && !idRef.current) {
         DEBUG_ANIMATION &&
           console.log(
-            `[${APP_NAME}]: [animation] mouseenter onStartPreviewAnimation id=%s title=%s`,
-            id,
+            `[${APP_NAME}]: [animation] mouseenter onStartPreviewAnimation bvid=%s title=%s`,
+            bvid,
             title
           )
         onStartPreviewAnimation(true)
