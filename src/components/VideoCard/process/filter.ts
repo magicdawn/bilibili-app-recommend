@@ -5,7 +5,9 @@ import { normalizeCardData } from './normalize'
 
 export function anyFilterEnabled() {
   return (
-    settings.filterMinDurationEnabled || settings.filterMinPlayCountEnabled || settings.dynamicMode
+    settings.filterMinDurationEnabled ||
+    settings.filterMinPlayCountEnabled ||
+    settings.onlyFollowMode
   )
 }
 
@@ -22,7 +24,7 @@ export function filterVideos(items: RecItemType[]) {
      * 动态模式
      */
 
-    if (settings.dynamicMode && hasLogined()) {
+    if (settings.onlyFollowMode && hasLogined()) {
       return isFollowed
     }
 

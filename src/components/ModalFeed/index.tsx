@@ -7,7 +7,7 @@ import { useIsDarkMode } from '$platform'
 import { useSettingsSnapshot } from '$settings'
 import { css } from '@emotion/react'
 import { useMemoizedFn } from 'ahooks'
-import { CSSProperties, memo, useMemo, useRef } from 'react'
+import { CSSProperties, memo, useMemo, useRef, useState } from 'react'
 import { BaseModal, BaseModalClass, ModalClose } from '../BaseModal'
 import { CollapseBtn } from '../CollapseBtn'
 import styles from './index.module.less'
@@ -42,6 +42,8 @@ export const ModalFeed = memo(function ModalFeed({ show, onHide }: IProps) {
     [dark, colorPrimary]
   )
 
+  const [refreshing, setRefreshing] = useState(false)
+
   return (
     <BaseModal
       {...{ show, onHide }}
@@ -52,16 +54,16 @@ export const ModalFeed = memo(function ModalFeed({ show, onHide }: IProps) {
       }}
     >
       <div className={cx(BaseModalClass.modalHeader, styles.modalHeader)}>
-        <div
+        {/* <div
           className={BaseModalClass.modalTitle}
           css={css`
             margin-right: 4px;
           `}
         >
           推荐
-        </div>
+        </div> */}
 
-        <DynamicModeSwitch onRefresh={onRefresh} />
+        <DynamicModeSwitch refreshing={refreshing} onRefresh={onRefresh} />
 
         <div className='space' style={{ flex: 1 }}></div>
 
@@ -73,6 +75,7 @@ export const ModalFeed = memo(function ModalFeed({ show, onHide }: IProps) {
           css={css`
             margin-left: 8px;
           `}
+          refreshing={refreshing}
           onClick={onRefresh}
           className={styles.btnRefresh}
           refreshHotkeyEnabled={show}
@@ -88,6 +91,7 @@ export const ModalFeed = memo(function ModalFeed({ show, onHide }: IProps) {
           onScrollToTop={onScrollToTop}
           infiteScrollUseWindow={false}
           scrollerRef={scrollerRef}
+          setRefreshing={setRefreshing}
         />
       </div>
     </BaseModal>

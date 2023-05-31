@@ -33,7 +33,7 @@ export function SectionRecommend() {
 
   return (
     <section data-area='推荐'>
-      <RecHeader onRefresh={refresh} />
+      <RecHeader refreshing={loading} onRefresh={refresh} />
       <div
         className={cx(videoGrid, limitTwoLines, { [internalTesting]: isInternalTesting })}
         style={{ marginBottom: isInternalTesting ? 30 : 0 }}

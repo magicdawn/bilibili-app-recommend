@@ -1,13 +1,13 @@
+/* eslint-disable no-constant-condition */
 import { baseDebug } from '$common'
 import { getColumnCount } from '$components/RecGrid/useShortcut'
+import { getCurrentSourceTab } from '$components/RecHeader/tab'
 import { anyFilterEnabled, filterVideos } from '$components/VideoCard/process/filter'
 import { RecItemType } from '$define'
 import { DynamicFeedService } from '$service-dynamic-feed'
 import { settings } from '$settings'
-import { hasLogined } from '$utility'
 import { uniqBy } from 'lodash'
 import * as app from './service-app'
-import * as pc from './service-pc'
 import { PcRecService } from './service-pc'
 
 const debug = baseDebug.extend('service')
@@ -29,7 +29,9 @@ export function uniqConcat(existing: RecItemType[], newItems: RecItemType[]) {
   )
 }
 
-export const usePcApi = () => settings.usePcDesktopApi || (settings.dynamicMode && hasLogined())
+export const usePcApi = () =>
+  getCurrentSourceTab() === 'onlyFollow' ||
+  (getCurrentSourceTab() === 'normal' && settings.usePcDesktopApi)
 
 export async function getMinCount(
   count: number,
@@ -40,35 +42,55 @@ export async function getMinCount(
   let items: RecItemType[] = []
 
   let addMore = async (restCount: number) => {
-    const pagesize = settings.usePcDesktopApi ? pc.PAGE_SIZE : app.PAGE_SIZE
-    const multipler = anyFilterEnabled()
-      ? filterMultiplier // 过滤, 需要大基数
-      : 1.2 // 可能有重复, so not 1.0
-    const times = Math.ceil((restCount * multipler) / pagesize)
-    debug(
-      'getMinCount: addMore(restCount = %s) multipler=%s pagesize=%s times=%s',
-      restCount,
-      filterMultiplier,
-      pagesize,
-      times
-    )
-
     let cur: RecItemType[] = []
-    if (settings.usePcDynamicApi && hasLogined()) {
+
+    // 动态
+    if (getCurrentSourceTab() === 'dynamic') {
       cur = (await dynamicFeedService.next()) || []
-    } else {
-      cur = usePcApi()
-        ? await pcRecService.getRecommendTimes(times)
-        : await app._getRecommendTimes(times)
-      cur = filterVideos(cur)
+      items = items.concat(cur)
+      return
     }
+
+    let times: number
+
+    // 已关注
+    if (getCurrentSourceTab() === 'onlyFollow') {
+      times = 8
+      debug('getMinCount: addMore(restCount = %s) times=%s', restCount, times)
+    }
+
+    // 常规
+    else {
+      const pagesize = usePcApi() ? PcRecService.PAGE_SIZE : app.PAGE_SIZE
+
+      const multipler = anyFilterEnabled()
+        ? filterMultiplier // 过滤, 需要大基数
+        : 1.2 // 可能有重复, so not 1.0
+
+      times = Math.ceil((restCount * multipler) / pagesize)
+
+      debug(
+        'getMinCount: addMore(restCount = %s) multipler=%s pagesize=%s times=%s',
+        restCount,
+        multipler,
+        pagesize,
+        times
+      )
+    }
+
+    cur = usePcApi()
+      ? await pcRecService.getRecommendTimes(times)
+      : await app._getRecommendTimes(times)
+    cur = filterVideos(cur)
 
     items = items.concat(cur)
     items = uniqBy(items, recItemUniqer)
   }
 
   await addMore(count)
-  while (items.length < count) {
+  while (true) {
+    if (items.length >= count) break
+    if (getCurrentSourceTab() === 'dynamic' && !dynamicFeedService.hasMore) break
     await addMore(count - items.length)
   }
 

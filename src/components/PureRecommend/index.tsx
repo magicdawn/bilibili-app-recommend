@@ -3,7 +3,7 @@ import { RecHeader, useHeaderState } from '$components/RecHeader'
 import { css } from '$libs'
 import { useSettingsSnapshot } from '$settings'
 import { useMemoizedFn } from 'ahooks'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 
 const narrowStyle = {
   grid: css`
@@ -28,15 +28,18 @@ export function PureRecommend() {
     document.documentElement.scrollTop = 0
   })
 
+  const [refreshing, setRefreshing] = useState(false)
+
   return (
     <section data-area='推荐'>
-      <RecHeader onRefresh={onRefresh} />
+      <RecHeader refreshing={refreshing} onRefresh={onRefresh} />
       <RecGrid
         ref={recGrid}
         css={[useNarrowMode && narrowStyle.grid]}
         shortcutEnabled={!(modalFeedVisible || modalConfigVisible)}
         infiteScrollUseWindow={true}
         onScrollToTop={onScrollToTop}
+        setRefreshing={setRefreshing}
       />
     </section>
   )

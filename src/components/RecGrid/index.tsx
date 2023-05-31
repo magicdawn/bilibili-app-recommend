@@ -50,19 +50,30 @@ export type RecGridProps = {
   onScrollToTop?: () => void | Promise<void>
   className?: string
   scrollerRef?: RefObject<HTMLElement | null>
+  setRefreshing: (val: boolean) => void
 }
 
 export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
-  ({ infiteScrollUseWindow, shortcutEnabled, onScrollToTop, className, scrollerRef }, ref) => {
-    const { usePcDynamicApi } = useSettingsSnapshot()
-    const usePcDynamicApiRef = useLatest(usePcDynamicApi)
+  (
+    {
+      infiteScrollUseWindow,
+      shortcutEnabled,
+      onScrollToTop,
+      className,
+      scrollerRef,
+      setRefreshing: setUpperRefreshing,
+    },
+    ref
+  ) => {
+    const { useDynamicApi, useNarrowMode } = useSettingsSnapshot()
+    const usePcDynamicApiRef = useLatest(useDynamicApi)
 
-    // 已加载完成的 load call count, 类似 page
-    const [loadCompleteCount, setLoadCompleteCount, getLoadCompleteCount] = useGetState(0)
+    const [items, setItems] = useState<RecItemType[]>([])
+    const [refreshing, setRefreshing] = useState(false)
+    const [hasMore, setHasMore] = useState(true)
 
-    const [items, setItems, getItems] = useGetState<RecItemType[]>([])
-    const [isRefreshing, setIsRefreshing] = useState(false)
     const [refreshedAt, setRefreshedAt, getRefreshedAt] = useGetState<number>(() => Date.now())
+    const [loadCompleteCount, setLoadCompleteCount] = useState(0) // 已加载完成的 load call count, 类似 page
 
     const [pcRecService, setPcRecService] = useState(() => new PcRecService())
     const [dynamicFeedService, setDynamicFeedService] = useState(() => new DynamicFeedService())
@@ -70,12 +81,13 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
     const refresh = useMemoizedFn(async () => {
       const start = performance.now()
       debug('call refresh()')
-      if (isRefreshing) return
+      if (refreshing) return
 
       // scroll to top
       await onScrollToTop?.()
 
-      setIsRefreshing(true)
+      setRefreshing(true)
+      setUpperRefreshing(true)
       setRefreshedAt(Date.now())
       clearActiveIndex() // before
       setItems([])
@@ -89,13 +101,15 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
       try {
         setItems(await getRecommendForGrid(_pcRecService, _dynamicFeedService))
       } catch (e) {
-        setIsRefreshing(false)
+        setRefreshing(false)
+        setUpperRefreshing(false)
         throw e
       }
 
       setLoadCompleteCount(1)
       clearActiveIndex() // and after
-      setIsRefreshing(false)
+      setRefreshing(false)
+      setUpperRefreshing(false)
 
       const cost = performance.now() - start
       debug('refresh cost %s ms', cost.toFixed(0))
@@ -109,17 +123,25 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
 
     const requesting = useRef(false)
 
+    /**
+     * useMemoizedFn 只能确保 fetchMore 开始调用时值时最新的.
+     * 拿 refreshedAt 举例, fetchMore 内部, 值 refreshedAt 不变
+     * 所以需要 useGetState, 从 getRefreshedAt 取最新的值
+     */
     const fetchMore = useMemoizedFn(async () => {
-      if (isRefreshing) return
+      if (!hasMore) return
+      if (refreshing) return
+
       if (requesting.current) return
       requesting.current = true
 
-      const refreshAtWhenStart = getRefreshedAt()
+      const refreshAtWhenStart = refreshedAt
       let newItems = items
 
       try {
         if (usePcDynamicApiRef.current) {
           newItems = newItems.concat((await dynamicFeedService.next()) || [])
+          setHasMore(dynamicFeedService.hasMore)
         } else {
           // fetchMore 至少 load 一项, 需要触发 InfiniteScroll.componentDidUpdate
           while (!(newItems.length > items.length)) {
@@ -145,13 +167,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
         return
       }
 
-      debug(
-        'fetchMore: seq(%s) len %s -> %s',
-        getLoadCompleteCount() + 1,
-        items.length,
-        newItems.length
-      )
-
+      debug('fetchMore: seq(%s) len %s -> %s', loadCompleteCount + 1, items.length, newItems.length)
       setItems(newItems)
       setLoadCompleteCount((c) => c + 1)
       triggerScroll() // check
@@ -173,9 +189,6 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
         scroller?.dispatchEvent(new CustomEvent('scroll'))
       })
     })
-
-    // 窄屏模式
-    const { useNarrowMode } = useSettingsSnapshot()
 
     // .video-grid
     const containerRef = useRef<HTMLDivElement>(null)
@@ -229,7 +242,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
     return (
       <InfiniteScroll
         pageStart={0}
-        hasMore={true}
+        hasMore={hasMore}
         loadMore={fetchMore}
         initialLoad={false}
         useWindow={infiteScrollUseWindow}
@@ -258,8 +271,8 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
             className
           )}
         >
-          {isRefreshing
-            ? //skeleton loading
+          {refreshing
+            ? // skeleton loading
               new Array(24).fill(undefined).map((_, index) => {
                 return <VideoCard key={index} loading={true} className={CardClassNames.card} />
               })

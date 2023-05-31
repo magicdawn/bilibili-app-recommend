@@ -1,7 +1,6 @@
 import { AccessKeyManage } from '$components/AccessKeyManage'
-import { AntdTooltip } from '$components/AntdApp'
 import { BaseModal, BaseModalClass, ModalClose } from '$components/BaseModal'
-import { FlagSettingItem } from '$components/piece'
+import { FlagSettingItem, HelpInfo } from '$components/piece'
 import { IconPark } from '$icon-park'
 import { cx } from '$libs'
 import {
@@ -94,7 +93,10 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
               children: (
                 <div className={styles.tabPane}>
                   <div className={styles.settingsGroup}>
-                    <div className={styles.settingsGroupTitle}>接口切换</div>
+                    <div className={styles.settingsGroupTitle}>
+                      API 切换
+                      <HelpInfo tooltip={<>只对推荐 Tab 生效, 详细信息查看 GitHub 主页说明</>} />
+                    </div>
                     <div className={cx(styles.settingsGroupContent)}>
                       <Radio.Group
                         buttonStyle='solid'
@@ -104,8 +106,8 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                           settings.usePcDesktopApi = newValue === 'desktop'
                         }}
                       >
-                        <Radio.Button value='desktop'>使用桌面端接口</Radio.Button>
-                        <Radio.Button value='app'>使用 App 端接口</Radio.Button>
+                        <Radio.Button value='desktop'>使用桌面端 API</Radio.Button>
+                        <Radio.Button value='app'>使用 App 端 API</Radio.Button>
                       </Radio.Group>
 
                       {!usePcDesktopApi && (
@@ -251,9 +253,14 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                   <div className={styles.settingsGroup}>
                     <div className={styles.settingsGroupTitle}>
                       视频过滤
-                      <AntdTooltip title={<>启用视频过滤会大幅降低加载速度, 谨慎开启!</>}>
-                        <IconPark style={{ marginLeft: 4, cursor: 'pointer' }} name={'Info'} />
-                      </AntdTooltip>
+                      <HelpInfo
+                        tooltip={
+                          <>
+                            启用视频过滤会大幅降低加载速度, 谨慎开启! <br />
+                            只对推荐 Tab 生效
+                          </>
+                        }
+                      />
                     </div>
                     <div className={cx(styles.settingsGroupContent)}>
                       <div className={styles.settingsGroupSubTitle}>过滤范围</div>

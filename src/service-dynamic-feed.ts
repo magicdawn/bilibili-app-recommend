@@ -2,6 +2,8 @@ import { DynamicFeedItemExtend, DynamicFeedJson } from '$define'
 import { request } from '$request'
 
 export class DynamicFeedService {
+  static PAGE_SIZE = 15
+
   offset: string
   page = 0
   hasMore = true

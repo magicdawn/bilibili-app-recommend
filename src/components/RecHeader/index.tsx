@@ -19,9 +19,10 @@ import {
 } from 'react'
 import { useSticky } from 'react-use-sticky'
 import { proxy, useSnapshot } from 'valtio'
-import { AccessKeyManage } from './AccessKeyManage'
-import { ModalFeed } from './ModalFeed'
-import { HelpInfo } from './piece'
+import { AccessKeyManage } from '../AccessKeyManage'
+import { ModalFeed } from '../ModalFeed'
+import { HelpInfo } from '../piece'
+import { TabType, useCurrentSourceTab } from './tab'
 
 const verticalAlignStyle = css`
   display: flex;
@@ -68,8 +69,14 @@ const hideModalConfig = () => {
   headerState.modalConfigVisible = false
 }
 
-export function RecHeader({ onRefresh }: { onRefresh: () => void | Promise<void> }) {
-  const { accessKey, pureRecommend, usePcDesktopApi, dynamicMode } = useSettingsSnapshot()
+export function RecHeader({
+  onRefresh,
+  refreshing,
+}: {
+  onRefresh: () => void | Promise<void>
+  refreshing: boolean
+}) {
+  const { accessKey, pureRecommend, usePcDesktopApi } = useSettingsSnapshot()
 
   const { modalFeedVisible, modalConfigVisible } = useSnapshot(headerState)
   useKeyPress(
@@ -108,14 +115,13 @@ export function RecHeader({ onRefresh }: { onRefresh: () => void | Promise<void>
         ]}
       >
         <div className='left'>
-          <a id='影视' className='the-world area-anchor' data-id='25'></a>
           <svg className='icon'>
             <use href='#channel-cinephile'></use>
           </svg>
           {/* <a className='title' href='#'>
-            <span>推荐</span>
+            推荐
           </a> */}
-          <DynamicModeSwitch onRefresh={onRefresh} />
+          <DynamicModeSwitch refreshing={refreshing} onRefresh={onRefresh} />
         </div>
 
         <div className='right'>
@@ -127,6 +133,7 @@ export function RecHeader({ onRefresh }: { onRefresh: () => void | Promise<void>
             </Button>
 
             <RefreshButton
+              refreshing={refreshing}
               onClick={onRefresh}
               refreshHotkeyEnabled={!(modalConfigVisible || modalFeedVisible)}
             />
@@ -159,65 +166,55 @@ function toastNeedLogin() {
   return toast('你需要登录B站后使用该功能!')
 }
 
-export function DynamicModeSwitch({ onRefresh }: { onRefresh: () => void | Promise<void> }) {
-  const { dynamicMode, usePcDynamicApi } = useSettingsSnapshot()
+export function DynamicModeSwitch({
+  onRefresh,
+  refreshing,
+}: {
+  onRefresh: () => void | Promise<void>
+  refreshing: boolean
+}) {
   const logined = useHasLogined()
+  const tab = useCurrentSourceTab()
 
   return (
     <>
       <Radio.Group
+        disabled={refreshing}
         buttonStyle='solid'
         size='middle'
-        value={
-          logined
-            ? dynamicMode
-              ? 'dynamicMode'
-              : usePcDynamicApi
-              ? 'dynamicApi'
-              : 'normal'
-            : 'normal'
-        }
+        value={tab}
         style={{ overflow: 'hidden' }}
         onChange={(e) => {
-          const newValue = e.target.value
+          const newValue = e.target.value as TabType
           switch (newValue) {
-            case 'dynamicMode':
+            case 'onlyFollow':
               if (!logined) return toastNeedLogin()
-              updateSettings({ dynamicMode: true, usePcDynamicApi: false })
+              updateSettings({ onlyFollowMode: true, useDynamicApi: false })
               break
-            case 'dynamicApi':
+            case 'dynamic':
               if (!logined) return toastNeedLogin()
-              updateSettings({ dynamicMode: false, usePcDynamicApi: true })
+              updateSettings({ onlyFollowMode: false, useDynamicApi: true })
               break
             case 'normal':
             default:
-              updateSettings({ dynamicMode: false, usePcDynamicApi: false })
+              updateSettings({ onlyFollowMode: false, useDynamicApi: false })
               break
           }
 
           onRefresh()
         }}
       >
-        <Radio.Button value='normal'>推荐</Radio.Button>
-        <Radio.Button value='dynamicMode'>已关注</Radio.Button>
-        <Radio.Button value='dynamicApi'>动态</Radio.Button>
+        <Radio.Button value={'normal' satisfies TabType}>推荐</Radio.Button>
+        <Radio.Button value={'onlyFollow' satisfies TabType}>已关注</Radio.Button>
+        <Radio.Button value={'dynamic' satisfies TabType}>动态</Radio.Button>
       </Radio.Group>
       <HelpInfo
+        iconProps={{ size: 18, style: { marginLeft: 10 } }}
         tooltip={
           <>
-            <ul>
-              <li> 推荐</li>
-              <li>已关注: 推荐只保留已关注</li>
-              <li> 动态: 视频投稿动态</li>
-            </ul>
+            已关注: 推荐中只保留「已关注」,会很慢
             <br />
-            已关注: 只保留「已关注」
-            <br />
-            1. 动态模式使用更快的 PC 桌面端 API, 设置中 API 切换不影响动态模式.
-            <br />
-            2. 动态模式是基于筛选, 并不是真正的动态
-            <br />
-            3. 视频筛选器不起作用
+            动态: 视频投稿动态
           </>
         }
       />
@@ -231,9 +228,10 @@ export type RefreshButtonProps = {
   className?: string
   onClick?: (e?: MouseEvent) => void
   refreshHotkeyEnabled?: boolean
+  refreshing: boolean
 }
 export const RefreshButton = forwardRef<RefreshButtonActions, RefreshButtonProps>(function (
-  { onClick, className = '', style, refreshHotkeyEnabled },
+  { onClick, className = '', style, refreshHotkeyEnabled, refreshing },
   ref
 ) {
   refreshHotkeyEnabled ??= true
@@ -261,15 +259,22 @@ export const RefreshButton = forwardRef<RefreshButtonActions, RefreshButtonProps
   useKeyPress(
     'r',
     () => {
-      if (!refreshHotkeyEnabled) return
       if (isCurrentTyping()) return
-      btn.current?.click()
+      if (!refreshHotkeyEnabled) return
+
+      if (!btn.current) return
+      if (btn.current.disabled) return
+      btn.current.click()
     },
     { exactMatch: true }
   )
 
+  const tab = useCurrentSourceTab()
+  const text = tab === 'dynamic' ? '刷新' : '换一换'
+
   return (
     <Button
+      disabled={refreshing}
       className={className}
       style={style}
       css={css`
@@ -295,7 +300,7 @@ export const RefreshButton = forwardRef<RefreshButtonActions, RefreshButtonProps
       >
         <use href='#widget-roll'></use>
       </svg>
-      <span>换一换</span>
+      <span>{text}</span>
     </Button>
   )
 })

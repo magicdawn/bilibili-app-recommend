@@ -7,9 +7,9 @@ import { request } from './request'
  * 使用 web api 获取推荐
  */
 
-export const PAGE_SIZE = 14
-
 export class PcRecService {
+  static PAGE_SIZE = 14
+
   page = 0
 
   async getRecommend() {
@@ -18,7 +18,7 @@ export class PcRecService {
       params: {
         fresh_type: 3,
         version: 1,
-        ps: PAGE_SIZE, // >14 errors
+        ps: PcRecService.PAGE_SIZE, // >14 errors
         fresh_idx: curpage,
         fresh_idx_1h: curpage,
         homepage_ver: 1,
