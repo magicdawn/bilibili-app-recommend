@@ -100,7 +100,7 @@ export const RecHeader = forwardRef<
     const container = stickyRef.current?.parentElement
     if (!container) return
 
-    const scrollTop = getElementOffset(container).top - HEADER_HEIGHT
+    const scrollTop = getElementOffset(container).top - HEADER_HEIGHT - 4
     window.scrollTo({ top: scrollTop })
   })
   useImperativeHandle(ref, () => ({ scroll }))
