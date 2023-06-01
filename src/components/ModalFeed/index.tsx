@@ -76,7 +76,7 @@ export const ModalFeed = memo(function ModalFeed({ show, onHide }: IProps) {
             margin-left: 8px;
           `}
           refreshing={refreshing}
-          onClick={onRefresh}
+          onRefresh={onRefresh}
           className={styles.btnRefresh}
           refreshHotkeyEnabled={show}
         />

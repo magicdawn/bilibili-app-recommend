@@ -134,7 +134,7 @@ export function RecHeader({
 
             <RefreshButton
               refreshing={refreshing}
-              onClick={onRefresh}
+              onRefresh={onRefresh}
               refreshHotkeyEnabled={!(modalConfigVisible || modalFeedVisible)}
             />
 
@@ -227,21 +227,21 @@ export type RefreshButtonActions = { click: () => void }
 export type RefreshButtonProps = {
   style?: CSSProperties
   className?: string
-  onClick?: (e?: MouseEvent) => void
+  onRefresh?: (e?: MouseEvent) => void
   refreshHotkeyEnabled?: boolean
   refreshing: boolean
 }
 export const RefreshButton = forwardRef<RefreshButtonActions, RefreshButtonProps>(function (
-  { onClick, className = '', style, refreshHotkeyEnabled, refreshing },
+  { onRefresh, className = '', style, refreshHotkeyEnabled, refreshing },
   ref
 ) {
   refreshHotkeyEnabled ??= true
 
   const [deg, setDeg] = useState(0)
 
-  const btnOnClickHandler: MouseEventHandler = useMemoizedFn((e?: MouseEvent) => {
+  const onClick: MouseEventHandler = useMemoizedFn((e?: MouseEvent) => {
     setDeg((d) => d + 360)
-    return onClick?.(e)
+    return onRefresh?.(e)
   })
 
   // click from outside
@@ -285,7 +285,7 @@ export const RefreshButton = forwardRef<RefreshButtonActions, RefreshButtonProps
         }
       `}
       ref={btn}
-      onClick={btnOnClickHandler}
+      onClick={onClick}
     >
       <svg
         style={{
