@@ -181,6 +181,11 @@ function toastNeedLogin() {
   return toast('你需要登录B站后使用该功能!')
 }
 
+const btnCss = css`
+  height: 26px;
+  line-height: 26px;
+`
+
 export function VideoSourceTab({
   onRefresh,
   refreshing,
@@ -220,9 +225,15 @@ export function VideoSourceTab({
           onRefresh()
         }}
       >
-        <Radio.Button value={'normal' satisfies TabType}>推荐</Radio.Button>
-        <Radio.Button value={'onlyFollow' satisfies TabType}>已关注</Radio.Button>
-        <Radio.Button value={'dynamic' satisfies TabType}>动态</Radio.Button>
+        <Radio.Button css={btnCss} value={'normal' satisfies TabType}>
+          推荐
+        </Radio.Button>
+        <Radio.Button css={btnCss} value={'onlyFollow' satisfies TabType}>
+          已关注
+        </Radio.Button>
+        <Radio.Button css={btnCss} value={'dynamic' satisfies TabType}>
+          动态
+        </Radio.Button>
       </Radio.Group>
       <HelpInfo
         iconProps={{ size: 18, style: { marginLeft: 10 } }}
