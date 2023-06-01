@@ -1,5 +1,5 @@
 import { RecGrid, RecGridRef } from '$components/RecGrid'
-import { RecHeader, useHeaderState } from '$components/RecHeader'
+import { RecHeader, RecHeaderRef, useHeaderState } from '$components/RecHeader'
 import { css } from '$libs'
 import { useSettingsSnapshot } from '$settings'
 import { useMemoizedFn } from 'ahooks'
@@ -20,19 +20,21 @@ export function PureRecommend() {
   // 是否已经打开 "查看更多" 即 ModalFeed
   const { modalFeedVisible, modalConfigVisible } = useHeaderState()
 
+  const recHeader = useRef<RecHeaderRef>(null)
   const recGrid = useRef<RecGridRef>(null)
+
   const onRefresh = useMemoizedFn(() => {
     return recGrid.current?.refresh()
   })
   const onScrollToTop = useMemoizedFn(() => {
-    document.documentElement.scrollTop = 0
+    return recHeader.current?.scroll()
   })
 
   const [refreshing, setRefreshing] = useState(false)
 
   return (
     <section data-area='推荐'>
-      <RecHeader refreshing={refreshing} onRefresh={onRefresh} />
+      <RecHeader ref={recHeader} refreshing={refreshing} onRefresh={onRefresh} />
       <RecGrid
         ref={recGrid}
         css={[useNarrowMode && narrowStyle.grid]}

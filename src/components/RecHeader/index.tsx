@@ -4,7 +4,7 @@ import { css } from '$libs'
 import { HEADER_HEIGHT } from '$platform'
 import { settings, updateSettings, useSettingsSnapshot } from '$settings'
 import { useHasLogined } from '$utility'
-import { isCurrentTyping } from '$utility/dom'
+import { getElementOffset, isCurrentTyping } from '$utility/dom'
 import { toast } from '$utility/toast'
 import { useKeyPress, useMemoizedFn } from 'ahooks'
 import { Button, Radio, Space } from 'antd'
@@ -69,13 +69,16 @@ const hideModalConfig = () => {
   headerState.modalConfigVisible = false
 }
 
-export function RecHeader({
-  onRefresh,
-  refreshing,
-}: {
-  onRefresh: () => void | Promise<void>
-  refreshing: boolean
-}) {
+export type RecHeaderRef = {
+  scroll: () => void
+}
+export const RecHeader = forwardRef<
+  RecHeaderRef,
+  {
+    onRefresh: () => void | Promise<void>
+    refreshing: boolean
+  }
+>(function RecHeader({ onRefresh, refreshing }, ref) {
   const { accessKey, pureRecommend, usePcDesktopApi } = useSettingsSnapshot()
 
   const { modalFeedVisible, modalConfigVisible } = useSnapshot(headerState)
@@ -89,6 +92,18 @@ export function RecHeader({
   )
 
   const [stickyRef, sticky] = useSticky<HTMLDivElement>()
+
+  const scroll = useMemoizedFn(() => {
+    if (!pureRecommend) return
+    if (!sticky) return
+
+    const container = stickyRef.current?.parentElement
+    if (!container) return
+
+    const scrollTop = getElementOffset(container).top - HEADER_HEIGHT
+    window.scrollTo({ top: scrollTop })
+  })
+  useImperativeHandle(ref, () => ({ scroll }))
 
   return (
     <>
@@ -160,7 +175,7 @@ export function RecHeader({
       <ModalSettings show={modalConfigVisible} onHide={hideModalConfig} />
     </>
   )
-}
+})
 
 function toastNeedLogin() {
   return toast('你需要登录B站后使用该功能!')
