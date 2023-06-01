@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.12.1 2023-06-01
+
+- 838c0a2 feat: tab btn style tweak
+- 3c8b702 chore: scroll back 4px
+- 85c00ad feat: refresh 滚动逻辑优化
+- 68b1336 chore: refactor
+- 249c9c7 chore: rename
+- 5e85445 feat: unify using getCurrentSourceTab & useCurrentSourceTab
+
 ## v0.12.0 2023-05-31
 
 - feat: rename "动态模式" -> "已关注"
