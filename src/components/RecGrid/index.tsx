@@ -5,6 +5,7 @@
 import { baseDebug } from '$common'
 import { useModalDislikeVisible } from '$components/ModalDislike'
 import { useCurrentTheme } from '$components/ModalSettings/theme'
+import { useCurrentSourceTab } from '$components/RecHeader/tab'
 import { VideoCard, VideoCardActions } from '$components/VideoCard'
 import { RecItemType } from '$define'
 import { cx, generateClassName } from '$libs'
@@ -14,7 +15,7 @@ import { DynamicFeedService } from '$service-dynamic-feed'
 import { PcRecService } from '$service-pc'
 import { useSettingsSnapshot } from '$settings'
 import { css } from '@emotion/react'
-import { useGetState, useLatest, useMemoizedFn, useMount } from 'ahooks'
+import { useGetState, useMemoizedFn, useMount } from 'ahooks'
 import { RefObject, forwardRef, useImperativeHandle, useMemo, useRef, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroller'
 import { internalTesting, narrowMode, videoGrid } from '../video-grid.module.less'
@@ -65,8 +66,8 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
     },
     ref
   ) => {
-    const { useDynamicApi, useNarrowMode } = useSettingsSnapshot()
-    const usePcDynamicApiRef = useLatest(useDynamicApi)
+    const { useNarrowMode } = useSettingsSnapshot()
+    const tab = useCurrentSourceTab()
 
     const [items, setItems] = useState<RecItemType[]>([])
     const [refreshing, setRefreshing] = useState(false)
@@ -139,7 +140,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
       let newItems = items
 
       try {
-        if (usePcDynamicApiRef.current) {
+        if (tab === 'dynamic') {
           newItems = newItems.concat((await dynamicFeedService.next()) || [])
           setHasMore(dynamicFeedService.hasMore)
         } else {

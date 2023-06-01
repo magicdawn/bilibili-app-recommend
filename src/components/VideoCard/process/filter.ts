@@ -1,6 +1,6 @@
+import { getCurrentSourceTab } from '$components/RecHeader/tab'
 import { RecItemType } from '$define'
 import { settings } from '$settings'
-import { hasLogined } from '$utility'
 import { normalizeCardData } from './normalize'
 
 export function anyFilterEnabled() {
@@ -21,10 +21,10 @@ export function filterVideos(items: RecItemType[]) {
     const isFollowed = recommendReason === '已关注' || recommendReason?.includes('关注')
 
     /**
-     * 动态模式
+     * 已关注模式
      */
 
-    if (settings.onlyFollowMode && hasLogined()) {
+    if (getCurrentSourceTab() === 'onlyFollow') {
       return isFollowed
     }
 
