@@ -239,22 +239,15 @@ export const RefreshButton = forwardRef<RefreshButtonActions, RefreshButtonProps
 
   const [deg, setDeg] = useState(0)
 
-  const onClick: MouseEventHandler = useMemoizedFn((e?: MouseEvent) => {
-    setDeg((d) => d + 360)
-    return onRefresh?.(e)
+  const btn = useRef<HTMLButtonElement>(null)
+  const click = useMemoizedFn(() => {
+    if (!btn.current) return
+    if (btn.current.disabled) return
+    btn.current.click()
   })
 
   // click from outside
-  const btn = useRef<HTMLButtonElement>(null)
-  useImperativeHandle(
-    ref,
-    () => ({
-      click() {
-        btn.current?.click()
-      },
-    }),
-    []
-  )
+  useImperativeHandle(ref, () => ({ click }), [])
 
   // refresh
   useKeyPress(
@@ -262,16 +255,18 @@ export const RefreshButton = forwardRef<RefreshButtonActions, RefreshButtonProps
     () => {
       if (isCurrentTyping()) return
       if (!refreshHotkeyEnabled) return
-
-      if (!btn.current) return
-      if (btn.current.disabled) return
-      btn.current.click()
+      click()
     },
     { exactMatch: true }
   )
 
   const tab = useCurrentSourceTab()
   const text = tab === 'dynamic' ? '刷新' : '换一换'
+
+  const onClick: MouseEventHandler = useMemoizedFn((e?: MouseEvent) => {
+    setDeg((d) => d + 360)
+    return onRefresh?.(e)
+  })
 
   return (
     <Button
