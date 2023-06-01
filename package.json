@@ -1,6 +1,6 @@
 {
   "name": "bilibili-app-recommend",
-  "version": "0.12.0",
+  "version": "0.12.1",
   "private": true,
   "scripts": {
     "prepare": "husky install",
