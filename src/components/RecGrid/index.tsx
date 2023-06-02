@@ -8,8 +8,9 @@ import { useCurrentTheme } from '$components/ModalSettings/theme'
 import { useCurrentSourceTab } from '$components/RecHeader/tab'
 import { VideoCard, VideoCardActions } from '$components/VideoCard'
 import { RecItemType } from '$define'
+import { getHeaderHeight } from '$header'
 import { cx, generateClassName } from '$libs'
-import { HEADER_HEIGHT, getIsInternalTesting } from '$platform'
+import { getIsInternalTesting } from '$platform'
 import { getRecommendForGrid, getRecommendTimes, uniqConcat } from '$service'
 import { DynamicFeedService } from '$service-dynamic-feed'
 import { PcRecService } from '$service-pc'
@@ -197,7 +198,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
     const getScrollerRect = useMemoizedFn(() => {
       // use window
       if (infiteScrollUseWindow) {
-        const headerHight = HEADER_HEIGHT + 50 // 50 RecHeader height
+        const headerHight = getHeaderHeight() + 50 // 50 RecHeader height
         return new DOMRect(0, headerHight, window.innerWidth, window.innerHeight - headerHight)
       }
       // use in a scroller
@@ -275,6 +276,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
           {refreshing
             ? // skeleton loading
               new Array(24).fill(undefined).map((_, index) => {
+                const x = <VideoCard key={index} loading={true} className={CardClassNames.card} />
                 return <VideoCard key={index} loading={true} className={CardClassNames.card} />
               })
             : // items

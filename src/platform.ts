@@ -12,16 +12,6 @@ export const getIsInternalTesting = once(() => {
 })
 
 /**
- * BILIBILI-Evolved header
- */
-
-const defaultHeader = document.querySelector('.bili-header__bar')
-export const isUsingCustomHeader = Boolean(
-  defaultHeader && window.getComputedStyle(defaultHeader).display === 'none'
-)
-export const HEADER_HEIGHT = isUsingCustomHeader ? 50 : 64
-
-/**
  * BILIBILI-Evolved dark mode
  *
  * Bilibili-evoled toggle dark mode
@@ -53,5 +43,5 @@ bodyOb.observe(document.body, {
   attributeFilter: ['class'],
 })
 window.addEventListener('unload', () => {
-  bodyOb?.disconnect()
+  bodyOb.disconnect()
 })

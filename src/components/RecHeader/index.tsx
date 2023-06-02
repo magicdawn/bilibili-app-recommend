@@ -1,7 +1,7 @@
 import { ModalSettings } from '$components/ModalSettings'
+import { getHeaderHeight, useHeaderHeight } from '$header'
 import { IconPark } from '$icon-park'
 import { css } from '$libs'
-import { HEADER_HEIGHT } from '$platform'
 import { settings, updateSettings, useSettingsSnapshot } from '$settings'
 import { useHasLogined } from '$utility'
 import { getElementOffset, isCurrentTyping } from '$utility/dom'
@@ -100,10 +100,12 @@ export const RecHeader = forwardRef<
     const container = stickyRef.current?.parentElement
     if (!container) return
 
-    const scrollTop = getElementOffset(container).top - HEADER_HEIGHT - 4
+    const scrollTop = getElementOffset(container).top - getHeaderHeight() - 4
     window.scrollTo({ top: scrollTop })
   })
   useImperativeHandle(ref, () => ({ scroll }))
+
+  const headerHeight = useHeaderHeight()
 
   return (
     <>
@@ -118,7 +120,7 @@ export const RecHeader = forwardRef<
           pureRecommend &&
             css`
               position: sticky;
-              top: ${HEADER_HEIGHT}px;
+              top: ${headerHeight || -1}px; // =0 时有缝隙
               z-index: 1000;
             `,
           pureRecommend &&
