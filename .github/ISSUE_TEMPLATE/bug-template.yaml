@@ -1,0 +1,35 @@
+name: 'Bug Report'
+description: 报告问题
+title: '[BUG]:'
+labels: ['bug']
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## BUG 表单
+
+  - type: textarea
+    attributes:
+      label: 环境
+      description: 软件版本
+      placeholder: |
+        浏览器: (如 Chrome)
+        浏览器版本: (如 113.0.5672.126)
+        脚本管理器: (如 暴力猴 / TamperMonkey)
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: 问题详细描述
+      description: 怎么复现的
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: 预期结果
+      description:
+    validations:
+      required: false

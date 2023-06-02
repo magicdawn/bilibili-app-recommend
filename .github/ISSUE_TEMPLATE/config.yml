@@ -1,0 +1,10 @@
+#
+# copy from https://github.com/drizzle-team/drizzle-orm/blob/main/.github/ISSUE_TEMPLATE/config.yml
+#
+
+blank_issues_enabled: true
+
+contact_links:
+  # - name: Ask a question
+  #   url: https://discord.gg/JGrkEU4Scj
+  #   about: Ask questions and discuss with other community members in Discord
