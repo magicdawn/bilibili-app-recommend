@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.12.2 2023-06-03
+
+- feat: improve compatiblity with Bilibili-Evolved
+
 ## v0.12.1 2023-06-01
 
 - 838c0a2 feat: tab btn style tweak
