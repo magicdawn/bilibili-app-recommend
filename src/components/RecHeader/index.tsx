@@ -120,7 +120,7 @@ export const RecHeader = forwardRef<
           pureRecommend &&
             css`
               position: sticky;
-              top: ${headerHeight || -1}px; // =0 时有缝隙
+              top: ${headerHeight - 1}px; // 有缝隙, 故 -1 px
               z-index: 1000;
             `,
           pureRecommend &&
