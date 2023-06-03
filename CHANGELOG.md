@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.12.3 2023-06-03
+
+- 修复快速切换 Tab, 可能出现卡住的情况
+
+详细
+
+- chore: add toast on pc api no items
+- 281924a feat: fix requesting.current check
+
 ## v0.12.2 2023-06-03
 
 - feat: improve compatiblity with Bilibili-Evolved
