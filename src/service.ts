@@ -108,7 +108,7 @@ export async function getRecommendForGrid(
   pcRecService: PcRecService,
   dynamicFeedService: DynamicFeedService
 ) {
-  return getMinCount(getColumnCount() * 3, pcRecService, dynamicFeedService, 5) // 7 * 3-row, 1 screen
+  return getMinCount(getColumnCount() * 3 + 1, pcRecService, dynamicFeedService, 5) // 7 * 3-row, 1 screen
 }
 
 export async function getRecommendTimes(times: number, pcRecService: PcRecService) {

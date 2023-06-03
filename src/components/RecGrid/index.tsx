@@ -17,6 +17,7 @@ import { PcRecService } from '$service-pc'
 import { useSettingsSnapshot } from '$settings'
 import { css } from '@emotion/react'
 import { useGetState, useMemoizedFn, useMount } from 'ahooks'
+import delay from 'delay'
 import { RefObject, forwardRef, useImperativeHandle, useMemo, useRef, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroller'
 import { internalTesting, narrowMode, videoGrid } from '../video-grid.module.less'
@@ -98,12 +99,12 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
       clearActiveIndex() // before
       setItems([])
 
+      const _pcRecService = new PcRecService()
       const _dynamicFeedService = new DynamicFeedService()
+      setPcRecService(_pcRecService)
       setDynamicFeedService(_dynamicFeedService)
 
-      const _pcRecService = new PcRecService()
-      setPcRecService(_pcRecService)
-
+      await delay(50)
       try {
         setItems(await getRecommendForGrid(_pcRecService, _dynamicFeedService))
       } finally {
@@ -112,7 +113,6 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
 
       setLoadCompleteCount(1)
       clearActiveIndex() // and after
-
       const cost = performance.now() - start
       debug('refresh cost %s ms', cost.toFixed(0))
 
@@ -187,7 +187,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
     const triggerScroll = useMemoizedFn(() => {
       setTimeout(() => {
         const scroller = infiteScrollUseWindow ? window : scrollerRef?.current
-        scroller?.dispatchEvent(new CustomEvent('scroll'))
+        scroller?.dispatchEvent(new CustomEvent('scroll', { detail: { deltaY: 0 } }))
       })
     })
 
@@ -247,7 +247,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
         loadMore={fetchMore}
         initialLoad={false}
         useWindow={infiteScrollUseWindow}
-        threshold={window.innerHeight} // 一屏
+        threshold={window.innerHeight * 0.5} // 一屏
         style={{ minHeight: '100%' }}
         loader={
           <div
@@ -258,7 +258,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
             `}
             key={-1}
           >
-            加载中...
+            {!refreshing && <>加载中...</>}
           </div>
         }
       >

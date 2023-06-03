@@ -5,7 +5,7 @@ import { IconPark } from '$icon-park'
 import { css } from '$libs'
 import { settings, updateSettings, useSettingsSnapshot } from '$settings'
 import { useHasLogined } from '$utility'
-import { getElementOffset, isCurrentTyping } from '$utility/dom'
+import { isCurrentTyping } from '$utility/dom'
 import { toast } from '$utility/toast'
 import { useKeyPress, useMemoizedFn } from 'ahooks'
 import { Button, Radio, Space } from 'antd'
@@ -98,20 +98,22 @@ export const RecHeader = forwardRef<
 
   const scroll = useMemoizedFn(() => {
     if (!pureRecommend) return
-    if (!sticky) return
 
     const container = stickyRef.current?.parentElement
     if (!container) return
 
-    const scrollTop = getElementOffset(container).top - getHeaderHeight() - 4
-    debug(
-      'scroll to %s, offsetTop=%s headerHeight=%s',
-      scrollTop,
-      getElementOffset(container).top,
-      getHeaderHeight()
-    )
-    document.documentElement.scrollTop = scrollTop
-    // window.scrollTo({ top: scrollTop })
+    const rect = container.getBoundingClientRect()
+    const headerHeight = getHeaderHeight()
+    if (rect.top < headerHeight) {
+      const relativeScrolltop = headerHeight - rect.top + 1
+      debug(
+        'changing scroll on refresh: rect.top = %s, headerHeight = %s, scrollTop -= %s',
+        rect.top,
+        headerHeight,
+        relativeScrolltop
+      )
+      document.documentElement.scrollTop -= relativeScrolltop
+    }
   })
   useImperativeHandle(ref, () => ({ scroll }))
 
