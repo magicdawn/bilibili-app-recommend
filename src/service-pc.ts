@@ -1,5 +1,6 @@
 import { PcRecItem, PcRecItemExtend, PcRecommendJson } from '$define'
 import { settings } from '$settings'
+import { toast } from '$utility/toast'
 import { uniqBy } from 'lodash'
 import { request } from './request'
 
@@ -26,7 +27,11 @@ export class PcRecService {
     })
 
     const json = res.data as PcRecommendJson
-    const items = json.data.item
+    if (!json.data?.item) {
+      toast(json.message || 'API 请求没有返回结果')
+    }
+
+    const items = json.data?.item || []
     return items
   }
 
