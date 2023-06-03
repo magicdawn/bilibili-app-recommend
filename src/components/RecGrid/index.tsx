@@ -88,8 +88,12 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
       // scroll to top
       await onScrollToTop?.()
 
-      setRefreshing(true)
-      setUpperRefreshing(true)
+      const updateRefreshing = (val: boolean) => {
+        setRefreshing(val)
+        setUpperRefreshing(val)
+      }
+
+      updateRefreshing(true)
       setRefreshedAt(Date.now())
       clearActiveIndex() // before
       setItems([])
@@ -102,16 +106,12 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
 
       try {
         setItems(await getRecommendForGrid(_pcRecService, _dynamicFeedService))
-      } catch (e) {
-        setRefreshing(false)
-        setUpperRefreshing(false)
-        throw e
+      } finally {
+        updateRefreshing(false)
       }
 
       setLoadCompleteCount(1)
       clearActiveIndex() // and after
-      setRefreshing(false)
-      setUpperRefreshing(false)
 
       const cost = performance.now() - start
       debug('refresh cost %s ms', cost.toFixed(0))
