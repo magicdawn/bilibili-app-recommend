@@ -123,7 +123,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
     useMount(refresh)
     useImperativeHandle(ref, () => ({ refresh }), [])
 
-    const requesting = useRef(false)
+    const requesting = useRef<Record<number, boolean>>({})
 
     /**
      * useMemoizedFn 只能确保 fetchMore 开始调用时值时最新的.
@@ -134,10 +134,10 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
       if (!hasMore) return
       if (refreshing) return
 
-      if (requesting.current) return
-      requesting.current = true
-
       const refreshAtWhenStart = refreshedAt
+      if (requesting.current[refreshAtWhenStart]) return
+      requesting.current = { [refreshAtWhenStart]: true }
+
       let newItems = items
 
       try {
@@ -152,7 +152,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
           }
         }
       } catch (e) {
-        requesting.current = false
+        requesting.current[refreshAtWhenStart] = false
         throw e
       }
 
@@ -165,7 +165,6 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
           refreshAtWhenStart,
           getRefreshedAt()
         )
-        requesting.current = false
         return
       }
 
@@ -173,7 +172,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
       setItems(newItems)
       setLoadCompleteCount((c) => c + 1)
       triggerScroll() // check
-      requesting.current = false
+      requesting.current[refreshAtWhenStart] = false
     })
 
     //

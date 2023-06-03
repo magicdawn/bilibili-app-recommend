@@ -1,3 +1,4 @@
+import { baseDebug } from '$common'
 import { ModalSettings } from '$components/ModalSettings'
 import { getHeaderHeight, useHeaderHeight } from '$header'
 import { IconPark } from '$icon-park'
@@ -23,6 +24,8 @@ import { AccessKeyManage } from '../AccessKeyManage'
 import { ModalFeed } from '../ModalFeed'
 import { HelpInfo } from '../piece'
 import { TabType, useCurrentSourceTab } from './tab'
+
+const debug = baseDebug.extend('RecHeader')
 
 const verticalAlignStyle = css`
   display: flex;
@@ -101,7 +104,14 @@ export const RecHeader = forwardRef<
     if (!container) return
 
     const scrollTop = getElementOffset(container).top - getHeaderHeight() - 4
-    window.scrollTo({ top: scrollTop })
+    debug(
+      'scroll to %s, offsetTop=%s headerHeight=%s',
+      scrollTop,
+      getElementOffset(container).top,
+      getHeaderHeight()
+    )
+    document.documentElement.scrollTop = scrollTop
+    // window.scrollTo({ top: scrollTop })
   })
   useImperativeHandle(ref, () => ({ scroll }))
 
