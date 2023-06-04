@@ -247,7 +247,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
         loadMore={fetchMore}
         initialLoad={false}
         useWindow={infiteScrollUseWindow}
-        threshold={window.innerHeight * 0.5} // 一屏
+        threshold={window.innerHeight * 1} // 一屏
         style={{ minHeight: '100%' }}
         loader={
           <div
