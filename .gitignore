@@ -10,3 +10,7 @@ node_modules
 .turbo
 
 tmp/
+
+# moon
+.moon/cache
+.moon/docker

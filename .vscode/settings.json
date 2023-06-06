@@ -8,5 +8,8 @@
     "**/.DS_Store": true,
     "**/Thumbs.db": true,
     "**/node_modules": false
+  },
+  "yaml.schemas": {
+    "https://moonrepo.dev/schemas/project.json": "file:///Users/magicdawn/projects/bilibili-app-recommend/moon.yml"
   }
 }

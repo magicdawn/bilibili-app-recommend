@@ -1,0 +1,32 @@
+# yaml-language-server: $schema=https://moonrepo.dev/schemas/project.json
+
+tasks:
+  build-less:
+    command: 'tlm src'
+    inputs:
+      - src/**/*.less
+
+  build-typecheck:
+    command: 'tsc --noEmit'
+    inputs:
+      - 'src/**/*.{ts,tsx}'
+    deps:
+      - build-less
+
+  build-vite:
+    command: vite build
+    inputs:
+      - 'src/**/*.{ts,tsx}'
+      - 'tsconfig.json'
+      - 'vite.config.ts'
+      - 'package.json'
+    outputs:
+      - 'dist/*.js'
+    deps:
+      - build-less
+
+  build:
+    command: vite preview
+    deps:
+      - build-typecheck
+      - build-vite

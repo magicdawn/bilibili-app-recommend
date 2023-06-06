@@ -79,6 +79,9 @@ devDependencies:
   '@magicdawn/prettier-config':
     specifier: ^0.0.2
     version: 0.0.2
+  '@moonrepo/cli':
+    specifier: ^1.7.2
+    version: 1.7.2
   '@qiniu/typed-less-modules':
     specifier: ^0.1.2
     version: 0.1.2
@@ -917,6 +920,82 @@ packages:
   /@magicdawn/prettier-config@0.0.2:
     resolution: {integrity: sha512-ZyJ9S6lV6i6AgfF2QCm9EoKZZm6RKYDcxL89Sps3KQfM7PdTc5iNX3fXBKBY5fQX3N0a2a0s8XGKovepn8qb9g==}
     dev: true
+
+  /@moonrepo/cli@1.7.2:
+    resolution: {integrity: sha512-mBnThzSRZEeksOn056g2W8gHE71hxBySiK28/m5HFe9n29JBIHeDH0dB1/qMBOsC4V17MJYlUCMlscmEpwoy3Q==}
+    hasBin: true
+    requiresBuild: true
+    dependencies:
+      detect-libc: 2.0.1
+    optionalDependencies:
+      '@moonrepo/core-linux-arm64-gnu': 1.7.2
+      '@moonrepo/core-linux-arm64-musl': 1.7.2
+      '@moonrepo/core-linux-x64-gnu': 1.7.2
+      '@moonrepo/core-linux-x64-musl': 1.7.2
+      '@moonrepo/core-macos-arm64': 1.7.2
+      '@moonrepo/core-macos-x64': 1.7.2
+      '@moonrepo/core-windows-x64-msvc': 1.7.2
+    dev: true
+
+  /@moonrepo/core-linux-arm64-gnu@1.7.2:
+    resolution: {integrity: sha512-UFkUHcjVYfW4G1fqG2raafCf2I0/Al7zUsf1VnhqvGm92twpXwlPEOrlM4Wh4zOVXnv2ncmBG00p7tiv4eh7xA==}
+    cpu: [arm64]
+    os: [linux]
+    libc: [glibc]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@moonrepo/core-linux-arm64-musl@1.7.2:
+    resolution: {integrity: sha512-WkIen5H7tfe4mUc/GceKsBmdw75kG4xkLrOYeJVxZfDlhRXVrqgoTscbt4An9ACuD4pprAoiFZCae1Sa/IZOiw==}
+    cpu: [arm64]
+    os: [linux]
+    libc: [musl]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@moonrepo/core-linux-x64-gnu@1.7.2:
+    resolution: {integrity: sha512-v10KFDYDcPUmu8oXWKLJfF4JKhKrxOM7I9GQ2N53pXUvNXqm2nPksg9SxqFSvz5ZHWSTsrkdbhkaLe1bI08lgg==}
+    cpu: [x64]
+    os: [linux]
+    libc: [glibc]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@moonrepo/core-linux-x64-musl@1.7.2:
+    resolution: {integrity: sha512-gPOejOLZiQycxm0WPVuW1xC5wsCPHDfuES30n88qImJJpyE54zWv9k99qHvekFghOOIdzSpwzl5I13ITwFBfaQ==}
+    cpu: [x64]
+    os: [linux]
+    libc: [musl]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@moonrepo/core-macos-arm64@1.7.2:
+    resolution: {integrity: sha512-IIY0p51C8aL8xaC3khSixtsWiq76RJo7AsHgijKRrW6G/re/DEjM60L+RyOhX0zvhrDIGLuW9NNyaXK/PYlIzw==}
+    cpu: [arm64]
+    os: [darwin]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@moonrepo/core-macos-x64@1.7.2:
+    resolution: {integrity: sha512-gRphkVJOuDvxNS2O57+9jnulkPFd8vHxSRSlBDAiWE9oufq3lwp2i1cU72o1eFjWvWJUmCaKenzhLm1hnRLEtA==}
+    cpu: [x64]
+    os: [darwin]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@moonrepo/core-windows-x64-msvc@1.7.2:
+    resolution: {integrity: sha512-C4uVTFyJGP9A7/ALL8on5ItJqhA1oYx/r2tewDk4vJq7ekzdx5XmbKPvMW/cMAlMBQobTkjwzDW6PMO8C/NkDg==}
+    cpu: [x64]
+    os: [win32]
+    requiresBuild: true
+    dev: true
+    optional: true
 
   /@nodelib/fs.scandir@2.1.5:
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -2093,6 +2172,11 @@ packages:
     resolution: {integrity: sha512-ZySD7Nf91aLB0RxL4KGrKHBXl7Eds1DAmEdcoVawXnLD7SDhpNgtuII2aAkg7a7QS41jxPSZ17p4VdGnMHk3MQ==}
     engines: {node: '>=0.4.0'}
     dev: false
+
+  /detect-libc@2.0.1:
+    resolution: {integrity: sha512-463v3ZeIrcWtdgIg6vI6XUncguvr2TnGl4SzDXinkt9mSLpBJKXT3mW6xT3VQdDN11+WVs29pgvivTc4Lp8v+w==}
+    engines: {node: '>=8'}
+    dev: true
 
   /detect-port@1.5.1:
     resolution: {integrity: sha512-aBzdj76lueB6uUst5iAs7+0H/oOjqI5D16XUWxlWMIMROhcM0rfsNVk93zTngq1dDNpoXRr++Sus7ETAExppAQ==}
