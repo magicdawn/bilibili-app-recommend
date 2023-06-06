@@ -25,7 +25,7 @@
     "@types/lodash": "4.14.195",
     "@types/ms": "^0.7.31",
     "@types/node": "20.2.5",
-    "@types/react": "18.2.8",
+    "@types/react": "18.2.7",
     "@types/react-dom": "18.2.4",
     "@types/react-infinite-scroller": "^1.2.3",
     "@typescript-eslint/eslint-plugin": "^5.59.9",
