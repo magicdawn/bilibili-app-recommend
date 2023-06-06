@@ -126,8 +126,9 @@ B 站桌面端已上线, 支持 MacOS / Windows, 首页包含推荐模块
 
 ## 开发 or 使用源代码构建最新版本
 
-- pnpm build
-- 按照提示, 复制 `file://` 链接, 在 chrome 中打开, 即可安装
+- git clone this repo
+- pnpm install
+- pnpm build, build 完会自动使用 Chrome 打开安装地址
 
 ## 支持
 
