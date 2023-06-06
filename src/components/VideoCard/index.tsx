@@ -14,6 +14,7 @@ import {
   useUnmountedRef,
   useUpdateEffect,
 } from 'ahooks'
+import { Dropdown, MenuProps } from 'antd'
 import cx from 'classnames'
 import {
   CSSProperties,
@@ -41,6 +42,11 @@ import styles from './index.module.less'
 import { normalizeCardData } from './process/normalize'
 
 const toHttps = (url: string) => (url || '').replace(/^http:\/\//, 'https://')
+
+function copyContent(content: string) {
+  GM_setClipboard(content)
+  toast(`已复制: ${content}`)
+}
 
 export type VideoCardProps = {
   style?: CSSProperties
@@ -380,16 +386,6 @@ const VideoCardInner = memo(
     const _favoriteStr = useMemo(() => formatCount(favorite), [favorite])
     const favoriteStr = isPc ? likeStr : _favoriteStr
 
-    const onContextMenu = useMemoizedFn((e: MouseEvent) => {
-      if (!settings.openInIINAWhenRightClick) return
-
-      const fullHref = new URL(href, location.href).href
-      const iinaUrl = `iina://open?url=${encodeURIComponent(fullHref)}`
-      window.open(iinaUrl, '_self')
-
-      e.preventDefault()
-    })
-
     const statItem = ({
       text,
       iconSvgName,
@@ -412,182 +408,230 @@ const VideoCardInner = memo(
       )
     }
 
+    const contextMenus: MenuProps['items'] = [
+      {
+        key: 'open-link',
+        label: '打开',
+        onClick() {
+          window.open(href, '_blank')
+        },
+      },
+      { type: 'divider' },
+      {
+        key: 'copy-link',
+        label: '复制视频链接',
+        onClick() {
+          let content = href
+          if (href.startsWith('/')) {
+            content = new URL(href, location.href).href
+          }
+          copyContent(content)
+        },
+      },
+      {
+        key: 'copy-bvid',
+        label: '复制 BVID',
+        onClick() {
+          copyContent(bvid)
+        },
+      },
+      ...(navigator.userAgent.toLowerCase().includes('mac')
+        ? [
+            { type: 'divider' as const },
+            {
+              key: 'open-in-iina',
+              label: '在 IINA 中打开',
+              onClick() {
+                const fullHref = new URL(href, location.href).href
+                const iinaUrl = `iina://open?url=${encodeURIComponent(fullHref)}`
+                window.open(iinaUrl, '_self')
+              },
+            },
+          ]
+        : []),
+    ]
+
     return (
-      <div className='bili-video-card__wrap __scale-wrap' onContextMenu={onContextMenu}>
-        <a href={href} target='_blank'>
-          <div className='bili-video-card__image __scale-player-wrap' ref={videoPreviewWrapperRef}>
-            <div className={cx('bili-video-card__image--wrap', styles.imageWrapper)}>
-              <picture className='v-img bili-video-card__cover'>
-                <source
-                  srcSet={`${cover}@672w_378h_1c_!web-home-common-cover.avif`}
-                  type='image/avif'
-                />
-                <source
-                  srcSet={`${cover}@672w_378h_1c_!web-home-common-cover.webp`}
-                  type='image/webp'
-                />
-                <img
-                  src={`${cover}@672w_378h_1c_!web-home-common-cover`}
-                  alt={title}
-                  loading='eager'
-                />
-              </picture>
+      <Dropdown menu={{ items: contextMenus }} trigger={['contextMenu']}>
+        <div className='bili-video-card__wrap __scale-wrap'>
+          <a href={href} target='_blank'>
+            <div
+              className='bili-video-card__image __scale-player-wrap'
+              ref={videoPreviewWrapperRef}
+            >
+              <div className={cx('bili-video-card__image--wrap', styles.imageWrapper)}>
+                <picture className='v-img bili-video-card__cover'>
+                  <source
+                    srcSet={`${cover}@672w_378h_1c_!web-home-common-cover.avif`}
+                    type='image/avif'
+                  />
+                  <source
+                    srcSet={`${cover}@672w_378h_1c_!web-home-common-cover.webp`}
+                    type='image/webp'
+                  />
+                  <img
+                    src={`${cover}@672w_378h_1c_!web-home-common-cover`}
+                    alt={title}
+                    loading='eager'
+                  />
+                </picture>
 
-              {/* <div className='v-inline-player'></div> */}
+                {/* <div className='v-inline-player'></div> */}
 
-              {/* preview */}
-              {/* follow-mouse or manual-control */}
-              {(isHovering || typeof previewAnimationProgress === 'number') && (
-                <PreviewImage
-                  videoDuration={duration}
-                  pvideo={videoData?.pvideoData}
-                  mouseEnterRelativeX={mouseEnterRelativeX}
-                  previewAnimationProgress={previewAnimationProgress}
-                />
-              )}
+                {/* preview */}
+                {/* follow-mouse or manual-control */}
+                {(isHovering || typeof previewAnimationProgress === 'number') && (
+                  <PreviewImage
+                    videoDuration={duration}
+                    pvideo={videoData?.pvideoData}
+                    mouseEnterRelativeX={mouseEnterRelativeX}
+                    previewAnimationProgress={previewAnimationProgress}
+                  />
+                )}
 
-              {/* 稍后再看 */}
-              <div
-                className={`bili-watch-later ${styles.watchLater}`}
-                style={{
-                  display: isHovering || active ? 'flex' : 'none',
-                }}
-                ref={watchLaterRef}
-                onClick={onToggleWatchLater}
-              >
-                <svg className='bili-watch-later__icon'>
-                  <use href={watchLaterAdded ? '#widget-watch-save' : '#widget-watch-later'} />
-                </svg>
-                <span
-                  className='bili-watch-later__tip'
-                  style={{ display: isWatchLaterHovering ? 'block' : 'none' }}
-                >
-                  {watchLaterAdded ? '移除' : '稍后再看'}
-                </span>
-              </div>
-
-              {/* 我不想看 */}
-              {isApp && authed && (
+                {/* 稍后再看 */}
                 <div
-                  ref={btnDislikeRef}
-                  className={styles.btnDislike}
-                  onClick={onTriggerDislike}
-                  style={{ display: isHovering ? 'flex' : 'none' }}
+                  className={`bili-watch-later ${styles.watchLater}`}
+                  style={{
+                    display: isHovering || active ? 'flex' : 'none',
+                  }}
+                  ref={watchLaterRef}
+                  onClick={onToggleWatchLater}
                 >
-                  <svg className={styles.btnDislikeIcon}>
-                    <use href='#widget-close'></use>
+                  <svg className='bili-watch-later__icon'>
+                    <use href={watchLaterAdded ? '#widget-watch-save' : '#widget-watch-later'} />
                   </svg>
                   <span
-                    className={styles.btnDislikeTip}
-                    style={{ display: isBtnDislikeHovering ? 'block' : 'none' }}
+                    className='bili-watch-later__tip'
+                    style={{ display: isWatchLaterHovering ? 'block' : 'none' }}
                   >
-                    我不想看
+                    {watchLaterAdded ? '移除' : '稍后再看'}
                   </span>
                 </div>
-              )}
-            </div>
 
-            <div className='bili-video-card__mask'>
-              <div className='bili-video-card__stats'>
-                <div className='bili-video-card__stats--left'>
-                  {isPc ? (
-                    <>
-                      {/* 播放 */}
-                      {statItem({ text: playStr, iconSvgName: AppRecIconSvgNameMap.play })}
-                      {/* 点赞 */}
-                      {statItem({
-                        text: goto === 'av' ? likeStr : favoriteStr,
-                        iconSvgName: AppRecIconSvgNameMap.like,
-                      })}
-                    </>
-                  ) : isApp ? (
-                    <>
-                      {item.cover_left_text_1 &&
-                        statItem({
-                          ...statItemForId(item.cover_left_icon_1),
-                          text:
-                            goto === 'picture'
-                              ? item.cover_left_text_1 +
-                                (item.cover_left_1_content_description || '')
-                              : item.cover_left_text_1,
+                {/* 我不想看 */}
+                {isApp && authed && (
+                  <div
+                    ref={btnDislikeRef}
+                    className={styles.btnDislike}
+                    onClick={onTriggerDislike}
+                    style={{ display: isHovering ? 'flex' : 'none' }}
+                  >
+                    <svg className={styles.btnDislikeIcon}>
+                      <use href='#widget-close'></use>
+                    </svg>
+                    <span
+                      className={styles.btnDislikeTip}
+                      style={{ display: isBtnDislikeHovering ? 'block' : 'none' }}
+                    >
+                      我不想看
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              <div className='bili-video-card__mask'>
+                <div className='bili-video-card__stats'>
+                  <div className='bili-video-card__stats--left'>
+                    {isPc ? (
+                      <>
+                        {/* 播放 */}
+                        {statItem({ text: playStr, iconSvgName: AppRecIconSvgNameMap.play })}
+                        {/* 点赞 */}
+                        {statItem({
+                          text: goto === 'av' ? likeStr : favoriteStr,
+                          iconSvgName: AppRecIconSvgNameMap.like,
                         })}
-                      {item.cover_left_text_2 &&
-                        statItem({
-                          ...statItemForId(item.cover_left_icon_2),
-                          text:
-                            goto === 'picture'
-                              ? item.cover_left_text_2 +
-                                (item.cover_left_2_content_description || '')
-                              : item.cover_left_text_2,
+                      </>
+                    ) : isApp ? (
+                      <>
+                        {item.cover_left_text_1 &&
+                          statItem({
+                            ...statItemForId(item.cover_left_icon_1),
+                            text:
+                              goto === 'picture'
+                                ? item.cover_left_text_1 +
+                                  (item.cover_left_1_content_description || '')
+                                : item.cover_left_text_1,
+                          })}
+                        {item.cover_left_text_2 &&
+                          statItem({
+                            ...statItemForId(item.cover_left_icon_2),
+                            text:
+                              goto === 'picture'
+                                ? item.cover_left_text_2 +
+                                  (item.cover_left_2_content_description || '')
+                                : item.cover_left_text_2,
+                          })}
+                      </>
+                    ) : (
+                      <>
+                        {/* 播放 */}
+                        {statItem({ text: playStr, iconSvgName: AppRecIconSvgNameMap.play })}
+                        {/* 弹幕 */}
+                        {statItem({
+                          text: (danmaku || 0).toString(),
+                          iconSvgName: AppRecIconSvgNameMap.danmaku,
                         })}
-                    </>
-                  ) : (
-                    <>
-                      {/* 播放 */}
-                      {statItem({ text: playStr, iconSvgName: AppRecIconSvgNameMap.play })}
-                      {/* 弹幕 */}
-                      {statItem({
-                        text: (danmaku || 0).toString(),
-                        iconSvgName: AppRecIconSvgNameMap.danmaku,
-                      })}
-                    </>
-                  )}
+                      </>
+                    )}
+                  </div>
+
+                  {/* 时长 */}
+                  {/* 番剧没有 duration 字段 */}
+                  <span className='bili-video-card__stats__duration'>
+                    {isNormalVideo && durationStr}
+                  </span>
                 </div>
-
-                {/* 时长 */}
-                {/* 番剧没有 duration 字段 */}
-                <span className='bili-video-card__stats__duration'>
-                  {isNormalVideo && durationStr}
-                </span>
               </div>
             </div>
-          </div>
-        </a>
+          </a>
 
-        <div className='bili-video-card__info __scale-disable'>
-          <div className='bili-video-card__info--right'>
-            <a
-              href={href}
-              target='_blank'
-              data-mod='partition_recommend'
-              data-idx='content'
-              data-ext='click'
-            >
-              <h3 className='bili-video-card__info--tit' title={title}>
-                {title}
-              </h3>
-            </a>
-            <p className='bili-video-card__info--bottom'>
-              {isNormalVideo ? (
-                <a
-                  className='bili-video-card__info--owner'
-                  href={`//space.bilibili.com/${authorMid}`}
-                  target='_blank'
-                  data-mod='partition_recommend'
-                  data-idx='content'
-                  data-ext='click'
-                >
-                  {recommendReason ? (
-                    <span className={styles.recommendReason}>{recommendReason}</span>
-                  ) : (
-                    <svg className='bili-video-card__info--owner__up'>
-                      <use href='#widget-up'></use>
-                    </svg>
-                  )}
+          <div className='bili-video-card__info __scale-disable'>
+            <div className='bili-video-card__info--right'>
+              <a
+                href={href}
+                target='_blank'
+                data-mod='partition_recommend'
+                data-idx='content'
+                data-ext='click'
+              >
+                <h3 className='bili-video-card__info--tit' title={title}>
+                  {title}
+                </h3>
+              </a>
+              <p className='bili-video-card__info--bottom'>
+                {isNormalVideo ? (
+                  <a
+                    className='bili-video-card__info--owner'
+                    href={`//space.bilibili.com/${authorMid}`}
+                    target='_blank'
+                    data-mod='partition_recommend'
+                    data-idx='content'
+                    data-ext='click'
+                  >
+                    {recommendReason ? (
+                      <span className={styles.recommendReason}>{recommendReason}</span>
+                    ) : (
+                      <svg className='bili-video-card__info--owner__up'>
+                        <use href='#widget-up'></use>
+                      </svg>
+                    )}
 
-                  <span className='bili-video-card__info--author'>{authorName}</span>
-                  {pubdate && <span className='bili-video-card__info--date'>· {pubdate}</span>}
-                </a>
-              ) : appBadge || appBadgeDesc ? (
-                <a className='bili-video-card__info--owner' href={href} target='_blank'>
-                  <span className={styles.badge}>{appBadge || ''}</span>
-                  <span className={styles.bangumiDesc}>{appBadgeDesc || ''}</span>
-                </a>
-              ) : null}
-            </p>
+                    <span className='bili-video-card__info--author'>{authorName}</span>
+                    {pubdate && <span className='bili-video-card__info--date'>· {pubdate}</span>}
+                  </a>
+                ) : appBadge || appBadgeDesc ? (
+                  <a className='bili-video-card__info--owner' href={href} target='_blank'>
+                    <span className={styles.badge}>{appBadge || ''}</span>
+                    <span className={styles.bangumiDesc}>{appBadgeDesc || ''}</span>
+                  </a>
+                ) : null}
+              </p>
+            </div>
           </div>
         </div>
-      </div>
+      </Dropdown>
     )
   })
 )

@@ -14,9 +14,6 @@ export const initialSettings = {
   // 纯推荐模式
   pureRecommend: false,
 
-  // 右键在 IINA 中打开
-  openInIINAWhenRightClick: false,
-
   // 是否使用 PC 端接口
   // https://github.com/magicdawn/bilibili-app-recommend/issues/16
   usePcDesktopApi: false,

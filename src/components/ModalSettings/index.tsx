@@ -344,14 +344,6 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                           </Button>
                         </Popconfirm>
                       </div>
-
-                      <div className={styles.row} style={{ marginTop: 10 }}>
-                        <FlagSettingItem
-                          configKey={'openInIINAWhenRightClick'}
-                          label='右键在 IINA 中打开'
-                          className={styles.check}
-                        />
-                      </div>
                     </div>
                   </div>
                 </div>
