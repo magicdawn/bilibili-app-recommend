@@ -1,5 +1,5 @@
 import { useIsDarkMode } from '$platform'
-import { App, ConfigProvider, Tooltip, theme } from 'antd'
+import { ConfigProvider, Tooltip, theme } from 'antd'
 import zhCN from 'antd/locale/zh_CN'
 import { ComponentProps, ReactNode } from 'react'
 import { useCurrentTheme } from './ModalSettings/theme'
@@ -19,7 +19,7 @@ export function AntdApp({ children }: { children: ReactNode }) {
         },
       }}
     >
-      <App>{children}</App>
+      {children}
     </ConfigProvider>
   )
 }
