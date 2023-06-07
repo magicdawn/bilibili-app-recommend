@@ -452,8 +452,8 @@ const VideoCardInner = memo(
     ]
 
     return (
-      <Dropdown menu={{ items: contextMenus }} trigger={['contextMenu']}>
-        <div className='bili-video-card__wrap __scale-wrap'>
+      <div className='bili-video-card__wrap __scale-wrap'>
+        <Dropdown menu={{ items: contextMenus }} trigger={['contextMenu']}>
           <a href={href} target='_blank'>
             <div
               className='bili-video-card__image __scale-player-wrap'
@@ -586,52 +586,52 @@ const VideoCardInner = memo(
               </div>
             </div>
           </a>
+        </Dropdown>
 
-          <div className='bili-video-card__info __scale-disable'>
-            <div className='bili-video-card__info--right'>
-              <a
-                href={href}
-                target='_blank'
-                data-mod='partition_recommend'
-                data-idx='content'
-                data-ext='click'
-              >
-                <h3 className='bili-video-card__info--tit' title={title}>
-                  {title}
-                </h3>
-              </a>
-              <p className='bili-video-card__info--bottom'>
-                {isNormalVideo ? (
-                  <a
-                    className='bili-video-card__info--owner'
-                    href={`//space.bilibili.com/${authorMid}`}
-                    target='_blank'
-                    data-mod='partition_recommend'
-                    data-idx='content'
-                    data-ext='click'
-                  >
-                    {recommendReason ? (
-                      <span className={styles.recommendReason}>{recommendReason}</span>
-                    ) : (
-                      <svg className='bili-video-card__info--owner__up'>
-                        <use href='#widget-up'></use>
-                      </svg>
-                    )}
+        <div className='bili-video-card__info __scale-disable'>
+          <div className='bili-video-card__info--right'>
+            <a
+              href={href}
+              target='_blank'
+              data-mod='partition_recommend'
+              data-idx='content'
+              data-ext='click'
+            >
+              <h3 className='bili-video-card__info--tit' title={title}>
+                {title}
+              </h3>
+            </a>
+            <p className='bili-video-card__info--bottom'>
+              {isNormalVideo ? (
+                <a
+                  className='bili-video-card__info--owner'
+                  href={`//space.bilibili.com/${authorMid}`}
+                  target='_blank'
+                  data-mod='partition_recommend'
+                  data-idx='content'
+                  data-ext='click'
+                >
+                  {recommendReason ? (
+                    <span className={styles.recommendReason}>{recommendReason}</span>
+                  ) : (
+                    <svg className='bili-video-card__info--owner__up'>
+                      <use href='#widget-up'></use>
+                    </svg>
+                  )}
 
-                    <span className='bili-video-card__info--author'>{authorName}</span>
-                    {pubdate && <span className='bili-video-card__info--date'>· {pubdate}</span>}
-                  </a>
-                ) : appBadge || appBadgeDesc ? (
-                  <a className='bili-video-card__info--owner' href={href} target='_blank'>
-                    <span className={styles.badge}>{appBadge || ''}</span>
-                    <span className={styles.bangumiDesc}>{appBadgeDesc || ''}</span>
-                  </a>
-                ) : null}
-              </p>
-            </div>
+                  <span className='bili-video-card__info--author'>{authorName}</span>
+                  {pubdate && <span className='bili-video-card__info--date'>· {pubdate}</span>}
+                </a>
+              ) : appBadge || appBadgeDesc ? (
+                <a className='bili-video-card__info--owner' href={href} target='_blank'>
+                  <span className={styles.badge}>{appBadge || ''}</span>
+                  <span className={styles.bangumiDesc}>{appBadgeDesc || ''}</span>
+                </a>
+              ) : null}
+            </p>
           </div>
         </div>
-      </Dropdown>
+      </div>
     )
   })
 )
