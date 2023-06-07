@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.12.5 2023-06-07
+
+- 6ecadfc fix: remove antd.App wrapper, close #35
+- b3944bf feat: video-card context-menu on img only
+
 ## v0.12.4 2023-06-07
 
 - feat: 视频卡片右键菜单
