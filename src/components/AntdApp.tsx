@@ -16,6 +16,7 @@ export function AntdApp({ children }: { children: ReactNode }) {
         token: {
           colorPrimary,
           zIndexPopupBase: 11000, // base-modal 10001
+          fontFamily: 'inherit', // use B 站首页默认字体, PingFang SC,HarmonyOS_Regular,Helvetica Neue,Microsoft YaHei,sans-serif
         },
       }}
     >
