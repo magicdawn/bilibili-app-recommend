@@ -198,6 +198,10 @@ function toastNeedLogin() {
 const btnCss = css`
   height: 26px;
   line-height: 26px;
+  &:has(:focus-visible) {
+    outline: none;
+    outline-offset: unset;
+  }
 `
 
 export function VideoSourceTab({
@@ -217,7 +221,11 @@ export function VideoSourceTab({
         buttonStyle='solid'
         size='middle'
         value={tab}
-        style={{ overflow: 'hidden' }}
+        onFocus={(e) => {
+          // 不移除 focus, refresh `r` 无法响应
+          const target = e.target as HTMLElement
+          target.blur()
+        }}
         onChange={(e) => {
           const newValue = e.target.value as TabType
           switch (newValue) {
