@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.12.7 2023-06-08
+
+- 8a8f822 feat: add Tab key support
+- 9129f9d feat: use bilibili.com default font, close #36
+- b3140ea refactor: a lot
+- a87830e fix: VideoSourceTab focus issue
+- 25eeda3 chore: more tweaks
+
 ## v0.12.6 2023-06-08
 
 - feat: support abort refresh request, close #34
