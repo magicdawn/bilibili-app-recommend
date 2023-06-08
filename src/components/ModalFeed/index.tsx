@@ -63,7 +63,7 @@ export const ModalFeed = memo(function ModalFeed({ show, onHide }: IProps) {
           推荐
         </div> */}
 
-        <VideoSourceTab refreshing={refreshing} onRefresh={onRefresh} />
+        <VideoSourceTab onRefresh={onRefresh} />
 
         <div className='space' style={{ flex: 1 }}></div>
 

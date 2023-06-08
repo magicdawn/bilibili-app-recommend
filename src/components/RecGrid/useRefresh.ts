@@ -1,36 +1,41 @@
 import { TabType } from '$components/RecHeader/tab'
 import { RecItemType } from '$define'
-import { getRecommendForGrid, getRecommendForHome } from '$service'
 import { DynamicFeedService } from '$service-dynamic-feed'
 import { PcRecService } from '$service-pc'
 import { useGetState, useMemoizedFn } from 'ahooks'
 import { Debugger } from 'debug'
-import delay from 'delay'
 import { useState } from 'react'
+
+export type FetcherOptions = {
+  tab: TabType
+  pcRecService: PcRecService
+  dynamicFeedService: DynamicFeedService
+  abortSignal: AbortSignal
+}
 
 export function useRefresh({
   debug,
   tab,
-  foruse,
-  recreateService = true,
+  recreateService,
+  fetcher,
+  preAction,
+  postAction,
 
+  // RecGrid 定制
   onScrollToTop,
   setUpperRefreshing,
-  clearActiveIndex,
-  triggerScroll,
 }: {
   tab: TabType
   debug: Debugger
-  foruse: 'RecGrid' | 'SectionRecommend'
-  recreateService?: boolean
+  fetcher: (opts: FetcherOptions) => Promise<RecItemType[]>
+  recreateService: boolean
+  preAction?: () => void | Promise<void>
+  postAction?: () => void | Promise<void>
 
   setUpperRefreshing?: (val: boolean) => void
   onScrollToTop?: () => void | Promise<void>
-  clearActiveIndex?: () => void
-  triggerScroll?: () => void
 }) {
   const [items, setItems] = useState<RecItemType[]>([])
-  const [loadCompleteCount, setLoadCompleteCount] = useState(0) // 已加载完成的 load call count, 类似 page
 
   const [pcRecService, setPcRecService] = useState(() => new PcRecService())
   const [dynamicFeedService, setDynamicFeedService] = useState(() => new DynamicFeedService())
@@ -50,16 +55,16 @@ export function useRefresh({
     if (refreshing) {
       // prevent same tab `refresh()`
       if (tab === refreshFor) {
-        debug('refresh(): [refreshing] prevent same tab(%s) refresh()', tab)
+        debug('refresh(): [start] [refreshing] prevent same tab(%s) refresh()', tab)
         return
       }
       // switch tab
       else {
-        debug('refresh(): [refreshing] switchTab %s -> %s, abort existing', refreshFor, tab)
+        debug('refresh(): [start] [refreshing] switchTab %s -> %s, abort existing', refreshFor, tab)
         refreshAbortController.abort()
       }
     } else {
-      debug('refresh(): tab = %s', tab)
+      debug('refresh(): [start] tab = %s', tab)
     }
 
     // scroll to top
@@ -74,9 +79,10 @@ export function useRefresh({
     setRefreshedAt(Date.now())
     setRefreshFor(tab)
 
-    clearActiveIndex?.() // before
     setItems([])
     setError(undefined)
+
+    await preAction?.()
 
     const _pcRecService = recreateService ? new PcRecService() : pcRecService
     const _dynamicFeedService = recreateService ? new DynamicFeedService() : dynamicFeedService
@@ -89,20 +95,24 @@ export function useRefresh({
     const _signal = _abortController.signal
     setRefreshAbortController(_abortController)
 
-    await delay(50)
+    const fetcherOptions = {
+      tab,
+      pcRecService: _pcRecService,
+      dynamicFeedService: _dynamicFeedService,
+      abortSignal: _signal,
+    }
 
-    const fn = foruse === 'RecGrid' ? getRecommendForGrid : getRecommendForHome
     let _items: RecItemType[] = []
     let err: any
     try {
-      _items = await fn(tab, _pcRecService, _dynamicFeedService, _abortController.signal)
+      _items = await fetcher(fetcherOptions)
     } catch (e) {
       err = e
     }
 
     // aborted, `_items` & `err` does not matter
     if (_signal.aborted) {
-      debug('refresh(): skip setItems/err for aborted, legacy tab = %s', tab)
+      debug('refresh(): [legacy] skip setItems/err for aborted, legacy tab = %s', tab)
       return
     }
 
@@ -115,13 +125,10 @@ export function useRefresh({
     }
 
     setItems(_items)
-    setLoadCompleteCount(1)
-    clearActiveIndex?.() // and after
-    const cost = performance.now() - start
-    debug('refresh cost %s ms', cost.toFixed(0))
+    await postAction?.()
 
-    // check need loadMore
-    triggerScroll?.()
+    const cost = performance.now() - start
+    debug('refresh(): [success] cost %s ms', cost.toFixed(0))
   })
 
   return {
@@ -142,9 +149,6 @@ export function useRefresh({
 
     refreshAbortController,
     setRefreshAbortController,
-
-    loadCompleteCount,
-    setLoadCompleteCount,
 
     pcRecService,
     setPcRecService,

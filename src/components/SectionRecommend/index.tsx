@@ -5,6 +5,7 @@ import { internalTesting, limitTwoLines, videoGrid } from '$components/video-gri
 import { AppRecItemExtend, PcRecItemExtend } from '$define'
 import { cx } from '$libs'
 import { getIsInternalTesting } from '$platform'
+import { getRecommendForHome } from '$service'
 import { useMount } from 'ahooks'
 import { useMemo } from 'react'
 import { RecHeader } from '../RecHeader'
@@ -25,10 +26,9 @@ export function SectionRecommend() {
   const { refreshing, items, refresh, error } = useRefresh({
     tab,
     debug,
-    foruse: 'SectionRecommend',
+    fetcher: getRecommendForHome,
     recreateService: false,
   })
-
   useMount(refresh)
 
   return (

@@ -10,7 +10,7 @@ import { VideoCard, VideoCardActions } from '$components/VideoCard'
 import { getHeaderHeight } from '$header'
 import { cx, generateClassName } from '$libs'
 import { getIsInternalTesting } from '$platform'
-import { getRecommendTimes, uniqConcat } from '$service'
+import { getRecommendForGrid, getRecommendTimes, uniqConcat } from '$service'
 import { useSettingsSnapshot } from '$settings'
 import { css } from '@emotion/react'
 import { useMemoizedFn, useMount } from 'ahooks'
@@ -69,31 +69,44 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
     const [hasMore, setHasMore] = useState(true)
     const tab = useCurrentSourceTab()
 
+    const [loadCompleteCount, setLoadCompleteCount] = useState(0) // 已加载完成的 load call count, 类似 page
+
+    // before refresh
+    const preAction = useMemoizedFn(async () => {
+      clearActiveIndex()
+    })
+
+    // after refresh, setItems
+    const postAction = useMemoizedFn(async () => {
+      clearActiveIndex()
+      setLoadCompleteCount(1)
+      // check need loadMore
+      triggerScroll()
+    })
+
     const {
       refresh,
+
       items,
       setItems,
+      error: refreshError,
 
       refreshing,
       refreshedAt,
       getRefreshedAt,
-      loadCompleteCount,
-      setLoadCompleteCount,
 
       pcRecService,
       dynamicFeedService,
     } = useRefresh({
       tab,
       debug,
-      foruse: 'RecGrid',
+      fetcher: getRecommendForGrid,
+      recreateService: true,
+      preAction,
+      postAction,
+
       onScrollToTop,
       setUpperRefreshing,
-      clearActiveIndex() {
-        clearActiveIndex()
-      },
-      triggerScroll() {
-        triggerScroll()
-      },
     })
 
     useMount(refresh)
@@ -248,7 +261,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
             className
           )}
         >
-          {refreshing
+          {refreshing || refreshError
             ? // skeleton loading
               new Array(24).fill(undefined).map((_, index) => {
                 const x = <VideoCard key={index} loading={true} className={CardClassNames.card} />

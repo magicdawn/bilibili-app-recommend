@@ -1,10 +1,10 @@
 /* eslint-disable no-constant-condition */
 import { baseDebug } from '$common'
+import { FetcherOptions } from '$components/RecGrid/useRefresh'
 import { getColumnCount } from '$components/RecGrid/useShortcut'
 import { TabType, getCurrentSourceTab } from '$components/RecHeader/tab'
 import { anyFilterEnabled, filterVideos } from '$components/VideoCard/process/filter'
 import { RecItemType } from '$define'
-import { DynamicFeedService } from '$service-dynamic-feed'
 import { settings } from '$settings'
 import { uniqBy } from 'lodash'
 import * as app from './service-app'
@@ -34,14 +34,12 @@ export const usePcApi = (tab: TabType) =>
 
 export async function getMinCount(
   count: number,
-  tab: TabType,
-  pcRecService: PcRecService,
-  dynamicFeedService: DynamicFeedService,
-  abortSignal: AbortSignal | undefined,
+  fetcherOptions: FetcherOptions,
   filterMultiplier = 5
 ) {
-  let items: RecItemType[] = []
+  const { pcRecService, dynamicFeedService, tab, abortSignal } = fetcherOptions
 
+  let items: RecItemType[] = []
   let addMore = async (restCount: number) => {
     let cur: RecItemType[] = []
 
@@ -108,36 +106,12 @@ export async function getMinCount(
   return items
 }
 
-export async function getRecommendForHome(
-  tab: TabType,
-  pcRecService: PcRecService,
-  dynamicFeedService: DynamicFeedService,
-  abortSingal: AbortSignal
-) {
-  return getMinCount(
-    getColumnCount(undefined, false) * 2,
-    tab,
-    pcRecService,
-    dynamicFeedService,
-    abortSingal,
-    5
-  ) // 7 * 2-row
+export async function getRecommendForHome(fetcherOptions: FetcherOptions) {
+  return getMinCount(getColumnCount(undefined, false) * 2, fetcherOptions, 5) // 7 * 2-row
 }
 
-export async function getRecommendForGrid(
-  tab: TabType,
-  pcRecService: PcRecService,
-  dynamicFeedService: DynamicFeedService,
-  abortSingal: AbortSignal
-) {
-  return getMinCount(
-    getColumnCount() * 3 + 1,
-    tab,
-    pcRecService,
-    dynamicFeedService,
-    abortSingal,
-    5
-  ) // 7 * 3-row, 1 screen
+export async function getRecommendForGrid(fetcherOptions: FetcherOptions) {
+  return getMinCount(getColumnCount() * 3 + 1, fetcherOptions, 5) // 7 * 3-row, 1 screen
 }
 
 export async function getRecommendTimes(times: number, tab: TabType, pcRecService: PcRecService) {

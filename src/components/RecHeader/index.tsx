@@ -77,10 +77,7 @@ export type RecHeaderRef = {
 }
 export const RecHeader = forwardRef<
   RecHeaderRef,
-  {
-    onRefresh: () => void | Promise<void>
-    refreshing: boolean
-  }
+  { refreshing: boolean; onRefresh: () => void | Promise<void> }
 >(function RecHeader({ onRefresh, refreshing }, ref) {
   const { accessKey, pureRecommend, usePcDesktopApi } = useSettingsSnapshot()
 
@@ -150,7 +147,7 @@ export const RecHeader = forwardRef<
           {/* <a className='title' href='#'>
             推荐
           </a> */}
-          <VideoSourceTab refreshing={refreshing} onRefresh={onRefresh} />
+          <VideoSourceTab onRefresh={onRefresh} />
         </div>
 
         <div className='right'>
@@ -204,13 +201,7 @@ const btnCss = css`
   }
 `
 
-export function VideoSourceTab({
-  onRefresh,
-  refreshing,
-}: {
-  onRefresh: () => void | Promise<void>
-  refreshing: boolean
-}) {
+export function VideoSourceTab({ onRefresh }: { onRefresh: () => void | Promise<void> }) {
   const logined = useHasLogined()
   const tab = useCurrentSourceTab()
 
