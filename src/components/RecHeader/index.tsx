@@ -240,13 +240,13 @@ export function VideoSourceTab({ onRefresh }: { onRefresh: () => void | Promise<
           })
         }}
       >
-        <Radio.Button css={btnCss} value={'normal' satisfies TabType}>
+        <Radio.Button css={btnCss} tabIndex={-1} value={'normal' satisfies TabType}>
           推荐
         </Radio.Button>
-        <Radio.Button css={btnCss} value={'onlyFollow' satisfies TabType}>
+        <Radio.Button css={btnCss} tabIndex={-1} value={'onlyFollow' satisfies TabType}>
           已关注
         </Radio.Button>
-        <Radio.Button css={btnCss} value={'dynamic' satisfies TabType}>
+        <Radio.Button css={btnCss} tabIndex={-1} value={'dynamic' satisfies TabType}>
           动态
         </Radio.Button>
       </Radio.Group>

@@ -94,6 +94,10 @@ export function useShortcut({
   // by 1
   useKeyPress('leftarrow', addActiveIndex(-1), { exactMatch: true })
   useKeyPress('rightarrow', addActiveIndex(1), { exactMatch: true })
+
+  useKeyPress('tab', addActiveIndex(1), { exactMatch: true })
+  useKeyPress('shift.tab', addActiveIndex(-1), { exactMatch: true })
+
   // by row
   // 在 render 时调用 getColCount 会出现 useNarrowMode:false, UI 还没更新, 返回还是两列的情况
   const _getColCount = () => getColumnCount(containerRef.current)
