@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { settings as $config } from './settings'
+import { settings } from './settings'
 
 export const HOST_API = 'https://api.bilibili.com'
 export const HOST_APP = 'https://app.bilibili.com'
@@ -30,7 +30,7 @@ gmrequest.interceptors.request.use(
   function (config) {
     config.params = {
       appkey,
-      access_key: $config.accessKey || '',
+      access_key: settings.accessKey || '',
       ...config.params,
     }
     return config
