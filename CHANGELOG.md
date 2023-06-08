@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.12.6 2023-06-08
+
+- feat: support abort refresh request, close #34
+
 ## v0.12.5 2023-06-07
 
 - 6ecadfc fix: remove antd.App wrapper, close #35
