@@ -7,20 +7,17 @@ import { useModalDislikeVisible } from '$components/ModalDislike'
 import { useCurrentTheme } from '$components/ModalSettings/theme'
 import { useCurrentSourceTab } from '$components/RecHeader/tab'
 import { VideoCard, VideoCardActions } from '$components/VideoCard'
-import { RecItemType } from '$define'
 import { getHeaderHeight } from '$header'
 import { cx, generateClassName } from '$libs'
 import { getIsInternalTesting } from '$platform'
-import { getRecommendForGrid, getRecommendTimes, uniqConcat } from '$service'
-import { DynamicFeedService } from '$service-dynamic-feed'
-import { PcRecService } from '$service-pc'
+import { getRecommendTimes, uniqConcat } from '$service'
 import { useSettingsSnapshot } from '$settings'
 import { css } from '@emotion/react'
-import { useGetState, useMemoizedFn, useMount } from 'ahooks'
-import delay from 'delay'
+import { useMemoizedFn, useMount } from 'ahooks'
 import { RefObject, forwardRef, useImperativeHandle, useMemo, useRef, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroller'
 import { internalTesting, narrowMode, videoGrid } from '../video-grid.module.less'
+import { useRefresh } from './useRefresh'
 import { useShortcut } from './useShortcut'
 
 const debug = baseDebug.extend('components:RecGrid')
@@ -69,55 +66,34 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
     ref
   ) => {
     const { useNarrowMode } = useSettingsSnapshot()
+    const [hasMore, setHasMore] = useState(true)
     const tab = useCurrentSourceTab()
 
-    const [items, setItems] = useState<RecItemType[]>([])
-    const [refreshing, setRefreshing] = useState(false)
-    const [hasMore, setHasMore] = useState(true)
+    const {
+      refresh,
+      items,
+      setItems,
 
-    const [refreshedAt, setRefreshedAt, getRefreshedAt] = useGetState<number>(() => Date.now())
-    const [loadCompleteCount, setLoadCompleteCount] = useState(0) // 已加载完成的 load call count, 类似 page
+      refreshing,
+      refreshedAt,
+      getRefreshedAt,
+      loadCompleteCount,
+      setLoadCompleteCount,
 
-    const [pcRecService, setPcRecService] = useState(() => new PcRecService())
-    const [dynamicFeedService, setDynamicFeedService] = useState(() => new DynamicFeedService())
-
-    const refresh = useMemoizedFn(async () => {
-      const start = performance.now()
-      debug('call refresh()')
-      if (refreshing) return
-
-      // scroll to top
-      await onScrollToTop?.()
-
-      const updateRefreshing = (val: boolean) => {
-        setRefreshing(val)
-        setUpperRefreshing(val)
-      }
-
-      updateRefreshing(true)
-      setRefreshedAt(Date.now())
-      clearActiveIndex() // before
-      setItems([])
-
-      const _pcRecService = new PcRecService()
-      const _dynamicFeedService = new DynamicFeedService()
-      setPcRecService(_pcRecService)
-      setDynamicFeedService(_dynamicFeedService)
-
-      await delay(50)
-      try {
-        setItems(await getRecommendForGrid(_pcRecService, _dynamicFeedService))
-      } finally {
-        updateRefreshing(false)
-      }
-
-      setLoadCompleteCount(1)
-      clearActiveIndex() // and after
-      const cost = performance.now() - start
-      debug('refresh cost %s ms', cost.toFixed(0))
-
-      // check need loadMore
-      triggerScroll()
+      pcRecService,
+      dynamicFeedService,
+    } = useRefresh({
+      tab,
+      debug,
+      foruse: 'RecGrid',
+      onScrollToTop,
+      setUpperRefreshing,
+      clearActiveIndex() {
+        clearActiveIndex()
+      },
+      triggerScroll() {
+        triggerScroll()
+      },
     })
 
     useMount(refresh)
@@ -147,7 +123,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
         } else {
           // fetchMore 至少 load 一项, 需要触发 InfiniteScroll.componentDidUpdate
           while (!(newItems.length > items.length)) {
-            const more = await getRecommendTimes(2, pcRecService)
+            const more = await getRecommendTimes(2, tab, pcRecService)
             newItems = uniqConcat(newItems, more)
           }
         }

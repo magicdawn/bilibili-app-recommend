@@ -8,7 +8,7 @@ export class DynamicFeedService {
   page = 0
   hasMore = true
 
-  async next() {
+  async next(signal: AbortSignal | undefined = undefined) {
     if (!this.hasMore) {
       return
     }
@@ -25,7 +25,7 @@ export class DynamicFeedService {
       params.offset = this.offset
     }
 
-    const res = await request.get('/x/polymer/web-dynamic/v1/feed/all', { params })
+    const res = await request.get('/x/polymer/web-dynamic/v1/feed/all', { signal, params })
     const json = res.data as DynamicFeedJson
 
     this.hasMore = json.data.has_more

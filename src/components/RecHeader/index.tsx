@@ -213,7 +213,6 @@ export function VideoSourceTab({
   return (
     <>
       <Radio.Group
-        disabled={refreshing}
         optionType='button'
         buttonStyle='solid'
         size='middle'
@@ -236,7 +235,10 @@ export function VideoSourceTab({
               break
           }
 
-          onRefresh()
+          // so that `RecGrid.refresh` can access latest `tab`
+          setTimeout(() => {
+            onRefresh()
+          })
         }}
       >
         <Radio.Button css={btnCss} value={'normal' satisfies TabType}>

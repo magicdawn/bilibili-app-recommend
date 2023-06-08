@@ -1,7 +1,7 @@
 /* eslint-disable no-constant-condition */
 import { baseDebug } from '$common'
 import { getColumnCount } from '$components/RecGrid/useShortcut'
-import { getCurrentSourceTab } from '$components/RecHeader/tab'
+import { TabType, getCurrentSourceTab } from '$components/RecHeader/tab'
 import { anyFilterEnabled, filterVideos } from '$components/VideoCard/process/filter'
 import { RecItemType } from '$define'
 import { DynamicFeedService } from '$service-dynamic-feed'
@@ -29,14 +29,15 @@ export function uniqConcat(existing: RecItemType[], newItems: RecItemType[]) {
   )
 }
 
-export const usePcApi = () =>
-  getCurrentSourceTab() === 'onlyFollow' ||
-  (getCurrentSourceTab() === 'normal' && settings.usePcDesktopApi)
+export const usePcApi = (tab: TabType) =>
+  tab === 'onlyFollow' || (tab === 'normal' && settings.usePcDesktopApi)
 
 export async function getMinCount(
   count: number,
+  tab: TabType,
   pcRecService: PcRecService,
   dynamicFeedService: DynamicFeedService,
+  abortSignal: AbortSignal | undefined,
   filterMultiplier = 5
 ) {
   let items: RecItemType[] = []
@@ -45,8 +46,8 @@ export async function getMinCount(
     let cur: RecItemType[] = []
 
     // 动态
-    if (getCurrentSourceTab() === 'dynamic') {
-      cur = (await dynamicFeedService.next()) || []
+    if (tab === 'dynamic') {
+      cur = (await dynamicFeedService.next(abortSignal)) || []
       items = items.concat(cur)
       return
     }
@@ -54,14 +55,14 @@ export async function getMinCount(
     let times: number
 
     // 已关注
-    if (getCurrentSourceTab() === 'onlyFollow') {
+    if (tab === 'onlyFollow') {
       times = 8
       debug('getMinCount: addMore(restCount = %s) times=%s', restCount, times)
     }
 
     // 常规
     else {
-      const pagesize = usePcApi() ? PcRecService.PAGE_SIZE : app.PAGE_SIZE
+      const pagesize = usePcApi(tab) ? PcRecService.PAGE_SIZE : app.PAGE_SIZE
 
       const multipler = anyFilterEnabled()
         ? filterMultiplier // 过滤, 需要大基数
@@ -78,8 +79,8 @@ export async function getMinCount(
       )
     }
 
-    cur = usePcApi()
-      ? await pcRecService.getRecommendTimes(times)
+    cur = usePcApi(tab)
+      ? await pcRecService.getRecommendTimes(times, abortSignal)
       : await app._getRecommendTimes(times)
     cur = filterVideos(cur)
 
@@ -89,8 +90,18 @@ export async function getMinCount(
 
   await addMore(count)
   while (true) {
+    // aborted
+    if (abortSignal?.aborted) {
+      debug('getMinCount: break for abortSignal')
+      break
+    }
+    // no more
+    if (getCurrentSourceTab() === 'dynamic' && !dynamicFeedService.hasMore) {
+      debug('getMinCount: break for dynamicFeedService.hasMore')
+      break
+    }
+    // enpugh
     if (items.length >= count) break
-    if (getCurrentSourceTab() === 'dynamic' && !dynamicFeedService.hasMore) break
     await addMore(count - items.length)
   }
 
@@ -98,21 +109,39 @@ export async function getMinCount(
 }
 
 export async function getRecommendForHome(
+  tab: TabType,
   pcRecService: PcRecService,
-  dynamicFeedService: DynamicFeedService
+  dynamicFeedService: DynamicFeedService,
+  abortSingal: AbortSignal
 ) {
-  return getMinCount(getColumnCount(undefined, false) * 2, pcRecService, dynamicFeedService, 3) // 7 * 2-row
+  return getMinCount(
+    getColumnCount(undefined, false) * 2,
+    tab,
+    pcRecService,
+    dynamicFeedService,
+    abortSingal,
+    5
+  ) // 7 * 2-row
 }
 
 export async function getRecommendForGrid(
+  tab: TabType,
   pcRecService: PcRecService,
-  dynamicFeedService: DynamicFeedService
+  dynamicFeedService: DynamicFeedService,
+  abortSingal: AbortSignal
 ) {
-  return getMinCount(getColumnCount() * 3 + 1, pcRecService, dynamicFeedService, 5) // 7 * 3-row, 1 screen
+  return getMinCount(
+    getColumnCount() * 3 + 1,
+    tab,
+    pcRecService,
+    dynamicFeedService,
+    abortSingal,
+    5
+  ) // 7 * 3-row, 1 screen
 }
 
-export async function getRecommendTimes(times: number, pcRecService: PcRecService) {
-  let items: RecItemType[] = usePcApi()
+export async function getRecommendTimes(times: number, tab: TabType, pcRecService: PcRecService) {
+  let items: RecItemType[] = usePcApi(tab)
     ? await pcRecService.getRecommendTimes(times)
     : await app._getRecommendTimes(times)
   items = filterVideos(items)

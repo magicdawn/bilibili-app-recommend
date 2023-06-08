@@ -13,9 +13,10 @@ export class PcRecService {
 
   page = 0
 
-  async getRecommend() {
+  async getRecommend(signal: AbortSignal | undefined = undefined) {
     const curpage = ++this.page
     const res = await request.get('/x/web-interface/index/top/rcmd', {
+      signal,
       params: {
         fresh_type: 3,
         version: 1,
@@ -35,15 +36,17 @@ export class PcRecService {
     return items
   }
 
-  async getRecommendTimes(times: number) {
+  async getRecommendTimes(times: number, signal: AbortSignal | undefined = undefined) {
     let list: PcRecItem[] = []
 
     const parallel = async () => {
-      list = (await Promise.all(new Array(times).fill(0).map(() => this.getRecommend()))).flat()
+      list = (
+        await Promise.all(new Array(times).fill(0).map(() => this.getRecommend(signal)))
+      ).flat()
     }
     const sequence = async () => {
       for (let x = 1; x <= times; x++) {
-        list = list.concat(await this.getRecommend())
+        list = list.concat(await this.getRecommend(signal))
       }
     }
 
