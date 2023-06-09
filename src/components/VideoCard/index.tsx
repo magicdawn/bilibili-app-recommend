@@ -16,6 +16,7 @@ import {
 } from 'ahooks'
 import { Dropdown, MenuProps } from 'antd'
 import cx from 'classnames'
+import delay from 'delay'
 import {
   CSSProperties,
   ComponentProps,
@@ -39,7 +40,7 @@ import {
   watchLaterDel,
 } from './card.service'
 import styles from './index.module.less'
-import { normalizeCardData } from './process/normalize'
+import { IVideoCardData, normalizeCardData } from './process/normalize'
 
 const toHttps = (url: string) => (url || '').replace(/^http:\/\//, 'https://')
 
@@ -51,16 +52,17 @@ function copyContent(content: string) {
 export type VideoCardProps = {
   style?: CSSProperties
   className?: string
-  item?: RecItemType
   loading?: boolean
   active?: boolean // 键盘 active
+  item?: RecItemType
+  onRemoveCurrent?: (item: RecItemType, data: IVideoCardData) => void | Promise<void>
 } & ComponentProps<'div'>
 
 export type VideoCardActions = DislikeCardActions & VideoCardInnerActions
 
 export const VideoCard = memo(
   forwardRef<VideoCardActions, VideoCardProps>(function VideoCard(
-    { style, className, item, loading, active, ...restProps },
+    { style, className, item, loading, active, onRemoveCurrent, ...restProps },
     ref
   ) {
     // loading defaults to
@@ -131,7 +133,12 @@ export const VideoCard = memo(
               dislikedReason={dislikedReason!}
             />
           ) : (
-            <VideoCardInner ref={videoCardInnerRef} item={item!} active={active} />
+            <VideoCardInner
+              ref={videoCardInnerRef}
+              item={item!}
+              active={active}
+              onRemoveCurrent={onRemoveCurrent}
+            />
           ))}
       </div>
     )
@@ -199,6 +206,7 @@ const DislikedCard = memo(
 type VideoCardInnerProps = {
   item: RecItemType
   active?: boolean
+  onRemoveCurrent?: (item: RecItemType, data: IVideoCardData) => void | Promise<void>
 }
 type VideoCardInnerActions = {
   onToggleWatchLater: () => Promise<void>
@@ -208,13 +216,15 @@ type VideoCardInnerActions = {
 }
 const VideoCardInner = memo(
   forwardRef<VideoCardInnerActions, VideoCardInnerProps>(function VideoCardInner(
-    { item, active = false },
+    { item, active = false, onRemoveCurrent },
     ref
   ) {
     const isPc = item.api === 'pc'
     const isApp = item.api === 'app'
     const isDynamic = item.api === 'dynamic'
+    const isWatchlater = item.api === 'watchlater'
 
+    const cardData = useMemo(() => normalizeCardData(item), [item])
     const {
       // video
       avid,
@@ -243,9 +253,9 @@ const VideoCardInner = memo(
       // adpater specific
       appBadge,
       appBadgeDesc,
-    } = useMemo(() => normalizeCardData(item), [item])
+    } = cardData
 
-    const isNormalVideo = isDynamic || item.goto === 'av'
+    const isNormalVideo = isDynamic || isWatchlater || item.goto === 'av'
     if (!['av', 'bangumi', 'picture'].includes(goto)) {
       console.warn(`[${APP_NAME}]: none (av,bangumi,picture) goto type %s`, goto, item)
     }
@@ -321,7 +331,7 @@ const VideoCardInner = memo(
     const isWatchLaterHovering = useHover(watchLaterRef)
 
     // watchLater added
-    const [watchLaterAdded, setWatchLaterAdded] = useState(false)
+    const [watchLaterAdded, setWatchLaterAdded] = useState(item.api === 'watchlater' ? true : false)
 
     const { accessKey } = useSettingsSnapshot()
     const authed = Boolean(accessKey)
@@ -348,23 +358,29 @@ const VideoCardInner = memo(
      * 稍候再看
      */
 
-    const [requestingWatchLaterApi, setRequestingWatchLaterApi] = useState(false)
+    const requestingWatchLaterApi = useRef(false)
     const onToggleWatchLater = useMemoizedFn(async (e?: MouseEvent) => {
       e?.preventDefault()
 
-      if (requestingWatchLaterApi) return
-      setRequestingWatchLaterApi(true)
+      if (requestingWatchLaterApi.current) return
+      requestingWatchLaterApi.current = true
 
       const fn = watchLaterAdded ? watchLaterDel : watchLaterAdd
-      let successed = false
+      let success = false
       try {
-        successed = await fn(avid)
+        success = await fn(avid)
       } finally {
-        setRequestingWatchLaterApi(false)
+        requestingWatchLaterApi.current = false
       }
 
-      if (successed) {
+      if (success) {
         setWatchLaterAdded((val) => !val)
+
+        // tell parent container remove current card
+        if (item.api === 'watchlater') {
+          await delay(100)
+          onRemoveCurrent?.(item, cardData)
+        }
       }
     })
 
@@ -505,7 +521,11 @@ const VideoCardInner = memo(
                     className='bili-watch-later__tip'
                     style={{ display: isWatchLaterHovering ? 'block' : 'none' }}
                   >
-                    {watchLaterAdded ? '移除' : '稍后再看'}
+                    {watchLaterAdded
+                      ? item.api === 'watchlater'
+                        ? '移除稍后再看'
+                        : '移除'
+                      : '稍后再看'}
                   </span>
                 </div>
 

@@ -5,6 +5,7 @@ import { getColumnCount } from '$components/RecGrid/useShortcut'
 import { TabType, getCurrentSourceTab } from '$components/RecHeader/tab'
 import { anyFilterEnabled, filterVideos } from '$components/VideoCard/process/filter'
 import { RecItemType } from '$define'
+import { WatchLaterService } from '$service-watchlater'
 import { settings } from '$settings'
 import { uniqBy } from 'lodash'
 import * as app from './service-app'
@@ -17,7 +18,9 @@ export const recItemUniqer = (item: RecItemType) =>
     ? item.id
     : item.api === 'app'
     ? item.param
-    : item.modules.module_dynamic.major.archive.aid
+    : item.api === 'dynamic'
+    ? item.modules.module_dynamic.major.archive.aid
+    : item.bvid
 
 export function uniqConcat(existing: RecItemType[], newItems: RecItemType[]) {
   const ids = existing.map(recItemUniqer)
@@ -39,13 +42,17 @@ export async function getMinCount(
 ) {
   const { pcRecService, dynamicFeedService, tab, abortSignal } = fetcherOptions
 
+  if (tab === 'watchlater') {
+    return WatchLaterService.getAll()
+  }
+
   let items: RecItemType[] = []
   let addMore = async (restCount: number) => {
     let cur: RecItemType[] = []
 
     // 动态
     if (tab === 'dynamic') {
-      cur = (await dynamicFeedService.next(abortSignal)) || []
+      cur = (await dynamicFeedService.loadMore(abortSignal)) || []
       items = items.concat(cur)
       return
     }

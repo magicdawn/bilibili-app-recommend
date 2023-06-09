@@ -1,5 +1,11 @@
 import { APP_NAME } from '$common'
-import { AppRecItemExtend, DynamicFeedItemExtend, PcRecItemExtend, RecItemType } from '$define'
+import {
+  AppRecItemExtend,
+  DynamicFeedItemExtend,
+  PcRecItemExtend,
+  RecItemType,
+  WatchLaterItemExtend,
+} from '$define'
 import { BvCode } from '$utility/bv'
 import { formatDuration, formatTimeStamp, parseCount, parseDuration } from '$utility/video'
 import dayjs from 'dayjs'
@@ -44,24 +50,31 @@ export function normalizeCardData(item: RecItemType) {
   const isPc = item.api === 'pc'
   const isApp = item.api === 'app'
   const isDynamic = item.api === 'dynamic'
+  const isWatchlater = item.api === 'watchlater'
 
-  if (isPc) return apiPcAdapter(item)
-  if (isApp) return apiAppAdapter(item)
-  return apiDynamicAdapter(item)
-
-  function lookinto<T>({
-    pc,
-    app,
-    dynamic,
-  }: {
+  function lookinto<T>(opts: {
     pc: (item: PcRecItemExtend) => T
     app: (item: AppRecItemExtend) => T
     dynamic: (item: DynamicFeedItemExtend) => T
+    watchlater: (item: WatchLaterItemExtend) => T
   }) {
-    if (isPc) return pc(item)
-    if (isApp) return app(item)
-    return dynamic(item)
+    if (isPc) return opts.pc(item)
+    if (isApp) return opts.app(item)
+    if (isDynamic) return opts.dynamic(item)
+    return opts.watchlater(item)
   }
+
+  // if (isPc) return apiPcAdapter(item)
+  // if (isApp) return apiAppAdapter(item)
+  // if (isDynamic) return apiDynamicAdapter(item)
+  // return apiWatchLaterAdapter(item)
+
+  return lookinto<IVideoCardData>({
+    pc: apiPcAdapter,
+    app: apiAppAdapter,
+    dynamic: apiDynamicAdapter,
+    watchlater: apiWatchLaterAdapter,
+  })
 }
 
 export function apiPcAdapter(item: PcRecItemExtend): IVideoCardData {
@@ -206,5 +219,34 @@ export function apiDynamicAdapter(item: DynamicFeedItemExtend): IVideoCardData {
     authorName: author.name,
     authorFace: author.face,
     authorMid: author.mid.toString(),
+  }
+}
+
+export function apiWatchLaterAdapter(item: WatchLaterItemExtend): IVideoCardData {
+  return {
+    // video
+    avid: String(item.aid),
+    bvid: item.bvid,
+    goto: 'av',
+    href: item.uri,
+    title: `${item.viewed ? '[已观看]' : ''} ${item.title}`,
+    coverRaw: item.pic,
+    pubts: item.pubdate,
+    pubdate: formatTimeStamp(item.pubdate),
+    duration: item.duration,
+    durationStr: formatDuration(item.duration),
+    recommendReason: formatTimeStamp(item.add_at) + ' 稍后再看', //  '稍后再看',
+
+    // stat
+    play: item.stat.view,
+    like: item.stat.like,
+    coin: undefined,
+    danmaku: item.stat.danmaku,
+    favorite: undefined,
+
+    // author
+    authorName: item.owner.name,
+    authorFace: item.owner.face,
+    authorMid: String(item.owner.mid),
   }
 }

@@ -1,17 +1,22 @@
 import { settings, useSettingsSnapshot } from '$settings'
 import { hasLogined, useHasLogined } from '$utility'
 
-export const TabValue = ['normal', 'onlyFollow', 'dynamic'] as const
-export type TabType = typeof TabValue extends ReadonlyArray<infer T> ? T : never
+export const TabConfig = [
+  { key: 'normal', label: '推荐' },
+  { key: 'onlyFollow', label: '已关注' },
+  { key: 'dynamic', label: '动态' },
+  { key: 'watchlater', label: '稍后再看' },
+] as const
+
+export const TAB_ALLOW_VALUES = TabConfig.map((x) => x.key)
+export type TabType = typeof TAB_ALLOW_VALUES extends ReadonlyArray<infer T> ? T : never
 
 export function useCurrentSourceTab(): TabType {
-  const { onlyFollowMode, useDynamicApi } = useSettingsSnapshot()
+  const { videoSourceTab } = useSettingsSnapshot()
   const logined = useHasLogined()
-
-  if (!logined) return 'normal'
-  if (onlyFollowMode) return 'onlyFollow'
-  if (useDynamicApi) return 'dynamic'
-  return 'normal'
+  if (!TAB_ALLOW_VALUES.includes(videoSourceTab)) return 'normal' // invalid
+  if (!logined) return 'normal' // not logined
+  return videoSourceTab
 }
 
 /**
@@ -19,10 +24,9 @@ export function useCurrentSourceTab(): TabType {
  */
 
 export function getCurrentSourceTab(): TabType {
-  const { onlyFollowMode, useDynamicApi } = settings
+  const { videoSourceTab } = settings
   const logined = hasLogined()
-  if (!logined) return 'normal'
-  if (onlyFollowMode) return 'onlyFollow'
-  if (useDynamicApi) return 'dynamic'
-  return 'normal'
+  if (!TAB_ALLOW_VALUES.includes(videoSourceTab)) return 'normal' // invalid
+  if (!logined) return 'normal' // not logined
+  return videoSourceTab
 }

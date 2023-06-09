@@ -1,4 +1,5 @@
 import { APP_NAME } from '$common'
+import { TabType } from '$components/RecHeader/tab'
 import { pick } from 'lodash'
 import { proxy, subscribe, useSnapshot } from 'valtio'
 
@@ -36,6 +37,11 @@ export const initialSettings = {
   colorPickerThemeSelectedColor: '', // 自定义颜色
 
   /**
+   * TabType
+   */
+  videoSourceTab: 'normal' as TabType,
+
+  /**
    * 过滤器模块
    * 使用 flat config 方便使用 FlagSettingItem
    */
@@ -50,12 +56,6 @@ export const initialSettings = {
 
   // 已关注UP的推荐视频, 默认不参与过滤
   enableFilterForFollowed: false,
-
-  // 推荐只看已关注
-  onlyFollowMode: false,
-
-  // 使用动态 API
-  useDynamicApi: false,
 }
 
 export type Config = typeof initialSettings

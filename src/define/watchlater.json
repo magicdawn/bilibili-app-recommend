@@ -1,0 +1,95 @@
+{
+  "code": 0,
+  "message": "0",
+  "ttl": 1,
+  "data": {
+    "count": 99,
+    "list": [
+      {
+        "aid": 572119317,
+        "videos": 1,
+        "tid": 31,
+        "tname": "翻唱",
+        "copyright": 1,
+        "pic": "http://i2.hdslb.com/bfs/archive/ab10bfecb44ee443c428e69b177050006f4f340c.jpg",
+        "title": "【人生态度】房子着火我拍照~人生乱套我睡觉！",
+        "pubdate": 1686107570,
+        "ctime": 1686107570,
+        "desc": "看来睡的太早也不行呀~\n人生态度要明确~\n该吃吃该喝喝，啥事不往心里搁~\n今天还挺适合唱这个的吧！！！\n高考加油啊，别给自己太大压力~",
+        "state": 0,
+        "duration": 153,
+        "rights": {
+          "bp": 0,
+          "elec": 0,
+          "download": 0,
+          "movie": 0,
+          "pay": 0,
+          "hd5": 0,
+          "no_reprint": 1,
+          "autoplay": 1,
+          "ugc_pay": 0,
+          "is_cooperation": 0,
+          "ugc_pay_preview": 0,
+          "no_background": 0,
+          "arc_pay": 0,
+          "pay_free_watch": 0
+        },
+        "owner": {
+          "mid": 1749046,
+          "name": "括号笑叔",
+          "face": "https://i1.hdslb.com/bfs/face/2ff868192fdb2dd88a3ec8f0691b604537f02dff.jpg"
+        },
+        "stat": {
+          "aid": 572119317,
+          "view": 24353,
+          "danmaku": 66,
+          "reply": 433,
+          "favorite": 388,
+          "coin": 579,
+          "share": 44,
+          "now_rank": 0,
+          "his_rank": 0,
+          "like": 4449,
+          "dislike": 0,
+          "vt": -1,
+          "vv": 24353
+        },
+        "dynamic": "",
+        "dimension": {
+          "width": 1440,
+          "height": 2560,
+          "rotate": 0
+        },
+        "season_id": 413530,
+        "short_link_v2": "https://b23.tv/BV1dz4y1v7V9",
+        "first_frame": "http://i0.hdslb.com/bfs/storyff/n230607a22z8526mbaardff4bwm5bq9e_firsti.jpg",
+        "pub_location": "辽宁",
+        "pages": [
+          {
+            "cid": 1155557133,
+            "page": 1,
+            "from": "vupload",
+            "part": "【人生态度】房子着火我拍照~人生乱套我睡觉！",
+            "duration": 153,
+            "vid": "",
+            "weblink": "",
+            "dimension": {
+              "width": 1440,
+              "height": 2560,
+              "rotate": 0
+            },
+            "first_frame": "http://i0.hdslb.com/bfs/storyff/n230607a22z8526mbaardff4bwm5bq9e_firsti.jpg"
+          }
+        ],
+        "cid": 1155557133,
+        "progress": 0,
+        "add_at": 1686293453,
+        "bvid": "BV1dz4y1v7V9",
+        "uri": "https://www.bilibili.com/medialist/play/watchlater/BV1dz4y1v7V9",
+        "viewed": false,
+        "seq": 0,
+        "enable_vt": 0
+      }
+    ]
+  }
+}

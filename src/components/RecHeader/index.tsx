@@ -23,7 +23,7 @@ import { proxy, useSnapshot } from 'valtio'
 import { AccessKeyManage } from '../AccessKeyManage'
 import { ModalFeed } from '../ModalFeed'
 import { HelpInfo } from '../piece'
-import { TabType, useCurrentSourceTab } from './tab'
+import { TabConfig, TabType, useCurrentSourceTab } from './tab'
 
 const debug = baseDebug.extend('RecHeader')
 
@@ -189,7 +189,7 @@ export const RecHeader = forwardRef<
 })
 
 function toastNeedLogin() {
-  return toast('你需要登录B站后使用该功能!')
+  return toast('你需要登录B站后使用该功能! 如已完成登录, 请刷新网页重试~')
 }
 
 const btnCss = css`
@@ -219,20 +219,10 @@ export function VideoSourceTab({ onRefresh }: { onRefresh: () => void | Promise<
         }}
         onChange={(e) => {
           const newValue = e.target.value as TabType
-          switch (newValue) {
-            case 'onlyFollow':
-              if (!logined) return toastNeedLogin()
-              updateSettings({ onlyFollowMode: true, useDynamicApi: false })
-              break
-            case 'dynamic':
-              if (!logined) return toastNeedLogin()
-              updateSettings({ onlyFollowMode: false, useDynamicApi: true })
-              break
-            case 'normal':
-            default:
-              updateSettings({ onlyFollowMode: false, useDynamicApi: false })
-              break
+          if (newValue !== 'normal' && !logined) {
+            return toastNeedLogin()
           }
+          updateSettings({ videoSourceTab: newValue })
 
           // so that `RecGrid.refresh` can access latest `tab`
           setTimeout(() => {
@@ -240,15 +230,11 @@ export function VideoSourceTab({ onRefresh }: { onRefresh: () => void | Promise<
           })
         }}
       >
-        <Radio.Button css={btnCss} tabIndex={-1} value={'normal' satisfies TabType}>
-          推荐
-        </Radio.Button>
-        <Radio.Button css={btnCss} tabIndex={-1} value={'onlyFollow' satisfies TabType}>
-          已关注
-        </Radio.Button>
-        <Radio.Button css={btnCss} tabIndex={-1} value={'dynamic' satisfies TabType}>
-          动态
-        </Radio.Button>
+        {TabConfig.map(({ key, label }) => (
+          <Radio.Button css={btnCss} tabIndex={-1} value={key} key={key}>
+            {label}
+          </Radio.Button>
+        ))}
       </Radio.Group>
       <HelpInfo
         iconProps={{ size: 18, style: { marginLeft: 10 } }}
@@ -302,7 +288,9 @@ export const RefreshButton = forwardRef<RefreshButtonActions, RefreshButtonProps
   )
 
   const tab = useCurrentSourceTab()
-  const text = tab === 'dynamic' ? '刷新' : '换一换'
+  const text = (['dynamic', 'watchlater'] satisfies TabType[] as TabType[]).includes(tab)
+    ? '刷新'
+    : '换一换'
 
   const onClick: MouseEventHandler = useMemoizedFn((e?: MouseEvent) => {
     setDeg((d) => d + 360)

@@ -35,6 +35,7 @@ export function useRefresh({
   setUpperRefreshing?: (val: boolean) => void
   onScrollToTop?: () => void | Promise<void>
 }) {
+  const [hasMore, setHasMore] = useState(true)
   const [items, setItems] = useState<RecItemType[]>([])
 
   const [pcRecService, setPcRecService] = useState(() => new PcRecService())
@@ -81,6 +82,7 @@ export function useRefresh({
 
     setItems([])
     setError(undefined)
+    setHasMore(true)
 
     await preAction?.()
 
@@ -125,6 +127,7 @@ export function useRefresh({
     }
 
     setItems(_items)
+    if (tab === 'watchlater') setHasMore(false)
     await postAction?.()
 
     const cost = performance.now() - start
@@ -134,7 +137,6 @@ export function useRefresh({
   return {
     items,
     setItems,
-
     error,
 
     refreshedAt,
@@ -149,6 +151,9 @@ export function useRefresh({
 
     refreshAbortController,
     setRefreshAbortController,
+
+    hasMore,
+    setHasMore,
 
     pcRecService,
     setPcRecService,

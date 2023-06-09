@@ -7,11 +7,14 @@ import { useModalDislikeVisible } from '$components/ModalDislike'
 import { useCurrentTheme } from '$components/ModalSettings/theme'
 import { useCurrentSourceTab } from '$components/RecHeader/tab'
 import { VideoCard, VideoCardActions } from '$components/VideoCard'
+import { IVideoCardData } from '$components/VideoCard/process/normalize'
+import { RecItemType } from '$define'
 import { getHeaderHeight } from '$header'
 import { cx, generateClassName } from '$libs'
 import { getIsInternalTesting } from '$platform'
 import { getRecommendForGrid, getRecommendTimes, uniqConcat } from '$service'
 import { useSettingsSnapshot } from '$settings'
+import { toast } from '$utility/toast'
 import { css } from '@emotion/react'
 import { useMemoizedFn, useMount } from 'ahooks'
 import { RefObject, forwardRef, useImperativeHandle, useMemo, useRef, useState } from 'react'
@@ -66,7 +69,6 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
     ref
   ) => {
     const { useNarrowMode } = useSettingsSnapshot()
-    const [hasMore, setHasMore] = useState(true)
     const tab = useCurrentSourceTab()
 
     const [loadCompleteCount, setLoadCompleteCount] = useState(0) // 已加载完成的 load call count, 类似 page
@@ -94,6 +96,9 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
       refreshing,
       refreshedAt,
       getRefreshedAt,
+
+      hasMore,
+      setHasMore,
 
       pcRecService,
       dynamicFeedService,
@@ -131,7 +136,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
 
       try {
         if (tab === 'dynamic') {
-          newItems = newItems.concat((await dynamicFeedService.next()) || [])
+          newItems = newItems.concat((await dynamicFeedService.loadMore()) || [])
           setHasMore(dynamicFeedService.hasMore)
         } else {
           // fetchMore 至少 load 一项, 需要触发 InfiniteScroll.componentDidUpdate
@@ -229,6 +234,18 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
 
     const { colorPrimary } = useCurrentTheme()
 
+    const handleRemoveCard = useMemoizedFn((item: RecItemType, data: IVideoCardData) => {
+      setItems((items) => {
+        const index = items.findIndex((x) => x.uniqId === item.uniqId)
+        if (index === -1) return items
+
+        let newItems = items.slice()
+        newItems.splice(index, 1)
+        toast(`已移除: ${data.title}`, 5000)
+        return newItems
+      })
+    })
+
     return (
       <InfiniteScroll
         pageStart={0}
@@ -283,9 +300,20 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
                     ]}
                     item={item}
                     active={active}
+                    onRemoveCurrent={handleRemoveCard}
                   />
                 )
               })}
+        </div>
+
+        <div
+          css={css`
+            text-align: center;
+            line-height: 60px;
+            font-size: 120%;
+          `}
+        >
+          {!refreshing && !hasMore && <>没有更多了~</>}
         </div>
       </InfiniteScroll>
     )

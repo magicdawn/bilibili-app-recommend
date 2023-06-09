@@ -10,3 +10,6 @@ node_modules
 .turbo
 
 tmp/
+
+# privacy
+src/define/watchlater-full.json

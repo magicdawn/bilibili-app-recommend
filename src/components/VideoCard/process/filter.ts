@@ -7,7 +7,7 @@ export function anyFilterEnabled() {
   return (
     settings.filterMinDurationEnabled ||
     settings.filterMinPlayCountEnabled ||
-    settings.onlyFollowMode
+    settings.videoSourceTab === 'onlyFollow'
   )
 }
 

@@ -8,7 +8,7 @@ export class DynamicFeedService {
   page = 0
   hasMore = true
 
-  async next(signal: AbortSignal | undefined = undefined) {
+  async loadMore(signal: AbortSignal | undefined = undefined) {
     if (!this.hasMore) {
       return
     }
@@ -36,7 +36,7 @@ export class DynamicFeedService {
       return {
         ...item,
         api: 'dynamic',
-        uniqId: crypto.randomUUID(),
+        uniqId: item.id_str || crypto.randomUUID(),
       }
     })
     return items
