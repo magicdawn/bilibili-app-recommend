@@ -345,6 +345,19 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                         </Popconfirm>
                       </div>
                     </div>
+
+                    <div className={styles.settingsGroupTitle} style={{ marginTop: 15 }}>
+                      稍后再看
+                    </div>
+                    <div className={cx(styles.settingsGroupContent)}>
+                      <div className={styles.row}>
+                        <FlagSettingItem
+                          configKey='shuffleForWatchLater'
+                          label='对「稍后再看」Tab 使用随机顺序'
+                          tooltip={<>不包括今天添加的「稍后再看」</>}
+                        />
+                      </div>
+                    </div>
                   </div>
                 </div>
               ),

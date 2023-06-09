@@ -1,6 +1,7 @@
 import { useCurrentTheme } from '$components/ModalSettings/theme'
 import { RecGrid, RecGridRef } from '$components/RecGrid'
-import { RefreshButton, VideoSourceTab } from '$components/RecHeader'
+import { RefreshButton } from '$components/RecHeader'
+import { VideoSourceTab } from '$components/RecHeader/tab'
 import { ModalFeedConfigChecks } from '$components/piece'
 import { cx } from '$libs'
 import { useIsDarkMode } from '$platform'

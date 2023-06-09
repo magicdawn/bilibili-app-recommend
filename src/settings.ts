@@ -42,6 +42,11 @@ export const initialSettings = {
   videoSourceTab: 'normal' as TabType,
 
   /**
+   * tab=watchlater
+   */
+  shuffleForWatchLater: true, // 打乱顺序
+
+  /**
    * 过滤器模块
    * 使用 flat config 方便使用 FlagSettingItem
    */
