@@ -233,7 +233,8 @@ const VideoCardInner = memo(
       href,
       title,
       coverRaw,
-      pubdate,
+      pubdateDisplay,
+      pubdateDisplayTitle,
       duration,
       durationStr,
       recommendReason,
@@ -630,6 +631,7 @@ const VideoCardInner = memo(
                   data-mod='partition_recommend'
                   data-idx='content'
                   data-ext='click'
+                  title={`${authorName} ${pubdateDisplayTitle || pubdateDisplay}`}
                 >
                   {recommendReason ? (
                     <span className={styles.recommendReason}>{recommendReason}</span>
@@ -640,7 +642,9 @@ const VideoCardInner = memo(
                   )}
 
                   <span className='bili-video-card__info--author'>{authorName}</span>
-                  {pubdate && <span className='bili-video-card__info--date'>· {pubdate}</span>}
+                  {pubdateDisplay && (
+                    <span className='bili-video-card__info--date'>· {pubdateDisplay}</span>
+                  )}
                 </a>
               ) : appBadge || appBadgeDesc ? (
                 <a className='bili-video-card__info--owner' href={href} target='_blank'>

@@ -20,7 +20,8 @@ export interface IVideoCardData {
   title: string
   coverRaw: string
   pubts?: number // unix timestamp
-  pubdate?: string // for display
+  pubdateDisplay?: string // for display
+  pubdateDisplayTitle?: string
   duration: number
   durationStr: string
   recommendReason?: string
@@ -87,7 +88,7 @@ export function apiPcAdapter(item: PcRecItemExtend): IVideoCardData {
     title: item.title,
     coverRaw: item.pic,
     pubts: item.pubdate,
-    pubdate: formatTimeStamp(item.pubdate),
+    pubdateDisplay: formatTimeStamp(item.pubdate),
     duration: item.duration,
     durationStr: formatDuration(item.duration),
     recommendReason: item.rcmd_reason?.content,
@@ -158,7 +159,7 @@ export function apiAppAdapter(item: AppRecItemExtend): IVideoCardData {
     title: item.title,
     coverRaw: item.cover,
     pubts: undefined,
-    pubdate: undefined,
+    pubdateDisplay: undefined,
     duration: item.player_args?.duration || 0,
     durationStr: formatDuration(item.player_args?.duration),
     recommendReason: item.rcmd_reason,
@@ -185,7 +186,7 @@ export function apiDynamicAdapter(item: DynamicFeedItemExtend): IVideoCardData {
   const author = item.modules.module_author
 
   const oneDayAgo = dayjs().subtract(2, 'days').unix()
-  const pubdate = (() => {
+  const pubdateDisplay = (() => {
     const ts = author.pub_ts
     if (ts > oneDayAgo) {
       return author.pub_time
@@ -203,7 +204,7 @@ export function apiDynamicAdapter(item: DynamicFeedItemExtend): IVideoCardData {
     title: v.title,
     coverRaw: v.cover,
     pubts: author.pub_ts,
-    pubdate,
+    pubdateDisplay,
     duration: parseDuration(v.duration_text) || 0,
     durationStr: v.duration_text,
     recommendReason: v.badge.text,
@@ -232,10 +233,13 @@ export function apiWatchLaterAdapter(item: WatchLaterItemExtend): IVideoCardData
     title: `${item.viewed ? '[已观看]' : ''} ${item.title}`,
     coverRaw: item.pic,
     pubts: item.pubdate,
-    pubdate: formatTimeStamp(item.pubdate),
+    pubdateDisplay: formatTimeStamp(item.pubdate),
+    pubdateDisplayTitle: `${formatTimeStamp(item.pubdate)} 发布, ${formatTimeStamp(
+      item.add_at
+    )} 添加稍后再看`,
     duration: item.duration,
     durationStr: formatDuration(item.duration),
-    recommendReason: formatTimeStamp(item.add_at) + ' 稍后再看', //  '稍后再看',
+    recommendReason: `${formatTimeStamp(item.add_at)} · 稍后再看`,
 
     // stat
     play: item.stat.view,
