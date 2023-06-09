@@ -230,7 +230,7 @@ export function apiWatchLaterAdapter(item: WatchLaterItemExtend): IVideoCardData
     bvid: item.bvid,
     goto: 'av',
     href: item.uri,
-    title: `${item.viewed ? '[已观看]' : ''} ${item.title}`,
+    title: `${item.viewed ? '【已观看】· ' : ''}${item.title}`,
     coverRaw: item.pic,
     pubts: item.pubdate,
     pubdateDisplay: formatTimeStamp(item.pubdate),
