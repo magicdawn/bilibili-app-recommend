@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.13.0 2023-06-09
+
+- 稍后再看 Tab
+
 ## v0.12.7 2023-06-08
 
 - 8a8f822 feat: add Tab key support
