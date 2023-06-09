@@ -18,9 +18,10 @@ export class WatchLaterService {
 
     // 洗牌
     if (settings.shuffleForWatchLater) {
-      const firstNotTodayAddedIndex = items.findIndex(
-        (item) => item.add_at < dayjs().startOf('day').unix()
-      )
+      // keep 最近几天内
+      const gate = dayjs().subtract(2, 'days').unix()
+      const firstNotTodayAddedIndex = items.findIndex((item) => item.add_at < gate)
+
       if (firstNotTodayAddedIndex !== -1) {
         const items1 = items.slice(0, firstNotTodayAddedIndex)
         const items2 = items.slice(firstNotTodayAddedIndex)
