@@ -11,7 +11,8 @@
     "build:type-check": "tsc --noEmit",
     "build:vite": "vite build",
     "preview": "vite preview",
-    "test": "vitest --ui",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
     "coverage": "vitest run --coverage"
   },
   "license": "MIT",
