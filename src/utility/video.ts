@@ -18,8 +18,6 @@ export function parseDuration(d?: string) {
 
   return total
 }
-// console.log(parseDuration('01:23'))
-// console.log(parseDuration('00:01:23'))
 
 /**
  * xx秒 -> xx:xx:xx
@@ -47,10 +45,6 @@ export function parseCount(str: string) {
   if (/^\d+$/.test(str)) return Number(str)
   if (/^\d+(\.\d+?)?万$/.test(str)) return Number(str.slice(0, -1)) * 10000
 }
-
-// console.log(getCountFromStr('10000'))
-// console.log(getCountFromStr('1.2万'))
-// console.log(getCountFromStr('2万'))
 
 const currentYear = dayjs().format('YYYY')
 

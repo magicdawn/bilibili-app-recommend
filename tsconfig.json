@@ -21,7 +21,7 @@
         "tags": ["css", "cssCls", "generateClassName"]
       }
     ],
-    "types": ["vite/client", "@violentmonkey/types", "node"]
+    "types": ["vite/client", "@violentmonkey/types", "node", "vitest/importMeta"]
   },
   "ts-node": {
     "swc": true,
