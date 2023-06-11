@@ -120,11 +120,11 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
     const requesting = useRef<Record<number, boolean>>({})
 
     /**
-     * useMemoizedFn 只能确保 fetchMore 开始调用时值时最新的.
-     * 拿 refreshedAt 举例, fetchMore 内部, 值 refreshedAt 不变
+     * useMemoizedFn 只能确保 loadMore 开始调用时值时最新的.
+     * 拿 refreshedAt 举例, loadMore 内部, 值 refreshedAt 不变
      * 所以需要 useGetState, 从 getRefreshedAt 取最新的值
      */
-    const fetchMore = useMemoizedFn(async () => {
+    const loadMore = useMemoizedFn(async () => {
       if (!hasMore) return
       if (refreshing) return
 
@@ -139,9 +139,11 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
           newItems = newItems.concat((await dynamicFeedService.loadMore()) || [])
           setHasMore(dynamicFeedService.hasMore)
         } else {
-          // fetchMore 至少 load 一项, 需要触发 InfiniteScroll.componentDidUpdate
+          // loadMore 至少 load 一项, 需要触发 InfiniteScroll.componentDidUpdate
           while (!(newItems.length > items.length)) {
-            const more = await getRecommendTimes(2, tab, pcRecService)
+            // onlyFollow 需要大基数
+            const times = tab === 'onlyFollow' ? 5 : 2
+            const more = await getRecommendTimes(times, tab, pcRecService)
             newItems = uniqConcat(newItems, more)
           }
         }
@@ -155,14 +157,14 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
       //  - 刷新结束了
       if (refreshAtWhenStart !== getRefreshedAt()) {
         debug(
-          'fetchMore: skip update for mismatch refreshedAt, %s != %s',
+          'loadMore: skip update for mismatch refreshedAt, %s != %s',
           refreshAtWhenStart,
           getRefreshedAt()
         )
         return
       }
 
-      debug('fetchMore: seq(%s) len %s -> %s', loadCompleteCount + 1, items.length, newItems.length)
+      debug('loadMore: seq(%s) len %s -> %s', loadCompleteCount + 1, items.length, newItems.length)
       setItems(newItems)
       setLoadCompleteCount((c) => c + 1)
       triggerScroll() // check
@@ -250,7 +252,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
       <InfiniteScroll
         pageStart={0}
         hasMore={hasMore}
-        loadMore={fetchMore}
+        loadMore={loadMore}
         initialLoad={false}
         useWindow={infiteScrollUseWindow}
         threshold={window.innerHeight * 1} // 一屏
