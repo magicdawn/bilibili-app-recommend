@@ -20,7 +20,7 @@ export const initialSettings = {
   usePcDesktopApi: false,
 
   // 并行请求
-  useParallelRequest: true,
+  // useParallelRequest: true,
 
   // 自动开始预览
   autoPreviewWhenKeyboardSelect: false,

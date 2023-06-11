@@ -1,5 +1,4 @@
 import { PcRecItem, PcRecItemExtend, PcRecommendJson } from '$define'
-import { settings } from '$settings'
 import { toast } from '$utility/toast'
 import { uniqBy } from 'lodash'
 import { request } from './request'
@@ -50,7 +49,7 @@ export class PcRecService {
       }
     }
 
-    await (settings.useParallelRequest ? parallel : sequence)()
+    await (true ? parallel : sequence)()
 
     list = uniqBy(list, (item) => item.id)
 

@@ -1,5 +1,4 @@
 import { APP_NAME } from '$common'
-import { settings } from '$settings'
 import { toast } from '$utility/toast'
 import { uniqBy } from 'lodash'
 import pretry, { RetryError } from 'promise.retry'
@@ -94,7 +93,7 @@ export async function _getRecommendTimes(times: number) {
   }
 
   // 并行: 快,but 好多重复啊
-  await (settings.useParallelRequest ? parallel : sequence)()
+  await (true ? parallel : sequence)()
 
   // make api unique
   list = uniqBy(list, (item) => item.param)

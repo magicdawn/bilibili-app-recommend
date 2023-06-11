@@ -157,7 +157,9 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                         }
                         className={styles.check}
                       />
-                      <FlagSettingItem
+
+                      {/* 已经整体去重, useParallelRequest always true */}
+                      {/* <FlagSettingItem
                         configKey='useParallelRequest'
                         label='批量请求时使用并行'
                         tooltip={
@@ -168,7 +170,7 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                           </>
                         }
                         className={styles.check}
-                      />
+                      /> */}
                     </div>
                   </div>
 

@@ -20,3 +20,4 @@ rules:
   '@typescript-eslint/no-explicit-any': off
   'prefer-const': warn
   '@typescript-eslint/no-namespace': off
+  'no-constant-condition': off
