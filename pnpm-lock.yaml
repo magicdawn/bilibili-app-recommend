@@ -14,6 +14,9 @@ dependencies:
   '@icon-park/react':
     specifier: ^1.4.2
     version: 1.4.2(react-dom@18.2.0)(react@18.2.0)
+  '@total-typescript/ts-reset':
+    specifier: ^0.4.2
+    version: 0.4.2
   ahooks:
     specifier: 3.7.7
     version: 3.7.7(react@18.2.0)
@@ -1403,6 +1406,10 @@ packages:
     dependencies:
       defer-to-connect: 2.0.1
     dev: true
+
+  /@total-typescript/ts-reset@0.4.2:
+    resolution: {integrity: sha512-vqd7ZUDSrXFVT1n8b2kc3LnklncDQFPvR58yUS1kEP23/nHPAO9l1lMjUfnPrXYYk4Hj54rrLKMW5ipwk7k09A==}
+    dev: false
 
   /@tsconfig/node10@1.0.8:
     resolution: {integrity: sha512-6XFfSQmMgq0CFLY1MslA/CPUfhIL919M1rMsa5lP2P097N2Wd1sSX0tx1u4olM16fLNhtHZpRhedZJphNJqmZg==}

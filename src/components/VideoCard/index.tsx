@@ -425,6 +425,8 @@ const VideoCardInner = memo(
       )
     }
 
+    const hasDislikeEntry = isApp && authed
+
     const contextMenus: MenuProps['items'] = [
       {
         key: 'open-link',
@@ -433,7 +435,8 @@ const VideoCardInner = memo(
           window.open(href, '_blank')
         },
       },
-      { type: 'divider' },
+
+      { type: 'divider' as const },
       {
         key: 'copy-link',
         label: '复制视频链接',
@@ -452,6 +455,23 @@ const VideoCardInner = memo(
           copyContent(bvid)
         },
       },
+
+      { type: 'divider' as const },
+      hasDislikeEntry && {
+        key: 'dislike',
+        label: '我不想看',
+        onClick() {
+          onTriggerDislike()
+        },
+      },
+      {
+        key: 'watchlater',
+        label: watchLaterAdded ? '移除稍后再看' : '稍后再看',
+        onClick() {
+          onToggleWatchLater()
+        },
+      },
+
       ...(navigator.userAgent.toLowerCase().includes('mac')
         ? [
             { type: 'divider' as const },
@@ -466,7 +486,7 @@ const VideoCardInner = memo(
             },
           ]
         : []),
-    ]
+    ].filter(Boolean)
 
     return (
       <div className='bili-video-card__wrap __scale-wrap'>
@@ -522,16 +542,12 @@ const VideoCardInner = memo(
                     className='bili-watch-later__tip'
                     style={{ display: isWatchLaterHovering ? 'block' : 'none' }}
                   >
-                    {watchLaterAdded
-                      ? item.api === 'watchlater'
-                        ? '移除稍后再看'
-                        : '移除'
-                      : '稍后再看'}
+                    {watchLaterAdded ? '移除稍后再看' : '稍后再看'}
                   </span>
                 </div>
 
                 {/* 我不想看 */}
-                {isApp && authed && (
+                {hasDislikeEntry && (
                   <div
                     ref={btnDislikeRef}
                     className={styles.btnDislike}
