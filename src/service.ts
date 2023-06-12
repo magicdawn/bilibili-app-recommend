@@ -2,7 +2,7 @@
 import { baseDebug } from '$common'
 import { FetcherOptions } from '$components/RecGrid/useRefresh'
 import { getColumnCount } from '$components/RecGrid/useShortcut'
-import { TabType, getCurrentSourceTab } from '$components/RecHeader/tab'
+import { TabType } from '$components/RecHeader/tab'
 import { anyFilterEnabled, filterVideos } from '$components/VideoCard/process/filter'
 import { RecItemType } from '$define'
 import { WatchLaterService } from '$service-watchlater'
@@ -47,7 +47,7 @@ export async function getMinCount(
   }
 
   let items: RecItemType[] = []
-  let addMore = async (restCount: number) => {
+  const addMore = async (restCount: number) => {
     let cur: RecItemType[] = []
 
     // 动态
@@ -100,13 +100,16 @@ export async function getMinCount(
       debug('getMinCount: break for abortSignal')
       break
     }
+
     // no more
-    if (getCurrentSourceTab() === 'dynamic' && !dynamicFeedService.hasMore) {
+    if (tab === 'dynamic' && !dynamicFeedService.hasMore) {
       debug('getMinCount: break for dynamicFeedService.hasMore')
       break
     }
-    // enpugh
+
+    // enough
     if (items.length >= count) break
+
     await addMore(count - items.length)
   }
 
