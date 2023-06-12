@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.13.1 2023-06-13
+
+- fcd25f1 chore: watchlater text tweak
+- 7314ddd fix BaseModal z-index
+- f5f7481 feat: more items on video-card context-menu
+- 5989bed feat: remove parallelRequest setting item
+- 3265fc7 feat: increase onlyFollow loadMore api call
+- 92256f1 chore: update deps
+- 1aa2627 chore: tweak
+- 9fc82d6 feat: import vitest
+- d9739cd chore: style tweak
+- c660304 chore: tweak
+- 80736f9 chore: tweak watchlater card display
+- ee3cfc0 chore: tweak no-shuffle threshold value
+
 ## v0.13.0 2023-06-09
 
 - 稍后再看 Tab
