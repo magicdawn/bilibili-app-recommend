@@ -356,7 +356,7 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                         <FlagSettingItem
                           configKey='shuffleForWatchLater'
                           label='对「稍后再看」Tab 使用随机顺序'
-                          tooltip={<>不包括今天添加的「稍后再看」</>}
+                          tooltip={<>不包括最近添加的「稍后再看」</>}
                         />
                       </div>
                     </div>
