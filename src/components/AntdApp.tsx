@@ -15,7 +15,7 @@ export function AntdApp({ children }: { children: ReactNode }) {
         algorithm: dark ? theme.darkAlgorithm : theme.defaultAlgorithm,
         token: {
           colorPrimary,
-          zIndexPopupBase: 11000, // base-modal 10001
+          zIndexPopupBase: 11000, // base-modal 10002
           fontFamily: 'inherit', // use B 站首页默认字体, PingFang SC,HarmonyOS_Regular,Helvetica Neue,Microsoft YaHei,sans-serif
         },
       }}
