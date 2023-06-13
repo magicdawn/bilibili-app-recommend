@@ -117,7 +117,11 @@ export async function getMinCount(
 }
 
 export async function getRecommendForHome(fetcherOptions: FetcherOptions) {
-  return getMinCount(getColumnCount(undefined, false) * 2, fetcherOptions, 5) // 7 * 2-row
+  let items = await getMinCount(getColumnCount(undefined, false) * 2, fetcherOptions, 5) // 7 * 2-row
+  if (fetcherOptions.tab === 'watchlater') {
+    items = items.slice(0, 20)
+  }
+  return items
 }
 
 export async function getRecommendForGrid(fetcherOptions: FetcherOptions) {
