@@ -8,11 +8,11 @@ dayjs.extend(duration)
 
 import { APP_NAME } from '$common'
 import { AntdApp } from '$components/AntdApp'
+import { RouterApp } from '$router-app'
 import { tryAction, tryToRemove } from '$utility/dom'
 import sleep from 'delay'
 import { createRoot } from 'react-dom/client'
 import './common/global.less'
-import { PureRecommend } from './components/PureRecommend'
 import { SectionRecommend } from './components/SectionRecommend'
 import { getIsInternalTesting } from './platform'
 import { settings } from './settings'
@@ -37,7 +37,16 @@ async function initHomepage() {
   // 变灰
   tryAction('html.gray', (el) => el.classList.remove('gray'))
 
-  if (settings.pureRecommend) {
+  let hash = (location.hash || '#').slice(1) // remove #
+  if (!hash && settings.pureRecommend) {
+    const newUrl = new URL(location.href)
+    newUrl.hash = `#/${APP_NAME}/`
+    location.href = newUrl.href
+    hash = newUrl.hash.slice(1)
+  }
+
+  const shouldRenderRouter = hash.startsWith(`/${APP_NAME}`)
+  if (shouldRenderRouter) {
     return initHomepagePureRecommend()
   } else {
     return initHomepageSection()
@@ -128,9 +137,5 @@ async function initHomepagePureRecommend() {
 
   // react render
   const root = createRoot(recommendContainer)
-  root.render(
-    <AntdApp>
-      <PureRecommend />
-    </AntdApp>
-  )
+  root.render(<RouterApp />)
 }

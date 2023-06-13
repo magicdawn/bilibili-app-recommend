@@ -2,7 +2,6 @@ import { baseDebug } from '$common'
 import { useRefresh } from '$components/RecGrid/useRefresh'
 import { useCurrentSourceTab } from '$components/RecHeader/tab'
 import { internalTesting, limitTwoLines, videoGrid } from '$components/video-grid.module.less'
-import { AppRecItemExtend, PcRecItemExtend } from '$define'
 import { cx } from '$libs'
 import { getIsInternalTesting } from '$platform'
 import { getRecommendForHome } from '$service'
@@ -40,7 +39,7 @@ export function SectionRecommend() {
       >
         {refreshing || error
           ? skeletonPlaceholders.map((id) => <VideoCard key={id} />)
-          : items!.map((item: PcRecItemExtend | AppRecItemExtend) => {
+          : items!.map((item) => {
               return <VideoCard key={item.uniqId} item={item} />
             })}
       </div>

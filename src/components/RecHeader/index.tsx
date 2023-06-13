@@ -1,4 +1,4 @@
-import { baseDebug } from '$common'
+import { APP_NAME, baseDebug } from '$common'
 import { ModalSettings } from '$components/ModalSettings'
 import { getHeaderHeight, useHeaderHeight } from '$header'
 import { IconPark } from '$icon-park'
@@ -162,7 +162,12 @@ export const RecHeader = forwardRef<
             />
 
             {!pureRecommend && (
-              <Button css={verticalAlignStyle} onClick={showModalFeed}>
+              <Button
+                css={verticalAlignStyle}
+                onClick={() => {
+                  window.open(`/#/${APP_NAME}/`, '_blank')
+                }}
+              >
                 <span>查看更多</span>
                 <svg
                   css={css`

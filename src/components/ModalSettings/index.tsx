@@ -21,6 +21,7 @@ import { ThemesSelect } from './theme'
 async function toastAndReload() {
   toast('即将刷新网页')
   await delay(500)
+  location.hash = ''
   location.reload()
 }
 
