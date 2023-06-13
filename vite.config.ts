@@ -4,7 +4,9 @@ import visualizer from 'rollup-plugin-visualizer'
 import { defineConfig } from 'vite'
 import monkey, { cdn } from 'vite-plugin-monkey'
 import tsconfigPaths from 'vite-tsconfig-paths'
-import { version } from './package.json'
+import { name as packageName, version } from './package.json'
+
+const shouldMinify = !process.argv.includes('--no-minify')
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -26,7 +28,9 @@ export default defineConfig({
   },
 
   build: {
-    minify: process.argv.includes('--no-minify') ? false : 'esbuild',
+    emptyOutDir: false,
+    cssMinify: shouldMinify,
+    minify: shouldMinify,
   },
 
   plugins: [
@@ -89,6 +93,7 @@ export default defineConfig({
       },
 
       build: {
+        fileName: packageName + (shouldMinify ? '.mini' : '') + '.user.js',
         externalGlobals: {
           'axios': cdn.unpkg('axios', 'dist/axios.min.js'),
           'axios-userscript-adapter': cdn.unpkg(

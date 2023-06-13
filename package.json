@@ -10,6 +10,7 @@
     "build": "turbo build:less typecheck build:vite && pnpm preview",
     "build:less": "tlm src",
     "build:vite": "vite build",
+    "build:vite-raw": "vite build --no-minify",
     "preview": "vite preview",
     "test": "vitest",
     "test:ui": "vitest --ui",
