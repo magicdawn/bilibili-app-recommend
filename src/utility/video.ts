@@ -48,13 +48,14 @@ export function parseCount(str: string) {
 
 const currentYear = dayjs().format('YYYY')
 
-export function formatTimeStamp(unixTs?: number) {
+export function formatTimeStamp(unixTs?: number, includeTime = false) {
   if (!unixTs) return ''
 
-  const dayCtime = dayjs.unix(unixTs)
-  if (dayCtime.format('YYYY') === currentYear) {
-    return dayCtime.format('M-D')
+  const t = dayjs.unix(unixTs)
+  const extraFormat = includeTime ? ' HH:mm' : ''
+  if (t.format('YYYY') === currentYear) {
+    return t.format('M-D' + extraFormat)
   } else {
-    return dayCtime.format('YY-M-D')
+    return t.format('YY-M-D' + extraFormat)
   }
 }

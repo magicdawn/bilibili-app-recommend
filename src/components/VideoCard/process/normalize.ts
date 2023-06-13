@@ -234,8 +234,9 @@ export function apiWatchLaterAdapter(item: WatchLaterItemExtend): IVideoCardData
     coverRaw: item.pic,
     pubts: item.pubdate,
     pubdateDisplay: formatTimeStamp(item.pubdate),
-    pubdateDisplayTitle: `${formatTimeStamp(item.pubdate)} 发布, ${formatTimeStamp(
-      item.add_at
+    pubdateDisplayTitle: `${formatTimeStamp(item.pubdate, true)} 发布, ${formatTimeStamp(
+      item.add_at,
+      true
     )} 添加稍后再看`,
     duration: item.duration,
     durationStr: formatDuration(item.duration),
