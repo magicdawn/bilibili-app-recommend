@@ -2,6 +2,7 @@ import { APP_KEY_PREFIX, APP_NAME } from '$common'
 import { Reason, dislikedIds, showModalDislike, useDislikedReason } from '$components/ModalDislike'
 import { AppRecItem, AppRecItemExtend, RecItemType } from '$define'
 import { IconPark } from '$icon-park'
+import { isMac, isSafari } from '$platform'
 import { settings, useSettingsSnapshot } from '$settings'
 import { toast, toastOperationFail, toastRequestFail } from '$utility/toast'
 import { formatCount } from '$utility/video'
@@ -319,7 +320,12 @@ const VideoCardInner = memo(
       if (!active) return
 
       // update global item data for debug
-      unsafeWindow[`${APP_KEY_PREFIX}_activeItem`] = item
+      try {
+        unsafeWindow[`${APP_KEY_PREFIX}_activeItem`] = item
+      } catch (e) {
+        console.warn('set unsafeWindow activeItem error')
+        console.warn(e.stack || e)
+      }
 
       // 自动开始预览
       if (settings.autoPreviewWhenKeyboardSelect) {
@@ -471,8 +477,7 @@ const VideoCardInner = memo(
           onToggleWatchLater()
         },
       },
-
-      ...(navigator.userAgent.toLowerCase().includes('mac')
+      ...(isMac
         ? [
             { type: 'divider' as const },
             {
@@ -498,10 +503,12 @@ const VideoCardInner = memo(
             >
               <div className={cx('bili-video-card__image--wrap', styles.imageWrapper)}>
                 <picture className='v-img bili-video-card__cover'>
-                  <source
-                    srcSet={`${cover}@672w_378h_1c_!web-home-common-cover.avif`}
-                    type='image/avif'
-                  />
+                  {!isSafari && (
+                    <source
+                      srcSet={`${cover}@672w_378h_1c_!web-home-common-cover.avif`}
+                      type='image/avif'
+                    />
+                  )}
                   <source
                     srcSet={`${cover}@672w_378h_1c_!web-home-common-cover.webp`}
                     type='image/webp'

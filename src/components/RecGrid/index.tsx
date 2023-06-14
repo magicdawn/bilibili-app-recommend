@@ -11,7 +11,7 @@ import { IVideoCardData } from '$components/VideoCard/process/normalize'
 import { RecItemType } from '$define'
 import { getHeaderHeight } from '$header'
 import { cx, generateClassName } from '$libs'
-import { getIsInternalTesting } from '$platform'
+import { getIsInternalTesting, isSafari } from '$platform'
 import { getRecommendForGrid, getRecommendTimes, uniqConcat } from '$service'
 import { useSettingsSnapshot } from '$settings'
 import { toast } from '$utility/toast'
@@ -181,10 +181,11 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
     // 这里模拟一下 scroll event
     //
     const triggerScroll = useMemoizedFn(() => {
+      const ms = isSafari ? 100 : undefined
       setTimeout(() => {
         const scroller = infiteScrollUseWindow ? window : scrollerRef?.current
-        scroller?.dispatchEvent(new CustomEvent('scroll', { detail: { deltaY: 0 } }))
-      })
+        scroller?.dispatchEvent(new CustomEvent('scroll'))
+      }, ms)
     })
 
     // .video-grid

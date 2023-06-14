@@ -1,5 +1,6 @@
 import { once } from 'lodash'
 import { useMemo } from 'react'
+import UAParser from 'ua-parser-js'
 import { proxy, useSnapshot } from 'valtio'
 
 /**
@@ -45,3 +46,7 @@ bodyOb.observe(document.body, {
 window.addEventListener('unload', () => {
   bodyOb.disconnect()
 })
+
+export const uaParseResult = UAParser()
+export const isMac = uaParseResult.os.name?.toLowerCase() === 'mac os'
+export const isSafari = uaParseResult.browser.name?.toLowerCase() === 'safari'

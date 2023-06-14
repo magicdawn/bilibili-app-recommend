@@ -1,5 +1,6 @@
 import react from '@vitejs/plugin-react'
 // import reactSwc from '@vitejs/plugin-react-swc'
+import fs from 'fs'
 import visualizer from 'rollup-plugin-visualizer'
 import { defineConfig } from 'vite'
 import importer from 'vite-plugin-importer'
@@ -8,6 +9,10 @@ import tsconfigPaths from 'vite-tsconfig-paths'
 import { name as packageName, version } from './package.json'
 
 const shouldMinify = !process.argv.includes('--no-minify')
+const useHttps =
+  process.env.MY_KEY_FILE &&
+  process.env.MY_CERT_FILE &&
+  (process.argv.includes('--https') || process.env.VITE_DEV_HTTPS)
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -26,6 +31,17 @@ export default defineConfig({
       lodash: 'lodash-es',
       util: 'rollup-plugin-node-polyfills/polyfills/util',
     },
+  },
+
+  // enable https, can load in safari
+  // but still not available for development
+  server: {
+    https: useHttps
+      ? {
+          key: fs.readFileSync(process.env.MY_KEY_FILE!),
+          cert: fs.readFileSync(process.env.MY_CERT_FILE!),
+        }
+      : undefined,
   },
 
   build: {
