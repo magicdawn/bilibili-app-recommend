@@ -2,6 +2,7 @@ import react from '@vitejs/plugin-react'
 // import reactSwc from '@vitejs/plugin-react-swc'
 import visualizer from 'rollup-plugin-visualizer'
 import { defineConfig } from 'vite'
+import importer from 'vite-plugin-importer'
 import monkey, { cdn } from 'vite-plugin-monkey'
 import tsconfigPaths from 'vite-tsconfig-paths'
 import { name as packageName, version } from './package.json'
@@ -28,26 +29,31 @@ export default defineConfig({
   },
 
   build: {
-    // emptyOutDir: false,
+    emptyOutDir: false,
     cssMinify: shouldMinify,
     minify: shouldMinify,
   },
 
   plugins: [
+    tsconfigPaths(),
+
+    importer({
+      libraryName: 'antd',
+      libraryDirectory: 'es',
+    }),
+    // import {get} from 'lodash' -> import get from 'lodash/get'
+    importer({
+      libraryName: 'lodash',
+      libraryDirectory: '',
+      camel2DashComponentName: false,
+    }),
+
     react({
       jsxImportSource: '@emotion/react',
       babel: {
         plugins: ['@emotion/babel-plugin'],
       },
     }),
-    tsconfigPaths(),
-
-    // visualize
-    process.env.NODE_ENV === 'production' &&
-      process.argv.includes('--analyze') &&
-      visualizer({
-        open: true,
-      }),
 
     // https://github.com/lisonge/vite-plugin-monkey
     monkey({
@@ -102,8 +108,17 @@ export default defineConfig({
           ),
           'react': cdn.unpkg('React', 'umd/react.production.min.js'),
           'react-dom': cdn.unpkg('ReactDOM', 'umd/react-dom.production.min.js'),
+          // '@emotion/css': cdn.unpkg('emotion', 'dist/emotion-css.umd.min.js'),
+          // '@emotion/react': cdn.unpkg('emotionReact', 'dist/emotion-react.umd.min.js'),
         },
       },
     }),
+
+    // visualize
+    process.env.NODE_ENV === 'production' &&
+      process.argv.includes('--analyze') &&
+      visualizer({
+        open: true,
+      }),
   ].filter(Boolean),
 })

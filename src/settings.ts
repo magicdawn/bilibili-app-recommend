@@ -84,8 +84,8 @@ export const useSettingsSnapshot = function () {
 const nsp = APP_NAME
 const key = `${nsp}.settings`
 
-export function load() {
-  const val = GM_getValue<Config>(key)
+export async function load() {
+  const val = await GM.getValue<Config>(key)
   if (val && typeof val === 'object') {
     Object.assign(settings, pick(val, allowedConfigKeys))
   }
@@ -97,11 +97,12 @@ export function load() {
 }
 export function save() {
   const newVal = pick(settings, allowedConfigKeys)
-  // console.log('GM_setValue newVal = %o', newVal)
-  GM_setValue(key, newVal)
+  // console.log('GM.setValue newVal = %o', newVal)
+  return GM.setValue(key, newVal)
 }
+
 export function clean() {
-  GM_deleteValue(key)
+  return GM.deleteValue(key)
 }
 
 /**
@@ -122,4 +123,4 @@ export function resetSettings() {
  * load on init
  */
 
-load()
+await load()

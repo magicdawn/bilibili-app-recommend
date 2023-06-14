@@ -13,3 +13,5 @@ tmp/
 
 # privacy
 src/define/watchlater-full.json
+
+/.vite-inspect

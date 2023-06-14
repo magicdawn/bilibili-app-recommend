@@ -45,7 +45,7 @@ import { IVideoCardData, normalizeCardData } from './process/normalize'
 const toHttps = (url: string) => (url || '').replace(/^http:\/\//, 'https://')
 
 function copyContent(content: string) {
-  GM_setClipboard(content)
+  GM.setClipboard(content)
   toast(`已复制: ${content}`)
 }
 

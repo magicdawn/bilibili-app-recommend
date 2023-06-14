@@ -6,6 +6,11 @@
       "inputs": ["src/**/*.{ts,tsx}", "tsconfig.json", "vite.config.ts", "package.json"],
       "outputs": ["dist/**"]
     },
+    "build:vite-raw": {
+      "dependsOn": ["build:less"],
+      "inputs": ["src/**/*.{ts,tsx}", "tsconfig.json", "vite.config.ts", "package.json"],
+      "outputs": ["dist/**"]
+    },
     "typecheck": {
       "dependsOn": ["build:less"],
       "inputs": ["src/**/*.{ts,tsx}", "tsconfig.json"]
