@@ -29,7 +29,7 @@ export default defineConfig({
   },
 
   build: {
-    emptyOutDir: false,
+    emptyOutDir: true,
     cssMinify: shouldMinify,
     minify: shouldMinify,
   },

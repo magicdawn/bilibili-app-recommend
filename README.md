@@ -18,6 +18,7 @@
 - [x] 主题设置(预设主题 + color-picker 自定义)
 - [x] 已关注 Tab
 - [x] 动态 Tab
+- [x] 稍后再看 Tab
 
 ## 链接
 
@@ -37,17 +38,16 @@
 
 支持新版首页和内测首页. 旧版首页请看这里 https://github.com/indefined/UserScripts/tree/master/bilibiliHome
 
-### Monkey 插件
+### 支持的 浏览器 & 脚本管理器 环境
 
-支持 ViolentMonkey(我使用的) 和 TamperMonkey.
-
-### 浏览器
-
-不支持 macOS safari TamperMonkey, 请使用 Chrome / Edge / Firefox.
+- Chrome/Edge/Firefox: 支持 ViolentMonkey(我使用的) 和 TamperMonkey.
+- macOS Safari: [Userscripts](https://itunes.apple.com/us/app/userscripts/id1463298887)
+- _**不支持**_ macOS Safari + TamperMonkey. (收费 Safari 插件, 已知不兼容, 请使用上述开源免费的 Userscripts
 
 ### 你可能不需要这个脚本 :)
 
-B 站桌面端已上线, 支持 MacOS / Windows, 首页包含推荐模块
+- B 站桌面端已上线, 支持 MacOS / Windows, 首页推荐流
+- B 站内测首页也是推荐流
 
 ## 介绍
 

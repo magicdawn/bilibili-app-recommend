@@ -4,12 +4,12 @@
     "build:vite": {
       "dependsOn": ["build:less"],
       "inputs": ["src/**/*.{ts,tsx}", "tsconfig.json", "vite.config.ts", "package.json"],
-      "outputs": ["dist/**"]
+      "outputs": ["dist/bilibili-app-recommend.mini.user.js"]
     },
     "build:vite-raw": {
       "dependsOn": ["build:less"],
       "inputs": ["src/**/*.{ts,tsx}", "tsconfig.json", "vite.config.ts", "package.json"],
-      "outputs": ["dist/**"]
+      "outputs": ["dist/bilibili-app-recommend.user.js"]
     },
     "typecheck": {
       "dependsOn": ["build:less"],
