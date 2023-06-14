@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.13.2 2023-06-14
+
+- 支持 safari + Userscripts
+
+详细
+
+- f125768 feat: add readme
+- 0721518 feat: support safari UserScripts
+- 1b520f9 feat: show watchlater detail time in title attr
+- d9349b2 chore: clean up dist
+- 963e38f feat: [watchlater] slice when used in home
+- e8253ca chore: explore no-minify
+- 30accc2 refactor: tweak
+
 ## v0.13.1 2023-06-13
 
 - fcd25f1 chore: watchlater text tweak
