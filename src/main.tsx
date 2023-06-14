@@ -9,12 +9,12 @@ dayjs.extend(duration)
 import { APP_NAME } from '$common'
 import { AntdApp } from '$components/AntdApp'
 import { tryAction, tryToRemove } from '$utility/dom'
-import sleep from 'delay'
+import { default as delay, default as sleep } from 'delay'
 import { createRoot } from 'react-dom/client'
 import './common/global.less'
 import { PureRecommend } from './components/PureRecommend'
 import { SectionRecommend } from './components/SectionRecommend'
-import { getIsInternalTesting } from './platform'
+import { getIsInternalTesting, isSafari } from './platform'
 import { settings } from './settings'
 
 void (function main() {
@@ -93,6 +93,9 @@ async function initHomepageSection() {
 }
 
 async function initHomepagePureRecommend() {
+  // let bilibili default content run
+  if (isSafari) await delay(500)
+
   // 新版 bili-feed4
   if (getIsInternalTesting()) {
     document.querySelector('.bili-feed4 .bili-feed4-layout')?.remove()
