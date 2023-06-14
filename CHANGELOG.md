@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.13.3 2023-06-15
+
+- chore: add delay to safari
+
 ## v0.13.2 2023-06-14
 
 - 支持 safari + Userscripts
