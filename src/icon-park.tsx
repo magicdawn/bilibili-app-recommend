@@ -1,13 +1,14 @@
-import { useIsDarkMode } from '$platform'
 import { type Icon } from '@icon-park/react/es/runtime'
 import { type ComponentProps } from 'react'
 
 import {
   Close,
+  Computer,
   Config,
   DistraughtFace,
   Help,
   Info,
+  Iphone,
   Loading,
   LoadingThree,
   Return,
@@ -24,6 +25,8 @@ const ImportedIcons = {
   LoadingThree,
   Return,
   Tips,
+  Computer,
+  Iphone,
 } satisfies Record<string, Icon>
 
 export function IconPark({
@@ -35,10 +38,16 @@ export function IconPark({
 }: { name: keyof typeof ImportedIcons } & ComponentProps<Icon>) {
   theme ||= 'outline'
   size ||= 24
-
-  const isDarkMode = useIsDarkMode()
-  fill ||= isDarkMode ? '#fff' : '#333'
+  fill ||= 'currentColor'
 
   const Comp = ImportedIcons[name]
-  return <Comp {...{ theme, size, fill, ...props }} />
+  return (
+    <Comp
+      {...{ theme, size, fill, ...props }}
+      style={{
+        fontSize: 0,
+        ...props.style,
+      }}
+    />
+  )
 }

@@ -1,13 +1,42 @@
 import { HelpInfo } from '$components/piece'
+import { IconPark } from '$icon-park'
 import { updateSettings, useSettingsSnapshot } from '$settings'
 import { useHasLogined } from '$utility'
 import { toast } from '$utility/toast'
 import { css } from '@emotion/react'
 import { Radio } from 'antd'
 
+const iconCss = css`
+  margin-right: 4px;
+  vertical-align: top;
+  margin-top: 4px;
+`
+
+const iconCssInTips = css`
+  margin-right: 4px;
+  margin-top: -4px;
+  vertical-align: middle;
+`
+
 export const TabConfig = [
-  { key: 'recommend-app', label: '推荐' },
-  { key: 'recommend-pc', label: '推荐 (PC API)' },
+  {
+    key: 'recommend-app',
+    label: (
+      <>
+        <IconPark name='Iphone' size={18} css={iconCss} />
+        推荐
+      </>
+    ),
+  },
+  {
+    key: 'recommend-pc',
+    label: (
+      <>
+        <IconPark name='Computer' size={18} css={iconCss} />
+        推荐
+      </>
+    ),
+  },
   { key: 'onlyFollow', label: '已关注' },
   { key: 'dynamic', label: '动态' },
   { key: 'watchlater', label: '稍后再看' },
@@ -28,7 +57,7 @@ function toastNeedLogin() {
   return toast('你需要登录B站后使用该功能! 如已完成登录, 请刷新网页重试~')
 }
 
-const btnCss = css`
+const radioBtnCss = css`
   height: 26px;
   line-height: 26px;
   &:has(:focus-visible) {
@@ -68,7 +97,7 @@ export function VideoSourceTab({ onRefresh }: { onRefresh: () => void | Promise<
         }}
       >
         {TabConfig.map(({ key, label }) => (
-          <Radio.Button css={btnCss} tabIndex={-1} value={key} key={key}>
+          <Radio.Button css={radioBtnCss} tabIndex={-1} value={key} key={key}>
             {label}
           </Radio.Button>
         ))}
@@ -77,9 +106,11 @@ export function VideoSourceTab({ onRefresh }: { onRefresh: () => void | Promise<
         iconProps={{ name: 'Tips', size: 16, style: { marginLeft: 6 } }}
         tooltip={
           <>
-            推荐: APP 端推荐
+            <IconPark name='Iphone' size={18} css={iconCssInTips} />
+            推荐: 使用手机 APP 端推荐 API
             <br />
-            推荐 (PC API): 新版首页顶部推荐
+            <IconPark name='Computer' size={18} css={iconCssInTips} />
+            推荐: 使用新版首页顶部推荐 API
             <br />
             已关注: 推荐中只保留「已关注」,会很慢
             <br />

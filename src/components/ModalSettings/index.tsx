@@ -95,7 +95,11 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                     <div className={styles.settingsGroupTitle}>
                       access_key
                       <HelpInfo
-                        iconProps={{ name: 'Help', size: 18 }}
+                        iconProps={{
+                          name: 'Help',
+                          size: 18,
+                          style: { marginTop: 6, marginLeft: 10 },
+                        }}
                         tooltip={
                           <>
                             用于「推荐」Tab
