@@ -6,7 +6,6 @@ import { TabType } from '$components/RecHeader/tab'
 import { anyFilterEnabled, filterVideos } from '$components/VideoCard/process/filter'
 import { RecItemType } from '$define'
 import { WatchLaterService } from '$service-watchlater'
-import { settings } from '$settings'
 import { uniqBy } from 'lodash'
 import * as app from './service-app'
 import { PcRecService } from './service-pc'
@@ -32,8 +31,7 @@ export function uniqConcat(existing: RecItemType[], newItems: RecItemType[]) {
   )
 }
 
-export const usePcApi = (tab: TabType) =>
-  tab === 'onlyFollow' || (tab === 'normal' && settings.usePcDesktopApi)
+export const usePcApi = (tab: TabType) => tab === 'onlyFollow' || tab === 'recommend-pc'
 
 export async function getMinCount(
   count: number,

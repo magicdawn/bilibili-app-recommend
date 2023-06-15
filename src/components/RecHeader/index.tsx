@@ -83,7 +83,7 @@ export const RecHeader = forwardRef<
     rightSlot?: ReactNode
   }
 >(function RecHeader({ onRefresh, refreshing, leftSlot, rightSlot }, ref) {
-  const { accessKey, pureRecommend, usePcDesktopApi } = useSettingsSnapshot()
+  const { accessKey, pureRecommend } = useSettingsSnapshot()
 
   const { modalFeedVisible, modalConfigVisible } = useSnapshot(headerState)
   useKeyPress(
@@ -159,7 +159,7 @@ export const RecHeader = forwardRef<
           <Space size={'small'}>
             {rightSlot}
 
-            {!usePcDesktopApi && !accessKey && <AccessKeyManage style={{ marginLeft: 5 }} />}
+            {!accessKey && <AccessKeyManage style={{ marginLeft: 5 }} />}
 
             <Button onClick={showModalConfig} css={configStyles.btn}>
               <IconPark name='Config' css={configStyles.icon} />

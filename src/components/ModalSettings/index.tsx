@@ -13,7 +13,7 @@ import {
 import { isCurrentTyping } from '$utility/dom'
 import { toast } from '$utility/toast'
 import { useKeyPress } from 'ahooks'
-import { Button, InputNumber, Popconfirm, Radio, Slider, Space, Tabs, Tag } from 'antd'
+import { Button, InputNumber, Popconfirm, Slider, Space, Tabs, Tag } from 'antd'
 import delay from 'delay'
 import styles from './index.module.less'
 import { ThemesSelect } from './theme'
@@ -45,7 +45,6 @@ function useHotkeyForConfig(hotkey: string | string[], configKey: BooleanConfigK
 
 export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => void }) {
   const {
-    usePcDesktopApi,
     autoPreviewUpdateInterval,
     filterMinPlayCount,
     filterMinPlayCountEnabled,
@@ -94,30 +93,22 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                 <div className={styles.tabPane}>
                   <div className={styles.settingsGroup}>
                     <div className={styles.settingsGroupTitle}>
-                      API 切换
+                      access_key
                       <HelpInfo
                         iconProps={{ name: 'Help', size: 18 }}
-                        tooltip={<>只对推荐 Tab 生效, 详细信息查看 GitHub 主页说明</>}
+                        tooltip={
+                          <>
+                            用于「推荐」Tab
+                            <br />
+                            用于 获取推荐 / 提交不喜欢等操作
+                          </>
+                        }
                       />
                     </div>
                     <div className={cx(styles.settingsGroupContent)}>
-                      <Radio.Group
-                        buttonStyle='solid'
-                        value={usePcDesktopApi ? 'desktop' : 'app'}
-                        onChange={(e) => {
-                          const newValue = e.target.value
-                          settings.usePcDesktopApi = newValue === 'desktop'
-                        }}
-                      >
-                        <Radio.Button value='desktop'>使用桌面端 API</Radio.Button>
-                        <Radio.Button value='app'>使用 App 端 API</Radio.Button>
-                      </Radio.Group>
-
-                      {!usePcDesktopApi && (
-                        <div className={styles.row} style={{ marginTop: 5 }}>
-                          <AccessKeyManage />
-                        </div>
-                      )}
+                      <div className={styles.row} style={{ marginTop: 5 }}>
+                        <AccessKeyManage />
+                      </div>
                     </div>
                   </div>
 
@@ -263,7 +254,7 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                         tooltip={
                           <>
                             启用视频过滤会大幅降低加载速度, 谨慎开启! <br />
-                            只对推荐 Tab 生效
+                            仅推荐类 Tab 生效
                           </>
                         }
                       />

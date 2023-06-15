@@ -135,7 +135,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
           items.length <= 90 ? 'success' : items.length < 100 ? 'warning' : 'error'
         const title = `${color !== 'success' ? '快满了~ ' : ''}已使用 ${items.length} / 100`
         info = (
-          <Tag color={color} style={{ marginLeft: 20 }} title={title}>
+          <Tag color={color} style={{ marginLeft: 20, cursor: 'pointer' }} title={title}>
             {items.length} / 100
           </Tag>
         )

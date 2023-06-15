@@ -17,7 +17,7 @@ export const initialSettings = {
 
   // 是否使用 PC 端接口
   // https://github.com/magicdawn/bilibili-app-recommend/issues/16
-  usePcDesktopApi: false,
+  // usePcDesktopApi: false,
 
   // 并行请求
   // useParallelRequest: true,
@@ -39,7 +39,7 @@ export const initialSettings = {
   /**
    * TabType
    */
-  videoSourceTab: 'normal' as TabType,
+  videoSourceTab: 'recommend-app' satisfies TabType as TabType,
 
   /**
    * tab=watchlater
