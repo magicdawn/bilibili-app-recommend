@@ -484,7 +484,10 @@ const VideoCardInner = memo(
               key: 'open-in-iina',
               label: '在 IINA 中打开',
               onClick() {
-                const fullHref = new URL(href, location.href).href
+                let usingHref = href
+                if (item.api === 'watchlater') usingHref = `/video/${item.bvid}`
+
+                const fullHref = new URL(usingHref, location.href).href
                 const iinaUrl = `iina://open?url=${encodeURIComponent(fullHref)}`
                 window.open(iinaUrl, '_self')
               },
