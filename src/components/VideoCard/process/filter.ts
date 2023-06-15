@@ -1,18 +1,16 @@
-import { getCurrentSourceTab } from '$components/RecHeader/tab'
+import { TabType } from '$components/RecHeader/tab'
 import { RecItemType } from '$define'
 import { settings } from '$settings'
 import { normalizeCardData } from './normalize'
 
-export function anyFilterEnabled() {
+export function anyFilterEnabled(tab: TabType) {
   return (
-    settings.filterMinDurationEnabled ||
-    settings.filterMinPlayCountEnabled ||
-    settings.videoSourceTab === 'onlyFollow'
+    settings.filterMinDurationEnabled || settings.filterMinPlayCountEnabled || tab === 'onlyFollow'
   )
 }
 
-export function filterVideos(items: RecItemType[]) {
-  if (!anyFilterEnabled()) {
+export function filterVideos(items: RecItemType[], tab: TabType) {
+  if (!anyFilterEnabled(tab)) {
     return items
   }
 
@@ -24,7 +22,7 @@ export function filterVideos(items: RecItemType[]) {
      * 已关注模式
      */
 
-    if (getCurrentSourceTab() === 'onlyFollow') {
+    if (tab === 'onlyFollow') {
       return isFollowed
     }
 

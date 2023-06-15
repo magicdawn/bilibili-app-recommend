@@ -1,6 +1,6 @@
 import { HelpInfo } from '$components/piece'
-import { settings, updateSettings, useSettingsSnapshot } from '$settings'
-import { hasLogined, useHasLogined } from '$utility'
+import { updateSettings, useSettingsSnapshot } from '$settings'
+import { useHasLogined } from '$utility'
 import { toast } from '$utility/toast'
 import { css } from '@emotion/react'
 import { Radio } from 'antd'
@@ -19,18 +19,6 @@ export type TabType = typeof TAB_ALLOW_VALUES extends ReadonlyArray<infer T> ? T
 export function useCurrentSourceTab(): TabType {
   const { videoSourceTab } = useSettingsSnapshot()
   const logined = useHasLogined()
-  if (!TAB_ALLOW_VALUES.includes(videoSourceTab)) return 'recommend-app' // invalid
-  if (!logined) return 'recommend-app' // not logined
-  return videoSourceTab
-}
-
-/**
- * outside react
- */
-
-export function getCurrentSourceTab(): TabType {
-  const { videoSourceTab } = settings
-  const logined = hasLogined()
   if (!TAB_ALLOW_VALUES.includes(videoSourceTab)) return 'recommend-app' // invalid
   if (!logined) return 'recommend-app' // not logined
   return videoSourceTab

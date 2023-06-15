@@ -67,7 +67,7 @@ export async function getMinCount(
     else {
       const pagesize = usePcApi(tab) ? PcRecService.PAGE_SIZE : app.PAGE_SIZE
 
-      const multipler = anyFilterEnabled()
+      const multipler = anyFilterEnabled(tab)
         ? filterMultiplier // 过滤, 需要大基数
         : 1.2 // 可能有重复, so not 1.0
 
@@ -85,7 +85,7 @@ export async function getMinCount(
     cur = usePcApi(tab)
       ? await pcRecService.getRecommendTimes(times, abortSignal)
       : await app._getRecommendTimes(times)
-    cur = filterVideos(cur)
+    cur = filterVideos(cur, tab)
 
     items = items.concat(cur)
     items = uniqBy(items, recItemUniqer)
@@ -130,6 +130,6 @@ export async function getRecommendTimes(times: number, tab: TabType, pcRecServic
   let items: RecItemType[] = usePcApi(tab)
     ? await pcRecService.getRecommendTimes(times)
     : await app._getRecommendTimes(times)
-  items = filterVideos(items)
+  items = filterVideos(items, tab)
   return items
 }
