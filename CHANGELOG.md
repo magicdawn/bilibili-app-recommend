@@ -1,5 +1,26 @@
 # Changelog
 
+## v0.14.0 2023-06-16
+
+- 移除 API 切换设置, 变成 Tab. 加了手机 & 电脑 icon, 方便区分
+- 稍后再看 Tab, 增加容量提示
+- 优化 bundle
+- icon park 图标使用 `currentColor`
+- 其他的 fix
+
+详细
+
+- 8ae9cae feat: add more icons
+- 87e7a64 feat: add icons to rec tabs
+- e95749c refactor: use tab parameter
+- 545409b feat: remove usePcDesktopApi
+- 572e74a fix react-use-sticky
+- 889eee1 chore: fix typecheck
+- 06e73f3 feat: show watchlater capacity
+- c788082 fix: [watchlater] open-in-iina url
+- 4303f10 chore: icon-park related tweak
+- 8b29876 chore: optimize bundle size
+
 ## v0.13.3 2023-06-15
 
 - chore: add delay to safari
