@@ -17,7 +17,8 @@ import {
   useRef,
   useState,
 } from 'react'
-import { useSticky } from 'react-use-sticky'
+// import { useSticky } from 'react-use-sticky'
+import { useSticky } from '$common/hooks/useSticky'
 import { proxy, useSnapshot } from 'valtio'
 import { AccessKeyManage } from '../AccessKeyManage'
 import { ModalFeed } from '../ModalFeed'
