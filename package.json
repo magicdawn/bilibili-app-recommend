@@ -94,5 +94,10 @@
     "*.{js,jsx,ts,tsx,less,md}": [
       "prettier --write"
     ]
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "rc-field-form@1.32.0": "patches/rc-field-form@1.32.0.patch"
+    }
   }
 }

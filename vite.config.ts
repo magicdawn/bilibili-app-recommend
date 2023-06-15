@@ -124,6 +124,7 @@ export default defineConfig({
           ),
           'react': cdn.unpkg('React', 'umd/react.production.min.js'),
           'react-dom': cdn.unpkg('ReactDOM', 'umd/react-dom.production.min.js'),
+          'ua-parser-js': cdn.unpkg('UAParser', 'dist/ua-parser.min.js'),
           // '@emotion/css': cdn.unpkg('emotion', 'dist/emotion-css.umd.min.js'),
           // '@emotion/react': cdn.unpkg('emotionReact', 'dist/emotion-react.umd.min.js'),
         },

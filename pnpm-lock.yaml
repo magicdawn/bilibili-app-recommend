@@ -4,6 +4,11 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  rc-field-form@1.32.0:
+    hash: raokjsh6c45gxxrs7z75usbmum
+    path: patches/rc-field-form@1.32.0.patch
+
 dependencies:
   '@emotion/css':
     specifier: ^11.11.0
@@ -1941,7 +1946,7 @@ packages:
       rc-dialog: 9.1.0(react-dom@18.2.0)(react@18.2.0)
       rc-drawer: 6.2.0(react-dom@18.2.0)(react@18.2.0)
       rc-dropdown: 4.1.0(react-dom@18.2.0)(react@18.2.0)
-      rc-field-form: 1.32.0(react-dom@18.2.0)(react@18.2.0)
+      rc-field-form: 1.32.0(patch_hash=raokjsh6c45gxxrs7z75usbmum)(react-dom@18.2.0)(react@18.2.0)
       rc-image: 5.17.1(react-dom@18.2.0)(react@18.2.0)
       rc-input: 1.0.4(react-dom@18.2.0)(react@18.2.0)
       rc-input-number: 7.4.2(react-dom@18.2.0)(react@18.2.0)
@@ -4240,7 +4245,7 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
-  /rc-field-form@1.32.0(react-dom@18.2.0)(react@18.2.0):
+  /rc-field-form@1.32.0(patch_hash=raokjsh6c45gxxrs7z75usbmum)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-vr5pA0/gWiBZf0HKdevQJcWSsAac10Z8Nj1Brs3OOCnExk7l+u8GtsW+4cRSqJLug5fxV11dOGXpxf7+aHT/2A==}
     engines: {node: '>=8.x'}
     peerDependencies:
@@ -4253,6 +4258,7 @@ packages:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: false
+    patched: true
 
   /rc-image@5.17.1(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-oR4eviLyQxd/5A7pn843w2/Z1wuBA27L2lS4agq0sjl2z97ssNIVEzRzgwgB0ZxVZG/qSu9Glit2Zgzb/n+blQ==}
