@@ -4,8 +4,10 @@ import { type ComponentProps } from 'react'
 import {
   Close,
   Computer,
+  Concern,
   Config,
   DistraughtFace,
+  FileCabinet,
   Help,
   Info,
   Iphone,
@@ -13,9 +15,10 @@ import {
   LoadingThree,
   Return,
   Tips,
+  Tumblr,
 } from '@icon-park/react'
 
-const ImportedIcons = {
+export const ImportedIcons = {
   Close,
   Config,
   DistraughtFace,
@@ -27,7 +30,12 @@ const ImportedIcons = {
   Tips,
   Computer,
   Iphone,
+  Concern,
+  Tumblr,
+  FileCabinet,
 } satisfies Record<string, Icon>
+
+export type IconName = keyof typeof ImportedIcons
 
 export function IconPark({
   name,
@@ -35,7 +43,7 @@ export function IconPark({
   size,
   fill,
   ...props
-}: { name: keyof typeof ImportedIcons } & ComponentProps<Icon>) {
+}: { name: IconName } & ComponentProps<Icon>) {
   theme ||= 'outline'
   size ||= 24
   fill ||= 'currentColor'
