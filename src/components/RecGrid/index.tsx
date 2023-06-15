@@ -65,7 +65,7 @@ export type RecGridProps = {
   className?: string
   scrollerRef?: RefObject<HTMLElement | null>
   setRefreshing: (val: boolean) => void
-  setExtraInfo: (n?: ReactNode) => void
+  setExtraInfo?: (n?: ReactNode) => void
 }
 
 export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
@@ -89,7 +89,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
     // before refresh
     const preAction = useMemoizedFn(async () => {
       clearActiveIndex()
-      setExtraInfo()
+      setExtraInfo?.()
     })
 
     // after refresh, setItems
@@ -129,7 +129,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
     })
 
     useEffect(() => {
-      let info: ReactNode = null
+      let info: ReactNode
       if (tab === 'watchlater' && items.length) {
         const color: ComponentProps<typeof Tag>['color'] =
           items.length <= 90 ? 'success' : items.length < 100 ? 'warning' : 'error'
@@ -140,7 +140,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
           </Tag>
         )
       }
-      setExtraInfo(info)
+      setExtraInfo?.(info)
     }, [items, tab])
 
     useMount(refresh)
