@@ -17,7 +17,18 @@ import { useSettingsSnapshot } from '$settings'
 import { toast } from '$utility/toast'
 import { css } from '@emotion/react'
 import { useMemoizedFn, useMount } from 'ahooks'
-import { RefObject, forwardRef, useImperativeHandle, useMemo, useRef, useState } from 'react'
+import { Tag } from 'antd'
+import {
+  ComponentProps,
+  ReactNode,
+  RefObject,
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import InfiniteScroll from 'react-infinite-scroller'
 import { internalTesting, narrowMode, videoGrid } from '../video-grid.module.less'
 import { useRefresh } from './useRefresh'
@@ -54,6 +65,7 @@ export type RecGridProps = {
   className?: string
   scrollerRef?: RefObject<HTMLElement | null>
   setRefreshing: (val: boolean) => void
+  setExtraInfo: (n?: ReactNode) => void
 }
 
 export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
@@ -65,6 +77,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
       className,
       scrollerRef,
       setRefreshing: setUpperRefreshing,
+      setExtraInfo,
     },
     ref
   ) => {
@@ -76,10 +89,11 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
     // before refresh
     const preAction = useMemoizedFn(async () => {
       clearActiveIndex()
+      setExtraInfo()
     })
 
     // after refresh, setItems
-    const postAction = useMemoizedFn(async () => {
+    const postAction = useMemoizedFn(() => {
       clearActiveIndex()
       setLoadCompleteCount(1)
       // check need loadMore
@@ -113,6 +127,21 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
       onScrollToTop,
       setUpperRefreshing,
     })
+
+    useEffect(() => {
+      let info: ReactNode = null
+      if (tab === 'watchlater' && items.length) {
+        const color: ComponentProps<typeof Tag>['color'] =
+          items.length <= 90 ? 'success' : items.length < 100 ? 'warning' : 'error'
+        const title = `${color !== 'success' ? '快满了~ ' : ''}已使用 ${items.length} / 100`
+        info = (
+          <Tag color={color} style={{ marginLeft: 20 }} title={title}>
+            {items.length} / 100
+          </Tag>
+        )
+      }
+      setExtraInfo(info)
+    }, [items, tab])
 
     useMount(refresh)
     useImperativeHandle(ref, () => ({ refresh }), [])

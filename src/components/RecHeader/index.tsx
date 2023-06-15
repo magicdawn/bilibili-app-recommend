@@ -11,6 +11,7 @@ import {
   CSSProperties,
   MouseEvent,
   MouseEventHandler,
+  ReactNode,
   forwardRef,
   useImperativeHandle,
   useRef,
@@ -74,8 +75,13 @@ export type RecHeaderRef = {
 }
 export const RecHeader = forwardRef<
   RecHeaderRef,
-  { refreshing: boolean; onRefresh: () => void | Promise<void> }
->(function RecHeader({ onRefresh, refreshing }, ref) {
+  {
+    refreshing: boolean
+    onRefresh: () => void | Promise<void>
+    leftSlot?: ReactNode
+    rightSlot?: ReactNode
+  }
+>(function RecHeader({ onRefresh, refreshing, leftSlot, rightSlot }, ref) {
   const { accessKey, pureRecommend, usePcDesktopApi } = useSettingsSnapshot()
 
   const { modalFeedVisible, modalConfigVisible } = useSnapshot(headerState)
@@ -145,10 +151,13 @@ export const RecHeader = forwardRef<
             推荐
           </a> */}
           <VideoSourceTab onRefresh={onRefresh} />
+          {leftSlot}
         </div>
 
         <div className='right'>
           <Space size={'small'}>
+            {rightSlot}
+
             {!usePcDesktopApi && !accessKey && <AccessKeyManage style={{ marginLeft: 5 }} />}
 
             <Button onClick={showModalConfig} css={configStyles.btn}>

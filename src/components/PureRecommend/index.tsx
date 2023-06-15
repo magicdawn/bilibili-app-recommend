@@ -3,7 +3,7 @@ import { RecHeader, RecHeaderRef, useHeaderState } from '$components/RecHeader'
 import { css } from '$libs'
 import { useSettingsSnapshot } from '$settings'
 import { useMemoizedFn } from 'ahooks'
-import { useRef, useState } from 'react'
+import { ReactNode, useRef, useState } from 'react'
 
 const narrowStyle = {
   grid: css`
@@ -32,9 +32,16 @@ export function PureRecommend() {
 
   const [refreshing, setRefreshing] = useState(false)
 
+  const [extraInfo, setExtraInfo] = useState<ReactNode>(null)
+
   return (
     <section data-area='推荐'>
-      <RecHeader ref={recHeader} refreshing={refreshing} onRefresh={onRefresh} />
+      <RecHeader
+        ref={recHeader}
+        refreshing={refreshing}
+        onRefresh={onRefresh}
+        leftSlot={extraInfo}
+      />
       <RecGrid
         ref={recGrid}
         css={[useNarrowMode && narrowStyle.grid]}
@@ -42,6 +49,7 @@ export function PureRecommend() {
         infiteScrollUseWindow={true}
         onScrollToTop={onScrollToTop}
         setRefreshing={setRefreshing}
+        setExtraInfo={setExtraInfo}
       />
     </section>
   )
