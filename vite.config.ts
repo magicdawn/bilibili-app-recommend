@@ -63,6 +63,11 @@ export default defineConfig({
       libraryDirectory: '',
       camel2DashComponentName: false,
     }),
+    importer({
+      libraryName: '@icon-park/react',
+      libraryDirectory: 'es/icons',
+      camel2DashComponentName: false, // default: true,
+    }),
 
     react({
       jsxImportSource: '@emotion/react',

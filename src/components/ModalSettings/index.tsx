@@ -95,7 +95,10 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                   <div className={styles.settingsGroup}>
                     <div className={styles.settingsGroupTitle}>
                       API 切换
-                      <HelpInfo tooltip={<>只对推荐 Tab 生效, 详细信息查看 GitHub 主页说明</>} />
+                      <HelpInfo
+                        iconProps={{ name: 'Help', size: 18 }}
+                        tooltip={<>只对推荐 Tab 生效, 详细信息查看 GitHub 主页说明</>}
+                      />
                     </div>
                     <div className={cx(styles.settingsGroupContent)}>
                       <Radio.Group
@@ -256,6 +259,7 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                     <div className={styles.settingsGroupTitle}>
                       视频过滤
                       <HelpInfo
+                        iconProps={{ name: 'Tips' }}
                         tooltip={
                           <>
                             启用视频过滤会大幅降低加载速度, 谨慎开启! <br />

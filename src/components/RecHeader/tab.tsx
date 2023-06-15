@@ -84,7 +84,7 @@ export function VideoSourceTab({ onRefresh }: { onRefresh: () => void | Promise<
         ))}
       </Radio.Group>
       <HelpInfo
-        iconProps={{ size: 18, style: { marginLeft: 10 } }}
+        iconProps={{ name: 'Tips', size: 16, style: { marginLeft: 6 } }}
         tooltip={
           <>
             已关注: 推荐中只保留「已关注」,会很慢

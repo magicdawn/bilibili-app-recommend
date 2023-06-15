@@ -6,12 +6,15 @@ import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
 dayjs.extend(duration)
 
+// styles
+import '@icon-park/react/styles/index.css'
+import './common/global.less'
+
 import { APP_NAME } from '$common'
 import { AntdApp } from '$components/AntdApp'
 import { tryAction, tryToRemove } from '$utility/dom'
 import { default as delay, default as sleep } from 'delay'
 import { createRoot } from 'react-dom/client'
-import './common/global.less'
 import { PureRecommend } from './components/PureRecommend'
 import { SectionRecommend } from './components/SectionRecommend'
 import { getIsInternalTesting, isSafari } from './platform'

@@ -174,7 +174,7 @@ export function ThemesSelect() {
               `}
             >
               {name}
-              <HelpInfo tooltip={tooltip} iconProps={{ size: 22 }} />
+              <HelpInfo tooltip={tooltip} iconProps={{ name: 'Tips', size: 16 }} />
             </div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2px 8px' }}>
               {themes.map((t) => {

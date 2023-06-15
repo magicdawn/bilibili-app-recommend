@@ -4,6 +4,7 @@ import { css } from '@emotion/react'
 import { Checkbox, Tooltip } from 'antd'
 import { CheckboxChangeEvent } from 'antd/es/checkbox'
 import { ComponentProps, ReactNode, useCallback } from 'react'
+import { SetOptional } from 'type-fest'
 import { AntdTooltip } from './AntdApp'
 
 export function FlagSettingItem({
@@ -60,15 +61,16 @@ export function HelpInfo({
   iconProps,
 }: {
   tooltip?: ReactNode
-  iconProps?: Omit<ComponentProps<typeof IconPark>, 'name'>
+  iconProps?: SetOptional<ComponentProps<typeof IconPark>, 'name'>
 }) {
   return (
     <>
       {tooltip && (
         <AntdTooltip title={tooltip}>
           <IconPark
-            {...iconProps}
             name={'Info'}
+            size={18}
+            {...iconProps}
             style={{ cursor: 'pointer', marginLeft: '4px', ...iconProps?.style }}
           />
         </AntdTooltip>
