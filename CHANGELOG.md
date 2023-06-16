@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.14.1 2023-06-16
+
+- feat: add .video-source-tab
+- feat: [theme] add bilibili blue
+
 ## v0.14.0 2023-06-16
 
 - 移除 API 切换设置, 变成 Tab. 加了手机 & 电脑 icon, 方便区分
