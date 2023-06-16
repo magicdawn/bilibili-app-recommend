@@ -82,7 +82,8 @@ const ThemeGroups: { name: string; tooltip?: ReactNode; themes: LxTheme[] }[] = 
     name: 'App',
     themes: [
       DEFAULT_BILI_PINK_THEME,
-      { id: 'app-靓紫', name: '靓紫', colorPrimary: '#8500FF' },
+      { id: 'bilibili-blue', name: 'B站蓝', colorPrimary: '#00aeec' },
+      { id: 'app-靓紫', name: '靓紫', colorPrimary: '#8500ff' },
       COLOR_PICKER_THEME,
     ],
   },

@@ -98,7 +98,7 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                         iconProps={{
                           name: 'Help',
                           size: 18,
-                          style: { marginTop: 6, marginLeft: 10 },
+                          style: { marginTop: 6, marginLeft: 5 },
                         }}
                         tooltip={
                           <>
