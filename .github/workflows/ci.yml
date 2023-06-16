@@ -41,3 +41,14 @@ jobs:
 
       # build, no minify
       - run: pnpm turbo build:vite-raw
+
+      # prepare
+      - run: cp README.md CHANGELOG.md ./dist
+
+      # commit to release-nightly branch
+      - uses: peaceiris/actions-gh-pages@v3
+        with:
+          publish_branch: release-nightly
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          force_orphan: true
