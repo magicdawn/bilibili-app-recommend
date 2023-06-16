@@ -7,7 +7,8 @@ on:
 
 concurrency:
   group: ${{ github.workflow }}
-  cancel-in-progress: true
+  # 很烦: 通知无法关掉
+  # cancel-in-progress: true
 
 jobs:
   test-and-build:
