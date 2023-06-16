@@ -51,4 +51,6 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
           # webhook not working when orphan commit
+          # greasyfork webhook 依赖 modified: [], 需要包含 xxx.user.js
+          # https://github.com/YDX-2147483647/BIT-enhanced/issues/4#issuecomment-1590620027
           force_orphan: false
