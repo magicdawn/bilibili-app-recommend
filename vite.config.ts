@@ -84,6 +84,7 @@ export default defineConfig({
         namespace: 'https://magicdawn.fun',
         version,
         description: '为B站首页添加像App一样的推荐',
+        icon: 'https://www.bilibili.com/favicon.ico',
         // 'description': 'Add app like recommend part to bilibili homepage',
         // 'description:zh-CN': '为B站首页添加像App一样的推荐',
         author: 'magicdawn',
@@ -93,12 +94,12 @@ export default defineConfig({
           'https://greasyfork.org/scripts/443530-bilibili-app-recommend/code/bilibili-app-recommend.user.js',
         license: 'MIT',
         match: [
-          '*://www.bilibili.com/',
+          'https://www.bilibili.com/',
           'https://www.mcbbs.net/template/mcbbs/image/special_photo_bg.png',
-          '*://www.bilibili.com/index.html',
-          '*://www.bilibili.com/?*',
+          'https://www.bilibili.com/index.html',
+          'https://www.bilibili.com/?*',
           'https://www.mcbbs.net/template/mcbbs/image/special_photo_bg.png?*',
-          '*://www.bilibili.com/index.html?*',
+          'https://www.bilibili.com/index.html?*',
         ],
         connect: [
           //
