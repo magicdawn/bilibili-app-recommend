@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - 'main'
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+jobs:
+  build-app:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: pnpm/action-setup@v2
+        with: { version: 8 }
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'pnpm'
+
+      # install deps
+      - run: pnpm install --frozen-lockfile
+
+      # turbo cache
+      - uses: actions/cache@v3
+        with:
+          path: node_modules/.cache/turbo
+          key: turbo-cache-${{ runner.os }}
+
+      # code check
+      - run: pnpm turbo build:less typecheck
+
+      # test
+      - run: pnpm test
+
+      # build, no minify
+      - run: pnpm build:vite-raw
