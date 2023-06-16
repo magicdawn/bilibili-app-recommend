@@ -74,19 +74,27 @@ export const TabConfigMap = TabConfig.reduce((val, configItem) => {
 
 export const TAB_ALLOW_VALUES = TabConfig.map((x) => x.key)
 
-export function useCurrentSourceTab(): TabType {
-  const { videoSourceTab } = useSettingsSnapshot()
-  const logined = useHasLogined()
-  if (!TAB_ALLOW_VALUES.includes(videoSourceTab)) return 'recommend-app' // invalid
-  if (!logined) return 'recommend-app' // not logined
+function _getCurrentSourceTab(videoSourceTab: TabType, logined: boolean): TabType {
+  // invalid
+  if (!TAB_ALLOW_VALUES.includes(videoSourceTab)) return 'recommend-app'
+
+  // not logined
+  if (!logined) {
+    if (videoSourceTab === 'recommend-app' || videoSourceTab === 'recommend-pc') {
+      return videoSourceTab
+    } else {
+      return 'recommend-app'
+    }
+  }
+
   return videoSourceTab
 }
+
+export function useCurrentSourceTab(): TabType {
+  return _getCurrentSourceTab(useSettingsSnapshot().videoSourceTab, useHasLogined())
+}
 export function getCurrentSourceTab(): TabType {
-  const { videoSourceTab } = settings
-  const logined = getHasLogined()
-  if (!TAB_ALLOW_VALUES.includes(videoSourceTab)) return 'recommend-app' // invalid
-  if (!logined) return 'recommend-app' // not logined
-  return videoSourceTab
+  return _getCurrentSourceTab(settings.videoSourceTab, getHasLogined())
 }
 
 function toastNeedLogin() {
