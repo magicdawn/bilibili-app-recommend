@@ -118,7 +118,13 @@ export function VideoSourceTab({ onRefresh }: { onRefresh: () => void | Promise<
         }}
       >
         {TabConfig.map(({ key, label, icon, iconSize }) => (
-          <Radio.Button css={radioBtnCss} tabIndex={-1} value={key} key={key}>
+          <Radio.Button
+            css={radioBtnCss}
+            className='video-source-tab' // can be used to customize css
+            tabIndex={-1}
+            value={key}
+            key={key}
+          >
             <IconPark name={icon} size={iconSize || 18} css={iconCss} />
             {label}
           </Radio.Button>
