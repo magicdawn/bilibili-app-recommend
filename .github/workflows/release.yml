@@ -50,4 +50,5 @@ jobs:
           publish_branch: release
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
-          force_orphan: true
+          # webhook not working when orphan commit
+          force_orphan: false
