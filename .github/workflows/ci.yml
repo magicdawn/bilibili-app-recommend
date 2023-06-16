@@ -10,7 +10,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build-app:
+  test-and-build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -39,4 +39,4 @@ jobs:
       - run: pnpm test
 
       # build, no minify
-      - run: pnpm build:vite-raw
+      - run: pnpm turbo build:vite-raw
