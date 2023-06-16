@@ -213,7 +213,7 @@ const countCache = new Map<number, number>()
 export function getColumnCount(container?: HTMLElement | null, mayHaveNarrowMode = true) {
   if (mayHaveNarrowMode && settings.useNarrowMode) return 2
 
-  let count = countCache.get(window.innerWidth)
+  let count = countCache.get(Math.trunc(window.innerWidth))
   if (count) {
     return count
   }

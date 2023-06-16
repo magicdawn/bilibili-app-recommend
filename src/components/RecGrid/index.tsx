@@ -306,7 +306,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
         >
           {refreshError || (refreshing && !swr)
             ? // skeleton loading
-              new Array(24).fill(undefined).map((_, index) => {
+              new Array(28).fill(undefined).map((_, index) => {
                 const x = <VideoCard key={index} loading={true} className={CardClassNames.card} />
                 return <VideoCard key={index} loading={true} className={CardClassNames.card} />
               })
