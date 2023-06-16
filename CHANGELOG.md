@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.14.3 2023-06-16
+
+- feat: support login without refresh
+- fix unlogin video-source-tab can not switch to recommend-pc issue
+
 ## v0.14.2 2023-06-16
 
 - feat: normalize watchlater, Tab 切换会使用缓存, 动态和稍后再看会使用 swr(stale while revalidate)
