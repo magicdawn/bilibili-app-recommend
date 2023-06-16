@@ -238,6 +238,15 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                           >
                             查看可用的快捷键
                           </Button>
+                          <Button
+                            href='https://github.com/magicdawn/bilibili-app-recommend/blob/main/CHANGELOG.md'
+                            target='_blank'
+                          >
+                            更新日志
+                          </Button>
+                          <Button href='https://afdian.net/a/magicdawn' target='_blank'>
+                            用 ❤️ 发电
+                          </Button>
                         </Space>
                       </div>
                     </div>

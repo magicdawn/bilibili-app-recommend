@@ -145,7 +145,7 @@
 
 ## Changelog
 
-[CHANGELOG.md](https://github.com/magicdawn/bilibili-app-recommend/blob/master/CHANGELOG.md)
+[CHANGELOG.md](https://github.com/magicdawn/bilibili-app-recommend/blob/main/CHANGELOG.md)
 
 ## License
 
