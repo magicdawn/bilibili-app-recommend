@@ -1,7 +1,7 @@
 import { HelpInfo } from '$components/piece'
 import { IconName, IconPark } from '$icon-park'
 import { settings, updateSettings, useSettingsSnapshot } from '$settings'
-import { getHasLogined, useHasLogined } from '$utility'
+import { checkLoginStatus, getHasLogined, useHasLogined } from '$utility'
 import { toast } from '$utility/toast'
 import { css } from '@emotion/react'
 import { Radio } from 'antd'
@@ -129,9 +129,13 @@ export function VideoSourceTab({ onRefresh }: { onRefresh: OnRefresh }) {
         }}
         onChange={(e) => {
           const newValue = e.target.value as TabType
+
           if (newValue !== 'recommend-app' && newValue !== 'recommend-pc' && !logined) {
-            return toastNeedLogin()
+            if (!checkLoginStatus()) {
+              return toastNeedLogin()
+            }
           }
+
           updateSettings({ videoSourceTab: newValue })
 
           // so that `RecGrid.refresh` can access latest `tab`

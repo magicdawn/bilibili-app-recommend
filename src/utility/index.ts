@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { proxy, useSnapshot } from 'valtio'
 import { toast } from './toast'
 
 export function parseCookie(): Record<string, string> {
@@ -35,8 +35,13 @@ export function getHasLogined(): boolean {
   return !!cookies.DedeUserID // SESSDATA 是 httponly
 }
 
-// TODO: make it reactive
-// 找不到特征...
+export const loginState = proxy({ cookie: document.cookie, logined: getHasLogined() })
+
+export function checkLoginStatus(): boolean {
+  Object.assign(loginState, { cookie: document.cookie, logined: getHasLogined() })
+  return loginState.logined
+}
+
 export function useHasLogined() {
-  return useMemo(() => getHasLogined(), [document.cookie])
+  return useSnapshot(loginState).logined
 }
