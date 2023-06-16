@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.14.2 2023-06-16
+
+- feat: normalize watchlater, Tab 切换会使用缓存, 动态和稍后再看会使用 swr(stale while revalidate)
+- chore: add more links
+
 ## v0.14.1 2023-06-16
 
 - feat: add .video-source-tab
