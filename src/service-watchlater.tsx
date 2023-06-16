@@ -60,7 +60,7 @@ export class WatchLaterService {
     return (
       <Tag
         color={color}
-        style={{ marginLeft: 20, cursor: 'pointer' }}
+        style={{ marginLeft: 20, marginTop: 1, cursor: 'pointer' }}
         title={title}
         onClick={() => {
           toast(`稍后再看: ${title}`)
