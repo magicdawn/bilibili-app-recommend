@@ -48,7 +48,28 @@ export class WatchLaterService {
   hasMore = true
   count: number
   items: RecItemType[] = []
-  usageInfo: ReactNode
+
+  get usageInfo(): ReactNode {
+    if (!this.loaded) return
+
+    const { count } = this
+    const color: ComponentProps<typeof Tag>['color'] =
+      count <= 90 ? 'success' : count < 100 ? 'warning' : 'error'
+    const title = `${color !== 'success' ? '快满了~ ' : ''}已使用 ${count} / 100`
+
+    return (
+      <Tag
+        color={color}
+        style={{ marginLeft: 20, cursor: 'pointer' }}
+        title={title}
+        onClick={() => {
+          toast(`稍后再看: ${title}`)
+        }}
+      >
+        {count} / 100
+      </Tag>
+    )
+  }
 
   async loadMore() {
     if (!this.hasMore) return
@@ -56,23 +77,6 @@ export class WatchLaterService {
     if (!this.loaded) {
       await this.fetch()
       this.loaded = true
-
-      const { count } = this
-      const color: ComponentProps<typeof Tag>['color'] =
-        count <= 90 ? 'success' : count < 100 ? 'warning' : 'error'
-      const title = `${color !== 'success' ? '快满了~ ' : ''}已使用 ${count} / 100`
-      this.usageInfo = (
-        <Tag
-          color={color}
-          style={{ marginLeft: 20, cursor: 'pointer' }}
-          title={title}
-          onClick={() => {
-            toast(`稍后再看: ${title}`)
-          }}
-        >
-          {count} / 100
-        </Tag>
-      )
     }
 
     this.page++

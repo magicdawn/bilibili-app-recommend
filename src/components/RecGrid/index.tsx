@@ -268,6 +268,12 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
         let newItems = items.slice()
         newItems.splice(index, 1)
         toast(`已移除: ${data.title}`, 4000)
+
+        if (tab === 'watchlater') {
+          watchLaterService.count--
+          setExtraInfo?.(watchLaterService.usageInfo)
+        }
+
         return newItems
       })
     })
