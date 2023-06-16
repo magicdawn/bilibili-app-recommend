@@ -1,0 +1,56 @@
+on:
+  push:
+    tags:
+      - 'v0*'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  release:
+    runs-on: macos-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: pnpm/action-setup@v2
+        with: { version: 8 }
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'pnpm'
+
+      # install deps
+      - run: pnpm install --frozen-lockfile
+
+      # turbo cache
+      - uses: actions/cache@v3
+        with:
+          path: node_modules/.cache/turbo
+          key: turbo-cache-${{ runner.os }}
+
+      # code check
+      - run: pnpm turbo build:less typecheck
+
+      # test
+      - run: pnpm test
+
+      # build
+      - run: pnpm build:real-build
+
+      # prepare
+      - run: cp README.md CHANGELOG.md ./dist
+
+      # release to release branch
+      - name: Commit to release branch
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          publish_branch: release
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          force_orphan: true
