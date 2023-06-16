@@ -1,5 +1,5 @@
 import { RecGrid, RecGridRef } from '$components/RecGrid'
-import { RecHeader, RecHeaderRef, useHeaderState } from '$components/RecHeader'
+import { OnRefresh, RecHeader, RecHeaderRef, useHeaderState } from '$components/RecHeader'
 import { css } from '$libs'
 import { useSettingsSnapshot } from '$settings'
 import { useMemoizedFn } from 'ahooks'
@@ -23,8 +23,8 @@ export function PureRecommend() {
   const recHeader = useRef<RecHeaderRef>(null)
   const recGrid = useRef<RecGridRef>(null)
 
-  const onRefresh = useMemoizedFn(() => {
-    return recGrid.current?.refresh()
+  const onRefresh: OnRefresh = useMemoizedFn((reuse) => {
+    return recGrid.current?.refresh(reuse)
   })
   const onScrollToTop = useMemoizedFn(() => {
     return recHeader.current?.scroll()

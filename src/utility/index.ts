@@ -27,7 +27,7 @@ export function getCsrfToken(): string {
   return csrfToken
 }
 
-export function hasLogined(): boolean {
+export function getHasLogined(): boolean {
   // logout in default header
   // but not included in bilibili-evolved
   // return !!document.querySelector('.logout-item')
@@ -38,5 +38,5 @@ export function hasLogined(): boolean {
 // TODO: make it reactive
 // 找不到特征...
 export function useHasLogined() {
-  return useMemo(() => hasLogined(), [document.cookie])
+  return useMemo(() => getHasLogined(), [document.cookie])
 }

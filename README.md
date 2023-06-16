@@ -41,7 +41,7 @@
 ### 支持的 浏览器 & 脚本管理器 环境
 
 - Chrome/Edge/Firefox: 支持 ViolentMonkey(我使用的) 和 TamperMonkey.
-- macOS Safari: [Userscripts](https://itunes.apple.com/us/app/userscripts/id1463298887)
+- macOS Safari: [Userscripts](https://itunes.apple.com/us/app/userscripts/id1463298887), iPad Safari 上也可以使用
 - _**不支持**_ macOS Safari + TamperMonkey. (收费 Safari 插件, 已知不兼容, 请使用上述开源免费的 Userscripts
 
 ### 你可能不需要这个脚本 :)

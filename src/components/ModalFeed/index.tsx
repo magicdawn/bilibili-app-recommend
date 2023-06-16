@@ -26,8 +26,8 @@ export const ModalFeed = memo(function ModalFeed({ show, onHide }: IProps) {
   const { useNarrowMode } = useSettingsSnapshot()
   const narrowStyleObj = useMemo(() => ({ [styles.narrowMode]: useNarrowMode }), [useNarrowMode])
 
-  const onRefresh = useMemoizedFn(() => {
-    return recGridRef.current?.refresh()
+  const onRefresh = useMemoizedFn((reuse?: boolean) => {
+    return recGridRef.current?.refresh(reuse)
   })
 
   const onScrollToTop = useMemoizedFn(() => {

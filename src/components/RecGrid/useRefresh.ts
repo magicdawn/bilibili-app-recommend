@@ -1,7 +1,9 @@
-import { TabType } from '$components/RecHeader/tab'
+import { useRefInit } from '$common/hooks/useRefInit'
+import { TabConfigMap, TabType, getCurrentSourceTab } from '$components/RecHeader/tab'
 import { RecItemType } from '$define'
 import { DynamicFeedService } from '$service-dynamic-feed'
 import { PcRecService } from '$service-pc'
+import { WatchLaterService } from '$service-watchlater'
 import { useGetState, useMemoizedFn } from 'ahooks'
 import { Debugger } from 'debug'
 import { useState } from 'react'
@@ -10,12 +12,13 @@ export type FetcherOptions = {
   tab: TabType
   pcRecService: PcRecService
   dynamicFeedService: DynamicFeedService
+  watchLaterService: WatchLaterService
   abortSignal: AbortSignal
 }
 
 export function useRefresh({
   debug,
-  tab,
+  // tab,
   recreateService,
   fetcher,
   preAction,
@@ -35,11 +38,15 @@ export function useRefresh({
   setUpperRefreshing?: (val: boolean) => void
   onScrollToTop?: () => void | Promise<void>
 }) {
+  const tab = getCurrentSourceTab()
+
+  const itemsCache = useRefInit<Partial<Record<TabType, RecItemType[]>>>(() => ({}))
   const [hasMore, setHasMore] = useState(true)
   const [items, setItems] = useState<RecItemType[]>([])
 
   const [pcRecService, setPcRecService] = useState(() => new PcRecService())
   const [dynamicFeedService, setDynamicFeedService] = useState(() => new DynamicFeedService())
+  const [watchLaterService, setWatchLaterService] = useState(() => new WatchLaterService())
 
   const [refreshing, setRefreshing] = useState(false)
   const [refreshedAt, setRefreshedAt, getRefreshedAt] = useGetState<number>(() => Date.now())
@@ -47,9 +54,10 @@ export function useRefresh({
   const [refreshAbortController, setRefreshAbortController] = useState<AbortController>(
     () => new AbortController()
   )
+  const [swr, setSwr] = useState(false)
   const [error, setError] = useState<any>(undefined)
 
-  const refresh = useMemoizedFn(async () => {
+  const refresh = useMemoizedFn(async (reuse = false) => {
     const start = performance.now()
 
     // when already in refreshing
@@ -88,10 +96,12 @@ export function useRefresh({
 
     const _pcRecService = recreateService ? new PcRecService() : pcRecService
     const _dynamicFeedService = recreateService ? new DynamicFeedService() : dynamicFeedService
+    const _watchLaterService = new WatchLaterService() // always recreate
     if (recreateService) {
       setPcRecService(_pcRecService)
       setDynamicFeedService(_dynamicFeedService)
     }
+    setWatchLaterService(_watchLaterService)
 
     const _abortController = new AbortController()
     const _signal = _abortController.signal
@@ -101,15 +111,34 @@ export function useRefresh({
       tab,
       pcRecService: _pcRecService,
       dynamicFeedService: _dynamicFeedService,
+      watchLaterService: _watchLaterService,
       abortSignal: _signal,
     }
 
     let _items: RecItemType[] = []
     let err: any
-    try {
-      _items = await fetcher(fetcherOptions)
-    } catch (e) {
-      err = e
+
+    // reuse
+    const shouldReuse = Boolean(reuse && itemsCache.current[tab]?.length)
+    const swr = Boolean(shouldReuse && TabConfigMap[tab].swr)
+    setSwr(swr)
+
+    const doFetch = async () => {
+      try {
+        _items = await fetcher(fetcherOptions)
+      } catch (e) {
+        err = e
+      }
+    }
+
+    debug('refresh(): shouldReuse=%s swr=%s', shouldReuse, swr)
+    if (shouldReuse) {
+      _items = itemsCache.current[tab] || []
+      setItems(_items)
+      if (swr) await doFetch()
+    } else {
+      itemsCache.current[tab] = []
+      await doFetch()
     }
 
     // aborted, `_items` & `err` does not matter
@@ -118,6 +147,7 @@ export function useRefresh({
       return
     }
 
+    // err or not
     updateRefreshing(false)
 
     if (err) {
@@ -127,7 +157,18 @@ export function useRefresh({
     }
 
     setItems(_items)
-    if (tab === 'watchlater') setHasMore(false)
+
+    // if swr, save list starting part only
+    if (TabConfigMap[tab].swr) {
+      itemsCache.current[tab] = _items.slice(0, 30)
+    } else {
+      itemsCache.current[tab] = _items
+    }
+
+    // hasMore check
+    if (tab === 'dynamic') setHasMore(_dynamicFeedService.hasMore)
+    if (tab === 'watchlater') setHasMore(_watchLaterService.hasMore)
+
     await postAction?.()
 
     const cost = performance.now() - start
@@ -136,6 +177,7 @@ export function useRefresh({
 
   return {
     items,
+    itemsCache,
     setItems,
     error,
 
@@ -155,10 +197,16 @@ export function useRefresh({
     hasMore,
     setHasMore,
 
+    swr,
+    setSwr,
+
     pcRecService,
-    setPcRecService,
     dynamicFeedService,
+    watchLaterService,
+
+    setPcRecService,
     setDynamicFeedService,
+    setWatchLaterService,
 
     refresh,
   }

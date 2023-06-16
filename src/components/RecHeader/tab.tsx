@@ -1,11 +1,12 @@
 import { HelpInfo } from '$components/piece'
 import { IconName, IconPark } from '$icon-park'
-import { updateSettings, useSettingsSnapshot } from '$settings'
-import { useHasLogined } from '$utility'
+import { settings, updateSettings, useSettingsSnapshot } from '$settings'
+import { getHasLogined, useHasLogined } from '$utility'
 import { toast } from '$utility/toast'
 import { css } from '@emotion/react'
 import { Radio } from 'antd'
 import { Fragment } from 'react'
+import { OnRefresh } from '.'
 
 const iconCss = css`
   margin-right: 4px;
@@ -27,6 +28,7 @@ type TabConfigItem = {
   iconSize?: number
   label: string
   desc: string
+  swr?: boolean // stale while revalidate
 }
 
 export const TabConfig: TabConfigItem[] = [
@@ -54,6 +56,7 @@ export const TabConfig: TabConfigItem[] = [
     iconSize: 16,
     label: '动态',
     desc: '视频投稿动态',
+    swr: true,
   },
   {
     key: 'watchlater',
@@ -61,14 +64,26 @@ export const TabConfig: TabConfigItem[] = [
     iconSize: 15,
     label: '稍后再看',
     desc: '默认随机乱序, 可在设置-高级设置中关闭乱序',
+    swr: true,
   },
 ]
+
+export const TabConfigMap = TabConfig.reduce((val, configItem) => {
+  return { ...val, [configItem.key]: configItem }
+}, {}) as Record<TabType, TabConfigItem>
 
 export const TAB_ALLOW_VALUES = TabConfig.map((x) => x.key)
 
 export function useCurrentSourceTab(): TabType {
   const { videoSourceTab } = useSettingsSnapshot()
   const logined = useHasLogined()
+  if (!TAB_ALLOW_VALUES.includes(videoSourceTab)) return 'recommend-app' // invalid
+  if (!logined) return 'recommend-app' // not logined
+  return videoSourceTab
+}
+export function getCurrentSourceTab(): TabType {
+  const { videoSourceTab } = settings
+  const logined = getHasLogined()
   if (!TAB_ALLOW_VALUES.includes(videoSourceTab)) return 'recommend-app' // invalid
   if (!logined) return 'recommend-app' // not logined
   return videoSourceTab
@@ -87,7 +102,7 @@ const radioBtnCss = css`
   }
 `
 
-export function VideoSourceTab({ onRefresh }: { onRefresh: () => void | Promise<void> }) {
+export function VideoSourceTab({ onRefresh }: { onRefresh: OnRefresh }) {
   const logined = useHasLogined()
   const tab = useCurrentSourceTab()
 
@@ -113,7 +128,8 @@ export function VideoSourceTab({ onRefresh }: { onRefresh: () => void | Promise<
 
           // so that `RecGrid.refresh` can access latest `tab`
           setTimeout(() => {
-            onRefresh()
+            onRefresh(true) // reuse results when switch tab
+            // onRefresh()
           })
         }}
       >

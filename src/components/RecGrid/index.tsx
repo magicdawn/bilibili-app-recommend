@@ -5,6 +5,7 @@
 import { baseDebug } from '$common'
 import { useModalDislikeVisible } from '$components/ModalDislike'
 import { useCurrentTheme } from '$components/ModalSettings/theme'
+import { OnRefresh } from '$components/RecHeader'
 import { useCurrentSourceTab } from '$components/RecHeader/tab'
 import { VideoCard, VideoCardActions } from '$components/VideoCard'
 import { IVideoCardData } from '$components/VideoCard/process/normalize'
@@ -17,13 +18,10 @@ import { useSettingsSnapshot } from '$settings'
 import { toast } from '$utility/toast'
 import { css } from '@emotion/react'
 import { useMemoizedFn, useMount } from 'ahooks'
-import { Tag } from 'antd'
 import {
-  ComponentProps,
   ReactNode,
   RefObject,
   forwardRef,
-  useEffect,
   useImperativeHandle,
   useMemo,
   useRef,
@@ -55,7 +53,7 @@ export const CardClassNames = {
 }
 
 export type RecGridRef = {
-  refresh: () => void | Promise<void>
+  refresh: OnRefresh
 }
 
 export type RecGridProps = {
@@ -96,6 +94,11 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
     const postAction = useMemoizedFn(() => {
       clearActiveIndex()
       setLoadCompleteCount(1)
+
+      if (tab === 'watchlater') {
+        setExtraInfo?.(watchLaterService.usageInfo)
+      }
+
       // check need loadMore
       triggerScroll()
     })
@@ -110,12 +113,14 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
       refreshing,
       refreshedAt,
       getRefreshedAt,
+      swr,
 
       hasMore,
       setHasMore,
 
       pcRecService,
       dynamicFeedService,
+      watchLaterService,
     } = useRefresh({
       tab,
       debug,
@@ -127,28 +132,6 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
       onScrollToTop,
       setUpperRefreshing,
     })
-
-    useEffect(() => {
-      let info: ReactNode
-      if (tab === 'watchlater' && items.length) {
-        const color: ComponentProps<typeof Tag>['color'] =
-          items.length <= 90 ? 'success' : items.length < 100 ? 'warning' : 'error'
-        const title = `${color !== 'success' ? '快满了~ ' : ''}已使用 ${items.length} / 100`
-        info = (
-          <Tag
-            color={color}
-            style={{ marginLeft: 20, cursor: 'pointer' }}
-            title={title}
-            onClick={() => {
-              toast(`稍后再看: ${title}`)
-            }}
-          >
-            {items.length} / 100
-          </Tag>
-        )
-      }
-      setExtraInfo?.(info)
-    }, [items, tab])
 
     useMount(refresh)
     useImperativeHandle(ref, () => ({ refresh }), [])
@@ -169,11 +152,14 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
       requesting.current = { [refreshAtWhenStart]: true }
 
       let newItems = items
-
+      let postAction: undefined | (() => void)
       try {
         if (tab === 'dynamic') {
           newItems = newItems.concat((await dynamicFeedService.loadMore()) || [])
-          setHasMore(dynamicFeedService.hasMore)
+          postAction = () => setHasMore(dynamicFeedService.hasMore)
+        } else if (tab === 'watchlater') {
+          newItems = newItems.concat((await watchLaterService.loadMore()) || [])
+          postAction = () => setHasMore(watchLaterService.hasMore)
         } else {
           // loadMore 至少 load 一项, 需要触发 InfiniteScroll.componentDidUpdate
           while (!(newItems.length > items.length)) {
@@ -201,6 +187,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
       }
 
       debug('loadMore: seq(%s) len %s -> %s', loadCompleteCount + 1, items.length, newItems.length)
+      postAction?.()
       setItems(newItems)
       setLoadCompleteCount((c) => c + 1)
       triggerScroll() // check
@@ -280,7 +267,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
 
         let newItems = items.slice()
         newItems.splice(index, 1)
-        toast(`已移除: ${data.title}`, 5000)
+        toast(`已移除: ${data.title}`, 4000)
         return newItems
       })
     })
@@ -317,7 +304,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
             className
           )}
         >
-          {refreshing || refreshError
+          {refreshError || (refreshing && !swr)
             ? // skeleton loading
               new Array(24).fill(undefined).map((_, index) => {
                 const x = <VideoCard key={index} loading={true} className={CardClassNames.card} />

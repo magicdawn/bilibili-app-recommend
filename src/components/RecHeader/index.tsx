@@ -74,11 +74,14 @@ const hideModalConfig = () => {
 export type RecHeaderRef = {
   scroll: () => void
 }
+
+export type OnRefresh = (reuse?: boolean) => void | Promise<void>
+
 export const RecHeader = forwardRef<
   RecHeaderRef,
   {
     refreshing: boolean
-    onRefresh: () => void | Promise<void>
+    onRefresh: OnRefresh
     leftSlot?: ReactNode
     rightSlot?: ReactNode
   }
@@ -199,7 +202,7 @@ export type RefreshButtonActions = { click: () => void }
 export type RefreshButtonProps = {
   style?: CSSProperties
   className?: string
-  onRefresh?: (e?: MouseEvent) => void
+  onRefresh?: OnRefresh
   refreshHotkeyEnabled?: boolean
   refreshing: boolean
 }
@@ -239,7 +242,7 @@ export const RefreshButton = forwardRef<RefreshButtonActions, RefreshButtonProps
 
   const onClick: MouseEventHandler = useMemoizedFn((e?: MouseEvent) => {
     setDeg((d) => d + 360)
-    return onRefresh?.(e)
+    return onRefresh?.()
   })
 
   return (
