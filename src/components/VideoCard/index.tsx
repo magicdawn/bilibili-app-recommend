@@ -646,10 +646,7 @@ const VideoCardInner = memo(
               data-idx='content'
               data-ext='click'
             >
-              <h3
-                className='bili-video-card__info--tit'
-                title={invalidReason ? `已失效: ${invalidReason} \n${title}` : title}
-              >
+              <h3 className='bili-video-card__info--tit' title={title}>
                 {titleRender ?? title}
               </h3>
             </a>

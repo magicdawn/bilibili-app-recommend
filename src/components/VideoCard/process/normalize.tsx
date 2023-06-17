@@ -1,4 +1,5 @@
 import { APP_NAME } from '$common'
+import { AntdTooltip } from '$components/AntdApp'
 import {
   AppRecItemExtend,
   DynamicFeedItemExtend,
@@ -234,13 +235,18 @@ export function apiDynamicAdapter(item: DynamicFeedItemExtend): IVideoCardData {
 
 export function apiWatchLaterAdapter(item: WatchLaterItemExtend): IVideoCardData {
   const invalidReason = getVideoInvalidReason(item.state)
-
   const title = `${item.viewed ? '【已观看】· ' : ''}${item.title}`
   const titleRender: ReactNode = invalidReason ? (
-    <del>
-      {item.viewed ? '【已观看】· ' : ''}
-      {item.title}`
-    </del>
+    <AntdTooltip
+      title={<>视频已失效, 原因: {invalidReason}</>}
+      align={{ offset: [0, -5] }}
+      placement='topLeft'
+    >
+      <del>
+        {item.viewed ? '【已观看】· ' : ''}
+        {item.title}`
+      </del>
+    </AntdTooltip>
   ) : undefined
 
   return {
