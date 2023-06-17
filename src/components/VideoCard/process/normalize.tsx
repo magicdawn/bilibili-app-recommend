@@ -7,8 +7,15 @@ import {
   WatchLaterItemExtend,
 } from '$define'
 import { BvCode } from '$utility/bv'
-import { formatDuration, formatTimeStamp, parseCount, parseDuration } from '$utility/video'
+import {
+  formatDuration,
+  formatTimeStamp,
+  getVideoInvalidReason,
+  parseCount,
+  parseDuration,
+} from '$utility/video'
 import dayjs from 'dayjs'
+import { ReactNode } from 'react'
 import { AppRecIconField, AppRecIconMap } from '../app-rec-icon'
 
 export interface IVideoCardData {
@@ -18,6 +25,7 @@ export interface IVideoCardData {
   goto: string
   href: string
   title: string
+  titleRender?: ReactNode
   coverRaw: string
   pubts?: number // unix timestamp
   pubdateDisplay?: string // for display
@@ -25,6 +33,7 @@ export interface IVideoCardData {
   duration: number
   durationStr: string
   recommendReason?: string
+  invalidReason?: string // 已失效理由
 
   // stat
   play?: number
@@ -224,13 +233,24 @@ export function apiDynamicAdapter(item: DynamicFeedItemExtend): IVideoCardData {
 }
 
 export function apiWatchLaterAdapter(item: WatchLaterItemExtend): IVideoCardData {
+  const invalidReason = getVideoInvalidReason(item.state)
+
+  const title = `${item.viewed ? '【已观看】· ' : ''}${item.title}`
+  const titleRender: ReactNode = invalidReason ? (
+    <del>
+      {item.viewed ? '【已观看】· ' : ''}
+      {item.title}`
+    </del>
+  ) : undefined
+
   return {
     // video
     avid: String(item.aid),
     bvid: item.bvid,
     goto: 'av',
     href: item.uri,
-    title: `${item.viewed ? '【已观看】· ' : ''}${item.title}`,
+    title,
+    titleRender,
     coverRaw: item.pic,
     pubts: item.pubdate,
     pubdateDisplay: formatTimeStamp(item.pubdate),
@@ -241,6 +261,7 @@ export function apiWatchLaterAdapter(item: WatchLaterItemExtend): IVideoCardData
     duration: item.duration,
     durationStr: formatDuration(item.duration),
     recommendReason: `${formatTimeStamp(item.add_at)} · 稍后再看`,
+    invalidReason,
 
     // stat
     play: item.stat.view,

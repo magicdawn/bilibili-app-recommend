@@ -233,12 +233,14 @@ const VideoCardInner = memo(
       goto,
       href,
       title,
+      titleRender,
       coverRaw,
       pubdateDisplay,
       pubdateDisplayTitle,
       duration,
       durationStr,
       recommendReason,
+      invalidReason,
 
       // stat
       play,
@@ -644,8 +646,11 @@ const VideoCardInner = memo(
               data-idx='content'
               data-ext='click'
             >
-              <h3 className='bili-video-card__info--tit' title={title}>
-                {title}
+              <h3
+                className='bili-video-card__info--tit'
+                title={invalidReason ? `已失效: ${invalidReason} \n${title}` : title}
+              >
+                {titleRender ?? title}
               </h3>
             </a>
             <p className='bili-video-card__info--bottom'>

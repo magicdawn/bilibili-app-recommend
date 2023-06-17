@@ -59,3 +59,37 @@ export function formatTimeStamp(unixTs?: number, includeTime = false) {
     return t.format('YY-M-D' + extraFormat)
   }
 }
+
+// https://socialsisteryi.github.io/bilibili-API-collect/docs/video/attribute_data.html#state%E5%AD%97%E6%AE%B5%E5%80%BC-%E7%A8%BF%E4%BB%B6%E7%8A%B6%E6%80%81
+export const VideoStateMap = {
+  '1': '橙色通过',
+  '0': '开放浏览',
+  '-1': '待审',
+  '-2': '被打回',
+  '-3': '网警锁定',
+  '-4': '被锁定',
+  '-5': '管理员锁定',
+  '-6': '修复待审',
+  '-7': '暂缓审核',
+  '-8': '补档待审',
+  '-9': '等待转码',
+  '-10': '延迟审核',
+  '-11': '视频源待修',
+  '-12': '转储失败',
+  '-13': '允许评论待审',
+  '-14': '临时回收站',
+  '-15': '分发中',
+  '-16': '转码失败',
+  '-20': '创建未提交',
+  '-30': '创建已提交',
+  '-40': '定时发布',
+  '-100': '用户删除',
+}
+
+// true: valid
+// string: invalid reason
+export function getVideoInvalidReason(state: number | undefined): string | undefined {
+  if (typeof state === 'undefined') return // unkown
+  if (state >= 0) return // valid
+  return VideoStateMap[state]
+}
