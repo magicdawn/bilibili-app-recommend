@@ -24,6 +24,9 @@
 
 - 安装地址 https://greasyfork.org/zh-CN/scripts/443530-bilibili-app-recommend
 - 源代码 https://github.com/magicdawn/bilibili-app-recommend 如果对你有用,请来个 Star :)
+- 从 GitHub 安装
+  - Release https://github.com/magicdawn/bilibili-app-recommend/raw/release/bilibili-app-recommend.mini.user.js
+  - CI build https://github.com/magicdawn/bilibili-app-recommend/raw/release-nightly/bilibili-app-recommend.mini.user.js
 
 ## 声明
 
@@ -51,57 +54,117 @@
 
 ## 介绍
 
-### API 切换
+_\* 截图均为不带 access_key 匿名获取, 不代表作者喜好_
 
-支持使用 App API 或者 PC 桌面端 API
+### 一站式体验
 
-#### App API, 默认
+![image](https://github.com/magicdawn/bilibili-app-recommend/assets/4067115/cde676d8-b794-4a6a-a6b9-a813fd97b427)
 
-- 需要 access_key
+#### APP 推荐, 默认
+
+- 需要获取 access_key
 - 可以使用标记不喜欢功能
 - 没有视频发布日期
 
-#### PC 桌面端 API
+#### PC 桌面端推荐
 
 - 不需要 access_key 了
 - 标记不喜欢功能没了
 - 和首页自带推荐不一样, 自带推荐有视频预览 / 弹幕预览, 本项目还是鼠标滑动查看快照图片.
 - 首页自带推荐的接口, 貌似不会给你推荐番剧 (没有看见数据, 所以没有兼容)
 - 推荐结果貌似更理想
+- 更快!
 
-### 主页 "推荐" 块
+#### 已关注
 
-![image](https://user-images.githubusercontent.com/4067115/163818208-9090095d-1690-4d03-a0ff-bcca72b071ea.png)
+> 基于 PC 桌面端推荐, 筛选出「已关注」，可能会比较慢
 
-- [x] 点击获取 access_key, 以便调用推荐接口
+#### 动态
 
-### 主页 "推荐" 块, 纯推荐模式
+> 动态页的解析
 
-该模式会去除首页其他所有内容, 仅保留推荐块, 推荐操作栏有吸顶效果, 目前
+#### 稍后再看
 
-#### 顶栏
+> 你添加的稍后再看
+
+### 模式
+
+可以基于个人喜好定制
+
+#### 主页推荐块 + 查看更多弹窗 (默认模式)
+
+![image](https://github.com/magicdawn/bilibili-app-recommend/assets/4067115/a3c303c2-bff4-459b-9bd6-5527ef468386)
+
+- 推荐块做为一个「分区」存在，不影响首页其他地方
+  - 新版首页是第一个「分区」
+  - 内测首页在最顶部
+
+![image](https://github.com/magicdawn/bilibili-app-recommend/assets/4067115/85b06340-257f-4811-b81d-ee3c2b9aa98f)
+
+- [x] 支持无限滚动, 加载更多
+- [x] 支持自动查看更多, 即打开 B 站首页自动弹出全屏弹框.
+- [x] 支持快捷键
+
+#### 纯推荐模式
+
+![image](https://github.com/magicdawn/bilibili-app-recommend/assets/4067115/4fd66d66-4839-4403-a9e6-6cdd55f0b4a2)
+
+_\* 截图均为不带 access_key 匿名获取, 不代表作者喜好_
+
+- 该模式会去除首页其他所有内容, 仅保留推荐块,
+- 在设置中开启
+
+![image](https://github.com/magicdawn/bilibili-app-recommend/assets/4067115/e6191158-2b43-42bf-9f12-f271206d9734)
+_\* 开关-第一项_
+
+推荐操作栏有吸顶效果, 目前
 
 - 与 B 站首页自带顶栏兼容
 - 与 Bilibili-Evolved 的自定义顶栏兼容. (自定义顶栏: 全局固定 / 高度 可自由设置)
 
-默认关闭, 在开关内打开
+### 功能
 
-![image](https://user-images.githubusercontent.com/4067115/203917748-bce30561-80cf-4389-ab15-31d7cf79c9a2.png)
+#### 居中模式
 
-### 查看更多 -> 全屏弹框推荐
-
-![image](https://user-images.githubusercontent.com/4067115/163818386-1550dcbd-69fb-4eec-9db2-fb4d538a7e20.png)
 ![image](https://user-images.githubusercontent.com/4067115/182653003-e48befbe-c69a-4ccc-9bee-b4fe97149052.png)
 
-- [x] 支持无限滚动, 加载更多
-- [x] 深色模式, 与 [Bilibili-Evolved](https://github.com/the1812/Bilibili-Evolved) 提供的深色模式兼容
-- [x] 支持窄屏模式, 全屏浏览在显示器下需要左右扭脖子(治好了你们多年的颈椎病), 如果没有颈椎病可以用窄屏模式(即居中双列模式)
-- [x] 支持快捷键
-- [x] 支持自动查看更多, 即打开 B 站首页自动弹出全屏弹框.
+- 像手机一样的居中双列
+- 「查看更多」弹窗 & 纯推荐模式可用
+
+#### 稍候再看
+
+- 视频卡片右上角
+- 快捷键支持
+
+#### 我不想看
+
+![image](https://github.com/magicdawn/bilibili-app-recommend/assets/4067115/75516f49-43e0-4827-aa4c-3216b7f51374)
+![image](https://github.com/magicdawn/bilibili-app-recommend/assets/4067115/f113f8bd-56bb-4482-a54d-2dbcd3e429c1)
+
+![image](https://github.com/magicdawn/bilibili-app-recommend/assets/4067115/9674e212-9ff9-4d97-a2fd-46561d762b65)
+
+- 仅 APP 推荐 Tab, 获取 access_key 后可用
+
+#### 深色模式兼容
+
+本脚本不提供深色模式, 但与 [Bilibili-Evolved](https://github.com/the1812/Bilibili-Evolved) 提供的深色模式兼容
+
+#### 视频过滤
+
+![image](https://github.com/magicdawn/bilibili-app-recommend/assets/4067115/69dc596a-b504-47e1-bd3c-809cba99a708)
+
+#### 主题选择
+
+![image](https://github.com/magicdawn/bilibili-app-recommend/assets/4067115/3ce3c3f3-3d39-4147-8393-b1b9c0baddde)
+
+### 视频卡片
+
+- [x] 支持鼠标滑动快速预览.
+- [ ] 弹幕预览, 个人需求不是很大. (原版有该功能, 可以试试旧版首页)
 
 ### 快捷键说明
 
-#### 查看更多弹框 & 纯推荐模式
+#### 「查看更多」弹框 & 纯推荐模式
 
 - [x] 方向键, 选择视频
 - [x] `Tab` / `Shift + Tab`, 选择视频
@@ -123,18 +186,15 @@
 - 也可以方向键选择理由, 回车提交
 - 默认选中最后一个理由, 通常是「不感兴趣」
 
-### 视频卡片
-
-- [x] 支持鼠标滑动快速预览.
-- [x] 支持添加/移除「稍候再看」
-- [x] 不喜欢 / 撤销 「不喜欢」
-- [ ] 弹幕预览, 个人需求不是很大. (不好弄...)
-
 ## 开发 or 使用源代码构建最新版本
 
 - git clone this repo
 - pnpm install
 - pnpm build, build 完会自动使用 Chrome 打开安装地址
+
+### main 分支 CI build 代码
+
+https://github.com/magicdawn/bilibili-app-recommend/raw/release-nightly/bilibili-app-recommend.mini.user.js
 
 ## 支持
 
