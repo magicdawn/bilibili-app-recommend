@@ -14,6 +14,16 @@ const useHttps =
   process.env.MY_CERT_FILE &&
   (process.argv.includes('--https') || process.env.VITE_DEV_HTTPS)
 
+let downloadURL =
+  'https://greasyfork.org/scripts/443530-bilibili-app-recommend/code/bilibili-app-recommend.user.js'
+if (process.env.RELEASE) {
+  downloadURL =
+    'https://github.com/magicdawn/bilibili-app-recommend/raw/release/bilibili-app-recommend.mini.user.js'
+} else if (process.env.RELEASE_NIGHTLY) {
+  downloadURL =
+    'https://github.com/magicdawn/bilibili-app-recommend/raw/release-nightly/bilibili-app-recommend.mini.user.js'
+}
+
 // https://vitejs.dev/config/
 export default defineConfig({
   define: {
@@ -90,8 +100,7 @@ export default defineConfig({
         author: 'magicdawn',
         supportURL: 'https://github.com/magicdawn/bilibili-app-recommend/issues',
         homepageURL: 'https://greasyfork.org/zh-CN/scripts/443530-bilibili-app-recommend',
-        downloadURL:
-          'https://greasyfork.org/scripts/443530-bilibili-app-recommend/code/bilibili-app-recommend.user.js',
+        downloadURL,
         license: 'MIT',
         match: [
           'https://www.bilibili.com/',

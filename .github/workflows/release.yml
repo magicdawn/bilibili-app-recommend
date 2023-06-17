@@ -12,6 +12,8 @@ concurrency:
 jobs:
   release:
     runs-on: ubuntu-latest
+    env:
+      RELEASE: 'true'
     steps:
       - uses: actions/checkout@v3
 

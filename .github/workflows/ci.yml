@@ -13,6 +13,8 @@ concurrency:
 jobs:
   test-and-build:
     runs-on: ubuntu-latest
+    env:
+      RELEASE_NIGHTLY: 'true'
     steps:
       - uses: actions/checkout@v3
 
@@ -39,8 +41,8 @@ jobs:
       # test
       - run: pnpm test
 
-      # build, no minify
-      - run: pnpm turbo build:vite-raw
+      # build
+      - run: pnpm build:real-build
 
       # prepare
       - run: cp README.md CHANGELOG.md ./dist
