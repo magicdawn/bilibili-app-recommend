@@ -65,6 +65,7 @@ _\* 截图均为不带 access_key 匿名获取, 不代表作者喜好_
 - 需要获取 access_key
 - 可以使用标记不喜欢功能
 - 没有视频发布日期
+- 感谢 @Myitian 提供的 v2 API 示例 https://github.com/magicdawn/bilibili-app-recommend/issues/18
 
 #### PC 桌面端推荐
 
