@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.14.4
+
+- fix: update watchlater usageInfo after removeCard
+- feat: add script icon
+
+FULL https://github.com/magicdawn/bilibili-app-recommend/compare/v0.14.3...main
+
 ## v0.14.3 2023-06-16
 
 - feat: support login without refresh
