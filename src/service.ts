@@ -40,17 +40,22 @@ export async function getMinCount(
   const { pcRecService, dynamicFeedService, watchLaterService, tab, abortSignal } = fetcherOptions
 
   let items: RecItemType[] = []
+  let hasMore = true
+
   const addMore = async (restCount: number) => {
     let cur: RecItemType[] = []
 
     // 动态
     if (tab === 'dynamic') {
       cur = (await dynamicFeedService.loadMore(abortSignal)) || []
+      hasMore = dynamicFeedService.hasMore
       items = items.concat(cur)
       return
     }
+    // 稍候再看
     if (tab === 'watchlater') {
       cur = (await watchLaterService.loadMore()) || []
+      hasMore = watchLaterService.hasMore
       items = items.concat(cur)
       return
     }
@@ -98,16 +103,14 @@ export async function getMinCount(
       debug('getMinCount: break for abortSignal')
       break
     }
-
     // no more
-    if (tab === 'dynamic' && !dynamicFeedService.hasMore) {
-      debug('getMinCount: break for dynamicFeedService.hasMore')
+    if (!hasMore) {
+      debug('getMinCount: break for tab=%s hasMore=false', tab)
       break
     }
 
     // enough
     if (items.length >= count) break
-
     await addMore(count - items.length)
   }
 

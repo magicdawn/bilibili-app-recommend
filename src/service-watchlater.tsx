@@ -39,6 +39,11 @@ export class WatchLaterService {
       }
     }
 
+    // FIXME: 测试 watchlater 不足一屏的情况
+    // https://github.com/magicdawn/bilibili-app-recommend/issues/41
+    // this.items = items.slice(0, 10)
+    // this.count = this.items.length
+
     this.count = json.data.count
     this.items = items
   }
