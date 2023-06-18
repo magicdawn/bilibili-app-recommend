@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.14.5
+
+- 修复稍后再看卡住问题, see #41
+
 ## v0.14.4
 
 - fix: update watchlater usageInfo after removeCard
