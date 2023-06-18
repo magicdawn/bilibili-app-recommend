@@ -96,9 +96,9 @@ _\* 截图均为不带 access_key 匿名获取, 不代表作者喜好_
 
 ![image](https://github.com/magicdawn/bilibili-app-recommend/assets/4067115/a3c303c2-bff4-459b-9bd6-5527ef468386)
 
-- 推荐块做为一个「分区」存在，不影响首页其他地方
-  - 新版首页是第一个「分区」
-  - 内测首页在最顶部
+- 推荐块作为一个「分区」存在，不影响首页其他地方
+  - 新版首页: 推荐下边, 作为第一个「分区」
+  - 内测首页: 在最顶部
 
 ![image](https://github.com/magicdawn/bilibili-app-recommend/assets/4067115/85b06340-257f-4811-b81d-ee3c2b9aa98f)
 
