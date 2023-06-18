@@ -4,6 +4,7 @@ import { settings } from '$settings'
 import { toast } from '$utility/toast'
 import { Tag } from 'antd'
 import dayjs from 'dayjs'
+import delay from 'delay'
 import { cloneDeep, shuffle } from 'lodash'
 import { ComponentProps, ReactNode } from 'react'
 
@@ -79,7 +80,9 @@ export class WatchLaterService {
   async loadMore() {
     if (!this.hasMore) return
 
+    let hasApiCall = false
     if (!this.loaded) {
+      hasApiCall = true
       await this.fetch()
       this.loaded = true
     }
@@ -90,6 +93,12 @@ export class WatchLaterService {
 
     const items = cloneDeep(this.items.slice(start, end))
     this.hasMore = end <= this.count - 1
+
+    if (!hasApiCall) {
+      // may fix https://github.com/magicdawn/bilibili-app-recommend/issues/41
+      await delay(50)
+    }
+
     return items
   }
 }
