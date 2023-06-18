@@ -17,6 +17,7 @@ body:
         浏览器: (如 Chrome)
         浏览器版本: (如 113.0.5672.126)
         脚本管理器: (如 暴力猴 / TamperMonkey)
+        脚本版本: (如 0.14.0, 请先更新到最新版本!)
       value: |
         浏览器: (如 Chrome)
         浏览器版本: (如 113.0.5672.126)
@@ -34,6 +35,6 @@ body:
   - type: textarea
     attributes:
       label: 预期结果
-      description:
+      description: ''
     validations:
       required: false
