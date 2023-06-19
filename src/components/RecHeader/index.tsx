@@ -75,7 +75,8 @@ export type RecHeaderRef = {
   scroll: () => void
 }
 
-export type OnRefresh = (reuse?: boolean) => void | Promise<void>
+export type OnRefreshOoptions = { watchlaterKeepOrder?: boolean }
+export type OnRefresh = (reuse?: boolean, options?: OnRefreshOoptions) => void | Promise<void>
 
 export const RecHeader = forwardRef<
   RecHeaderRef,
