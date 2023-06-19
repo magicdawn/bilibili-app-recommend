@@ -23,8 +23,8 @@ export function PureRecommend() {
   const recHeader = useRef<RecHeaderRef>(null)
   const recGrid = useRef<RecGridRef>(null)
 
-  const onRefresh: OnRefresh = useMemoizedFn((reuse) => {
-    return recGrid.current?.refresh(reuse)
+  const onRefresh: OnRefresh = useMemoizedFn((...args) => {
+    return recGrid.current?.refresh(...args)
   })
   const onScrollToTop = useMemoizedFn(() => {
     return recHeader.current?.scroll()

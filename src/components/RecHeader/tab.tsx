@@ -140,8 +140,8 @@ export function VideoSourceTab({ onRefresh }: { onRefresh: OnRefresh }) {
 
           // so that `RecGrid.refresh` can access latest `tab`
           setTimeout(() => {
-            onRefresh(true) // reuse results when switch tab
-            // onRefresh()
+            // reuse results & keep original order when switch tab
+            onRefresh(true, { watchlaterKeepOrder: true })
           })
         }}
       >
