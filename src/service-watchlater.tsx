@@ -14,6 +14,11 @@ import { ComponentProps, ReactNode } from 'react'
 
 export class WatchLaterService {
   static PAGE_SIZE = 15
+  static LAST_ITEMS: WatchLaterItemExtend[] = []
+
+  constructor(keepOrder?: boolean) {
+    this.keepOrder = keepOrder ?? false
+  }
 
   private async fetch() {
     const res = await request.get('/x/v2/history/toview/web')
@@ -26,15 +31,27 @@ export class WatchLaterService {
       }
     })
 
-    // 洗牌
-    if (settings.shuffleForWatchLater) {
-      // keep 最近几天内
-      const gate = dayjs().subtract(2, 'days').unix()
-      const firstNotTodayAddedIndex = items.findIndex((item) => item.add_at < gate)
+    // keep 最近几天内
+    const gate = dayjs().subtract(2, 'days').unix()
+    const firstNotTodayAddedIndex = items.findIndex((item) => item.add_at < gate)
 
-      if (firstNotTodayAddedIndex !== -1) {
-        const items1 = items.slice(0, firstNotTodayAddedIndex)
-        const items2 = items.slice(firstNotTodayAddedIndex)
+    if (firstNotTodayAddedIndex !== -1) {
+      const items1 = items.slice(0, firstNotTodayAddedIndex)
+      let items2 = items.slice(firstNotTodayAddedIndex)
+
+      // 保持顺序
+      if (this.keepOrder && WatchLaterService.LAST_ITEMS.length) {
+        items2 = items2
+          .map((item) => ({
+            item,
+            index: WatchLaterService.LAST_ITEMS.findIndex((i) => i.bvid === item.bvid),
+          }))
+          .sort((a, b) => a.index - b.index)
+          .map((x) => x.item)
+        items = [...items1, ...items2]
+      }
+      // 洗牌
+      else if (settings.shuffleForWatchLater) {
         items = [...items1, ...shuffle(items2)]
       }
     }
@@ -46,6 +63,9 @@ export class WatchLaterService {
 
     this.count = json.data.count
     this.items = items
+
+    // save for next keepOrder=true
+    WatchLaterService.LAST_ITEMS = items
   }
 
   loaded = false
@@ -53,6 +73,7 @@ export class WatchLaterService {
   hasMore = true
   count: number
   items: RecItemType[] = []
+  keepOrder: boolean
 
   get usageInfo(): ReactNode {
     if (!this.loaded) return

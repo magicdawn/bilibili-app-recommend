@@ -17,7 +17,7 @@ import { getRecommendForGrid, getRecommendTimes, uniqConcat } from '$service'
 import { useSettingsSnapshot } from '$settings'
 import { toast } from '$utility/toast'
 import { css } from '@emotion/react'
-import { useLatest, useMemoizedFn, useMount } from 'ahooks'
+import { useEventListener, useLatest, useMemoizedFn, useMount } from 'ahooks'
 import delay from 'delay'
 import {
   ReactNode,
@@ -140,7 +140,23 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
     useMount(refresh)
     useImperativeHandle(ref, () => ({ refresh }), [])
 
-    const requesting = useRef<Record<number, boolean>>({})
+    useEventListener(
+      'visibilitychange',
+      (e) => {
+        if (document.visibilityState !== 'visible') return
+        if (refreshing) return
+        if (loadMoreRequesting.current[refreshedAt]) return
+
+        // 场景
+        // 当前 Tab: 稍后再看, 点视频进去, 在视频页移除了, 关闭视频页, 回到首页
+        if (tab === 'watchlater') {
+          refresh(true, { watchlaterKeepOrder: true })
+        }
+      },
+      { target: document }
+    )
+
+    const loadMoreRequesting = useRef<Record<number, boolean>>({})
 
     /**
      * useMemoizedFn 只能确保 loadMore 开始调用时值时最新的.
@@ -152,18 +168,18 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
       if (refreshing) return
 
       const refreshAtWhenStart = refreshedAt
-      if (requesting.current[refreshAtWhenStart]) return
-      requesting.current = { [refreshAtWhenStart]: true }
+      if (loadMoreRequesting.current[refreshAtWhenStart]) return
+      loadMoreRequesting.current = { [refreshAtWhenStart]: true }
 
       let newItems = items
-      let postAction: undefined | (() => void)
+      let _hasMore = true
       try {
         if (tab === 'dynamic') {
           newItems = newItems.concat((await dynamicFeedService.loadMore()) || [])
-          postAction = () => setHasMore(dynamicFeedService.hasMore)
+          _hasMore = dynamicFeedService.hasMore
         } else if (tab === 'watchlater') {
           newItems = newItems.concat((await watchLaterService.loadMore()) || [])
-          postAction = () => setHasMore(watchLaterService.hasMore)
+          _hasMore = watchLaterService.hasMore
         } else {
           // loadMore 至少 load 一项, 需要触发 InfiniteScroll.componentDidUpdate
           while (!(newItems.length > items.length)) {
@@ -174,7 +190,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
           }
         }
       } catch (e) {
-        requesting.current[refreshAtWhenStart] = false
+        loadMoreRequesting.current[refreshAtWhenStart] = false
         throw e
       }
 
@@ -191,10 +207,10 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
       }
 
       debug('loadMore: seq(%s) len %s -> %s', loadCompleteCount + 1, items.length, newItems.length)
-      postAction?.()
+      setHasMore(_hasMore)
       setItems(newItems)
       setLoadCompleteCount((c) => c + 1)
-      requesting.current[refreshAtWhenStart] = false
+      loadMoreRequesting.current[refreshAtWhenStart] = false
 
       // check
       checkShouldLoadMore()
