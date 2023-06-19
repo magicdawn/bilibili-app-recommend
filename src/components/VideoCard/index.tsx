@@ -368,30 +368,37 @@ const VideoCardInner = memo(
      */
 
     const requestingWatchLaterApi = useRef(false)
-    const onToggleWatchLater = useMemoizedFn(async (e?: MouseEvent) => {
-      e?.preventDefault()
+    const onToggleWatchLater = useMemoizedFn(
+      async (e?: MouseEvent, usingAction?: typeof watchLaterDel | typeof watchLaterAdd) => {
+        e?.preventDefault()
 
-      if (requestingWatchLaterApi.current) return
-      requestingWatchLaterApi.current = true
+        usingAction ??= watchLaterAdded ? watchLaterDel : watchLaterAdd
+        if (usingAction !== watchLaterAdd && usingAction !== watchLaterDel) {
+          throw new Error('unexpected usingAction provided')
+        }
 
-      const fn = watchLaterAdded ? watchLaterDel : watchLaterAdd
-      let success = false
-      try {
-        success = await fn(avid)
-      } finally {
-        requestingWatchLaterApi.current = false
-      }
+        if (requestingWatchLaterApi.current) return
+        requestingWatchLaterApi.current = true
 
-      if (success) {
-        setWatchLaterAdded((val) => !val)
+        let success = false
+        try {
+          success = await usingAction(avid)
+        } finally {
+          requestingWatchLaterApi.current = false
+        }
 
-        // tell parent container remove current card
-        if (item.api === 'watchlater') {
-          await delay(100)
-          onRemoveCurrent?.(item, cardData)
+        if (success) {
+          const targetState = usingAction === watchLaterAdd ? true : false
+          setWatchLaterAdded(targetState)
+
+          // when remove-watchlater for watchlater tab, remove this card
+          if (item.api === 'watchlater' && targetState === false) {
+            await delay(100)
+            onRemoveCurrent?.(item, cardData)
+          }
         }
       }
-    })
+    )
 
     /**
      * 不喜欢
@@ -479,6 +486,15 @@ const VideoCardInner = memo(
           onToggleWatchLater()
         },
       },
+      item.api === 'watchlater' &&
+        watchLaterAdded && {
+          key: 'watchlater-readd',
+          label: '重新添加稍候再看 (移到最前)',
+          onClick() {
+            onToggleWatchLater(undefined, watchLaterAdd)
+          },
+        },
+
       ...(isMac
         ? [
             { type: 'divider' as const },
