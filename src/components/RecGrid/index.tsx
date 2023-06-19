@@ -11,6 +11,7 @@ import { VideoCard, VideoCardActions } from '$components/VideoCard'
 import { IVideoCardData } from '$components/VideoCard/process/normalize'
 import { RecItemType } from '$define'
 import { getHeaderHeight } from '$header'
+import { IconPark } from '$icon-park'
 import { cx, generateClassName } from '$libs'
 import { getIsInternalTesting, isSafari } from '$platform'
 import { getRecommendForGrid, getRecommendTimes, uniqConcat } from '$service'
@@ -19,6 +20,7 @@ import { toast } from '$utility/toast'
 import { css } from '@emotion/react'
 import { useEventListener, useLatest, useMemoizedFn, useMount } from 'ahooks'
 import delay from 'delay'
+import ms from 'ms'
 import {
   ReactNode,
   RefObject,
@@ -140,16 +142,22 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
     useMount(refresh)
     useImperativeHandle(ref, () => ({ refresh }), [])
 
+    const goOutAt = useRef<number | undefined>()
     useEventListener(
       'visibilitychange',
       (e) => {
-        if (document.visibilityState !== 'visible') return
+        const visible = document.visibilityState === 'visible'
+        if (!visible) {
+          goOutAt.current = Date.now()
+          return
+        }
+
         if (refreshing) return
         if (loadMoreRequesting.current[refreshedAt]) return
 
         // 场景
         // 当前 Tab: 稍后再看, 点视频进去, 在视频页移除了, 关闭视频页, 回到首页
-        if (tab === 'watchlater') {
+        if (tab === 'watchlater' && goOutAt.current && Date.now() - goOutAt.current > ms('1h')) {
           refresh(true, { watchlaterKeepOrder: true })
         }
       },
@@ -324,12 +332,32 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
       <div
         ref={footerRef}
         css={css`
-          text-align: center;
-          line-height: 60px;
+          padding: 20px 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
           font-size: 120%;
         `}
       >
-        {!refreshing && <>{hasMore ? '加载中...' : '没有更多了~'}</>}
+        {/* '加载中...' */}
+        {!refreshing && (
+          <>
+            {hasMore ? (
+              <>
+                <IconPark
+                  name='Loading'
+                  fill={colorPrimary}
+                  spin
+                  size={40}
+                  style={{ marginRight: 5 }}
+                />
+                加载中...
+              </>
+            ) : (
+              '没有更多了~'
+            )}
+          </>
+        )}
       </div>
     )
 
