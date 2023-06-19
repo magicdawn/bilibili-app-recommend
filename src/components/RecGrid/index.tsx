@@ -17,7 +17,8 @@ import { getRecommendForGrid, getRecommendTimes, uniqConcat } from '$service'
 import { useSettingsSnapshot } from '$settings'
 import { toast } from '$utility/toast'
 import { css } from '@emotion/react'
-import { useMemoizedFn, useMount } from 'ahooks'
+import { useLatest, useMemoizedFn, useMount } from 'ahooks'
+import delay from 'delay'
 import {
   ReactNode,
   RefObject,
@@ -27,12 +28,15 @@ import {
   useRef,
   useState,
 } from 'react'
-import InfiniteScroll from 'react-infinite-scroller'
+import { useInView } from 'react-intersection-observer'
+import { VirtuosoGrid } from 'react-virtuoso'
 import { internalTesting, narrowMode, videoGrid } from '../video-grid.module.less'
 import { useRefresh } from './useRefresh'
 import { useShortcut } from './useShortcut'
 
 const debug = baseDebug.extend('components:RecGrid')
+
+const ENABLE_VIRTUAL_GRID = false
 
 export const CardClassNames = {
   card: generateClassName`
@@ -100,7 +104,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
       }
 
       // check need loadMore
-      triggerScroll()
+      checkShouldLoadMore()
     })
 
     const {
@@ -190,8 +194,10 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
       postAction?.()
       setItems(newItems)
       setLoadCompleteCount((c) => c + 1)
-      triggerScroll() // check
       requesting.current[refreshAtWhenStart] = false
+
+      // check
+      checkShouldLoadMore()
     })
 
     //
@@ -203,12 +209,18 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
     // 问题在于, loadMore 结束后还需要再 loadMore, 这时需要手动 scroll 一下
     // 这里模拟一下 scroll event
     //
-    const triggerScroll = useMemoizedFn(() => {
-      const ms = isSafari ? 100 : undefined
-      setTimeout(() => {
-        const scroller = infiteScrollUseWindow ? window : scrollerRef?.current
-        scroller?.dispatchEvent(new CustomEvent('scroll'))
-      }, ms)
+    const checkShouldLoadMore = useMemoizedFn(async () => {
+      const ms = isSafari ? 100 : 0
+      await delay(ms) // always in nextTick
+
+      debug('checkShouldLoadMore(): footerInView = %s', footerInViewRef.current)
+      if (footerInViewRef.current) {
+        loadMore()
+      }
+
+      // legacy trigger for react-infinite-scroller
+      // const scroller = infiteScrollUseWindow ? window : scrollerRef?.current
+      // scroller?.dispatchEvent(new CustomEvent('scroll'))
     })
 
     // .video-grid
@@ -217,8 +229,8 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
     const getScrollerRect = useMemoizedFn(() => {
       // use window
       if (infiteScrollUseWindow) {
-        const headerHight = getHeaderHeight() + 50 // 50 RecHeader height
-        return new DOMRect(0, headerHight, window.innerWidth, window.innerHeight - headerHight)
+        const yStart = getHeaderHeight() + 50 // 50 RecHeader height
+        return new DOMRect(0, yStart, window.innerWidth, window.innerHeight - yStart)
       }
       // use in a scroller
       else {
@@ -278,76 +290,140 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
       })
     })
 
-    return (
-      <InfiniteScroll
-        pageStart={0}
-        hasMore={hasMore}
-        loadMore={loadMore}
-        initialLoad={false}
-        useWindow={infiteScrollUseWindow}
-        threshold={window.innerHeight * 1} // 一屏
-        style={{ minHeight: '100%' }}
-        loader={
-          <div
-            css={css`
-              text-align: center;
-              line-height: 60px;
-              font-size: 120%;
-            `}
-            key={-1}
-          >
-            {!refreshing && <>加载中...</>}
-          </div>
+    /**
+     * footer for infinite scroll
+     */
+    const { ref: footerRef, inView: __footerInView } = useInView({
+      root: infiteScrollUseWindow ? null : scrollerRef?.current || null,
+      rootMargin: `0px 0px ${window.innerHeight}px 0px`,
+      onChange(inView) {
+        if (inView) {
+          debug('footerInView change to visible', inView)
+          loadMore()
         }
+      },
+    })
+    const footerInViewRef = useLatest(__footerInView)
+    const footer = (
+      <div
+        ref={footerRef}
+        css={css`
+          text-align: center;
+          line-height: 60px;
+          font-size: 120%;
+        `}
       >
-        {/* 这里只定义列数, 宽度 100% */}
-        <div
-          ref={containerRef}
-          className={cx(
-            videoGrid,
-            { [internalTesting]: isInisInternalTesting },
-            { [narrowMode]: useNarrowMode },
-            className
-          )}
-        >
-          {refreshError || (refreshing && !swr)
-            ? // skeleton loading
-              new Array(28).fill(undefined).map((_, index) => {
-                const x = <VideoCard key={index} loading={true} className={CardClassNames.card} />
-                return <VideoCard key={index} loading={true} className={CardClassNames.card} />
-              })
-            : // items
-              items.map((item, index) => {
-                const active = index === activeIndex
+        {!refreshing && <>{hasMore ? '加载中...' : '没有更多了~'}</>}
+      </div>
+    )
+
+    const containerClassName = cx(
+      videoGrid,
+      { [internalTesting]: isInisInternalTesting },
+      { [narrowMode]: useNarrowMode },
+      className
+    )
+
+    const showSkeleton = refreshError || (refreshing && !swr)
+
+    // skeleton loading
+    if (showSkeleton) {
+      return (
+        <div className={containerClassName}>
+          {new Array(28).fill(undefined).map((_, index) => {
+            const x = <VideoCard key={index} loading={true} className={CardClassNames.card} />
+            return <VideoCard key={index} loading={true} className={CardClassNames.card} />
+          })}
+        </div>
+      )
+    }
+
+    // virtual grid
+    // 有个缺点, 开始的时候只显示一个 video-card
+    if (ENABLE_VIRTUAL_GRID) {
+      return (
+        <div>
+          <VirtuosoGrid
+            useWindowScroll
+            data={items}
+            // listClassName={containerClassName}
+            overscan={window.innerHeight}
+            computeItemKey={(index, item) => item.uniqId}
+            components={{
+              List: forwardRef((props, ref) => {
                 return (
-                  <VideoCard
-                    ref={(val) => (videoCardRefs[index] = val)}
-                    key={item.uniqId}
-                    className={cx(CardClassNames.card, { [CardClassNames.cardActive]: active })}
-                    css={[
-                      active &&
-                        css`
-                          border-color: ${colorPrimary};
-                        `,
-                    ]}
-                    item={item}
-                    active={active}
-                    onRemoveCurrent={handleRemoveCard}
+                  <div
+                    ref={(el) => {
+                      // @ts-ignore
+                      containerRef.current = el
+                      if (ref) {
+                        if (typeof ref === 'function') ref(el)
+                        else ref.current = el
+                      }
+                    }}
+                    {...props}
+                    className={cx(props.className, containerClassName)}
                   />
                 )
-              })}
-        </div>
+              }),
 
-        <div
-          css={css`
-            text-align: center;
-            line-height: 60px;
-            font-size: 120%;
-          `}
-        >
-          {!refreshing && !hasMore && <>没有更多了~</>}
+              // render footer here cause error
+              // Footer() {
+              //   return <></>
+              // },
+            }}
+            itemContent={(index, item) => {
+              const active = index === activeIndex
+              return (
+                <VideoCard
+                  ref={(val) => (videoCardRefs[index] = val)}
+                  key={item.uniqId}
+                  className={cx(CardClassNames.card, { [CardClassNames.cardActive]: active })}
+                  css={[
+                    active &&
+                      css`
+                        border-color: ${colorPrimary};
+                      `,
+                  ]}
+                  item={item}
+                  active={active}
+                  onRemoveCurrent={handleRemoveCard}
+                />
+              )
+            }}
+          />
+          {footer}
         </div>
-      </InfiniteScroll>
+      )
+    }
+
+    // plain dom
+    return (
+      <div style={{ minHeight: '100%' }}>
+        <div ref={containerRef} className={containerClassName}>
+          {/* items */}
+          {items.map((item, index) => {
+            const active = index === activeIndex
+            return (
+              <VideoCard
+                ref={(val) => (videoCardRefs[index] = val)}
+                key={item.uniqId}
+                className={cx(CardClassNames.card, { [CardClassNames.cardActive]: active })}
+                css={[
+                  active &&
+                    css`
+                      border-color: ${colorPrimary};
+                    `,
+                ]}
+                item={item}
+                active={active}
+                onRemoveCurrent={handleRemoveCard}
+              />
+            )
+          })}
+        </div>
+        {footer}
+      </div>
     )
   }
 )

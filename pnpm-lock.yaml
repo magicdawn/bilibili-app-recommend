@@ -67,12 +67,15 @@ dependencies:
   react-dom:
     specifier: 18.2.0
     version: 18.2.0(react@18.2.0)
-  react-infinite-scroller:
-    specifier: ^1.2.6
-    version: 1.2.6(react@18.2.0)
+  react-intersection-observer:
+    specifier: ^9.5.0
+    version: 9.5.0(react@18.2.0)
   react-use-sticky:
     specifier: ^0.1.4
     version: 0.1.4(react@18.2.0)
+  react-virtuoso:
+    specifier: ^4.3.10
+    version: 4.3.10(react-dom@18.2.0)(react@18.2.0)
   ua-parser-js:
     specifier: ^1.0.35
     version: 1.0.35
@@ -117,9 +120,6 @@ devDependencies:
   '@types/react-dom':
     specifier: 18.2.5
     version: 18.2.5
-  '@types/react-infinite-scroller':
-    specifier: ^1.2.3
-    version: 1.2.3
   '@types/ua-parser-js':
     specifier: ^0.7.36
     version: 0.7.36
@@ -1538,12 +1538,6 @@ packages:
 
   /@types/react-dom@18.2.5:
     resolution: {integrity: sha512-sRQsOS/sCLnpQhR4DSKGTtWFE3FZjpQa86KPVbhUqdYMRZ9FEFcfAytKhR/vUG2rH1oFbOOej6cuD7MFSobDRQ==}
-    dependencies:
-      '@types/react': 18.2.7
-    dev: true
-
-  /@types/react-infinite-scroller@1.2.3:
-    resolution: {integrity: sha512-l60JckVoO+dxmKW2eEG7jbliEpITsTJvRPTe97GazjF5+ylagAuyYdXl8YY9DQsTP9QjhqGKZROknzgscGJy0A==}
     dependencies:
       '@types/react': 18.2.7
     dev: true
@@ -3799,11 +3793,6 @@ packages:
       path-key: 4.0.0
     dev: true
 
-  /object-assign@4.1.1:
-    resolution: {integrity: sha512-rJgTQnkUnH1sFw8yT6VSU3zD3sWmu6sZhIseY8VX+GRu3P6F7Fu+JNDoXfklElbLJSnc3FUQHVe4cU5hj+BcUg==}
-    engines: {node: '>=0.10.0'}
-    dev: false
-
   /object-inspect@1.12.3:
     resolution: {integrity: sha512-geUvdk7c+eizMNUDkRpW1wJwgfOiOeHbxBR/hLXK1aT6zmVSO0jsQcs7fj6MGw89jC/cjGfLcNOrtMYtGqm81g==}
     dev: true
@@ -4096,14 +4085,6 @@ packages:
 
   /promise.timeout@1.1.2:
     resolution: {integrity: sha512-0iLypU/OMfDPP0PuUE3ViS5vqTeNEJM9wluoZI898vUnR4bCAJYYn+jYA+SGRxDjReqgUcGDimIRljQHNzlaEA==}
-
-  /prop-types@15.8.1:
-    resolution: {integrity: sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==}
-    dependencies:
-      loose-envify: 1.4.0
-      object-assign: 4.1.1
-      react-is: 16.13.1
-    dev: false
 
   /proxy-compare@2.5.1:
     resolution: {integrity: sha512-oyfc0Tx87Cpwva5ZXezSp5V9vht1c7dZBhvuV/y3ctkgMVUmiAGDVeeB0dKhGSyT0v1ZTEQYpe/RXlBVBNuCLA==}
@@ -4677,12 +4658,11 @@ packages:
       scheduler: 0.23.0
     dev: false
 
-  /react-infinite-scroller@1.2.6(react@18.2.0):
-    resolution: {integrity: sha512-mGdMyOD00YArJ1S1F3TVU9y4fGSfVVl6p5gh/Vt4u99CJOptfVu/q5V/Wlle72TMgYlBwIhbxK5wF0C/R33PXQ==}
+  /react-intersection-observer@9.5.0(react@18.2.0):
+    resolution: {integrity: sha512-bQbfe6Jl8KSynbWfQWz8LoGCCmG6fhsilljgc6dc1NMYpNmP20wfFsrF7CE5N9+LbWx33DUgJdkNBVhU1JzIRA==}
     peerDependencies:
-      react: ^0.14.9 || ^15.3.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
+      react: ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
     dependencies:
-      prop-types: 15.8.1
       react: 18.2.0
     dev: false
 
@@ -4705,6 +4685,17 @@ packages:
       react: ^16.8.0
     dependencies:
       react: 18.2.0
+    dev: false
+
+  /react-virtuoso@4.3.10(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-/LDICLCmPRDMOheCKmuHj/U7CGjLT/WtMWZGfOothhhubQeWGbR6mtGyd+uD80Yw/n3ICZtYwERQZnTM8eC0ag==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      react: '>=16 || >=17 || >= 18'
+      react-dom: '>=16 || >=17 || >= 18'
+    dependencies:
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
     dev: false
 
   /react@18.2.0:

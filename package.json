@@ -34,7 +34,6 @@
     "@types/node": "20.3.1",
     "@types/react": "18.2.7",
     "@types/react-dom": "18.2.5",
-    "@types/react-infinite-scroller": "^1.2.3",
     "@types/ua-parser-js": "^0.7.36",
     "@typescript-eslint/eslint-plugin": "^5.59.11",
     "@typescript-eslint/parser": "^5.59.11",
@@ -87,8 +86,9 @@
     "promise.retry": "^1.1.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-infinite-scroller": "^1.2.6",
+    "react-intersection-observer": "^9.5.0",
     "react-use-sticky": "^0.1.4",
+    "react-virtuoso": "^4.3.10",
     "ua-parser-js": "^1.0.35",
     "valtio": "^1.10.5"
   },
