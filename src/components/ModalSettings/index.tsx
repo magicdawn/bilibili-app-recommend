@@ -321,7 +321,29 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
             },
             {
               label: '外观设置',
-              key: 'UI',
+              key: 'ui',
+              children: (
+                <div className={styles.tabPane}>
+                  <div className={styles.settingsGroup}>
+                    <div className={styles.settingsGroupTitle} style={{ marginBottom: 15 }}>
+                      外观设置
+                    </div>
+                    <div className={cx(styles.settingsGroupContent)}>
+                      <FlagSettingItem
+                        configKey='useYoutubeLikeCard'
+                        label='视频卡片: 使用类似 YouTube 大卡片'
+                        tooltip={
+                          <>增加卡片大小, 增大卡片间距, 仅「查看更多」弹窗 & 纯推荐模式可用</>
+                        }
+                      />
+                    </div>
+                  </div>
+                </div>
+              ),
+            },
+            {
+              label: '主题选择',
+              key: 'theme-select',
               children: (
                 <div className={styles.tabPane}>
                   <div className={styles.settingsGroup}>

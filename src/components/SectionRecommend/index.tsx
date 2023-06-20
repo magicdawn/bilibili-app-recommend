@@ -1,7 +1,12 @@
 import { baseDebug } from '$common'
 import { useRefresh } from '$components/RecGrid/useRefresh'
 import { useCurrentSourceTab } from '$components/RecHeader/tab'
-import { internalTesting, limitTwoLines, videoGrid } from '$components/video-grid.module.less'
+import {
+  limitTwoLines,
+  videoGrid,
+  videoGridInternalTesting,
+  videoGridNewHomepage,
+} from '$components/video-grid.module.less'
 import { AppRecItemExtend, PcRecItemExtend } from '$define'
 import { cx } from '$libs'
 import { getIsInternalTesting } from '$platform'
@@ -35,7 +40,11 @@ export function SectionRecommend() {
     <section data-area='推荐'>
       <RecHeader refreshing={refreshing} onRefresh={refresh} />
       <div
-        className={cx(videoGrid, limitTwoLines, { [internalTesting]: isInternalTesting })}
+        className={cx(
+          videoGrid,
+          limitTwoLines,
+          isInternalTesting ? videoGridInternalTesting : videoGridNewHomepage
+        )}
         style={{ marginBottom: isInternalTesting ? 30 : 0 }}
       >
         {refreshing || error

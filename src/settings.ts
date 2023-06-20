@@ -61,6 +61,13 @@ export const initialSettings = {
 
   // 已关注UP的推荐视频, 默认不参与过滤
   enableFilterForFollowed: false,
+
+  /**
+   * 外观
+   */
+
+  // 大卡片, 大间距
+  useYoutubeLikeCard: false,
 }
 
 export type Config = typeof initialSettings

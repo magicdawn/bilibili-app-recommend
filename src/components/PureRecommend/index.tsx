@@ -7,8 +7,8 @@ import { ReactNode, useRef, useState } from 'react'
 
 const narrowStyle = {
   grid: css`
-    /* card=299 col-gap=20  */
-    width: ${299 * 2 + 20}px;
+    /* card=360 col-gap=16  */
+    width: ${360 * 2 + 20}px;
     margin: 0 auto;
   `,
 }

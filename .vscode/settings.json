@@ -8,5 +8,9 @@
     "**/.DS_Store": true,
     "**/Thumbs.db": true,
     "**/node_modules": false
-  }
+  },
+  "css.customData": [
+    // ^ whatever the name/path of your custom data file is
+    ".vscode/css-custom-data.json"
+  ]
 }

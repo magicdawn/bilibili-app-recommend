@@ -15,34 +15,34 @@
 }
 
 @media (max-width: 1099.9px) {
-  .video-grid {
+  .video-grid-new-homepage {
     grid-template-columns: repeat(4, 1fr);
   }
-  .video-grid.limit-two-lines > *:nth-of-type(1n + 9) {
+  .video-grid-new-homepage.limit-two-lines > *:nth-of-type(1n + 9) {
     display: none !important;
   }
 }
 @media (min-width: 1100px) and (max-width: 1700.9px) {
-  .video-grid {
+  .video-grid-new-homepage {
     grid-template-columns: repeat(5, 1fr);
   }
-  .video-grid.limit-two-lines > *:nth-of-type(1n + 11) {
+  .video-grid-new-homepage.limit-two-lines > *:nth-of-type(1n + 11) {
     display: none !important;
   }
 }
 @media (min-width: 1701px) and (max-width: 2199.9px) {
-  .video-grid {
+  .video-grid-new-homepage {
     grid-template-columns: repeat(6, 1fr);
   }
-  .video-grid.limit-two-lines > *:nth-of-type(1n + 13) {
+  .video-grid-new-homepage.limit-two-lines > *:nth-of-type(1n + 13) {
     display: none !important;
   }
 }
 @media (min-width: 2200px) {
-  .video-grid {
+  .video-grid-new-homepage {
     grid-template-columns: repeat(7, 1fr);
   }
-  .video-grid.limit-two-lines > *:nth-of-type(1n + 15) {
+  .video-grid-new-homepage.limit-two-lines > *:nth-of-type(1n + 15) {
     display: none !important;
   }
 }
@@ -52,13 +52,13 @@
  * 取自 .battle-feed-area .battle-feed-body
  */
 
-.video-grid.internal-testing {
+.video-grid-internal-testing {
   // grid-gap: 60px 20px; // original
   grid-gap: 20px 20px;
 }
 
 @media (max-width: 1399.9px) {
-  .video-grid.internal-testing {
+  .video-grid-internal-testing {
     grid-template-columns: repeat(4, 1fr);
 
     &.limit-one-line > *:nth-of-type(1n + 5) {
@@ -70,7 +70,7 @@
   }
 }
 @media (min-width: 1400px) {
-  .video-grid.internal-testing {
+  .video-grid-internal-testing {
     grid-template-columns: repeat(5, 1fr);
 
     &.limit-one-line > *:nth-of-type(1n + 6) {
@@ -79,6 +79,52 @@
     &.limit-two-lines > *:nth-of-type(1n + 11) {
       display: none !important;
     }
+  }
+}
+
+/**
+ * youtube like
+ */
+
+.video-grid-container {
+  container-name: video-grid-container;
+  container-type: inline-size;
+}
+
+.video-grid-youtube-like {
+  grid-gap: 40px 16px;
+  grid-template-columns: repeat(5, 1fr); // default
+}
+
+@min-2: (300px + 16px) * 2 - 16px;
+@max-2: (360px + 16px) * 2 - 16px;
+@container video-grid-container (width >= @min-2) {
+  .video-grid-youtube-like {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@min-3: (300px + 16px) * 3 - 16px;
+@max-3: (360px + 16px) * 3 - 16px;
+@container video-grid-container (width >= @min-3) {
+  .video-grid-youtube-like {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@min-4: (300px + 16px) * 4 - 16px;
+@max-4: (360px + 16px) * 4 - 16px;
+@container video-grid-container (width >= @min-4) {
+  .video-grid-youtube-like {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@min-5: (300px + 16px) * 5 - 16px;
+@max-5: (360px + 16px) * 5 - 16px;
+@container video-grid-container (width >= @min-5) {
+  .video-grid-youtube-like {
+    grid-template-columns: repeat(5, 1fr);
   }
 }
 

@@ -2,7 +2,7 @@
  * 推荐内容, 无限滚动
  */
 
-import { baseDebug } from '$common'
+import { APP_NAME, baseDebug } from '$common'
 import { useModalDislikeVisible } from '$components/ModalDislike'
 import { useCurrentTheme } from '$components/ModalSettings/theme'
 import { OnRefresh } from '$components/RecHeader'
@@ -32,7 +32,14 @@ import {
 } from 'react'
 import { useInView } from 'react-intersection-observer'
 import { VirtuosoGrid } from 'react-virtuoso'
-import { internalTesting, narrowMode, videoGrid } from '../video-grid.module.less'
+import {
+  narrowMode,
+  videoGrid,
+  videoGridContainer,
+  videoGridInternalTesting,
+  videoGridNewHomepage,
+  videoGridYoutubeLike,
+} from '../video-grid.module.less'
 import { useRefresh } from './useRefresh'
 import { useShortcut } from './useShortcut'
 
@@ -85,7 +92,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
     },
     ref
   ) => {
-    const { useNarrowMode } = useSettingsSnapshot()
+    const { useNarrowMode, useYoutubeLikeCard } = useSettingsSnapshot()
     const tab = useCurrentSourceTab()
 
     const [loadCompleteCount, setLoadCompleteCount] = useState(0) // 已加载完成的 load call count, 类似 page
@@ -292,7 +299,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
         : undefined,
     })
 
-    const isInisInternalTesting = getIsInternalTesting()
+    const isInternalTesting = getIsInternalTesting()
 
     const { colorPrimary } = useCurrentTheme()
 
@@ -332,14 +339,13 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
       <div
         ref={footerRef}
         css={css`
-          padding: 20px 0;
+          padding: 30px 0;
           display: flex;
           align-items: center;
           justify-content: center;
           font-size: 120%;
         `}
       >
-        {/* '加载中...' */}
         {!refreshing && (
           <>
             {hasMore ? (
@@ -349,9 +355,9 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
                   fill={colorPrimary}
                   spin
                   size={40}
-                  style={{ marginRight: 5 }}
+                  style={{ marginRight: 10 }}
                 />
-                加载中...
+                加载中~
               </>
             ) : (
               '没有更多了~'
@@ -361,10 +367,17 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
       </div>
     )
 
-    const containerClassName = cx(
+    const gridClassName = cx(
+      `${APP_NAME}-video-grid`, // for customize css
       videoGrid,
-      { [internalTesting]: isInisInternalTesting },
-      { [narrowMode]: useNarrowMode },
+
+      useYoutubeLikeCard
+        ? videoGridYoutubeLike // 大卡片
+        : isInternalTesting
+        ? videoGridInternalTesting // 内测
+        : videoGridNewHomepage, // default
+
+      useNarrowMode && narrowMode, // 居中
       className
     )
 
@@ -373,11 +386,13 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
     // skeleton loading
     if (showSkeleton) {
       return (
-        <div className={containerClassName}>
-          {new Array(28).fill(undefined).map((_, index) => {
-            const x = <VideoCard key={index} loading={true} className={CardClassNames.card} />
-            return <VideoCard key={index} loading={true} className={CardClassNames.card} />
-          })}
+        <div className={videoGridContainer}>
+          <div className={gridClassName}>
+            {new Array(28).fill(undefined).map((_, index) => {
+              const x = <VideoCard key={index} loading={true} className={CardClassNames.card} />
+              return <VideoCard key={index} loading={true} className={CardClassNames.card} />
+            })}
+          </div>
         </div>
       )
     }
@@ -406,7 +421,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
                       }
                     }}
                     {...props}
-                    className={cx(props.className, containerClassName)}
+                    className={cx(props.className, gridClassName)}
                   />
                 )
               }),
@@ -443,8 +458,8 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
 
     // plain dom
     return (
-      <div style={{ minHeight: '100%' }}>
-        <div ref={containerRef} className={containerClassName}>
+      <div style={{ minHeight: '100%' }} className={videoGridContainer}>
+        <div ref={containerRef} className={gridClassName}>
           {/* items */}
           {items.map((item, index) => {
             const active = index === activeIndex

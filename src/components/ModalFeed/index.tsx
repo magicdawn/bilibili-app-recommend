@@ -1,6 +1,6 @@
 import { useCurrentTheme } from '$components/ModalSettings/theme'
 import { RecGrid, RecGridRef } from '$components/RecGrid'
-import { RefreshButton } from '$components/RecHeader'
+import { OnRefresh, RefreshButton } from '$components/RecHeader'
 import { VideoSourceTab } from '$components/RecHeader/tab'
 import { ModalFeedConfigChecks } from '$components/piece'
 import { cx } from '$libs'
@@ -26,8 +26,8 @@ export const ModalFeed = memo(function ModalFeed({ show, onHide }: IProps) {
   const { useNarrowMode } = useSettingsSnapshot()
   const narrowStyleObj = useMemo(() => ({ [styles.narrowMode]: useNarrowMode }), [useNarrowMode])
 
-  const onRefresh = useMemoizedFn((reuse?: boolean) => {
-    return recGridRef.current?.refresh(reuse)
+  const onRefresh: OnRefresh = useMemoizedFn((...args) => {
+    return recGridRef.current?.refresh(...args)
   })
 
   const onScrollToTop = useMemoizedFn(() => {
