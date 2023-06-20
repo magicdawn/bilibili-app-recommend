@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.15.0
+
+- refactor: 使用 react-intersection-observer 代替 react-infinite-scroller 实现无限加载
+- feat: 稍后再看视频卡片, 右键菜单, 重新添加(移到最前)
+- feat: 稍后再看, 支持保持顺序刷新, 切换 tab 的 swr 刷新会保持顺序
+- feat: 优化 loading, 之前是纯文字
+- feat: add styleUseStandardVideoSourceTab & youtube-like card style
+
 ## v0.14.5
 
 - 修复稍后再看卡住问题, see #41
