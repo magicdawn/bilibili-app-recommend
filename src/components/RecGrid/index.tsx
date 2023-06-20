@@ -92,7 +92,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
     },
     ref
   ) => {
-    const { useNarrowMode, useYoutubeLikeCard } = useSettingsSnapshot()
+    const { useNarrowMode, styleUseYoutubeLikeCard } = useSettingsSnapshot()
     const tab = useCurrentSourceTab()
 
     const [loadCompleteCount, setLoadCompleteCount] = useState(0) // 已加载完成的 load call count, 类似 page
@@ -371,7 +371,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
       `${APP_NAME}-video-grid`, // for customize css
       videoGrid,
 
-      useYoutubeLikeCard
+      styleUseYoutubeLikeCard
         ? videoGridYoutubeLike // 大卡片
         : isInternalTesting
         ? videoGridInternalTesting // 内测

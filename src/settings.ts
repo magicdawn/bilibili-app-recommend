@@ -67,7 +67,10 @@ export const initialSettings = {
    */
 
   // 大卡片, 大间距
-  useYoutubeLikeCard: false,
+  styleUseYoutubeLikeCard: false,
+
+  // video-source-tab 高度, 默认 compact
+  styleUseStandardVideoSourceTab: false,
 }
 
 export type Config = typeof initialSettings

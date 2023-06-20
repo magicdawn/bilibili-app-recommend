@@ -29,7 +29,7 @@ export function FlagSettingItem({
     extraAction?.(val)
   }, [])
 
-  let inner: ReactNode = label || configKey
+  let inner: ReactNode = <span style={{ userSelect: 'none' }}>{label || configKey}</span>
   if (tooltip)
     inner = (
       <Tooltip title={tooltip} overlayStyle={{ width: 'max-content', maxWidth: '50vw' }}>

@@ -329,13 +329,22 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                       外观设置
                     </div>
                     <div className={cx(styles.settingsGroupContent)}>
-                      <FlagSettingItem
-                        configKey='useYoutubeLikeCard'
-                        label='视频卡片: 使用类似 YouTube 大卡片'
-                        tooltip={
-                          <>增加卡片大小, 增大卡片间距, 仅「查看更多」弹窗 & 纯推荐模式可用</>
-                        }
-                      />
+                      <div className={styles.row}>
+                        <FlagSettingItem
+                          configKey='styleUseYoutubeLikeCard'
+                          label='视频卡片: 使用类似 YouTube 大卡片'
+                          tooltip={
+                            <>增加卡片大小, 增大卡片间距, 仅「查看更多」弹窗 & 纯推荐模式可用</>
+                          }
+                        />
+                      </div>
+                      <div className={styles.row} style={{ marginTop: 5 }}>
+                        <FlagSettingItem
+                          configKey='styleUseStandardVideoSourceTab'
+                          label='推荐源切换 Tab: 使用标准大小'
+                          tooltip='推荐源切换 Tab 大小, 默认紧凑大小'
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>

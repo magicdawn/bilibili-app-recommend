@@ -104,15 +104,22 @@ function toastNeedLogin() {
 const radioBtnCss = css`
   height: 26px;
   line-height: 26px;
+
   &:has(:focus-visible) {
     outline: none;
     outline-offset: unset;
   }
 `
 
+const radioBtnStandardCss = css`
+  height: 32px;
+  line-height: 32px;
+`
+
 export function VideoSourceTab({ onRefresh }: { onRefresh: OnRefresh }) {
   const logined = useHasLogined()
   const tab = useCurrentSourceTab()
+  const { styleUseStandardVideoSourceTab } = useSettingsSnapshot()
 
   return (
     <>
@@ -147,7 +154,7 @@ export function VideoSourceTab({ onRefresh }: { onRefresh: OnRefresh }) {
       >
         {TabConfig.map(({ key, label, icon, iconSize }) => (
           <Radio.Button
-            css={radioBtnCss}
+            css={[radioBtnCss, styleUseStandardVideoSourceTab && radioBtnStandardCss]}
             className='video-source-tab' // can be used to customize css
             tabIndex={-1}
             value={key}
