@@ -61,6 +61,10 @@ export type VideoCardProps = {
 
 export type VideoCardActions = DislikeCardActions & VideoCardInnerActions
 
+const borderRadiusStyle: CSSProperties = {
+  borderRadius: 'var(--video-card-border-radius)',
+}
+
 export const VideoCard = memo(
   forwardRef<VideoCardActions, VideoCardProps>(function VideoCard(
     { style, className, item, loading, active, onRemoveCurrent, ...restProps },
@@ -78,7 +82,7 @@ export const VideoCard = memo(
           [styles.skeletonActive]: loading,
         })}
       >
-        <div className='bili-video-card__skeleton--cover'></div>
+        <div className='bili-video-card__skeleton--cover' style={borderRadiusStyle} />
         <div className='bili-video-card__skeleton--info'>
           <div className='bili-video-card__skeleton--right'>
             <p className='bili-video-card__skeleton--text'></p>
@@ -521,9 +525,13 @@ const VideoCardInner = memo(
             <div
               className='bili-video-card__image __scale-player-wrap'
               ref={videoPreviewWrapperRef}
+              style={{ ...borderRadiusStyle }}
             >
-              <div className={cx('bili-video-card__image--wrap', styles.imageWrapper)}>
-                <picture className='v-img bili-video-card__cover'>
+              <div className='bili-video-card__image--wrap' style={{ borderRadius: 'inherit' }}>
+                <picture
+                  className='v-img bili-video-card__cover'
+                  style={{ borderRadius: 'inherit', overflow: 'hidden' }}
+                >
                   {!isSafari && (
                     <source
                       srcSet={`${cover}@672w_378h_1c_!web-home-common-cover.avif`}
@@ -595,7 +603,10 @@ const VideoCardInner = memo(
                 )}
               </div>
 
-              <div className='bili-video-card__mask'>
+              <div
+                className='bili-video-card__mask'
+                style={{ borderRadius: 'inherit', overflow: 'hidden' }}
+              >
                 <div className='bili-video-card__stats'>
                   <div className='bili-video-card__stats--left'>
                     {isPc ? (

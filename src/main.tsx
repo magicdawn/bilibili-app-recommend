@@ -103,6 +103,16 @@ async function initHomepagePureRecommend() {
   if (getIsInternalTesting()) {
     document.querySelector('.bili-feed4 .bili-feed4-layout')?.remove()
     tryToRemove('.bili-feed4 .header-channel')
+
+    // 三个点
+    tryAction('.palette-button-wrap .storage-box', (el) => el.classList.remove('hidden'))
+    tryAction('.palette-button-wrap .top-btn-wrap .top-btn', (el) => el.classList.add('visible'))
+
+    if (process.env.NODE_ENV === 'production') {
+      tryAction('.palette-button-wrap', (el) => {
+        el.style.position = 'absolute'
+      })
+    }
   } else {
     document.querySelector('.bili-layout')?.remove()
     tryToRemove('.bili-footer') // build 版本, .bili-footer 还不存在, 后来出来的

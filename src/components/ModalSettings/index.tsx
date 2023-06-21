@@ -55,6 +55,7 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
   useHotkeyForConfig(['shift.p'], 'autoPreviewWhenKeyboardSelect', '键盘选中后自动开始预览')
   useHotkeyForConfig(['shift.m'], 'autoPreviewWhenHover', '鼠标悬浮后自动开始预览')
   useHotkeyForConfig(['shift.c'], 'useNarrowMode', '居中模式')
+  useHotkeyForConfig(['shift.y'], 'styleUseYoutubeLikeCard', '大卡片样式')
 
   return (
     <BaseModal
@@ -155,20 +156,6 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                         }
                         className={styles.check}
                       />
-
-                      {/* 已经整体去重, useParallelRequest always true */}
-                      {/* <FlagSettingItem
-                        configKey='useParallelRequest'
-                        label='批量请求时使用并行'
-                        tooltip={
-                          <>
-                            并行快但可能有重复
-                            <br />
-                            推荐视频大量重复时关闭这个试试~
-                          </>
-                        }
-                        className={styles.check}
-                      /> */}
                     </div>
                   </div>
 
@@ -334,7 +321,13 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                           configKey='styleUseYoutubeLikeCard'
                           label='视频卡片: 使用类似 YouTube 大卡片'
                           tooltip={
-                            <>增加卡片大小, 增大卡片间距, 仅「查看更多」弹窗 & 纯推荐模式可用</>
+                            <>
+                              增加卡片大小, 增大卡片间距
+                              <br />
+                              仅「查看更多」弹窗 & 纯推荐模式可用
+                              <br />
+                              切换设置快捷键: <Tag color='green'>shift+y</Tag>
+                            </>
                           }
                         />
                       </div>
