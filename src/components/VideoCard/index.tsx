@@ -1,5 +1,5 @@
 import { APP_KEY_PREFIX, APP_NAME } from '$common'
-import { EventEmitter } from '$common/hooks/useEventEmitter'
+import { useMittOn } from '$common/hooks/useMitt'
 import { Reason, dislikedIds, showModalDislike, useDislikedReason } from '$components/ModalDislike'
 import { AppRecItem, AppRecItemExtend, RecItemType } from '$define'
 import { IconPark } from '$icon-park'
@@ -19,6 +19,7 @@ import {
 import { Dropdown, MenuProps } from 'antd'
 import cx from 'classnames'
 import delay from 'delay'
+import mitt, { Emitter } from 'mitt'
 import {
   CSSProperties,
   ComponentProps,
@@ -49,18 +50,21 @@ function copyContent(content: string) {
   toast(`已复制: ${content}`)
 }
 
-export type VideoCardActionType =
+export type VideoCardEvents = {
   // for cancel card
-  | 'cancel-dislike'
+  'cancel-dislike': void | undefined
 
   // for normal card
-  | 'open'
-  | 'toggle-watch-later'
-  | 'trigger-dislike'
-  | 'start-preview-animation'
-  | 'hotkey-preview-animation'
+  'open': void | undefined
+  'toggle-watch-later': void | undefined
+  'trigger-dislike': void | undefined
+  'start-preview-animation': void | undefined
+  'hotkey-preview-animation': void | undefined
+}
 
-const defaultEmitter = new EventEmitter<VideoCardActionType>()
+export type VideoCardEmitter = Emitter<VideoCardEvents>
+
+const defaultEmitter = mitt<VideoCardEvents>()
 
 export type VideoCardProps = {
   style?: CSSProperties
@@ -69,7 +73,7 @@ export type VideoCardProps = {
   active?: boolean // 键盘 active
   item?: RecItemType
   onRemoveCurrent?: (item: RecItemType, data: IVideoCardData) => void | Promise<void>
-  emitter?: EventEmitter<VideoCardActionType>
+  emitter?: VideoCardEmitter
 } & ComponentProps<'div'>
 
 const borderRadiusStyle: CSSProperties = {
@@ -145,7 +149,7 @@ const DislikedCard = memo(function DislikedCard({
 }: {
   item: AppRecItem
   dislikedReason: Reason
-  emitter?: EventEmitter<VideoCardActionType>
+  emitter?: VideoCardEmitter
 }) {
   const onCancelDislike = useMemoizedFn(async () => {
     if (!dislikedReason?.id) return
@@ -169,11 +173,7 @@ const DislikedCard = memo(function DislikedCard({
     }
   })
 
-  emitter.useSubscription((type) => {
-    if (type === 'cancel-dislike') {
-      onCancelDislike()
-    }
-  })
+  useMittOn(emitter, 'cancel-dislike', onCancelDislike)
 
   return (
     <div className={cx(styles.dislikedWrapper)}>
@@ -198,7 +198,7 @@ type VideoCardInnerProps = {
   item: RecItemType
   active?: boolean
   onRemoveCurrent?: (item: RecItemType, data: IVideoCardData) => void | Promise<void>
-  emitter?: EventEmitter<VideoCardActionType>
+  emitter?: VideoCardEmitter
 }
 const VideoCardInner = memo(function VideoCardInner({
   item,
@@ -336,32 +336,6 @@ const VideoCardInner = memo(function VideoCardInner({
   }, [isHovering])
 
   /**
-   * expose actions
-   */
-
-  emitter.useSubscription((type) => {
-    switch (type) {
-      case 'open':
-        window.open(href, '_blank')
-        break
-      case 'toggle-watch-later':
-        onToggleWatchLater()
-        break
-      case 'trigger-dislike':
-        onTriggerDislike()
-        break
-      case 'start-preview-animation':
-        onStartPreviewAnimation()
-        break
-      case 'hotkey-preview-animation':
-        onHotkeyPreviewAnimation()
-        break
-      default:
-        break
-    }
-  })
-
-  /**
    * 稍候再看
    */
 
@@ -437,6 +411,18 @@ const VideoCardInner = memo(function VideoCardInner({
       </span>
     )
   }
+
+  /**
+   * expose actions
+   */
+
+  useMittOn(emitter, 'open', () => {
+    window.open(href, '_blank')
+  })
+  useMittOn(emitter, 'toggle-watch-later', () => onToggleWatchLater())
+  useMittOn(emitter, 'trigger-dislike', () => onTriggerDislike())
+  useMittOn(emitter, 'start-preview-animation', onStartPreviewAnimation)
+  useMittOn(emitter, 'hotkey-preview-animation', onHotkeyPreviewAnimation)
 
   const hasDislikeEntry = isApp && authed
 

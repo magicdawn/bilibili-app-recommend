@@ -55,6 +55,9 @@ dependencies:
   lru-cache:
     specifier: 9.1.2
     version: 9.1.2
+  mitt:
+    specifier: ^3.0.0
+    version: 3.0.0
   ms:
     specifier: ^2.1.3
     version: 2.1.3
@@ -3708,6 +3711,10 @@ packages:
     dependencies:
       brace-expansion: 1.1.11
     dev: true
+
+  /mitt@3.0.0:
+    resolution: {integrity: sha512-7dX2/10ITVyqh4aOSVI9gdape+t9l2/8QxHrFmUXu4EEUpdlxl6RudZUPZoc+zuY2hk1j7XxVroIVIan/pD/SQ==}
+    dev: false
 
   /mlly@1.3.0:
     resolution: {integrity: sha512-HT5mcgIQKkOrZecOjOX3DJorTikWXwsBfpcr/MGBkhfWcjiqvnaL/9ppxvIUXfjT6xt4DVIAsN9fMUz1ev4bIw==}

@@ -24,7 +24,10 @@ export class EventEmitter<T> {
           callbackRef.current(val)
         }
       }
+
+      console.log('useSubscription: re-add')
       emitter.subscriptions.add(subscription)
+
       return () => {
         emitter.subscriptions.delete(subscription)
       }

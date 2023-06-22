@@ -1,5 +1,4 @@
-import { EventEmitter } from '$common/hooks/useEventEmitter'
-import { VideoCardActionType } from '$components/VideoCard'
+import { VideoCardEmitter } from '$components/VideoCard'
 import { settings } from '$settings'
 import { isCurrentTyping } from '$utility/dom'
 import { useKeyPress, useMemoizedFn } from 'ahooks'
@@ -23,7 +22,7 @@ interface IOptions {
   changeScrollY?: (options: { offset?: number; absolute?: number }) => void
 
   /** video-card */
-  videoCardEmitters: Array<EventEmitter<VideoCardActionType>>
+  videoCardEmitters: Array<VideoCardEmitter>
 }
 
 // 快捷键

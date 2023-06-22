@@ -3,12 +3,11 @@
  */
 
 import { APP_NAME, baseDebug } from '$common'
-import { EventEmitter } from '$common/hooks/useEventEmitter'
 import { useModalDislikeVisible } from '$components/ModalDislike'
 import { useCurrentTheme } from '$components/ModalSettings/theme'
 import { OnRefresh } from '$components/RecHeader'
 import { useCurrentSourceTab } from '$components/RecHeader/tab'
-import { VideoCard, VideoCardActionType } from '$components/VideoCard'
+import { VideoCard, VideoCardEmitter, VideoCardEvents } from '$components/VideoCard'
 import { IVideoCardData } from '$components/VideoCard/process/normalize'
 import { RecItemType } from '$define'
 import { getHeaderHeight } from '$header'
@@ -21,6 +20,7 @@ import { toast } from '$utility/toast'
 import { css } from '@emotion/react'
 import { useEventListener, useLatest, useMemoizedFn, useMount } from 'ahooks'
 import delay from 'delay'
+import mitt from 'mitt'
 import ms from 'ms'
 import {
   ReactNode,
@@ -273,11 +273,20 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
     // 不喜欢弹框
     const modalDislikeVisible = useModalDislikeVisible()
 
+    // emitters
+    const videoCardEmittersMap = useMemo(() => new Map<string, VideoCardEmitter>(), [refreshedAt])
     const videoCardEmitters = useMemo(() => {
-      return new Array(items.length)
-        .fill(undefined)
-        .map(() => new EventEmitter<VideoCardActionType>())
-    }, [items.length])
+      return items.map(({ uniqId: cacheKey }) => {
+        return (
+          videoCardEmittersMap.get(cacheKey) ||
+          (() => {
+            const instance = mitt<VideoCardEvents>()
+            videoCardEmittersMap.set(cacheKey, instance)
+            return instance
+          })()
+        )
+      })
+    }, [items])
 
     // 快捷键
     const { activeIndex, clearActiveIndex } = useShortcut({
