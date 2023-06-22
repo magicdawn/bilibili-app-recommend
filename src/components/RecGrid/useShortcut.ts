@@ -1,4 +1,5 @@
-import { VideoCardActions } from '$components/VideoCard'
+import { EventEmitter } from '$common/hooks/useEventEmitter'
+import { VideoCardActionType } from '$components/VideoCard'
 import { settings } from '$settings'
 import { isCurrentTyping } from '$utility/dom'
 import { useKeyPress, useMemoizedFn } from 'ahooks'
@@ -22,7 +23,7 @@ interface IOptions {
   changeScrollY?: (options: { offset?: number; absolute?: number }) => void
 
   /** video-card */
-  videoCardRefs: Array<VideoCardActions | undefined | null>
+  videoCardEmitters: Array<EventEmitter<VideoCardActionType>>
 }
 
 // 快捷键
@@ -34,7 +35,7 @@ export function useShortcut({
   containerRef,
   getScrollerRect,
   changeScrollY,
-  videoCardRefs,
+  videoCardEmitters,
 }: IOptions) {
   const [activeIndex, setActiveIndex] = useState<number | undefined>(undefined)
 
@@ -114,14 +115,19 @@ export function useShortcut({
     setActiveIndex(undefined)
   }
 
+  const getActiveEmitter = () => {
+    if (!isEnabled() || typeof activeIndex !== 'number') return
+    return videoCardEmitters[activeIndex]
+  }
+
   useKeyPress('esc', clearActiveIndex)
   useKeyPress('enter', () => {
     if (!isEnabled() || typeof activeIndex !== 'number') return
-    openVideoAt(activeIndex)
+    getActiveEmitter()?.emit('open')
   })
   useKeyPress('backspace', () => {
     if (!isEnabled() || typeof activeIndex !== 'number') return
-    videoCardRefs[activeIndex]?.onTriggerDislike()
+    getActiveEmitter()?.emit('trigger-dislike')
   })
 
   // 稍候再看
@@ -130,7 +136,7 @@ export function useShortcut({
     ['s', 'w'],
     () => {
       if (!isEnabled() || typeof activeIndex !== 'number') return
-      videoCardRefs[activeIndex]?.onToggleWatchLater()
+      getActiveEmitter()?.emit('toggle-watch-later')
     },
     { exactMatch: true }
   )
@@ -139,7 +145,7 @@ export function useShortcut({
     ['period', 'p'],
     () => {
       if (!isEnabled() || typeof activeIndex !== 'number') return
-      videoCardRefs[activeIndex]?.onHotkeyPreviewAnimation()
+      getActiveEmitter()?.emit('hotkey-preview-animation')
     },
     { exactMatch: true }
   )
@@ -202,7 +208,10 @@ export function useShortcut({
     videoLink?.click()
   }
 
-  return { activeIndex, clearActiveIndex }
+  return {
+    activeIndex,
+    clearActiveIndex,
+  }
 }
 
 // use window.innerHeight as cache key

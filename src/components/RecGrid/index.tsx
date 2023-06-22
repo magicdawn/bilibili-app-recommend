@@ -3,11 +3,12 @@
  */
 
 import { APP_NAME, baseDebug } from '$common'
+import { EventEmitter } from '$common/hooks/useEventEmitter'
 import { useModalDislikeVisible } from '$components/ModalDislike'
 import { useCurrentTheme } from '$components/ModalSettings/theme'
 import { OnRefresh } from '$components/RecHeader'
 import { useCurrentSourceTab } from '$components/RecHeader/tab'
-import { VideoCard, VideoCardActions } from '$components/VideoCard'
+import { VideoCard, VideoCardActionType } from '$components/VideoCard'
 import { IVideoCardData } from '$components/VideoCard/process/normalize'
 import { RecItemType } from '$define'
 import { getHeaderHeight } from '$header'
@@ -272,8 +273,10 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
     // 不喜欢弹框
     const modalDislikeVisible = useModalDislikeVisible()
 
-    const videoCardRefs = useMemo(() => {
-      return new Array<VideoCardActions | undefined | null>(items.length).fill(undefined)
+    const videoCardEmitters = useMemo(() => {
+      return new Array(items.length)
+        .fill(undefined)
+        .map(() => new EventEmitter<VideoCardActionType>())
     }, [items.length])
 
     // 快捷键
@@ -283,7 +286,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
       maxIndex: items.length - 1,
       containerRef,
       getScrollerRect,
-      videoCardRefs,
+      videoCardEmitters,
       changeScrollY: infiteScrollUseWindow
         ? function ({ offset, absolute }) {
             const scroller = document.documentElement
@@ -435,7 +438,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
               const active = index === activeIndex
               return (
                 <VideoCard
-                  ref={(val) => (videoCardRefs[index] = val)}
+                  emitter={videoCardEmitters[index]}
                   key={item.uniqId}
                   className={cx(CardClassNames.card, { [CardClassNames.cardActive]: active })}
                   css={[
@@ -465,7 +468,6 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
             const active = index === activeIndex
             return (
               <VideoCard
-                ref={(val) => (videoCardRefs[index] = val)}
                 key={item.uniqId}
                 className={cx(CardClassNames.card, { [CardClassNames.cardActive]: active })}
                 css={[
@@ -477,6 +479,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
                 item={item}
                 active={active}
                 onRemoveCurrent={handleRemoveCard}
+                emitter={videoCardEmitters[index]}
               />
             )
           })}
