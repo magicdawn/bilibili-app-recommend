@@ -73,6 +73,7 @@ export type VideoCardProps = {
   active?: boolean // 键盘 active
   item?: RecItemType
   onRemoveCurrent?: (item: RecItemType, data: IVideoCardData) => void | Promise<void>
+  onMoveToFirst?: (item: RecItemType, data: IVideoCardData) => void | Promise<void>
   emitter?: VideoCardEmitter
 } & ComponentProps<'div'>
 
@@ -87,6 +88,7 @@ export const VideoCard = memo(function VideoCard({
   loading,
   active,
   onRemoveCurrent,
+  onMoveToFirst,
   emitter,
   ...restProps
 }: VideoCardProps) {
@@ -136,6 +138,7 @@ export const VideoCard = memo(function VideoCard({
             active={active}
             emitter={emitter}
             onRemoveCurrent={onRemoveCurrent}
+            onMoveToFirst={onMoveToFirst}
           />
         ))}
     </div>
@@ -198,12 +201,14 @@ type VideoCardInnerProps = {
   item: RecItemType
   active?: boolean
   onRemoveCurrent?: (item: RecItemType, data: IVideoCardData) => void | Promise<void>
+  onMoveToFirst?: (item: RecItemType, data: IVideoCardData) => void | Promise<void>
   emitter?: VideoCardEmitter
 }
 const VideoCardInner = memo(function VideoCardInner({
   item,
   active = false,
   onRemoveCurrent,
+  onMoveToFirst,
   emitter = defaultEmitter,
 }: VideoCardInnerProps) {
   const isPc = item.api === 'pc'
@@ -369,6 +374,8 @@ const VideoCardInner = memo(function VideoCardInner({
           onRemoveCurrent?.(item, cardData)
         }
       }
+
+      return success
     }
   )
 
@@ -483,8 +490,10 @@ const VideoCardInner = memo(function VideoCardInner({
       watchLaterAdded && {
         key: 'watchlater-readd',
         label: '重新添加稍候再看 (移到最前)',
-        onClick() {
-          onToggleWatchLater(undefined, watchLaterAdd)
+        async onClick() {
+          const success = await onToggleWatchLater(undefined, watchLaterAdd)
+          if (!success) return
+          onMoveToFirst?.(item, cardData)
         },
       },
 

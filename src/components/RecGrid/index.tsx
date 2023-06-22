@@ -312,8 +312,11 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
     })
 
     const isInternalTesting = getIsInternalTesting()
-
     const { colorPrimary } = useCurrentTheme()
+
+    /**
+     * card state change
+     */
 
     const handleRemoveCard = useMemoizedFn((item: RecItemType, data: IVideoCardData) => {
       setItems((items) => {
@@ -328,6 +331,19 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
           watchLaterService.count--
           setExtraInfo?.(watchLaterService.usageInfo)
         }
+
+        return newItems
+      })
+    })
+    const handleMoveCardToFirst = useMemoizedFn((item: RecItemType, data: IVideoCardData) => {
+      setItems((items) => {
+        const currentItem = items.find((x) => x.uniqId === item.uniqId)
+        if (!currentItem) return items
+        const index = items.indexOf(currentItem)
+
+        const newItems = items.slice()
+        newItems.splice(index, 1)
+        newItems.unshift(currentItem)
 
         return newItems
       })
@@ -459,6 +475,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
                   item={item}
                   active={active}
                   onRemoveCurrent={handleRemoveCard}
+                  onMoveToFirst={handleMoveCardToFirst}
                 />
               )
             }}
@@ -488,6 +505,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
                 item={item}
                 active={active}
                 onRemoveCurrent={handleRemoveCard}
+                onMoveToFirst={handleMoveCardToFirst}
                 emitter={videoCardEmitters[index]}
               />
             )
