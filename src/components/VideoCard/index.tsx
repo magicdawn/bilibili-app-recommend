@@ -381,7 +381,16 @@ const VideoCardInner = memo(function VideoCardInner({
     e?.stopPropagation()
     e?.preventDefault()
 
-    if (!isApp) return
+    if (!hasDislikeEntry) {
+      if (item.api !== 'app') {
+        return toast('当前视频不支持提交「我不想看」')
+      }
+      if (!authed) {
+        return toast('请先获取 access_key')
+      }
+      return
+    }
+
     showModalDislike(item)
   })
 
@@ -416,9 +425,11 @@ const VideoCardInner = memo(function VideoCardInner({
    * expose actions
    */
 
-  useMittOn(emitter, 'open', () => {
+  const onOpen = useMemoizedFn(() => {
     window.open(href, '_blank')
   })
+
+  useMittOn(emitter, 'open', onOpen)
   useMittOn(emitter, 'toggle-watch-later', () => onToggleWatchLater())
   useMittOn(emitter, 'trigger-dislike', () => onTriggerDislike())
   useMittOn(emitter, 'start-preview-animation', onStartPreviewAnimation)
@@ -430,9 +441,7 @@ const VideoCardInner = memo(function VideoCardInner({
     {
       key: 'open-link',
       label: '打开',
-      onClick() {
-        window.open(href, '_blank')
-      },
+      onClick: onOpen,
     },
 
     { type: 'divider' as const },

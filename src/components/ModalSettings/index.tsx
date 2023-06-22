@@ -78,7 +78,8 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
         <ModalClose onClick={onHide} />
       </div>
 
-      <main className={BaseModalClass.modalBody}>
+      {/* issue 设置项里面的滚动条怎么是双份的 */}
+      <main className={BaseModalClass.modalBody} style={{ overflow: 'hidden' }}>
         <Tabs
           tabPosition='left'
           size='middle'
