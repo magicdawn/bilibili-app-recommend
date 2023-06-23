@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.15.1
+
+- feat: 大卡片样式, 同步 YouTube 12px 圆角
+- feat: 内测模式首页, 支持在纯推荐模式下点「退出内测」等功能按键
+- refactor: 卡片相关快捷键, 从 forwardRef+useImperativeHandle 重构成 mitt+useMittOn, 中间使用过 ahooks.useEventEmitter
+- fix: 设置弹框多个滚动条
+- feat: 稍后再看, 移到最前: 会先本地修改数据移到最前
+
 ## v0.15.0
 
 - refactor: 使用 react-intersection-observer 代替 react-infinite-scroller 实现无限加载
