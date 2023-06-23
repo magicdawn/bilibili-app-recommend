@@ -496,12 +496,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
               <VideoCard
                 key={item.uniqId}
                 className={cx(CardClassNames.card, { [CardClassNames.cardActive]: active })}
-                css={[
-                  active &&
-                    css`
-                      border-color: ${colorPrimary};
-                    `,
-                ]}
+                style={active ? { borderColor: colorPrimary } : undefined}
                 item={item}
                 active={active}
                 onRemoveCurrent={handleRemoveCard}
