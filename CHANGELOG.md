@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.16.0
+
+- feat: initial support of 「收藏」 Tab
+
 ## v0.15.1
 
 - feat: 大卡片样式, 同步 YouTube 12px 圆角
