@@ -393,6 +393,18 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                         />
                       </div>
                     </div>
+
+                    <div className={styles.settingsGroupTitle} style={{ marginTop: 15 }}>
+                      收藏
+                    </div>
+                    <div className={cx(styles.settingsGroupContent)}>
+                      <div className={styles.row}>
+                        <FlagSettingItem
+                          configKey='shuffleForFav'
+                          label='对「收藏」Tab 使用随机顺序'
+                        />
+                      </div>
+                    </div>
                   </div>
                 </div>
               ),

@@ -4,6 +4,7 @@ import { FetcherOptions } from '$components/RecGrid/useRefresh'
 import { getColumnCount } from '$components/RecGrid/useShortcut'
 import { TabType } from '$components/RecHeader/tab'
 import { anyFilterEnabled, filterVideos } from '$components/VideoCard/process/filter'
+import { lookinto } from '$components/VideoCard/process/normalize'
 import { RecItemType } from '$define'
 import { uniqBy } from 'lodash'
 import * as app from './service-app'
@@ -12,13 +13,13 @@ import { PcRecService } from './service-pc'
 const debug = baseDebug.extend('service')
 
 export const recItemUniqer = (item: RecItemType) =>
-  item.api === 'pc'
-    ? item.id
-    : item.api === 'app'
-    ? item.param
-    : item.api === 'dynamic'
-    ? item.modules.module_dynamic.major.archive.aid
-    : item.bvid
+  lookinto<string | number>(item, {
+    pc: (item) => item.id,
+    app: (item) => item.param,
+    dynamic: (item) => item.modules.module_dynamic.major.archive.aid,
+    watchlater: (item) => item.bvid,
+    fav: (item) => item.bvid,
+  })
 
 export function uniqConcat(existing: RecItemType[], newItems: RecItemType[]) {
   const ids = existing.map(recItemUniqer)
@@ -37,7 +38,8 @@ export async function getMinCount(
   fetcherOptions: FetcherOptions,
   filterMultiplier = 5
 ) {
-  const { pcRecService, dynamicFeedService, watchLaterService, tab, abortSignal } = fetcherOptions
+  const { pcRecService, dynamicFeedService, watchLaterService, favService, tab, abortSignal } =
+    fetcherOptions
 
   let items: RecItemType[] = []
   let hasMore = true
@@ -56,6 +58,13 @@ export async function getMinCount(
     if (tab === 'watchlater') {
       cur = (await watchLaterService.loadMore()) || []
       hasMore = watchLaterService.hasMore
+      items = items.concat(cur)
+      return
+    }
+    // 收藏
+    if (tab === 'fav') {
+      cur = (await favService.loadMore()) || []
+      hasMore = favService.hasMore
       items = items.concat(cur)
       return
     }

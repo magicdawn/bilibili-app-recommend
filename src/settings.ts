@@ -47,6 +47,11 @@ export const initialSettings = {
   shuffleForWatchLater: true, // 打乱顺序
 
   /**
+   * tab=fav
+   */
+  shuffleForFav: false, // 打乱顺序
+
+  /**
    * 过滤器模块
    * 使用 flat config 方便使用 FlagSettingItem
    */

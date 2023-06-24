@@ -215,6 +215,7 @@ const VideoCardInner = memo(function VideoCardInner({
   const isApp = item.api === 'app'
   const isDynamic = item.api === 'dynamic'
   const isWatchlater = item.api === 'watchlater'
+  const isFav = item.api === 'fav'
 
   const cardData = useMemo(() => normalizeCardData(item), [item])
   const {
@@ -250,7 +251,7 @@ const VideoCardInner = memo(function VideoCardInner({
     appBadgeDesc,
   } = cardData
 
-  const isNormalVideo = isDynamic || isWatchlater || item.goto === 'av'
+  const isNormalVideo = goto === 'av'
   if (!['av', 'bangumi', 'picture'].includes(goto)) {
     console.warn(`[${APP_NAME}]: none (av,bangumi,picture) goto type %s`, goto, item)
   }

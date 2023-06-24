@@ -3,6 +3,7 @@ import { OnRefresh } from '$components/RecHeader'
 import { TabConfigMap, TabType, getCurrentSourceTab } from '$components/RecHeader/tab'
 import { RecItemType } from '$define'
 import { DynamicFeedService } from '$service-dynamic-feed'
+import { FavService } from '$service-fav'
 import { PcRecService } from '$service-pc'
 import { WatchLaterService } from '$service-watchlater'
 import { useGetState, useMemoizedFn } from 'ahooks'
@@ -14,6 +15,7 @@ export type FetcherOptions = {
   pcRecService: PcRecService
   dynamicFeedService: DynamicFeedService
   watchLaterService: WatchLaterService
+  favService: FavService
   abortSignal: AbortSignal
 }
 
@@ -48,6 +50,7 @@ export function useRefresh({
   const [pcRecService, setPcRecService] = useState(() => new PcRecService())
   const [dynamicFeedService, setDynamicFeedService] = useState(() => new DynamicFeedService())
   const [watchLaterService, setWatchLaterService] = useState(() => new WatchLaterService())
+  const [favService, setFavService] = useState(() => new FavService())
 
   const [refreshing, setRefreshing] = useState(false)
   const [refreshedAt, setRefreshedAt, getRefreshedAt] = useGetState<number>(() => Date.now())
@@ -105,6 +108,9 @@ export function useRefresh({
     const _watchLaterService = new WatchLaterService(options?.watchlaterKeepOrder) // always recreate
     setWatchLaterService(_watchLaterService)
 
+    const _favServive = new FavService()
+    setFavService(_favServive)
+
     const _abortController = new AbortController()
     const _signal = _abortController.signal
     setRefreshAbortController(_abortController)
@@ -114,6 +120,7 @@ export function useRefresh({
       pcRecService: _pcRecService,
       dynamicFeedService: _dynamicFeedService,
       watchLaterService: _watchLaterService,
+      favService: _favServive,
       abortSignal: _signal,
     }
 
@@ -169,7 +176,8 @@ export function useRefresh({
 
     // hasMore check
     if (tab === 'dynamic') setHasMore(_dynamicFeedService.hasMore)
-    if (tab === 'watchlater') setHasMore(_watchLaterService.hasMore)
+    if (tab === 'dynamic') setHasMore(_dynamicFeedService.hasMore)
+    if (tab === 'fav') setHasMore(_favServive.hasMore)
 
     await postAction?.()
 
@@ -205,10 +213,12 @@ export function useRefresh({
     pcRecService,
     dynamicFeedService,
     watchLaterService,
+    favService,
 
     setPcRecService,
     setDynamicFeedService,
     setWatchLaterService,
+    setFavService,
 
     refresh,
   }

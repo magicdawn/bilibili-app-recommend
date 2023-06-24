@@ -7,6 +7,7 @@ import {
   RecItemType,
   WatchLaterItemExtend,
 } from '$define'
+import { FavItemExtend } from '$define/fav'
 import { BvCode } from '$utility/bv'
 import {
   formatDuration,
@@ -53,38 +54,39 @@ export interface IVideoCardData {
   appBadgeDesc?: string
 }
 
-export function normalizeCardData(item: RecItemType) {
-  /**
-   * raw data
-   */
-
-  const isPc = item.api === 'pc'
-  const isApp = item.api === 'app'
-  const isDynamic = item.api === 'dynamic'
-  const isWatchlater = item.api === 'watchlater'
-
-  function lookinto<T>(opts: {
+export function lookinto<T>(
+  item: RecItemType,
+  opts: {
     pc: (item: PcRecItemExtend) => T
     app: (item: AppRecItemExtend) => T
     dynamic: (item: DynamicFeedItemExtend) => T
     watchlater: (item: WatchLaterItemExtend) => T
-  }) {
-    if (isPc) return opts.pc(item)
-    if (isApp) return opts.app(item)
-    if (isDynamic) return opts.dynamic(item)
-    return opts.watchlater(item)
+    fav: (item: FavItemExtend) => T
   }
+): T {
+  /**
+   * raw data
+   */
+  const isPc = item.api === 'pc'
+  const isApp = item.api === 'app'
+  const isDynamic = item.api === 'dynamic'
+  const isWatchlater = item.api === 'watchlater'
+  const isFav = item.api === 'fav'
 
-  // if (isPc) return apiPcAdapter(item)
-  // if (isApp) return apiAppAdapter(item)
-  // if (isDynamic) return apiDynamicAdapter(item)
-  // return apiWatchLaterAdapter(item)
+  if (isPc) return opts.pc(item)
+  if (isApp) return opts.app(item)
+  if (isDynamic) return opts.dynamic(item)
+  if (isWatchlater) return opts.watchlater(item)
+  return opts.fav(item)
+}
 
-  return lookinto<IVideoCardData>({
+export function normalizeCardData(item: RecItemType) {
+  return lookinto<IVideoCardData>(item, {
     pc: apiPcAdapter,
     app: apiAppAdapter,
     dynamic: apiDynamicAdapter,
     watchlater: apiWatchLaterAdapter,
+    fav: apiFavAdapter,
   })
 }
 
@@ -280,5 +282,34 @@ export function apiWatchLaterAdapter(item: WatchLaterItemExtend): IVideoCardData
     authorName: item.owner.name,
     authorFace: item.owner.face,
     authorMid: String(item.owner.mid),
+  }
+}
+
+export function apiFavAdapter(item: FavItemExtend): IVideoCardData {
+  return {
+    // video
+    avid: String(item.id),
+    bvid: item.bvid,
+    goto: 'av',
+    href: `/video/${item.bvid}/`,
+    title: `【${item.folder.title}】· ${item.title}`,
+    coverRaw: item.cover,
+    pubts: item.pubtime,
+    pubdateDisplay: formatTimeStamp(item.pubtime),
+    duration: item.duration,
+    durationStr: formatDuration(item.duration),
+    recommendReason: `${formatTimeStamp(item.fav_time)} · 收藏`,
+
+    // stat
+    play: item.cnt_info.play,
+    like: undefined,
+    coin: undefined,
+    danmaku: item.cnt_info.danmaku,
+    favorite: item.cnt_info.collect,
+
+    // author
+    authorName: item.upper.name,
+    authorFace: item.upper.face,
+    authorMid: String(item.upper.mid),
   }
 }

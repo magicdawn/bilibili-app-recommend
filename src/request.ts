@@ -21,6 +21,13 @@ request.interceptors.request.use(
   }
 )
 
+/**
+ * check json has {code: 0, message: "0"}
+ */
+export function isWebApiSuccess(json: any) {
+  return json?.code === 0 && json?.message === '0'
+}
+
 // 可以跨域
 import { appkey } from '$utility/auth'
 import gmAdapter from 'axios-userscript-adapter'

@@ -135,6 +135,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
       pcRecService,
       dynamicFeedService,
       watchLaterService,
+      favService,
     } = useRefresh({
       tab,
       debug,
@@ -196,6 +197,9 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
         } else if (tab === 'watchlater') {
           newItems = newItems.concat((await watchLaterService.loadMore()) || [])
           _hasMore = watchLaterService.hasMore
+        } else if (tab === 'fav') {
+          newItems = newItems.concat((await favService.loadMore()) || [])
+          _hasMore = favService.hasMore
         } else {
           // loadMore 至少 load 一项, 需要触发 InfiniteScroll.componentDidUpdate
           while (!(newItems.length > items.length)) {

@@ -1,9 +1,11 @@
 import { AppRecItem } from './app-recommend'
 import { DmJson } from './dm'
+import { FavItemExtend } from './fav'
 import { DynamicFeedItem } from './pc-dynamic-feed'
 import { PcRecItem } from './pc-recommend'
 
 export { AppRecItem, AppRecommendJson } from './app-recommend'
+export { FavItem, FavItemExtend } from './fav'
 export { DynamicFeedItem, DynamicFeedJson } from './pc-dynamic-feed'
 export { PcRecItem, PcRecommendJson } from './pc-recommend'
 export { WatchLaterItem, WatchLaterJson } from './watchlater'
@@ -18,6 +20,7 @@ export type RecItemType =
   | AppRecItemExtend
   | DynamicFeedItemExtend
   | WatchLaterItemExtend
+  | FavItemExtend
 
 export interface AppRecItemExtend extends AppRecItem {
   uniqId: string

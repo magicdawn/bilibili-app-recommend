@@ -1,5 +1,5 @@
 import { AppRecItem, DmJson, PvideoJson } from '$define'
-import { HOST_APP, gmrequest, request } from '$request'
+import { HOST_APP, gmrequest, isWebApiSuccess, request } from '$request'
 import { getCsrfToken } from '$utility'
 import { toast } from '$utility/toast'
 import { LRUCache } from 'lru-cache'
@@ -66,7 +66,7 @@ function watchLaterFactory(action: 'add' | 'del') {
     //     "ttl": 1
     // }
     const json = res.data
-    const success = json?.code === 0 && json?.message === '0'
+    const success = isWebApiSuccess(json)
 
     if (!success) {
       toast(json?.message || '出错了')
@@ -118,7 +118,7 @@ const dislikeFactory = (type: 'dislike' | 'cancel') => {
     //     "ttl": 1
     // }
     const json = res.data
-    const success = json?.code === 0 && json?.message === '0'
+    const success = isWebApiSuccess(json)
     return success
   }
 }

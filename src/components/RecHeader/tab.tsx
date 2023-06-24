@@ -20,7 +20,13 @@ const iconCssInTips = css`
   vertical-align: middle;
 `
 
-export type TabType = 'dynamic' | 'watchlater' | 'recommend-app' | 'recommend-pc' | 'onlyFollow'
+export type TabType =
+  | 'recommend-app'
+  | 'recommend-pc'
+  | 'onlyFollow'
+  | 'dynamic'
+  | 'watchlater'
+  | 'fav'
 
 type TabConfigItem = {
   key: TabType
@@ -64,6 +70,14 @@ export const TabConfig: TabConfigItem[] = [
     iconSize: 15,
     label: '稍后再看',
     desc: '默认随机乱序, 可在设置-高级设置中关闭乱序',
+    swr: true,
+  },
+  {
+    key: 'fav',
+    icon: 'FileCabinet',
+    iconSize: 15,
+    label: '收藏',
+    desc: '收藏啊~',
     swr: true,
   },
 ]
