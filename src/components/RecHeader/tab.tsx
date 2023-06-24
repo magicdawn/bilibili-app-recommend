@@ -35,6 +35,7 @@ type TabConfigItem = {
   label: string
   desc: string
   swr?: boolean // stale while revalidate
+  reuseable?: boolean // can reuse
 }
 
 export const TabConfig: TabConfigItem[] = [
@@ -74,11 +75,11 @@ export const TabConfig: TabConfigItem[] = [
   },
   {
     key: 'fav',
-    icon: 'FileCabinet',
+    icon: 'Star',
     iconSize: 15,
     label: '收藏',
     desc: '收藏啊~',
-    swr: true,
+    reuseable: false,
   },
 ]
 

@@ -98,6 +98,24 @@ export function useRefresh({
 
     await preAction?.()
 
+    let _items: RecItemType[] = []
+    let err: any
+
+    // reuse
+    const shouldReuse = Boolean(
+      reuse && TabConfigMap[tab].reuseable !== false && itemsCache.current[tab]?.length
+    )
+    const swr = Boolean(shouldReuse && TabConfigMap[tab].swr)
+    setSwr(swr)
+
+    const doFetch = async () => {
+      try {
+        _items = await fetcher(fetcherOptions)
+      } catch (e) {
+        err = e
+      }
+    }
+
     const _pcRecService = recreateService ? new PcRecService() : pcRecService
     const _dynamicFeedService = recreateService ? new DynamicFeedService() : dynamicFeedService
     if (recreateService) {
@@ -108,7 +126,7 @@ export function useRefresh({
     const _watchLaterService = new WatchLaterService(options?.watchlaterKeepOrder) // always recreate
     setWatchLaterService(_watchLaterService)
 
-    const _favServive = new FavService()
+    let _favServive = new FavService()
     setFavService(_favServive)
 
     const _abortController = new AbortController()
@@ -122,22 +140,6 @@ export function useRefresh({
       watchLaterService: _watchLaterService,
       favService: _favServive,
       abortSignal: _signal,
-    }
-
-    let _items: RecItemType[] = []
-    let err: any
-
-    // reuse
-    const shouldReuse = Boolean(reuse && itemsCache.current[tab]?.length)
-    const swr = Boolean(shouldReuse && TabConfigMap[tab].swr)
-    setSwr(swr)
-
-    const doFetch = async () => {
-      try {
-        _items = await fetcher(fetcherOptions)
-      } catch (e) {
-        err = e
-      }
     }
 
     debug('refresh(): shouldReuse=%s swr=%s', shouldReuse, swr)

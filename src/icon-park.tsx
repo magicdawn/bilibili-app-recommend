@@ -14,6 +14,7 @@ import {
   Loading,
   LoadingThree,
   Return,
+  Star,
   Tips,
   Tumblr,
 } from '@icon-park/react'
@@ -33,6 +34,7 @@ export const ImportedIcons = {
   Concern,
   Tumblr,
   FileCabinet,
+  Star,
 } satisfies Record<string, Icon>
 
 export type IconName = keyof typeof ImportedIcons

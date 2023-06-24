@@ -56,7 +56,9 @@ export class FavFolderService {
   info: FavFolderDetailInfo
   page = 0
 
-  async loadMore(): Promise<FavItemExtend[]> {
+  async loadMore(): Promise<FavItemExtend[] | undefined> {
+    if (!this.hasMore) return
+
     const res = await request.get('/x/v3/fav/resource/list', {
       params: {
         media_id: this.entry.id,
@@ -73,7 +75,7 @@ export class FavFolderService {
     const json = res.data as ResourceListJSON
     if (!isWebApiSuccess(json)) {
       toast(json.message)
-      return []
+      return
     }
 
     this.hasMore = json.data.has_more
