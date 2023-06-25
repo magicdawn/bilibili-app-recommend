@@ -1,4 +1,4 @@
-import { useCurrentTheme } from '$components/ModalSettings/theme'
+import { colorPrimaryValue } from '$components/ModalSettings/theme'
 import { RecGrid, RecGridRef } from '$components/RecGrid'
 import { OnRefresh, RefreshButton } from '$components/RecHeader'
 import { VideoSourceTab } from '$components/RecHeader/tab'
@@ -37,10 +37,9 @@ export const ModalFeed = memo(function ModalFeed({ show, onHide }: IProps) {
   })
 
   const dark = useIsDarkMode()
-  const { colorPrimary } = useCurrentTheme()
   const modalBorderStyle: CSSProperties | undefined = useMemo(
-    () => (dark ? { border: `1px solid ${colorPrimary}` } : undefined),
-    [dark, colorPrimary]
+    () => (dark ? { border: `1px solid ${colorPrimaryValue}` } : undefined),
+    [dark]
   )
 
   const [refreshing, setRefreshing] = useState(false)

@@ -4,8 +4,9 @@ import { settings, updateSettings, useSettingsSnapshot } from '$settings'
 import { checkLoginStatus, getHasLogined, useHasLogined } from '$utility'
 import { toast } from '$utility/toast'
 import { css } from '@emotion/react'
+import { Icon } from '@icon-park/react/es/runtime'
 import { Radio } from 'antd'
-import { Fragment } from 'react'
+import { ComponentProps, Fragment } from 'react'
 import { OnRefresh } from '.'
 
 const iconCss = css`
@@ -31,7 +32,7 @@ export type TabType =
 type TabConfigItem = {
   key: TabType
   icon: IconName
-  iconSize?: number
+  iconProps?: ComponentProps<Icon>
   label: string
   desc: string
   swr?: boolean // stale while revalidate
@@ -60,7 +61,7 @@ export const TabConfig: TabConfigItem[] = [
   {
     key: 'dynamic',
     icon: 'Tumblr',
-    iconSize: 16,
+    iconProps: { size: 16 },
     label: '动态',
     desc: '视频投稿动态',
     swr: true,
@@ -68,7 +69,7 @@ export const TabConfig: TabConfigItem[] = [
   {
     key: 'watchlater',
     icon: 'FileCabinet',
-    iconSize: 15,
+    iconProps: { size: 15 },
     label: '稍后再看',
     desc: '你添加的稍后再看, 默认随机乱序, 可在设置-高级设置中关闭乱序',
     swr: true,
@@ -76,7 +77,7 @@ export const TabConfig: TabConfigItem[] = [
   {
     key: 'fav',
     icon: 'Star',
-    iconSize: 15,
+    iconProps: { size: 15 },
     label: '收藏',
     desc: '你添加的收藏, 默认随机乱序, 可在设置-高级设置中关闭乱序',
     reuseable: false,
@@ -167,7 +168,7 @@ export function VideoSourceTab({ onRefresh }: { onRefresh: OnRefresh }) {
           })
         }}
       >
-        {TabConfig.map(({ key, label, icon, iconSize }) => (
+        {TabConfig.map(({ key, label, icon, iconProps }) => (
           <Radio.Button
             css={[radioBtnCss, styleUseStandardVideoSourceTab && radioBtnStandardCss]}
             className='video-source-tab' // can be used to customize css
@@ -175,7 +176,7 @@ export function VideoSourceTab({ onRefresh }: { onRefresh: OnRefresh }) {
             value={key}
             key={key}
           >
-            <IconPark name={icon} size={iconSize || 18} css={iconCss} />
+            <IconPark name={icon} {...iconProps} size={iconProps?.size || 18} css={iconCss} />
             {label}
           </Radio.Button>
         ))}
@@ -184,9 +185,14 @@ export function VideoSourceTab({ onRefresh }: { onRefresh: OnRefresh }) {
         iconProps={{ name: 'Tips', size: 16, style: { marginLeft: 6 } }}
         tooltip={
           <>
-            {TabConfig.map(({ key, label, icon, iconSize, desc }) => (
+            {TabConfig.map(({ key, label, icon, iconProps, desc }) => (
               <Fragment key={key}>
-                <IconPark name={icon} size={iconSize || 18} css={iconCssInTips} />
+                <IconPark
+                  name={icon}
+                  {...iconProps}
+                  size={iconProps?.size || 18}
+                  css={iconCssInTips}
+                />
                 {label}: {desc}
                 <br />
               </Fragment>

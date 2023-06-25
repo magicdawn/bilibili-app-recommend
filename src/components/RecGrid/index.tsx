@@ -4,7 +4,7 @@
 
 import { APP_NAME, baseDebug } from '$common'
 import { useModalDislikeVisible } from '$components/ModalDislike'
-import { useCurrentTheme } from '$components/ModalSettings/theme'
+import { colorPrimaryValue } from '$components/ModalSettings/theme'
 import { OnRefresh } from '$components/RecHeader'
 import { useCurrentSourceTab } from '$components/RecHeader/tab'
 import { VideoCard, VideoCardEmitter, VideoCardEvents } from '$components/VideoCard'
@@ -59,8 +59,9 @@ export const CardClassNames = {
       margin-top: calc(var(--info-margin-top) - 1px);
     }
   `,
+
   cardActive: generateClassName`
-    border-color: #fb7299;
+    border-color: ${colorPrimaryValue};
     border-radius: 6px;
     overflow: hidden;
   `,
@@ -319,7 +320,6 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
     })
 
     const isInternalTesting = getIsInternalTesting()
-    const { colorPrimary } = useCurrentTheme()
 
     /**
      * card state change
@@ -387,7 +387,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
               <>
                 <IconPark
                   name='Loading'
-                  fill={colorPrimary}
+                  fill={colorPrimaryValue}
                   spin
                   size={40}
                   style={{ marginRight: 10 }}
@@ -470,19 +470,13 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
               const active = index === activeIndex
               return (
                 <VideoCard
-                  emitter={videoCardEmitters[index]}
                   key={item.uniqId}
                   className={cx(CardClassNames.card, { [CardClassNames.cardActive]: active })}
-                  css={[
-                    active &&
-                      css`
-                        border-color: ${colorPrimary};
-                      `,
-                  ]}
                   item={item}
                   active={active}
                   onRemoveCurrent={handleRemoveCard}
                   onMoveToFirst={handleMoveCardToFirst}
+                  emitter={videoCardEmitters[index]}
                 />
               )
             }}
@@ -503,7 +497,6 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
               <VideoCard
                 key={item.uniqId}
                 className={cx(CardClassNames.card, { [CardClassNames.cardActive]: active })}
-                style={active ? { borderColor: colorPrimary } : undefined}
                 item={item}
                 active={active}
                 onRemoveCurrent={handleRemoveCard}

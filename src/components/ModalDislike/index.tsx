@@ -1,5 +1,5 @@
 import { BaseModal, BaseModalClass, ModalClose } from '$components/BaseModal'
-import { useCurrentTheme } from '$components/ModalSettings/theme'
+import { colorPrimaryValue } from '$components/ModalSettings/theme'
 import { AppRecItem, AppRecItemExtend } from '$define'
 import { IconPark } from '$icon-park'
 import { cx } from '$libs'
@@ -114,8 +114,6 @@ export function ModalDislike({ show, onHide, item }: IProps) {
     return reasons[activeIndex]?.name || ''
   }, [reasons, activeIndex])
 
-  const { colorPrimary } = useCurrentTheme()
-
   return (
     <BaseModal
       {...{
@@ -142,7 +140,7 @@ export function ModalDislike({ show, onHide, item }: IProps) {
               <button
                 className={cx(styles.reason, { [styles.active]: index === activeIndex })}
                 style={{
-                  ...(index === activeIndex && { borderColor: colorPrimary }),
+                  ...(index === activeIndex && { borderColor: colorPrimaryValue }),
                 }}
                 key={reason.id}
                 data-id={reason.id}
@@ -152,7 +150,7 @@ export function ModalDislike({ show, onHide, item }: IProps) {
                 }}
                 disabled={isRequesting}
               >
-                <span className={styles.reasonNo} style={{ backgroundColor: colorPrimary }}>
+                <span className={styles.reasonNo} style={{ backgroundColor: colorPrimaryValue }}>
                   {index + 1}
                 </span>
                 {reason.name}

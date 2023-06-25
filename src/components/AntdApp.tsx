@@ -1,8 +1,9 @@
 import { useIsDarkMode } from '$platform'
+import { Global, css as _css } from '@emotion/react'
 import { ConfigProvider, Tooltip, theme } from 'antd'
 import zhCN from 'antd/locale/zh_CN'
 import { ComponentProps, ReactNode } from 'react'
-import { useCurrentTheme } from './ModalSettings/theme'
+import { colorPrimaryIdentifier, useCurrentTheme } from './ModalSettings/theme'
 
 export function AntdApp({ children }: { children: ReactNode }) {
   const dark = useIsDarkMode()
@@ -20,6 +21,13 @@ export function AntdApp({ children }: { children: ReactNode }) {
         },
       }}
     >
+      <Global
+        styles={_css`
+          :root {
+            ${colorPrimaryIdentifier}: ${colorPrimary};
+          }
+        `}
+      />
       {children}
     </ConfigProvider>
   )

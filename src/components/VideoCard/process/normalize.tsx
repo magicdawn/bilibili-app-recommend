@@ -1,5 +1,6 @@
 import { APP_NAME } from '$common'
 import { AntdTooltip } from '$components/AntdApp'
+import { colorPrimaryValue } from '$components/ModalSettings/theme'
 import {
   AppRecItemExtend,
   DynamicFeedItemExtend,
@@ -301,12 +302,13 @@ export function apiFavAdapter(item: FavItemExtend): IVideoCardData {
           name='Star'
           size={16}
           theme='two-tone'
+          fill={['currentColor', colorPrimaryValue]}
           style={{
             display: 'inline-block',
             verticalAlign: 'middle',
             marginLeft: 10,
             marginRight: 4,
-            marginTop: -5,
+            marginTop: -4,
           }}
         />
         {item.folder.title}】· {item.title}

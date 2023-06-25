@@ -6,6 +6,7 @@
  * http://www.apache.org/licenses/
  */
 
+import { APP_NAME } from '$common'
 import { HelpInfo } from '$components/piece'
 import { settings, updateSettings, useSettingsSnapshot } from '$settings'
 import { css } from '@emotion/react'
@@ -148,6 +149,9 @@ export function useCurrentTheme() {
     return theme
   }, [themeId, colorPickerThemeSelectedColor])
 }
+
+export const colorPrimaryIdentifier = `--${APP_NAME}-color-primary`
+export const colorPrimaryValue = `var(${colorPrimaryIdentifier})`
 
 export function ThemesSelect() {
   const activeId = useCurrentTheme().id
