@@ -4,13 +4,17 @@ import { FavFolderDetailInfo, ResourceListJSON } from '$define/fav/resource-list
 import { isWebApiSuccess, request } from '$request'
 import { settings } from '$settings'
 import { parseCookie, toast } from '$utility'
+import { css } from '@emotion/react'
+import { Tag } from 'antd'
 import { shuffle } from 'lodash'
+import { ReactNode } from 'react'
 
 export class FavService {
   static PAGE_SIZE = 20
 
   folderServices: FavFolderService[] = []
   bufferQueue: FavItemExtend[] = []
+  total: number
 
   get folderHasMore() {
     return this.folderServices.some((s) => s.hasMore)
@@ -18,6 +22,21 @@ export class FavService {
 
   get hasMore() {
     return this.bufferQueue.length > 0 || this.folderHasMore
+  }
+
+  get usageInfo(): ReactNode {
+    if (!this.foldersLoaded) return
+    return (
+      <Tag
+        color='success'
+        css={css`
+          margin-left: 15px;
+          cursor: pointer;
+        `}
+      >
+        收藏夹({this.folderServices.length}) 收藏({this.total})
+      </Tag>
+    )
   }
 
   async loadMore() {
@@ -43,7 +62,7 @@ export class FavService {
     // 1.fill queue
     if (this.bufferQueue.length < FavService.PAGE_SIZE) {
       // 1.1 request
-      while (this.folderHasMore && this.bufferQueue.length < FavService.PAGE_SIZE) {
+      while (this.folderHasMore && this.bufferQueue.length < 100) {
         const restServices = this.folderServices.filter((s) => s.hasMore)
         const pickedServices = shuffle(restServices).slice(0, 5)
         const fetched = (
@@ -73,14 +92,11 @@ export class FavService {
     })
 
     const json = res.data as FavFolderListAllJson
-
-    let folders = json.data.list
-    if (settings.shuffleForFav) {
-      folders = shuffle(folders)
-    }
+    const folders = json.data.list
 
     this.foldersLoaded = true
     this.folderServices = folders.map((f) => new FavFolderService(f))
+    this.total = folders.reduce((count, f) => count + f.media_count, 0)
   }
 }
 

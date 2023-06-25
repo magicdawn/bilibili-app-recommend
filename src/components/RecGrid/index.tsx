@@ -112,6 +112,9 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
       if (tab === 'watchlater') {
         setExtraInfo?.(watchLaterService.usageInfo)
       }
+      if (tab === 'fav') {
+        setExtraInfo?.(favService.usageInfo)
+      }
 
       // check need loadMore
       checkShouldLoadMore()

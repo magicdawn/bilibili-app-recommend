@@ -1,7 +1,7 @@
 import { PcRecItem, PcRecItemExtend, PcRecommendJson } from '$define'
+import { request } from '$request'
 import { toast } from '$utility/toast'
 import { uniqBy } from 'lodash'
-import { request } from './request'
 
 /**
  * 使用 web api 获取推荐

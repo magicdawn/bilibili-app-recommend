@@ -1,10 +1,10 @@
 import { APP_NAME } from '$common'
+import { AppRecItem, AppRecItemExtend, AppRecommendJson } from '$define'
+import { HOST_APP, gmrequest } from '$request'
 import { toast } from '$utility/toast'
 import { uniqBy } from 'lodash'
 import pretry, { RetryError } from 'promise.retry'
 import { format as fmt } from 'util'
-import { AppRecItem, AppRecItemExtend, AppRecommendJson } from './define'
-import { HOST_APP, gmrequest } from './request'
 
 class RecReqError extends Error {
   json: AppRecommendJson

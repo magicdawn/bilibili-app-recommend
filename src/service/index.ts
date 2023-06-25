@@ -7,8 +7,8 @@ import { anyFilterEnabled, filterVideos } from '$components/VideoCard/process/fi
 import { lookinto } from '$components/VideoCard/process/normalize'
 import { RecItemType } from '$define'
 import { uniqBy } from 'lodash'
-import * as app from './service-app'
-import { PcRecService } from './service-pc'
+import * as app from './app'
+import { PcRecService } from './pc'
 
 const debug = baseDebug.extend('service')
 
