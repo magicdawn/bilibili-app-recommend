@@ -2,8 +2,8 @@
 import 'react'
 
 declare module 'react' {
-  interface CSSProperties {
-    // Allow css variables
-    [index: `--${string}`]: string | number
-  }
+  // interface CSSProperties {
+  //   // Allow css variables
+  //   [index: `--${string}`]: string | number
+  // }
 }
