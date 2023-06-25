@@ -7,21 +7,60 @@ import { parseCookie, toast } from '$utility'
 import { shuffle } from 'lodash'
 
 export class FavService {
+  static PAGE_SIZE = 20
+
   folderServices: FavFolderService[] = []
+  bufferQueue: FavItemExtend[] = []
+
+  get folderHasMore() {
+    return this.folderServices.some((s) => s.hasMore)
+  }
 
   get hasMore() {
-    return this.folderServices.some((s) => s.hasMore)
+    return this.bufferQueue.length > 0 || this.folderHasMore
   }
 
   async loadMore() {
     if (!this.foldersLoaded) await this.getAllFolders()
     if (!this.hasMore) return
 
-    const service = this.folderServices.find((s) => s.hasMore)
-    if (!service) return
+    /**
+     * in sequence order
+     */
 
-    const items = await service.loadMore()
-    return items
+    if (!settings.shuffleForFav) {
+      const service = this.folderServices.find((s) => s.hasMore)
+      if (!service) return
+
+      const items = await service.loadMore()
+      return items
+    }
+
+    /**
+     * in shuffle order
+     */
+
+    // 1.fill queue
+    if (this.bufferQueue.length < FavService.PAGE_SIZE) {
+      // 1.1 request
+      while (this.folderHasMore && this.bufferQueue.length < FavService.PAGE_SIZE) {
+        const restServices = this.folderServices.filter((s) => s.hasMore)
+        const pickedServices = shuffle(restServices).slice(0, 5)
+        const fetched = (
+          await Promise.all(pickedServices.map(async (s) => (await s.loadMore()) || []))
+        ).flat()
+
+        this.bufferQueue = [...this.bufferQueue, ...fetched]
+      }
+
+      // 1.2 shuffle
+      this.bufferQueue = shuffle(this.bufferQueue)
+    }
+
+    // 2.take from queue
+    const sliced = this.bufferQueue.slice(0, FavService.PAGE_SIZE)
+    this.bufferQueue = this.bufferQueue.slice(FavService.PAGE_SIZE)
+    return sliced
   }
 
   foldersLoaded = false

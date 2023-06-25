@@ -246,7 +246,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
     // 这里模拟一下 scroll event
     //
     const checkShouldLoadMore = useMemoizedFn(async () => {
-      const ms = isSafari ? 100 : 0
+      const ms = isSafari ? 100 : 50
       await delay(ms) // always in nextTick
 
       debug('checkShouldLoadMore(): footerInView = %s', footerInViewRef.current)
