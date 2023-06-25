@@ -9,6 +9,15 @@ import { Tag } from 'antd'
 import { shuffle } from 'lodash'
 import { ReactNode } from 'react'
 
+export function getUid() {
+  return parseCookie().DedeUserID
+}
+
+export function formatFavFolderUrl(id: number) {
+  const uid = getUid()
+  return `https://space.bilibili.com/${uid}/favlist?fid=${id}`
+}
+
 export class FavService {
   static PAGE_SIZE = 20
 
@@ -84,10 +93,9 @@ export class FavService {
 
   foldersLoaded = false
   async getAllFolders() {
-    const mid = parseCookie().DedeUserID
     const res = await request.get('/x/v3/fav/folder/created/list-all', {
       params: {
-        up_mid: mid,
+        up_mid: getUid(),
       },
     })
 

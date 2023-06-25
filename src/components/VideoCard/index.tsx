@@ -4,6 +4,7 @@ import { Reason, dislikedIds, showModalDislike, useDislikedReason } from '$compo
 import { AppRecItem, AppRecItemExtend, RecItemType } from '$define'
 import { IconPark } from '$icon-park'
 import { isMac, isSafari } from '$platform'
+import { formatFavFolderUrl } from '$service/fav'
 import { settings, useSettingsSnapshot } from '$settings'
 import { toast, toastOperationFail, toastRequestFail } from '$utility/toast'
 import { formatCount } from '$utility/video'
@@ -497,6 +498,21 @@ const VideoCardInner = memo(function VideoCardInner({
           onMoveToFirst?.(item, cardData)
         },
       },
+
+    ...(item.api === 'fav'
+      ? [
+          { type: 'divider' as const },
+          {
+            key: 'open-fav-folder',
+            label: '浏览收藏夹',
+            onClick() {
+              const { id } = item.folder
+              const url = formatFavFolderUrl(id)
+              window.open(url, '_blank')
+            },
+          },
+        ]
+      : []),
 
     ...(isMac
       ? [
