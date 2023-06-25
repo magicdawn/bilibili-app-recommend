@@ -8,6 +8,7 @@ import {
   WatchLaterItemExtend,
 } from '$define'
 import { FavItemExtend } from '$define/fav'
+import { IconPark } from '$icon-park'
 import { BvCode } from '$utility/bv'
 import {
   formatDuration,
@@ -293,6 +294,24 @@ export function apiFavAdapter(item: FavItemExtend): IVideoCardData {
     goto: 'av',
     href: `/video/${item.bvid}/`,
     title: `【${item.folder.title}】· ${item.title}`,
+    titleRender: (
+      <>
+        【
+        <IconPark
+          name='Star'
+          size={16}
+          theme='two-tone'
+          style={{
+            display: 'inline-block',
+            verticalAlign: 'middle',
+            marginLeft: 10,
+            marginRight: 4,
+            marginTop: -5,
+          }}
+        />
+        {item.folder.title}】· {item.title}
+      </>
+    ),
     coverRaw: item.cover,
     pubts: item.pubtime,
     pubdateDisplay: formatTimeStamp(item.pubtime),
