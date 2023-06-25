@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.16.1
+
+- 115df88 chore: revert react type augment
+- 34ea9ef feat: use css variable --[app-prefix]-color-primary
+- c52f16c feat: explicit mark fav folder
+- 9da44f0 chore: modify shuffleForFav default value
+- f846eb9 chore: settings tweak
+- efaeba5 feat: add open-fav-folder context menu for fav tab
+- 5aae109 feat: add FavService.usageInfo
+- bea32d0 feat: improve fav shuffle
+
 ## v0.16.0
 
 - feat: initial support of 「收藏」 Tab
