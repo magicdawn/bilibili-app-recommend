@@ -382,7 +382,7 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                     </div>
 
                     <div className={styles.settingsGroupTitle} style={{ marginTop: 15 }}>
-                      稍后再看
+                      稍后再看 & 收藏
                     </div>
                     <div className={cx(styles.settingsGroupContent)}>
                       <div className={styles.row}>
@@ -392,12 +392,6 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                           tooltip={<>不包括最近添加的「稍后再看」</>}
                         />
                       </div>
-                    </div>
-
-                    <div className={styles.settingsGroupTitle} style={{ marginTop: 15 }}>
-                      收藏
-                    </div>
-                    <div className={cx(styles.settingsGroupContent)}>
                       <div className={styles.row}>
                         <FlagSettingItem
                           configKey='shuffleForFav'
