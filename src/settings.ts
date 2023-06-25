@@ -49,7 +49,7 @@ export const initialSettings = {
   /**
    * tab=fav
    */
-  shuffleForFav: false, // 打乱顺序
+  shuffleForFav: true, // 打乱顺序
 
   /**
    * 过滤器模块
