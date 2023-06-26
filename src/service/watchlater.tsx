@@ -6,13 +6,14 @@ import { Tag } from 'antd'
 import dayjs from 'dayjs'
 import { cloneDeep, shuffle } from 'lodash'
 import { ComponentProps, ReactNode } from 'react'
+import { IService } from './base'
 
 /**
  * Q: 为什么不一次性加载?
  * A: 全部加载特别卡, 没有滚动时没必要全部加载
  */
 
-export class WatchLaterService {
+export class WatchLaterService implements IService {
   static PAGE_SIZE = 15
   static LAST_ITEMS: WatchLaterItemExtend[] = []
 

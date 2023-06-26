@@ -1,7 +1,8 @@
 import { DynamicFeedItemExtend, DynamicFeedJson } from '$define'
 import { request } from '$request'
+import { IService } from './base'
 
-export class DynamicFeedService {
+export class DynamicFeedService implements IService {
   static PAGE_SIZE = 15
 
   offset: string

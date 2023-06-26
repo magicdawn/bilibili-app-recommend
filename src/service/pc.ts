@@ -2,15 +2,22 @@ import { PcRecItem, PcRecItemExtend, PcRecommendJson } from '$define'
 import { request } from '$request'
 import { toast } from '$utility/toast'
 import { uniqBy } from 'lodash'
+import { IService } from './base'
 
 /**
  * 使用 web api 获取推荐
  */
 
-export class PcRecService {
+export class PcRecService implements IService {
   static PAGE_SIZE = 14
 
   page = 0
+
+  hasMore = true
+
+  loadMore() {
+    return this.getRecommendTimes(2)
+  }
 
   async getRecommend(signal: AbortSignal | undefined = undefined) {
     const curpage = ++this.page

@@ -5,6 +5,7 @@ import { toast } from '$utility/toast'
 import { uniqBy } from 'lodash'
 import pretry, { RetryError } from 'promise.retry'
 import { format as fmt } from 'util'
+import { IService } from './base'
 
 class RecReqError extends Error {
   json: AppRecommendJson
@@ -15,8 +16,6 @@ class RecReqError extends Error {
     this.message = json.message || JSON.stringify(json)
   }
 }
-
-export const PAGE_SIZE = 10
 
 export async function getRecommend() {
   // /x/feed/index
@@ -79,36 +78,42 @@ export async function tryGetRecommend() {
   }
 }
 
-// 一次10个不够, 多来几次
-export async function _getRecommendTimes(times: number) {
-  let list: AppRecItem[] = []
+export class AppRecService implements IService {
+  static PAGE_SIZE = 10
 
-  const parallel = async () => {
-    list = (await Promise.all(new Array(times).fill(0).map(() => tryGetRecommend()))).flat()
+  hasMore = true
+
+  loadMore() {
+    return this.getRecommendTimes(2)
   }
-  const sequence = async () => {
-    for (let x = 1; x <= times; x++) {
-      list = list.concat(await tryGetRecommend())
+
+  // 一次10个不够, 多来几次
+  async getRecommendTimes(times: number) {
+    let list: AppRecItem[] = []
+
+    const parallel = async () => {
+      list = (await Promise.all(new Array(times).fill(0).map(() => tryGetRecommend()))).flat()
     }
+    const sequence = async () => {
+      for (let x = 1; x <= times; x++) {
+        list = list.concat(await tryGetRecommend())
+      }
+    }
+
+    // 并行: 快,but 好多重复啊
+    await (true ? parallel : sequence)()
+
+    // make api unique
+    list = uniqBy(list, (item) => item.param)
+
+    // add uuid
+    // add api
+    return list.map((item) => {
+      return {
+        ...item,
+        api: 'app',
+        uniqId: item.param + '-' + crypto.randomUUID(),
+      } as AppRecItemExtend
+    })
   }
-
-  // 并行: 快,but 好多重复啊
-  await (true ? parallel : sequence)()
-
-  // make api unique
-  list = uniqBy(list, (item) => item.param)
-
-  // add uuid
-  // add api
-  return list.map((item) => {
-    return {
-      ...item,
-      api: 'app',
-      uniqId: item.param + '-' + crypto.randomUUID(),
-    } as AppRecItemExtend
-  })
-}
-
-export async function _getRecommendForHome() {
-  return _getRecommendTimes(2)
 }

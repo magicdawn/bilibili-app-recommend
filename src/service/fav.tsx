@@ -8,6 +8,7 @@ import { css } from '@emotion/react'
 import { Tag } from 'antd'
 import { shuffle } from 'lodash'
 import { ReactNode } from 'react'
+import { IService } from './base'
 
 export function getUid() {
   return parseCookie().DedeUserID
@@ -18,7 +19,7 @@ export function formatFavFolderUrl(id: number) {
   return `https://space.bilibili.com/${uid}/favlist?fid=${id}`
 }
 
-export class FavService {
+export class FavService implements IService {
   static PAGE_SIZE = 20
 
   folderServices: FavFolderService[] = []

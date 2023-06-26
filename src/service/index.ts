@@ -7,7 +7,7 @@ import { anyFilterEnabled, filterVideos } from '$components/VideoCard/process/fi
 import { lookinto } from '$components/VideoCard/process/normalize'
 import { RecItemType } from '$define'
 import { uniqBy } from 'lodash'
-import * as app from './app'
+import { AppRecService } from './app'
 import { PcRecService } from './pc'
 
 const debug = baseDebug.extend('service')
@@ -40,6 +40,7 @@ export async function getMinCount(
 ) {
   const { pcRecService, dynamicFeedService, watchLaterService, favService, tab, abortSignal } =
     fetcherOptions
+  const appRecService = new AppRecService()
 
   let items: RecItemType[] = []
   let hasMore = true
@@ -79,7 +80,7 @@ export async function getMinCount(
 
     // 常规
     else {
-      const pagesize = usePcApi(tab) ? PcRecService.PAGE_SIZE : app.PAGE_SIZE
+      const pagesize = usePcApi(tab) ? PcRecService.PAGE_SIZE : AppRecService.PAGE_SIZE
 
       const multipler = anyFilterEnabled(tab)
         ? filterMultiplier // 过滤, 需要大基数
@@ -98,7 +99,7 @@ export async function getMinCount(
 
     cur = usePcApi(tab)
       ? await pcRecService.getRecommendTimes(times, abortSignal)
-      : await app._getRecommendTimes(times)
+      : await appRecService.getRecommendTimes(times)
     cur = filterVideos(cur, tab)
 
     items = items.concat(cur)
@@ -126,7 +127,7 @@ export async function getMinCount(
   return items
 }
 
-export async function getRecommendForHome(fetcherOptions: FetcherOptions) {
+export async function refreshForHome(fetcherOptions: FetcherOptions) {
   let items = await getMinCount(getColumnCount(undefined, false) * 2, fetcherOptions, 5) // 7 * 2-row
   if (fetcherOptions.tab === 'watchlater') {
     items = items.slice(0, 20)
@@ -134,14 +135,14 @@ export async function getRecommendForHome(fetcherOptions: FetcherOptions) {
   return items
 }
 
-export async function getRecommendForGrid(fetcherOptions: FetcherOptions) {
+export async function refreshForGrid(fetcherOptions: FetcherOptions) {
   return getMinCount(getColumnCount() * 3 + 1, fetcherOptions, 5) // 7 * 3-row, 1 screen
 }
 
 export async function getRecommendTimes(times: number, tab: TabType, pcRecService: PcRecService) {
   let items: RecItemType[] = usePcApi(tab)
     ? await pcRecService.getRecommendTimes(times)
-    : await app._getRecommendTimes(times)
+    : await new AppRecService().getRecommendTimes(times)
   items = filterVideos(items, tab)
   return items
 }

@@ -14,7 +14,7 @@ import { getHeaderHeight } from '$header'
 import { IconPark } from '$icon-park'
 import { cx, generateClassName } from '$libs'
 import { getIsInternalTesting, isSafari } from '$platform'
-import { getRecommendForGrid, getRecommendTimes, uniqConcat } from '$service'
+import { getRecommendTimes, refreshForGrid, uniqConcat } from '$service'
 import { useSettingsSnapshot } from '$settings'
 import { toast } from '$utility/toast'
 import { css } from '@emotion/react'
@@ -143,7 +143,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
     } = useRefresh({
       tab,
       debug,
-      fetcher: getRecommendForGrid,
+      fetcher: refreshForGrid,
       recreateService: true,
       preAction,
       postAction,
