@@ -1,7 +1,7 @@
 import { AppRecItem, DmJson, PvideoJson } from '$define'
 import { HOST_APP, gmrequest, isWebApiSuccess, request } from '$request'
 import { getCsrfToken } from '$utility'
-import { toast } from '$utility/toast'
+import { OPERATION_FAIL_MSG, toast } from '$utility/toast'
 import { LRUCache } from 'lru-cache'
 
 // api.bilibili.com/pvideo?aid=${target.dataset.id}&_=${Date.now()
@@ -125,3 +125,33 @@ const dislikeFactory = (type: 'dislike' | 'cancel') => {
 
 export const dislike = dislikeFactory('dislike')
 export const cancelDislike = dislikeFactory('cancel')
+
+/**
+ * 收藏
+ * resource = ${avId}:${type}
+ * type 一般为 2, 即获取收藏夹里的视频返回的 Media.type 意义不明
+ * https://socialsisteryi.github.io/bilibili-API-collect/docs/video/action.html#%E6%94%B6%E8%97%8F%E8%A7%86%E9%A2%91-%E5%8F%8C%E7%AB%AF
+ */
+
+export async function removeFav(folderId: number | string, resource: string) {
+  const form = new FormData()
+  form.append('resources', resource)
+  form.append('media_id', folderId.toString())
+  form.append('platform', 'web')
+  form.append('csrf', getCsrfToken())
+
+  // resources: 421702525:2
+  // media_id: 484882829
+  // platform: web
+  // csrf: ''
+
+  const res = await request.post('/x/v3/fav/resource/batch-del', form)
+  const json = res.data
+  const success = isWebApiSuccess(json)
+
+  if (!success) {
+    toast(json.message || OPERATION_FAIL_MSG)
+  }
+
+  return success
+}
