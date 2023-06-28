@@ -38,6 +38,7 @@ import {
   VideoData,
   cancelDislike,
   getVideoData,
+  removeFav,
   watchLaterAdd,
   watchLaterDel,
 } from './card.service'
@@ -509,6 +510,17 @@ const VideoCardInner = memo(function VideoCardInner({
               const { id } = item.folder
               const url = formatFavFolderUrl(id)
               window.open(url, '_blank')
+            },
+          },
+          {
+            key: 'remove-fav',
+            label: '移除收藏',
+            async onClick() {
+              if (item.api !== 'fav') return
+              const success = await removeFav(item.folder.id, `${item.id}:${item.type}`)
+              if (success) {
+                onRemoveCurrent?.(item, cardData)
+              }
             },
           },
         ]
