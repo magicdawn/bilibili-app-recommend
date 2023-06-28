@@ -451,6 +451,7 @@ const VideoCardInner = memo(function VideoCardInner({
     {
       key: 'open-link',
       label: '打开',
+      icon: <IconPark name='EfferentFour' size={16} />,
       onClick: onOpen,
     },
 
@@ -458,6 +459,7 @@ const VideoCardInner = memo(function VideoCardInner({
     {
       key: 'copy-link',
       label: '复制视频链接',
+      icon: <IconPark name='Copy' size={16} />,
       onClick() {
         let content = href
         if (href.startsWith('/')) {
@@ -469,6 +471,7 @@ const VideoCardInner = memo(function VideoCardInner({
     {
       key: 'copy-bvid',
       label: '复制 BVID',
+      icon: <IconPark name='Copy' size={16} />,
       onClick() {
         copyContent(bvid)
       },
@@ -478,6 +481,7 @@ const VideoCardInner = memo(function VideoCardInner({
     hasDislikeEntry && {
       key: 'dislike',
       label: '我不想看',
+      icon: <IconPark name='DislikeTwo' size={16} />,
       onClick() {
         onTriggerDislike()
       },
@@ -485,6 +489,7 @@ const VideoCardInner = memo(function VideoCardInner({
     {
       key: 'watchlater',
       label: watchLaterAdded ? '移除稍后再看' : '稍后再看',
+      icon: <IconPark name='FileCabinet' size={16} />,
       onClick() {
         onToggleWatchLater()
       },
@@ -493,6 +498,7 @@ const VideoCardInner = memo(function VideoCardInner({
       watchLaterAdded && {
         key: 'watchlater-readd',
         label: '重新添加稍候再看 (移到最前)',
+        icon: <IconPark name='AddTwo' size={16} />,
         async onClick() {
           const success = await onToggleWatchLater(undefined, watchLaterAdd)
           if (!success) return
@@ -506,6 +512,7 @@ const VideoCardInner = memo(function VideoCardInner({
           {
             key: 'open-fav-folder',
             label: '浏览收藏夹',
+            icon: <IconPark name='EfferentFour' size={16} />,
             onClick() {
               const { id } = item.folder
               const url = formatFavFolderUrl(id)
@@ -515,6 +522,7 @@ const VideoCardInner = memo(function VideoCardInner({
           {
             key: 'remove-fav',
             label: '移除收藏',
+            icon: <IconPark name='Star' size={16} />,
             async onClick() {
               if (item.api !== 'fav') return
               const success = await removeFav(item.folder.id, `${item.id}:${item.type}`)
@@ -532,6 +540,7 @@ const VideoCardInner = memo(function VideoCardInner({
           {
             key: 'open-in-iina',
             label: '在 IINA 中打开',
+            icon: <IconPark name='PlayTwo' size={16} />,
             onClick() {
               let usingHref = href
               if (item.api === 'watchlater') usingHref = `/video/${item.bvid}`

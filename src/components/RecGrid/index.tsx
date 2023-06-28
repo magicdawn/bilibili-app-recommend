@@ -338,6 +338,10 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
           watchLaterService.count--
           setExtraInfo?.(watchLaterService.usageInfo)
         }
+        if (tab === 'fav') {
+          favService.total--
+          setExtraInfo?.(favService.usageInfo)
+        }
 
         return newItems
       })

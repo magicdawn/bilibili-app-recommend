@@ -25,6 +25,11 @@ export class FavService implements IService {
   folderServices: FavFolderService[] = []
   bufferQueue: FavItemExtend[] = []
   total: number
+  useShuffle: boolean
+
+  constructor() {
+    this.useShuffle = settings.shuffleForFav
+  }
 
   get folderHasMore() {
     return this.folderServices.some((s) => s.hasMore)
@@ -57,7 +62,14 @@ export class FavService implements IService {
      * in sequence order
      */
 
-    if (!settings.shuffleForFav) {
+    if (!this.useShuffle) {
+      // from queue
+      if (this.bufferQueue.length) {
+        const sliced = this.bufferQueue.slice(0, FavService.PAGE_SIZE)
+        this.bufferQueue = this.bufferQueue.slice(FavService.PAGE_SIZE)
+        return sliced
+      }
+
       const service = this.folderServices.find((s) => s.hasMore)
       if (!service) return
 
@@ -71,22 +83,20 @@ export class FavService implements IService {
 
     // 1.fill queue
     if (this.bufferQueue.length < FavService.PAGE_SIZE) {
-      // 1.1 request
       while (this.folderHasMore && this.bufferQueue.length < 100) {
         const restServices = this.folderServices.filter((s) => s.hasMore)
         const pickedServices = shuffle(restServices).slice(0, 5)
         const fetched = (
           await Promise.all(pickedServices.map(async (s) => (await s.loadMore()) || []))
         ).flat()
-
         this.bufferQueue = [...this.bufferQueue, ...fetched]
       }
 
-      // 1.2 shuffle
+      // 2.shuffle
       this.bufferQueue = shuffle(this.bufferQueue)
     }
 
-    // 2.take from queue
+    // next: take from queue
     const sliced = this.bufferQueue.slice(0, FavService.PAGE_SIZE)
     this.bufferQueue = this.bufferQueue.slice(FavService.PAGE_SIZE)
     return sliced
@@ -150,9 +160,6 @@ export class FavFolderService {
       if (item.title === '已失效视频') return false
       return true
     })
-    if (settings.shuffleForFav) {
-      items = shuffle(items)
-    }
 
     return items.map((item) => {
       return {

@@ -2,17 +2,22 @@ import { type Icon } from '@icon-park/react/es/runtime'
 import { type ComponentProps } from 'react'
 
 import {
+  AddTwo,
   Close,
   Computer,
   Concern,
   Config,
+  Copy,
+  DislikeTwo,
   DistraughtFace,
+  EfferentFour,
   FileCabinet,
   Help,
   Info,
   Iphone,
   Loading,
   LoadingThree,
+  PlayTwo,
   Return,
   Star,
   Tips,
@@ -35,6 +40,11 @@ export const ImportedIcons = {
   Tumblr,
   FileCabinet,
   Star,
+  EfferentFour,
+  Copy,
+  DislikeTwo,
+  PlayTwo,
+  AddTwo,
 } satisfies Record<string, Icon>
 
 export type IconName = keyof typeof ImportedIcons

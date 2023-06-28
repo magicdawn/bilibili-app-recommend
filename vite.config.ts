@@ -25,7 +25,7 @@ if (process.env.RELEASE) {
 }
 
 // https://vitejs.dev/config/
-export default defineConfig({
+export default defineConfig(({ command, mode, ssrBuild }) => ({
   define: {
     'import.meta.vitest': 'undefined',
   },
@@ -63,21 +63,24 @@ export default defineConfig({
   plugins: [
     tsconfigPaths(),
 
-    importer({
-      libraryName: 'antd',
-      libraryDirectory: 'es',
-    }),
+    command === 'build' &&
+      importer({
+        libraryName: 'antd',
+        libraryDirectory: 'es',
+      }),
     // import {get} from 'lodash' -> import get from 'lodash/get'
-    importer({
-      libraryName: 'lodash',
-      libraryDirectory: '',
-      camel2DashComponentName: false,
-    }),
-    importer({
-      libraryName: '@icon-park/react',
-      libraryDirectory: 'es/icons',
-      camel2DashComponentName: false, // default: true,
-    }),
+    command === 'build' &&
+      importer({
+        libraryName: 'lodash',
+        libraryDirectory: '',
+        camel2DashComponentName: false,
+      }),
+    command === 'build' &&
+      importer({
+        libraryName: '@icon-park/react',
+        libraryDirectory: 'es/icons',
+        camel2DashComponentName: false, // default: true,
+      }),
 
     react({
       jsxImportSource: '@emotion/react',
@@ -153,4 +156,4 @@ export default defineConfig({
         open: true,
       }),
   ].filter(Boolean),
-})
+}))
