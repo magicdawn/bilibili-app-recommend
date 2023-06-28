@@ -22,19 +22,30 @@ export function formatFavFolderUrl(id: number) {
 export class FavService implements IService {
   static PAGE_SIZE = 20
 
-  folderServices: FavFolderService[] = []
-  bufferQueue: FavItemExtend[] = []
-  total: number
   useShuffle: boolean
-
   constructor() {
     this.useShuffle = settings.shuffleForFav
+  }
+
+  folderServices: FavFolderService[] = []
+  bufferQueue: FavItemExtend[] = []
+  total = 0
+
+  returnedItems: FavItemExtend[] = []
+  private doReturnItems(items: FavItemExtend[] | undefined) {
+    this.returnedItems = this.returnedItems.concat(items || [])
+    return items
+  }
+
+  // full-list = returnedItems + bufferQueue + folderServices.more
+  restore() {
+    this.bufferQueue = [...this.returnedItems, ...this.bufferQueue]
+    this.returnedItems = []
   }
 
   get folderHasMore() {
     return this.folderServices.some((s) => s.hasMore)
   }
-
   get hasMore() {
     return this.bufferQueue.length > 0 || this.folderHasMore
   }
@@ -58,31 +69,36 @@ export class FavService implements IService {
     if (!this.foldersLoaded) await this.getAllFolders()
     if (!this.hasMore) return
 
+    const sliceFromQueue = () => {
+      if (this.bufferQueue.length) {
+        const sliced = this.bufferQueue.slice(0, FavService.PAGE_SIZE)
+        this.bufferQueue = this.bufferQueue.slice(FavService.PAGE_SIZE)
+        return this.doReturnItems(sliced)
+      }
+    }
+
     /**
      * in sequence order
      */
 
     if (!this.useShuffle) {
-      // from queue
+      // from queue if queue not empty
       if (this.bufferQueue.length) {
-        const sliced = this.bufferQueue.slice(0, FavService.PAGE_SIZE)
-        this.bufferQueue = this.bufferQueue.slice(FavService.PAGE_SIZE)
-        return sliced
+        return sliceFromQueue()
       }
-
+      // api request
       const service = this.folderServices.find((s) => s.hasMore)
       if (!service) return
-
       const items = await service.loadMore()
-      return items
+      return this.doReturnItems(items)
     }
 
     /**
      * in shuffle order
      */
 
-    // 1.fill queue
     if (this.bufferQueue.length < FavService.PAGE_SIZE) {
+      // 1.fill queue
       while (this.folderHasMore && this.bufferQueue.length < 100) {
         const restServices = this.folderServices.filter((s) => s.hasMore)
         const pickedServices = shuffle(restServices).slice(0, 5)
@@ -91,15 +107,12 @@ export class FavService implements IService {
         ).flat()
         this.bufferQueue = [...this.bufferQueue, ...fetched]
       }
-
       // 2.shuffle
       this.bufferQueue = shuffle(this.bufferQueue)
     }
 
     // next: take from queue
-    const sliced = this.bufferQueue.slice(0, FavService.PAGE_SIZE)
-    this.bufferQueue = this.bufferQueue.slice(FavService.PAGE_SIZE)
-    return sliced
+    return sliceFromQueue()
   }
 
   foldersLoaded = false

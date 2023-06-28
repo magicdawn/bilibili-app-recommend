@@ -102,11 +102,11 @@ export function useRefresh({
     let err: any
 
     // reuse
-    const shouldReuse = Boolean(
-      reuse && TabConfigMap[tab].reuseable !== false && itemsCache.current[tab]?.length
-    )
-    const swr = Boolean(shouldReuse && TabConfigMap[tab].swr)
+    const shouldReuse = Boolean(reuse && itemsCache.current[tab]?.length)
+    const swr = Boolean(shouldReuse && (TabConfigMap[tab].swr || tab === 'fav'))
     setSwr(swr)
+    // fav is not swr, but need call FavService.loadMore
+    const shouldRequestWhenReuse = shouldReuse && (swr || tab === 'fav')
 
     const doFetch = async () => {
       try {
@@ -117,17 +117,31 @@ export function useRefresh({
     }
 
     const _pcRecService = recreateService ? new PcRecService() : pcRecService
-    const _dynamicFeedService = recreateService ? new DynamicFeedService() : dynamicFeedService
     if (recreateService) {
       setPcRecService(_pcRecService)
+    }
+
+    let _dynamicFeedService = dynamicFeedService
+    if (tab === 'dynamic') {
+      _dynamicFeedService = new DynamicFeedService()
       setDynamicFeedService(_dynamicFeedService)
     }
 
-    const _watchLaterService = new WatchLaterService(options?.watchlaterKeepOrder) // always recreate
-    setWatchLaterService(_watchLaterService)
+    let _watchLaterService = watchLaterService
+    if (tab === 'watchlater') {
+      _watchLaterService = new WatchLaterService(options?.watchlaterKeepOrder)
+      setWatchLaterService(_watchLaterService)
+    }
 
-    let _favServive = new FavService()
-    setFavService(_favServive)
+    let _favServive = favService
+    if (tab === 'fav') {
+      if (shouldReuse) {
+        _favServive.restore()
+      } else {
+        _favServive = new FavService()
+        setFavService(_favServive)
+      }
+    }
 
     const _abortController = new AbortController()
     const _signal = _abortController.signal
@@ -146,7 +160,7 @@ export function useRefresh({
     if (shouldReuse) {
       _items = itemsCache.current[tab] || []
       setItems(_items)
-      if (swr) await doFetch()
+      if (shouldRequestWhenReuse) await doFetch()
     } else {
       itemsCache.current[tab] = []
       await doFetch()

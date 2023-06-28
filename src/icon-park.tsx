@@ -8,6 +8,7 @@ import {
   Concern,
   Config,
   Copy,
+  Delete,
   DislikeTwo,
   DistraughtFace,
   EfferentFour,
@@ -22,6 +23,7 @@ import {
   Star,
   Tips,
   Tumblr,
+  Unlike,
 } from '@icon-park/react'
 
 export const ImportedIcons = {
@@ -43,8 +45,10 @@ export const ImportedIcons = {
   EfferentFour,
   Copy,
   DislikeTwo,
+  Unlike,
   PlayTwo,
   AddTwo,
+  Delete,
 } satisfies Record<string, Icon>
 
 export type IconName = keyof typeof ImportedIcons
