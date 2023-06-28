@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.16.2
+
+- 收藏 Tab 支持右键菜单移除收藏
+- 右键菜单添加图标
+- 收藏 Tab, 切换 Tab, 内容保持不变. (更快的切换 Tab)
+
+详细
+
+- 5ef25ef feat: keep fav tab content when switch tab
+- 4916b09 feat: add context-menu icons
+- f071266 feat: [tab=fav] add remove-fav context menu
+- 9aa04dd feat: add removeFav to card.service.ts
+- d9d7e83 refactor: indeterminate state
+
 ## v0.16.1
 
 - 115df88 chore: revert react type augment
