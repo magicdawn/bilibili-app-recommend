@@ -204,7 +204,7 @@ https://github.com/magicdawn/bilibili-app-recommend/raw/release-nightly/bilibili
 
 ![afdian-magicdawn_w375](https://ghproxy.com/https://raw.githubusercontent.com/magicdawn/magicdawn/master/images/afdian-magicdawn_w375.jpg)
 
-## Changelog
+## 更新日志
 
 [CHANGELOG.md](https://github.com/magicdawn/bilibili-app-recommend/blob/main/CHANGELOG.md)
 
