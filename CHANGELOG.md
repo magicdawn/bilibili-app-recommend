@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.16.3
+
+- 所有 Tab: 稍后再看状态改为全局状态, 推荐/动态/收藏 等 Tab 中的视频可以保持稍后再看状态.
+- 稍后再看 Tab: 移除稍后再看, 可以看到是否已经添加收藏. 在清理稍候再看列表时比较有用.
+
+![image](https://github.com/magicdawn/bilibili-app-recommend/assets/4067115/26053d9c-2543-4ffb-ac20-9b052a6807c2)
+
 ## v0.16.2
 
 - 收藏 Tab 支持右键菜单移除收藏
