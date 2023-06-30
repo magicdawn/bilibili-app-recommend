@@ -1,12 +1,29 @@
 import { RecItemType, WatchLaterItemExtend, WatchLaterJson } from '$define'
 import { request } from '$request'
 import { settings } from '$settings'
+import { getHasLogined } from '$utility'
 import { toast } from '$utility/toast'
 import { Tag } from 'antd'
 import dayjs from 'dayjs'
 import { cloneDeep, shuffle } from 'lodash'
 import { ComponentProps, ReactNode } from 'react'
+import { proxy, useSnapshot } from 'valtio'
+import { proxySet } from 'valtio/utils'
 import { IService } from './base'
+
+export const watchLaterState = proxy({
+  updatedAt: 0,
+  bvidSet: proxySet<string>(),
+})
+export function useWatchLaterState(bvid: string) {
+  return useSnapshot(watchLaterState).bvidSet.has(bvid)
+}
+
+if (getHasLogined()) {
+  setTimeout(() => {
+    new WatchLaterService().loadMore() // init watchLaterState
+  })
+}
 
 /**
  * Q: 为什么不一次性加载?
@@ -31,6 +48,12 @@ export class WatchLaterService implements IService {
         uniqId: `watchlater-${item.bvid}`,
       }
     })
+
+    // save
+    if (Date.now() > watchLaterState.updatedAt) {
+      watchLaterState.updatedAt = Date.now()
+      watchLaterState.bvidSet = proxySet(items.map((i) => i.bvid))
+    }
 
     // keep 最近几天内
     const gate = dayjs().subtract(2, 'days').unix()

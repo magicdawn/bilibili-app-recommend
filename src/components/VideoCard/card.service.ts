@@ -1,6 +1,8 @@
 import { AppRecItem, DmJson, PvideoJson } from '$define'
+import { FavFolderListAllJson } from '$define/fav/folder-list-all'
 import { HOST_APP, gmrequest, isWebApiSuccess, request } from '$request'
-import { getCsrfToken } from '$utility'
+import { getUid } from '$service/fav'
+import { getCsrfToken, getHasLogined } from '$utility'
 import { OPERATION_FAIL_MSG, toast } from '$utility/toast'
 import { LRUCache } from 'lru-cache'
 
@@ -154,4 +156,32 @@ export async function removeFav(folderId: number | string, resource: string) {
   }
 
   return success
+}
+
+/**
+ * 可以查询视频: 关注/点赞/投币/收藏 状态
+ */
+export async function getRelated(bvid: string) {
+  const res = await request.get('/x/web-interface/archive/relation', { params: { bvid } })
+}
+
+/**
+ * 获取视频所在收藏夹
+ * @see https://github.com/the1812/Bilibili-Evolved/blob/master/registry/lib/components/video/quick-favorite/QuickFavorite.vue
+ */
+
+export async function getVideoFavState(avid: string) {
+  if (!getHasLogined()) return
+  const res = await request.get('/x/v3/fav/folder/created/list-all', {
+    params: {
+      up_mid: getUid(),
+      type: 2,
+      rid: avid,
+    },
+  })
+  const json = res.data as FavFolderListAllJson
+  const favFolderNames = json.data.list
+    .filter((folder) => folder.fav_state > 0)
+    .map((folder) => folder.title)
+  return favFolderNames
 }

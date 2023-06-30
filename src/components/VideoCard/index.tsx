@@ -1,10 +1,13 @@
 import { APP_KEY_PREFIX, APP_NAME } from '$common'
 import { useMittOn } from '$common/hooks/useMitt'
+import { AntdTooltip } from '$components/AntdApp'
 import { Reason, dislikedIds, showModalDislike, useDislikedReason } from '$components/ModalDislike'
+import { colorPrimaryValue } from '$components/ModalSettings/theme'
 import { AppRecItem, AppRecItemExtend, RecItemType } from '$define'
 import { IconPark } from '$icon-park'
 import { isMac, isSafari } from '$platform'
 import { formatFavFolderUrl } from '$service/fav'
+import { useWatchLaterState, watchLaterState } from '$service/watchlater'
 import { settings, useSettingsSnapshot } from '$settings'
 import { toast, toastOperationFail, toastRequestFail } from '$utility/toast'
 import { formatCount } from '$utility/video'
@@ -38,6 +41,7 @@ import {
   VideoData,
   cancelDislike,
   getVideoData,
+  getVideoFavState,
   removeFav,
   watchLaterAdd,
   watchLaterDel,
@@ -334,7 +338,7 @@ const VideoCardInner = memo(function VideoCardInner({
   const isWatchLaterHovering = useHover(watchLaterRef)
 
   // watchLater added
-  const [watchLaterAdded, setWatchLaterAdded] = useState(item.api === 'watchlater' ? true : false)
+  const watchLaterAdded = useWatchLaterState(bvid)
 
   const { accessKey } = useSettingsSnapshot()
   const authed = Boolean(accessKey)
@@ -369,7 +373,11 @@ const VideoCardInner = memo(function VideoCardInner({
 
       if (success) {
         const targetState = usingAction === watchLaterAdd ? true : false
-        setWatchLaterAdded(targetState)
+        if (targetState) {
+          watchLaterState.bvidSet.add(bvid)
+        } else {
+          watchLaterState.bvidSet.delete(bvid)
+        }
 
         // when remove-watchlater for watchlater tab, remove this card
         if (item.api === 'watchlater' && targetState === false) {
@@ -432,6 +440,19 @@ const VideoCardInner = memo(function VideoCardInner({
   }
 
   /**
+   * 收藏状态
+   */
+  const [favFolderNames, setFavFolderNames] = useState<string[] | undefined>(undefined)
+  const updateFavFolderNames = useMemoizedFn(async () => {
+    // 只在「稍后再看」提供收藏状态
+    if (item.api !== 'watchlater') return
+    const names = await getVideoFavState(avid)
+    if (names) {
+      setFavFolderNames(names)
+    }
+  })
+
+  /**
    * expose actions
    */
 
@@ -447,116 +468,167 @@ const VideoCardInner = memo(function VideoCardInner({
 
   const hasDislikeEntry = isApp && authed
 
-  const contextMenus: MenuProps['items'] = [
-    {
-      key: 'open-link',
-      label: '打开',
-      icon: <IconPark name='EfferentFour' size={15} />,
-      onClick: onOpen,
-    },
+  /**
+   * context menu
+   */
 
-    { type: 'divider' as const },
-    {
-      key: 'copy-link',
-      label: '复制视频链接',
-      icon: <IconPark name='Copy' size={15} />,
-      onClick() {
-        let content = href
-        if (href.startsWith('/')) {
-          content = new URL(href, location.href).href
-        }
-        copyContent(content)
-      },
-    },
-    {
-      key: 'copy-bvid',
-      label: '复制 BVID',
-      icon: <IconPark name='Copy' size={15} />,
-      onClick() {
-        copyContent(bvid)
-      },
-    },
+  const onCopyLink = useMemoizedFn(() => {
+    let content = href
+    if (href.startsWith('/')) {
+      content = new URL(href, location.href).href
+    }
+    copyContent(content)
+  })
 
-    { type: 'divider' as const },
-    hasDislikeEntry && {
-      key: 'dislike',
-      label: '我不想看',
-      icon: <IconPark name='DislikeTwo' size={15} />,
-      onClick() {
-        onTriggerDislike()
+  const onOpenInIINA = useMemoizedFn(() => {
+    let usingHref = href
+    if (item.api === 'watchlater') usingHref = `/video/${item.bvid}`
+    const fullHref = new URL(usingHref, location.href).href
+    const iinaUrl = `iina://open?url=${encodeURIComponent(fullHref)}`
+    window.open(iinaUrl, '_self')
+  })
+
+  const contextMenus: MenuProps['items'] = useMemo(() => {
+    const watchLaterLabel = watchLaterAdded ? '移除稍后再看' : '稍后再看'
+
+    return [
+      {
+        key: 'open-link',
+        label: '打开',
+        icon: <IconPark name='EfferentFour' size={15} />,
+        onClick: onOpen,
       },
-    },
-    {
-      key: 'watchlater',
-      label: watchLaterAdded ? '移除稍后再看' : '稍后再看',
-      icon: <IconPark name={watchLaterAdded ? 'Delete' : 'FileCabinet'} size={15} />,
-      onClick() {
-        onToggleWatchLater()
+
+      { type: 'divider' as const },
+      {
+        key: 'copy-link',
+        label: '复制视频链接',
+        icon: <IconPark name='Copy' size={15} />,
+        onClick: onCopyLink,
       },
-    },
-    item.api === 'watchlater' &&
-      watchLaterAdded && {
-        key: 'watchlater-readd',
-        label: '重新添加稍候再看 (移到最前)',
-        icon: <IconPark name='AddTwo' size={15} />,
-        async onClick() {
-          const success = await onToggleWatchLater(undefined, watchLaterAdd)
-          if (!success) return
-          onMoveToFirst?.(item, cardData)
+      {
+        key: 'copy-bvid',
+        label: '复制 BVID',
+        icon: <IconPark name='Copy' size={15} />,
+        onClick() {
+          copyContent(bvid)
         },
       },
 
-    ...(item.api === 'fav'
-      ? [
-          { type: 'divider' as const },
-          {
-            key: 'open-fav-folder',
-            label: '浏览收藏夹',
-            icon: <IconPark name='EfferentFour' size={15} />,
-            onClick() {
-              const { id } = item.folder
-              const url = formatFavFolderUrl(id)
-              window.open(url, '_blank')
-            },
-          },
-          {
-            key: 'remove-fav',
-            label: '移除收藏',
-            icon: <IconPark name='Delete' size={15} />,
-            async onClick() {
-              if (item.api !== 'fav') return
-              const success = await removeFav(item.folder.id, `${item.id}:${item.type}`)
-              if (success) {
-                onRemoveCurrent?.(item, cardData)
+      { type: 'divider' as const },
+      hasDislikeEntry && {
+        key: 'dislike',
+        label: '我不想看',
+        icon: <IconPark name='DislikeTwo' size={15} />,
+        onClick() {
+          onTriggerDislike()
+        },
+      },
+      {
+        key: 'watchlater',
+        label:
+          item.api === 'watchlater' && favFolderNames ? (
+            <AntdTooltip
+              title={
+                <>
+                  {favFolderNames.length
+                    ? `已收藏在${favFolderNames.map((n) => `「${n}」`).join('')}`
+                    : '未收藏'}
+                </>
               }
-            },
+              placement='right'
+            >
+              <span
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
+              >
+                {watchLaterLabel}
+                <IconPark
+                  name='Star'
+                  size={15}
+                  style={{ marginLeft: 15 }}
+                  {...(favFolderNames.length
+                    ? {
+                        theme: 'two-tone',
+                        fill: ['currentColor', colorPrimaryValue],
+                      }
+                    : undefined)}
+                />
+              </span>
+            </AntdTooltip>
+          ) : (
+            watchLaterLabel
+          ),
+        icon: <IconPark name={watchLaterAdded ? 'Delete' : 'FileCabinet'} size={15} />,
+        onClick() {
+          onToggleWatchLater()
+        },
+      },
+      item.api === 'watchlater' &&
+        watchLaterAdded && {
+          key: 'watchlater-readd',
+          label: '重新添加稍候再看 (移到最前)',
+          icon: <IconPark name='AddTwo' size={15} />,
+          async onClick() {
+            const success = await onToggleWatchLater(undefined, watchLaterAdd)
+            if (!success) return
+            onMoveToFirst?.(item, cardData)
           },
-        ]
-      : []),
+        },
 
-    ...(isMac
-      ? [
-          { type: 'divider' as const },
-          {
-            key: 'open-in-iina',
-            label: '在 IINA 中打开',
-            icon: <IconPark name='PlayTwo' size={15} />,
-            onClick() {
-              let usingHref = href
-              if (item.api === 'watchlater') usingHref = `/video/${item.bvid}`
-
-              const fullHref = new URL(usingHref, location.href).href
-              const iinaUrl = `iina://open?url=${encodeURIComponent(fullHref)}`
-              window.open(iinaUrl, '_self')
+      ...(item.api === 'fav'
+        ? [
+            { type: 'divider' as const },
+            {
+              key: 'open-fav-folder',
+              label: '浏览收藏夹',
+              icon: <IconPark name='EfferentFour' size={15} />,
+              onClick() {
+                const { id } = item.folder
+                const url = formatFavFolderUrl(id)
+                window.open(url, '_blank')
+              },
             },
-          },
-        ]
-      : []),
-  ].filter(Boolean)
+            {
+              key: 'remove-fav',
+              label: '移除收藏',
+              icon: <IconPark name='Delete' size={15} />,
+              async onClick() {
+                if (item.api !== 'fav') return
+                const success = await removeFav(item.folder.id, `${item.id}:${item.type}`)
+                if (success) {
+                  onRemoveCurrent?.(item, cardData)
+                }
+              },
+            },
+          ]
+        : []),
+
+      ...(isMac
+        ? [
+            { type: 'divider' as const },
+            {
+              key: 'open-in-iina',
+              label: '在 IINA 中打开',
+              icon: <IconPark name='PlayTwo' size={15} />,
+              onClick: onOpenInIINA,
+            },
+          ]
+        : []),
+    ].filter(Boolean)
+  }, [item, watchLaterAdded, hasDislikeEntry, favFolderNames])
+
+  const onContextMenuOpenChange = useMemoizedFn((open: boolean) => {
+    if (!open) return
+    updateFavFolderNames()
+  })
 
   return (
     <div className='bili-video-card__wrap __scale-wrap'>
-      <Dropdown menu={{ items: contextMenus }} trigger={['contextMenu']}>
+      <Dropdown
+        menu={{ items: contextMenus }}
+        trigger={['contextMenu']}
+        onOpenChange={onContextMenuOpenChange}
+      >
         <a href={href} target='_blank'>
           <div
             className='bili-video-card__image __scale-player-wrap'
