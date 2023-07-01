@@ -195,12 +195,11 @@ export function VideoSourceTab({ onRefresh }: { onRefresh: OnRefresh }) {
                 css={css`
                   display: flex;
                   align-items: center;
-                  height: 26px;
+                  height: 22px;
                 `}
               >
                 <IconPark name={icon} {...iconProps} size={iconProps?.size || 18} css={iconCss} />
                 {label}: {desc}
-                <br />
               </div>
             ))}
           </>
