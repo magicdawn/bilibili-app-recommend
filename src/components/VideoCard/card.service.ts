@@ -30,7 +30,7 @@ export async function dm(aid: string) {
   return json.data
 }
 
-export const cache = new LRUCache<string, VideoData>({ max: 200 })
+export const cache = new LRUCache<string, VideoData>({ max: 1000 })
 
 export type VideoData = {
   pvideoData: PvideoJson['data']

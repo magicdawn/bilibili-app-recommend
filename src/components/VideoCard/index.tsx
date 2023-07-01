@@ -633,8 +633,11 @@ const VideoCardInner = memo(function VideoCardInner({
           <div
             className='bili-video-card__image __scale-player-wrap'
             ref={videoPreviewWrapperRef}
-            style={{ ...borderRadiusStyle }}
+            style={{ ...borderRadiusStyle, aspectRatio: '16 / 9' }}
           >
+            {/* __image--wrap 上有 padding-top: 56.25% = 9/16, 用于保持高度, 在 firefox 中有明显的文字位移 */}
+            {/* picture: absolute, top:0, left: 0  */}
+            {/* 故加上 aspect-ratio: 16/9 */}
             <div className='bili-video-card__image--wrap' style={{ borderRadius: 'inherit' }}>
               <picture
                 className='v-img bili-video-card__cover'
@@ -652,8 +655,9 @@ const VideoCardInner = memo(function VideoCardInner({
                 />
                 <img
                   src={`${cover}@672w_378h_1c_!web-home-common-cover`}
-                  alt={title}
                   loading='eager'
+                  // in firefox, alt text is visible during loading
+                  // alt={title}
                 />
               </picture>
 
