@@ -6,19 +6,11 @@ import { toast } from '$utility/toast'
 import { css } from '@emotion/react'
 import { Icon } from '@icon-park/react/es/runtime'
 import { Radio } from 'antd'
-import { ComponentProps, Fragment } from 'react'
-import { OnRefresh } from '.'
+import { ComponentProps } from 'react'
+import { type OnRefresh } from './index'
 
 const iconCss = css`
   margin-right: 4px;
-  vertical-align: middle;
-  margin-top: -2px;
-`
-
-const iconCssInTips = css`
-  margin-right: 4px;
-  margin-top: -4px;
-  vertical-align: middle;
 `
 
 export type TabType =
@@ -119,17 +111,20 @@ function toastNeedLogin() {
 
 const radioBtnCss = css`
   height: 26px;
-  line-height: 26px;
+  line-height: unset;
 
   &:has(:focus-visible) {
     outline: none;
     outline-offset: unset;
   }
+
+  > .ant-radio-button + span {
+    height: 100%;
+  }
 `
 
 const radioBtnStandardCss = css`
   height: 32px;
-  line-height: 32px;
 `
 
 export function VideoSourceTab({ onRefresh }: { onRefresh: OnRefresh }) {
@@ -176,8 +171,17 @@ export function VideoSourceTab({ onRefresh }: { onRefresh: OnRefresh }) {
             value={key}
             key={key}
           >
-            <IconPark name={icon} {...iconProps} size={iconProps?.size || 18} css={iconCss} />
-            {label}
+            <span
+              css={css`
+                display: flex;
+                align-items: center;
+                line-height: unset;
+                height: 100%;
+              `}
+            >
+              <IconPark name={icon} {...iconProps} size={iconProps?.size || 18} css={iconCss} />
+              {label}
+            </span>
           </Radio.Button>
         ))}
       </Radio.Group>
@@ -186,16 +190,18 @@ export function VideoSourceTab({ onRefresh }: { onRefresh: OnRefresh }) {
         tooltip={
           <>
             {TabConfig.map(({ key, label, icon, iconProps, desc }) => (
-              <Fragment key={key}>
-                <IconPark
-                  name={icon}
-                  {...iconProps}
-                  size={iconProps?.size || 18}
-                  css={iconCssInTips}
-                />
+              <div
+                key={key}
+                css={css`
+                  display: flex;
+                  align-items: center;
+                  height: 26px;
+                `}
+              >
+                <IconPark name={icon} {...iconProps} size={iconProps?.size || 18} css={iconCss} />
                 {label}: {desc}
                 <br />
-              </Fragment>
+              </div>
             ))}
           </>
         }
