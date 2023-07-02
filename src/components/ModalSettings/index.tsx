@@ -268,7 +268,7 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                         tooltip={<>默认不过滤「已关注」</>}
                       />
 
-                      <div className={styles.settingsGroupSubTitle}>过滤器</div>
+                      <div className={styles.settingsGroupSubTitle}>过滤条件</div>
                       <div className={styles.row}>
                         <FlagSettingItem
                           configKey='filterMinPlayCountEnabled'
@@ -314,7 +314,7 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                 <div className={styles.tabPane}>
                   <div className={styles.settingsGroup}>
                     <div className={styles.settingsGroupTitle} style={{ marginBottom: 15 }}>
-                      外观设置
+                      样式自定义
                     </div>
                     <div className={cx(styles.settingsGroupContent)}>
                       <div className={styles.row}>

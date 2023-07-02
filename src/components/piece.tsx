@@ -59,14 +59,16 @@ export const ModalFeedConfigChecks = function () {
 export function HelpInfo({
   tooltip,
   iconProps,
+  tooltipProps,
 }: {
   tooltip?: ReactNode
+  tooltipProps?: Partial<ComponentProps<typeof AntdTooltip>>
   iconProps?: SetOptional<ComponentProps<typeof IconPark>, 'name'>
 }) {
   return (
     <>
       {tooltip && (
-        <AntdTooltip title={tooltip}>
+        <AntdTooltip {...tooltipProps} title={tooltip}>
           <IconPark
             name={'Info'}
             size={18}

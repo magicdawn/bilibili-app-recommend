@@ -179,7 +179,11 @@ export function ThemesSelect() {
               `}
             >
               {name}
-              <HelpInfo tooltip={tooltip} iconProps={{ name: 'Tips', size: 16 }} />
+              <HelpInfo
+                tooltip={tooltip}
+                tooltipProps={{ color: 'rgba(0, 0, 0, 0.85)' }} // 默认使用 colorPrimary, 链接可能看不清
+                iconProps={{ name: 'Tips', size: 16 }}
+              />
             </div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2px 8px' }}>
               {themes.map((t) => {
