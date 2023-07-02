@@ -8,7 +8,7 @@ export const appkey = '27eb53fc9058f8c3'
  * 获取 access_key
  */
 
-async function getAuth(): Promise<{ errmsg?: string; access_key?: string; json?: any }> {
+async function getAccessKey(): Promise<string | undefined> {
   const res = await request.get('https://passport.bilibili.com/login/app/third', {
     params: {
       appkey,
@@ -20,44 +20,64 @@ async function getAuth(): Promise<{ errmsg?: string; access_key?: string; json?:
   const json = res.data
 
   if (!json?.data?.has_login) {
-    return { errmsg: '你必须登录B站之后才能使用授权', json }
+    toast('你必须登录B站之后才能使用授权')
+    return
   }
 
   if (!json?.data?.confirm_uri) {
-    return { errmsg: '无法获得授权网址', json }
+    toast('无法获得授权网址')
+    return
   }
 
   const confirm_uri = json.data.confirm_uri
   let timeout: ReturnType<typeof setTimeout> | undefined
   let removeEventHandler: (() => void) | undefined
 
-  const waitCallback = new Promise<{ errmsg?: string; access_key?: string }>((resolve) => {
+  const waitCallback = new Promise<string | undefined>((resolve) => {
     const handleEvent = (e: MessageEvent) => {
-      if (e.origin != 'https://www.mcbbs.net' || !e.data) return
-
-      const key = e.data.match(/access_key=([0-9a-z]{32})/)
-      if (!key || !key[1]) {
-        return resolve({ errmsg: '没有获得匹配的密钥' })
+      if (e.origin != 'https://www.mcbbs.net') return
+      if (!e.data || typeof e.data !== 'string') {
+        console.warn('received message event with invalid data')
+        return
       }
 
-      resolve({ access_key: key[1] as string })
+      const u = new URL(e.data)
+      const accessKey = u.searchParams.get('access_key')
+      if (!accessKey) {
+        toast('没有获得匹配的密钥')
+        return resolve(undefined)
+      } else {
+        return resolve(accessKey)
+      }
     }
 
     window.addEventListener('message', handleEvent)
     removeEventHandler = () => window.removeEventListener('message', handleEvent)
 
     timeout = setTimeout(() => {
-      resolve({ errmsg: '获取授权超时' })
+      toast('获取授权超时')
+      resolve(undefined)
     }, 10 * 1000) // 10 s
   })
 
-  const iframe = document.createElement('iframe')
-  iframe.src = confirm_uri
-  iframe.style.display = 'none'
-  document.body.appendChild(iframe)
+  let cleanWindow: (() => void) | undefined
+
+  const useWindow = false
+  if (useWindow) {
+    // use window.open
+    const confirmWin = window.open(confirm_uri, '_blank', 'popup=true,width=800,height=600')
+    cleanWindow = () => confirmWin?.close()
+  } else {
+    // use iframe
+    const iframe = document.createElement('iframe')
+    iframe.src = confirm_uri
+    iframe.style.display = 'none'
+    document.body.appendChild(iframe)
+    cleanWindow = () => iframe.remove()
+  }
 
   function cleanup() {
-    iframe?.remove()
+    cleanWindow?.()
 
     removeEventHandler?.()
     removeEventHandler = undefined
@@ -75,13 +95,9 @@ async function getAuth(): Promise<{ errmsg?: string; access_key?: string; json?:
 }
 
 export async function auth() {
-  const res = await getAuth()
+  const accessKey = await getAccessKey()
+  if (!accessKey) return
 
-  if (!res.access_key) {
-    return toast(res.errmsg || '')
-  }
-
-  const accessKey = res.access_key
   settings.accessKey = accessKey
   toast('获取成功')
   return accessKey

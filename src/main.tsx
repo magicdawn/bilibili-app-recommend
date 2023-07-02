@@ -38,7 +38,16 @@ void (function main() {
     location.href.startsWith('https://www.mcbbs.net/template/mcbbs/image/special_photo_bg.png?')
   ) {
     window.stop()
-    return window.top?.postMessage(location.href, 'https://www.bilibili.com')
+
+    if (window.top === window) {
+      // a window
+      window.opener?.postMessage(location.href, 'https://www.bilibili.com')
+    } else {
+      // a iframe
+      window.top?.postMessage(location.href, 'https://www.bilibili.com')
+    }
+
+    return
   }
 
   if (location.pathname === '/' || location.pathname === '/index.html') {
