@@ -1,6 +1,6 @@
 # bilibili-app-recommend
 
-> 更好的 B 站首页推荐体验
+> 一个好用的 B 站首页推荐脚本
 
 ## 功能
 
