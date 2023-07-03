@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.16.4
+
+- 8db4a35 chore: tweak desc again
+- 2ee68ef chore: update description
+- 9b9384d refactor: improve auth getAccessKey
+- 4c6c11f chore: use black backgorund for tooltip in ThemeSelect
+- 02e5dca chore: video-source-tab style tweak
+- 1934707 fix: video-source-tab icon & text vertical align
+- 475fc03 feat: disable dislike entry for video which does not contain three_point.dislike_reasons
+- f6e0e9e feat: change tooltip backgroud-color to colorPrimary
+- d00e667 feat: improve firefox compatibility
+
 ## v0.16.3
 
 - 所有 Tab: 稍后再看状态改为全局状态, 推荐/动态/收藏 等 Tab 中的视频可以保持稍后再看状态.
