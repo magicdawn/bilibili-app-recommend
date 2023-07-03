@@ -1,6 +1,6 @@
 # bilibili-app-recommend
 
-> 为 B 站首页添加像 App 一样的推荐
+> 更好的 B 站首页推荐体验
 
 ## 功能
 
@@ -17,8 +17,7 @@
 - [x] IINA
 - [x] 主题设置(预设主题 + color-picker 自定义)
 - [x] 已关注 Tab
-- [x] 动态 Tab
-- [x] 稍后再看 Tab
+- [x] 动态 / 稍后再看 / 收藏 Tab
 
 ## 链接
 
