@@ -96,7 +96,7 @@ export default defineConfig(({ command, mode, ssrBuild }) => ({
         name: 'bilibili-app-recommend',
         namespace: 'https://magicdawn.fun',
         version,
-        description: '一个好用的 B 站首页推荐脚本',
+        description: '为 B 站首页添加像 App 一样的推荐',
         icon: 'https://www.bilibili.com/favicon.ico',
         // 'description': 'Add app like recommend part to bilibili homepage',
         author: 'magicdawn',

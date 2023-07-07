@@ -1,6 +1,6 @@
 # bilibili-app-recommend
 
-> 一个好用的 B 站首页推荐脚本
+> 为 B 站首页添加像 App 一样的推荐
 
 ## 功能
 
