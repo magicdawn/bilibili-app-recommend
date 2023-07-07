@@ -7,7 +7,12 @@ import { useModalDislikeVisible } from '$components/ModalDislike'
 import { colorPrimaryValue } from '$components/ModalSettings/theme'
 import { OnRefresh } from '$components/RecHeader'
 import { useCurrentSourceTab } from '$components/RecHeader/tab'
-import { VideoCard, VideoCardEmitter, VideoCardEvents } from '$components/VideoCard'
+import {
+  VideoCard,
+  VideoCardEmitter,
+  VideoCardEvents,
+  borderRadiusValue,
+} from '$components/VideoCard'
 import { IVideoCardData } from '$components/VideoCard/process/normalize'
 import { RecItemType } from '$define'
 import { getHeaderHeight } from '$header'
@@ -62,7 +67,7 @@ export const CardClassNames = {
 
   cardActive: generateClassName`
     border-color: ${colorPrimaryValue};
-    border-radius: 6px;
+    border-radius: ${borderRadiusValue};
     overflow: hidden;
   `,
 }
@@ -278,7 +283,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
       }
     })
 
-    // 不喜欢弹框
+    // 不喜欢弹窗
     const modalDislikeVisible = useModalDislikeVisible()
 
     // emitters

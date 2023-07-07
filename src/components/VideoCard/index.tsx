@@ -83,8 +83,10 @@ export type VideoCardProps = {
   emitter?: VideoCardEmitter
 } & ComponentProps<'div'>
 
-const borderRadiusStyle: CSSProperties = {
-  borderRadius: 'var(--video-card-border-radius)',
+export const borderRadiusIdentifier = '--video-card-border-radius'
+export const borderRadiusValue = `var(${borderRadiusIdentifier})`
+export const borderRadiusStyle: CSSProperties = {
+  borderRadius: borderRadiusValue,
 }
 
 export const VideoCard = memo(function VideoCard({

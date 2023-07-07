@@ -162,7 +162,7 @@ export function ModalDislike({ show, onHide, item }: IProps) {
         <div className={styles.tipsContainer}>
           <div className={styles.tips}>
             <IconPark name='Info' size={15} style={{ marginRight: 5 }} />
-            使用删除键打开弹框, 数字键选择, Esc 关闭
+            使用删除键打开弹窗, 数字键选择, Esc 关闭
           </div>
           {activeReasonName && (
             <div className={styles.tips}>

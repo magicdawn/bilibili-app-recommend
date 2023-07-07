@@ -137,11 +137,11 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                       <FlagSettingItem
                         configKey={'initialShowMore'}
                         label='自动查看更多'
-                        tooltip='打开首页时默认打开推荐弹框'
+                        tooltip='打开首页时默认打开推荐弹窗'
                         className={styles.check}
                         extraAction={(val) => {
                           if (val) {
-                            toast('已开启自动查看更多: 下次打开首页时将直接展示推荐弹框')
+                            toast('已开启自动查看更多: 下次打开首页时将直接展示推荐弹窗')
                           }
                         }}
                       />
