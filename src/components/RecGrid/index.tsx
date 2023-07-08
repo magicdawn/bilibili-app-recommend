@@ -425,7 +425,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
       className
     )
 
-    const showSkeleton = refreshError || (refreshing && !swr)
+    const showSkeleton = !items.length || refreshError || (refreshing && !swr)
 
     // skeleton loading
     if (showSkeleton) {
