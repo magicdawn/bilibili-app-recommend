@@ -12,13 +12,16 @@ import {
   MouseEvent,
   MouseEventHandler,
   ReactNode,
+  createContext,
   forwardRef,
+  useContext,
   useImperativeHandle,
   useRef,
   useState,
 } from 'react'
 // import { useSticky } from 'react-use-sticky'
 import { useSticky } from '$common/hooks/useSticky'
+import { noop } from 'lodash'
 import { proxy, useSnapshot } from 'valtio'
 import { AccessKeyManage } from '../AccessKeyManage'
 import { ModalFeed } from '../ModalFeed'
@@ -75,6 +78,11 @@ export type RecHeaderRef = {
   scroll: () => void
 }
 
+const RecHeaderContext = createContext<{ onRefresh: OnRefresh }>({ onRefresh: noop })
+export function useRecHeaderContext() {
+  return useContext(RecHeaderContext)
+}
+
 export type OnRefreshOoptions = { watchlaterKeepOrder?: boolean }
 export type OnRefresh = (reuse?: boolean, options?: OnRefreshOoptions) => void | Promise<void>
 
@@ -126,75 +134,77 @@ export const RecHeader = forwardRef<
 
   return (
     <>
-      <div
-        ref={stickyRef}
-        className='area-header'
-        css={[
-          css`
-            margin-bottom: 0;
-            height: 50px;
-          `,
-          pureRecommend &&
+      <RecHeaderContext.Provider value={{ onRefresh }}>
+        <div
+          ref={stickyRef}
+          className='area-header'
+          css={[
             css`
-              position: sticky;
-              top: ${headerHeight - 1}px; // 有缝隙, 故 -1 px
-              z-index: 1000;
+              margin-bottom: 0;
+              height: 50px;
             `,
-          pureRecommend &&
-            sticky &&
-            css`
-              background-color: var(--bg1_float);
-              box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
-            `,
-        ]}
-      >
-        <div className='left'>
-          <svg className='icon'>
-            <use href='#channel-cinephile'></use>
-          </svg>
-          {/* <a className='title' href='#'>
+            pureRecommend &&
+              css`
+                position: sticky;
+                top: ${headerHeight - 1}px; // 有缝隙, 故 -1 px
+                z-index: 1000;
+              `,
+            pureRecommend &&
+              sticky &&
+              css`
+                background-color: var(--bg1_float);
+                box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
+              `,
+          ]}
+        >
+          <div className='left'>
+            <svg className='icon'>
+              <use href='#channel-cinephile'></use>
+            </svg>
+            {/* <a className='title' href='#'>
             推荐
           </a> */}
-          <VideoSourceTab onRefresh={onRefresh} />
-          {leftSlot}
-        </div>
+            <VideoSourceTab onRefresh={onRefresh} />
+            {leftSlot}
+          </div>
 
-        <div className='right'>
-          <Space size={'small'}>
-            {rightSlot}
+          <div className='right'>
+            <Space size={'small'}>
+              {rightSlot}
 
-            {!accessKey && <AccessKeyManage style={{ marginLeft: 5 }} />}
+              {!accessKey && <AccessKeyManage style={{ marginLeft: 5 }} />}
 
-            <Button onClick={showModalConfig} css={configStyles.btn}>
-              <IconPark name='Config' css={configStyles.icon} />
-            </Button>
-
-            <RefreshButton
-              refreshing={refreshing}
-              onRefresh={onRefresh}
-              refreshHotkeyEnabled={!(modalConfigVisible || modalFeedVisible)}
-            />
-
-            {!pureRecommend && (
-              <Button css={verticalAlignStyle} onClick={showModalFeed}>
-                <span>查看更多</span>
-                <svg
-                  css={css`
-                    width: 12px;
-                    height: 12px;
-                    margin-left: 2px;
-                  `}
-                >
-                  <use href='#widget-arrow'></use>
-                </svg>
+              <Button onClick={showModalConfig} css={configStyles.btn}>
+                <IconPark name='Config' css={configStyles.icon} />
               </Button>
-            )}
-          </Space>
-        </div>
-      </div>
 
-      <ModalFeed show={modalFeedVisible} onHide={hideModalFeed} />
-      <ModalSettings show={modalConfigVisible} onHide={hideModalConfig} />
+              <RefreshButton
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+                refreshHotkeyEnabled={!(modalConfigVisible || modalFeedVisible)}
+              />
+
+              {!pureRecommend && (
+                <Button css={verticalAlignStyle} onClick={showModalFeed}>
+                  <span>查看更多</span>
+                  <svg
+                    css={css`
+                      width: 12px;
+                      height: 12px;
+                      margin-left: 2px;
+                    `}
+                  >
+                    <use href='#widget-arrow'></use>
+                  </svg>
+                </Button>
+              )}
+            </Space>
+          </div>
+        </div>
+
+        <ModalFeed show={modalFeedVisible} onHide={hideModalFeed} />
+        <ModalSettings show={modalConfigVisible} onHide={hideModalConfig} />
+      </RecHeaderContext.Provider>
     </>
   )
 })

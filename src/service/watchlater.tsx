@@ -1,9 +1,10 @@
+import { useRecHeaderContext } from '$components/RecHeader'
 import { RecItemType, WatchLaterItemExtend, WatchLaterJson } from '$define'
 import { request } from '$request'
-import { settings } from '$settings'
+import { settings, updateSettings, useSettingsSnapshot } from '$settings'
 import { getHasLogined } from '$utility'
 import { toast } from '$utility/toast'
-import { Tag } from 'antd'
+import { Switch, Tag } from 'antd'
 import dayjs from 'dayjs'
 import { cloneDeep, shuffle } from 'lodash'
 import { ComponentProps, ReactNode } from 'react'
@@ -101,24 +102,8 @@ export class WatchLaterService implements IService {
 
   get usageInfo(): ReactNode {
     if (!this.loaded) return
-
     const { count } = this
-    const color: ComponentProps<typeof Tag>['color'] =
-      count <= 90 ? 'success' : count < 100 ? 'warning' : 'error'
-    const title = `${color !== 'success' ? '快满了~ ' : ''}已使用 ${count} / 100`
-
-    return (
-      <Tag
-        color={color}
-        style={{ marginLeft: 20, marginTop: 1, cursor: 'pointer' }}
-        title={title}
-        onClick={() => {
-          toast(`稍后再看: ${title}`)
-        }}
-      >
-        {count} / 100
-      </Tag>
-    )
+    return <WatchLaterUsageInfo count={count} />
   }
 
   async loadMore() {
@@ -146,4 +131,40 @@ export class WatchLaterService implements IService {
 
     return items
   }
+}
+
+function WatchLaterUsageInfo({ count }: { count: number }) {
+  const color: ComponentProps<typeof Tag>['color'] =
+    count <= 90 ? 'success' : count < 100 ? 'warning' : 'error'
+  const title = `${color !== 'success' ? '快满了~ ' : ''}已使用 ${count} / 100`
+
+  const { shuffleForWatchLater } = useSettingsSnapshot()
+  const { onRefresh } = useRecHeaderContext()
+
+  return (
+    <>
+      <Tag
+        color={color}
+        style={{ marginLeft: 20, marginTop: 1, cursor: 'pointer' }}
+        title={title}
+        onClick={() => {
+          toast(`稍后再看: ${title}`)
+        }}
+      >
+        {count} / 100
+      </Tag>
+
+      <Switch
+        checkedChildren='随机顺序'
+        unCheckedChildren='添加顺序'
+        checked={shuffleForWatchLater}
+        onChange={(checked) => {
+          updateSettings({ shuffleForWatchLater: checked })
+          setTimeout(() => {
+            onRefresh()
+          })
+        }}
+      />
+    </>
+  )
 }
