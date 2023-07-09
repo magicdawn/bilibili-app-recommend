@@ -80,12 +80,22 @@ const LongwashingThemes = toThemes(
 
 const ThemeGroups: { name: string; tooltip?: ReactNode; themes: LxTheme[] }[] = [
   {
-    name: 'App',
+    name: '预设',
     themes: [
       DEFAULT_BILI_PINK_THEME,
       { id: 'bilibili-blue', name: 'B站蓝', colorPrimary: '#00aeec' },
       { id: 'app-靓紫', name: '靓紫', colorPrimary: '#8500ff' },
       COLOR_PICKER_THEME,
+    ],
+  },
+  {
+    name: '移动端',
+    themes: [
+      { id: 'app-custom-高能红', name: '高能红', colorPrimary: '#fd453e' },
+      { id: 'app-custom-咸蛋黄', name: '咸蛋黄', colorPrimary: '#ffc034' },
+      { id: 'app-custom-早苗绿', name: '早苗绿', colorPrimary: '#85c255' },
+      { id: 'app-custom-宝石蓝', name: '宝石蓝', colorPrimary: '#0095ef' },
+      { id: 'app-custom-罗兰紫', name: '罗兰紫', colorPrimary: '#a029ac' },
     ],
   },
   {

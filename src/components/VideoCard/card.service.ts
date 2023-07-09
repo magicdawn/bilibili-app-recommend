@@ -4,7 +4,7 @@ import { HOST_APP, gmrequest, isWebApiSuccess, request } from '$request'
 import { getUid } from '$service/fav'
 import { getCsrfToken, getHasLogined } from '$utility'
 import { OPERATION_FAIL_MSG, toast } from '$utility/toast'
-import { LRUCache } from 'lru-cache'
+import QuickLRU from 'quick-lru'
 
 // api.bilibili.com/pvideo?aid=${target.dataset.id}&_=${Date.now()
 // 视频预览
@@ -30,7 +30,7 @@ export async function dm(aid: string) {
   return json.data
 }
 
-export const cache = new LRUCache<string, VideoData>({ max: 1000 })
+export const cache = new QuickLRU<string, VideoData>({ maxSize: 1000 })
 
 export type VideoData = {
   pvideoData: PvideoJson['data']
