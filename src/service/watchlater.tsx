@@ -145,7 +145,7 @@ function WatchLaterUsageInfo({ count }: { count: number }) {
     <>
       <Tag
         color={color}
-        style={{ marginLeft: 20, marginTop: 1, cursor: 'pointer' }}
+        style={{ marginLeft: 20, marginRight: 0, marginTop: 1, cursor: 'pointer' }}
         title={title}
         onClick={() => {
           toast(`稍后再看: ${title}`)
@@ -155,6 +155,7 @@ function WatchLaterUsageInfo({ count }: { count: number }) {
       </Tag>
 
       <Switch
+        style={{ marginLeft: 15 }}
         checkedChildren='随机顺序'
         unCheckedChildren='添加顺序'
         checked={shuffleForWatchLater}
