@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.16.5
+
+- 9dea53c chore: update deps
+- 0648413 chore: tweak margin
+- d6267fd dep: replace lru-cache with quick-lru
+- 851571b fix: scrollTop collapsed to 0 in chrome
+- 1933fc8 feat: add toggle shuffle in watchlater.usageInfo
+- f8004d2 chore: revert description
+- 928fa33 chore: clean up
+- 298b07e feat: more tweaks
+
 ## v0.16.4
 
 - 8db4a35 chore: tweak desc again
