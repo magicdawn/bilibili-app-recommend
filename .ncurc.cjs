@@ -1,3 +1,6 @@
 module.exports = {
-  reject: ['axios', 'chalk', 'open'],
+  reject: [
+    //
+    'axios',
+  ],
 }

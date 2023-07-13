@@ -31,8 +31,9 @@
   },
   "ts-node": {
     "swc": true,
+    "esm": true,
     "compilerOptions": {
-      "module": "CommonJS"
+      "module": "Node16"
     }
   }
 }
