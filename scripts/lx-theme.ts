@@ -1,7 +1,10 @@
 import child_process from 'child_process'
 import dl from 'dl-vampire'
+import esmUtils from 'esm-utils'
 import fsp from 'fs/promises'
 import path from 'path'
+
+const { __dirname } = esmUtils(import.meta)
 
 void (async function () {
   await dl({
