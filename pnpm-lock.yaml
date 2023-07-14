@@ -162,9 +162,6 @@ devDependencies:
   eslint-config-prettier:
     specifier: ^8.8.0
     version: 8.8.0(eslint@8.44.0)
-  esm-util:
-    specifier: ^1.0.1
-    version: 1.0.1
   esm-utils:
     specifier: ^4.1.2
     version: 4.1.2
@@ -2589,10 +2586,6 @@ packages:
       text-table: 0.2.0
     transitivePeerDependencies:
       - supports-color
-    dev: true
-
-  /esm-util@1.0.1:
-    resolution: {integrity: sha512-uwGdptl6Kduys4Hn8F5Hi4zk9aQlQBYs2RRhmWfDkBp0Jo95HNATNbA4aIdPU62w2HQ7rimMqt5FUBUqytXISw==}
     dev: true
 
   /esm-utils@4.1.2:
