@@ -7,7 +7,6 @@ import {
   videoGridInternalTesting,
   videoGridNewHomepage,
 } from '$components/video-grid.module.less'
-import { AppRecItemExtend, PcRecItemExtend } from '$define'
 import { cx } from '$libs'
 import { getIsInternalTesting } from '$platform'
 import { refreshForHome } from '$service'
@@ -42,7 +41,7 @@ export function SectionRecommend() {
   })
   useMount(refresh)
 
-  const showSkeleton = refreshError || (refreshing && !swr)
+  const showSkeleton = !items.length || refreshError || (refreshing && !swr)
 
   return (
     <section data-area='推荐'>
@@ -57,7 +56,7 @@ export function SectionRecommend() {
       >
         {showSkeleton
           ? skeletonPlaceholders.map((id) => <VideoCard key={id} />)
-          : items!.map((item: PcRecItemExtend | AppRecItemExtend) => {
+          : items.map((item) => {
               return <VideoCard key={item.uniqId} item={item} />
             })}
       </div>

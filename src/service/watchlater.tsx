@@ -96,7 +96,7 @@ export class WatchLaterService implements IService {
   loaded = false
   page = -1
   hasMore = true
-  count: number
+  count: number = 0
   items: RecItemType[] = []
   keepOrder: boolean
 

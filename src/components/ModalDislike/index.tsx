@@ -46,7 +46,7 @@ export function ModalDislike({ show, onHide, item }: IProps) {
       setIsRequesting(true)
       success = await dislike(item, reason.id)
     } catch (e) {
-      err = e
+      err = e as Error
     } finally {
       setIsRequesting(false)
     }

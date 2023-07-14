@@ -31,7 +31,10 @@ export function isWebApiSuccess(json: any) {
 // 可以跨域
 import { appkey } from '$utility/auth'
 import gmAdapter from 'axios-userscript-adapter'
-export const gmrequest = axios.create({ adapter: gmAdapter })
+export const gmrequest = axios.create({
+  // @ts-ignore
+  adapter: gmAdapter,
+})
 
 gmrequest.interceptors.request.use(
   function (config) {

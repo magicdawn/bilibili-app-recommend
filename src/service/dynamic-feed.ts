@@ -5,7 +5,7 @@ import { IService } from './base'
 export class DynamicFeedService implements IService {
   static PAGE_SIZE = 15
 
-  offset: string
+  offset: string = ''
   page = 0
   hasMore = true
 

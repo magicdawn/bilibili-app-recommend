@@ -140,7 +140,7 @@ export class FavFolderService {
   }
 
   hasMore: boolean
-  info: FavFolderDetailInfo
+  info: FavFolderDetailInfo | undefined
   page = 0
 
   async loadMore(): Promise<FavItemExtend[] | undefined> {
@@ -177,9 +177,9 @@ export class FavFolderService {
     return items.map((item) => {
       return {
         ...item,
-        folder: this.info,
+        folder: this.info!,
         api: 'fav',
-        uniqId: `fav-${this.info.id}-${item.bvid}`,
+        uniqId: `fav-${this.info?.id}-${item.bvid}`,
       }
     })
   }

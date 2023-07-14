@@ -170,7 +170,7 @@ const DislikedCard = memo(function DislikedCard({
     try {
       success = await cancelDislike(item, dislikedReason.id)
     } catch (e) {
-      err = e
+      err = e as Error
     }
 
     if (err) {
@@ -323,8 +323,8 @@ const VideoCardInner = memo(function VideoCardInner({
 
     // update global item data for debug
     try {
-      unsafeWindow[`${APP_KEY_PREFIX}_activeItem`] = item
-    } catch (e) {
+      ;(unsafeWindow as any)[`${APP_KEY_PREFIX}_activeItem`] = item
+    } catch (e: any) {
       console.warn('set unsafeWindow activeItem error')
       console.warn(e.stack || e)
     }

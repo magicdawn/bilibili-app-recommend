@@ -61,7 +61,7 @@ export function formatTimeStamp(unixTs?: number, includeTime = false) {
 }
 
 // https://socialsisteryi.github.io/bilibili-API-collect/docs/video/attribute_data.html#state%E5%AD%97%E6%AE%B5%E5%80%BC-%E7%A8%BF%E4%BB%B6%E7%8A%B6%E6%80%81
-export const VideoStateMap = {
+export const VideoStateMap: Record<string, string> = {
   '1': '橙色通过',
   '0': '开放浏览',
   '-1': '待审',
@@ -86,8 +86,8 @@ export const VideoStateMap = {
   '-100': '用户删除',
 }
 
-// true: valid
 // string: invalid reason
+// undefined: it's valid
 export function getVideoInvalidReason(state: number | undefined): string | undefined {
   if (typeof state === 'undefined') return // unkown
   if (state >= 0) return // valid

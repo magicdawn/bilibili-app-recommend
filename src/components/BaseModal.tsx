@@ -76,8 +76,8 @@ export function BaseModal({
   const isDarkMode = useIsDarkMode()
 
   const { bg, c } = useMemo(() => {
-    const bg = window.getComputedStyle(document.body)['background-color']
-    const c = window.getComputedStyle(document.body)['color']
+    const bg = window.getComputedStyle(document.body).backgroundColor
+    const c = window.getComputedStyle(document.body).color
     return { bg, c }
   }, [isDarkMode])
 
