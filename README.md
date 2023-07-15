@@ -87,6 +87,10 @@ _\* 截图均为不带 access_key 匿名获取, 不代表作者喜好_
 
 > 你添加的稍后再看
 
+#### 收藏
+
+> 收藏夹内容的抓取
+
 ### 模式
 
 可以基于个人喜好定制
@@ -160,7 +164,16 @@ _\* 开关-第一项_
 ### 视频卡片
 
 - [x] 支持鼠标滑动快速预览.
+- [x] 支持右键菜单
 - [ ] 弹幕预览, 个人需求不是很大. (原版有该功能, 可以试试旧版首页)
+
+#### 视频卡片右键菜单
+
+因 Tab 功能不同有差异
+
+![image](https://github.com/magicdawn/bilibili-app-recommend/assets/4067115/b7cbe6de-dc4c-4c45-909a-0392aaa66add)
+![image](https://github.com/magicdawn/bilibili-app-recommend/assets/4067115/26053d9c-2543-4ffb-ac20-9b052a6807c2)
+![image](https://github.com/magicdawn/bilibili-app-recommend/assets/4067115/451e3705-99a0-422e-8d33-e893bc09be71)
 
 ### 快捷键说明
 
