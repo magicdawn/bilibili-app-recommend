@@ -63,6 +63,14 @@ export default defineConfig(({ command, mode, ssrBuild }) => ({
   plugins: [
     tsconfigPaths(),
 
+    // nodePolyfills({
+    //   globals: {
+    //     Buffer: false,
+    //     global: false,
+    //     process: false,
+    //   },
+    // }),
+
     command === 'build' &&
       importer({
         libraryName: 'antd',

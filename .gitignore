@@ -6,6 +6,7 @@ node_modules
 
 # visualizer
 /stats.html
+/stats.*
 
 .turbo
 
