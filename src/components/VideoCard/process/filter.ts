@@ -5,7 +5,10 @@ import { normalizeCardData } from './normalize'
 
 export function anyFilterEnabled(tab: TabType) {
   return (
-    settings.filterMinDurationEnabled || settings.filterMinPlayCountEnabled || tab === 'onlyFollow'
+    tab === 'onlyFollow' ||
+    settings.filterMinDurationEnabled ||
+    settings.filterMinPlayCountEnabled ||
+    settings.filterOutGotoTypePicture
   )
 }
 
@@ -15,7 +18,7 @@ export function filterVideos(items: RecItemType[], tab: TabType) {
   }
 
   return items.filter((item) => {
-    const { play, duration, recommendReason } = normalizeCardData(item)
+    const { play, duration, recommendReason, goto } = normalizeCardData(item)
     const isFollowed = recommendReason === '已关注' || recommendReason?.includes('关注')
 
     /**
@@ -27,25 +30,37 @@ export function filterVideos(items: RecItemType[], tab: TabType) {
     }
 
     /**
-     * 推荐筛选
+     * 过滤范围
      */
 
     if (!settings.enableFilterForFollowed) {
       if (isFollowed) return true
     }
 
-    if (typeof play === 'number') {
-      if (settings.filterMinPlayCountEnabled && settings.filterMinPlayCount) {
-        if (play < settings.filterMinPlayCount) {
-          return false
-        }
-      }
+    /**
+     * 过滤条件
+     */
+
+    if (
+      settings.filterMinPlayCountEnabled &&
+      settings.filterMinPlayCount &&
+      typeof play === 'number' &&
+      play < settings.filterMinPlayCount
+    ) {
+      return false
     }
 
-    if (duration && settings.filterMinDurationEnabled && settings.filterMinDuration) {
-      if (duration < settings.filterMinDuration) {
-        return false
-      }
+    if (
+      settings.filterMinDurationEnabled &&
+      settings.filterMinDuration &&
+      duration &&
+      duration < settings.filterMinDuration
+    ) {
+      return false
+    }
+
+    if (settings.filterOutGotoTypePicture && goto === 'picture') {
+      return false
     }
 
     return true

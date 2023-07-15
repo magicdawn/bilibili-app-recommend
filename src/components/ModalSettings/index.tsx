@@ -187,19 +187,6 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                           </>
                         }
                       />
-
-                      <div style={{ width: '100%', display: 'flex', alignItems: 'center' }}>
-                        预览更新间隔
-                        <Slider
-                          style={{ flex: 1, margin: '0 15px' }}
-                          min={0}
-                          max={1000}
-                          keyboard
-                          onChange={(val) => (settings.autoPreviewUpdateInterval = val)}
-                          value={autoPreviewUpdateInterval}
-                        />
-                        <span style={{ width: '65px' }}>({autoPreviewUpdateInterval}ms)</span>
-                      </div>
                     </div>
                   </div>
 
@@ -302,6 +289,15 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                           disabled={!filterMinDurationEnabled}
                         />
                       </div>
+
+                      <div className={styles.settingsGroupSubTitle}>按类型过滤</div>
+                      <div className={styles.row}>
+                        <FlagSettingItem
+                          configKey='filterOutGotoTypePicture'
+                          label='图文: 动态 & 专栏'
+                          tooltip={<>过滤掉图文推荐</>}
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -335,8 +331,8 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                       <div className={styles.row} style={{ marginTop: 5 }}>
                         <FlagSettingItem
                           configKey='styleUseStandardVideoSourceTab'
-                          label='推荐源切换 Tab: 使用标准大小'
-                          tooltip='推荐源切换 Tab 大小, 默认紧凑大小'
+                          label='推荐源切换 Tab 按钮: 使用标准高度'
+                          tooltip='默认紧凑高度'
                         />
                       </div>
                     </div>
@@ -398,6 +394,22 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                           label='对「收藏」Tab 使用随机顺序'
                         />
                       </div>
+                    </div>
+
+                    <div className={styles.settingsGroupTitle} style={{ marginTop: 15 }}>
+                      预览
+                    </div>
+                    <div style={{ width: '100%', display: 'flex', alignItems: 'center' }}>
+                      自动预览更新间隔
+                      <Slider
+                        style={{ flex: 1, margin: '0 15px' }}
+                        min={0}
+                        max={1000}
+                        keyboard
+                        onChange={(val) => (settings.autoPreviewUpdateInterval = val)}
+                        value={autoPreviewUpdateInterval}
+                      />
+                      <span style={{ width: '65px' }}>({autoPreviewUpdateInterval}ms)</span>
                     </div>
                   </div>
                 </div>

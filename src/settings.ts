@@ -67,6 +67,9 @@ export const initialSettings = {
   // 已关注UP的推荐视频, 默认不参与过滤
   enableFilterForFollowed: false,
 
+  // filter out whose goto = 'picture'
+  filterOutGotoTypePicture: false,
+
   /**
    * 外观
    */
