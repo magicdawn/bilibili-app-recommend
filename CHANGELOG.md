@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.16.6
+
+Noteable changes:
+
+- 202de58 feat: add filterOutGotoTypePicture, move autoPreviewUpdateInterval to 高级设置
+- e21bb61 ts: turn on strict
+
 ## v0.16.5
 
 - 9dea53c chore: update deps
