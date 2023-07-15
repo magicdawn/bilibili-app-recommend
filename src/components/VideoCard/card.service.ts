@@ -1,8 +1,7 @@
 import { AppRecItem, DmJson, PvideoJson } from '$define'
 import { FavFolderListAllJson } from '$define/fav/folder-list-all'
 import { HOST_APP, gmrequest, isWebApiSuccess, request } from '$request'
-import { getUid } from '$service/fav'
-import { getCsrfToken, getHasLogined } from '$utility'
+import { getCsrfToken, getHasLogined, getUid } from '$utility'
 import { OPERATION_FAIL_MSG, toast } from '$utility/toast'
 import QuickLRU from 'quick-lru'
 

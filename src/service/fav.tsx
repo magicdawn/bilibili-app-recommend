@@ -3,16 +3,12 @@ import { FavFolderListAllItem, FavFolderListAllJson } from '$define/fav/folder-l
 import { FavFolderDetailInfo, ResourceListJSON } from '$define/fav/resource-list'
 import { isWebApiSuccess, request } from '$request'
 import { settings } from '$settings'
-import { parseCookie, toast } from '$utility'
+import { getUid, toast } from '$utility'
 import { css } from '@emotion/react'
 import { Tag } from 'antd'
 import { shuffle } from 'lodash'
 import { ReactNode } from 'react'
 import { IService } from './base'
-
-export function getUid() {
-  return parseCookie().DedeUserID
-}
 
 export function formatFavFolderUrl(id: number) {
   const uid = getUid()

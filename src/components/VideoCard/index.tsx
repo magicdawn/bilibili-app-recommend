@@ -7,6 +7,8 @@ import { AppRecItem, AppRecItemExtend, RecItemType } from '$define'
 import { IconPark } from '$icon-park'
 import { isMac, isSafari } from '$platform'
 import { formatFavFolderUrl } from '$service/fav'
+import { UserService } from '$service/user'
+import { useInBlacklist } from '$service/user/blacklist'
 import { useWatchLaterState, watchLaterState } from '$service/watchlater'
 import { settings, useSettingsSnapshot } from '$settings'
 import { toast, toastOperationFail, toastRequestFail } from '$utility/toast'
@@ -124,6 +126,8 @@ export const VideoCard = memo(function VideoCard({
   )
 
   const dislikedReason = useDislikedReason(item?.api === 'app' && item.param)
+  const cardData = useMemo(() => item && normalizeCardData(item), [item])
+  const blacklisted = useInBlacklist(cardData?.authorMid)
 
   return (
     <div
@@ -134,15 +138,19 @@ export const VideoCard = memo(function VideoCard({
       {skeleton}
       {!loading &&
         item &&
+        cardData &&
         (dislikedReason ? (
           <DislikedCard
             item={item as AppRecItemExtend}
             emitter={emitter}
             dislikedReason={dislikedReason!}
           />
+        ) : blacklisted ? (
+          <BlacklistCard cardData={cardData} />
         ) : (
           <VideoCardInner
-            item={item!}
+            item={item}
+            cardData={cardData}
             active={active}
             emitter={emitter}
             onRemoveCurrent={onRemoveCurrent}
@@ -205,8 +213,37 @@ const DislikedCard = memo(function DislikedCard({
   )
 })
 
+const BlacklistCard = memo(function BlacklistCard({ cardData }: { cardData: IVideoCardData }) {
+  const { authorMid, authorFace, authorName } = cardData
+
+  const onCancel = useMemoizedFn(async () => {
+    if (!authorMid) return
+    const success = await UserService.blacklistRemove(authorMid)
+    if (success) toast(`已移出黑名单: ${authorName}`)
+  })
+
+  return (
+    <div className={cx(styles.dislikedWrapper)}>
+      <div className={styles.dislikeContentCover}>
+        <div className={styles.dislikeContentCoverInner}>
+          <IconPark name='PeopleDelete' size={32} className={styles.dislikeIcon} />
+          <div className={styles.dislikeReason}>已拉黑</div>
+          <div className={styles.dislikeDesc}>UP: {authorName}</div>
+        </div>
+      </div>
+      <div className={styles.dislikeContentAction}>
+        <button onClick={onCancel}>
+          <IconPark name='Return' size='16' style={{ marginRight: 4, marginTop: -2 }} />
+          撤销
+        </button>
+      </div>
+    </div>
+  )
+})
+
 type VideoCardInnerProps = {
   item: RecItemType
+  cardData: IVideoCardData
   active?: boolean
   onRemoveCurrent?: (item: RecItemType, data: IVideoCardData) => void | Promise<void>
   onMoveToFirst?: (item: RecItemType, data: IVideoCardData) => void | Promise<void>
@@ -214,6 +251,7 @@ type VideoCardInnerProps = {
 }
 const VideoCardInner = memo(function VideoCardInner({
   item,
+  cardData,
   active = false,
   onRemoveCurrent,
   onMoveToFirst,
@@ -225,7 +263,6 @@ const VideoCardInner = memo(function VideoCardInner({
   const isWatchlater = item.api === 'watchlater'
   const isFav = item.api === 'fav'
 
-  const cardData = useMemo(() => normalizeCardData(item), [item])
   const {
     // video
     avid,
@@ -490,6 +527,15 @@ const VideoCardInner = memo(function VideoCardInner({
     window.open(iinaUrl, '_self')
   })
 
+  const hasBlacklistEntry = item.api === 'app' || item.api === 'pc'
+  const onBlacklistUp = useMemoizedFn(async () => {
+    if (!authorMid) return toast('UP mid 为空!')
+    const success = await UserService.blacklistAdd(authorMid)
+    if (success) {
+      toast(`已加入黑名单: ${authorName}`)
+    }
+  })
+
   const contextMenus: MenuProps['items'] = useMemo(() => {
     const watchLaterLabel = watchLaterAdded ? '移除稍后再看' : '稍后再看'
 
@@ -524,6 +570,14 @@ const VideoCardInner = memo(function VideoCardInner({
         icon: <IconPark name='DislikeTwo' size={15} />,
         onClick() {
           onTriggerDislike()
+        },
+      },
+      hasBlacklistEntry && {
+        key: 'blacklist-up',
+        label: '将 UP 加入黑名单',
+        icon: <IconPark name='PeopleDelete' size={15} />,
+        onClick() {
+          onBlacklistUp()
         },
       },
       {

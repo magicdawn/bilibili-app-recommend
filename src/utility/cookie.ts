@@ -27,6 +27,10 @@ export function getCsrfToken(): string {
   return csrfToken
 }
 
+export function getUid() {
+  return parseCookie().DedeUserID
+}
+
 export function getHasLogined(): boolean {
   // logout in default header
   // but not included in bilibili-evolved
