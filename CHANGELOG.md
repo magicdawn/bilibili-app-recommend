@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.16.7
+
+- feat: 支持在推荐 Tab 快速拉黑视频作者
+
+![image](https://github.com/magicdawn/bilibili-app-recommend/assets/4067115/b7cbe6de-dc4c-4c45-909a-0392aaa66add)
+
+![image](https://github.com/magicdawn/bilibili-app-recommend/assets/4067115/a48df3b5-0028-4100-8780-c40b61134b63)
+
 ## v0.16.6
 
 Noteable changes:

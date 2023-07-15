@@ -3,6 +3,7 @@ import { useMittOn } from '$common/hooks/useMitt'
 import { AntdTooltip } from '$components/AntdApp'
 import { Reason, dislikedIds, showModalDislike, useDislikedReason } from '$components/ModalDislike'
 import { colorPrimaryValue } from '$components/ModalSettings/theme'
+import { useCurrentSourceTab } from '$components/RecHeader/tab'
 import { AppRecItem, AppRecItemExtend, RecItemType } from '$define'
 import { IconPark } from '$icon-park'
 import { isMac, isSafari } from '$platform'
@@ -527,7 +528,10 @@ const VideoCardInner = memo(function VideoCardInner({
     window.open(iinaUrl, '_self')
   })
 
-  const hasBlacklistEntry = item.api === 'app' || item.api === 'pc'
+  // 已关注 item.api 也为 'pc', 故使用 tab, 而不是 api 区分
+  const tab = useCurrentSourceTab()
+  const hasBlacklistEntry = tab === 'recommend-app' || tab === 'recommend-pc'
+
   const onBlacklistUp = useMemoizedFn(async () => {
     if (!authorMid) return toast('UP mid 为空!')
     const success = await UserService.blacklistAdd(authorMid)
@@ -671,7 +675,7 @@ const VideoCardInner = memo(function VideoCardInner({
           ]
         : []),
     ].filter(Boolean)
-  }, [item, watchLaterAdded, hasDislikeEntry, favFolderNames])
+  }, [item, watchLaterAdded, hasDislikeEntry, hasBlacklistEntry, favFolderNames])
 
   const onContextMenuOpenChange = useMemoizedFn((open: boolean) => {
     if (!open) return
