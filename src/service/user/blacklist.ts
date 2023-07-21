@@ -1,5 +1,5 @@
 /**
- * user services
+ * user blacklist services
  */
 
 import { isWebApiSuccess, request } from '$request'
@@ -9,6 +9,11 @@ import { proxySet } from 'valtio/utils'
 
 export const blacklistAdd = blacklistActionFactory('add')
 export const blacklistRemove = blacklistActionFactory('remove')
+
+export const UserBlacklistService = {
+  add: blacklistAdd,
+  remove: blacklistRemove,
+}
 
 export const blacklistIds = proxySet<string>()
 export function useInBlacklist(upMid?: string) {

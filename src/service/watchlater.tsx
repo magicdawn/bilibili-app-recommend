@@ -22,7 +22,7 @@ export function useWatchLaterState(bvid: string) {
 
 if (getHasLogined()) {
   setTimeout(() => {
-    new WatchLaterService().loadMore() // init watchLaterState
+    new WatchLaterRecService().loadMore() // init watchLaterState
   })
 }
 
@@ -31,7 +31,7 @@ if (getHasLogined()) {
  * A: 全部加载特别卡, 没有滚动时没必要全部加载
  */
 
-export class WatchLaterService implements IService {
+export class WatchLaterRecService implements IService {
   static PAGE_SIZE = 15
   static LAST_ITEMS: WatchLaterItemExtend[] = []
 
@@ -65,11 +65,11 @@ export class WatchLaterService implements IService {
       let items2 = items.slice(firstNotTodayAddedIndex)
 
       // 保持顺序
-      if (this.keepOrder && WatchLaterService.LAST_ITEMS.length) {
+      if (this.keepOrder && WatchLaterRecService.LAST_ITEMS.length) {
         items2 = items2
           .map((item) => ({
             item,
-            index: WatchLaterService.LAST_ITEMS.findIndex((i) => i.bvid === item.bvid),
+            index: WatchLaterRecService.LAST_ITEMS.findIndex((i) => i.bvid === item.bvid),
           }))
           .sort((a, b) => a.index - b.index)
           .map((x) => x.item)
@@ -90,7 +90,7 @@ export class WatchLaterService implements IService {
     this.items = items
 
     // save for next keepOrder=true
-    WatchLaterService.LAST_ITEMS = items
+    WatchLaterRecService.LAST_ITEMS = items
   }
 
   loaded = false
@@ -117,8 +117,8 @@ export class WatchLaterService implements IService {
     }
 
     this.page++
-    const start = this.page * WatchLaterService.PAGE_SIZE
-    const end = start + WatchLaterService.PAGE_SIZE
+    const start = this.page * WatchLaterRecService.PAGE_SIZE
+    const end = start + WatchLaterRecService.PAGE_SIZE
 
     const items = cloneDeep(this.items.slice(start, end))
     this.hasMore = end <= this.count - 1

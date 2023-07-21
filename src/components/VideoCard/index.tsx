@@ -1,6 +1,5 @@
 import { APP_KEY_PREFIX, APP_NAME } from '$common'
 import { useMittOn } from '$common/hooks/useMitt'
-import { AntdTooltip } from '$components/AntdApp'
 import { Reason, dislikedIds, showModalDislike, useDislikedReason } from '$components/ModalDislike'
 import { colorPrimaryValue } from '$components/ModalSettings/theme'
 import { useCurrentSourceTab } from '$components/RecHeader/tab'
@@ -8,8 +7,8 @@ import { AppRecItem, AppRecItemExtend, RecItemType } from '$define'
 import { IconPark } from '$icon-park'
 import { isMac, isSafari } from '$platform'
 import { formatFavFolderUrl } from '$service/fav'
-import { UserService } from '$service/user'
-import { useInBlacklist } from '$service/user/blacklist'
+import { UserBlacklistService, useInBlacklist } from '$service/user/blacklist'
+import { UserFavService, defaultFavFolderName } from '$service/user/fav'
 import { useWatchLaterState, watchLaterState } from '$service/watchlater'
 import { settings, useSettingsSnapshot } from '$settings'
 import { toast, toastOperationFail, toastRequestFail } from '$utility/toast'
@@ -44,8 +43,6 @@ import {
   VideoData,
   cancelDislike,
   getVideoData,
-  getVideoFavState,
-  removeFav,
   watchLaterAdd,
   watchLaterDel,
 } from './card.service'
@@ -219,7 +216,7 @@ const BlacklistCard = memo(function BlacklistCard({ cardData }: { cardData: IVid
 
   const onCancel = useMemoizedFn(async () => {
     if (!authorMid) return
-    const success = await UserService.blacklistRemove(authorMid)
+    const success = await UserBlacklistService.remove(authorMid)
     if (success) toast(`已移出黑名单: ${authorName}`)
   })
 
@@ -486,7 +483,7 @@ const VideoCardInner = memo(function VideoCardInner({
   const updateFavFolderNames = useMemoizedFn(async () => {
     // 只在「稍后再看」提供收藏状态
     if (item.api !== 'watchlater') return
-    const names = await getVideoFavState(avid)
+    const names = await UserFavService.getVideoFavState(avid)
     if (names) {
       setFavFolderNames(names)
     }
@@ -534,7 +531,7 @@ const VideoCardInner = memo(function VideoCardInner({
 
   const onBlacklistUp = useMemoizedFn(async () => {
     if (!authorMid) return toast('UP mid 为空!')
-    const success = await UserService.blacklistAdd(authorMid)
+    const success = await UserBlacklistService.add(authorMid)
     if (success) {
       toast(`已加入黑名单: ${authorName}`)
     }
@@ -584,40 +581,34 @@ const VideoCardInner = memo(function VideoCardInner({
           onBlacklistUp()
         },
       },
+      item.api === 'watchlater' && {
+        key: 'add-fav',
+        icon: (
+          <IconPark
+            name='Star'
+            size={15}
+            {...(favFolderNames?.length
+              ? {
+                  theme: 'two-tone',
+                  fill: ['currentColor', colorPrimaryValue],
+                }
+              : undefined)}
+          />
+        ),
+        label: favFolderNames?.length
+          ? `已收藏 ${favFolderNames.map((n) => `「${n}」`).join('')}`
+          : '快速收藏',
+        async onClick() {
+          if (favFolderNames?.length) return
+          const success = await UserFavService.addFav(avid)
+          if (success) {
+            toast(`已加入收藏夹「${defaultFavFolderName}』」`)
+          }
+        },
+      },
       {
         key: 'watchlater',
-        label:
-          item.api === 'watchlater' && favFolderNames ? (
-            <AntdTooltip
-              title={
-                <>
-                  {favFolderNames.length
-                    ? `已收藏在${favFolderNames.map((n) => `「${n}」`).join('')}`
-                    : '未收藏'}
-                </>
-              }
-              placement='right'
-            >
-              <span
-                style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
-              >
-                {watchLaterLabel}
-                <IconPark
-                  name='Star'
-                  size={15}
-                  style={{ marginLeft: 15 }}
-                  {...(favFolderNames.length
-                    ? {
-                        theme: 'two-tone',
-                        fill: ['currentColor', colorPrimaryValue],
-                      }
-                    : undefined)}
-                />
-              </span>
-            </AntdTooltip>
-          ) : (
-            watchLaterLabel
-          ),
+        label: watchLaterLabel,
         icon: <IconPark name={watchLaterAdded ? 'Delete' : 'FileCabinet'} size={15} />,
         onClick() {
           onToggleWatchLater()
@@ -654,7 +645,10 @@ const VideoCardInner = memo(function VideoCardInner({
               icon: <IconPark name='Delete' size={15} />,
               async onClick() {
                 if (item.api !== 'fav') return
-                const success = await removeFav(item.folder.id, `${item.id}:${item.type}`)
+                const success = await UserFavService.removeFav(
+                  item.folder.id,
+                  `${item.id}:${item.type}`
+                )
                 if (success) {
                   onRemoveCurrent?.(item, cardData)
                 }

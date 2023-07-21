@@ -2,10 +2,10 @@ import { useRefInit } from '$common/hooks/useRefInit'
 import { OnRefresh } from '$components/RecHeader'
 import { TabConfigMap, TabType, getCurrentSourceTab } from '$components/RecHeader/tab'
 import { RecItemType } from '$define'
-import { DynamicFeedService } from '$service/dynamic-feed'
-import { FavService } from '$service/fav'
+import { DynamicFeedRecService } from '$service/dynamic-feed'
+import { FavRecService } from '$service/fav'
 import { PcRecService } from '$service/pc'
-import { WatchLaterService } from '$service/watchlater'
+import { WatchLaterRecService } from '$service/watchlater'
 import { useGetState, useMemoizedFn } from 'ahooks'
 import { Debugger } from 'debug'
 import { useState } from 'react'
@@ -13,9 +13,9 @@ import { useState } from 'react'
 export type FetcherOptions = {
   tab: TabType
   pcRecService: PcRecService
-  dynamicFeedService: DynamicFeedService
-  watchLaterService: WatchLaterService
-  favService: FavService
+  dynamicFeedService: DynamicFeedRecService
+  watchLaterService: WatchLaterRecService
+  favService: FavRecService
   abortSignal: AbortSignal
 }
 
@@ -48,9 +48,9 @@ export function useRefresh({
   const [items, setItems] = useState<RecItemType[]>([])
 
   const [pcRecService, setPcRecService] = useState(() => new PcRecService())
-  const [dynamicFeedService, setDynamicFeedService] = useState(() => new DynamicFeedService())
-  const [watchLaterService, setWatchLaterService] = useState(() => new WatchLaterService())
-  const [favService, setFavService] = useState(() => new FavService())
+  const [dynamicFeedService, setDynamicFeedService] = useState(() => new DynamicFeedRecService())
+  const [watchLaterService, setWatchLaterService] = useState(() => new WatchLaterRecService())
+  const [favService, setFavService] = useState(() => new FavRecService())
 
   const [refreshing, setRefreshing] = useState(false)
   const [refreshedAt, setRefreshedAt, getRefreshedAt] = useGetState<number>(() => Date.now())
@@ -123,13 +123,13 @@ export function useRefresh({
 
     let _dynamicFeedService = dynamicFeedService
     if (tab === 'dynamic') {
-      _dynamicFeedService = new DynamicFeedService()
+      _dynamicFeedService = new DynamicFeedRecService()
       setDynamicFeedService(_dynamicFeedService)
     }
 
     let _watchLaterService = watchLaterService
     if (tab === 'watchlater') {
-      _watchLaterService = new WatchLaterService(options?.watchlaterKeepOrder)
+      _watchLaterService = new WatchLaterRecService(options?.watchlaterKeepOrder)
       setWatchLaterService(_watchLaterService)
     }
 
@@ -138,7 +138,7 @@ export function useRefresh({
       if (shouldReuse) {
         _favServive.restore()
       } else {
-        _favServive = new FavService()
+        _favServive = new FavRecService()
         setFavService(_favServive)
       }
     }

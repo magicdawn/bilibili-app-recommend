@@ -15,7 +15,7 @@ export function formatFavFolderUrl(id: number) {
   return `https://space.bilibili.com/${uid}/favlist?fid=${id}`
 }
 
-export class FavService implements IService {
+export class FavRecService implements IService {
   static PAGE_SIZE = 20
 
   useShuffle: boolean
@@ -67,8 +67,8 @@ export class FavService implements IService {
 
     const sliceFromQueue = () => {
       if (this.bufferQueue.length) {
-        const sliced = this.bufferQueue.slice(0, FavService.PAGE_SIZE)
-        this.bufferQueue = this.bufferQueue.slice(FavService.PAGE_SIZE)
+        const sliced = this.bufferQueue.slice(0, FavRecService.PAGE_SIZE)
+        this.bufferQueue = this.bufferQueue.slice(FavRecService.PAGE_SIZE)
         return this.doReturnItems(sliced)
       }
     }
@@ -93,7 +93,7 @@ export class FavService implements IService {
      * in shuffle order
      */
 
-    if (this.bufferQueue.length < FavService.PAGE_SIZE) {
+    if (this.bufferQueue.length < FavRecService.PAGE_SIZE) {
       // 1.fill queue
       while (this.folderHasMore && this.bufferQueue.length < 100) {
         const restServices = this.folderServices.filter((s) => s.hasMore)
