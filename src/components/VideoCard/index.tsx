@@ -480,12 +480,15 @@ const VideoCardInner = memo(function VideoCardInner({
    * 收藏状态
    */
   const [favFolderNames, setFavFolderNames] = useState<string[] | undefined>(undefined)
+  const [favFolderUrls, setFavFolderUrls] = useState<string[] | undefined>(undefined)
   const updateFavFolderNames = useMemoizedFn(async () => {
     // 只在「稍后再看」提供收藏状态
     if (item.api !== 'watchlater') return
-    const names = await UserFavService.getVideoFavState(avid)
-    if (names) {
-      setFavFolderNames(names)
+    const result = await UserFavService.getVideoFavState(avid)
+    if (result) {
+      const { favFolderNames, favFolderUrls } = result
+      setFavFolderNames(favFolderNames)
+      setFavFolderUrls(favFolderUrls)
     }
   })
 
@@ -599,10 +602,21 @@ const VideoCardInner = memo(function VideoCardInner({
           ? `已收藏 ${favFolderNames.map((n) => `「${n}」`).join('')}`
           : '快速收藏',
         async onClick() {
-          if (favFolderNames?.length) return
-          const success = await UserFavService.addFav(avid)
-          if (success) {
-            toast(`已加入收藏夹「${defaultFavFolderName}』」`)
+          const hasFaved = Boolean(favFolderNames?.length)
+
+          // 浏览收藏夹
+          if (hasFaved) {
+            favFolderUrls?.forEach((u) => {
+              window.open(u, '_blank')
+            })
+          }
+
+          // 快速收藏
+          else {
+            const success = await UserFavService.addFav(avid)
+            if (success) {
+              toast(`已加入收藏夹「${defaultFavFolderName}』」`)
+            }
           }
         },
       },
@@ -669,7 +683,7 @@ const VideoCardInner = memo(function VideoCardInner({
           ]
         : []),
     ].filter(Boolean)
-  }, [item, watchLaterAdded, hasDislikeEntry, hasBlacklistEntry, favFolderNames])
+  }, [item, watchLaterAdded, hasDislikeEntry, hasBlacklistEntry, favFolderNames, favFolderUrls])
 
   const onContextMenuOpenChange = useMemoizedFn((open: boolean) => {
     if (!open) return

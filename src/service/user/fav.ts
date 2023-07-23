@@ -7,7 +7,7 @@
 
 import { FavFolderListAllJson } from '$define/fav/folder-list-all'
 import { isWebApiSuccess, request } from '$request'
-import { FavRecService } from '$service/fav'
+import { FavRecService, formatFavFolderUrl } from '$service/fav'
 import { OPERATION_FAIL_MSG, getCsrfToken, getHasLogined, getUid, toast } from '$utility'
 
 export const UserFavService = {
@@ -53,10 +53,12 @@ export async function getVideoFavState(avid: string) {
     },
   })
   const json = res.data as FavFolderListAllJson
-  const favFolderNames = json.data.list
-    .filter((folder) => folder.fav_state > 0)
-    .map((folder) => folder.title)
-  return favFolderNames
+  const favFolders = json.data.list.filter((folder) => folder.fav_state > 0)
+
+  const favFolderNames = favFolders.map((f) => f.title)
+  const favFolderUrls = favFolders.map((f) => formatFavFolderUrl(f.id))
+
+  return { favFolders, favFolderNames, favFolderUrls }
 }
 
 // media_ids: 收藏夹 id, 逗号分割
