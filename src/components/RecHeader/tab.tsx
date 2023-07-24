@@ -1,13 +1,23 @@
+import { APP_NAME } from '$common'
+import { proxyWithLocalStorage } from '$common/hooks/proxyWithLocalStorage'
 import { HelpInfo } from '$components/piece'
 import { IconName, IconPark } from '$icon-park'
-import { settings, updateSettings, useSettingsSnapshot } from '$settings'
+import { useSettingsSnapshot } from '$settings'
 import { checkLoginStatus, getHasLogined, useHasLogined } from '$utility'
 import { toast } from '$utility/toast'
 import { css } from '@emotion/react'
 import { Icon } from '@icon-park/react/es/runtime'
 import { Radio } from 'antd'
 import { ComponentProps } from 'react'
+import { useSnapshot } from 'valtio'
 import { type OnRefresh } from './index'
+
+export const VIDEO_SOURCE_TAB_STORAGE_KEY = `${APP_NAME}-video-source-tab`
+
+export const videoSourceTabState = proxyWithLocalStorage<{ value: TabType }>(
+  { value: 'recommend-app' },
+  VIDEO_SOURCE_TAB_STORAGE_KEY
+)
 
 const iconCss = css`
   margin-right: 4px;
@@ -99,10 +109,10 @@ function _getCurrentSourceTab(videoSourceTab: TabType, logined: boolean): TabTyp
 }
 
 export function useCurrentSourceTab(): TabType {
-  return _getCurrentSourceTab(useSettingsSnapshot().videoSourceTab, useHasLogined())
+  return _getCurrentSourceTab(useSnapshot(videoSourceTabState).value, useHasLogined())
 }
 export function getCurrentSourceTab(): TabType {
-  return _getCurrentSourceTab(settings.videoSourceTab, getHasLogined())
+  return _getCurrentSourceTab(videoSourceTabState.value, getHasLogined())
 }
 
 function toastNeedLogin() {
@@ -154,7 +164,7 @@ export function VideoSourceTab({ onRefresh }: { onRefresh: OnRefresh }) {
             }
           }
 
-          updateSettings({ videoSourceTab: newValue })
+          videoSourceTabState.value = newValue
 
           // so that `RecGrid.refresh` can access latest `tab`
           setTimeout(() => {

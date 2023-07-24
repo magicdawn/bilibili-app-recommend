@@ -1,7 +1,9 @@
-import { APP_NAME } from '$common'
-import { TabType } from '$components/RecHeader/tab'
-import { pick } from 'lodash'
-import { proxy, subscribe, useSnapshot } from 'valtio'
+import { APP_NAME, baseDebug } from '$common'
+import { setData } from '$service/user/article-draft'
+import { omit, pick } from 'lodash'
+import { proxy, snapshot, subscribe, useSnapshot } from 'valtio'
+
+const debug = baseDebug.extend('settings')
 
 export const initialSettings = {
   accessKey: '',
@@ -35,11 +37,6 @@ export const initialSettings = {
   // 颜色主题
   theme: '',
   colorPickerThemeSelectedColor: '', // 自定义颜色
-
-  /**
-   * TabType
-   */
-  videoSourceTab: 'recommend-app' satisfies TabType as TabType,
 
   /**
    * tab=watchlater
@@ -79,13 +76,18 @@ export const initialSettings = {
 
   // video-source-tab 高度, 默认 compact
   styleUseStandardVideoSourceTab: false,
+
+  /**
+   * 功能
+   */
+  backupSettingsToArticleDraft: false,
 }
 
 export type Config = typeof initialSettings
 export const settings = proxy({ ...initialSettings })
 
 export type ConfigKey = keyof Config
-const allowedConfigKeys = Object.keys(initialSettings) as ConfigKey[]
+export const allowedConfigKeys = Object.keys(initialSettings) as ConfigKey[]
 
 export type BooleanConfigKey = {
   [k in ConfigKey]: Config[k] extends boolean ? k : never
@@ -113,10 +115,25 @@ export async function load() {
     save()
   })
 }
-export function save() {
-  const newVal = pick(settings, allowedConfigKeys)
+
+export async function save() {
+  const newVal = snapshot(settings)
   // console.log('GM.setValue newVal = %o', newVal)
-  return GM.setValue(key, newVal)
+
+  // GM
+  await GM.setValue(key, newVal)
+
+  // http backup
+  const httpBackupVal = omit(newVal, ['accessKey'])
+  // 如果 (window as any)[`${APP_NAME}-restore`] 存在, 则是刚从备份恢复的, 等等刷新网页
+  if (httpBackupVal.backupSettingsToArticleDraft && !(window as any)[`${APP_NAME}-restore`]) {
+    try {
+      await setData(httpBackupVal)
+      debug('backup to article draft complete')
+    } catch (e: any) {
+      console.error(e.stack || e)
+    }
+  }
 }
 
 export function clean() {

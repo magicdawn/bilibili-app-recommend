@@ -1,10 +1,13 @@
+import { APP_NAME } from '$common'
 import { AccessKeyManage } from '$components/AccessKeyManage'
 import { BaseModal, BaseModalClass, ModalClose } from '$components/BaseModal'
 import { FlagSettingItem, HelpInfo } from '$components/piece'
 import { IconPark } from '$icon-park'
 import { cx } from '$libs'
+import { getData } from '$service/user/article-draft'
 import {
   BooleanConfigKey,
+  allowedConfigKeys,
   resetSettings,
   settings,
   updateSettings,
@@ -15,6 +18,7 @@ import { toast } from '$utility/toast'
 import { useKeyPress } from 'ahooks'
 import { Button, InputNumber, Popconfirm, Slider, Space, Tabs, Tag } from 'antd'
 import delay from 'delay'
+import { pick } from 'lodash'
 import styles from './index.module.less'
 import { ThemesSelect } from './theme'
 
@@ -26,6 +30,20 @@ async function toastAndReload() {
 
 function onResetSettings() {
   resetSettings()
+  return toastAndReload()
+}
+
+async function onRestoreSettings() {
+  const remoteSettings = await getData()
+  const pickedSettings = pick(remoteSettings || {}, allowedConfigKeys)
+
+  const len = Object.keys(pickedSettings).length
+  if (!len) {
+    return toast('备份不存在或没有有效的配置')
+  }
+
+  ;(window as any)[`${APP_NAME}-restore`] = Date.now()
+  updateSettings({ ...pickedSettings })
   return toastAndReload()
 }
 
@@ -362,7 +380,7 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
               children: (
                 <div className={styles.tabPane}>
                   <div className={styles.settingsGroup}>
-                    <div className={styles.settingsGroupTitle}>高级</div>
+                    <div className={styles.settingsGroupTitle}>设置项</div>
                     <div className={cx(styles.settingsGroupContent)}>
                       <div className={styles.row}>
                         <Popconfirm
@@ -372,6 +390,39 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                         >
                           <Button danger type='primary'>
                             恢复默认设置
+                          </Button>
+                        </Popconfirm>
+                      </div>
+                    </div>
+
+                    <div className={styles.settingsGroupTitle} style={{ marginTop: 15 }}>
+                      备份/恢复
+                    </div>
+                    <div className={cx(styles.settingsGroupContent)}>
+                      <div className={styles.row}>
+                        <FlagSettingItem
+                          configKey='backupSettingsToArticleDraft'
+                          label='备份设置到专栏草稿箱中'
+                          tooltip={`专栏 - 草稿箱 - ${APP_NAME}`}
+                        />
+
+                        <a
+                          style={{ marginLeft: 15, display: 'inline-flex', alignItems: 'center' }}
+                          href='https://member.bilibili.com/platform/upload/text/draft'
+                          target='_blank'
+                        >
+                          <IconPark name='EfferentFour' size={16} style={{ marginRight: 4 }} />
+                          去草稿箱浏览
+                        </a>
+                      </div>
+                      <div className={styles.row} style={{ marginTop: 5 }}>
+                        <Popconfirm
+                          title='确定'
+                          description='将覆盖本地设置? 该操作不可逆!'
+                          onConfirm={onRestoreSettings}
+                        >
+                          <Button danger type='primary'>
+                            从专栏草稿箱中恢复
                           </Button>
                         </Popconfirm>
                       </div>
