@@ -47,6 +47,7 @@ export const initialSettings = {
    * tab=fav
    */
   shuffleForFav: true, // 打乱顺序
+  excludeFavFolderIds: [] as string[], // 忽略的收藏夹
 
   /**
    * 过滤器模块

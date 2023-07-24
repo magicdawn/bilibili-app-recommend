@@ -1,13 +1,16 @@
+import { useRecHeaderContext } from '$components/RecHeader'
 import { FavItemExtend } from '$define/fav'
 import { FavFolderListAllItem, FavFolderListAllJson } from '$define/fav/folder-list-all'
 import { FavFolderDetailInfo, ResourceListJSON } from '$define/fav/resource-list'
 import { isWebApiSuccess, request } from '$request'
-import { settings } from '$settings'
+import { settings, updateSettings, useSettingsSnapshot } from '$settings'
 import { getUid, toast } from '$utility'
 import { css } from '@emotion/react'
-import { Tag } from 'antd'
+import { useMemoizedFn } from 'ahooks'
+import { Popover, Tag, Transfer } from 'antd'
+import { TransferDirection } from 'antd/es/transfer'
 import { shuffle } from 'lodash'
-import { ReactNode } from 'react'
+import { ReactNode, useMemo, useState } from 'react'
 import { IService } from './base'
 
 export function formatFavFolderUrl(id: number) {
@@ -23,7 +26,8 @@ export class FavRecService implements IService {
     this.useShuffle = settings.shuffleForFav
   }
 
-  folderServices: FavFolderService[] = []
+  allFolderServices: FavFolderService[] = [] // before exclude
+  folderServices: FavFolderService[] = [] // after exclude
   bufferQueue: FavItemExtend[] = []
   total = 0
 
@@ -48,17 +52,7 @@ export class FavRecService implements IService {
 
   get usageInfo(): ReactNode {
     if (!this.foldersLoaded) return
-    return (
-      <Tag
-        color='success'
-        css={css`
-          margin-left: 15px;
-          cursor: pointer;
-        `}
-      >
-        收藏夹({this.folderServices.length}) 收藏({this.total})
-      </Tag>
-    )
+    return <FavUsageInfo allFavFolderServices={this.allFolderServices} />
   }
 
   async loadMore() {
@@ -123,8 +117,11 @@ export class FavRecService implements IService {
     const folders = json.data.list
 
     this.foldersLoaded = true
-    this.folderServices = folders.map((f) => new FavFolderService(f))
-    this.total = folders.reduce((count, f) => count + f.media_count, 0)
+    this.allFolderServices = folders.map((f) => new FavFolderService(f))
+    this.folderServices = this.allFolderServices.filter(
+      (s) => !settings.excludeFavFolderIds.includes(s.entry.id.toString())
+    )
+    this.total = this.folderServices.reduce((count, f) => count + f.entry.media_count, 0)
   }
 }
 
@@ -179,4 +176,75 @@ export class FavFolderService {
       }
     })
   }
+}
+
+export function FavUsageInfo({
+  allFavFolderServices,
+}: {
+  allFavFolderServices: FavFolderService[]
+}) {
+  const { excludeFavFolderIds } = useSettingsSnapshot()
+  const { onRefresh } = useRecHeaderContext()
+  const [excludeFavFolderIdsChanged, setExcludeFavFolderIdsChanged] = useState(false)
+
+  const handleChange = useMemoizedFn(
+    (newTargetKeys: string[], direction: TransferDirection, moveKeys: string[]) => {
+      setExcludeFavFolderIdsChanged(true)
+      updateSettings({ excludeFavFolderIds: newTargetKeys })
+    }
+  )
+
+  const foldersCount = allFavFolderServices.length - excludeFavFolderIds.length
+
+  const videosCount = useMemo(() => {
+    return allFavFolderServices
+      .filter((s) => !excludeFavFolderIds.includes(s.entry.id.toString()))
+      .reduce((count, s) => count + s.entry.media_count, 0)
+  }, [allFavFolderServices, excludeFavFolderIds])
+
+  const onPopupOpenChange = useMemoizedFn((open: boolean) => {
+    // when open
+    if (open) {
+      setExcludeFavFolderIdsChanged(false)
+    }
+
+    // when close
+    else {
+      if (excludeFavFolderIdsChanged) {
+        onRefresh()
+      }
+    }
+  })
+
+  return (
+    <Popover
+      trigger={'click'}
+      placement='bottom'
+      onOpenChange={onPopupOpenChange}
+      content={
+        <>
+          <Transfer
+            dataSource={allFavFolderServices}
+            rowKey={(row) => row.entry.id.toString()}
+            titles={['收藏夹', '忽略']}
+            targetKeys={excludeFavFolderIds}
+            onChange={handleChange}
+            render={(item) => item.entry.title}
+            oneWay
+            style={{ marginBottom: 10 }}
+          />
+        </>
+      }
+    >
+      <Tag
+        color='success'
+        css={css`
+          margin-left: 15px;
+          cursor: pointer;
+        `}
+      >
+        收藏夹({foldersCount}) 收藏({videosCount})
+      </Tag>
+    </Popover>
+  )
 }
