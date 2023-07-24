@@ -4,6 +4,7 @@
 
 - feat: 支持使用专栏草稿箱作为备份存储, 备份设置项
 - feat: 收藏 Tab, 支持过滤收藏夹
+- feat: video source tab, 改成 localStorage 存储, 切换 Tab 不会触发备份
 
 ![image](https://github.com/magicdawn/bilibili-app-recommend/assets/4067115/41408b67-fbad-4e3d-b181-dd51f3b42518)
 
