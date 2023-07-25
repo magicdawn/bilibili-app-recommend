@@ -10,16 +10,15 @@ import { AntdTooltip } from './AntdApp'
 export function FlagSettingItem({
   configKey,
   label,
-  className,
   extraAction,
   tooltip,
+  ...otherProps
 }: {
   configKey: BooleanConfigKey
   label?: string
-  className?: string
   extraAction?: (val: boolean) => void | Promise<void>
   tooltip?: ReactNode
-}) {
+} & ComponentProps<typeof Checkbox>) {
   const snap = useSettingsSnapshot()
 
   const checked = !!snap[configKey]
@@ -38,7 +37,7 @@ export function FlagSettingItem({
     )
 
   return (
-    <Checkbox className={className} checked={checked} onChange={onChange}>
+    <Checkbox {...otherProps} checked={checked} onChange={onChange}>
       {inner}
     </Checkbox>
   )

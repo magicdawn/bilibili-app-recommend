@@ -1,6 +1,7 @@
 import { APP_NAME, baseDebug } from '$common'
 import { setData } from '$service/user/article-draft'
-import { omit, pick } from 'lodash'
+import { omit, pick, throttle } from 'lodash'
+import ms from 'ms'
 import { proxy, snapshot, subscribe, useSnapshot } from 'valtio'
 
 const debug = baseDebug.extend('settings')
@@ -63,10 +64,12 @@ export const initialSettings = {
   filterMinDuration: 60, // 60s
 
   // 已关注UP的推荐视频, 默认不参与过滤
-  enableFilterForFollowed: false,
+  enableFilterForFollowedVideo: false,
 
   // filter out whose goto = 'picture'
   filterOutGotoTypePicture: false,
+  // 已关注UP的推荐图文, 默认不参与过滤
+  // enableFilterForFollowedPicture: false,
 
   /**
    * 外观
@@ -117,6 +120,8 @@ export async function load() {
   })
 }
 
+const setDataThrottled = throttle(setData, ms('5s'))
+
 export async function save() {
   const newVal = snapshot(settings)
   // console.log('GM.setValue newVal = %o', newVal)
@@ -129,7 +134,7 @@ export async function save() {
   // 如果 (window as any)[`${APP_NAME}-restore`] 存在, 则是刚从备份恢复的, 等等刷新网页
   if (httpBackupVal.backupSettingsToArticleDraft && !(window as any)[`${APP_NAME}-restore`]) {
     try {
-      await setData(httpBackupVal)
+      await setDataThrottled(httpBackupVal)
       debug('backup to article draft complete')
     } catch (e: any) {
       console.error(e.stack || e)

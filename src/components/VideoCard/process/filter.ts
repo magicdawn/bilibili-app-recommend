@@ -12,7 +12,7 @@ export function anyFilterEnabled(tab: TabType) {
   )
 }
 
-export function filterVideos(items: RecItemType[], tab: TabType) {
+export function filterRecItems(items: RecItemType[], tab: TabType) {
   if (!anyFilterEnabled(tab)) {
     return items
   }
@@ -22,47 +22,56 @@ export function filterVideos(items: RecItemType[], tab: TabType) {
     const isFollowed = recommendReason === '已关注' || recommendReason?.includes('关注')
 
     /**
-     * 已关注模式
+     * 已关注 Tab
      */
-
     if (tab === 'onlyFollow') {
-      return isFollowed
+      if (!isFollowed) return false
     }
 
-    /**
-     * 过滤范围
-     */
+    const isVideo = goto === 'av'
+    const isPicture = goto === 'picture'
+    if (isVideo) return filterVideo()
+    if (isPicture) return filterPicture()
+    return true // just keep it
 
-    if (!settings.enableFilterForFollowed) {
-      if (isFollowed) return true
+    function filterVideo() {
+      // 不过滤已关注视频
+      if (isFollowed && !settings.enableFilterForFollowedVideo) return true
+
+      // paly
+      if (
+        settings.filterMinPlayCountEnabled &&
+        settings.filterMinPlayCount &&
+        typeof play === 'number' &&
+        play < settings.filterMinPlayCount
+      ) {
+        return false
+      }
+
+      // duration
+      if (
+        settings.filterMinDurationEnabled &&
+        settings.filterMinDuration &&
+        duration &&
+        duration < settings.filterMinDuration
+      ) {
+        return false
+      }
+
+      return true
     }
 
-    /**
-     * 过滤条件
-     */
-
-    if (
-      settings.filterMinPlayCountEnabled &&
-      settings.filterMinPlayCount &&
-      typeof play === 'number' &&
-      play < settings.filterMinPlayCount
-    ) {
-      return false
+    function filterPicture() {
+      if (settings.filterOutGotoTypePicture) {
+        // // 不去掉已关注的图文
+        // if (isFollowed && !settings.enableFilterForFollowedPicture) {
+        //   debugger
+        //   return true
+        // }
+        return false
+      } else {
+        return true
+      }
     }
-
-    if (
-      settings.filterMinDurationEnabled &&
-      settings.filterMinDuration &&
-      duration &&
-      duration < settings.filterMinDuration
-    ) {
-      return false
-    }
-
-    if (settings.filterOutGotoTypePicture && goto === 'picture') {
-      return false
-    }
-
-    return true
   })
 }

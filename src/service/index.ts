@@ -3,7 +3,7 @@ import { baseDebug } from '$common'
 import { FetcherOptions } from '$components/RecGrid/useRefresh'
 import { getColumnCount } from '$components/RecGrid/useShortcut'
 import { TabType } from '$components/RecHeader/tab'
-import { anyFilterEnabled, filterVideos } from '$components/VideoCard/process/filter'
+import { anyFilterEnabled, filterRecItems } from '$components/VideoCard/process/filter'
 import { lookinto } from '$components/VideoCard/process/normalize'
 import { RecItemType } from '$define'
 import { uniqBy } from 'lodash'
@@ -100,7 +100,7 @@ export async function getMinCount(
     cur = usePcApi(tab)
       ? await pcRecService.getRecommendTimes(times, abortSignal)
       : await appRecService.getRecommendTimes(times)
-    cur = filterVideos(cur, tab)
+    cur = filterRecItems(cur, tab)
 
     items = items.concat(cur)
     items = uniqBy(items, recItemUniqer)
@@ -143,6 +143,6 @@ export async function getRecommendTimes(times: number, tab: TabType, pcRecServic
   let items: RecItemType[] = usePcApi(tab)
     ? await pcRecService.getRecommendTimes(times)
     : await new AppRecService().getRecommendTimes(times)
-  items = filterVideos(items, tab)
+  items = filterRecItems(items, tab)
   return items
 }

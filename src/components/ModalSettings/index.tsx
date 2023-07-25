@@ -68,6 +68,7 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
     filterMinPlayCountEnabled,
     filterMinDuration,
     filterMinDurationEnabled,
+    filterOutGotoTypePicture,
   } = useSettingsSnapshot()
 
   useHotkeyForConfig(['shift.p'], 'autoPreviewWhenKeyboardSelect', '键盘选中后自动开始预览')
@@ -101,8 +102,6 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
         <Tabs
           tabPosition='left'
           size='middle'
-          // FIXME: modify before release
-          // defaultActiveKey='UI'
           defaultActiveKey='normal'
           className={styles.settingTabs}
           items={[
@@ -248,32 +247,26 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
               ),
             },
             {
-              label: '视频过滤',
+              label: '内容过滤',
               key: 'filter',
               children: (
                 <div className={styles.tabPane}>
                   <div className={styles.settingsGroup}>
                     <div className={styles.settingsGroupTitle}>
-                      视频过滤
+                      内容过滤
                       <HelpInfo
                         iconProps={{ name: 'Tips' }}
                         tooltip={
                           <>
-                            启用视频过滤会大幅降低加载速度, 谨慎开启! <br />
+                            启用过滤会大幅降低加载速度, 谨慎开启! <br />
                             仅推荐类 Tab 生效
                           </>
                         }
                       />
                     </div>
-                    <div className={cx(styles.settingsGroupContent)}>
-                      <div className={styles.settingsGroupSubTitle}>过滤范围</div>
-                      <FlagSettingItem
-                        configKey='enableFilterForFollowed'
-                        label='对推荐理由为「已关注」的视频启用过滤'
-                        tooltip={<>默认不过滤「已关注」</>}
-                      />
 
-                      <div className={styles.settingsGroupSubTitle}>过滤条件</div>
+                    <div className={cx(styles.settingsGroupContent)}>
+                      <div className={styles.settingsGroupSubTitle}>视频</div>
                       <div className={styles.row}>
                         <FlagSettingItem
                           configKey='filterMinPlayCountEnabled'
@@ -289,8 +282,7 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                           disabled={!filterMinPlayCountEnabled}
                         />
                       </div>
-
-                      <div className={styles.row} style={{ marginTop: 8 }}>
+                      <div className={styles.row} style={{ marginTop: 3 }}>
                         <FlagSettingItem
                           configKey='filterMinDurationEnabled'
                           label='按视频时长过滤'
@@ -307,15 +299,29 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                           disabled={!filterMinDurationEnabled}
                         />
                       </div>
+                      <FlagSettingItem
+                        className={styles.row}
+                        style={{ marginTop: 3 }}
+                        configKey='enableFilterForFollowedVideo'
+                        label='对「已关注」的视频启用过滤'
+                        tooltip={<>默认不过滤「已关注」</>}
+                      />
 
-                      <div className={styles.settingsGroupSubTitle}>按类型过滤</div>
-                      <div className={styles.row}>
-                        <FlagSettingItem
-                          configKey='filterOutGotoTypePicture'
-                          label='图文: 动态 & 专栏'
-                          tooltip={<>过滤掉图文推荐</>}
-                        />
-                      </div>
+                      <div className={styles.settingsGroupSubTitle}>图文</div>
+                      <FlagSettingItem
+                        className={styles.row}
+                        configKey='filterOutGotoTypePicture'
+                        label='启用图文(动态 & 专栏)过滤'
+                        tooltip={<>过滤掉图文推荐</>}
+                      />
+                      {/* 图文有已关注? */}
+                      {/* <FlagSettingItem
+                        className={styles.row}
+                        disabled={!filterOutGotoTypePicture}
+                        configKey='enableFilterForFollowedPicture'
+                        label='对「已关注」的图文启用过滤'
+                        tooltip={<>默认不过滤「已关注」</>}
+                      /> */}
                     </div>
                   </div>
                 </div>
