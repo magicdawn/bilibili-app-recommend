@@ -46,6 +46,12 @@
 - macOS Safari: [Userscripts](https://itunes.apple.com/us/app/userscripts/id1463298887), iPad Safari 上也可以使用
 - _**不支持**_ macOS Safari + TamperMonkey. (收费 Safari 插件, 已知不兼容, 请使用上述开源免费的 Userscripts
 
+### 与 Bilibili-Evolved 的兼容性
+
+- ❌ 首页相关 (如清爽首页 / 极简首页
+- [x] 夜间模式
+- [x] 自定义顶栏
+
 ### 你可能不需要这个脚本 :)
 
 - B 站桌面端已上线, 支持 MacOS / Windows, 首页推荐流
