@@ -7,7 +7,7 @@ import { settings, updateSettings, useSettingsSnapshot } from '$settings'
 import { getUid, toast } from '$utility'
 import { css } from '@emotion/react'
 import { useMemoizedFn } from 'ahooks'
-import { Popover, Tag, Transfer } from 'antd'
+import { Popover, Switch, Tag, Transfer } from 'antd'
 import { TransferDirection } from 'antd/es/transfer'
 import { shuffle } from 'lodash'
 import { ReactNode, useMemo, useState } from 'react'
@@ -183,7 +183,7 @@ export function FavUsageInfo({
 }: {
   allFavFolderServices: FavFolderService[]
 }) {
-  const { excludeFavFolderIds } = useSettingsSnapshot()
+  const { excludeFavFolderIds, shuffleForFav } = useSettingsSnapshot()
   const { onRefresh } = useRecHeaderContext()
   const [excludeFavFolderIdsChanged, setExcludeFavFolderIdsChanged] = useState(false)
 
@@ -217,34 +217,49 @@ export function FavUsageInfo({
   })
 
   return (
-    <Popover
-      trigger={'click'}
-      placement='bottom'
-      onOpenChange={onPopupOpenChange}
-      content={
-        <>
-          <Transfer
-            dataSource={allFavFolderServices}
-            rowKey={(row) => row.entry.id.toString()}
-            titles={['收藏夹', '忽略']}
-            targetKeys={excludeFavFolderIds}
-            onChange={handleChange}
-            render={(item) => item.entry.title}
-            oneWay
-            style={{ marginBottom: 10 }}
-          />
-        </>
-      }
-    >
-      <Tag
-        color='success'
-        css={css`
-          margin-left: 15px;
-          cursor: pointer;
-        `}
+    <>
+      <Popover
+        trigger={'click'}
+        placement='bottom'
+        onOpenChange={onPopupOpenChange}
+        content={
+          <>
+            <Transfer
+              dataSource={allFavFolderServices}
+              rowKey={(row) => row.entry.id.toString()}
+              titles={['收藏夹', '忽略']}
+              targetKeys={excludeFavFolderIds}
+              onChange={handleChange}
+              render={(item) => item.entry.title}
+              oneWay
+              style={{ marginBottom: 10 }}
+            />
+          </>
+        }
       >
-        收藏夹({foldersCount}) 收藏({videosCount})
-      </Tag>
-    </Popover>
+        <Tag
+          color='success'
+          css={css`
+            margin-left: 15px;
+            cursor: pointer;
+          `}
+        >
+          收藏夹({foldersCount}) 收藏({videosCount})
+        </Tag>
+      </Popover>
+
+      <Switch
+        style={{ marginLeft: 15 }}
+        checkedChildren='随机顺序'
+        unCheckedChildren='默认顺序'
+        checked={shuffleForFav}
+        onChange={(checked) => {
+          updateSettings({ shuffleForFav: checked })
+          setTimeout(() => {
+            onRefresh()
+          })
+        }}
+      />
+    </>
   )
 }
