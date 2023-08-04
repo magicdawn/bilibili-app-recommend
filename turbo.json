@@ -18,7 +18,8 @@
       "inputs": ["src/**/*.{ts,tsx}", "tsconfig.json"]
     },
     "build:less": {
-      "inputs": ["src/**/*.less"]
+      "inputs": ["src/**/*.less"],
+      "outputs": ["src/**/*.less.d.ts"]
     }
   }
 }
