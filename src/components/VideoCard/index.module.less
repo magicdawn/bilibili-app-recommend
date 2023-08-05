@@ -192,7 +192,7 @@
     );
     background-size: 400% 100%;
     animation-name: ant-skeleton-loading;
-    animation-duration: 1.4s;
+    animation-duration: 2.165s;
     animation-timing-function: ease;
     animation-iteration-count: infinite;
   }
@@ -202,6 +202,10 @@
   0% {
     background-position: 100% 50%;
   }
+
+  // https://css-tricks.com/css-keyframe-animation-delay-iterations/
+  // raw animation-duration: 1.4s; / 0.618 = 2.165s
+  61.8%,
   100% {
     background-position: 0 50%;
   }

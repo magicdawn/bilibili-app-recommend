@@ -66,6 +66,10 @@ export function filterRecItems(items: RecItemType[], tab: TabType) {
 
     function filterPicture() {
       if (settings.filterOutGotoTypePicture) {
+        // 不去掉已关注的图文
+        if (isFollowed && !settings.enableFilterForFollowedPicture) {
+          return true
+        }
         return false
       } else {
         return true

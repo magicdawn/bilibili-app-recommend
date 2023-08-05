@@ -68,6 +68,9 @@ export const initialSettings = {
 
   // filter out whose goto = 'picture'
   filterOutGotoTypePicture: false,
+  // 已关注UP的推荐图文, 默认不参与过滤
+  // 图文也是有 rcmd_reason = '已关注' 的
+  enableFilterForFollowedPicture: false,
 
   /**
    * 外观
