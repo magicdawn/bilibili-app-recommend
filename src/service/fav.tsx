@@ -242,6 +242,7 @@ export function FavUsageInfo({
           css={css`
             margin-left: 15px;
             cursor: pointer;
+            font-size: 12px;
           `}
         >
           收藏夹({foldersCount}) 收藏({videosCount})
