@@ -615,7 +615,7 @@ const VideoCardInner = memo(function VideoCardInner({
           else {
             const success = await UserFavService.addFav(avid)
             if (success) {
-              toast(`已加入收藏夹「${defaultFavFolderName}』」`)
+              toast(`已加入收藏夹「${defaultFavFolderName}」`)
             }
           }
         },
