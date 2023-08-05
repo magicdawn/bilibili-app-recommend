@@ -1,5 +1,23 @@
 # Changelog
 
+## v0.17.1
+
+- 备份设置: 调用专栏 API 会 throttle 处理
+- 收藏 Tab: 增加随机乱序 toggle
+- 内容过滤: 功能重构, 已关注拆分成 goto=av 视频已关注 & goto=picture 图文已关注
+
+详细
+
+- aff1313 chore: prevent popover-open class influence Tag font-size
+- 9406e9a feat: revert enableFilterForFollowedPicture, goto=picture also has follow related
+- 49b6408 chore: clean up legacy code, since goto = picture has no follow
+- dea5fbf chore: fix turbo config
+- 10ba241 chore: fix tsconfig
+- 1e3a925 feat: add toggle for shuffleForFav
+- 8c9c847 deps: ncu-safe
+- de22ca6 readme: more compatibility info
+- 7de6135 refactor video filter
+
 ## v0.17.0
 
 - feat: 支持使用专栏草稿箱作为备份存储, 备份设置项
