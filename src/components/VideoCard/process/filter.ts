@@ -30,8 +30,11 @@ export function filterRecItems(items: RecItemType[], tab: TabType) {
 
     const isVideo = goto === 'av'
     const isPicture = goto === 'picture'
+    // console.log('filter: goto = %s', goto)
+
     if (isVideo) return filterVideo()
     if (isPicture) return filterPicture()
+
     return true // just keep it
 
     function filterVideo() {
@@ -63,11 +66,6 @@ export function filterRecItems(items: RecItemType[], tab: TabType) {
 
     function filterPicture() {
       if (settings.filterOutGotoTypePicture) {
-        // // 不去掉已关注的图文
-        // if (isFollowed && !settings.enableFilterForFollowedPicture) {
-        //   debugger
-        //   return true
-        // }
         return false
       } else {
         return true

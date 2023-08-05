@@ -314,14 +314,6 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                         label='启用图文(动态 & 专栏)过滤'
                         tooltip={<>过滤掉图文推荐</>}
                       />
-                      {/* 图文有已关注? */}
-                      {/* <FlagSettingItem
-                        className={styles.row}
-                        disabled={!filterOutGotoTypePicture}
-                        configKey='enableFilterForFollowedPicture'
-                        label='对「已关注」的图文启用过滤'
-                        tooltip={<>默认不过滤「已关注」</>}
-                      /> */}
                     </div>
                   </div>
                 </div>

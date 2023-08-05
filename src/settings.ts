@@ -68,8 +68,6 @@ export const initialSettings = {
 
   // filter out whose goto = 'picture'
   filterOutGotoTypePicture: false,
-  // 已关注UP的推荐图文, 默认不参与过滤
-  // enableFilterForFollowedPicture: false,
 
   /**
    * 外观
