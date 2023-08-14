@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.17.2
+
+- pc recommend, 使用 wbi 接口
+
 ## v0.17.1
 
 - 备份设置: 调用专栏 API 会 throttle 处理

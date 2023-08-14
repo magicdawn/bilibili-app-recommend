@@ -1,6 +1,6 @@
-import { APP_NAME } from '$common'
+import { APP_NAME, HOST_APP } from '$common'
 import { AppRecItem, AppRecItemExtend, AppRecommendJson } from '$define'
-import { HOST_APP, gmrequest } from '$request'
+import { gmrequest } from '$request'
 import { toast } from '$utility/toast'
 import { uniqBy } from 'lodash'
 import pretry, { RetryError } from 'promise.retry'

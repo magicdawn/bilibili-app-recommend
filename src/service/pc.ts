@@ -21,7 +21,10 @@ export class PcRecService implements IService {
 
   async getRecommend(signal: AbortSignal | undefined = undefined) {
     const curpage = ++this.page
-    const res = await request.get('/x/web-interface/index/top/rcmd', {
+
+    // /x/web-interface/index/top/rcmd
+    // /x/web-interface/wbi/index/top/rcmd
+    const res = await request.get('/x/web-interface/wbi/index/top/rcmd', {
       signal,
       params: {
         fresh_type: 3,

@@ -1,5 +1,6 @@
+import { HOST_APP } from '$common'
 import { AppRecItem, DmJson, PvideoJson } from '$define'
-import { HOST_APP, gmrequest, isWebApiSuccess, request } from '$request'
+import { gmrequest, isWebApiSuccess, request } from '$request'
 import { getCsrfToken } from '$utility'
 import { toast } from '$utility/toast'
 import QuickLRU from 'quick-lru'
