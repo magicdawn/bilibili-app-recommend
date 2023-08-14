@@ -19,6 +19,9 @@ dependencies:
   '@icon-park/react':
     specifier: ^1.4.2
     version: 1.4.2(react-dom@18.2.0)(react@18.2.0)
+  '@mgdn/bvid':
+    specifier: ^0.0.1
+    version: 0.0.1
   '@total-typescript/ts-reset':
     specifier: ^0.4.2
     version: 0.4.2
@@ -1210,6 +1213,10 @@ packages:
   /@magicdawn/prettier-config@0.0.2:
     resolution: {integrity: sha512-ZyJ9S6lV6i6AgfF2QCm9EoKZZm6RKYDcxL89Sps3KQfM7PdTc5iNX3fXBKBY5fQX3N0a2a0s8XGKovepn8qb9g==}
     dev: true
+
+  /@mgdn/bvid@0.0.1:
+    resolution: {integrity: sha512-J5Bej6mqdUYgaLIby77joWvDUmtPXCamWKf9ezTjybBa2aT0X5lGyAkUOPW6EPu2h20zzi1sQ9gXkeHgzek8SQ==}
+    dev: false
 
   /@nodelib/fs.scandir@2.1.5:
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}

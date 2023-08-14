@@ -72,6 +72,7 @@
     "@emotion/css": "^11.11.2",
     "@emotion/react": "^11.11.1",
     "@icon-park/react": "^1.4.2",
+    "@mgdn/bvid": "^0.0.1",
     "@total-typescript/ts-reset": "^0.4.2",
     "ahooks": "3.7.8",
     "antd": "^5.7.2",

@@ -10,7 +10,6 @@ import {
 } from '$define'
 import { FavItemExtend } from '$define/fav'
 import { IconPark } from '$icon-park'
-import { BvCode } from '$utility/bv'
 import {
   formatDuration,
   formatTimeStamp,
@@ -18,6 +17,7 @@ import {
   parseCount,
   parseDuration,
 } from '$utility/video'
+import { BvCode } from '@mgdn/bvid'
 import dayjs from 'dayjs'
 import { ReactNode } from 'react'
 import { AppRecIconField, AppRecIconMap } from '../app-rec-icon'
