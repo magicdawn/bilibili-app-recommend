@@ -1,7 +1,7 @@
 import react from '@vitejs/plugin-react'
 // import reactSwc from '@vitejs/plugin-react-swc'
 import fs from 'fs'
-import visualizer from 'rollup-plugin-visualizer'
+import { visualizer } from 'rollup-plugin-visualizer'
 import { defineConfig } from 'vite'
 import importer from 'vite-plugin-importer'
 import monkey, { cdn } from 'vite-plugin-monkey'
@@ -9,6 +9,7 @@ import tsconfigPaths from 'vite-tsconfig-paths'
 import { name as packageName, version } from './package.json'
 
 const shouldMinify = !process.argv.includes('--no-minify')
+
 const useHttps =
   process.env.MY_KEY_FILE &&
   process.env.MY_CERT_FILE &&
