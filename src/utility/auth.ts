@@ -1,3 +1,7 @@
+/**
+ * 获取 access_key
+ */
+
 import { settings } from '$settings'
 import request from 'axios'
 import { toast } from './toast'
@@ -5,8 +9,13 @@ import { toast } from './toast'
 export const appkey = '27eb53fc9058f8c3'
 
 /**
- * 获取 access_key
+ * 2023-08-19
+ * mcbbs.net 只让他自己 iframe
+ * Content-Security-Policy: frame-ancestors *.mcbbs.net
+ * 故改成弹出窗口
  */
+
+export const GET_ACCESS_KEY_VIA_WINDOW = true
 
 async function getAccessKey(): Promise<string | undefined> {
   const res = await request.get('https://passport.bilibili.com/login/app/third', {
@@ -62,8 +71,7 @@ async function getAccessKey(): Promise<string | undefined> {
 
   let cleanWindow: (() => void) | undefined
 
-  const useWindow = false
-  if (useWindow) {
+  if (GET_ACCESS_KEY_VIA_WINDOW) {
     // use window.open
     const confirmWin = window.open(confirm_uri, '_blank', 'popup=true,width=800,height=600')
     cleanWindow = () => confirmWin?.close()
