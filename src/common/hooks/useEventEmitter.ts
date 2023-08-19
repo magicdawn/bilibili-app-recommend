@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-this-alias */
+
 import { useEffect, useRef } from 'react'
 
 type Subscription<T> = (val: T) => void
@@ -14,10 +16,8 @@ export class EventEmitter<T> {
   useSubscription = (callback: Subscription<T>) => {
     const emitter = this
 
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     const callbackRef = useRef<Subscription<T>>()
     callbackRef.current = callback
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     useEffect(() => {
       function subscription(val: T) {
         if (callbackRef.current) {
