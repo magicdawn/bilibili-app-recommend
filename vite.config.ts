@@ -1,6 +1,7 @@
 import react from '@vitejs/plugin-react'
 // import reactSwc from '@vitejs/plugin-react-swc'
 import fs from 'fs'
+import postcssMediaMinmax from 'postcss-media-minmax'
 import { visualizer } from 'rollup-plugin-visualizer'
 import { defineConfig } from 'vite'
 import importer from 'vite-plugin-importer'
@@ -26,12 +27,18 @@ if (process.env.RELEASE) {
 }
 
 // https://vitejs.dev/config/
-export default defineConfig(({ command, mode, ssrBuild }) => ({
+export default defineConfig(({ command }) => ({
   define: {
     'import.meta.vitest': 'undefined',
   },
 
   css: {
+    postcss: {
+      plugins: [
+        // transform `@media (width >= 1000px)` => `@media (min-width: 1000px)`
+        postcssMediaMinmax(),
+      ],
+    },
     modules: {
       localsConvention: 'camelCaseOnly',
     },

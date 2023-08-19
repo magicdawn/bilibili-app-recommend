@@ -189,6 +189,9 @@ devDependencies:
   open:
     specifier: ^9.1.0
     version: 9.1.0
+  postcss-media-minmax:
+    specifier: ^5.0.0
+    version: 5.0.0(postcss@8.4.27)
   prettier:
     specifier: ^3.0.2
     version: 3.0.2
@@ -3997,6 +4000,15 @@ packages:
       jsonc-parser: 3.2.0
       mlly: 1.4.0
       pathe: 1.1.1
+    dev: true
+
+  /postcss-media-minmax@5.0.0(postcss@8.4.27):
+    resolution: {integrity: sha512-yDUvFf9QdFZTuCUg0g0uNSHVlJ5X1lSzDZjPSFaiCWvjgsvu8vEVxtahPrLMinIDEEGnx6cBe6iqdx5YWz08wQ==}
+    engines: {node: '>=10.0.0'}
+    peerDependencies:
+      postcss: ^8.1.0
+    dependencies:
+      postcss: 8.4.27
     dev: true
 
   /postcss-modules-extract-imports@1.1.0:
