@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.17.4
+
+- 在 v0.17.3 中引入了将 media query range syntax, 从 chrome 104 开始支持. 本次引入 postcss-media-minmax transform.
+
 ## v0.17.3
 
 - access_key 获取: 因 mcbbs.net 不能再通过 iframe 访问, 改为弹出窗口获取 access_key
