@@ -149,17 +149,26 @@ export default defineConfig(({ command }) => ({
 
       build: {
         fileName: packageName + (shouldMinify ? '.mini' : '') + '.user.js',
+
+        // unpkg is not stable
+        // https://greasyfork.org/zh-CN/scripts/443530-bilibili-app-recommend/discussions/197900
+
+        // externalGlobals: {
+        //   'axios': cdn.unpkg('axios', 'dist/axios.min.js'),
+        //   'axios-userscript-adapter': cdn.unpkg(
+        //     'axiosGmxhrAdapter',
+        //     'dist/axiosGmxhrAdapter.min.js'
+        //   ),
+        //   'react': cdn.unpkg('React', 'umd/react.production.min.js'),
+        //   'react-dom': cdn.unpkg('ReactDOM', 'umd/react-dom.production.min.js'),
+        //   'ua-parser-js': cdn.unpkg('UAParser', 'dist/ua-parser.min.js'),
+        //   // '@emotion/css': cdn.unpkg('emotion', 'dist/emotion-css.umd.min.js'),
+        //   // '@emotion/react': cdn.unpkg('emotionReact', 'dist/emotion-react.umd.min.js'),
+        // },
+
         externalGlobals: {
-          'axios': cdn.unpkg('axios', 'dist/axios.min.js'),
-          'axios-userscript-adapter': cdn.unpkg(
-            'axiosGmxhrAdapter',
-            'dist/axiosGmxhrAdapter.min.js'
-          ),
-          'react': cdn.unpkg('React', 'umd/react.production.min.js'),
-          'react-dom': cdn.unpkg('ReactDOM', 'umd/react-dom.production.min.js'),
-          'ua-parser-js': cdn.unpkg('UAParser', 'dist/ua-parser.min.js'),
-          // '@emotion/css': cdn.unpkg('emotion', 'dist/emotion-css.umd.min.js'),
-          // '@emotion/react': cdn.unpkg('emotionReact', 'dist/emotion-react.umd.min.js'),
+          'react': cdn.bytecdntp('React', 'umd/react.production.min.js'),
+          'react-dom': cdn.bytecdntp('ReactDOM', 'umd/react-dom.production.min.js'),
         },
       },
     }),
