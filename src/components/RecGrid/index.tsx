@@ -17,11 +17,12 @@ import { IVideoCardData } from '$components/VideoCard/process/normalize'
 import { RecItemType } from '$define'
 import { getHeaderHeight } from '$header'
 import { IconPark } from '$icon-park'
-import { cx, generateClassName } from '$libs'
+import { cx } from '$libs'
 import { getIsInternalTesting, isSafari } from '$platform'
 import { getRecommendTimes, refreshForGrid, uniqConcat } from '$service'
 import { useSettingsSnapshot } from '$settings'
 import { toast } from '$utility/toast'
+import { css as styled } from '@emotion/css'
 import { css } from '@emotion/react'
 import { useEventListener, useLatest, useMemoizedFn, useMount } from 'ahooks'
 import delay from 'delay'
@@ -54,7 +55,7 @@ const debug = baseDebug.extend('components:RecGrid')
 const ENABLE_VIRTUAL_GRID = false
 
 export const CardClassNames = {
-  card: generateClassName`
+  card: styled`
     border: 2px solid transparent;
 
     /* global class under .card */
@@ -65,7 +66,7 @@ export const CardClassNames = {
     }
   `,
 
-  cardActive: generateClassName`
+  cardActive: styled`
     border-color: ${colorPrimaryValue};
     border-radius: ${borderRadiusValue};
     overflow: hidden;

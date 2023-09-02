@@ -15,12 +15,7 @@
     "skipLibCheck": true,
     "jsx": "react-jsx",
     "jsxImportSource": "@emotion/react",
-    "plugins": [
-      {
-        "name": "@styled/typescript-styled-plugin",
-        "tags": ["css", "cssCls", "generateClassName"]
-      }
-    ],
+    "plugins": [{ "name": "@styled/typescript-styled-plugin" }],
     "types": [
       "vite/client",
       "vitest/importMeta",
