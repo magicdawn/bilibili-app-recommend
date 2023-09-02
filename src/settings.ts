@@ -1,8 +1,9 @@
 import { APP_NAME, baseDebug } from '$common'
+import { HAS_RESTORED_SETTINGS } from '$components/ModalSettings'
 import { setData } from '$service/user/article-draft'
 import { omit, pick, throttle } from 'lodash'
 import ms from 'ms'
-import { proxy, snapshot, subscribe, useSnapshot } from 'valtio'
+import { INTERNAL_Snapshot, proxy, snapshot, subscribe, useSnapshot } from 'valtio'
 
 const debug = baseDebug.extend('settings')
 
@@ -88,15 +89,15 @@ export const initialSettings = {
   backupSettingsToArticleDraft: false,
 }
 
-export type Config = typeof initialSettings
+export type Settings = typeof initialSettings
 export const settings = proxy({ ...initialSettings })
 
-export type ConfigKey = keyof Config
-export const allowedConfigKeys = Object.keys(initialSettings) as ConfigKey[]
+export type SettingsKey = keyof Settings
+export const allowedSettingsKeys = Object.keys(initialSettings) as SettingsKey[]
 
-export type BooleanConfigKey = {
-  [k in ConfigKey]: Config[k] extends boolean ? k : never
-}[ConfigKey]
+export type BooleanSettingsKey = {
+  [k in SettingsKey]: Settings[k] extends boolean ? k : never
+}[SettingsKey]
 
 export const useSettingsSnapshot = function () {
   return useSnapshot(settings)
@@ -110,9 +111,9 @@ const nsp = APP_NAME
 const key = `${nsp}.settings`
 
 export async function load() {
-  const val = await GM.getValue<Config>(key)
+  const val = await GM.getValue<Settings>(key)
   if (val && typeof val === 'object') {
-    Object.assign(settings, pick(val, allowedConfigKeys))
+    Object.assign(settings, pick(val, allowedSettingsKeys))
   }
 
   // persist when config change
@@ -127,19 +128,25 @@ export async function save() {
   const newVal = snapshot(settings)
   // console.log('GM.setValue newVal = %o', newVal)
 
-  // GM
+  // GM save
   await GM.setValue(key, newVal)
 
   // http backup
+  await saveToDraft(newVal)
+}
+
+async function saveToDraft(newVal: INTERNAL_Snapshot<Settings>) {
+  if (!newVal.backupSettingsToArticleDraft) return
+
+  // skip when `HAS_RESTORED_SETTINGS=true`
+  if (HAS_RESTORED_SETTINGS) return
+
   const httpBackupVal = omit(newVal, ['accessKey'])
-  // 如果 (window as any)[`${APP_NAME}-restore`] 存在, 则是刚从备份恢复的, 等等刷新网页
-  if (httpBackupVal.backupSettingsToArticleDraft && !(window as any)[`${APP_NAME}-restore`]) {
-    try {
-      await setDataThrottled(httpBackupVal)
-      debug('backup to article draft complete')
-    } catch (e: any) {
-      console.error(e.stack || e)
-    }
+  try {
+    await setDataThrottled(httpBackupVal)
+    debug('backup to article draft complete')
+  } catch (e: any) {
+    console.error(e.stack || e)
   }
 }
 
@@ -150,7 +157,7 @@ export function clean() {
 /**
  * update & persist
  */
-export function updateSettings(c: Partial<Config>) {
+export function updateSettings(c: Partial<Settings>) {
   Object.assign(settings, c)
 }
 

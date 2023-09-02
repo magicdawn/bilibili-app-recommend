@@ -6,8 +6,8 @@ import { IconPark } from '$icon-park'
 import { cx } from '$libs'
 import { getData } from '$service/user/article-draft'
 import {
-  BooleanConfigKey,
-  allowedConfigKeys,
+  BooleanSettingsKey,
+  allowedSettingsKeys,
   resetSettings,
   settings,
   updateSettings,
@@ -33,21 +33,27 @@ function onResetSettings() {
   return toastAndReload()
 }
 
+export let HAS_RESTORED_SETTINGS = false
+
 async function onRestoreSettings() {
   const remoteSettings = await getData()
-  const pickedSettings = pick(remoteSettings || {}, allowedConfigKeys)
+  const pickedSettings = pick(remoteSettings || {}, allowedSettingsKeys)
 
   const len = Object.keys(pickedSettings).length
   if (!len) {
     return toast('备份不存在或没有有效的配置')
   }
 
-  ;(window as any)[`${APP_NAME}-restore`] = Date.now()
+  HAS_RESTORED_SETTINGS = true
   updateSettings({ ...pickedSettings })
   return toastAndReload()
 }
 
-function useHotkeyForConfig(hotkey: string | string[], configKey: BooleanConfigKey, label: string) {
+function useHotkeyForConfig(
+  hotkey: string | string[],
+  configKey: BooleanSettingsKey,
+  label: string
+) {
   return useKeyPress(
     hotkey,
     (e) => {

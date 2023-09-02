@@ -1,5 +1,5 @@
 import { IconPark } from '$icon-park'
-import { BooleanConfigKey, updateSettings, useSettingsSnapshot } from '$settings'
+import { BooleanSettingsKey, updateSettings, useSettingsSnapshot } from '$settings'
 import { css } from '@emotion/react'
 import { Checkbox, Tooltip } from 'antd'
 import { CheckboxChangeEvent } from 'antd/es/checkbox'
@@ -14,7 +14,7 @@ export function FlagSettingItem({
   tooltip,
   ...otherProps
 }: {
-  configKey: BooleanConfigKey
+  configKey: BooleanSettingsKey
   label?: string
   extraAction?: (val: boolean) => void | Promise<void>
   tooltip?: ReactNode
