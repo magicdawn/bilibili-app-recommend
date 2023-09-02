@@ -99,7 +99,7 @@ export type BooleanSettingsKey = {
   [k in SettingsKey]: Settings[k] extends boolean ? k : never
 }[SettingsKey]
 
-export const useSettingsSnapshot = function () {
+export function useSettingsSnapshot() {
   return useSnapshot(settings)
 }
 
