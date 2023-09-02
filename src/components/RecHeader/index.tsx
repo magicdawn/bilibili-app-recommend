@@ -25,7 +25,7 @@ import { noop } from 'lodash'
 import { proxy, useSnapshot } from 'valtio'
 import { AccessKeyManage } from '../AccessKeyManage'
 import { ModalFeed } from '../ModalFeed'
-import { TabType, VideoSourceTab, useCurrentSourceTab } from './tab'
+import { VideoSourceTab, useCurrentSourceTab } from './tab'
 
 const debug = baseDebug.extend('RecHeader')
 
@@ -247,9 +247,14 @@ export const RefreshButton = forwardRef<RefreshButtonActions, RefreshButtonProps
   )
 
   const tab = useCurrentSourceTab()
-  const text = (['dynamic', 'watchlater'] satisfies TabType[] as TabType[]).includes(tab)
-    ? '刷新'
-    : '换一换'
+  const { shuffleForFav, shuffleForWatchLater } = useSettingsSnapshot()
+
+  const text =
+    tab === 'dynamic' ||
+    (tab === 'watchlater' && !shuffleForWatchLater) ||
+    (tab === 'fav' && !shuffleForFav)
+      ? '刷新'
+      : '换一换'
 
   const onClick: MouseEventHandler = useMemoizedFn((e?: MouseEvent) => {
     setDeg((d) => d + 360)
