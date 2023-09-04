@@ -7,8 +7,9 @@ import { AppRecItem, AppRecItemExtend, RecItemType } from '$define'
 import { IconPark } from '$icon-park'
 import { isMac, isSafari } from '$platform'
 import { formatFavFolderUrl } from '$service/fav'
-import { UserBlacklistService, useInBlacklist } from '$service/user/blacklist'
 import { UserFavService, defaultFavFolderName } from '$service/user/fav'
+import { UserBlacklistService, useInBlacklist } from '$service/user/relations/blacklist'
+import { UserfollowService } from '$service/user/relations/follow'
 import { useWatchLaterState, watchLaterState } from '$service/watchlater'
 import { settings, useSettingsSnapshot } from '$settings'
 import { toast, toastOperationFail, toastRequestFail } from '$utility/toast'
@@ -528,6 +529,10 @@ const VideoCardInner = memo(function VideoCardInner({
     window.open(iinaUrl, '_self')
   })
 
+  /**
+   * blacklist
+   */
+
   // 已关注 item.api 也为 'pc', 故使用 tab, 而不是 api 区分
   const tab = useCurrentSourceTab()
   const hasBlacklistEntry = tab === 'recommend-app' || tab === 'recommend-pc'
@@ -537,6 +542,21 @@ const VideoCardInner = memo(function VideoCardInner({
     const success = await UserBlacklistService.add(authorMid)
     if (success) {
       toast(`已加入黑名单: ${authorName}`)
+    }
+  })
+
+  /**
+   * unfollow
+   */
+
+  const hasUnfollowEntry =
+    item.api === 'dynamic' ||
+    ((item.api === 'app' || item.api === 'pc') && recommendReason === '已关注')
+  const onUnfollowUp = useMemoizedFn(async () => {
+    if (!authorMid) return
+    const success = await UserfollowService.unfollow(authorMid)
+    if (success) {
+      toast('已取消关注')
     }
   })
 
@@ -574,6 +594,14 @@ const VideoCardInner = memo(function VideoCardInner({
         icon: <IconPark name='DislikeTwo' size={15} />,
         onClick() {
           onTriggerDislike()
+        },
+      },
+      hasUnfollowEntry && {
+        key: 'unfollow-up',
+        label: '取消关注',
+        icon: <IconPark name='PeopleMinus' size={15} />,
+        onClick() {
+          onUnfollowUp()
         },
       },
       hasBlacklistEntry && {
@@ -683,7 +711,15 @@ const VideoCardInner = memo(function VideoCardInner({
           ]
         : []),
     ].filter(Boolean)
-  }, [item, watchLaterAdded, hasDislikeEntry, hasBlacklistEntry, favFolderNames, favFolderUrls])
+  }, [
+    item,
+    watchLaterAdded,
+    hasDislikeEntry,
+    hasUnfollowEntry,
+    hasBlacklistEntry,
+    favFolderNames,
+    favFolderUrls,
+  ])
 
   const onContextMenuOpenChange = useMemoizedFn((open: boolean) => {
     if (!open) return
