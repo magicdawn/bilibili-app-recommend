@@ -3,21 +3,10 @@
 - 完成 features
 - 完成 changelog
 - npm version patch
-- pnpm build
-- 自测一遍 prod version script
-- 上传 greasefork
-- git push origin master && git push origin --tags
+- git push origin --all && git push origin --tags
 
 ## Todo
 
-- [x] modal close button
-- [x] meta 补充
-- [x] 优化 externals, 减小打包体积
-- [x] preview progress bar
-- [x] 稍后再看
-- [x] access_key 管理, 特别是增加删除功能
-- [x] 提交不喜欢原因, 撤销
-- [x] 快捷键, modal-feed 上下左右, 刷新,
 - [ ] 弹幕预览
 
 ## 实现细节
