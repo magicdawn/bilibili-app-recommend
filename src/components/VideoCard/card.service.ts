@@ -8,7 +8,9 @@ import QuickLRU from 'quick-lru'
 // api.bilibili.com/pvideo?aid=${target.dataset.id}&_=${Date.now()
 // 视频预览
 export async function pvideo(aid: string) {
-  const res = await request.get('/pvideo', { params: { aid } })
+  // 2023-09-08 pvideo 出现 404, 切换为 videoshot
+  // const res = await request.get('/pvideo', { params: { aid } })
+  const res = await request.get('/x/player/videoshot', { params: { aid, index: '1' } })
   const json = res.data as PvideoJson
 
   // TODO: process errors
