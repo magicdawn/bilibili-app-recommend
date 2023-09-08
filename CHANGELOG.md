@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.17.6
+
+- 49b2e4f fix: PreviewImage replace /pvideo with /x/player/videoshot api
+
+其他
+
+- 6187472 feat: use different text for shuffle on/off
+- a704418 feat: support unfollow context-menu item
+
 ## v0.17.5
 
 - move to cdn.bytedance.com from unpkg.com
