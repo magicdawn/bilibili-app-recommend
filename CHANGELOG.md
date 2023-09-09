@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.17.7
+
+- 2070c84 feat: set popup container for fav tab - fav folder ignore popover
+- 51c671b feat: 动态支持筛选
+
 ## v0.17.6
 
 - 49b2e4f fix: PreviewImage replace /pvideo with /x/player/videoshot api
