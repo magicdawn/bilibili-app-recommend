@@ -222,6 +222,7 @@ export function FavUsageInfo({
         trigger={'click'}
         placement='bottom'
         onOpenChange={onPopupOpenChange}
+        getPopupContainer={(el) => el.parentElement || document.body}
         content={
           <>
             <Transfer
