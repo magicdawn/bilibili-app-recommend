@@ -2,10 +2,10 @@ import { useRefInit } from '$common/hooks/useRefInit'
 import { OnRefresh } from '$components/RecHeader'
 import { TabConfigMap, TabType, getCurrentSourceTab } from '$components/RecHeader/tab'
 import { RecItemType } from '$define'
-import { DynamicFeedRecService } from '$service/dynamic-feed'
-import { FavRecService } from '$service/fav'
-import { PcRecService } from '$service/pc'
-import { WatchLaterRecService } from '$service/watchlater'
+import { DynamicFeedRecService, dynamicFeedFilterStore } from '$service/rec/dynamic-feed'
+import { FavRecService } from '$service/rec/fav'
+import { PcRecService } from '$service/rec/pc'
+import { WatchLaterRecService } from '$service/rec/watchlater'
 import { useGetState, useMemoizedFn } from 'ahooks'
 import { Debugger } from 'debug'
 import { useState } from 'react'
@@ -48,7 +48,9 @@ export function useRefresh({
   const [items, setItems] = useState<RecItemType[]>([])
 
   const [pcRecService, setPcRecService] = useState(() => new PcRecService())
-  const [dynamicFeedService, setDynamicFeedService] = useState(() => new DynamicFeedRecService())
+  const [dynamicFeedService, setDynamicFeedService] = useState(
+    () => new DynamicFeedRecService(dynamicFeedFilterStore.upMid)
+  )
   const [watchLaterService, setWatchLaterService] = useState(() => new WatchLaterRecService())
   const [favService, setFavService] = useState(() => new FavRecService())
 
@@ -123,7 +125,7 @@ export function useRefresh({
 
     let _dynamicFeedService = dynamicFeedService
     if (tab === 'dynamic') {
-      _dynamicFeedService = new DynamicFeedRecService()
+      _dynamicFeedService = new DynamicFeedRecService(dynamicFeedFilterStore.upMid)
       setDynamicFeedService(_dynamicFeedService)
     }
 

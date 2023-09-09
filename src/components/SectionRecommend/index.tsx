@@ -9,7 +9,7 @@ import {
 } from '$components/video-grid.module.less'
 import { cx } from '$libs'
 import { getIsInternalTesting } from '$platform'
-import { refreshForHome } from '$service'
+import { refreshForHome } from '$service/rec'
 import { useMount } from 'ahooks'
 import { useMemo } from 'react'
 import { RecHeader } from '../RecHeader'

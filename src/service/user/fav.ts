@@ -7,7 +7,7 @@
 
 import { FavFolderListAllJson } from '$define/fav/folder-list-all'
 import { isWebApiSuccess, request } from '$request'
-import { FavRecService, formatFavFolderUrl } from '$service/fav'
+import { FavRecService, formatFavFolderUrl } from '$service/rec/fav'
 import { OPERATION_FAIL_MSG, getCsrfToken, getHasLogined, getUid, toast } from '$utility'
 
 export const UserFavService = {

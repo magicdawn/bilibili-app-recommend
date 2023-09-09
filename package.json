@@ -22,7 +22,7 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@babel/core": "^7.22.15",
+    "@babel/core": "^7.22.17",
     "@emotion/babel-plugin": "^11.11.0",
     "@magicdawn/prettier-config": "^0.0.2",
     "@qiniu/typed-less-modules": "^0.1.2",
@@ -32,7 +32,7 @@
     "@types/lodash": "4.14.198",
     "@types/md5": "^2.3.2",
     "@types/ms": "^0.7.31",
-    "@types/node": "20.5.9",
+    "@types/node": "20.6.0",
     "@types/react": "18.2.21",
     "@types/react-dom": "18.2.7",
     "@types/ua-parser-js": "^0.7.37",
@@ -41,12 +41,12 @@
     "@violentmonkey/types": "^0.1.4",
     "@vitejs/plugin-react": "^4.0.4",
     "@vitejs/plugin-react-swc": "^3.3.2",
-    "@vitest/ui": "^0.34.3",
+    "@vitest/ui": "^0.34.4",
     "chalk": "5",
     "concurrently": "^8.2.1",
     "dl-vampire": "^1.4.1",
     "esbuild": "0.19.2",
-    "eslint": "^8.48.0",
+    "eslint": "^8.49.0",
     "eslint-config-prettier": "^9.0.0",
     "esm-utils": "^4.1.2",
     "husky": "^8.0.3",
@@ -67,7 +67,7 @@
     "vite-plugin-inspect": "^0.7.38",
     "vite-plugin-monkey": "^3.5.0",
     "vite-tsconfig-paths": "^4.2.0",
-    "vitest": "^0.34.3"
+    "vitest": "^0.34.4"
   },
   "dependencies": {
     "@emotion/css": "^11.11.2",
@@ -95,7 +95,7 @@
     "react-intersection-observer": "^9.5.2",
     "react-use-sticky": "^0.1.4",
     "react-virtuoso": "^4.5.1",
-    "ua-parser-js": "^1.0.35",
+    "ua-parser-js": "^1.0.36",
     "valtio": "^1.11.2"
   },
   "lint-staged": {

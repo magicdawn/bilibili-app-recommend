@@ -19,7 +19,7 @@ import { getHeaderHeight } from '$header'
 import { IconPark } from '$icon-park'
 import { cx } from '$libs'
 import { getIsInternalTesting, isSafari } from '$platform'
-import { getRecommendTimes, refreshForGrid, uniqConcat } from '$service'
+import { getRecommendTimes, refreshForGrid, uniqConcat } from '$service/rec'
 import { useSettingsSnapshot } from '$settings'
 import { toast } from '$utility/toast'
 import { css as styled } from '@emotion/css'
@@ -121,6 +121,9 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
       }
       if (tab === 'fav') {
         setExtraInfo?.(favService.usageInfo)
+      }
+      if (tab === 'dynamic') {
+        setExtraInfo?.(dynamicFeedService.usageInfo)
       }
 
       // check need loadMore
