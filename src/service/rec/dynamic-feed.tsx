@@ -3,12 +3,13 @@ import { DynamicFeedItemExtend, DynamicFeedJson } from '$define'
 import { request } from '$request'
 import { getRecentUpdateUpList } from '$service/dynamic'
 import { DynamicPortalUp } from '$service/dynamic/portal'
+import { ArrayItem } from '$utility/type'
 import { css } from '@emotion/react'
 import { useMemoizedFn, useMount } from 'ahooks'
 import { Avatar, Badge, Button, Dropdown, MenuProps } from 'antd'
 import delay from 'delay'
 import ms from 'ms'
-import { ReactNode } from 'react'
+import { ReactNode, useMemo } from 'react'
 import { proxy, useSnapshot } from 'valtio'
 import { IService } from './base'
 
@@ -93,6 +94,8 @@ async function updateUpList(force = false) {
   dynamicFeedFilterStore.upListUpdatedAt = Date.now()
 }
 
+type MenuItemType = ArrayItem<Exclude<MenuProps['items'], undefined>>
+
 export function DynamicFeedUsageInfo() {
   const { onRefresh } = useRecHeaderContext()
   const { upName, upList } = useSnapshot(dynamicFeedFilterStore)
@@ -115,8 +118,8 @@ export function DynamicFeedUsageInfo() {
     onRefresh()
   })
 
-  const allMenuItem: MenuProps['items'] = [
-    {
+  const menuItems = useMemo((): MenuItemType[] => {
+    const itemAll: MenuItemType = {
       key: 'all',
       label: (
         <span>
@@ -134,47 +137,49 @@ export function DynamicFeedUsageInfo() {
       onClick() {
         onSelect({ upMid: undefined, upName: undefined })
       },
-    },
-  ]
-
-  const menuItems: MenuProps['items'] = upList.map((up) => {
-    let avatar: ReactNode = null
-    if (up.has_update) {
-      avatar = (
-        <Badge
-          dot
-          css={css`
-            margin-right: 10px;
-          `}
-        >
-          <Avatar size={'small'} src={up.face} />
-        </Badge>
-      )
-    } else {
-      avatar = (
-        <Avatar
-          size={'small'}
-          src={up.face}
-          css={css`
-            margin-right: 10px;
-          `}
-        />
-      )
     }
 
-    return {
-      key: up.mid,
-      label: (
-        <span>
-          {avatar}
-          {up.uname}
-        </span>
-      ),
-      onClick() {
-        onSelect({ upMid: up.mid, upName: up.uname })
-      },
-    }
-  })
+    const items: MenuItemType[] = upList.map((up) => {
+      let avatar: ReactNode = null
+      if (up.has_update) {
+        avatar = (
+          <Badge
+            dot
+            css={css`
+              margin-right: 10px;
+            `}
+          >
+            <Avatar size={'small'} src={up.face} />
+          </Badge>
+        )
+      } else {
+        avatar = (
+          <Avatar
+            size={'small'}
+            src={up.face}
+            css={css`
+              margin-right: 10px;
+            `}
+          />
+        )
+      }
+
+      return {
+        key: up.mid,
+        label: (
+          <span>
+            {avatar}
+            {up.uname}
+          </span>
+        ),
+        onClick() {
+          onSelect({ upMid: up.mid, upName: up.uname })
+        },
+      }
+    })
+
+    return [itemAll, ...items]
+  }, [upList, upList.map((x) => !!x.has_update)])
 
   return (
     <div
@@ -183,11 +188,8 @@ export function DynamicFeedUsageInfo() {
       `}
     >
       <Dropdown
-        menu={{
-          items: [...allMenuItem, ...menuItems],
-          style: { maxHeight: '50vh', overflowY: 'scroll' },
-        }}
         placement='bottomLeft'
+        menu={{ items: menuItems, style: { maxHeight: '50vh', overflowY: 'scroll' } }}
       >
         <Button>{upName ? `UP: ${upName}` : '全部'}</Button>
       </Dropdown>
