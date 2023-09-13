@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.17.8
+
+- 动态右键菜单: 快速筛选 UP
+  ![image](https://github.com/magicdawn/bilibili-app-recommend/assets/4067115/06a08386-4d90-4178-875d-4241eaec38f9)
+- 「查看更多」弹窗也支持 extraInfo 了
+
 ## v0.17.7
 
 - 2070c84 feat: set popup container for fav tab - fav folder ignore popover

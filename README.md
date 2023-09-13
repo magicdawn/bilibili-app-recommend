@@ -173,13 +173,36 @@ _\* 开关-第一项_
 - [x] 支持右键菜单
 - [ ] 弹幕预览, 个人需求不是很大. (原版有该功能, 可以试试旧版首页)
 
-#### 视频卡片右键菜单
+### 视频卡片右键菜单
 
 因 Tab 功能不同有差异
 
 ![image](https://github.com/magicdawn/bilibili-app-recommend/assets/4067115/b7cbe6de-dc4c-4c45-909a-0392aaa66add)
 ![image](https://github.com/magicdawn/bilibili-app-recommend/assets/4067115/26053d9c-2543-4ffb-ac20-9b052a6807c2)
 ![image](https://github.com/magicdawn/bilibili-app-recommend/assets/4067115/451e3705-99a0-422e-8d33-e893bc09be71)
+
+#### 黑名单
+
+推荐类 Tab, 快速拉黑
+
+#### 取消关注
+
+已关注 or 动态 Tab 中会有
+
+#### 动态 Tab
+
+- 快速筛选 UP 的动态
+
+#### 稍后再看 Tab
+
+- 快速收藏
+- 移除稍后再看
+- 重新添加(aka 移到最前)
+
+#### 收藏 Tab
+
+- 浏览收藏夹
+- 移除收藏
 
 ### 快捷键说明
 
