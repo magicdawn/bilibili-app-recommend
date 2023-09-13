@@ -1,4 +1,4 @@
-import { useRecHeaderContext } from '$components/RecHeader'
+import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
 import { FavItemExtend } from '$define/fav'
 import { FavFolderListAllItem, FavFolderListAllJson } from '$define/fav/folder-list-all'
 import { FavFolderDetailInfo, ResourceListJSON } from '$define/fav/resource-list'
@@ -184,7 +184,7 @@ export function FavUsageInfo({
   allFavFolderServices: FavFolderService[]
 }) {
   const { excludeFavFolderIds, shuffleForFav } = useSettingsSnapshot()
-  const { onRefresh } = useRecHeaderContext()
+  const onRefresh = useOnRefreshContext()
   const [excludeFavFolderIdsChanged, setExcludeFavFolderIdsChanged] = useState(false)
 
   const handleChange = useMemoizedFn(
@@ -211,7 +211,7 @@ export function FavUsageInfo({
     // when close
     else {
       if (excludeFavFolderIdsChanged) {
-        onRefresh()
+        onRefresh?.()
       }
     }
   })
@@ -258,7 +258,7 @@ export function FavUsageInfo({
         onChange={(checked) => {
           updateSettings({ shuffleForFav: checked })
           setTimeout(() => {
-            onRefresh()
+            onRefresh?.()
           })
         }}
       />

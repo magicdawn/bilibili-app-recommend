@@ -1,5 +1,6 @@
 import { APP_NAME } from '$common'
 import { proxyWithLocalStorage } from '$common/hooks/proxyWithLocalStorage'
+import { type OnRefresh } from '$components/RecGrid/useRefresh'
 import { HelpInfo } from '$components/piece'
 import { IconName, IconPark } from '$icon-park'
 import { useSettingsSnapshot } from '$settings'
@@ -10,7 +11,6 @@ import { Icon } from '@icon-park/react/es/runtime'
 import { Radio } from 'antd'
 import { ComponentProps } from 'react'
 import { useSnapshot } from 'valtio'
-import { type OnRefresh } from './index'
 
 export const VIDEO_SOURCE_TAB_STORAGE_KEY = `${APP_NAME}-video-source-tab`
 

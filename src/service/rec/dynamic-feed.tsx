@@ -1,4 +1,4 @@
-import { useRecHeaderContext } from '$components/RecHeader'
+import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
 import { DynamicFeedItemExtend, DynamicFeedJson } from '$define'
 import { request } from '$request'
 import { getRecentUpdateUpList } from '$service/dynamic'
@@ -96,8 +96,17 @@ async function updateUpList(force = false) {
 
 type MenuItemType = ArrayItem<Exclude<MenuProps['items'], undefined>>
 
+export function dynamicFeedFilterSelectUp(payload: Partial<typeof dynamicFeedFilterStore>) {
+  Object.assign(dynamicFeedFilterStore, payload)
+  // 选择了 up, 去除红点
+  if (payload.upMid) {
+    const item = dynamicFeedFilterStore.upList.find((x) => x.mid === payload.upMid)
+    if (item) item.has_update = false
+  }
+}
+
 export function DynamicFeedUsageInfo() {
-  const { onRefresh } = useRecHeaderContext()
+  const onRefresh = useOnRefreshContext()
   const { upName, upList } = useSnapshot(dynamicFeedFilterStore)
 
   // try update on mount
@@ -106,69 +115,42 @@ export function DynamicFeedUsageInfo() {
   })
 
   const onSelect = useMemoizedFn(async (payload: Partial<typeof dynamicFeedFilterStore>) => {
-    Object.assign(dynamicFeedFilterStore, payload)
-
-    // 选择了 up, 去除红点
-    if (payload.upMid) {
-      const item = dynamicFeedFilterStore.upList.find((x) => x.mid === payload.upMid)
-      if (item) item.has_update = false
-    }
-
+    dynamicFeedFilterSelectUp(payload)
     await delay(100)
-    onRefresh()
+    onRefresh?.()
   })
 
   const menuItems = useMemo((): MenuItemType[] => {
     const itemAll: MenuItemType = {
       key: 'all',
-      label: (
-        <span>
-          <Avatar
-            size={'small'}
-            css={css`
-              margin-right: 10px;
-            `}
-          >
-            全
-          </Avatar>
-          全部
-        </span>
-      ),
+      icon: <Avatar size={'small'}>全</Avatar>,
+      label: '全部',
       onClick() {
         onSelect({ upMid: undefined, upName: undefined })
       },
     }
 
     const items: MenuItemType[] = upList.map((up) => {
-      let avatar: ReactNode = null
+      let avatar: ReactNode = <Avatar size={'small'} src={up.face} />
       if (up.has_update) {
-        avatar = (
-          <Badge
-            dot
-            css={css`
-              margin-right: 10px;
-            `}
-          >
-            <Avatar size={'small'} src={up.face} />
-          </Badge>
-        )
-      } else {
-        avatar = (
-          <Avatar
-            size={'small'}
-            src={up.face}
-            css={css`
-              margin-right: 10px;
-            `}
-          />
-        )
+        avatar = <Badge dot>{avatar}</Badge>
       }
 
       return {
         key: up.mid,
+        icon: avatar,
+        // label: up.uname,
         label: (
-          <span>
-            {avatar}
+          <span
+            title={up.uname}
+            css={css`
+              display: block;
+              max-width: 130px;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+              overflow: hidden;
+            `}
+          >
             {up.uname}
           </span>
         ),
@@ -189,7 +171,10 @@ export function DynamicFeedUsageInfo() {
     >
       <Dropdown
         placement='bottomLeft'
-        menu={{ items: menuItems, style: { maxHeight: '50vh', overflowY: 'scroll' } }}
+        menu={{
+          items: menuItems,
+          style: { maxHeight: '50vh', overflowY: 'scroll' },
+        }}
       >
         <Button>{upName ? `UP: ${upName}` : '全部'}</Button>
       </Dropdown>

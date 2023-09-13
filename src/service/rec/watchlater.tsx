@@ -1,4 +1,4 @@
-import { useRecHeaderContext } from '$components/RecHeader'
+import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
 import { RecItemType, WatchLaterItemExtend, WatchLaterJson } from '$define'
 import { request } from '$request'
 import { settings, updateSettings, useSettingsSnapshot } from '$settings'
@@ -139,7 +139,7 @@ function WatchLaterUsageInfo({ count }: { count: number }) {
   const title = `${color !== 'success' ? '快满了~ ' : ''}已使用 ${count} / 100`
 
   const { shuffleForWatchLater } = useSettingsSnapshot()
-  const { onRefresh } = useRecHeaderContext()
+  const onRefresh = useOnRefreshContext()
 
   return (
     <>
@@ -162,7 +162,7 @@ function WatchLaterUsageInfo({ count }: { count: number }) {
         onChange={(checked) => {
           updateSettings({ shuffleForWatchLater: checked })
           setTimeout(() => {
-            onRefresh()
+            onRefresh?.()
           })
         }}
       />

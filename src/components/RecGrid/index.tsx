@@ -5,7 +5,6 @@
 import { APP_NAME, baseDebug } from '$common'
 import { useModalDislikeVisible } from '$components/ModalDislike'
 import { colorPrimaryValue } from '$components/ModalSettings/theme'
-import { OnRefresh } from '$components/RecHeader'
 import { useCurrentSourceTab } from '$components/RecHeader/tab'
 import {
   VideoCard,
@@ -47,7 +46,7 @@ import {
   videoGridNewHomepage,
   videoGridYoutubeLike,
 } from '../video-grid.module.less'
-import { useRefresh } from './useRefresh'
+import { OnRefresh, useRefresh } from './useRefresh'
 import { useShortcut } from './useShortcut'
 
 const debug = baseDebug.extend('components:RecGrid')
@@ -489,6 +488,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
                   active={active}
                   onRemoveCurrent={handleRemoveCard}
                   onMoveToFirst={handleMoveCardToFirst}
+                  onRefresh={refresh}
                   emitter={videoCardEmitters[index]}
                 />
               )
@@ -514,6 +514,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
                 active={active}
                 onRemoveCurrent={handleRemoveCard}
                 onMoveToFirst={handleMoveCardToFirst}
+                onRefresh={refresh}
                 emitter={videoCardEmitters[index]}
               />
             )

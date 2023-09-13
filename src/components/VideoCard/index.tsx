@@ -2,10 +2,12 @@ import { APP_KEY_PREFIX, APP_NAME } from '$common'
 import { useMittOn } from '$common/hooks/useMitt'
 import { Reason, dislikedIds, showModalDislike, useDislikedReason } from '$components/ModalDislike'
 import { colorPrimaryValue } from '$components/ModalSettings/theme'
+import { OnRefresh } from '$components/RecGrid/useRefresh'
 import { useCurrentSourceTab } from '$components/RecHeader/tab'
 import { AppRecItem, AppRecItemExtend, RecItemType } from '$define'
 import { IconPark } from '$icon-park'
 import { isMac, isSafari } from '$platform'
+import { dynamicFeedFilterSelectUp } from '$service/rec/dynamic-feed'
 import { formatFavFolderUrl } from '$service/rec/fav'
 import { useWatchLaterState, watchLaterState } from '$service/rec/watchlater'
 import { UserFavService, defaultFavFolderName } from '$service/user/fav'
@@ -81,6 +83,7 @@ export type VideoCardProps = {
   item?: RecItemType
   onRemoveCurrent?: (item: RecItemType, data: IVideoCardData) => void | Promise<void>
   onMoveToFirst?: (item: RecItemType, data: IVideoCardData) => void | Promise<void>
+  onRefresh?: OnRefresh
   emitter?: VideoCardEmitter
 } & ComponentProps<'div'>
 
@@ -98,6 +101,7 @@ export const VideoCard = memo(function VideoCard({
   active,
   onRemoveCurrent,
   onMoveToFirst,
+  onRefresh,
   emitter,
   ...restProps
 }: VideoCardProps) {
@@ -154,6 +158,7 @@ export const VideoCard = memo(function VideoCard({
             emitter={emitter}
             onRemoveCurrent={onRemoveCurrent}
             onMoveToFirst={onMoveToFirst}
+            onRefresh={onRefresh}
           />
         ))}
     </div>
@@ -246,6 +251,7 @@ type VideoCardInnerProps = {
   active?: boolean
   onRemoveCurrent?: (item: RecItemType, data: IVideoCardData) => void | Promise<void>
   onMoveToFirst?: (item: RecItemType, data: IVideoCardData) => void | Promise<void>
+  onRefresh?: OnRefresh
   emitter?: VideoCardEmitter
 }
 const VideoCardInner = memo(function VideoCardInner({
@@ -254,6 +260,7 @@ const VideoCardInner = memo(function VideoCardInner({
   active = false,
   onRemoveCurrent,
   onMoveToFirst,
+  onRefresh,
   emitter = defaultEmitter,
 }: VideoCardInnerProps) {
   const isPc = item.api === 'pc'
@@ -560,6 +567,18 @@ const VideoCardInner = memo(function VideoCardInner({
     }
   })
 
+  /**
+   * 动态筛选
+   */
+
+  const hasDynamicFeedFilterSelectUpEntry = item.api === 'dynamic' && !!onRefresh
+  const onDynamicFeedFilterSelectUp = useMemoizedFn(async () => {
+    if (!authorMid || !authorName) return
+    dynamicFeedFilterSelectUp({ upMid: Number(authorMid), upName: authorName })
+    await delay(100)
+    await onRefresh?.()
+  })
+
   const contextMenus: MenuProps['items'] = useMemo(() => {
     const watchLaterLabel = watchLaterAdded ? '移除稍后再看' : '稍后再看'
 
@@ -596,21 +615,23 @@ const VideoCardInner = memo(function VideoCardInner({
           onTriggerDislike()
         },
       },
+      hasDynamicFeedFilterSelectUpEntry && {
+        key: 'dymamic-feed-filter-select-up',
+        label: '查看 UP 的动态',
+        icon: <IconPark name='PeopleSearch' size={15} />,
+        onClick: onDynamicFeedFilterSelectUp,
+      },
       hasUnfollowEntry && {
         key: 'unfollow-up',
         label: '取消关注',
         icon: <IconPark name='PeopleMinus' size={15} />,
-        onClick() {
-          onUnfollowUp()
-        },
+        onClick: onUnfollowUp,
       },
       hasBlacklistEntry && {
         key: 'blacklist-up',
         label: '将 UP 加入黑名单',
         icon: <IconPark name='PeopleDelete' size={15} />,
-        onClick() {
-          onBlacklistUp()
-        },
+        onClick: onBlacklistUp,
       },
       item.api === 'watchlater' && {
         key: 'add-fav',
@@ -717,6 +738,7 @@ const VideoCardInner = memo(function VideoCardInner({
     hasDislikeEntry,
     hasUnfollowEntry,
     hasBlacklistEntry,
+    hasDynamicFeedFilterSelectUpEntry,
     favFolderNames,
     favFolderUrls,
   ])

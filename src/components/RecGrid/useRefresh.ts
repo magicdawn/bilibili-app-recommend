@@ -1,5 +1,4 @@
 import { useRefInit } from '$common/hooks/useRefInit'
-import { OnRefresh } from '$components/RecHeader'
 import { TabConfigMap, TabType, getCurrentSourceTab } from '$components/RecHeader/tab'
 import { RecItemType } from '$define'
 import { DynamicFeedRecService, dynamicFeedFilterStore } from '$service/rec/dynamic-feed'
@@ -8,7 +7,15 @@ import { PcRecService } from '$service/rec/pc'
 import { WatchLaterRecService } from '$service/rec/watchlater'
 import { useGetState, useMemoizedFn } from 'ahooks'
 import { Debugger } from 'debug'
-import { useState } from 'react'
+import { createContext, useContext, useState } from 'react'
+
+export type OnRefreshOoptions = { watchlaterKeepOrder?: boolean }
+export type OnRefresh = (reuse?: boolean, options?: OnRefreshOoptions) => void | Promise<void>
+
+export const OnRefreshContext = createContext<OnRefresh | undefined>(undefined)
+export function useOnRefreshContext() {
+  return useContext(OnRefreshContext)
+}
 
 export type FetcherOptions = {
   tab: TabType

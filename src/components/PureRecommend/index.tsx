@@ -1,5 +1,6 @@
 import { RecGrid, RecGridRef } from '$components/RecGrid'
-import { OnRefresh, RecHeader, RecHeaderRef, useHeaderState } from '$components/RecHeader'
+import { OnRefresh } from '$components/RecGrid/useRefresh'
+import { RecHeader, RecHeaderRef, useHeaderState } from '$components/RecHeader'
 import { css } from '$libs'
 import { useSettingsSnapshot } from '$settings'
 import { useMemoizedFn } from 'ahooks'

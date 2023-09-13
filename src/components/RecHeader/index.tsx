@@ -12,16 +12,14 @@ import {
   MouseEvent,
   MouseEventHandler,
   ReactNode,
-  createContext,
   forwardRef,
-  useContext,
   useImperativeHandle,
   useRef,
   useState,
 } from 'react'
 // import { useSticky } from 'react-use-sticky'
 import { useSticky } from '$common/hooks/useSticky'
-import { noop } from 'lodash'
+import { OnRefresh, OnRefreshContext } from '$components/RecGrid/useRefresh'
 import { proxy, useSnapshot } from 'valtio'
 import { AccessKeyManage } from '../AccessKeyManage'
 import { ModalFeed } from '../ModalFeed'
@@ -78,14 +76,6 @@ export type RecHeaderRef = {
   scroll: () => void
 }
 
-const RecHeaderContext = createContext<{ onRefresh: OnRefresh }>({ onRefresh: noop })
-export function useRecHeaderContext() {
-  return useContext(RecHeaderContext)
-}
-
-export type OnRefreshOoptions = { watchlaterKeepOrder?: boolean }
-export type OnRefresh = (reuse?: boolean, options?: OnRefreshOoptions) => void | Promise<void>
-
 export const RecHeader = forwardRef<
   RecHeaderRef,
   {
@@ -134,7 +124,7 @@ export const RecHeader = forwardRef<
 
   return (
     <>
-      <RecHeaderContext.Provider value={{ onRefresh }}>
+      <OnRefreshContext.Provider value={onRefresh}>
         <div
           ref={stickyRef}
           className='area-header'
@@ -204,7 +194,7 @@ export const RecHeader = forwardRef<
 
         <ModalFeed show={modalFeedVisible} onHide={hideModalFeed} />
         <ModalSettings show={modalConfigVisible} onHide={hideModalConfig} />
-      </RecHeaderContext.Provider>
+      </OnRefreshContext.Provider>
     </>
   )
 })

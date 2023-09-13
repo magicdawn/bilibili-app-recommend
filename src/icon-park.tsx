@@ -20,6 +20,7 @@ import {
   LoadingThree,
   PeopleDelete,
   PeopleMinus,
+  PeopleSearch,
   PlayTwo,
   Return,
   Star,
@@ -53,6 +54,7 @@ export const ImportedIcons = {
   Delete,
   PeopleDelete,
   PeopleMinus,
+  PeopleSearch,
 } satisfies Record<string, Icon>
 
 export type IconName = keyof typeof ImportedIcons
