@@ -859,23 +859,20 @@ const VideoCardInner = memo(function VideoCardInner({
                     </>
                   ) : isApp ? (
                     <>
-                      {item.cover_left_text_1 &&
+                      {/* e.g 2023-09-17 */}
+                      {/* cover_left_1_content_description: "156点赞"
+                          cover_left_icon_1: 20
+                          cover_left_text_1: "156"
+                      */}
+                      {!!item.cover_left_text_1 &&
                         statItem({
                           ...statItemForId(item.cover_left_icon_1),
-                          text:
-                            goto === 'picture'
-                              ? item.cover_left_text_1 +
-                                (item.cover_left_1_content_description || '')
-                              : item.cover_left_text_1,
+                          text: item.cover_left_text_1,
                         })}
-                      {item.cover_left_text_2 &&
+                      {!!item.cover_left_text_2 &&
                         statItem({
                           ...statItemForId(item.cover_left_icon_2),
-                          text:
-                            goto === 'picture'
-                              ? item.cover_left_text_2 +
-                                (item.cover_left_2_content_description || '')
-                              : item.cover_left_text_2,
+                          text: item.cover_left_text_2,
                         })}
                     </>
                   ) : (

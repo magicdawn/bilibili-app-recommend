@@ -25,7 +25,7 @@ import './common/global.less'
 import { APP_NAME } from '$common'
 import { AntdApp } from '$components/AntdApp'
 import { tryAction, tryToRemove } from '$utility/dom'
-import { default as delay, default as sleep } from 'delay'
+import delay from 'delay'
 import { createRoot } from 'react-dom/client'
 import { PureRecommend } from './components/PureRecommend'
 import { SectionRecommend } from './components/SectionRecommend'
@@ -87,7 +87,7 @@ async function initHomepageSection() {
       break
     }
 
-    await sleep(200)
+    await delay(200)
   }
 
   if (!insert) {
