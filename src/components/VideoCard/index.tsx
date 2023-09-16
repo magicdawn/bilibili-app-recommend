@@ -514,7 +514,7 @@ const VideoCardInner = memo(function VideoCardInner({
   useMittOn(emitter, 'start-preview-animation', onStartPreviewAnimation)
   useMittOn(emitter, 'hotkey-preview-animation', onHotkeyPreviewAnimation)
 
-  const hasDislikeEntry = isApp && authed && item.three_point?.dislike_reasons?.length
+  const hasDislikeEntry = isApp && authed && !!item.three_point?.dislike_reasons?.length
 
   /**
    * context menu
