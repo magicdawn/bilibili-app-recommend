@@ -8,6 +8,8 @@ import { toast } from './toast'
 
 export const appkey = '27eb53fc9058f8c3'
 
+export const GET_ACCESS_KEY_VIA_302 = true
+
 /**
  * 2023-08-19
  * mcbbs.net 只让他自己 iframe
@@ -15,7 +17,7 @@ export const appkey = '27eb53fc9058f8c3'
  * 故改成弹出窗口
  */
 
-export const GET_ACCESS_KEY_VIA_WINDOW = true
+export const GET_ACCESS_KEY_VIA_POPUP_WINDOW = true
 
 async function getAccessKey(): Promise<string | undefined> {
   const res = await request.get('https://passport.bilibili.com/login/app/third', {
@@ -37,8 +39,59 @@ async function getAccessKey(): Promise<string | undefined> {
     toast('无法获得授权网址')
     return
   }
-
   const confirm_uri = json.data.confirm_uri
+
+  if (GET_ACCESS_KEY_VIA_302) {
+    const redirectUrl = await getRedirectUrl(confirm_uri)
+    return extractAccessKeyFromUrl(redirectUrl)
+  }
+
+  return await getAccessKeyByPostMessage(confirm_uri)
+}
+
+export async function auth() {
+  const accessKey = await getAccessKey()
+  if (!accessKey) return
+
+  settings.accessKey = accessKey
+  toast('获取成功')
+  return accessKey
+}
+
+export function deleteAccessToken() {
+  settings.accessKey = ''
+  toast('已删除 access_key')
+}
+
+export function getRedirectUrl(url: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    GM.xmlHttpRequest({
+      method: 'get',
+      url: url,
+      responseType: 'blob',
+      onload(res) {
+        // console.log('onload', res)
+        resolve(res.finalUrl)
+      },
+      onreadystatechange(res) {
+        // console.log('onreadystatechange', res)
+      },
+    })
+  })
+}
+
+function extractAccessKeyFromUrl(urlWithAccessKey: string) {
+  const u = new URL(urlWithAccessKey)
+  const accessKey = u.searchParams.get('access_key')
+  if (!accessKey) {
+    toast('没有获得匹配的密钥')
+    return undefined
+  } else {
+    return accessKey
+  }
+}
+
+async function getAccessKeyByPostMessage(confirm_uri: string) {
   let timeout: ReturnType<typeof setTimeout> | undefined
   let removeEventHandler: (() => void) | undefined
 
@@ -49,15 +102,8 @@ async function getAccessKey(): Promise<string | undefined> {
         console.warn('received message event with invalid data')
         return
       }
-
-      const u = new URL(e.data)
-      const accessKey = u.searchParams.get('access_key')
-      if (!accessKey) {
-        toast('没有获得匹配的密钥')
-        return resolve(undefined)
-      } else {
-        return resolve(accessKey)
-      }
+      // e.data 为 redirect url
+      resolve(extractAccessKeyFromUrl(e.data))
     }
 
     window.addEventListener('message', handleEvent)
@@ -71,7 +117,7 @@ async function getAccessKey(): Promise<string | undefined> {
 
   let cleanWindow: (() => void) | undefined
 
-  if (GET_ACCESS_KEY_VIA_WINDOW) {
+  if (GET_ACCESS_KEY_VIA_POPUP_WINDOW) {
     // use window.open
     const confirmWin = window.open(confirm_uri, '_blank', 'popup=true,width=800,height=600')
     cleanWindow = () => confirmWin?.close()
@@ -100,18 +146,4 @@ async function getAccessKey(): Promise<string | undefined> {
   cleanup()
 
   return result
-}
-
-export async function auth() {
-  const accessKey = await getAccessKey()
-  if (!accessKey) return
-
-  settings.accessKey = accessKey
-  toast('获取成功')
-  return accessKey
-}
-
-export function deleteAccessToken() {
-  settings.accessKey = ''
-  toast('已删除 access_key')
 }

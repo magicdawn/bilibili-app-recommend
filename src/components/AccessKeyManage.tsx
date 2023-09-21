@@ -1,8 +1,13 @@
 import { useSettingsSnapshot } from '$settings'
-import { auth, deleteAccessToken } from '$utility/auth'
+import {
+  GET_ACCESS_KEY_VIA_302,
+  GET_ACCESS_KEY_VIA_POPUP_WINDOW,
+  auth,
+  deleteAccessToken,
+} from '$utility/auth'
 import { useRequest } from 'ahooks'
 import { Button, Space } from 'antd'
-import { CSSProperties } from 'react'
+import { CSSProperties, ReactNode } from 'react'
 import { AntdTooltip } from './AntdApp'
 
 const btnAccessKeyHelpLink = (
@@ -26,25 +31,29 @@ export function AccessKeyManage({
   const onDeleteAccessToken = deleteAccessToken
 
   const waitWindowTip = '请允许弹出窗口并等待窗口自动关闭'
+  const wrapTooltip = (child: ReactNode) => {
+    const usingPopupWindow = !GET_ACCESS_KEY_VIA_302 && GET_ACCESS_KEY_VIA_POPUP_WINDOW
+    return usingPopupWindow ? <AntdTooltip title={waitWindowTip}>{child}</AntdTooltip> : child
+  }
 
   return (
     <Space size='small' style={style} className={className}>
       {!accessKey ? (
         <>
-          <AntdTooltip title={waitWindowTip}>
+          {wrapTooltip(
             <Button onClick={runAsync} disabled={loading} size='middle'>
               <span>获取 access_key</span>
             </Button>
-          </AntdTooltip>
+          )}
           {btnAccessKeyHelpLink}
         </>
       ) : (
         <>
-          <AntdTooltip title={waitWindowTip}>
+          {wrapTooltip(
             <Button onClick={runAsync} disabled={loading}>
               <span>重新获取 access_key</span>
             </Button>
-          </AntdTooltip>
+          )}
           <Button onClick={onDeleteAccessToken}>
             <span>删除 access_key</span>
           </Button>
