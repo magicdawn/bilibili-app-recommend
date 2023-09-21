@@ -206,12 +206,12 @@ function updateProps(newProps: Partial<IProps>) {
 
 let _root: Root
 function getRoot() {
-  if (!_root) {
+  _root ||= (() => {
     const container = document.createElement('div')
     container.classList.add('show-dislike-container')
     document.body.appendChild(container)
-    _root = createRoot(container)
-  }
+    return createRoot(container)
+  })()
   return _root
 }
 

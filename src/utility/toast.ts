@@ -1,11 +1,35 @@
 import { colorPrimaryValue } from '$components/ModalSettings/theme'
-import { singleLine, toastContainer } from './toast.module.less'
+import { css } from '@emotion/css'
+
+const toastContainer = css`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  z-index: 90000;
+  padding: 12px 24px;
+  font-size: 14px;
+
+  min-width: 200px;
+  width: max-content;
+  max-width: 450px;
+
+  color: #fff;
+  background-color: #ffb243;
+  background-color: ${colorPrimaryValue};
+  border-radius: 6px;
+  white-space: pre-wrap;
+`
+
+const singleLine = css`
+  text-align: center;
+`
 
 export function toast(msg: string, duration = 2000) {
   const div = document.createElement('div')
   div.className = toastContainer
   div.innerText = msg
-  div.style.backgroundColor = colorPrimaryValue
 
   if (!msg.includes('\n') && !msg.includes('<br')) {
     div.classList.add(singleLine)
