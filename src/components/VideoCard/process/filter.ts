@@ -5,7 +5,7 @@ import { normalizeCardData } from './normalize'
 
 export function anyFilterEnabled(tab: TabType) {
   return (
-    tab === 'onlyFollow' ||
+    tab === 'keep-follow-only' ||
     settings.filterMinDurationEnabled ||
     settings.filterMinPlayCountEnabled ||
     settings.filterOutGotoTypePicture
@@ -24,7 +24,7 @@ export function filterRecItems(items: RecItemType[], tab: TabType) {
     /**
      * 已关注 Tab
      */
-    if (tab === 'onlyFollow') {
+    if (tab === 'keep-follow-only') {
       if (!isFollowed) return false
     }
 

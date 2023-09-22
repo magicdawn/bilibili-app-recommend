@@ -121,7 +121,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
       if (tab === 'fav') {
         setExtraInfo?.(favService.usageInfo)
       }
-      if (tab === 'dynamic') {
+      if (tab === 'dynamic-feed') {
         setExtraInfo?.(dynamicFeedService.usageInfo)
       }
 
@@ -203,7 +203,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
       let newItems = items
       let _hasMore = true
       try {
-        if (tab === 'dynamic') {
+        if (tab === 'dynamic-feed') {
           newItems = newItems.concat((await dynamicFeedService.loadMore()) || [])
           _hasMore = dynamicFeedService.hasMore
         } else if (tab === 'watchlater') {
@@ -215,8 +215,8 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
         } else {
           // loadMore 至少 load 一项, 需要触发 InfiniteScroll.componentDidUpdate
           while (!(newItems.length > items.length)) {
-            // onlyFollow 需要大基数
-            const times = tab === 'onlyFollow' ? 5 : 2
+            // keep-follow-only 需要大基数
+            const times = tab === 'keep-follow-only' ? 5 : 2
             const more = await getRecommendTimes(times, tab, pcRecService)
             newItems = uniqConcat(newItems, more)
           }

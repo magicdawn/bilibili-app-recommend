@@ -31,7 +31,7 @@ export function uniqConcat(existing: RecItemType[], newItems: RecItemType[]) {
   )
 }
 
-export const usePcApi = (tab: TabType) => tab === 'onlyFollow' || tab === 'recommend-pc'
+export const usePcApi = (tab: TabType) => tab === 'keep-follow-only' || tab === 'recommend-pc'
 
 export async function getMinCount(
   count: number,
@@ -49,7 +49,7 @@ export async function getMinCount(
     let cur: RecItemType[] = []
 
     // 动态
-    if (tab === 'dynamic') {
+    if (tab === 'dynamic-feed') {
       cur = (await dynamicFeedService.loadMore(abortSignal)) || []
       hasMore = dynamicFeedService.hasMore
       items = items.concat(cur)
@@ -73,7 +73,7 @@ export async function getMinCount(
     let times: number
 
     // 已关注
-    if (tab === 'onlyFollow') {
+    if (tab === 'keep-follow-only') {
       times = 8
       debug('getMinCount: addMore(restCount = %s) times=%s', restCount, times)
     }

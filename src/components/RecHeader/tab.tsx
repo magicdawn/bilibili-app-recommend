@@ -26,8 +26,8 @@ const iconCss = css`
 export type TabType =
   | 'recommend-app'
   | 'recommend-pc'
-  | 'onlyFollow'
-  | 'dynamic'
+  | 'keep-follow-only'
+  | 'dynamic-feed'
   | 'watchlater'
   | 'fav'
 
@@ -55,13 +55,13 @@ export const TabConfig: TabConfigItem[] = [
     desc: '使用新版首页顶部推荐 API',
   },
   {
-    key: 'onlyFollow',
+    key: 'keep-follow-only',
     icon: 'Concern',
     label: '已关注',
     desc: '推荐中只保留「已关注」,会很慢',
   },
   {
-    key: 'dynamic',
+    key: 'dynamic-feed',
     icon: 'Tumblr',
     iconProps: { size: 16 },
     label: '动态',

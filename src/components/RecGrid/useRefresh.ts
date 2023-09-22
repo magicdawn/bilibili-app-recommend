@@ -131,7 +131,7 @@ export function useRefresh({
     }
 
     let _dynamicFeedService = dynamicFeedService
-    if (tab === 'dynamic') {
+    if (tab === 'dynamic-feed') {
       _dynamicFeedService = new DynamicFeedRecService(dynamicFeedFilterStore.upMid)
       setDynamicFeedService(_dynamicFeedService)
     }
@@ -200,8 +200,8 @@ export function useRefresh({
     }
 
     // hasMore check
-    if (tab === 'dynamic') setHasMore(_dynamicFeedService.hasMore)
-    if (tab === 'dynamic') setHasMore(_dynamicFeedService.hasMore)
+    if (tab === 'dynamic-feed') setHasMore(_dynamicFeedService.hasMore)
+    if (tab === 'dynamic-feed') setHasMore(_dynamicFeedService.hasMore)
     if (tab === 'fav') setHasMore(_favServive.hasMore)
 
     await postAction?.()
