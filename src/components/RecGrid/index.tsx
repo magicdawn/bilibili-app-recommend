@@ -448,12 +448,16 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
     // 有个缺点, 开始的时候只显示一个 video-card
     if (ENABLE_VIRTUAL_GRID) {
       return (
-        <div>
+        <div className={videoGridContainer}>
           <VirtuosoGrid
+            style={{
+              // at least 1 line
+              minHeight: '300px',
+            }}
             useWindowScroll
             data={items}
-            // listClassName={containerClassName}
-            overscan={window.innerHeight}
+            overscan={20}
+            // listClassName={gridClassName}
             computeItemKey={(index, item) => item.uniqId}
             components={{
               List: forwardRef((props, ref) => {
