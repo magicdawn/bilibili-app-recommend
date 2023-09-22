@@ -76,7 +76,7 @@
     "@mgdn/bvid": "^0.0.1",
     "@total-typescript/ts-reset": "^0.5.1",
     "ahooks": "3.7.8",
-    "antd": "^5.8.4",
+    "antd": "^5.9.2",
     "axios": "0",
     "axios-userscript-adapter": "0",
     "classnames": "^2.3.2",
@@ -104,9 +104,7 @@
     ]
   },
   "pnpm": {
-    "patchedDependencies": {
-      "rc-field-form@1.36.2": "patches/rc-field-form@1.36.2.patch"
-    },
+    "patchedDependencies": {},
     "overrides": {
       "@qiniu/typed-less-modules>less": "4"
     }

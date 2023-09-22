@@ -66,6 +66,9 @@ export default defineConfig(({ command }) => ({
     emptyOutDir: true,
     cssMinify: shouldMinify,
     minify: shouldMinify,
+
+    // target defaults `modules`, = ['es2020', 'edge88', 'firefox78', 'chrome87', 'safari14']
+    // target: ''
   },
 
   plugins: [
