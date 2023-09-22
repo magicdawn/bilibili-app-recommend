@@ -1,5 +1,5 @@
-import react from '@vitejs/plugin-react'
-// import reactSwc from '@vitejs/plugin-react-swc'
+// import react from '@vitejs/plugin-react'
+import reactSwc from '@vitejs/plugin-react-swc'
 import fs from 'fs'
 import postcssMediaMinmax from 'postcss-media-minmax'
 import { visualizer } from 'rollup-plugin-visualizer'
@@ -101,11 +101,15 @@ export default defineConfig(({ command }) => ({
         camel2DashComponentName: false, // default: true,
       }),
 
-    react({
+    // react({
+    //   jsxImportSource: '@emotion/react',
+    //   babel: {
+    //     plugins: ['@emotion/babel-plugin'],
+    //   },
+    // }),
+
+    reactSwc({
       jsxImportSource: '@emotion/react',
-      babel: {
-        plugins: ['@emotion/babel-plugin'],
-      },
     }),
 
     // https://github.com/lisonge/vite-plugin-monkey

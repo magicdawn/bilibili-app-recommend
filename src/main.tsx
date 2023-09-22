@@ -125,8 +125,14 @@ async function initHomepagePureRecommend() {
     document.querySelector('.bili-feed4 .bili-feed4-layout')?.remove()
     tryToRemove('.bili-feed4 .header-channel')
 
+    /**
+     * 右侧边按钮
+     */
+    // 刷新内容
+    tryToRemove('.palette-button-wrap .flexible-roll-btn')
     // 三个点
     tryAction('.palette-button-wrap .storage-box', (el) => el.classList.remove('hidden'))
+    // 回到顶部
     tryAction('.palette-button-wrap .top-btn-wrap .top-btn', (el) => el.classList.add('visible'))
 
     if (process.env.NODE_ENV === 'production') {
