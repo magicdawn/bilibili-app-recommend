@@ -201,7 +201,7 @@ export function useRefresh({
 
     // hasMore check
     if (tab === 'dynamic-feed') setHasMore(_dynamicFeedService.hasMore)
-    if (tab === 'dynamic-feed') setHasMore(_dynamicFeedService.hasMore)
+    if (tab === 'watchlater') setHasMore(_watchLaterService.hasMore)
     if (tab === 'fav') setHasMore(_favServive.hasMore)
 
     await postAction?.()
