@@ -25,11 +25,11 @@ export async function tryAction(
   }
 
   if (!arr.length) {
-    console.warn(`[${APP_NAME}]: tryAction timeout, selector = %s`, selector)
+    console.warn(`[${APP_NAME}]: tryAction timeout, selector = \`%s\``, selector)
     return
   }
 
-  debug('tryAction: selector=%s count=%s', selector, arr.length)
+  debug('tryAction: selector=`%s` count=%s', selector, arr.length)
   for (const el of arr) {
     await Promise.resolve(action(el))
   }
