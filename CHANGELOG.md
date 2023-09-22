@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.17.9
+
+- df24bf8 chore: try virtuoso again
+- 57f7ef9 feat: rm float button '刷新内容'
+- ec7e9ff chore: update antd
+- 94308ab fix: old typo
+- 1b2d29d chore: rename tab key
+- edb6042 feat(dynamic-feed): add clear button
+- 4757869 feat: use GM.xmlHttpRequest to get redirect url
+- 817354e chore: move .module.less -> emotion/css
+- a2b9bc7 fix: react boolean &&
+- 30ba95d fix: goto=picture statItem
+
 ## v0.17.8
 
 - 动态右键菜单: 快速筛选 UP
