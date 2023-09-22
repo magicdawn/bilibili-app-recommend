@@ -1,0 +1,27 @@
+diff --git a/es/index.js b/es/index.js
+index ede2f7e6c52174ac15bfe1af5c951aee0c12d034..fcb206c76b0d899c908cf797861350d53bdd51ef 100644
+--- a/es/index.js
++++ b/es/index.js
+@@ -8,11 +8,16 @@ import FieldContext from "./FieldContext";
+ import ListContext from "./ListContext";
+ import useWatch from "./useWatch";
+ var InternalForm = /*#__PURE__*/React.forwardRef(FieldForm);
+-var RefForm = InternalForm;
+-RefForm.FormProvider = FormProvider;
+-RefForm.Field = Field;
+-RefForm.List = List;
+-RefForm.useForm = useForm;
+-RefForm.useWatch = useWatch;
++
++var RefForm = /*#__PURE__*/ (function () {
++  var f = InternalForm
++  f.FormProvider = FormProvider;
++  f.Field = Field;
++  f.List = List;
++  f.useForm = useForm;
++  f.useWatch = useWatch;
++  return f
++})()
++
+ export { Field, List, useForm, FormProvider, FieldContext, ListContext, useWatch };
+ export default RefForm;

@@ -104,7 +104,9 @@
     ]
   },
   "pnpm": {
-    "patchedDependencies": {},
+    "patchedDependencies": {
+      "rc-field-form@1.38.2": "patches/rc-field-form@1.38.2.patch"
+    },
     "overrides": {
       "@qiniu/typed-less-modules>less": "4"
     }

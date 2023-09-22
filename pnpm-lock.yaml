@@ -7,6 +7,11 @@ settings:
 overrides:
   '@qiniu/typed-less-modules>less': '4'
 
+patchedDependencies:
+  rc-field-form@1.38.2:
+    hash: csdu5rtbbse6wwp3m5medt6qqi
+    path: patches/rc-field-form@1.38.2.patch
+
 dependencies:
   '@emotion/css':
     specifier: ^11.11.2
@@ -2021,7 +2026,7 @@ packages:
       rc-dialog: 9.2.0(react-dom@18.2.0)(react@18.2.0)
       rc-drawer: 6.4.1(react-dom@18.2.0)(react@18.2.0)
       rc-dropdown: 4.1.0(react-dom@18.2.0)(react@18.2.0)
-      rc-field-form: 1.38.2(react-dom@18.2.0)(react@18.2.0)
+      rc-field-form: 1.38.2(patch_hash=csdu5rtbbse6wwp3m5medt6qqi)(react-dom@18.2.0)(react@18.2.0)
       rc-image: 7.2.0(react-dom@18.2.0)(react@18.2.0)
       rc-input: 1.1.1(react-dom@18.2.0)(react@18.2.0)
       rc-input-number: 8.0.4(react-dom@18.2.0)(react@18.2.0)
@@ -4237,7 +4242,7 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
-  /rc-field-form@1.38.2(react-dom@18.2.0)(react@18.2.0):
+  /rc-field-form@1.38.2(patch_hash=csdu5rtbbse6wwp3m5medt6qqi)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-O83Oi1qPyEv31Sg+Jwvsj6pXc8uQI2BtIAkURr5lvEYHVggXJhdU/nynK8wY1gbw0qR48k731sN5ON4egRCROA==}
     engines: {node: '>=8.x'}
     peerDependencies:
@@ -4250,6 +4255,7 @@ packages:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: false
+    patched: true
 
   /rc-image@7.2.0(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-5Ug2hCVl6VcT0osR5XaZQ4zclTMEWPnbn3b4/TS/MR1QjRpEACLNFUzBGwr5mbAVhzvLWX5YZf4vO10xUA5IUA==}

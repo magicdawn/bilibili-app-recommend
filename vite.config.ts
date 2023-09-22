@@ -1,4 +1,4 @@
-// import react from '@vitejs/plugin-react'
+import react from '@vitejs/plugin-react'
 import reactSwc from '@vitejs/plugin-react-swc'
 import fs from 'fs'
 import postcssMediaMinmax from 'postcss-media-minmax'
@@ -26,6 +26,17 @@ if (process.env.RELEASE) {
     'https://github.com/magicdawn/bilibili-app-recommend/raw/release-nightly/bilibili-app-recommend.mini.user.js'
 }
 
+// cdn.js-package-name 与 npm-package-name 可能不一致
+function baomitu(exportVarName: string, pathname: string, cdnjsPackageName?: string) {
+  return [
+    exportVarName,
+    (version: string, name: string, _importName = '', resolveName = '') => {
+      const p = pathname || resolveName
+      return `https://lib.baomitu.com/${cdnjsPackageName || name}/${version}/${p}`
+    },
+  ]
+}
+
 // https://vitejs.dev/config/
 export default defineConfig(({ command }) => ({
   define: {
@@ -46,7 +57,7 @@ export default defineConfig(({ command }) => ({
 
   resolve: {
     alias: {
-      lodash: 'lodash-es',
+      // lodash: 'lodash-es',
       util: 'rollup-plugin-node-polyfills/polyfills/util',
     },
   },
@@ -82,6 +93,9 @@ export default defineConfig(({ command }) => ({
     //   },
     // }),
 
+    /**
+     * babel-plugin-import
+     */
     command === 'build' &&
       importer({
         libraryName: 'antd',
@@ -101,16 +115,19 @@ export default defineConfig(({ command }) => ({
         camel2DashComponentName: false, // default: true,
       }),
 
-    // react({
-    //   jsxImportSource: '@emotion/react',
-    //   babel: {
-    //     plugins: ['@emotion/babel-plugin'],
-    //   },
-    // }),
-
-    reactSwc({
-      jsxImportSource: '@emotion/react',
-    }),
+    // use @vitejs/plugin-react in build
+    // for use emotion babel plugin
+    // https://emotion.sh/docs/babel#features-which-are-enabled-with-the-babel-plugin
+    command === 'serve'
+      ? reactSwc({
+          jsxImportSource: '@emotion/react',
+        })
+      : react({
+          jsxImportSource: '@emotion/react',
+          babel: {
+            plugins: ['@emotion/babel-plugin'],
+          },
+        }),
 
     // https://github.com/lisonge/vite-plugin-monkey
     monkey({
@@ -174,8 +191,11 @@ export default defineConfig(({ command }) => ({
         // },
 
         externalGlobals: {
-          'react': cdn.bytecdntp('React', 'umd/react.production.min.js'),
-          'react-dom': cdn.bytecdntp('ReactDOM', 'umd/react-dom.production.min.js'),
+          'react': cdn.baomitu('React', 'umd/react.production.min.js'),
+          'react-dom': cdn.baomitu('ReactDOM', 'umd/react-dom.production.min.js'),
+          'ua-parser-js': baomitu('UAParser', 'ua-parser.min.js', 'UAParser.js'),
+          // 'axios': cdn.baomitu('axios', 'axios.min.js'),
+          // 'lodash': baomitu('_', 'lodash.min.js', 'lodash.js'),
         },
       },
     }),
