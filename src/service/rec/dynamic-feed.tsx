@@ -1,12 +1,14 @@
+import { verticalAlignStyle } from '$common/emotion-css'
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
 import { DynamicFeedItemExtend, DynamicFeedJson } from '$define'
+import { IconPark } from '$icon-park'
 import { request } from '$request'
 import { getRecentUpdateUpList } from '$service/dynamic'
 import { DynamicPortalUp } from '$service/dynamic/portal'
 import { ArrayItem } from '$utility/type'
 import { css } from '@emotion/react'
 import { useMemoizedFn, useMount } from 'ahooks'
-import { Avatar, Badge, Button, Dropdown, MenuProps } from 'antd'
+import { Avatar, Badge, Button, Dropdown, MenuProps, Space } from 'antd'
 import delay from 'delay'
 import ms from 'ms'
 import { ReactNode, useMemo } from 'react'
@@ -120,14 +122,16 @@ export function DynamicFeedUsageInfo() {
     onRefresh?.()
   })
 
+  const onClear = useMemoizedFn(() => {
+    onSelect({ upMid: undefined, upName: undefined })
+  })
+
   const menuItems = useMemo((): MenuItemType[] => {
     const itemAll: MenuItemType = {
       key: 'all',
       icon: <Avatar size={'small'}>全</Avatar>,
       label: '全部',
-      onClick() {
-        onSelect({ upMid: undefined, upName: undefined })
-      },
+      onClick: onClear,
     }
 
     const items: MenuItemType[] = upList.map((up) => {
@@ -169,15 +173,23 @@ export function DynamicFeedUsageInfo() {
         margin-left: 15px;
       `}
     >
-      <Dropdown
-        placement='bottomLeft'
-        menu={{
-          items: menuItems,
-          style: { maxHeight: '50vh', overflowY: 'scroll' },
-        }}
-      >
-        <Button>{upName ? `UP: ${upName}` : '全部'}</Button>
-      </Dropdown>
+      <Space>
+        <Dropdown
+          placement='bottomLeft'
+          menu={{
+            items: menuItems,
+            style: { maxHeight: '50vh', overflowY: 'scroll' },
+          }}
+        >
+          <Button>{upName ? `UP: ${upName}` : '全部'}</Button>
+        </Dropdown>
+        {!!upName && (
+          <Button onClick={onClear} css={[verticalAlignStyle]}>
+            <IconPark name='Return' size={14} style={{ marginRight: 5 }} />
+            清除
+          </Button>
+        )}
+      </Space>
     </div>
   )
 }

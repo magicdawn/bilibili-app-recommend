@@ -27,7 +27,7 @@
     "@magicdawn/prettier-config": "^0.0.2",
     "@qiniu/typed-less-modules": "^0.1.2",
     "@styled/typescript-styled-plugin": "^1.0.0",
-    "@swc/core": "1.3.86",
+    "@swc/core": "1.3.87",
     "@types/debug": "^4.1.8",
     "@types/lodash": "4.14.198",
     "@types/md5": "^2.3.2",
@@ -38,10 +38,10 @@
     "@types/ua-parser-js": "^0.7.37",
     "@typescript-eslint/eslint-plugin": "^6.7.2",
     "@typescript-eslint/parser": "^6.7.2",
-    "@violentmonkey/types": "^0.1.4",
+    "@violentmonkey/types": "^0.1.6",
     "@vitejs/plugin-react": "^4.0.4",
     "@vitejs/plugin-react-swc": "^3.3.2",
-    "@vitest/ui": "^0.34.4",
+    "@vitest/ui": "^0.34.5",
     "chalk": "5",
     "concurrently": "^8.2.1",
     "dl-vampire": "^1.4.1",
@@ -67,7 +67,7 @@
     "vite-plugin-inspect": "^0.7.38",
     "vite-plugin-monkey": "^3.5.0",
     "vite-tsconfig-paths": "^4.2.1",
-    "vitest": "^0.34.4"
+    "vitest": "^0.34.5"
   },
   "dependencies": {
     "@emotion/css": "^11.11.2",

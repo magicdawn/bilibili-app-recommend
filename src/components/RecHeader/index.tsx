@@ -18,6 +18,7 @@ import {
   useState,
 } from 'react'
 // import { useSticky } from 'react-use-sticky'
+import { verticalAlignStyle } from '$common/emotion-css'
 import { useSticky } from '$common/hooks/useSticky'
 import { OnRefresh, OnRefreshContext } from '$components/RecGrid/useRefresh'
 import { proxy, useSnapshot } from 'valtio'
@@ -26,12 +27,6 @@ import { ModalFeed } from '../ModalFeed'
 import { VideoSourceTab, useCurrentSourceTab } from './tab'
 
 const debug = baseDebug.extend('RecHeader')
-
-const verticalAlignStyle = css`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`
 
 const configStyles = {
   btn: css`

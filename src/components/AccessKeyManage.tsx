@@ -1,10 +1,5 @@
 import { useSettingsSnapshot } from '$settings'
-import {
-  GET_ACCESS_KEY_VIA_302,
-  GET_ACCESS_KEY_VIA_POPUP_WINDOW,
-  auth,
-  deleteAccessToken,
-} from '$utility/auth'
+import { GET_ACCESS_KEY_VIA_GMREQUEST_REDIRECT, auth, deleteAccessToken } from '$utility/auth'
 import { useRequest } from 'ahooks'
 import { Button, Space } from 'antd'
 import { CSSProperties, ReactNode } from 'react'
@@ -32,7 +27,7 @@ export function AccessKeyManage({
 
   const waitWindowTip = '请允许弹出窗口并等待窗口自动关闭'
   const wrapTooltip = (child: ReactNode) => {
-    const usingPopupWindow = !GET_ACCESS_KEY_VIA_302 && GET_ACCESS_KEY_VIA_POPUP_WINDOW
+    const usingPopupWindow = !GET_ACCESS_KEY_VIA_GMREQUEST_REDIRECT
     return usingPopupWindow ? <AntdTooltip title={waitWindowTip}>{child}</AntdTooltip> : child
   }
 

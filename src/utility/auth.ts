@@ -8,16 +8,7 @@ import { toast } from './toast'
 
 export const appkey = '27eb53fc9058f8c3'
 
-export const GET_ACCESS_KEY_VIA_302 = true
-
-/**
- * 2023-08-19
- * mcbbs.net 只让他自己 iframe
- * Content-Security-Policy: frame-ancestors *.mcbbs.net
- * 故改成弹出窗口
- */
-
-export const GET_ACCESS_KEY_VIA_POPUP_WINDOW = true
+export const GET_ACCESS_KEY_VIA_GMREQUEST_REDIRECT = true
 
 async function getAccessKey(): Promise<string | undefined> {
   const res = await request.get('https://passport.bilibili.com/login/app/third', {
@@ -39,14 +30,15 @@ async function getAccessKey(): Promise<string | undefined> {
     toast('无法获得授权网址')
     return
   }
+
   const confirm_uri = json.data.confirm_uri
 
-  if (GET_ACCESS_KEY_VIA_302) {
+  if (GET_ACCESS_KEY_VIA_GMREQUEST_REDIRECT) {
     const redirectUrl = await getRedirectUrl(confirm_uri)
     return extractAccessKeyFromUrl(redirectUrl)
+  } else {
+    return await getAccessKeyByPostMessage(confirm_uri)
   }
-
-  return await getAccessKeyByPostMessage(confirm_uri)
 }
 
 export async function auth() {
@@ -66,7 +58,7 @@ export function deleteAccessToken() {
 export function getRedirectUrl(url: string): Promise<string> {
   return new Promise((resolve, reject) => {
     GM.xmlHttpRequest({
-      method: 'get',
+      method: 'head',
       url: url,
       responseType: 'blob',
       onload(res) {
@@ -115,20 +107,8 @@ async function getAccessKeyByPostMessage(confirm_uri: string) {
     }, 10 * 1000) // 10 s
   })
 
-  let cleanWindow: (() => void) | undefined
-
-  if (GET_ACCESS_KEY_VIA_POPUP_WINDOW) {
-    // use window.open
-    const confirmWin = window.open(confirm_uri, '_blank', 'popup=true,width=800,height=600')
-    cleanWindow = () => confirmWin?.close()
-  } else {
-    // use iframe
-    const iframe = document.createElement('iframe')
-    iframe.src = confirm_uri
-    iframe.style.display = 'none'
-    document.body.appendChild(iframe)
-    cleanWindow = () => iframe.remove()
-  }
+  const confirmWin = window.open(confirm_uri, '_blank', 'popup=true,width=800,height=600')
+  let cleanWindow = () => confirmWin?.close()
 
   function cleanup() {
     cleanWindow?.()
