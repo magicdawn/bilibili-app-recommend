@@ -466,42 +466,51 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                       Tab 显示
                     </div>
                     <div className={cx(styles.settingsGroupContent)}>
-                      <Checkbox.Group
-                        css={css`
-                          .ant-checkbox-group-item {
-                            align-items: center;
-                          }
-                        `}
-                        options={TabConfig.map(({ label, key, icon, iconProps }) => {
-                          return {
-                            label: (
-                              <span
-                                css={css`
-                                  display: flex;
-                                  align-items: center;
-                                  margin-right: 15px;
-                                `}
-                              >
-                                <IconPark
-                                  name={icon}
-                                  {...iconProps}
-                                  size={iconProps?.size || 18}
-                                  css={iconCss}
-                                />
-                                {label}
-                              </span>
-                            ),
-                            value: key,
-                          }
-                        })}
-                        value={usingShowingTabKeys}
-                        onChange={(newVal) => {
-                          if (!newVal.length) {
-                            return toast('至少选择一项!')
-                          }
-                          updateSettings({ showingTabKeys: newVal as string[] })
+                      <div className={styles.row}>
+                        <Checkbox.Group
+                          css={css`
+                            .ant-checkbox-group-item {
+                              align-items: center;
+                            }
+                          `}
+                          options={TabConfig.map(({ label, key, icon, iconProps }) => {
+                            return {
+                              label: (
+                                <span
+                                  css={css`
+                                    display: flex;
+                                    align-items: center;
+                                    margin-right: 15px;
+                                  `}
+                                >
+                                  <IconPark
+                                    name={icon}
+                                    {...iconProps}
+                                    size={iconProps?.size || 18}
+                                    css={iconCss}
+                                  />
+                                  {label}
+                                </span>
+                              ),
+                              value: key,
+                            }
+                          })}
+                          value={usingShowingTabKeys}
+                          onChange={(newVal) => {
+                            if (!newVal.length) {
+                              return toast('至少选择一项!')
+                            }
+                            updateSettings({ showingTabKeys: newVal as string[] })
+                          }}
+                        />
+                      </div>
+                      <Button
+                        onClick={() => {
+                          updateSettings({ showingTabKeys: [] })
                         }}
-                      />
+                      >
+                        重置
+                      </Button>
                     </div>
 
                     <div className={styles.settingsGroupTitle} style={{ marginTop: 15 }}>
