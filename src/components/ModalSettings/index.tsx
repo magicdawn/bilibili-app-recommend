@@ -1,7 +1,7 @@
 import { APP_NAME } from '$common'
 import { AccessKeyManage } from '$components/AccessKeyManage'
 import { BaseModal, BaseModalClass, ModalClose } from '$components/BaseModal'
-import { TabConfig, iconCss, useUsingShowingTabKeys } from '$components/RecHeader/tab'
+import { TabConfig, TabType, iconCss, useUsingShowingTabKeys } from '$components/RecHeader/tab'
 import { FlagSettingItem, HelpInfo } from '$components/piece'
 import { IconPark } from '$icon-park'
 import { cx } from '$libs'
@@ -500,7 +500,7 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                             if (!newVal.length) {
                               return toast('至少选择一项!')
                             }
-                            updateSettings({ showingTabKeys: newVal as string[] })
+                            updateSettings({ showingTabKeys: newVal as TabType[] })
                           }}
                         />
                       </div>

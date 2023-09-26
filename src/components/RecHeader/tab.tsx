@@ -95,7 +95,7 @@ export const TAB_ALLOW_VALUES = TabConfig.map((x) => x.key)
 export function useUsingShowingTabKeys(): TabType[] {
   const { showingTabKeys } = useSettingsSnapshot()
   return useMemo(
-    () => (showingTabKeys.length ? (showingTabKeys as TabType[]) : TabConfig.map((x) => x.key)),
+    () => (showingTabKeys.length ? showingTabKeys : TabConfig.map((x) => x.key)),
     [showingTabKeys]
   )
 }

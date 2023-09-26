@@ -1,5 +1,6 @@
 import { APP_NAME, baseDebug } from '$common'
 import { HAS_RESTORED_SETTINGS } from '$components/ModalSettings'
+import { TabType } from '$components/RecHeader/tab'
 import { setData } from '$service/user/article-draft'
 import { omit, pick, throttle } from 'lodash'
 import ms from 'ms'
@@ -91,7 +92,7 @@ export const initialSettings = {
   /**
    * tab 显示
    */
-  showingTabKeys: [] as string[],
+  showingTabKeys: [] as TabType[],
 }
 
 export type Settings = typeof initialSettings
