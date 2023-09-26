@@ -1,12 +1,14 @@
+/**
+ * BILIBILI-Evolved header related
+ */
+
 import { proxy, useSnapshot } from 'valtio'
 
-/**
- * BILIBILI-Evolved header
- */
 const defaultHeader = () => document.querySelector('.bili-header__bar')
 
 function isUsingCustomHeader() {
-  return Boolean(defaultHeader() && window.getComputedStyle(defaultHeader()!).display === 'none')
+  const el = defaultHeader()
+  return Boolean(el && window.getComputedStyle(el).display === 'none')
 }
 
 function calcHeaderHeight() {

@@ -1,6 +1,7 @@
 import { APP_NAME } from '$common'
 import { AccessKeyManage } from '$components/AccessKeyManage'
 import { BaseModal, BaseModalClass, ModalClose } from '$components/BaseModal'
+import { TabConfig, iconCss, useUsingShowingTabKeys } from '$components/RecHeader/tab'
 import { FlagSettingItem, HelpInfo } from '$components/piece'
 import { IconPark } from '$icon-park'
 import { cx } from '$libs'
@@ -15,8 +16,9 @@ import {
 } from '$settings'
 import { isCurrentTyping } from '$utility/dom'
 import { toast } from '$utility/toast'
+import { css } from '@emotion/react'
 import { useKeyPress } from 'ahooks'
-import { Button, InputNumber, Popconfirm, Slider, Space, Tabs, Tag } from 'antd'
+import { Button, Checkbox, InputNumber, Popconfirm, Slider, Space, Tabs, Tag } from 'antd'
 import delay from 'delay'
 import { pick } from 'lodash'
 import styles from './index.module.less'
@@ -81,6 +83,8 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
   useHotkeyForConfig(['shift.m'], 'autoPreviewWhenHover', '鼠标悬浮后自动开始预览')
   useHotkeyForConfig(['shift.c'], 'useNarrowMode', '居中模式')
   useHotkeyForConfig(['shift.y'], 'styleUseYoutubeLikeCard', '大卡片样式')
+
+  const usingShowingTabKeys = useUsingShowingTabKeys()
 
   return (
     <BaseModal
@@ -456,6 +460,48 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                           label='对「收藏」Tab 使用随机顺序'
                         />
                       </div>
+                    </div>
+
+                    <div className={styles.settingsGroupTitle} style={{ marginTop: 15 }}>
+                      Tab 显示
+                    </div>
+                    <div className={cx(styles.settingsGroupContent)}>
+                      <Checkbox.Group
+                        css={css`
+                          .ant-checkbox-group-item {
+                            align-items: center;
+                          }
+                        `}
+                        options={TabConfig.map(({ label, key, icon, iconProps }) => {
+                          return {
+                            label: (
+                              <span
+                                css={css`
+                                  display: flex;
+                                  align-items: center;
+                                  margin-right: 15px;
+                                `}
+                              >
+                                <IconPark
+                                  name={icon}
+                                  {...iconProps}
+                                  size={iconProps?.size || 18}
+                                  css={iconCss}
+                                />
+                                {label}
+                              </span>
+                            ),
+                            value: key,
+                          }
+                        })}
+                        value={usingShowingTabKeys}
+                        onChange={(newVal) => {
+                          if (!newVal.length) {
+                            return toast('至少选择一项!')
+                          }
+                          updateSettings({ showingTabKeys: newVal as string[] })
+                        }}
+                      />
                     </div>
 
                     <div className={styles.settingsGroupTitle} style={{ marginTop: 15 }}>

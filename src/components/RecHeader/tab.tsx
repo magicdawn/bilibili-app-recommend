@@ -9,7 +9,7 @@ import { toast } from '$utility/toast'
 import { css } from '@emotion/react'
 import { Icon } from '@icon-park/react/es/runtime'
 import { Radio } from 'antd'
-import { ComponentProps } from 'react'
+import { ComponentProps, useMemo } from 'react'
 import { useSnapshot } from 'valtio'
 
 export const VIDEO_SOURCE_TAB_STORAGE_KEY = `${APP_NAME}-video-source-tab`
@@ -19,7 +19,7 @@ export const videoSourceTabState = proxyWithLocalStorage<{ value: TabType }>(
   VIDEO_SOURCE_TAB_STORAGE_KEY
 )
 
-const iconCss = css`
+export const iconCss = css`
   margin-right: 4px;
 `
 
@@ -92,6 +92,26 @@ export const TabConfigMap = TabConfig.reduce((val, configItem) => {
 
 export const TAB_ALLOW_VALUES = TabConfig.map((x) => x.key)
 
+export function useUsingShowingTabKeys(): TabType[] {
+  const { showingTabKeys } = useSettingsSnapshot()
+  return useMemo(
+    () => (showingTabKeys.length ? (showingTabKeys as TabType[]) : TabConfig.map((x) => x.key)),
+    [showingTabKeys]
+  )
+}
+
+function useCurrentTabConfig() {
+  const usingShowingTabKeys = useUsingShowingTabKeys()
+  const logined = useHasLogined()
+  return useMemo(
+    () =>
+      TabConfig.filter(
+        (x) => usingShowingTabKeys.includes(x.key) || (!logined && x.key === 'recommend-app')
+      ),
+    [usingShowingTabKeys, logined]
+  )
+}
+
 function _getCurrentSourceTab(videoSourceTab: TabType, logined: boolean): TabType {
   // invalid
   if (!TAB_ALLOW_VALUES.includes(videoSourceTab)) return 'recommend-app'
@@ -119,6 +139,11 @@ function toastNeedLogin() {
   return toast('你需要登录B站后使用该功能! 如已完成登录, 请刷新网页重试~')
 }
 
+function gotoLogin() {
+  const href = 'https://passport.bilibili.com/login'
+  location.href = href
+}
+
 const radioBtnCss = css`
   height: 26px;
   line-height: unset;
@@ -141,6 +166,7 @@ export function VideoSourceTab({ onRefresh }: { onRefresh: OnRefresh }) {
   const logined = useHasLogined()
   const tab = useCurrentSourceTab()
   const { styleUseStandardVideoSourceTab } = useSettingsSnapshot()
+  const currentTabConfig = useCurrentTabConfig()
 
   return (
     <>
@@ -173,7 +199,7 @@ export function VideoSourceTab({ onRefresh }: { onRefresh: OnRefresh }) {
           })
         }}
       >
-        {TabConfig.map(({ key, label, icon, iconProps }) => (
+        {currentTabConfig.map(({ key, label, icon, iconProps }) => (
           <Radio.Button
             css={[radioBtnCss, styleUseStandardVideoSourceTab && radioBtnStandardCss]}
             className='video-source-tab' // can be used to customize css
@@ -199,7 +225,7 @@ export function VideoSourceTab({ onRefresh }: { onRefresh: OnRefresh }) {
         iconProps={{ name: 'Tips', size: 16, style: { marginLeft: 6 } }}
         tooltip={
           <>
-            {TabConfig.map(({ key, label, icon, iconProps, desc }) => (
+            {currentTabConfig.map(({ key, label, icon, iconProps, desc }) => (
               <div
                 key={key}
                 css={css`

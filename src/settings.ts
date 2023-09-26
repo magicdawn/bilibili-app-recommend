@@ -87,6 +87,11 @@ export const initialSettings = {
    * 功能
    */
   backupSettingsToArticleDraft: false,
+
+  /**
+   * tab 显示
+   */
+  showingTabKeys: [] as string[],
 }
 
 export type Settings = typeof initialSettings
