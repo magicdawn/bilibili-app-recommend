@@ -505,6 +505,7 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                         />
                       </div>
                       <Button
+                        style={{ marginTop: '5px' }}
                         onClick={() => {
                           updateSettings({ showingTabKeys: [] })
                         }}
