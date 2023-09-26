@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.17.10
+
+- 支持选择要显示的 Tab
+
+detail
+
+- 1504764 chore: style tweak
+- c73f719 chore: add showingTabKeys reset button
+- 814ba91 feat: add support to hide some tabs
+- f21881f chore: eacape selector
+- 09750f8 opt: tweak vite.config.ts
+
 ## v0.17.9
 
 - df24bf8 chore: try virtuoso again
