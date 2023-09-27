@@ -92,7 +92,7 @@ export const TabConfigMap = TabConfig.reduce((val, configItem) => {
 
 export const TAB_ALLOW_VALUES = TabConfig.map((x) => x.key)
 
-export function useUsingShowingTabKeys(): TabType[] {
+export function useCurrentShowingTabKeys(): TabType[] {
   const { showingTabKeys } = useSettingsSnapshot()
   return useMemo(
     () => (showingTabKeys.length ? showingTabKeys : TabConfig.map((x) => x.key)),
@@ -101,14 +101,14 @@ export function useUsingShowingTabKeys(): TabType[] {
 }
 
 function useCurrentTabConfig() {
-  const usingShowingTabKeys = useUsingShowingTabKeys()
+  const currentShowingTabKeys = useCurrentShowingTabKeys()
   const logined = useHasLogined()
   return useMemo(
     () =>
       TabConfig.filter(
-        (x) => usingShowingTabKeys.includes(x.key) || (!logined && x.key === 'recommend-app')
+        (x) => currentShowingTabKeys.includes(x.key) || (!logined && x.key === 'recommend-app')
       ),
-    [usingShowingTabKeys, logined]
+    [currentShowingTabKeys, logined]
   )
 }
 

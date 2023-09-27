@@ -49,7 +49,7 @@ export async function tryToRemove(
 }
 
 /**
- * input 输入种, 用于拦截快捷键处理
+ * input 输入中, 用于拦截快捷键处理
  */
 
 export function isCurrentTyping() {
