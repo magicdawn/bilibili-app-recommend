@@ -52,7 +52,7 @@ export async function tryToRemove(
  * input 输入中, 用于拦截快捷键处理
  */
 
-export function isCurrentTyping() {
+export function shouldDisableShortcut() {
   // if activeElement is input, disable shortcut
   const activeTagName = (document.activeElement?.tagName || '').toLowerCase()
   if (['input', 'textarea'].includes(activeTagName)) {

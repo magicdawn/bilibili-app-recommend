@@ -1,6 +1,6 @@
 import { VideoCardEmitter } from '$components/VideoCard'
 import { settings } from '$settings'
-import { isCurrentTyping } from '$utility/dom'
+import { shouldDisableShortcut } from '$utility/dom'
 import { useKeyPress, useMemoizedFn } from 'ahooks'
 import { RefObject, useState } from 'react'
 import { videoGrid } from '../video-grid.module.less'
@@ -40,7 +40,7 @@ export function useShortcut({
 
   const isEnabled = useMemoizedFn(() => {
     if (!enabled) return false
-    if (isCurrentTyping()) return false
+    if (shouldDisableShortcut()) return false
     return true
   })
 

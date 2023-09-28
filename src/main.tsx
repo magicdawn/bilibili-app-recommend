@@ -1,13 +1,13 @@
 /*
- *           佛曰:
- *                   写字楼里写字间，写字间里程序员；
- *                   程序人员写程序，又拿程序换酒钱。
- *                   酒醒只在网上坐，酒醉还来网下眠；
- *                   酒醉酒醒日复日，网上网下年复年。
- *                   但愿老死电脑间，不愿鞠躬老板前；
- *                   奔驰宝马贵者趣，公交自行程序员。
- *                   别人笑我忒疯癫，我笑自己命太贱；
- *                   不见满街漂亮妹，哪个归得程序员？
+ * 佛曰:
+ *     写字楼里写字间，写字间里程序员；
+ *     程序人员写程序，又拿程序换酒钱。
+ *     酒醒只在网上坐，酒醉还来网下眠；
+ *     酒醉酒醒日复日，网上网下年复年。
+ *     但愿老死电脑间，不愿鞠躬老板前；
+ *     奔驰宝马贵者趣，公交自行程序员。
+ *     别人笑我忒疯癫，我笑自己命太贱；
+ *     不见满街漂亮妹，哪个归得程序员？
  */
 
 // load config first
@@ -33,23 +33,6 @@ import { getIsInternalTesting, isSafari } from './platform'
 import { settings } from './settings'
 
 void (function main() {
-  // 用于获取授权
-  if (
-    location.href.startsWith('https://www.mcbbs.net/template/mcbbs/image/special_photo_bg.png?')
-  ) {
-    window.stop()
-
-    if (window.top === window) {
-      // a window
-      window.opener?.postMessage(location.href, 'https://www.bilibili.com')
-    } else {
-      // a iframe
-      window.top?.postMessage(location.href, 'https://www.bilibili.com')
-    }
-
-    return
-  }
-
   if (location.pathname === '/' || location.pathname === '/index.html') {
     return initHomepage()
   }

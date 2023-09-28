@@ -4,7 +4,7 @@ import { getHeaderHeight, useHeaderHeight } from '$header'
 import { IconPark } from '$icon-park'
 import { css } from '$libs'
 import { settings, useSettingsSnapshot } from '$settings'
-import { isCurrentTyping } from '$utility/dom'
+import { shouldDisableShortcut } from '$utility/dom'
 import { useKeyPress, useMemoizedFn } from 'ahooks'
 import { Button, Space } from 'antd'
 import {
@@ -86,7 +86,7 @@ export const RecHeader = forwardRef<
   useKeyPress(
     ['shift.comma'],
     (e) => {
-      if (isCurrentTyping()) return
+      if (shouldDisableShortcut()) return
       headerState.modalConfigVisible = !headerState.modalConfigVisible
     },
     { exactMatch: true }
@@ -224,7 +224,7 @@ export const RefreshButton = forwardRef<RefreshButtonActions, RefreshButtonProps
   useKeyPress(
     'r',
     () => {
-      if (isCurrentTyping()) return
+      if (shouldDisableShortcut()) return
       if (!refreshHotkeyEnabled) return
       click()
     },

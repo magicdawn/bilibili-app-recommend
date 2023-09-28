@@ -146,17 +146,14 @@ export default defineConfig(({ command }) => ({
         license: 'MIT',
         match: [
           'https://www.bilibili.com/',
-          'https://www.mcbbs.net/template/mcbbs/image/special_photo_bg.png',
-          'https://www.bilibili.com/index.html',
           'https://www.bilibili.com/?*',
-          'https://www.mcbbs.net/template/mcbbs/image/special_photo_bg.png?*',
+          'https://www.bilibili.com/index.html',
           'https://www.bilibili.com/index.html?*',
         ],
         connect: [
           //
           'app.bilibili.com',
           'passport.bilibili.com',
-          'link.acg.tv',
           'www.mcbbs.net',
         ],
         grant: [

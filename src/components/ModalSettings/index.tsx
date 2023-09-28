@@ -14,7 +14,7 @@ import {
   updateSettings,
   useSettingsSnapshot,
 } from '$settings'
-import { isCurrentTyping } from '$utility/dom'
+import { shouldDisableShortcut } from '$utility/dom'
 import { toast } from '$utility/toast'
 import { css } from '@emotion/react'
 import { useKeyPress } from 'ahooks'
@@ -59,7 +59,7 @@ function useHotkeyForConfig(
   return useKeyPress(
     hotkey,
     (e) => {
-      if (isCurrentTyping()) return
+      if (shouldDisableShortcut()) return
       settings[configKey] = !settings[configKey]
       const isCancel = !settings[configKey]
       toast(`已${isCancel ? '禁用' : '启用'}「${label}」`)
