@@ -83,6 +83,14 @@ export const dynamicFeedFilterStore = proxy<{
   upListUpdatedAt: 0,
 })
 
+setTimeout(() => {
+  if (!dynamicFeedFilterStore.upList.length) {
+    requestIdleCallback(() => {
+      updateUpList()
+    })
+  }
+}, ms('5s'))
+
 async function updateUpList(force = false) {
   const cacheHit =
     !force &&
