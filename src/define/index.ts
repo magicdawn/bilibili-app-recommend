@@ -12,7 +12,7 @@ export { WatchLaterItem, WatchLaterJson } from './watchlater'
 export { DmJson, PvideoJson }
 
 /**
- * *ItemExtend
+ * ItemExtend
  */
 
 export type RecItemType =
