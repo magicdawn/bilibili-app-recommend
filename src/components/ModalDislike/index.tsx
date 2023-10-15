@@ -97,18 +97,22 @@ export function ModalDislike({ show, onHide, item }: IProps) {
     }
   }
 
-  useKeyPress('leftarrow', increaseIndex(-1))
-  useKeyPress('rightarrow', increaseIndex(1))
-  useKeyPress('uparrow', increaseIndex(-2))
-  useKeyPress('downarrow', increaseIndex(2))
+  useKeyPress('leftarrow', increaseIndex(-1), { exactMatch: true })
+  useKeyPress('rightarrow', increaseIndex(1), { exactMatch: true })
+  useKeyPress('uparrow', increaseIndex(-2), { exactMatch: true })
+  useKeyPress('downarrow', increaseIndex(2), { exactMatch: true })
 
-  useKeyPress('enter', (e) => {
-    if (!keyPressEnabled()) return
-    if (activeIndex < 0 || activeIndex > reasons.length - 1) return
-    e.preventDefault()
-    e.stopImmediatePropagation()
-    document.querySelector<HTMLButtonElement>(`.${styles.reason}.${styles.active}`)?.click()
-  })
+  useKeyPress(
+    'enter',
+    (e) => {
+      if (!keyPressEnabled()) return
+      if (activeIndex < 0 || activeIndex > reasons.length - 1) return
+      e.preventDefault()
+      e.stopImmediatePropagation()
+      document.querySelector<HTMLButtonElement>(`.${styles.reason}.${styles.active}`)?.click()
+    },
+    { exactMatch: true }
+  )
 
   const activeReasonName = useMemo(() => {
     return reasons[activeIndex]?.name || ''

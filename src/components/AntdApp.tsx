@@ -18,7 +18,8 @@ export function AntdApp({ children }: { children: ReactNode }) {
           colorPrimary,
           colorBgSpotlight: colorPrimary, // tooltip bg
           zIndexPopupBase: 11000, // base-modal 10002
-          fontFamily: 'inherit', // use B 站首页默认字体, PingFang SC,HarmonyOS_Regular,Helvetica Neue,Microsoft YaHei,sans-serif
+          // bilibili.com default: PingFang SC,HarmonyOS_Regular,Helvetica Neue,Microsoft YaHei,sans-serif
+          fontFamily: 'inherit', // use default
         },
       }}
     >

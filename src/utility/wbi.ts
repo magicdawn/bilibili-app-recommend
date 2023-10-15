@@ -72,7 +72,7 @@ async function getWbiKeys(): Promise<Keys> {
     Date.now() - keysCacheTs <= ms('6h')
 
   if (shouldReuse) {
-    return keysCache as Keys
+    return keysCache!
   }
 
   // 直接用 axios, 防止与 $request 循环依赖
