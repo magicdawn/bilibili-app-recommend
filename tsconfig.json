@@ -16,13 +16,7 @@
     "jsx": "react-jsx",
     "jsxImportSource": "@emotion/react",
     "plugins": [{ "name": "@styled/typescript-styled-plugin" }],
-    "types": [
-      "vite/client",
-      "vitest/importMeta",
-      "node",
-      "@violentmonkey/types",
-      "@total-typescript/ts-reset"
-    ]
+    "types": ["vite/client", "node", "@violentmonkey/types", "@total-typescript/ts-reset"]
   },
   "ts-node": {
     "swc": true,
