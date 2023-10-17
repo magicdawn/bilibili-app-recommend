@@ -36,8 +36,8 @@
     "@types/react": "18.2.28",
     "@types/react-dom": "18.2.13",
     "@types/ua-parser-js": "^0.7.37",
-    "@typescript-eslint/eslint-plugin": "^6.7.5",
-    "@typescript-eslint/parser": "^6.7.5",
+    "@typescript-eslint/eslint-plugin": "^6.8.0",
+    "@typescript-eslint/parser": "^6.8.0",
     "@violentmonkey/types": "^0.1.6",
     "@vitejs/plugin-react": "^4.1.0",
     "@vitejs/plugin-react-swc": "^3.4.0",
@@ -45,13 +45,13 @@
     "chalk": "5",
     "concurrently": "^8.2.1",
     "dl-vampire": "^1.4.1",
-    "esbuild": "0.19.4",
+    "esbuild": "0.19.5",
     "eslint": "^8.51.0",
     "eslint-config-prettier": "^9.0.0",
     "esm-utils": "^4.1.2",
     "husky": "^8.0.3",
     "less": "^4.2.0",
-    "lint-staged": "^14.0.1",
+    "lint-staged": "^15.0.1",
     "open": "^9.1.0",
     "postcss-media-minmax": "^5.0.0",
     "prettier": "^3.0.3",
@@ -76,7 +76,7 @@
     "@mgdn/bvid": "^0.1.0",
     "@total-typescript/ts-reset": "^0.5.1",
     "ahooks": "3.7.8",
-    "antd": "^5.10.0",
+    "antd": "^5.10.1",
     "axios": "0",
     "axios-userscript-adapter": "0",
     "classnames": "^2.3.2",
@@ -94,7 +94,7 @@
     "react-dom": "18.2.0",
     "react-intersection-observer": "^9.5.2",
     "react-use-sticky": "^0.1.4",
-    "react-virtuoso": "^4.6.1",
+    "react-virtuoso": "^4.6.2",
     "ua-parser-js": "^1.0.36",
     "valtio": "^1.11.2"
   },
@@ -104,9 +104,7 @@
     ]
   },
   "pnpm": {
-    "patchedDependencies": {
-      "rc-field-form@1.38.2": "patches/rc-field-form@1.38.2.patch"
-    },
+    "patchedDependencies": {},
     "overrides": {
       "@qiniu/typed-less-modules>less": "4"
     }
