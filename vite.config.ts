@@ -77,7 +77,6 @@ export default defineConfig(({ command }) => ({
     emptyOutDir: true,
     cssMinify: shouldMinify,
     minify: shouldMinify,
-
     // target defaults `modules`, = ['es2020', 'edge88', 'firefox78', 'chrome87', 'safari14']
     // target: ''
   },
@@ -101,6 +100,7 @@ export default defineConfig(({ command }) => ({
         libraryName: 'antd',
         libraryDirectory: 'es',
       }),
+
     // import {get} from 'lodash' -> import get from 'lodash/get'
     command === 'build' &&
       importer({
@@ -108,6 +108,7 @@ export default defineConfig(({ command }) => ({
         libraryDirectory: '',
         camel2DashComponentName: false,
       }),
+
     command === 'build' &&
       importer({
         libraryName: '@icon-park/react',
@@ -174,26 +175,37 @@ export default defineConfig(({ command }) => ({
         // unpkg is not stable
         // https://greasyfork.org/zh-CN/scripts/443530-bilibili-app-recommend/discussions/197900
 
-        // externalGlobals: {
-        //   'axios': cdn.unpkg('axios', 'dist/axios.min.js'),
-        //   'axios-userscript-adapter': cdn.unpkg(
-        //     'axiosGmxhrAdapter',
-        //     'dist/axiosGmxhrAdapter.min.js'
-        //   ),
-        //   'react': cdn.unpkg('React', 'umd/react.production.min.js'),
-        //   'react-dom': cdn.unpkg('ReactDOM', 'umd/react-dom.production.min.js'),
-        //   'ua-parser-js': cdn.unpkg('UAParser', 'dist/ua-parser.min.js'),
-        //   // '@emotion/css': cdn.unpkg('emotion', 'dist/emotion-css.umd.min.js'),
-        //   // '@emotion/react': cdn.unpkg('emotionReact', 'dist/emotion-react.umd.min.js'),
-        // },
-
         externalGlobals: {
-          'react': cdn.baomitu('React', 'umd/react.production.min.js'),
-          'react-dom': cdn.baomitu('ReactDOM', 'umd/react-dom.production.min.js'),
-          'ua-parser-js': baomitu('UAParser', 'ua-parser.min.js', 'UAParser.js'),
-          // 'axios': cdn.baomitu('axios', 'axios.min.js'),
-          // 'lodash': baomitu('_', 'lodash.min.js', 'lodash.js'),
+          // https://caniuse.com/resizeobserver
+          // support starts from Chrome 76
+          'resize-observer-polyfill': 'ResizeObserver',
+
+          'axios': cdn.npmmirror('axios', 'dist/axios.min.js'),
+          'axios-userscript-adapter': cdn.npmmirror(
+            'axiosGmxhrAdapter',
+            'dist/axiosGmxhrAdapter.min.js'
+          ),
+          'react': cdn.npmmirror('React', 'umd/react.production.min.js'),
+          'react-dom': cdn.npmmirror('ReactDOM', 'umd/react-dom.production.min.js'),
+          'ua-parser-js': cdn.npmmirror('UAParser', 'dist/ua-parser.min.js'),
+
+          // 'lodash': cdn.npmmirror('_', 'lodash.min.js'),
+          // // ahooks use these
+          // 'lodash/throttle': '_.throttle',
+          // 'lodash/debounce': '_.debounce',
+          // 'lodash/isEqual': '_.isEqual',
+
+          // '@emotion/css': cdn.unpkg('emotion', 'dist/emotion-css.umd.min.js'),
+          // '@emotion/react': cdn.unpkg('emotionReact', 'dist/emotion-react.umd.min.js'),
         },
+
+        // externalGlobals: {
+        //   'react': cdn.baomitu('React', 'umd/react.production.min.js'),
+        //   'react-dom': cdn.baomitu('ReactDOM', 'umd/react-dom.production.min.js'),
+        //   'ua-parser-js': baomitu('UAParser', 'ua-parser.min.js', 'UAParser.js'),
+        //   // 'axios': cdn.baomitu('axios', 'axios.min.js'),
+        //   // 'lodash': baomitu('_', 'lodash.min.js', 'lodash.js'),
+        // },
       },
     }),
 

@@ -1,4 +1,5 @@
-#!/usr/bin/env ts-node
+#!/usr/bin/env bun
+// #!/usr/bin/env ts-node
 
 import chalk from 'chalk'
 import esmUtils from 'esm-utils'
