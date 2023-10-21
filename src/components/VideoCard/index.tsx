@@ -398,7 +398,10 @@ const VideoCardInner = memo(function VideoCardInner({
 
   const requestingWatchLaterApi = useRef(false)
   const onToggleWatchLater = useMemoizedFn(
-    async (e?: MouseEvent, usingAction?: typeof watchLaterDel | typeof watchLaterAdd) => {
+    async (
+      e?: MouseEvent,
+      usingAction?: typeof watchLaterDel | typeof watchLaterAdd
+    ): Promise<{ success: boolean; targetState?: boolean }> => {
       e?.preventDefault()
 
       usingAction ??= watchLaterAdded ? watchLaterDel : watchLaterAdd
@@ -406,7 +409,7 @@ const VideoCardInner = memo(function VideoCardInner({
         throw new Error('unexpected usingAction provided')
       }
 
-      if (requestingWatchLaterApi.current) return
+      if (requestingWatchLaterApi.current) return { success: false }
       requestingWatchLaterApi.current = true
 
       let success = false
@@ -416,22 +419,29 @@ const VideoCardInner = memo(function VideoCardInner({
         requestingWatchLaterApi.current = false
       }
 
+      const targetState = usingAction === watchLaterAdd ? true : false
       if (success) {
-        const targetState = usingAction === watchLaterAdd ? true : false
         if (targetState) {
           watchLaterState.bvidSet.add(bvid)
         } else {
           watchLaterState.bvidSet.delete(bvid)
         }
 
-        // when remove-watchlater for watchlater tab, remove this card
-        if (item.api === 'watchlater' && targetState === false) {
-          await delay(100)
-          onRemoveCurrent?.(item, cardData)
+        // 稍后再看
+        if (item.api === 'watchlater') {
+          // when remove-watchlater for watchlater tab, remove this card
+          if (!targetState) {
+            await delay(100)
+            onRemoveCurrent?.(item, cardData)
+          }
+        }
+        // 其他 Tab
+        else {
+          toast(`已${targetState ? '添加' : '移除'}稍后再看`)
         }
       }
 
-      return success
+      return { success, targetState }
     }
   )
 
@@ -683,7 +693,7 @@ const VideoCardInner = memo(function VideoCardInner({
           label: '重新添加稍候再看 (移到最前)',
           icon: <IconPark name='AddTwo' size={15} />,
           async onClick() {
-            const success = await onToggleWatchLater(undefined, watchLaterAdd)
+            const { success } = await onToggleWatchLater(undefined, watchLaterAdd)
             if (!success) return
             onMoveToFirst?.(item, cardData)
           },
