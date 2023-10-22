@@ -396,6 +396,8 @@ const VideoCardInner = memo(function VideoCardInner({
    * 稍候再看
    */
 
+  const hasWatchLaterEntry = item.api !== 'app' || (item.api === 'app' && item.goto === 'av')
+
   const requestingWatchLaterApi = useRef(false)
   const onToggleWatchLater = useMemoizedFn(
     async (
@@ -679,7 +681,7 @@ const VideoCardInner = memo(function VideoCardInner({
           }
         },
       },
-      {
+      hasWatchLaterEntry && {
         key: 'watchlater',
         label: watchLaterLabel,
         icon: <IconPark name={watchLaterAdded ? 'Delete' : 'FileCabinet'} size={15} />,
@@ -744,6 +746,7 @@ const VideoCardInner = memo(function VideoCardInner({
     ].filter(Boolean)
   }, [
     item,
+    hasWatchLaterEntry,
     watchLaterAdded,
     hasDislikeEntry,
     hasUnfollowEntry,
@@ -811,24 +814,26 @@ const VideoCardInner = memo(function VideoCardInner({
               )}
 
               {/* 稍后再看 */}
-              <div
-                className={`bili-watch-later ${styles.watchLater}`}
-                style={{
-                  display: isHovering || active ? 'flex' : 'none',
-                }}
-                ref={watchLaterRef}
-                onClick={onToggleWatchLater}
-              >
-                <svg className='bili-watch-later__icon'>
-                  <use href={watchLaterAdded ? '#widget-watch-save' : '#widget-watch-later'} />
-                </svg>
-                <span
-                  className='bili-watch-later__tip'
-                  style={{ display: isWatchLaterHovering ? 'block' : 'none' }}
+              {hasWatchLaterEntry && (
+                <div
+                  className={`bili-watch-later ${styles.watchLater}`}
+                  style={{
+                    display: isHovering || active ? 'flex' : 'none',
+                  }}
+                  ref={watchLaterRef}
+                  onClick={onToggleWatchLater}
                 >
-                  {watchLaterAdded ? '移除稍后再看' : '稍后再看'}
-                </span>
-              </div>
+                  <svg className='bili-watch-later__icon'>
+                    <use href={watchLaterAdded ? '#widget-watch-save' : '#widget-watch-later'} />
+                  </svg>
+                  <span
+                    className='bili-watch-later__tip'
+                    style={{ display: isWatchLaterHovering ? 'block' : 'none' }}
+                  >
+                    {watchLaterAdded ? '移除稍后再看' : '稍后再看'}
+                  </span>
+                </div>
+              )}
 
               {/* 我不想看 */}
               {hasDislikeEntry && (
