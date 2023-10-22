@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.17.11
+
+- chore: update deps
+- feat: switch to npmmirror
+- fix: disable watchlater entry for tab=app & none video recommend
+
 ## v0.17.10
 
 - 支持选择要显示的 Tab
