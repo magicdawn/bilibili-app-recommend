@@ -35,6 +35,6 @@ body:
   - type: textarea
     attributes:
       label: 预期结果
-      description: ''
+      description: 预期结果
     validations:
       required: false
