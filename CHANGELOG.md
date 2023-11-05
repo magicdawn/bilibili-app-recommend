@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.18.0
+
+- feat: support simulate TV to scan QRCode to get access_key, based on [BAC TV登录](https://socialsisteryi.github.io/bilibili-API-collect/docs/login/login_action/QR.html#tv%E7%AB%AF%E6%89%AB%E7%A0%81%E7%99%BB%E5%BD%95), see #53
+
 ## v0.17.11
 
 - chore: update deps
