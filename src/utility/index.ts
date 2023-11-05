@@ -1,4 +1,4 @@
-export * from './auth'
+export * from './access-key/by-cookie'
 export * from './cookie'
 export * from './dom'
 export * from './toast'

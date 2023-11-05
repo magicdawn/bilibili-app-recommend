@@ -1,5 +1,6 @@
 import { useSettingsSnapshot } from '$settings'
-import { GET_ACCESS_KEY_VIA_GMREQUEST_REDIRECT, auth, deleteAccessToken } from '$utility/auth'
+import { GET_ACCESS_KEY_VIA_GMREQUEST_REDIRECT } from '$utility/access-key/by-cookie'
+import { auth, deleteAccessToken } from '$utility/auth'
 import { useRequest } from 'ahooks'
 import { Button, Space } from 'antd'
 import { CSSProperties, ReactNode } from 'react'

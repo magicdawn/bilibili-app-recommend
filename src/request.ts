@@ -30,12 +30,19 @@ export function isWebApiSuccess(json: any) {
 }
 
 // 可以跨域
-import { appkey } from '$utility/auth'
+import { TVKeyInfo } from '$common'
+import { appSign } from '$utility/app-sign'
 import gmAdapter from 'axios-userscript-adapter'
 export const gmrequest = axios.create({
   // @ts-ignore
   adapter: gmAdapter,
 })
+
+// const appkey = '27eb53fc9058f8c3'
+// const appsec = 'c2ed53a74eeefe3cf99fbd01d8c9c375'
+
+const appkey = TVKeyInfo.appkey
+const appsec = TVKeyInfo.appsec
 
 gmrequest.interceptors.request.use(function (config) {
   config.params = {
@@ -43,6 +50,9 @@ gmrequest.interceptors.request.use(function (config) {
     access_key: settings.accessKey || '',
     ...config.params,
   }
+
+  config.params.sign = appSign(config.params, appkey, appsec)
+
   return config
 })
 

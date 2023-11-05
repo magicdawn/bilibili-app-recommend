@@ -1,0 +1,85 @@
+import { TVKeyInfo } from '$common'
+import { isWebApiSuccess, request } from '$request'
+import { toast } from '$utility'
+import { appSign } from '../../app-sign'
+import { AuthCodeJson } from './http.auth-code'
+import { PollJson } from './http.poll'
+
+const newSignedForm = (params: Record<string, any>) => {
+  const sign = appSign(params, TVKeyInfo.appkey, TVKeyInfo.appsec)
+  return new URLSearchParams({
+    ...params,
+    sign,
+  })
+}
+
+export async function getQRCodeInfo() {
+  const res = await request.post(
+    'https://passport.bilibili.com/x/passport-tv-login/qrcode/auth_code',
+    newSignedForm({
+      appkey: TVKeyInfo.appkey,
+      local_id: '0',
+      ts: '0',
+    })
+    // sign: 'e134154ed6add881d28fbdf68653cd9c',
+  )
+
+  const json = res.data as AuthCodeJson
+
+  if (!isWebApiSuccess(json)) {
+    toast(json?.message || '获取 auth_code 失败')
+    return
+  }
+
+  return json.data
+}
+
+export type PollResult = {
+  success: boolean
+  accessKey?: string
+  message: string
+  action?: 'refresh' | 'wait' | 'break'
+}
+
+export async function poll(auth_code: string): Promise<PollResult> {
+  const res = await request.post(
+    'https://passport.bilibili.com/x/passport-tv-login/qrcode/poll',
+    newSignedForm({
+      appkey: TVKeyInfo.appkey,
+      auth_code,
+      local_id: '0',
+      ts: '0',
+    })
+  )
+
+  const json = res.data as PollJson
+  const errorMap: Record<string, string> = {
+    '0': '成功',
+    '-3': 'API校验密匙错误',
+    '-400': '请求错误',
+    '-404': '啥都木有',
+    '86038': '二维码已失效',
+    '86039': '二维码尚未确认',
+    '86090': '二维码已扫码未确认',
+  }
+
+  if (!isWebApiSuccess(json)) {
+    const code = json.code.toString()
+    const message = json.message || errorMap[json.code.toString()] || '未知错误'
+
+    // 二维码已失效
+    if (code === '86038') {
+      return { success: false, message, action: 'refresh' }
+    }
+    // 无操作, 等待扫码
+    if (code === '86039' || code === '86090') {
+      return { success: false, message, action: 'wait' }
+    }
+
+    // errors
+    return { success: false, message, action: undefined }
+  }
+
+  const accessKey = json.data.access_token
+  return { success: true, accessKey, message: '获取成功' }
+}
