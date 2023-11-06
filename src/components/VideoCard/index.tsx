@@ -520,6 +520,13 @@ const VideoCardInner = memo(function VideoCardInner({
     window.open(href, '_blank')
   })
 
+  const onOpenInBackground = useMemoizedFn(() => {
+    GM.openInTab(href, {
+      active: false,
+      insert: true,
+    })
+  })
+
   useMittOn(emitter, 'open', onOpen)
   useMittOn(emitter, 'toggle-watch-later', () => onToggleWatchLater())
   useMittOn(emitter, 'trigger-dislike', () => onTriggerDislike())
@@ -600,6 +607,12 @@ const VideoCardInner = memo(function VideoCardInner({
         label: '打开',
         icon: <IconPark name='EfferentFour' size={15} />,
         onClick: onOpen,
+      },
+      {
+        key: 'open-link-in-background',
+        label: '后台打开',
+        icon: <IconPark name='Split' size={15} />,
+        onClick: onOpenInBackground,
       },
 
       { type: 'divider' as const },
