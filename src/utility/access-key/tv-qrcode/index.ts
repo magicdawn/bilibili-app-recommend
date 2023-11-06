@@ -5,8 +5,8 @@
 
 import { toast } from '$utility'
 import delay from 'delay'
-import { hideQRCode, showQRCode, tvqrcodeAuthStore, updateStore } from './TVQRCodeAuth'
-import { PollResult, getQRCodeInfo, poll } from './http'
+import { hideQRCode, showQRCode, tvQrCodeAuthStore, updateStore, whenHide } from './TvQrCodeAuth'
+import { PollResult, getQRCodeInfo, poll } from './api'
 
 async function refreshQRCode() {
   const qrinfo = await getQRCodeInfo()
@@ -18,7 +18,7 @@ async function refreshQRCode() {
 }
 
 // @ts-ignore
-// window.getAccessKeyByQRCode = getAccessKeyByQRCode
+window.getAccessKeyByQRCode = getAccessKeyByQRCode
 
 export async function getAccessKeyByQRCode() {
   const next = await refreshQRCode()
@@ -27,16 +27,27 @@ export async function getAccessKeyByQRCode() {
   // start poll
   let res: PollResult | undefined
 
-  let pollfor = tvqrcodeAuthStore.auth_code
+  let pollfor = tvQrCodeAuthStore.auth_code
+  function shouldBreak() {
+    if (!tvQrCodeAuthStore.show) return true
+    if (!tvQrCodeAuthStore.auth_code) return true
+    if (pollfor !== tvQrCodeAuthStore.auth_code) return true
+  }
   while (true) {
-    // 已关闭
-    if (!tvqrcodeAuthStore.show) return
-    if (!tvqrcodeAuthStore.auth_code) return
-    if (pollfor !== tvqrcodeAuthStore.auth_code) return
+    // break check
+    if (shouldBreak()) return
+
+    // delay
+    const p1 = delay(1500) // wait enough time
+    const p2 = whenHide() // if user click close, quick break
+    await Promise.race([p1, p2])
+    p2.cancel()
+
+    // break check
+    if (shouldBreak()) return
 
     // poll
-    await delay(1000)
-    res = await poll(tvqrcodeAuthStore.auth_code)
+    res = await poll(tvQrCodeAuthStore.auth_code)
     const { success, accessKey, message, action } = res!
 
     /**
@@ -56,7 +67,7 @@ export async function getAccessKeyByQRCode() {
     if (action === 'refresh') {
       await delay(2000) // let user see '已过期消息'
       await refreshQRCode()
-      pollfor = tvqrcodeAuthStore.auth_code
+      pollfor = tvQrCodeAuthStore.auth_code
       updateStore({ message: '已刷新二维码' })
       continue
     }
@@ -66,12 +77,9 @@ export async function getAccessKeyByQRCode() {
     }
 
     // other errors
+    if (shouldBreak()) return
     updateStore({ message })
-    const shouldToast =
-      tvqrcodeAuthStore.show &&
-      tvqrcodeAuthStore.auth_code &&
-      pollfor === tvqrcodeAuthStore.auth_code
-    if (shouldToast) toast(message)
+    toast(message)
     return
   }
 }

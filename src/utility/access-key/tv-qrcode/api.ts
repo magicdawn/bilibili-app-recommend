@@ -1,9 +1,9 @@
 import { TVKeyInfo } from '$common'
 import { isWebApiSuccess, request } from '$request'
-import { toast } from '$utility'
+import { getCsrfToken, toast } from '$utility'
 import { appSign } from '../../app-sign'
-import { AuthCodeJson } from './http.auth-code'
-import { PollJson } from './http.poll'
+import { AuthCodeJson } from './api.auth-code'
+import { PollJson } from './api.poll'
 
 const newSignedForm = (params: Record<string, any>) => {
   const sign = appSign(params, TVKeyInfo.appkey, TVKeyInfo.appsec)
@@ -82,4 +82,20 @@ export async function poll(auth_code: string): Promise<PollResult> {
 
   const accessKey = json.data.access_token
   return { success: true, accessKey, message: '获取成功' }
+}
+
+export async function qrcodeConfirm(auth_code: string) {
+  const res = await request.post(
+    'https://passport.bilibili.com/x/passport-tv-login/h5/qrcode/confirm',
+    new URLSearchParams({
+      auth_code,
+      scanning_type: '1',
+      csrf: getCsrfToken(),
+    })
+  )
+  const json = res.data
+  if (!isWebApiSuccess(json)) {
+    const msg = json.message || '未知错误'
+    return toast(msg)
+  }
 }
