@@ -5,7 +5,13 @@
 
 import { toast } from '$utility'
 import delay from 'delay'
-import { hideQRCode, showQRCode, tvQrCodeAuthStore, updateStore, whenHide } from './TvQrCodeAuth'
+import {
+  hideQrCodeModal,
+  showQrCodeModal,
+  tvQrCodeAuthStore,
+  updateStore,
+  whenQrCodeModalHide,
+} from './TvQrCodeAuth'
 import { PollResult, getQRCodeInfo, poll } from './api'
 
 async function refreshQRCode() {
@@ -13,12 +19,12 @@ async function refreshQRCode() {
   if (!qrinfo) return
 
   // show
-  showQRCode({ qrcode: qrinfo.url, auth_code: qrinfo.auth_code })
+  showQrCodeModal({ qrcode: qrinfo.url, auth_code: qrinfo.auth_code })
   return true
 }
 
 // @ts-ignore
-window.getAccessKeyByQRCode = getAccessKeyByQRCode
+// window.getAccessKeyByQRCode = getAccessKeyByQRCode
 
 export async function getAccessKeyByQRCode() {
   const next = await refreshQRCode()
@@ -39,7 +45,7 @@ export async function getAccessKeyByQRCode() {
 
     // delay
     const p1 = delay(1500) // wait enough time
-    const p2 = whenHide() // if user click close, quick break
+    const p2 = whenQrCodeModalHide() // if user click close, quick break
     await Promise.race([p1, p2])
     p2.cancel()
 
@@ -48,7 +54,7 @@ export async function getAccessKeyByQRCode() {
 
     // poll
     res = await poll(tvQrCodeAuthStore.auth_code)
-    const { success, accessKey, message, action } = res!
+    const { success, accessKey, message, action } = res
 
     /**
      * handle result
@@ -59,7 +65,7 @@ export async function getAccessKeyByQRCode() {
 
     if (success) {
       await delay(1000)
-      hideQRCode()
+      hideQrCodeModal()
       return accessKey
     }
 

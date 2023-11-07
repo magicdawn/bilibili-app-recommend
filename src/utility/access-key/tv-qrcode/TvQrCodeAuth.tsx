@@ -25,23 +25,23 @@ export function updateStore(data: Partial<typeof initialValue>) {
   Object.assign(store, data)
 }
 
-export function showQRCode(data: Partial<typeof initialValue>) {
+export function showQrCodeModal(data: Partial<typeof initialValue>) {
   updateStore({ ...initialValue, ...data, show: true })
 }
 
-export function hideQRCode() {
+export function hideQrCodeModal() {
   emitter.emit('hide')
   updateStore({ ...initialValue })
 }
 
 const emitter = mitt<{ hide: void }>()
 
-export function whenHide() {
+export function whenQrCodeModalHide() {
   return pEvent(emitter, 'hide')
 }
 
 // https://github.com/lzghzr/TampermonkeyJS/blob/master/libBilibiliToken/libBilibiliToken.js#L99-L106
-async function confirmQrLoginWithCookie() {
+async function confirmQrCodeLoginWithCookie() {
   if (!store.auth_code) return
   await qrcodeConfirm(store.auth_code)
 }
@@ -49,12 +49,12 @@ async function confirmQrLoginWithCookie() {
 export function TvQrCodeAuth() {
   const { qrcode, show, message } = useSnapshot(store)
 
-  const onHide = hideQRCode
+  const onHide = hideQrCodeModal
 
-  const { runAsync: confirmQrLoginWithCookieRun, loading: confirmQrLoginWithCookieLoading } =
-    useRequest(confirmQrLoginWithCookie, {
-      manual: true,
-    })
+  const { runAsync: confirmRun, loading: confirmLoading } = useRequest(
+    confirmQrCodeLoginWithCookie,
+    { manual: true }
+  )
 
   return (
     <BaseModal
@@ -106,7 +106,7 @@ export function TvQrCodeAuth() {
           `}
         >
           <AntdTooltip title='可能会导致桌面端掉登录, 谨慎使用'>
-            <Button onClick={confirmQrLoginWithCookieRun} loading={confirmQrLoginWithCookieLoading}>
+            <Button onClick={confirmRun} loading={confirmLoading}>
               使用桌面端确认
             </Button>
           </AntdTooltip>

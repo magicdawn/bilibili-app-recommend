@@ -1,7 +1,7 @@
 import { TVKeyInfo } from '$common'
 import { isWebApiSuccess, request } from '$request'
 import { getCsrfToken, toast } from '$utility'
-import { appSign } from '../../app-sign'
+import { appSign } from '$utility/app-sign'
 import { AuthCodeJson } from './api.auth-code'
 import { PollJson } from './api.poll'
 
