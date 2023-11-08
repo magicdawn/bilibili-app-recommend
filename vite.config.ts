@@ -155,7 +155,7 @@ export default defineConfig(({ command }) => ({
           //
           'app.bilibili.com',
           'passport.bilibili.com',
-          'www.mcbbs.net',
+          // 'www.mcbbs.net', // for get_access_key
         ],
         grant: [
           // axios gm adapter use
