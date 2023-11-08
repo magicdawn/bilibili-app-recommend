@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.18.2
+
+- 6139457 chore: refactor names
+- 89251f6 chore: back to @violentmonkey/types
+- 5ac62fc feat: add openInBackground context-menu
+
 ## v0.18.1
 
 - feat: support confirm qrcode login with pc cookie, optimize 扫码流程
