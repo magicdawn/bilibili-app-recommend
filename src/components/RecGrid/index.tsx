@@ -421,8 +421,8 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
       styleUseYoutubeLikeCard
         ? videoGridYoutubeLike // 大卡片
         : isInternalTesting
-        ? videoGridInternalTesting // 内测
-        : videoGridNewHomepage, // default
+          ? videoGridInternalTesting // 内测
+          : videoGridNewHomepage, // default
 
       useNarrowMode && narrowMode, // 居中
       className
