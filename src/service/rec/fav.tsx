@@ -197,7 +197,13 @@ export function FavUsageInfo({
     }
   )
 
-  const foldersCount = allFavFolderServices.length - excludeFavFolderIds.length
+  // may contains legacy ids, so not `allFavFolderServices.length - excludeFavFolderIds.length`
+  const foldersCount = useMemo(
+    () =>
+      allFavFolderServices.filter((x) => !excludeFavFolderIds.includes(x.entry.id.toString()))
+        .length,
+    [allFavFolderServices, excludeFavFolderIds]
+  )
 
   const videosCount = useMemo(() => {
     return allFavFolderServices
