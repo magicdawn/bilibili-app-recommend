@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.18.3
+
+- fix quick fav, default using folder selection influenced by exclude fav folder issue
+- fix fav folder count issue
+
 ## v0.18.2
 
 - 6139457 chore: refactor names
