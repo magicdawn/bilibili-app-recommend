@@ -107,15 +107,7 @@ export class FavRecService implements IService {
 
   foldersLoaded = false
   async getAllFolders() {
-    const res = await request.get('/x/v3/fav/folder/created/list-all', {
-      params: {
-        up_mid: getUid(),
-      },
-    })
-
-    const json = res.data as FavFolderListAllJson
-    const folders = json.data.list
-
+    const folders = await apiFavFolderListAll()
     this.foldersLoaded = true
     this.allFolderServices = folders.map((f) => new FavFolderService(f))
     this.folderServices = this.allFolderServices.filter(
@@ -123,6 +115,17 @@ export class FavRecService implements IService {
     )
     this.total = this.folderServices.reduce((count, f) => count + f.entry.media_count, 0)
   }
+}
+
+export async function apiFavFolderListAll() {
+  const res = await request.get('/x/v3/fav/folder/created/list-all', {
+    params: {
+      up_mid: getUid(),
+    },
+  })
+  const json = res.data as FavFolderListAllJson
+  const folders = json.data.list
+  return folders
 }
 
 export class FavFolderService {
