@@ -32,6 +32,7 @@ import { SectionRecommend } from './components/SectionRecommend'
 import { getIsInternalTesting, isSafari } from './platform'
 import { settings } from './settings'
 
+// in this entry, if no insert point found, render to document body
 const isHashEntry = (location.hash || '').startsWith(`#/${APP_NAME}/`)
 
 void (function main() {
