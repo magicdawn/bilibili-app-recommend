@@ -1,10 +1,9 @@
 /*
-使用的是 .video-card-body 的样式
-.video-card-list.is-full .video-card-body {
-  position: relative
-}
-
-在B站自己的首页中, .bili-grid > 2200px 是分 7 列, .video-card-body > 2200px 分6列
+  使用的是 .video-card-body 的样式
+  .video-card-list.is-full .video-card-body {
+    position: relative
+  }
+  在B站自己的首页中, .bili-grid > 2200px 是分 7 列, .video-card-body > 2200px 分6列
 */
 
 .video-grid {
@@ -92,16 +91,17 @@
   container-type: inline-size;
 }
 
-.video-grid-youtube-like {
-  --video-card-border-radius: 12px;
-  grid-gap: 40px 16px;
+.video-grid-fancy {
+  --video-card-border-radius: 20px;
+  grid-gap: 60px 20px;
   grid-template-columns: repeat(5, 1fr); // default
+  font-size: 12px;
 }
 
 @min-2: (300px + 16px) * 2 - 16px;
 @max-2: (360px + 16px) * 2 - 16px;
 @container video-grid-container (width >= @min-2) {
-  .video-grid-youtube-like {
+  .video-grid-fancy {
     grid-template-columns: repeat(2, 1fr);
   }
 }
@@ -109,7 +109,7 @@
 @min-3: (300px + 16px) * 3 - 16px;
 @max-3: (360px + 16px) * 3 - 16px;
 @container video-grid-container (width >= @min-3) {
-  .video-grid-youtube-like {
+  .video-grid-fancy {
     grid-template-columns: repeat(3, 1fr);
   }
 }
@@ -117,7 +117,7 @@
 @min-4: (300px + 16px) * 4 - 16px;
 @max-4: (360px + 16px) * 4 - 16px;
 @container video-grid-container (width >= @min-4) {
-  .video-grid-youtube-like {
+  .video-grid-fancy {
     grid-template-columns: repeat(4, 1fr);
   }
 }
@@ -125,7 +125,7 @@
 @min-5: (300px + 16px) * 5 - 16px;
 @max-5: (360px + 16px) * 5 - 16px;
 @container video-grid-container (width >= @min-5) {
-  .video-grid-youtube-like {
+  .video-grid-fancy {
     grid-template-columns: repeat(5, 1fr);
   }
 }

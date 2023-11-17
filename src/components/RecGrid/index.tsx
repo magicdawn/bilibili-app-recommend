@@ -42,9 +42,9 @@ import {
   narrowMode,
   videoGrid,
   videoGridContainer,
+  videoGridFancy,
   videoGridInternalTesting,
   videoGridNewHomepage,
-  videoGridYoutubeLike,
 } from '../video-grid.module.less'
 import { OnRefresh, useRefresh } from './useRefresh'
 import { useShortcut } from './useShortcut'
@@ -99,7 +99,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
     },
     ref
   ) => {
-    const { useNarrowMode, styleUseYoutubeLikeCard } = useSettingsSnapshot()
+    const { useNarrowMode, styleFancy } = useSettingsSnapshot()
     const tab = useCurrentSourceTab()
 
     const [loadCompleteCount, setLoadCompleteCount] = useState(0) // 已加载完成的 load call count, 类似 page
@@ -418,8 +418,8 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
       `${APP_NAME}-video-grid`, // for customize css
       videoGrid,
 
-      styleUseYoutubeLikeCard
-        ? videoGridYoutubeLike // 大卡片
+      styleFancy
+        ? videoGridFancy // 大卡片
         : isInternalTesting
           ? videoGridInternalTesting // 内测
           : videoGridNewHomepage, // default

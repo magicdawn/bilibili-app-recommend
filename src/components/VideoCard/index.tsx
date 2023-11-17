@@ -16,6 +16,7 @@ import { UserfollowService } from '$service/user/relations/follow'
 import { settings, useSettingsSnapshot } from '$settings'
 import { toast, toastOperationFail, toastRequestFail } from '$utility/toast'
 import { formatCount } from '$utility/video'
+import { css } from '@emotion/react'
 import {
   useEventListener,
   useGetState,
@@ -775,7 +776,12 @@ const VideoCardInner = memo(function VideoCardInner({
   })
 
   return (
-    <div className='bili-video-card__wrap __scale-wrap'>
+    <div
+      className='bili-video-card__wrap __scale-wrap'
+      css={css`
+        background-color: unset;
+      `}
+    >
       <Dropdown
         menu={{ items: contextMenus }}
         trigger={['contextMenu']}

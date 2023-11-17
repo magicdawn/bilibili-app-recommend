@@ -80,7 +80,7 @@ export const RecHeader = forwardRef<
     rightSlot?: ReactNode
   }
 >(function RecHeader({ onRefresh, refreshing, leftSlot, rightSlot }, ref) {
-  const { accessKey, pureRecommend } = useSettingsSnapshot()
+  const { accessKey, pureRecommend, styleFancy } = useSettingsSnapshot()
 
   const { modalFeedVisible, modalConfigVisible } = useSnapshot(headerState)
   useKeyPress(
@@ -137,7 +137,7 @@ export const RecHeader = forwardRef<
             pureRecommend &&
               sticky &&
               css`
-                background-color: var(--bg1_float);
+                background-color: var(--${styleFancy ? 'bg2' : 'bg1'}_float);
                 box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
               `,
           ]}

@@ -80,7 +80,6 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
   useHotkeyForConfig(['shift.p'], 'autoPreviewWhenKeyboardSelect', '键盘选中后自动开始预览')
   useHotkeyForConfig(['shift.m'], 'autoPreviewWhenHover', '鼠标悬浮后自动开始预览')
   useHotkeyForConfig(['shift.c'], 'useNarrowMode', '居中模式')
-  useHotkeyForConfig(['shift.y'], 'styleUseYoutubeLikeCard', '大卡片样式')
 
   return (
     <BaseModal
@@ -208,8 +207,8 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                     <div className={cx(styles.settingsGroupContent)}>
                       <div className={styles.row}>
                         <FlagSettingItem
-                          configKey='styleUseYoutubeLikeCard'
-                          label='视频卡片: 使用类似 YouTube 大卡片'
+                          configKey='styleFancy'
+                          label='Fancy Style'
                           tooltip={
                             <>
                               增加卡片大小, 增大卡片间距

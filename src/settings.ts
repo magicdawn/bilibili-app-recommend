@@ -78,8 +78,8 @@ export const initialSettings = {
    * 外观
    */
 
-  // 大卡片, 大间距
-  styleUseYoutubeLikeCard: false,
+  // 自用新样式
+  styleFancy: false,
 
   // video-source-tab 高度, 默认 compact
   styleUseStandardVideoSourceTab: false,

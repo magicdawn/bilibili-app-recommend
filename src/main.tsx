@@ -85,7 +85,7 @@ async function initHomepageSection() {
   // react render
   const root = createRoot(recommendContainer)
   root.render(
-    <AntdApp>
+    <AntdApp injectGlobalStyle>
       <SectionRecommend />
     </AntdApp>
   )
@@ -155,7 +155,7 @@ async function initHomepagePureRecommend() {
   // react render
   const root = createRoot(recommendContainer)
   root.render(
-    <AntdApp>
+    <AntdApp injectGlobalStyle>
       <PureRecommend />
     </AntdApp>
   )

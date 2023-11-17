@@ -118,7 +118,7 @@ export function TvQrCodeAuth() {
 
 const renderOnce = once(function render() {
   const container = document.createElement('div')
-  container.classList.add('tv-qrcode-auth')
+  container.classList.add('modal-tv-qrcode-auth')
   document.body.appendChild(container)
   const r = createRoot(container)
   r.render(

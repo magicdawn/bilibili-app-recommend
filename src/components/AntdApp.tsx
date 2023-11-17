@@ -1,11 +1,18 @@
 import { useIsDarkMode } from '$platform'
-import { Global, css as _css } from '@emotion/react'
+import { useSettingsSnapshot } from '$settings'
+import { Global, css as _css, css } from '@emotion/react'
 import { ConfigProvider, Tooltip, theme } from 'antd'
 import zhCN from 'antd/locale/zh_CN'
 import { ComponentProps, ReactNode } from 'react'
 import { colorPrimaryIdentifier, useCurrentTheme } from './ModalSettings/theme'
 
-export function AntdApp({ children }: { children: ReactNode }) {
+export function AntdApp({
+  children,
+  injectGlobalStyle = true,
+}: {
+  children: ReactNode
+  injectGlobalStyle?: boolean
+}) {
   const dark = useIsDarkMode()
   const { colorPrimary } = useCurrentTheme()
 
@@ -23,6 +30,18 @@ export function AntdApp({ children }: { children: ReactNode }) {
         },
       }}
     >
+      {injectGlobalStyle && <GlobalStyle />}
+      {children}
+    </ConfigProvider>
+  )
+}
+
+function GlobalStyle() {
+  const { colorPrimary } = useCurrentTheme()
+  const { styleFancy } = useSettingsSnapshot()
+
+  return (
+    <>
       <Global
         styles={_css`
           :root {
@@ -30,8 +49,19 @@ export function AntdApp({ children }: { children: ReactNode }) {
           }
         `}
       />
-      {children}
-    </ConfigProvider>
+      {styleFancy && (
+        <Global
+          styles={css`
+            body,
+            .large-header,
+            #i_cecream,
+            .bili-header .bili-header__channel {
+              background-color: var(--bg2);
+            }
+          `}
+        />
+      )}
+    </>
   )
 }
 
