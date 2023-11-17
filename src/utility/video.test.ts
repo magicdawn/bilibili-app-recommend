@@ -9,16 +9,18 @@ describe.concurrent('$utility/video', () => {
   })
 
   it('.parseCount', () => {
-    expect(parseCount('10000')).to.equal(10000)
-    expect(parseCount('1.2万')).to.equal(12000)
-    expect(parseCount('2万')).to.equal(20000)
+    expect(parseCount('10000')).to.equal(1_0000)
+    expect(parseCount('1.2万')).to.equal(1_2000)
+    expect(parseCount('2万')).to.equal(2_0000)
+    expect(parseCount('1.9亿')).to.equal(1_9000_0000) // https://www.bilibili.com/bangumi/play/ep327118
   })
 
   it('.formatCount', () => {
     expect(formatCount(10000)).to.equal('1万')
-    expect(formatCount(12000)).to.equal('1.2万')
-    expect(formatCount(20000)).to.equal('2万')
+    expect(formatCount(1_2000)).to.equal('1.2万')
+    expect(formatCount(2_0000)).to.equal('2万')
     expect(formatCount(1234)).to.equal('1234')
+    expect(formatCount(1_9000_0000)).to.equal('1.9亿')
   })
 
   it('.formatTimeStamp', () => {

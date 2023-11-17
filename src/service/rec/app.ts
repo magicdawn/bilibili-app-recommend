@@ -1,5 +1,6 @@
 import { APP_NAME, HOST_APP } from '$common'
 import { AppRecItem, AppRecItemExtend, AppRecommendJson } from '$define'
+import { ipad } from '$define/app-recommend.ipad'
 import { gmrequest } from '$request'
 import { toast } from '$utility/toast'
 import { uniqBy } from 'lodash'
@@ -23,7 +24,14 @@ export async function getRecommend() {
     responseType: 'json',
     params: {
       build: '1',
-      mobi_app: 'android',
+
+      // mobi_app: 'android',
+
+      // has avatar, date, etc
+      // see BewlyBewly usage
+      mobi_app: 'iphone',
+      device: 'pad',
+
       idx:
         (Date.now() / 1000).toFixed(0) +
         '0' +
@@ -32,7 +40,7 @@ export async function getRecommend() {
           .padStart(3, '0'),
     },
   })
-  const json = res.data as AppRecommendJson
+  const json = res.data as ipad.AppRecommendJson
 
   // { "code": -663, "message": "鉴权失败，请联系账号组", "ttl": 1 }
   if (!json.data) {
@@ -103,6 +111,14 @@ export class AppRecService implements IService {
     // 并行: 快,but 好多重复啊
     await (true ? parallel : sequence)()
 
+    // rm ad
+    list = list.filter((item) => {
+      if (item.goto.includes('ad')) return false
+      if (item.card_goto.includes('ad')) return false
+      if ((item as any).ad_info) return false
+      return true
+    })
+
     // make api unique
     list = uniqBy(list, (item) => item.param)
 
@@ -112,6 +128,7 @@ export class AppRecService implements IService {
       return {
         ...item,
         api: 'app',
+        device: 'ipad',
         uniqId: item.param + '-' + crypto.randomUUID(),
       } as AppRecItemExtend
     })

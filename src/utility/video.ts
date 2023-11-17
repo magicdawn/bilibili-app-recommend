@@ -34,16 +34,27 @@ export function formatCount(count?: number) {
     return count.toString()
   }
 
-  let _10k = (count / 10000).toFixed(1)
-  _10k = _10k.replace(/\.0$/, '') // 81.0 -> 81
-  return `${_10k}万`
+  count /= 1_0000
+  if (count <= 9999) {
+    let _c = count.toFixed(1)
+    _c = _c.replace(/\.0$/, '') // 81.0 -> 81
+    return `${_c}万`
+  }
+
+  count /= 1_0000
+  if (count <= 9999) {
+    let _c = count.toFixed(1)
+    _c = _c.replace(/\.0$/, '') // 81.0 -> 81
+    return `${_c}亿`
+  }
 }
 
 export function parseCount(str: string) {
   if (!str) return undefined
   if (str === '-') return 0 // -弹幕, 即 0弹幕
   if (/^\d+$/.test(str)) return Number(str)
-  if (/^\d+(\.\d+?)?万$/.test(str)) return Number(str.slice(0, -1)) * 10000
+  if (/^\d+(\.\d+?)?万$/.test(str)) return Number(str.slice(0, -1)) * 1_0000
+  if (/^\d+(\.\d+?)?亿$/.test(str)) return Number(str.slice(0, -1)) * 1_0000_0000
 }
 
 const currentYear = dayjs().format('YYYY')

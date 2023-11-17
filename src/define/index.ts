@@ -1,10 +1,10 @@
-import { AppRecItem } from './app-recommend'
+import { android } from './app-recommend.android'
+import { ipad } from './app-recommend.ipad'
 import { DmJson } from './dm'
 import { FavItemExtend } from './fav'
 import { DynamicFeedItem } from './pc-dynamic-feed'
 import { PcRecItem } from './pc-recommend'
 
-export { AppRecItem, AppRecommendJson } from './app-recommend'
 export { FavItem, FavItemExtend } from './fav'
 export { DynamicFeedItem, DynamicFeedJson } from './pc-dynamic-feed'
 export { PcRecItem, PcRecommendJson } from './pc-recommend'
@@ -12,20 +12,41 @@ export { WatchLaterItem, WatchLaterJson } from './watchlater'
 export { DmJson, PvideoJson }
 
 /**
+ * app
+ */
+
+// export { AppRecItem, AppRecommendJson } from './app-recommend.android'
+
+export type AndroidAppRecItem = android.AppRecItem
+export type IpadAppRecItem = ipad.AppRecItem
+
+export interface AndroidAppRecItemExtend extends AndroidAppRecItem {
+  uniqId: string
+  api: 'app'
+  device: 'android'
+}
+
+export interface IpadAppRecItemExtend extends ipad.AppRecItem {
+  uniqId: string
+  api: 'app'
+  device: 'ipad'
+}
+
+export type AppRecItem = AndroidAppRecItem | IpadAppRecItem
+export type AppRecItemExtend = AndroidAppRecItemExtend | IpadAppRecItemExtend
+export type AppRecommendJson = android.AppRecommendJson | ipad.AppRecommendJson
+
+/**
  * ItemExtend
  */
 
 export type RecItemType =
+  | AndroidAppRecItemExtend
+  | IpadAppRecItemExtend
   | PcRecItemExtend
-  | AppRecItemExtend
   | DynamicFeedItemExtend
   | WatchLaterItemExtend
   | FavItemExtend
-
-export interface AppRecItemExtend extends AppRecItem {
-  uniqId: string
-  api: 'app'
-}
 
 export interface PcRecItemExtend extends PcRecItem {
   uniqId: string

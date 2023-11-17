@@ -17,24 +17,16 @@ import { settings, useSettingsSnapshot } from '$settings'
 import { toast, toastOperationFail, toastRequestFail } from '$utility/toast'
 import { formatCount } from '$utility/video'
 import { css } from '@emotion/react'
-import {
-  useEventListener,
-  useGetState,
-  useHover,
-  useMemoizedFn,
-  useRafState,
-  useUnmountedRef,
-  useUpdateEffect,
-} from 'ahooks'
-import { Dropdown, MenuProps } from 'antd'
+import { useEventListener, useHover, useMemoizedFn, useUpdateEffect } from 'ahooks'
+import { Avatar, Dropdown, MenuProps } from 'antd'
 import cx from 'classnames'
 import delay from 'delay'
 import mitt, { Emitter } from 'mitt'
 import {
   CSSProperties,
   ComponentProps,
+  Fragment,
   MouseEvent,
-  RefObject,
   memo,
   useEffect,
   useMemo,
@@ -42,7 +34,7 @@ import {
   useState,
 } from 'react'
 import { PreviewImage } from './PreviewImage'
-import { AppRecIconSvgNameMap, statItemForId } from './app-rec-icon'
+import { AppRecIconScaleMap, AppRecIconSvgNameMap } from './app-rec-icon'
 import {
   VideoData,
   cancelDislike,
@@ -52,6 +44,7 @@ import {
 } from './card.service'
 import styles from './index.module.less'
 import { IVideoCardData, normalizeCardData } from './process/normalize'
+import { usePreviewAnimation } from './usePreviewAnimation'
 
 const toHttps = (url: string) => (url || '').replace(/^http:\/\//, 'https://')
 
@@ -139,29 +132,29 @@ export const VideoCard = memo(function VideoCard({
       className={cx('bili-video-card', styles.biliVideoCard, className)}
       {...restProps}
     >
-      {skeleton}
-      {!loading &&
-        item &&
-        cardData &&
-        (dislikedReason ? (
-          <DislikedCard
-            item={item as AppRecItemExtend}
-            emitter={emitter}
-            dislikedReason={dislikedReason!}
-          />
-        ) : blacklisted ? (
-          <BlacklistCard cardData={cardData} />
-        ) : (
-          <VideoCardInner
-            item={item}
-            cardData={cardData}
-            active={active}
-            emitter={emitter}
-            onRemoveCurrent={onRemoveCurrent}
-            onMoveToFirst={onMoveToFirst}
-            onRefresh={onRefresh}
-          />
-        ))}
+      {loading
+        ? skeleton
+        : item &&
+          cardData &&
+          (dislikedReason ? (
+            <DislikedCard
+              item={item as AppRecItemExtend}
+              emitter={emitter}
+              dislikedReason={dislikedReason!}
+            />
+          ) : blacklisted ? (
+            <BlacklistCard cardData={cardData} />
+          ) : (
+            <VideoCardInner
+              item={item}
+              cardData={cardData}
+              active={active}
+              emitter={emitter}
+              onRemoveCurrent={onRemoveCurrent}
+              onMoveToFirst={onMoveToFirst}
+              onRefresh={onRefresh}
+            />
+          ))}
     </div>
   )
 })
@@ -270,7 +263,9 @@ const VideoCardInner = memo(function VideoCardInner({
   const isWatchlater = item.api === 'watchlater'
   const isFav = item.api === 'fav'
 
-  const {
+  const { styleFancy } = useSettingsSnapshot()
+
+  let {
     // video
     avid,
     bvid,
@@ -278,6 +273,7 @@ const VideoCardInner = memo(function VideoCardInner({
     href,
     title,
     titleRender,
+    desc,
     coverRaw,
     pubdateDisplay,
     pubdateDisplayTitle,
@@ -292,6 +288,8 @@ const VideoCardInner = memo(function VideoCardInner({
     coin,
     danmaku,
     favorite,
+    bangumiFollow,
+    statItems,
 
     // author
     authorName,
@@ -475,7 +473,7 @@ const VideoCardInner = memo(function VideoCardInner({
   const _favoriteStr = useMemo(() => formatCount(favorite), [favorite])
   const favoriteStr = isPc ? likeStr : _favoriteStr
 
-  const statItem = ({
+  const makeStatItem = ({
     text,
     iconSvgName,
     iconSvgScale,
@@ -775,11 +773,22 @@ const VideoCardInner = memo(function VideoCardInner({
     updateFavFolderNames()
   })
 
+  // fallback to href
+  const authorHref = authorMid ? `https://space.bilibili.com/${authorMid}` : href
+
+  // firsr-line: title
+  // second-line: desc
+  // desc defaults to `author-name video-pub-date`
+  desc ||= `${authorName}${pubdateDisplay ? ` · ${pubdateDisplay}` : ''}`
+  const descTitle =
+    authorName && pubdateDisplayTitle ? `${authorName} · ${pubdateDisplayTitle}` : desc
+
   return (
     <div
       className='bili-video-card__wrap __scale-wrap'
       css={css`
         background-color: unset;
+        position: static;
       `}
     >
       <Dropdown
@@ -881,40 +890,40 @@ const VideoCardInner = memo(function VideoCardInner({
             >
               <div className='bili-video-card__stats'>
                 <div className='bili-video-card__stats--left'>
-                  {isPc ? (
+                  {statItems?.length ? (
+                    <>
+                      {statItems.map(({ field, value }) => (
+                        <Fragment key={field}>
+                          {makeStatItem({
+                            text: value,
+                            iconSvgName: AppRecIconSvgNameMap[field],
+                            iconSvgScale: AppRecIconScaleMap[field],
+                          })}
+                        </Fragment>
+                      ))}
+                    </>
+                  ) : isPc ? (
                     <>
                       {/* 播放 */}
-                      {statItem({ text: playStr, iconSvgName: AppRecIconSvgNameMap.play })}
+                      {makeStatItem({
+                        text: playStr || '',
+                        iconSvgName: AppRecIconSvgNameMap.play,
+                      })}
                       {/* 点赞 */}
-                      {statItem({
-                        text: goto === 'av' ? likeStr : favoriteStr,
+                      {makeStatItem({
+                        text: (goto === 'av' ? likeStr : favoriteStr) || '',
                         iconSvgName: AppRecIconSvgNameMap.like,
                       })}
-                    </>
-                  ) : isApp ? (
-                    <>
-                      {/* e.g 2023-09-17 */}
-                      {/* cover_left_1_content_description: "156点赞"
-                          cover_left_icon_1: 20
-                          cover_left_text_1: "156"
-                      */}
-                      {!!item.cover_left_text_1 &&
-                        statItem({
-                          ...statItemForId(item.cover_left_icon_1),
-                          text: item.cover_left_text_1,
-                        })}
-                      {!!item.cover_left_text_2 &&
-                        statItem({
-                          ...statItemForId(item.cover_left_icon_2),
-                          text: item.cover_left_text_2,
-                        })}
                     </>
                   ) : (
                     <>
                       {/* 播放 */}
-                      {statItem({ text: playStr, iconSvgName: AppRecIconSvgNameMap.play })}
+                      {makeStatItem({
+                        text: playStr || '',
+                        iconSvgName: AppRecIconSvgNameMap.play,
+                      })}
                       {/* 弹幕 */}
-                      {statItem({
+                      {makeStatItem({
                         text: (danmaku || 0).toString(),
                         iconSvgName: AppRecIconSvgNameMap.danmaku,
                       })}
@@ -933,251 +942,134 @@ const VideoCardInner = memo(function VideoCardInner({
         </a>
       </Dropdown>
 
-      <div className='bili-video-card__info __scale-disable'>
-        <div className='bili-video-card__info--right'>
-          <a
-            href={href}
-            target='_blank'
-            data-mod='partition_recommend'
-            data-idx='content'
-            data-ext='click'
-          >
-            <h3 className='bili-video-card__info--tit' title={title}>
-              {titleRender ?? title}
-            </h3>
-          </a>
-          <p className='bili-video-card__info--bottom'>
-            {isNormalVideo ? (
+      {!styleFancy ? (
+        <>
+          <div className='bili-video-card__info __scale-disable'>
+            <div className='bili-video-card__info--right'>
               <a
-                className='bili-video-card__info--owner'
-                href={`//space.bilibili.com/${authorMid}`}
+                href={href}
                 target='_blank'
                 data-mod='partition_recommend'
                 data-idx='content'
                 data-ext='click'
-                title={`${authorName} ${pubdateDisplayTitle || pubdateDisplay}`}
               >
-                {recommendReason ? (
-                  <span className={styles.recommendReason}>{recommendReason}</span>
-                ) : (
-                  <svg className='bili-video-card__info--owner__up'>
-                    <use href='#widget-up'></use>
-                  </svg>
-                )}
+                <h3 className='bili-video-card__info--tit' title={title}>
+                  {titleRender ?? title}
+                </h3>
+              </a>
+              <p className='bili-video-card__info--bottom'>
+                {isNormalVideo ? (
+                  <a
+                    className='bili-video-card__info--owner'
+                    href={authorHref}
+                    target='_blank'
+                    title={descTitle}
+                  >
+                    {recommendReason ? (
+                      <span className={styles.recommendReason}>{recommendReason}</span>
+                    ) : (
+                      <svg className='bili-video-card__info--owner__up'>
+                        <use href='#widget-up'></use>
+                      </svg>
+                    )}
+                    <span className='bili-video-card__info--author'>{desc}</span>
+                  </a>
+                ) : appBadge || appBadgeDesc ? (
+                  <a className='bili-video-card__info--owner' href={href} target='_blank'>
+                    <span className={styles.badge}>{appBadge || ''}</span>
+                    <span className={styles.bangumiDesc}>{appBadgeDesc || ''}</span>
+                  </a>
+                ) : null}
+              </p>
+            </div>
+          </div>
+        </>
+      ) : (
+        <>
+          <div
+            css={css`
+              display: flex;
+              margin-top: 15px;
+            `}
+          >
+            <a href={authorHref}>
+              {authorFace ? (
+                <Avatar src={authorFace} />
+              ) : (
+                <Avatar>{authorName?.[0] || appBadgeDesc?.[0] || ''}</Avatar>
+              )}
+            </a>
 
-                <span className='bili-video-card__info--author'>{authorName}</span>
-                {pubdateDisplay && (
-                  <span className='bili-video-card__info--date'>· {pubdateDisplay}</span>
-                )}
-              </a>
-            ) : appBadge || appBadgeDesc ? (
-              <a className='bili-video-card__info--owner' href={href} target='_blank'>
-                <span className={styles.badge}>{appBadge || ''}</span>
-                <span className={styles.bangumiDesc}>{appBadgeDesc || ''}</span>
-              </a>
-            ) : null}
-          </p>
-        </div>
-      </div>
+            <div
+              css={css`
+                flex: 1;
+                margin-left: 10px;
+              `}
+            >
+              <h3
+                title={title}
+                // className='bili-video-card__info--tit'
+                css={css`
+                  display: -webkit-box;
+                  -webkit-line-clamp: 2;
+                  -webkit-box-orient: vertical;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                  word-break: break-all;
+                  line-break: anywhere;
+
+                  color: var(--text1);
+                  font-size: var(--title-font-size);
+                  line-height: var(--title-line-height);
+                  /* min-height: 48px; */
+                `}
+              >
+                {titleRender ?? title}
+              </h3>
+
+              <div
+                css={css`
+                  margin-top: 4px;
+                  color: var(--text3);
+                  font-size: var(--subtitle-font-size);
+                `}
+              >
+                {isNormalVideo ? (
+                  <>
+                    <div>
+                      <a
+                        className='bili-video-card__info--owner'
+                        href={authorHref}
+                        target='_blank'
+                        title={descTitle}
+                      >
+                        <span className='bili-video-card__info--author'>{desc}</span>
+                      </a>
+                    </div>
+
+                    {!!recommendReason && (
+                      <div
+                        className={styles.recommendReason}
+                        css={css`
+                          padding-left: 0;
+                          margin-top: 4px;
+                        `}
+                      >
+                        {recommendReason}
+                      </div>
+                    )}
+                  </>
+                ) : appBadge || appBadgeDesc ? (
+                  <a className='bili-video-card__info--owner' href={href} target='_blank'>
+                    {!!appBadge && <span className={styles.badge}>{appBadge}</span>}
+                    {!!appBadgeDesc && <span className={styles.bangumiDesc}>{appBadgeDesc}</span>}
+                  </a>
+                ) : null}
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   )
 })
-
-/**
- * 自动以动画方式预览
- */
-
-function usePreviewAnimation({
-  bvid,
-  title,
-  autoPreviewWhenHover,
-  active,
-  tryFetchVideoData,
-  videoPreviewWrapperRef,
-}: {
-  bvid: string
-  title: string
-  autoPreviewWhenHover: boolean
-  active: boolean
-  tryFetchVideoData: () => Promise<void>
-  videoPreviewWrapperRef: RefObject<HTMLDivElement>
-}) {
-  const DEBUG_ANIMATION = process.env.NODE_ENV !== 'production' && false
-
-  const [previewAnimationProgress, setPreviewAnimationProgress] = useRafState<number | undefined>(
-    undefined
-  )
-
-  const [mouseMoved, setMouseMoved] = useState(false)
-
-  // 在 pvideodata 加载的时候, useHover 会有变化, so 使用 mouseenter/mouseleave 自己处理
-  const isHovering = useRef(false)
-  const startByHover = useRef(false)
-
-  useEventListener(
-    'mouseenter',
-    (e) => {
-      isHovering.current = true
-
-      if (autoPreviewWhenHover && !idRef.current) {
-        DEBUG_ANIMATION &&
-          console.log(
-            `[${APP_NAME}]: [animation] mouseenter onStartPreviewAnimation bvid=%s title=%s`,
-            bvid,
-            title
-          )
-        onStartPreviewAnimation(true)
-      }
-    },
-    { target: videoPreviewWrapperRef }
-  )
-  useEventListener(
-    'mouseleave',
-    (e) => {
-      isHovering.current = false
-    },
-    { target: videoPreviewWrapperRef }
-  )
-
-  useEventListener(
-    'mousemove',
-    (e: MouseEvent) => {
-      setMouseMoved(true)
-      if (!autoPreviewWhenHover) {
-        stopAnimation()
-      }
-    },
-    { target: videoPreviewWrapperRef }
-  )
-
-  const unmounted = useUnmountedRef()
-
-  // raf id
-  const idRef = useRef<number | undefined>(undefined)
-
-  // 停止动画
-  //  鼠标动了
-  //  不再 active
-  //  组件卸载了
-  const shouldStopAnimation = useMemoizedFn(() => {
-    if (unmounted.current) return true
-
-    // mixed keyboard & mouse control
-    if (autoPreviewWhenHover) {
-      if (startByHover.current) {
-        if (!isHovering.current) return true
-      } else {
-        if (!active) return true
-      }
-    }
-    // normal keyboard control
-    else {
-      if (!active) return true
-      if (mouseMoved) return true
-    }
-
-    return false
-  })
-
-  const stopAnimation = useMemoizedFn((isClear = false) => {
-    if (!isClear && DEBUG_ANIMATION) {
-      console.log(`[${APP_NAME}]: [animation] stopAnimation: %o`, {
-        autoPreviewWhenHover,
-        unmounted: unmounted.current,
-        isHovering: isHovering.current,
-        active,
-        mouseMoved,
-      })
-    }
-
-    if (idRef.current) cancelAnimationFrame(idRef.current)
-    idRef.current = undefined
-    setPreviewAnimationProgress(undefined)
-    setAnimationPaused(false)
-  })
-
-  const [animationPaused, setAnimationPaused, getAnimationPaused] = useGetState(false)
-
-  const resumeAnimationInner = useRef<(progress: number) => void>()
-
-  const onHotkeyPreviewAnimation = useMemoizedFn(() => {
-    // console.log('hotkey preview', animationPaused)
-
-    if (!idRef.current) {
-      onStartPreviewAnimation()
-      return
-    }
-
-    // toggle
-    setAnimationPaused((val) => !val)
-
-    if (animationPaused) {
-      // to resume
-      resumeAnimationInner.current?.(previewAnimationProgress || 0)
-    } else {
-      // to pause
-    }
-  })
-
-  const getProgress = useMemoizedFn(() => {
-    return previewAnimationProgress || 0
-  })
-
-  const onStartPreviewAnimation = useMemoizedFn((_startByHover = false) => {
-    startByHover.current = _startByHover
-    setMouseMoved(false)
-    setAnimationPaused(false)
-    tryFetchVideoData()
-    stopAnimation(true) // clear existing
-    setPreviewAnimationProgress((val) => (typeof val === 'undefined' ? 0 : val)) // get rid of undefined
-
-    // ms
-    const runDuration = 8e3
-    const updateProgressInterval = () =>
-      typeof settings.autoPreviewUpdateInterval === 'number'
-        ? settings.autoPreviewUpdateInterval
-        : 400
-
-    let start = performance.now()
-    let lastUpdateAt = 0
-
-    // 闭包这里获取不到最新 previewAnimationProgress
-    resumeAnimationInner.current = () => {
-      start = performance.now() - getProgress() * runDuration
-    }
-
-    function frame(t: number) {
-      // console.log('in raf run %s', t)
-
-      // 停止动画
-      if (shouldStopAnimation()) {
-        stopAnimation()
-        return
-      }
-
-      const update = () => {
-        const elapsed = performance.now() - start
-        const p = Math.min((elapsed % runDuration) / runDuration, 1)
-        // console.log('p', p)
-        setPreviewAnimationProgress(p)
-      }
-
-      if (!getAnimationPaused()) {
-        if (updateProgressInterval()) {
-          if (!lastUpdateAt || performance.now() - lastUpdateAt >= updateProgressInterval()) {
-            lastUpdateAt = performance.now()
-            update()
-          }
-        } else {
-          update()
-        }
-      }
-
-      idRef.current = requestAnimationFrame(frame)
-    }
-
-    idRef.current = requestAnimationFrame(frame)
-  })
-
-  return { onHotkeyPreviewAnimation, onStartPreviewAnimation, previewAnimationProgress }
-}

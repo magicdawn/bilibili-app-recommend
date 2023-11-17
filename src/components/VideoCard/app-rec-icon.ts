@@ -24,11 +24,14 @@ export const AppRecIconScaleMap: Partial<Record<keyof typeof AppRecIconSvgNameMa
   bangumiFollow: 1.3,
 }
 
-const getName = (id: number) => {
-  const key = AppRecIconMap[id] || AppRecIconMap[1] // 不认识的图标id, 使用 play
-  return AppRecIconSvgNameMap[key]
+export function getField(id: number) {
+  return AppRecIconMap[id] || AppRecIconMap[1] // 不认识的图标id, 使用 play
 }
-const getScale = (id: number) => {
+
+const getSvgName = (id: number) => {
+  return AppRecIconSvgNameMap[getField(id)]
+}
+const getSvgScale = (id: number) => {
   const key = AppRecIconMap[id] // 不认识的图标id, 使用 undefined
   if (!key) return
   return AppRecIconScaleMap[key]
@@ -36,7 +39,7 @@ const getScale = (id: number) => {
 
 export function statItemForId(id: number) {
   return {
-    iconSvgName: getName(id),
-    iconSvgScale: getScale(id),
+    iconSvgName: getSvgName(id),
+    iconSvgScale: getSvgScale(id),
   }
 }

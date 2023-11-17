@@ -2,8 +2,10 @@ import { APP_NAME } from '$common'
 import { AntdTooltip } from '$components/AntdApp'
 import { colorPrimaryValue } from '$components/ModalSettings/theme'
 import {
+  AndroidAppRecItemExtend,
   AppRecItemExtend,
   DynamicFeedItemExtend,
+  IpadAppRecItemExtend,
   PcRecItemExtend,
   RecItemType,
   WatchLaterItemExtend,
@@ -11,6 +13,7 @@ import {
 import { FavItemExtend } from '$define/fav'
 import { IconPark } from '$icon-park'
 import {
+  formatCount,
   formatDuration,
   formatTimeStamp,
   getVideoInvalidReason,
@@ -20,7 +23,9 @@ import {
 import { BvCode } from '@mgdn/bvid'
 import dayjs from 'dayjs'
 import { ReactNode } from 'react'
-import { AppRecIconField, AppRecIconMap } from '../app-rec-icon'
+import { AppRecIconField, AppRecIconMap, getField } from '../app-rec-icon'
+
+export type StatItemType = { field: AppRecIconField; value: string }
 
 export interface IVideoCardData {
   // video
@@ -29,6 +34,7 @@ export interface IVideoCardData {
   goto: string
   href: string
   title: string
+  desc?: string
   titleRender?: ReactNode
   coverRaw: string
   pubts?: number // unix timestamp
@@ -45,6 +51,8 @@ export interface IVideoCardData {
   coin?: number
   danmaku?: number
   favorite?: number
+  bangumiFollow?: number
+  statItems?: StatItemType[]
 
   // author
   authorName?: string
@@ -92,36 +100,11 @@ export function normalizeCardData(item: RecItemType) {
   })
 }
 
-export function apiPcAdapter(item: PcRecItemExtend): IVideoCardData {
-  return {
-    // video
-    avid: String(item.id),
-    bvid: item.bvid,
-    goto: item.goto,
-    href: item.goto === 'av' ? `/video/${item.bvid}/` : item.uri,
-    title: item.title,
-    coverRaw: item.pic,
-    pubts: item.pubdate,
-    pubdateDisplay: formatTimeStamp(item.pubdate),
-    duration: item.duration,
-    durationStr: formatDuration(item.duration),
-    recommendReason: item.rcmd_reason?.content,
-
-    // stat
-    play: item.stat.view,
-    like: item.stat.like,
-    coin: undefined,
-    danmaku: item.stat.danmaku,
-    favorite: undefined,
-
-    // author
-    authorName: item.owner.name,
-    authorFace: item.owner.face,
-    authorMid: String(item.owner.mid),
-  }
+export function apiAppAdapter(item: AppRecItemExtend): IVideoCardData {
+  return item.device === 'android' ? apiAndroidAppAdapter(item) : apiIpadAppAdapter(item)
 }
 
-export function apiAppAdapter(item: AppRecItemExtend): IVideoCardData {
+export function apiAndroidAppAdapter(item: AndroidAppRecItemExtend): IVideoCardData {
   const extractCountFor = (target: AppRecIconField) => {
     const { cover_left_icon_1, cover_left_text_1, cover_left_icon_2, cover_left_text_2 } = item
     if (cover_left_icon_1 && AppRecIconMap[cover_left_icon_1] === target) {
@@ -184,6 +167,22 @@ export function apiAppAdapter(item: AppRecItemExtend): IVideoCardData {
     coin: undefined,
     danmaku: extractCountFor('danmaku'),
     favorite: undefined,
+    bangumiFollow: extractCountFor('bangumiFollow'),
+
+    // e.g 2023-09-17
+    // cover_left_1_content_description: "156点赞"
+    // cover_left_icon_1: 20
+    // cover_left_text_1: "156"
+    statItems: [
+      item.cover_left_text_1 && {
+        field: getField(item.cover_left_icon_1),
+        value: item.cover_left_text_1,
+      },
+      item.cover_left_text_2 && {
+        field: getField(item.cover_left_icon_2),
+        value: item.cover_left_text_2,
+      },
+    ].filter(Boolean),
 
     // author
     authorName: item.args.up_name,
@@ -192,6 +191,140 @@ export function apiAppAdapter(item: AppRecItemExtend): IVideoCardData {
 
     appBadge: item.badge,
     appBadgeDesc: item.desc_button?.text || item.desc || '',
+  }
+}
+export function apiIpadAppAdapter(item: IpadAppRecItemExtend): IVideoCardData {
+  const extractCountFor = (target: AppRecIconField) => {
+    const { cover_left_text_1, cover_left_text_2, cover_left_text_3 } = item
+    const arr = [cover_left_text_1, cover_left_text_2, cover_left_text_3].filter(Boolean)
+    if (target === 'play') {
+      const text = arr.find((text) => /观看|播放$/.test(text))
+      if (!text) return
+      const rest = text.replace(/观看|播放$/, '')
+      return parseCount(rest)
+    }
+
+    if (target === 'danmaku') {
+      const text = arr.find((text) => /弹幕$/.test(text))
+      if (!text) return
+      const rest = text.replace(/弹幕$/, '')
+      return parseCount(rest)
+    }
+
+    if (target === 'bangumiFollow') {
+      const text = arr.find((text) => /追剧$/.test(text))
+      if (!text) return
+      const rest = text.replace(/追剧$/, '')
+      return parseCount(rest)
+    }
+  }
+
+  const avid = item.param
+  const bvid = item.bvid || BvCode.av2bv(Number(item.param))
+
+  const href = (() => {
+    // valid uri
+    if (item.uri.startsWith('http://') || item.uri.startsWith('https://')) {
+      return item.uri
+    }
+
+    // more see https://github.com/magicdawn/bilibili-app-recommend/issues/23#issuecomment-1533079590
+
+    if (item.goto === 'av') {
+      return `/video/${bvid}/`
+    }
+
+    if (item.goto === 'bangumi') {
+      console.warn(`[${APP_NAME}]: bangumi uri should not starts with 'bilibili://': %s`, item.uri)
+      return item.uri
+    }
+
+    // goto = picture, 可能是专栏 or 动态
+    // 动态的 url 是 https://t.bilibili.com, 使用 uri
+    // 专栏的 url 是 bilibili://article/<id>
+    if (item.goto === 'picture') {
+      const id = /^bilibili:\/\/article\/(\d+)$/.exec(item.uri)?.[1]
+      if (id) return `/read/cv${id}`
+      return item.uri
+    }
+
+    return item.uri
+  })()
+
+  // stat
+  const play = extractCountFor('play')
+  const like = undefined
+  const coin = undefined
+  const danmaku = extractCountFor('danmaku')
+  const favorite = undefined
+  const bangumiFollow = extractCountFor('bangumiFollow')
+  const statItems: StatItemType[] = [
+    { field: 'play', value: formatCount(play) || '' },
+    typeof danmaku === 'number'
+      ? { field: 'danmaku', value: formatCount(danmaku) || '' }
+      : { field: 'bangumiFollow', value: formatCount(bangumiFollow) || '' },
+  ]
+
+  return {
+    // video
+    avid,
+    bvid,
+    goto: item.goto,
+    href,
+    title: item.title,
+    desc: item.desc,
+    coverRaw: item.cover,
+    pubts: undefined,
+    pubdateDisplay: undefined,
+    duration: item.player_args?.duration || 0,
+    durationStr: formatDuration(item.player_args?.duration),
+    recommendReason: item.bottom_rcmd_reason || item.top_rcmd_reason, // TODO: top_rcmd_reason
+
+    // stat
+    play,
+    like,
+    coin,
+    danmaku,
+    favorite,
+    bangumiFollow,
+    statItems,
+
+    // author
+    authorName: item.args.up_name,
+    authorFace: item.avatar.cover,
+    authorMid: String(item.args.up_id!),
+
+    appBadge: item.cover_desc,
+    appBadgeDesc: item.desc,
+  }
+}
+
+export function apiPcAdapter(item: PcRecItemExtend): IVideoCardData {
+  return {
+    // video
+    avid: String(item.id),
+    bvid: item.bvid,
+    goto: item.goto,
+    href: item.goto === 'av' ? `/video/${item.bvid}/` : item.uri,
+    title: item.title,
+    coverRaw: item.pic,
+    pubts: item.pubdate,
+    pubdateDisplay: formatTimeStamp(item.pubdate),
+    duration: item.duration,
+    durationStr: formatDuration(item.duration),
+    recommendReason: item.rcmd_reason?.content,
+
+    // stat
+    play: item.stat.view,
+    like: item.stat.like,
+    coin: undefined,
+    danmaku: item.stat.danmaku,
+    favorite: undefined,
+
+    // author
+    authorName: item.owner.name,
+    authorFace: item.owner.face,
+    authorMid: String(item.owner.mid),
   }
 }
 

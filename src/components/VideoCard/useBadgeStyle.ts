@@ -16,11 +16,11 @@ color: rgb(255, 255, 255);
 border-color: rgba(255, 251, 158, 0.376);
  */
 
-import { Style } from '$define/app-recommend'
+import { android } from '$define/app-recommend.android'
 import { useIsDarkMode } from '$platform'
 import { CSSProperties } from 'react'
 
-export function useBadgeStyle(styleConfig?: Style) {
+export function useBadgeStyle(styleConfig?: android.Style) {
   const dark = useIsDarkMode()
 
   if (!styleConfig) return
