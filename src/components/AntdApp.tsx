@@ -8,7 +8,7 @@ import { colorPrimaryIdentifier, useCurrentTheme } from './ModalSettings/theme'
 
 export function AntdApp({
   children,
-  injectGlobalStyle = true,
+  injectGlobalStyle = false,
 }: {
   children: ReactNode
   injectGlobalStyle?: boolean
