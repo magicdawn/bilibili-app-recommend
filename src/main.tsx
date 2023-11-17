@@ -32,6 +32,8 @@ import { SectionRecommend } from './components/SectionRecommend'
 import { getIsInternalTesting, isSafari } from './platform'
 import { settings } from './settings'
 
+const isHashEntry = (location.hash || '').startsWith(`#/${APP_NAME}/`)
+
 void (function main() {
   if (location.pathname === '/' || location.pathname === '/index.html') {
     return initHomepage()
@@ -43,6 +45,11 @@ async function initHomepage() {
   tryToRemove('.adblock-tips')
   // 变灰
   tryAction('html.gray', (el) => el.classList.remove('gray'))
+
+  if (!isHashEntry && document.documentElement.classList.contains('bewly-design')) {
+    console.warn(`${APP_NAME}: quit for using bewly-design`)
+    return
+  }
 
   if (settings.pureRecommend) {
     return initHomepagePureRecommend()
@@ -140,20 +147,33 @@ async function initHomepagePureRecommend() {
     })
   }
 
+  let insertFn: ((reactContainer: HTMLElement) => void) | undefined
+  const header = document.querySelector('.bili-header')
+  if (header) {
+    insertFn = (reactContainer) => header.insertAdjacentElement('afterend', reactContainer)
+  } else {
+    if (isHashEntry) {
+      insertFn = (reactContainer) => document.body.appendChild(reactContainer)
+    }
+  }
+
+  if (!insertFn) {
+    console.error(`[${APP_NAME}]: init fail, no .bili-header found`)
+    return
+  }
+
   const biliLayout = document.createElement('div')
   biliLayout.classList.add(
     getIsInternalTesting() ? 'bili-feed4-layout' : 'bili-layout',
     'pure-recommend'
   )
+  insertFn(biliLayout)
 
-  const header = document.querySelector('.bili-header')
-  header?.insertAdjacentElement('afterend', biliLayout)
-
-  const recommendContainer = document.createElement('section')
-  biliLayout?.appendChild(recommendContainer)
+  const reactContainer = document.createElement('section')
+  biliLayout.appendChild(reactContainer)
 
   // react render
-  const root = createRoot(recommendContainer)
+  const root = createRoot(reactContainer)
   root.render(
     <AntdApp injectGlobalStyle>
       <PureRecommend />
