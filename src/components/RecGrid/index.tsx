@@ -69,6 +69,8 @@ export const CardClassNames = {
     border-color: ${colorPrimaryValue};
     border-radius: ${borderRadiusValue};
     overflow: hidden;
+    /* try here https://box-shadow.dev/ */
+    box-shadow: 0px 0px 9px 4px ${colorPrimaryValue};
   `,
 }
 
