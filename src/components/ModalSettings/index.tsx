@@ -18,7 +18,7 @@ import { shouldDisableShortcut } from '$utility/dom'
 import { toast } from '$utility/toast'
 import { css } from '@emotion/react'
 import { useKeyPress } from 'ahooks'
-import { Button, Checkbox, InputNumber, Popconfirm, Slider, Space, Tabs, Tag } from 'antd'
+import { Button, Checkbox, InputNumber, Popconfirm, Slider, Space, Switch, Tabs, Tag } from 'antd'
 import delay from 'delay'
 import { pick } from 'lodash'
 import styles from './index.module.less'
@@ -70,6 +70,7 @@ function useHotkeyForConfig(
 
 export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => void }) {
   const {
+    filterEnabled,
     filterMinPlayCount,
     filterMinPlayCountEnabled,
     filterMinDuration,
@@ -133,12 +134,22 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                           </>
                         }
                       />
+                      <Switch
+                        css={css`
+                          margin-left: 10px;
+                        `}
+                        checked={filterEnabled}
+                        onChange={(val) => {
+                          updateSettings({ filterEnabled: val })
+                        }}
+                      />
                     </div>
 
                     <div className={cx(styles.settingsGroupContent)}>
                       <div className={styles.settingsGroupSubTitle}>视频</div>
                       <div className={styles.row}>
                         <FlagSettingItem
+                          disabled={!filterEnabled}
                           configKey='filterMinPlayCountEnabled'
                           label='按播放量过滤'
                           tooltip={<>不显示播放量很少的视频</>}
@@ -149,7 +160,7 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                           step={1000}
                           value={filterMinPlayCount}
                           onChange={(val) => val && updateSettings({ filterMinPlayCount: val })}
-                          disabled={!filterMinPlayCountEnabled}
+                          disabled={!filterEnabled || !filterMinPlayCountEnabled}
                         />
                       </div>
                       <div className={styles.row} style={{ marginTop: 3 }}>
@@ -157,6 +168,7 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                           configKey='filterMinDurationEnabled'
                           label='按视频时长过滤'
                           tooltip={<>不显示短视频</>}
+                          disabled={!filterEnabled}
                         />
                         <InputNumber
                           style={{ width: 150 }}
@@ -166,7 +178,7 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                           addonAfter={'单位:秒'}
                           value={filterMinDuration}
                           onChange={(val) => val && updateSettings({ filterMinDuration: val })}
-                          disabled={!filterMinDurationEnabled}
+                          disabled={!filterEnabled || !filterMinDurationEnabled}
                         />
                       </div>
                       <FlagSettingItem
@@ -175,6 +187,7 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                         configKey='enableFilterForFollowedVideo'
                         label='对「已关注」的视频启用过滤'
                         tooltip={<>默认不过滤「已关注」</>}
+                        disabled={!filterEnabled}
                       />
 
                       <div className={styles.settingsGroupSubTitle}>图文</div>
@@ -183,10 +196,11 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                         configKey='filterOutGotoTypePicture'
                         label='启用图文(动态 & 专栏)过滤'
                         tooltip={<>过滤掉图文推荐</>}
+                        disabled={!filterEnabled}
                       />
                       <FlagSettingItem
                         className={styles.row}
-                        disabled={!filterOutGotoTypePicture}
+                        disabled={!filterEnabled || !filterOutGotoTypePicture}
                         configKey='enableFilterForFollowedPicture'
                         label='对「已关注」的图文启用过滤'
                         tooltip={<>默认不过滤「已关注」</>}

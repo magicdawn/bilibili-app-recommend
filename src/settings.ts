@@ -57,6 +57,8 @@ export const initialSettings = {
    * 使用 flat config 方便使用 FlagSettingItem
    */
 
+  filterEnabled: true,
+
   // 最少播放量
   filterMinPlayCountEnabled: false,
   filterMinPlayCount: 10000,

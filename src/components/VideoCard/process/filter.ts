@@ -6,9 +6,10 @@ import { normalizeCardData } from './normalize'
 export function anyFilterEnabled(tab: TabType) {
   return (
     tab === 'keep-follow-only' ||
-    settings.filterMinDurationEnabled ||
-    settings.filterMinPlayCountEnabled ||
-    settings.filterOutGotoTypePicture
+    (settings.filterEnabled &&
+      (settings.filterMinDurationEnabled ||
+        settings.filterMinPlayCountEnabled ||
+        settings.filterOutGotoTypePicture))
   )
 }
 
