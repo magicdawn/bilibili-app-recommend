@@ -167,18 +167,22 @@ export async function getData<T = any>(): Promise<T | undefined> {
   }
 }
 
-export async function setData<T = any>(data: T): Promise<boolean> {
-  const allDrafts = await listAll()
-  const draft = allDrafts.find((d) => d.title === APP_NAME)
+// cache aid for setData
+// a refresh is needed after manual delete article draft by bilibili dashboard
+let aid: string = ''
 
-  let aid: string = ''
-  if (!draft) {
-    // create new draft
-    const { success, aid: newDraftAid } = await addupdate({ title: APP_NAME })
-    if (!success) return false
-    aid = newDraftAid
-  } else {
-    aid = draft.id.toString()
+export async function setData<T = any>(data: T): Promise<boolean> {
+  if (!aid) {
+    const allDrafts = await listAll()
+    const draft = allDrafts.find((d) => d.title === APP_NAME)
+    if (!draft) {
+      // create new draft
+      const { success, aid: newDraftAid } = await addupdate({ title: APP_NAME })
+      if (!success) return false
+      aid = newDraftAid
+    } else {
+      aid = draft.id.toString()
+    }
   }
 
   const dataStr = JSON.stringify(data)
