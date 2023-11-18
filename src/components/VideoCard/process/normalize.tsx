@@ -299,9 +299,9 @@ export function apiIpadAppAdapter(item: IpadAppRecItemExtend): IVideoCardData {
     // author
     authorName: item.args.up_name,
     authorFace: item.avatar.cover,
-    authorMid: String(item.args.up_id!),
+    authorMid: String(item.args.up_id || ''),
 
-    appBadge: item.cover_desc,
+    appBadge: item.cover_badge,
     appBadgeDesc: item.desc,
   }
 }

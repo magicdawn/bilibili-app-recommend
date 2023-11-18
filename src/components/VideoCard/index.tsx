@@ -971,70 +971,72 @@ const VideoCardInner = memo(function VideoCardInner({
         </a>
       </Dropdown>
 
-      {!styleFancy ? (
-        <>
-          <div className='bili-video-card__info __scale-disable'>
-            <div className='bili-video-card__info--right'>
-              <a
-                href={href}
-                target='_blank'
-                data-mod='partition_recommend'
-                data-idx='content'
-                data-ext='click'
-              >
-                <h3 className='bili-video-card__info--tit' title={title}>
-                  {titleRender ?? title}
-                </h3>
-              </a>
-              <p className='bili-video-card__info--bottom'>
-                {isNormalVideo ? (
-                  <a
-                    className='bili-video-card__info--owner'
-                    href={authorHref}
-                    target='_blank'
-                    title={descTitle}
-                  >
-                    {recommendReason ? (
-                      <span className={styles.recommendReason}>{recommendReason}</span>
-                    ) : (
-                      <svg className='bili-video-card__info--owner__up'>
-                        <use href='#widget-up'></use>
-                      </svg>
-                    )}
-                    <span className='bili-video-card__info--author'>{desc}</span>
-                  </a>
-                ) : appBadge || appBadgeDesc ? (
-                  <a className='bili-video-card__info--owner' href={href} target='_blank'>
-                    <span className={styles.badge}>{appBadge || ''}</span>
-                    <span className={styles.bangumiDesc}>{appBadgeDesc || ''}</span>
-                  </a>
-                ) : null}
-              </p>
-            </div>
+      {/* old, same as bilibili default */}
+      {!styleFancy && (
+        <div className='bili-video-card__info __scale-disable'>
+          <div className='bili-video-card__info--right'>
+            <a
+              href={href}
+              target='_blank'
+              data-mod='partition_recommend'
+              data-idx='content'
+              data-ext='click'
+            >
+              <h3 className='bili-video-card__info--tit' title={title}>
+                {titleRender ?? title}
+              </h3>
+            </a>
+            <p className='bili-video-card__info--bottom'>
+              {isNormalVideo ? (
+                <a
+                  className='bili-video-card__info--owner'
+                  href={authorHref}
+                  target='_blank'
+                  title={descTitle}
+                >
+                  {recommendReason ? (
+                    <span className={styles.recommendReason}>{recommendReason}</span>
+                  ) : (
+                    <svg className='bili-video-card__info--owner__up'>
+                      <use href='#widget-up'></use>
+                    </svg>
+                  )}
+                  <span className='bili-video-card__info--author'>{desc}</span>
+                </a>
+              ) : appBadge || appBadgeDesc ? (
+                <a className='bili-video-card__info--owner' href={href} target='_blank'>
+                  <span className={styles.badge}>{appBadge || ''}</span>
+                  <span className={styles.bangumiDesc}>{appBadgeDesc || ''}</span>
+                </a>
+              ) : null}
+            </p>
           </div>
-        </>
-      ) : (
-        <>
+        </div>
+      )}
+
+      {/* new, not so crowded */}
+      {styleFancy && (
+        <div
+          css={css`
+            display: flex;
+            margin-top: 15px;
+          `}
+        >
+          <a href={authorHref} target='_blank'>
+            {authorFace ? (
+              <Avatar src={authorFace} />
+            ) : (
+              <Avatar>{authorName?.[0] || appBadgeDesc?.[0] || ''}</Avatar>
+            )}
+          </a>
+
           <div
             css={css`
-              display: flex;
-              margin-top: 15px;
+              flex: 1;
+              margin-left: 10px;
             `}
           >
-            <a href={authorHref}>
-              {authorFace ? (
-                <Avatar src={authorFace} />
-              ) : (
-                <Avatar>{authorName?.[0] || appBadgeDesc?.[0] || ''}</Avatar>
-              )}
-            </a>
-
-            <div
-              css={css`
-                flex: 1;
-                margin-left: 10px;
-              `}
-            >
+            <a href={href} target='_blank'>
               <h3
                 title={title}
                 // className='bili-video-card__info--tit'
@@ -1055,49 +1057,53 @@ const VideoCardInner = memo(function VideoCardInner({
               >
                 {titleRender ?? title}
               </h3>
+            </a>
 
-              <div
-                css={css`
-                  margin-top: 4px;
-                  color: var(--text3);
-                  font-size: var(--subtitle-font-size);
-                `}
-              >
-                {isNormalVideo ? (
-                  <>
-                    <div>
-                      <a
-                        className='bili-video-card__info--owner'
-                        href={authorHref}
-                        target='_blank'
-                        title={descTitle}
-                      >
-                        <span className='bili-video-card__info--author'>{desc}</span>
-                      </a>
+            <div
+              css={css`
+                margin-top: 4px;
+                color: var(--text3);
+                font-size: var(--subtitle-font-size);
+              `}
+            >
+              {isNormalVideo ? (
+                <>
+                  <div
+                    css={css`
+                      display: flex;
+                      align-items: center;
+                    `}
+                  >
+                    <a
+                      className='bili-video-card__info--owner'
+                      href={authorHref}
+                      target='_blank'
+                      title={descTitle}
+                    >
+                      <span className='bili-video-card__info--author'>{desc}</span>
+                    </a>
+                  </div>
+                  {!!recommendReason && (
+                    <div
+                      className={styles.recommendReason}
+                      css={css`
+                        margin-top: 4px;
+                        padding-left: 0;
+                      `}
+                    >
+                      {recommendReason}
                     </div>
-
-                    {!!recommendReason && (
-                      <div
-                        className={styles.recommendReason}
-                        css={css`
-                          padding-left: 0;
-                          margin-top: 4px;
-                        `}
-                      >
-                        {recommendReason}
-                      </div>
-                    )}
-                  </>
-                ) : appBadge || appBadgeDesc ? (
-                  <a className='bili-video-card__info--owner' href={href} target='_blank'>
-                    {!!appBadge && <span className={styles.badge}>{appBadge}</span>}
-                    {!!appBadgeDesc && <span className={styles.bangumiDesc}>{appBadgeDesc}</span>}
-                  </a>
-                ) : null}
-              </div>
+                  )}
+                </>
+              ) : appBadge || appBadgeDesc ? (
+                <a className='bili-video-card__info--owner' href={href} target='_blank'>
+                  {!!appBadge && <span className={styles.badge}>{appBadge}</span>}
+                  {!!appBadgeDesc && <span className={styles.bangumiDesc}>{appBadgeDesc}</span>}
+                </a>
+              ) : null}
             </div>
           </div>
-        </>
+        </div>
       )}
     </div>
   )

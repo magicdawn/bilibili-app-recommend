@@ -52,7 +52,7 @@ export namespace ipad {
     param: string
     bvid?: string
     cover: string
-    cover_desc?: string
+    cover_badge?: string
     title: string
     uri: string
     three_point: ThreePoint
