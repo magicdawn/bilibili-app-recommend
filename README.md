@@ -46,11 +46,16 @@
 - macOS Safari: [Userscripts](https://itunes.apple.com/us/app/userscripts/id1463298887), iPad Safari 上也可以使用
 - _**不支持**_ macOS Safari + TamperMonkey. (收费 Safari 插件, 已知不兼容, 请使用上述开源免费的 Userscripts
 
-### 与 Bilibili-Evolved 的兼容性
+### 与 [Bilibili-Evolved](https://github.com/the1812/Bilibili-Evolved) 的兼容性
 
 - ❌ 首页相关 (如清爽首页 / 极简首页
 - [x] 夜间模式
 - [x] 自定义顶栏
+
+### 与 [BewlyBewly](https://github.com/hakadao/BewlyBewly) 兼容性
+
+- 启用插件后, 在 https://www.bilibili.com/ 页面上, 本脚本检测到该 Extension 会自动退出.
+- 使用特殊的地址强制启用本脚本 https://www.bilibili.com/#/bilibili-app-recommend/
 
 ### 你可能不需要这个脚本 :)
 
