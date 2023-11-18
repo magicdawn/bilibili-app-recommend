@@ -8,11 +8,7 @@
 ## Todo
 
 - [ ] 弹幕预览
-- filter switch
-- skeleton with avatar
-- 键盘 active box-shadow
 - modal antd
--
 
 ## 实现细节
 
