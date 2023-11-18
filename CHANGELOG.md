@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.18.4
+
+- 53b4d2f chore: rm completed todo items
+- 0acc616 chore: style tweaks
+- 6e3010d feat: skeleton with avatar
+- 1aac1aa feat: active box-shadow
+- c65fb3d fix: update deps & fix mixed content caused by avatar http url
+- 1702462 feat: add filterEnabled switch like a valve
+- e1ab51b chore: add special hash entry comment
+- b6511bd feat: try using bewly chrome-ext & userscript both
+- b22f4f2 feat: app recommend api use ipad device to get large_cover_v1 card
+- ef703cf fix boolean default typo
+- a852f9d feat: fancy style
+
 ## v0.18.3
 
 - fix quick fav, default using folder selection influenced by exclude fav folder issue
