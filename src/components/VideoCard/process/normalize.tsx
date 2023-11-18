@@ -12,6 +12,7 @@ import {
 } from '$define'
 import { FavItemExtend } from '$define/fav'
 import { IconPark } from '$icon-park'
+import { toHttps } from '$utility'
 import {
   formatCount,
   formatDuration,
@@ -36,7 +37,7 @@ export interface IVideoCardData {
   title: string
   desc?: string
   titleRender?: ReactNode
-  coverRaw: string
+  cover: string
   pubts?: number // unix timestamp
   pubdateDisplay?: string // for display
   pubdateDisplayTitle?: string
@@ -91,13 +92,19 @@ export function lookinto<T>(
 }
 
 export function normalizeCardData(item: RecItemType) {
-  return lookinto<IVideoCardData>(item, {
+  const ret = lookinto<IVideoCardData>(item, {
     pc: apiPcAdapter,
     app: apiAppAdapter,
     dynamic: apiDynamicAdapter,
     watchlater: apiWatchLaterAdapter,
     fav: apiFavAdapter,
   })
+
+  // handle mixed content
+  if (ret.authorFace) ret.authorFace = toHttps(ret.authorFace)
+  ret.cover = toHttps(ret.cover)
+
+  return ret
 }
 
 export function apiAppAdapter(item: AppRecItemExtend): IVideoCardData {
@@ -154,7 +161,7 @@ export function apiAndroidAppAdapter(item: AndroidAppRecItemExtend): IVideoCardD
     goto: item.goto,
     href,
     title: item.title,
-    coverRaw: item.cover,
+    cover: item.cover,
     pubts: undefined,
     pubdateDisplay: undefined,
     duration: item.player_args?.duration || 0,
@@ -273,7 +280,7 @@ export function apiIpadAppAdapter(item: IpadAppRecItemExtend): IVideoCardData {
     href,
     title: item.title,
     desc: item.desc,
-    coverRaw: item.cover,
+    cover: item.cover,
     pubts: undefined,
     pubdateDisplay: undefined,
     duration: item.player_args?.duration || 0,
@@ -307,7 +314,7 @@ export function apiPcAdapter(item: PcRecItemExtend): IVideoCardData {
     goto: item.goto,
     href: item.goto === 'av' ? `/video/${item.bvid}/` : item.uri,
     title: item.title,
-    coverRaw: item.pic,
+    cover: item.pic,
     pubts: item.pubdate,
     pubdateDisplay: formatTimeStamp(item.pubdate),
     duration: item.duration,
@@ -349,7 +356,7 @@ export function apiDynamicAdapter(item: DynamicFeedItemExtend): IVideoCardData {
     goto: 'av',
     href: `/video/${v.bvid}/`,
     title: v.title,
-    coverRaw: v.cover,
+    cover: v.cover,
     pubts: author.pub_ts,
     pubdateDisplay,
     duration: parseDuration(v.duration_text) || 0,
@@ -394,7 +401,7 @@ export function apiWatchLaterAdapter(item: WatchLaterItemExtend): IVideoCardData
     href: item.uri,
     title,
     titleRender,
-    coverRaw: item.pic,
+    cover: item.pic,
     pubts: item.pubdate,
     pubdateDisplay: formatTimeStamp(item.pubdate),
     pubdateDisplayTitle: `${formatTimeStamp(item.pubdate, true)} 发布, ${formatTimeStamp(
@@ -447,7 +454,7 @@ export function apiFavAdapter(item: FavItemExtend): IVideoCardData {
         {item.folder.title}】· {item.title}
       </>
     ),
-    coverRaw: item.cover,
+    cover: item.cover,
     pubts: item.pubtime,
     pubdateDisplay: formatTimeStamp(item.pubtime),
     duration: item.duration,

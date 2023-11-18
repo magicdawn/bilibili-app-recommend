@@ -46,8 +46,6 @@ import styles from './index.module.less'
 import { IVideoCardData, normalizeCardData } from './process/normalize'
 import { usePreviewAnimation } from './usePreviewAnimation'
 
-const toHttps = (url: string) => (url || '').replace(/^http:\/\//, 'https://')
-
 function copyContent(content: string) {
   GM.setClipboard(content)
   toast(`已复制: ${content}`)
@@ -274,7 +272,7 @@ const VideoCardInner = memo(function VideoCardInner({
     title,
     titleRender,
     desc,
-    coverRaw,
+    cover,
     pubdateDisplay,
     pubdateDisplayTitle,
     duration,
@@ -309,7 +307,6 @@ const VideoCardInner = memo(function VideoCardInner({
   /**
    * transformed
    */
-  const cover = useMemo(() => toHttps(coverRaw), [coverRaw])
 
   const [videoData, setVideoData] = useState<VideoData | null>(null)
   const isFetchingVideoData = useRef(false)
