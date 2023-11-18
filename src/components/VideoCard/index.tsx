@@ -102,24 +102,6 @@ export const VideoCard = memo(function VideoCard({
   // false when item provided
   loading = loading ?? !item
 
-  const skeleton = (
-    <div
-      className={cx('bili-video-card__skeleton', {
-        hide: !loading,
-        [styles.skeletonActive]: loading,
-      })}
-    >
-      <div className='bili-video-card__skeleton--cover' style={borderRadiusStyle} />
-      <div className='bili-video-card__skeleton--info'>
-        <div className='bili-video-card__skeleton--right'>
-          <p className='bili-video-card__skeleton--text'></p>
-          <p className='bili-video-card__skeleton--text short'></p>
-          <p className='bili-video-card__skeleton--light'></p>
-        </div>
-      </div>
-    </div>
-  )
-
   const dislikedReason = useDislikedReason(item?.api === 'app' && item.param)
   const cardData = useMemo(() => item && normalizeCardData(item), [item])
   const blacklisted = useInBlacklist(cardData?.authorMid)
@@ -130,29 +112,79 @@ export const VideoCard = memo(function VideoCard({
       className={cx('bili-video-card', styles.biliVideoCard, className)}
       {...restProps}
     >
-      {loading
-        ? skeleton
-        : item &&
-          cardData &&
-          (dislikedReason ? (
-            <DislikedCard
-              item={item as AppRecItemExtend}
-              emitter={emitter}
-              dislikedReason={dislikedReason!}
-            />
-          ) : blacklisted ? (
-            <BlacklistCard cardData={cardData} />
-          ) : (
-            <VideoCardInner
-              item={item}
-              cardData={cardData}
-              active={active}
-              emitter={emitter}
-              onRemoveCurrent={onRemoveCurrent}
-              onMoveToFirst={onMoveToFirst}
-              onRefresh={onRefresh}
-            />
-          ))}
+      {loading ? (
+        <SkeletonCard loading={loading} />
+      ) : (
+        item &&
+        cardData &&
+        (dislikedReason ? (
+          <DislikedCard
+            item={item as AppRecItemExtend}
+            emitter={emitter}
+            dislikedReason={dislikedReason!}
+          />
+        ) : blacklisted ? (
+          <BlacklistCard cardData={cardData} />
+        ) : (
+          <VideoCardInner
+            item={item}
+            cardData={cardData}
+            active={active}
+            emitter={emitter}
+            onRemoveCurrent={onRemoveCurrent}
+            onMoveToFirst={onMoveToFirst}
+            onRefresh={onRefresh}
+          />
+        ))
+      )}
+    </div>
+  )
+})
+
+const SkeletonCard = memo(function SkeletonCard({ loading }: { loading: boolean }) {
+  const { styleFancy } = useSettingsSnapshot()
+
+  return (
+    <div
+      className={cx('bili-video-card__skeleton', {
+        hide: !loading,
+        [styles.skeletonActive]: loading,
+      })}
+    >
+      <div className='bili-video-card__skeleton--cover' style={borderRadiusStyle} />
+
+      {!styleFancy && (
+        <div className='bili-video-card__skeleton--info'>
+          <div className='bili-video-card__skeleton--right'>
+            <p className='bili-video-card__skeleton--text'></p>
+            <p className='bili-video-card__skeleton--text short'></p>
+            <p className='bili-video-card__skeleton--light'></p>
+          </div>
+        </div>
+      )}
+      {styleFancy && (
+        <div className='bili-video-card__skeleton--info'>
+          <div
+            className='bili-video-card__skeleton--avatar'
+            css={css`
+              width: 32px;
+              height: 32px;
+              border-radius: 50%;
+            `}
+          />
+          <div
+            className='bili-video-card__skeleton--right'
+            css={css`
+              flex: 1;
+              margin-left: 10px;
+            `}
+          >
+            <p className='bili-video-card__skeleton--text'></p>
+            <p className='bili-video-card__skeleton--text short'></p>
+            <p className='bili-video-card__skeleton--light'></p>
+          </div>
+        </div>
+      )}
     </div>
   )
 })
