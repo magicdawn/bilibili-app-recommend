@@ -2,6 +2,7 @@
 
 ## v0.18.4
 
+- 17c7ef3 Optimize article draft setData
 - 53b4d2f chore: rm completed todo items
 - 0acc616 chore: style tweaks
 - 6e3010d feat: skeleton with avatar
