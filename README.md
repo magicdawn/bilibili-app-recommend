@@ -52,9 +52,9 @@
 - [x] 夜间模式
 - [x] 自定义顶栏
 
-### 与 [BewlyBewly](https://github.com/hakadao/BewlyBewly) 兼容性
+### 与 [BewlyBewly](https://github.com/hakadao/BewlyBewly) 的兼容性
 
-- 启用插件后, 在 https://www.bilibili.com/ 页面上, 本脚本检测到该 Extension 会自动退出.
+- 启用 Extension 后, 在 https://www.bilibili.com/ 页面上, 本脚本检测到该 Extension 会自动退出.
 - 使用特殊的地址强制启用本脚本 https://www.bilibili.com/#/bilibili-app-recommend/
 
 ### 你可能不需要这个脚本 :)
