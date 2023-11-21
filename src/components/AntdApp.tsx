@@ -5,8 +5,7 @@ import { ConfigProvider, Tooltip, theme } from 'antd'
 import zhCN from 'antd/locale/zh_CN'
 import { LazyMotion, domAnimation } from 'framer-motion'
 import { ComponentProps, ReactNode } from 'react'
-import { useCurrentTheme } from './ModalSettings/index.shared'
-import { colorPrimaryIdentifier } from './ModalSettings/theme.shared'
+import { colorPrimaryIdentifier, useCurrentTheme } from './ModalSettings/theme.shared'
 
 export function AntdApp({
   children,

@@ -136,6 +136,7 @@ export function getCurrentTheme() {
   }
   return theme
 }
+
 /**
  * react hook
  */
