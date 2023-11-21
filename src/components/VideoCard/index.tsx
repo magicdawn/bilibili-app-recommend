@@ -17,10 +17,11 @@ import { settings, useSettingsSnapshot } from '$settings'
 import { toast, toastOperationFail, toastRequestFail } from '$utility/toast'
 import { formatCount } from '$utility/video'
 import { css } from '@emotion/react'
-import { useEventListener, useHover, useMemoizedFn, useUpdateEffect } from 'ahooks'
+import { useEventListener, useHover, useMemoizedFn, usePrevious, useUpdateEffect } from 'ahooks'
 import { Avatar, Dropdown, MenuProps } from 'antd'
 import cx from 'classnames'
 import delay from 'delay'
+import { m } from 'framer-motion'
 import mitt, { Emitter } from 'mitt'
 import {
   CSSProperties,
@@ -412,6 +413,7 @@ const VideoCardInner = memo(function VideoCardInner({
 
   // watchLater added
   const watchLaterAdded = useWatchLaterState(bvid)
+  const watchLaterAddedPrevious = usePrevious(watchLaterAdd)
 
   const { accessKey } = useSettingsSnapshot()
   const authed = Boolean(accessKey)
@@ -880,9 +882,28 @@ const VideoCardInner = memo(function VideoCardInner({
                   ref={watchLaterRef}
                   onClick={onToggleWatchLater}
                 >
-                  <svg className='bili-watch-later__icon'>
-                    <use href={watchLaterAdded ? '#widget-watch-save' : '#widget-watch-later'} />
-                  </svg>
+                  {watchLaterAdded ? (
+                    <svg className='bili-watch-later__icon' viewBox='0 0 200 200'>
+                      <m.path
+                        d='M25,100 l48,48 a 8.5,8.5 0 0 0 10,0 l90,-90'
+                        strokeWidth='20'
+                        stroke='currentColor'
+                        fill='transparent'
+                        strokeLinecap='round'
+                        {...(!watchLaterAddedPrevious
+                          ? {
+                              initial: { pathLength: 0 },
+                              animate: { pathLength: 1 },
+                            }
+                          : undefined)}
+                      />
+                    </svg>
+                  ) : (
+                    <svg className='bili-watch-later__icon'>
+                      <use href={'#widget-watch-later'} />
+                    </svg>
+                  )}
+                  {/* <use href={watchLaterAdded ? '#widget-watch-save' : '#widget-watch-later'} /> */}
                   <span
                     className='bili-watch-later__tip'
                     style={{ display: isWatchLaterHovering ? 'block' : 'none' }}
