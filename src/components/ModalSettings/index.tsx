@@ -22,6 +22,7 @@ import { Button, Checkbox, InputNumber, Popconfirm, Slider, Space, Switch, Tabs,
 import delay from 'delay'
 import { pick } from 'lodash'
 import styles from './index.module.less'
+import { set_HAS_RESTORED_SETTINGS } from './index.shared'
 import { ThemesSelect } from './theme'
 
 async function toastAndReload() {
@@ -35,8 +36,6 @@ function onResetSettings() {
   return toastAndReload()
 }
 
-export let HAS_RESTORED_SETTINGS = false
-
 async function onRestoreSettings() {
   const remoteSettings = await getData()
   const pickedSettings = pick(remoteSettings || {}, allowedSettingsKeys)
@@ -46,7 +45,7 @@ async function onRestoreSettings() {
     return toast('备份不存在或没有有效的配置')
   }
 
-  HAS_RESTORED_SETTINGS = true
+  set_HAS_RESTORED_SETTINGS(true)
   updateSettings({ ...pickedSettings })
   return toastAndReload()
 }

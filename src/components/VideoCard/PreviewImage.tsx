@@ -1,4 +1,4 @@
-import { colorPrimaryValue } from '$components/ModalSettings/theme'
+import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import { PvideoData } from '$define'
 import { cx } from '$libs'
 import { useMount, useMouse } from 'ahooks'

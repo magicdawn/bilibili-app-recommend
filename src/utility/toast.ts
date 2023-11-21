@@ -1,4 +1,4 @@
-import { colorPrimaryValue } from '$components/ModalSettings/theme'
+import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import { css } from '@emotion/css'
 
 const toastContainer = css`

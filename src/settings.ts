@@ -1,6 +1,6 @@
 import { APP_NAME, baseDebug } from '$common'
-import { HAS_RESTORED_SETTINGS } from '$components/ModalSettings'
-import { TabType } from '$components/RecHeader/tab'
+import { HAS_RESTORED_SETTINGS } from '$components/ModalSettings/index.shared'
+import type { TabType } from '$components/RecHeader/tab'
 import { setData } from '$service/user/article-draft'
 import { omit, pick, throttle } from 'lodash'
 import ms from 'ms'

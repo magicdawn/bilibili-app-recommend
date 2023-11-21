@@ -1,4 +1,4 @@
-import { colorPrimaryValue } from '$components/ModalSettings/theme'
+import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import { RecGrid, RecGridRef } from '$components/RecGrid'
 import { OnRefresh, OnRefreshContext } from '$components/RecGrid/useRefresh'
 import { RefreshButton } from '$components/RecHeader'

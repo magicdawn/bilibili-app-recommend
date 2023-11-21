@@ -1,6 +1,6 @@
 import { APP_NAME } from '$common'
 import { AntdTooltip } from '$components/AntdApp'
-import { colorPrimaryValue } from '$components/ModalSettings/theme'
+import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import {
   AndroidAppRecItemExtend,
   AppRecItemExtend,

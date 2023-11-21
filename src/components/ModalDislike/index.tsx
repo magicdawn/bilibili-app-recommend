@@ -1,5 +1,5 @@
 import { BaseModal, BaseModalClass, ModalClose } from '$components/BaseModal'
-import { colorPrimaryValue } from '$components/ModalSettings/theme'
+import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import { AppRecItem, AppRecItemExtend } from '$define'
 import { IconPark } from '$icon-park'
 import { cx } from '$libs'

@@ -1,7 +1,7 @@
 import { APP_KEY_PREFIX, APP_NAME } from '$common'
 import { useMittOn } from '$common/hooks/useMitt'
 import { Reason, dislikedIds, showModalDislike, useDislikedReason } from '$components/ModalDislike'
-import { colorPrimaryValue } from '$components/ModalSettings/theme'
+import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import { OnRefresh } from '$components/RecGrid/useRefresh'
 import { useCurrentSourceTab } from '$components/RecHeader/tab'
 import { AppRecItem, AppRecItemExtend, RecItemType } from '$define'
@@ -44,6 +44,7 @@ import {
   watchLaterDel,
 } from './card.service'
 import styles from './index.module.less'
+import { borderRadiusStyle } from './index.shared'
 import { IVideoCardData, normalizeCardData } from './process/normalize'
 import { usePreviewAnimation } from './usePreviewAnimation'
 
@@ -79,12 +80,6 @@ export type VideoCardProps = {
   onRefresh?: OnRefresh
   emitter?: VideoCardEmitter
 } & ComponentProps<'div'>
-
-export const borderRadiusIdentifier = '--video-card-border-radius'
-export const borderRadiusValue = `var(${borderRadiusIdentifier})`
-export const borderRadiusStyle: CSSProperties = {
-  borderRadius: borderRadiusValue,
-}
 
 export const VideoCard = memo(function VideoCard({
   style,

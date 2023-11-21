@@ -4,14 +4,10 @@
 
 import { APP_NAME, baseDebug } from '$common'
 import { useModalDislikeVisible } from '$components/ModalDislike'
-import { colorPrimaryValue } from '$components/ModalSettings/theme'
+import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import { useCurrentSourceTab } from '$components/RecHeader/tab'
-import {
-  VideoCard,
-  VideoCardEmitter,
-  VideoCardEvents,
-  borderRadiusValue,
-} from '$components/VideoCard'
+import { VideoCard, VideoCardEmitter, VideoCardEvents } from '$components/VideoCard'
+import { borderRadiusValue } from '$components/VideoCard/index.shared'
 import { IVideoCardData } from '$components/VideoCard/process/normalize'
 import { RecItemType } from '$define'
 import { getHeaderHeight } from '$header'
