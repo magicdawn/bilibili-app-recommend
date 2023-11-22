@@ -16,8 +16,7 @@
 - [x] API 切换
 - [x] IINA
 - [x] 主题设置(预设主题 + color-picker 自定义)
-- [x] 已关注 Tab
-- [x] 动态 / 稍后再看 / 收藏 Tab
+- [x] 已关注 / 动态 / 稍后再看 / 收藏 Tab
 
 ## 链接
 
@@ -48,9 +47,9 @@
 
 ### 与 [Bilibili-Evolved](https://github.com/the1812/Bilibili-Evolved) 的兼容性
 
-- ❌ 首页相关 (如清爽首页 / 极简首页
-- [x] 夜间模式
-- [x] 自定义顶栏
+- ❌ 首页相关 (如清爽首页 / 极简首页)
+- ✅ 夜间模式
+- ✅ 自定义顶栏
 
 ### 与 [BewlyBewly](https://github.com/hakadao/BewlyBewly) 的兼容性
 
