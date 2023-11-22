@@ -6,6 +6,7 @@
  * http://www.apache.org/licenses/
  */
 
+import { verticalAlignStyle } from '$common/emotion-css'
 import { HelpInfo } from '$components/piece'
 import { updateSettings, useSettingsSnapshot } from '$settings'
 import { css } from '@emotion/react'
@@ -55,10 +56,10 @@ export function ThemesSelect() {
                   <div
                     className='preview'
                     css={css`
-                      width: 100%;
-                      height: 100%;
+                      aspect-ratio: 1;
+                      width: 42px;
                       background-color: ${isCustom ? customColorHex : t.colorPrimary};
-                      border-radius: 5px;
+                      border-radius: 6px;
                     `}
                   />
                 )
@@ -68,13 +69,13 @@ export function ThemesSelect() {
                     className='preview-wrapper'
                     css={[
                       css`
+                        aspect-ratio: 1;
                         width: 50px;
-                        height: 50px;
-                        padding: 3px;
                         border: 2px solid transparent;
-                        border-radius: 5px;
+                        border-radius: 6px;
                         margin: 0 auto;
                       `,
+                      verticalAlignStyle,
                       isActive &&
                         css`
                           border-color: ${t.colorPrimary};

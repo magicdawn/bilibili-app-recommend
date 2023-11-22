@@ -227,7 +227,7 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                             <>
                               增加卡片大小, 增大卡片间距
                               <br />
-                              仅「查看更多」弹窗 & 纯推荐模式可用
+                              视频卡片会显示头像
                               <br />
                               切换设置快捷键: <Tag color='green'>shift+y</Tag>
                             </>
