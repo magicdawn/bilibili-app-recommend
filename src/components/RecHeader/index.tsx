@@ -21,6 +21,7 @@ import {
 import { verticalAlignStyle } from '$common/emotion-css'
 import { useSticky } from '$common/hooks/useSticky'
 import { OnRefresh, OnRefreshContext } from '$components/RecGrid/useRefresh'
+import { useAnimate } from 'framer-motion'
 import { proxy, useSnapshot } from 'valtio'
 import { AccessKeyManage } from '../AccessKeyManage'
 import { ModalFeed } from '../ModalFeed'
@@ -241,8 +242,10 @@ export const RefreshButton = forwardRef<RefreshButtonActions, RefreshButtonProps
       ? '刷新'
       : '换一换'
 
+  const [scope, animate] = useAnimate()
+
   const onClick: MouseEventHandler = useMemoizedFn((e?: MouseEvent) => {
-    setDeg((d) => d + 360)
+    animate(scope.current, { rotate: [0, 360] }, { duration: 0.5, type: 'tween' })
     return onRefresh?.()
   })
 
@@ -261,15 +264,11 @@ export const RefreshButton = forwardRef<RefreshButtonActions, RefreshButtonProps
       onClick={onClick}
     >
       <svg
+        ref={scope}
         style={{
-          transform: `rotate(${deg}deg)`,
           width: '11px',
           height: '11px',
           marginRight: 5,
-          transition: deg === 360 ? 'transform .5s ease' : 'unset',
-        }}
-        onTransitionEnd={() => {
-          setDeg(0)
         }}
       >
         <use href='#widget-roll'></use>
