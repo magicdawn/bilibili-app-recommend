@@ -1,5 +1,35 @@
 # Changelog
 
+## v0.18.5
+
+- feat: watch later add 动画
+- fix: 深色模式 avatar skeleton 背景颜色不正确的问题
+- feat: 移除魔法棒 logo
+- feat: 字体调整 HarmonyOS_Regular / PingFang SC 顺序, 优先 HarmonyOS_Regular, 主要影响 macOS
+- fix: 弹幕数量没有格式化的问题
+
+detail
+
+- be6776b fix stat danmaku not formated
+- dd46a39 feat: more root container add APP_NAME_ROOR_CLASSNAME
+- 6fed6ec feat: prefer Harmony_Regular even on macOS
+- 67b3b7d feat: only keep section logo for new-version homepage & SectionRecommend, close #58
+- b9c0a4b chore: rename things
+- ba00009 feat: use imperative animate instead of transform + onTransitionEnd
+- d433035 deps: ncu
+- b4e474e Fix avatar skeleyon background in dark mode
+- e867cc1 chore: modify readme +
+- 6a551db chore: modify readme
+- 3be9679 Fix theme select center style
+- 0ccfa5a chore: fix ghproxy domain
+- 4a3d78a fix: moving ts file issue
+- 2d0b8f5 feat: split x.shared.ts required by react Fast Refresh
+- d5c609a feat: animation of watchLaterAdded
+- 0616d37 deps: ncu
+- b0d13f2 chore: change ghproxy.com to gh-proxy.com
+- ee1827f chore: update readme
+- d2f3a90 doc: add more to readme
+
 ## v0.18.4
 
 - 17c7ef3 Optimize article draft setData
