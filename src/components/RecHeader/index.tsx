@@ -21,6 +21,7 @@ import {
 import { verticalAlignStyle } from '$common/emotion-css'
 import { useSticky } from '$common/hooks/useSticky'
 import { OnRefresh, OnRefreshContext } from '$components/RecGrid/useRefresh'
+import { getIsInternalTesting } from '$platform'
 import { useAnimate } from 'framer-motion'
 import { proxy, useSnapshot } from 'valtio'
 import { AccessKeyManage } from '../AccessKeyManage'
@@ -118,6 +119,8 @@ export const RecHeader = forwardRef<
 
   const headerHeight = useHeaderHeight()
 
+  const isInternalTesting = getIsInternalTesting()
+
   return (
     <>
       <OnRefreshContext.Provider value={onRefresh}>
@@ -144,12 +147,13 @@ export const RecHeader = forwardRef<
           ]}
         >
           <div className='left'>
-            <svg className='icon'>
-              <use href='#channel-cinephile'></use>
-            </svg>
-            {/* <a className='title' href='#'>
-            推荐
-          </a> */}
+            {/* section logo: 推荐 logo, 魔法棒 */}
+            {!pureRecommend && !isInternalTesting && (
+              <svg className='icon'>
+                <use href='#channel-cinephile'></use>
+              </svg>
+            )}
+
             <VideoSourceTab onRefresh={onRefresh} />
             {leftSlot}
           </div>
