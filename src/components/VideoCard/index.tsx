@@ -81,6 +81,8 @@ export type VideoCardProps = {
   emitter?: VideoCardEmitter
 } & ComponentProps<'div'>
 
+const STAT_NUMBER_FALLBACK = '-'
+
 export const VideoCard = memo(function VideoCard({
   style,
   className,
@@ -952,12 +954,12 @@ const VideoCardInner = memo(function VideoCardInner({
                     <>
                       {/* 播放 */}
                       {makeStatItem({
-                        text: playStr || '',
+                        text: playStr || STAT_NUMBER_FALLBACK,
                         iconSvgName: AppRecIconSvgNameMap.play,
                       })}
                       {/* 点赞 */}
                       {makeStatItem({
-                        text: (goto === 'av' ? likeStr : favoriteStr) || '',
+                        text: (goto === 'av' ? likeStr : favoriteStr) || STAT_NUMBER_FALLBACK,
                         iconSvgName: AppRecIconSvgNameMap.like,
                       })}
                     </>
@@ -965,12 +967,12 @@ const VideoCardInner = memo(function VideoCardInner({
                     <>
                       {/* 播放 */}
                       {makeStatItem({
-                        text: playStr || '',
+                        text: playStr || STAT_NUMBER_FALLBACK,
                         iconSvgName: AppRecIconSvgNameMap.play,
                       })}
                       {/* 弹幕 */}
                       {makeStatItem({
-                        text: danmakuStr || '',
+                        text: danmakuStr || STAT_NUMBER_FALLBACK,
                         iconSvgName: AppRecIconSvgNameMap.danmaku,
                       })}
                     </>
