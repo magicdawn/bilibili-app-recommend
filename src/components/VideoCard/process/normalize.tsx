@@ -25,6 +25,7 @@ import { BvCode } from '@mgdn/bvid'
 import dayjs from 'dayjs'
 import { ReactNode } from 'react'
 import { AppRecIconField, AppRecIconMap, getField } from '../app-rec-icon'
+import { STAT_NUMBER_FALLBACK } from '../index.shared'
 
 export type StatItemType = { field: AppRecIconField; value: string }
 
@@ -266,10 +267,10 @@ export function apiIpadAppAdapter(item: IpadAppRecItemExtend): IVideoCardData {
   const favorite = undefined
   const bangumiFollow = extractCountFor('bangumiFollow')
   const statItems: StatItemType[] = [
-    { field: 'play', value: formatCount(play) || '' },
+    { field: 'play', value: formatCount(play) || STAT_NUMBER_FALLBACK },
     typeof danmaku === 'number'
-      ? { field: 'danmaku', value: formatCount(danmaku) || '' }
-      : { field: 'bangumiFollow', value: formatCount(bangumiFollow) || '' },
+      ? { field: 'danmaku', value: formatCount(danmaku) || STAT_NUMBER_FALLBACK }
+      : { field: 'bangumiFollow', value: formatCount(bangumiFollow) || STAT_NUMBER_FALLBACK },
   ]
 
   return {
@@ -327,6 +328,10 @@ export function apiPcAdapter(item: PcRecItemExtend): IVideoCardData {
     coin: undefined,
     danmaku: item.stat.danmaku,
     favorite: undefined,
+    statItems: [
+      { field: 'play', value: formatCount(item.stat.view) || STAT_NUMBER_FALLBACK },
+      { field: 'like', value: formatCount(item.stat.like) || STAT_NUMBER_FALLBACK },
+    ] as StatItemType[],
 
     // author
     authorName: item.owner.name,

@@ -44,7 +44,7 @@ import {
   watchLaterDel,
 } from './card.service'
 import styles from './index.module.less'
-import { borderRadiusStyle } from './index.shared'
+import { STAT_NUMBER_FALLBACK, borderRadiusStyle } from './index.shared'
 import { IVideoCardData, normalizeCardData } from './process/normalize'
 import { usePreviewAnimation } from './usePreviewAnimation'
 
@@ -80,8 +80,6 @@ export type VideoCardProps = {
   onRefresh?: OnRefresh
   emitter?: VideoCardEmitter
 } & ComponentProps<'div'>
-
-const STAT_NUMBER_FALLBACK = '-'
 
 export const VideoCard = memo(function VideoCard({
   style,
@@ -519,7 +517,12 @@ const VideoCardInner = memo(function VideoCardInner({
         >
           <use href={iconSvgName}></use>
         </svg>
-        <span className='bili-video-card__stats--text'>{text}</span>
+        <span
+          className='bili-video-card__stats--text'
+          style={{ lineHeight: 'calc(var(--icon-size) + 1px)' }}
+        >
+          {text}
+        </span>
       </span>
     )
   }
@@ -949,19 +952,6 @@ const VideoCardInner = memo(function VideoCardInner({
                           })}
                         </Fragment>
                       ))}
-                    </>
-                  ) : isPc ? (
-                    <>
-                      {/* 播放 */}
-                      {makeStatItem({
-                        text: playStr || STAT_NUMBER_FALLBACK,
-                        iconSvgName: AppRecIconSvgNameMap.play,
-                      })}
-                      {/* 点赞 */}
-                      {makeStatItem({
-                        text: (goto === 'av' ? likeStr : favoriteStr) || STAT_NUMBER_FALLBACK,
-                        iconSvgName: AppRecIconSvgNameMap.like,
-                      })}
                     </>
                   ) : (
                     <>
