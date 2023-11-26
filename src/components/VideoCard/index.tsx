@@ -496,6 +496,7 @@ const VideoCardInner = memo(function VideoCardInner({
 
   const playStr = useMemo(() => formatCount(play), [play])
   const likeStr = useMemo(() => formatCount(like), [like])
+  const danmakuStr = useMemo(() => formatCount(danmaku), [danmaku])
   const _favoriteStr = useMemo(() => formatCount(favorite), [favorite])
   const favoriteStr = isPc ? likeStr : _favoriteStr
 
@@ -969,7 +970,7 @@ const VideoCardInner = memo(function VideoCardInner({
                       })}
                       {/* 弹幕 */}
                       {makeStatItem({
-                        text: (danmaku || 0).toString(),
+                        text: danmakuStr || '',
                         iconSvgName: AppRecIconSvgNameMap.danmaku,
                       })}
                     </>
