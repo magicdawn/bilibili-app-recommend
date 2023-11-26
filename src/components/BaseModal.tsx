@@ -1,3 +1,4 @@
+import { APP_NAME_ROOT_CLASSNAME } from '$common'
 import { IconPark } from '$icon-park'
 import { cx } from '$libs'
 import { useIsDarkMode } from '$platform'
@@ -96,6 +97,7 @@ export function BaseModal({
   const containerId = useId()
   const container = useMemo(() => {
     const div = document.createElement('div')
+    div.classList.add(APP_NAME_ROOT_CLASSNAME)
     div.setAttribute('data-id', 'base-modal-' + containerId)
     document.body.appendChild(div)
     return div

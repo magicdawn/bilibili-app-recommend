@@ -1,3 +1,4 @@
+import { APP_NAME_ROOT_CLASSNAME } from '$common'
 import { AntdApp, AntdTooltip } from '$components/AntdApp'
 import { BaseModal, BaseModalClass, ModalClose } from '$components/BaseModal'
 import { css } from '@emotion/react'
@@ -118,7 +119,7 @@ export function TvQrCodeAuth() {
 
 const renderOnce = once(function render() {
   const container = document.createElement('div')
-  container.classList.add('modal-tv-qrcode-auth')
+  container.classList.add('modal-tv-qrcode-auth', APP_NAME_ROOT_CLASSNAME)
   document.body.appendChild(container)
   const r = createRoot(container)
   r.render(

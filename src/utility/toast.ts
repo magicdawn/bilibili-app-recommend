@@ -1,3 +1,4 @@
+import { APP_NAME_ROOT_CLASSNAME } from '$common'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import { css } from '@emotion/css'
 
@@ -28,7 +29,7 @@ const singleLine = css`
 
 export function toast(msg: string, duration = 2000) {
   const div = document.createElement('div')
-  div.className = toastContainer
+  div.classList.add(toastContainer, APP_NAME_ROOT_CLASSNAME)
   div.innerText = msg
 
   if (!msg.includes('\n') && !msg.includes('<br')) {

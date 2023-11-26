@@ -1,3 +1,4 @@
+import { APP_NAME_ROOT_CLASSNAME } from '$common'
 import { BaseModal, BaseModalClass, ModalClose } from '$components/BaseModal'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import { AppRecItem, AppRecItemExtend } from '$define'
@@ -212,7 +213,7 @@ let _root: Root
 function getRoot() {
   _root ||= (() => {
     const container = document.createElement('div')
-    container.classList.add('show-dislike-container')
+    container.classList.add('show-dislike-container', APP_NAME_ROOT_CLASSNAME)
     document.body.appendChild(container)
     return createRoot(container)
   })()
