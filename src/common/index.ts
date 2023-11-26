@@ -11,3 +11,5 @@ export const TVKeyInfo = {
   appkey: '4409e2ce8ffd12b8',
   appsec: '59b43e04ad6965f34319062b478f83dd',
 }
+
+export const APP_NAME_ROOT_CLASSNAME = `${APP_NAME}-root`

@@ -1,3 +1,4 @@
+import { APP_NAME_ROOT_CLASSNAME } from '$common'
 import { useIsDarkMode } from '$platform'
 import { useSettingsSnapshot } from '$settings'
 import { Global, css as _css, css } from '@emotion/react'
@@ -6,6 +7,10 @@ import zhCN from 'antd/locale/zh_CN'
 import { LazyMotion, domAnimation } from 'framer-motion'
 import { ComponentProps, ReactNode } from 'react'
 import { colorPrimaryIdentifier, useCurrentTheme } from './ModalSettings/theme.shared'
+
+// bilibili.com default: PingFang SC,HarmonyOS_Regular,Helvetica Neue,Microsoft YaHei,sans-serif
+export const USING_FONT_FAMILY =
+  'HarmonyOS_Regular,PingFang SC,Helvetica Neue,Microsoft YaHei,sans-serif'
 
 export function AntdApp({
   children,
@@ -26,8 +31,7 @@ export function AntdApp({
           colorPrimary,
           colorBgSpotlight: colorPrimary, // tooltip bg
           zIndexPopupBase: 11000, // base-modal 10002
-          // bilibili.com default: PingFang SC,HarmonyOS_Regular,Helvetica Neue,Microsoft YaHei,sans-serif
-          fontFamily: 'inherit', // use default
+          fontFamily: USING_FONT_FAMILY,
         },
       }}
     >
@@ -47,6 +51,10 @@ function GlobalStyle() {
         styles={_css`
           :root {
             ${colorPrimaryIdentifier}: ${colorPrimary};
+          }
+
+          .${APP_NAME_ROOT_CLASSNAME} {
+            font-family: ${USING_FONT_FAMILY};
           }
         `}
       />

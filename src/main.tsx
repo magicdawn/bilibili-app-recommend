@@ -22,7 +22,7 @@ dayjs.extend(duration)
 import '@icon-park/react/styles/index.css'
 import './common/global.less'
 
-import { APP_NAME } from '$common'
+import { APP_NAME, APP_NAME_ROOT_CLASSNAME } from '$common'
 import { AntdApp } from '$components/AntdApp'
 import { tryAction, tryToRemove } from '$utility/dom'
 import delay from 'delay'
@@ -88,6 +88,7 @@ async function initHomepageSection() {
 
   // attach to dom
   const recommendContainer = document.createElement('section')
+  recommendContainer.classList.add(APP_NAME_ROOT_CLASSNAME)
   insert(recommendContainer)
 
   // react render
@@ -171,6 +172,7 @@ async function initHomepagePureRecommend() {
   insertFn(biliLayout)
 
   const reactContainer = document.createElement('section')
+  reactContainer.classList.add(APP_NAME_ROOT_CLASSNAME)
   biliLayout.appendChild(reactContainer)
 
   // react render
