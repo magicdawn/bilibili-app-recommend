@@ -18,7 +18,7 @@ const initialValue = {
   message: '',
 }
 const store = proxy({ ...initialValue })
-export const tvQrCodeAuthStore = store
+export const qrcodeStore = store
 
 export function updateStore(data: Partial<typeof initialValue>) {
   renderOnce()

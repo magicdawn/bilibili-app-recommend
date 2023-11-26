@@ -7,15 +7,15 @@ import { toast } from '$utility'
 import delay from 'delay'
 import {
   hideQrCodeModal,
+  qrcodeStore,
   showQrCodeModal,
-  tvQrCodeAuthStore,
   updateStore,
   whenQrCodeModalHide,
 } from './TvQrCodeAuth'
-import { PollResult, getQRCodeInfo, poll } from './api'
+import { PollResult, getQrCodeInfo, poll } from './api'
 
-async function refreshQRCode() {
-  const qrinfo = await getQRCodeInfo()
+async function refreshQrCode() {
+  const qrinfo = await getQrCodeInfo()
   if (!qrinfo) return
 
   // show
@@ -24,20 +24,20 @@ async function refreshQRCode() {
 }
 
 // @ts-ignore
-// window.getAccessKeyByQRCode = getAccessKeyByQRCode
+// window.getAccessKeyByQrCode = getAccessKeyByQrCode
 
-export async function getAccessKeyByQRCode() {
-  const next = await refreshQRCode()
+export async function getAccessKeyByQrCode() {
+  const next = await refreshQrCode()
   if (!next) return
 
   // start poll
   let res: PollResult | undefined
 
-  let pollfor = tvQrCodeAuthStore.auth_code
+  let pollfor = qrcodeStore.auth_code
   function shouldBreak() {
-    if (!tvQrCodeAuthStore.show) return true
-    if (!tvQrCodeAuthStore.auth_code) return true
-    if (pollfor !== tvQrCodeAuthStore.auth_code) return true
+    if (!qrcodeStore.show) return true
+    if (!qrcodeStore.auth_code) return true
+    if (pollfor !== qrcodeStore.auth_code) return true
   }
   while (true) {
     // break check
@@ -53,7 +53,7 @@ export async function getAccessKeyByQRCode() {
     if (shouldBreak()) return
 
     // poll
-    res = await poll(tvQrCodeAuthStore.auth_code)
+    res = await poll(qrcodeStore.auth_code)
     const { success, accessKey, message, action } = res
 
     /**
@@ -72,8 +72,8 @@ export async function getAccessKeyByQRCode() {
     // refresh
     if (action === 'refresh') {
       await delay(2000) // let user see '已过期消息'
-      await refreshQRCode()
-      pollfor = tvQrCodeAuthStore.auth_code
+      await refreshQrCode()
+      pollfor = qrcodeStore.auth_code
       updateStore({ message: '已刷新二维码' })
       continue
     }

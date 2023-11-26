@@ -20,21 +20,13 @@ export const initialSettings = {
   // 纯推荐模式
   pureRecommend: false,
 
-  // 是否使用 PC 端接口
-  // https://github.com/magicdawn/bilibili-app-recommend/issues/16
-  // usePcDesktopApi: false,
-
-  // 并行请求
-  // useParallelRequest: true,
-
   // 自动开始预览
   autoPreviewWhenKeyboardSelect: false,
 
   // 自动预览更新间隔
   autoPreviewUpdateInterval: 400,
 
-  // 鼠标悬浮自动预览, 不再跟随鼠标位置
-  // 默认: 跟随鼠标
+  // 鼠标悬浮自动预览, 不再跟随鼠标位置, 默认: 跟随鼠标
   autoPreviewWhenHover: false,
 
   // 颜色主题
@@ -179,5 +171,4 @@ export function resetSettings() {
 /**
  * load on init
  */
-
 await load()
