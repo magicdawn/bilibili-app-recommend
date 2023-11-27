@@ -35,9 +35,6 @@ dependencies:
   axios-userscript-adapter:
     specifier: '0'
     version: 0.2.0(axios@0.27.2)
-  classnames:
-    specifier: ^2.3.2
-    version: 2.3.2
   dayjs:
     specifier: 1.11.10
     version: 1.11.10
