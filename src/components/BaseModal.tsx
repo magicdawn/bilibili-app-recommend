@@ -23,7 +23,7 @@ interface IProps {
   onHide: () => void
   children: ReactNode
 
-  // classnames
+  // classNames
   clsModalMask?: string
   clsModal?: string
   styleModalMask?: CSSProperties

@@ -18,11 +18,10 @@ import { VideoCard } from '../VideoCard'
 const debug = baseDebug.extend('components:SectionRecommend')
 
 export function SectionRecommend() {
-  const skeletonPlaceholders = useMemo(() => {
-    return new Array(20).fill(0).map(() => {
-      return crypto.randomUUID()
-    })
-  }, [])
+  const skeletonPlaceholders = useMemo(
+    () => new Array(20).fill(0).map(() => crypto.randomUUID()),
+    []
+  )
 
   const isInternalTesting = getIsInternalTesting()
 
