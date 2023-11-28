@@ -5,7 +5,7 @@ import { Global, css as _css, css } from '@emotion/react'
 import { ConfigProvider, Tooltip, theme } from 'antd'
 import zhCN from 'antd/locale/zh_CN'
 import { LazyMotion, domAnimation } from 'framer-motion'
-import { ComponentProps, ReactNode } from 'react'
+import type { ComponentProps, ReactNode } from 'react'
 import { colorPrimaryIdentifier, useCurrentTheme } from './ModalSettings/theme.shared'
 
 // bilibili.com default: PingFang SC,HarmonyOS_Regular,Helvetica Neue,Microsoft YaHei,sans-serif

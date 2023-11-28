@@ -3,7 +3,7 @@
  */
 
 import { request } from '$request'
-import { DynamicPortalJSON } from './portal'
+import type { DynamicPortalJSON } from './portal'
 
 /**
  * 最近有更新的 UP

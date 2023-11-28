@@ -1,12 +1,12 @@
 import { APP_NAME, HOST_APP } from '$common'
-import { AppRecItem, AppRecItemExtend, AppRecommendJson } from '$define'
-import { ipad } from '$define/app-recommend.ipad'
+import type { AppRecItem, AppRecItemExtend, AppRecommendJson } from '$define'
+import type { ipad } from '$define/app-recommend.ipad'
 import { gmrequest } from '$request'
 import { toast } from '$utility/toast'
 import { uniqBy } from 'lodash'
 import pretry, { RetryError } from 'promise.retry'
 import { format as fmt } from 'util'
-import { IService } from './base'
+import type { IService } from './base'
 
 class RecReqError extends Error {
   json: AppRecommendJson

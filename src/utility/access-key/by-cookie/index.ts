@@ -93,7 +93,7 @@ async function getAccessKeyByPostMessage(confirm_uri: string) {
   })
 
   const confirmWin = window.open(confirm_uri, '_blank', 'popup=true,width=800,height=600')
-  let cleanWindow = () => confirmWin?.close()
+  const cleanWindow = () => confirmWin?.close()
 
   function cleanup() {
     cleanWindow?.()

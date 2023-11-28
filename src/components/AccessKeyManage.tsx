@@ -3,7 +3,7 @@ import { GET_ACCESS_KEY_VIA_GMREQUEST_REDIRECT } from '$utility/access-key/by-co
 import { auth, deleteAccessToken } from '$utility/auth'
 import { useRequest } from 'ahooks'
 import { Button, Space } from 'antd'
-import { CSSProperties, ReactNode } from 'react'
+import type { CSSProperties, ReactNode } from 'react'
 import { AntdTooltip } from './AntdApp'
 
 const btnAccessKeyHelpLink = (

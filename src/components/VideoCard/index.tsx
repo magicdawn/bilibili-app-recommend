@@ -1,10 +1,11 @@
 import { APP_KEY_PREFIX, APP_NAME } from '$common'
 import { useMittOn } from '$common/hooks/useMitt'
-import { Reason, dislikedIds, showModalDislike, useDislikedReason } from '$components/ModalDislike'
+import type { Reason } from '$components/ModalDislike'
+import { dislikedIds, showModalDislike, useDislikedReason } from '$components/ModalDislike'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
-import { OnRefresh } from '$components/RecGrid/useRefresh'
+import type { OnRefresh } from '$components/RecGrid/useRefresh'
 import { useCurrentSourceTab } from '$components/RecHeader/tab.shared'
-import { AppRecItem, AppRecItemExtend, RecItemType } from '$define'
+import type { AppRecItem, AppRecItemExtend, RecItemType } from '$define'
 import { IconPark } from '$icon-park'
 import { cx } from '$libs'
 import { isMac, isSafari } from '$platform'
@@ -19,33 +20,22 @@ import { toast, toastOperationFail, toastRequestFail } from '$utility/toast'
 import { formatCount } from '$utility/video'
 import { css } from '@emotion/react'
 import { useEventListener, useHover, useMemoizedFn, usePrevious, useUpdateEffect } from 'ahooks'
-import { Avatar, Dropdown, MenuProps } from 'antd'
+import type { MenuProps } from 'antd'
+import { Avatar, Dropdown } from 'antd'
 import delay from 'delay'
 import { m } from 'framer-motion'
-import mitt, { Emitter } from 'mitt'
-import {
-  CSSProperties,
-  ComponentProps,
-  Fragment,
-  MouseEvent,
-  memo,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import type { Emitter } from 'mitt'
+import mitt from 'mitt'
+import type { CSSProperties, ComponentProps, MouseEvent } from 'react'
+import { Fragment, memo, useEffect, useMemo, useRef, useState } from 'react'
 import { PreviewImage } from './PreviewImage'
 import { AppRecIconScaleMap, AppRecIconSvgNameMap } from './app-rec-icon'
-import {
-  VideoData,
-  cancelDislike,
-  getVideoData,
-  watchLaterAdd,
-  watchLaterDel,
-} from './card.service'
+import type { VideoData } from './card.service'
+import { cancelDislike, getVideoData, watchLaterAdd, watchLaterDel } from './card.service'
 import styles from './index.module.less'
 import { STAT_NUMBER_FALLBACK, borderRadiusStyle } from './index.shared'
-import { IVideoCardData, normalizeCardData } from './process/normalize'
+import type { IVideoCardData } from './process/normalize'
+import { normalizeCardData } from './process/normalize'
 import { usePreviewAnimation } from './usePreviewAnimation'
 
 function copyContent(content: string) {

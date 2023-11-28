@@ -1,7 +1,7 @@
-import { PopularGeneralItemExtend } from '$define'
-import { PopularGeneralJson } from '$define/popular-general'
+import type { PopularGeneralItemExtend } from '$define'
+import type { PopularGeneralJson } from '$define/popular-general'
 import { request } from '$request'
-import { IService } from './base'
+import type { IService } from './base'
 
 export class PopularGeneralService implements IService {
   hasMore = true

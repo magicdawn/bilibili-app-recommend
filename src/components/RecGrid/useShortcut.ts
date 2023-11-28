@@ -1,8 +1,9 @@
-import { VideoCardEmitter } from '$components/VideoCard'
+import type { VideoCardEmitter } from '$components/VideoCard'
 import { settings } from '$settings'
 import { shouldDisableShortcut } from '$utility/dom'
 import { useKeyPress, useMemoizedFn } from 'ahooks'
-import { RefObject, useState } from 'react'
+import type { RefObject } from 'react'
+import { useState } from 'react'
 import { videoGrid } from '../video-grid.module.less'
 import { CardClassNames } from './index'
 
@@ -72,7 +73,7 @@ export function useShortcut({
     // 防止 scroller focus 的情况下, 因键盘产生滑动, 进而页面抖动
     e?.preventDefault()
 
-    let _step = typeof step === 'number' ? step : step()
+    const _step = typeof step === 'number' ? step : step()
     const index = activeIndexIsValid() ? activeIndex! + _step : getInitialIndex()
 
     // overflow

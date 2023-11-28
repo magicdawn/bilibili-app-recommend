@@ -1,10 +1,12 @@
 import { IconPark } from '$icon-park'
-import { BooleanSettingsKey, updateSettings, useSettingsSnapshot } from '$settings'
+import type { BooleanSettingsKey } from '$settings'
+import { updateSettings, useSettingsSnapshot } from '$settings'
 import { css } from '@emotion/react'
 import { Checkbox, Tooltip } from 'antd'
-import { CheckboxChangeEvent } from 'antd/es/checkbox'
-import { ComponentProps, ReactNode, useCallback } from 'react'
-import { SetOptional } from 'type-fest'
+import type { CheckboxChangeEvent } from 'antd/es/checkbox'
+import type { ComponentProps, ReactNode } from 'react'
+import { useCallback } from 'react'
+import type { SetOptional } from 'type-fest'
 import { AntdTooltip } from './AntdApp'
 
 export function FlagSettingItem({

@@ -1,10 +1,13 @@
-import { RecGrid, RecGridRef } from '$components/RecGrid'
-import { OnRefresh } from '$components/RecGrid/useRefresh'
-import { RecHeader, RecHeaderRef, useHeaderState } from '$components/RecHeader'
+import type { RecGridRef } from '$components/RecGrid'
+import { RecGrid } from '$components/RecGrid'
+import type { OnRefresh } from '$components/RecGrid/useRefresh'
+import type { RecHeaderRef } from '$components/RecHeader'
+import { RecHeader, useHeaderState } from '$components/RecHeader'
 import { css } from '$libs'
 import { useSettingsSnapshot } from '$settings'
 import { useMemoizedFn } from 'ahooks'
-import { ReactNode, useRef, useState } from 'react'
+import type { ReactNode } from 'react'
+import { useRef, useState } from 'react'
 
 const narrowStyle = {
   grid: css`

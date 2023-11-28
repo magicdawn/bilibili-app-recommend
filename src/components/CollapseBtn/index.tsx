@@ -1,7 +1,8 @@
 import { cx } from '$libs'
 import { useToggle } from 'ahooks'
 import type { Actions } from 'ahooks/lib/useToggle'
-import { forwardRef, ReactNode, useImperativeHandle } from 'react'
+import type { ReactNode } from 'react'
+import { forwardRef, useImperativeHandle } from 'react'
 import styles from './index.module.less'
 
 interface IProps {

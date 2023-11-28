@@ -1,8 +1,8 @@
-import { PcRecItem, PcRecItemExtend, PcRecommendJson } from '$define'
+import type { PcRecItem, PcRecItemExtend, PcRecommendJson } from '$define'
 import { request } from '$request'
 import { toast } from '$utility/toast'
 import { uniqBy } from 'lodash'
-import { IService } from './base'
+import type { IService } from './base'
 
 /**
  * 使用 web api 获取推荐

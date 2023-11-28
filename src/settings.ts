@@ -4,7 +4,8 @@ import type { TabType } from '$components/RecHeader/tab.shared'
 import { setData } from '$service/user/article-draft'
 import { omit, pick, throttle } from 'lodash'
 import ms from 'ms'
-import { INTERNAL_Snapshot, proxy, snapshot, subscribe, useSnapshot } from 'valtio'
+import type { INTERNAL_Snapshot } from 'valtio'
+import { proxy, snapshot, subscribe, useSnapshot } from 'valtio'
 
 const debug = baseDebug.extend('settings')
 

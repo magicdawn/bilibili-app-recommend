@@ -1,6 +1,7 @@
 import { APP_NAME } from '$common'
 import { settings, useSettingsSnapshot } from '$settings'
-import { ReactNode, useMemo } from 'react'
+import type { ReactNode } from 'react'
+import { useMemo } from 'react'
 import LX_THEMES from './lx-themes.json'
 
 export const colorPrimaryIdentifier = `--${APP_NAME}-color-primary`

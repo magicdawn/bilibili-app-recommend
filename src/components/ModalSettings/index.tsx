@@ -7,8 +7,8 @@ import { FlagSettingItem, HelpInfo } from '$components/piece'
 import { IconPark } from '$icon-park'
 import { cx } from '$libs'
 import { getData } from '$service/user/article-draft'
+import type { BooleanSettingsKey } from '$settings'
 import {
-  BooleanSettingsKey,
   allowedSettingsKeys,
   resetSettings,
   settings,

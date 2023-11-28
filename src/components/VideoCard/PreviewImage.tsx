@@ -1,5 +1,5 @@
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
-import { PvideoData } from '$define'
+import type { PvideoData } from '$define'
 import { cx } from '$libs'
 import { useMount, useMouse } from 'ahooks'
 import { useMemo, useRef, useState } from 'react'

@@ -1,9 +1,10 @@
-import { IconName } from '$icon-park'
+import type { IconName } from '$icon-park'
 import { useSettingsSnapshot } from '$settings'
 import { getHasLogined, useHasLogined } from '$utility'
 import { toast } from '$utility/toast'
 import { type Icon } from '@icon-park/react/es/runtime'
-import { ComponentProps, useMemo } from 'react'
+import type { ComponentProps } from 'react'
+import { useMemo } from 'react'
 import { useSnapshot } from 'valtio'
 import { videoSourceTabState } from './tab'
 

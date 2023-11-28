@@ -1,4 +1,4 @@
-import { RecItemType } from '$define'
+import type { RecItemType } from '$define'
 
 export abstract class BaseService {
   abstract hasMore: boolean

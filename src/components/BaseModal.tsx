@@ -3,16 +3,8 @@ import { IconPark } from '$icon-park'
 import { cx } from '$libs'
 import { useIsDarkMode } from '$platform'
 import { useKeyPress, useMemoizedFn } from 'ahooks'
-import {
-  CSSProperties,
-  ComponentProps,
-  MouseEvent,
-  ReactNode,
-  useId,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-} from 'react'
+import type { CSSProperties, ComponentProps, MouseEvent, ReactNode } from 'react'
+import { useId, useLayoutEffect, useMemo, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import BaseModalClass from './BaseModal.module.less'
 

@@ -1,7 +1,8 @@
 import { APP_NAME } from '$common'
 import { settings } from '$settings'
 import { useEventListener, useGetState, useMemoizedFn, useRafState, useUnmountedRef } from 'ahooks'
-import { MouseEvent, RefObject, useRef, useState } from 'react'
+import type { MouseEvent, RefObject } from 'react'
+import { useRef, useState } from 'react'
 
 /**
  * 自动以动画方式预览

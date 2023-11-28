@@ -2,8 +2,8 @@ import { TVKeyInfo } from '$common'
 import { isWebApiSuccess, request } from '$request'
 import { getCsrfToken, toast } from '$utility'
 import { appSign } from '$utility/app-sign'
-import { AuthCodeJson } from './api.auth-code'
-import { PollJson } from './api.poll'
+import type { AuthCodeJson } from './api.auth-code'
+import type { PollJson } from './api.poll'
 
 const newSignedForm = (params: Record<string, any>) => {
   const sign = appSign(params, TVKeyInfo.appkey, TVKeyInfo.appsec)

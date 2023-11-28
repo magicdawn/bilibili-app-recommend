@@ -1,4 +1,4 @@
-import { FavFolderDetailInfo, Media } from './resource-list'
+import type { FavFolderDetailInfo, Media } from './resource-list'
 
 export type FavItem = Media & {
   folder: FavFolderDetailInfo

@@ -14,10 +14,15 @@ extends:
   - 'prettier'
 
 rules:
+  #
+  'prefer-const': [warn, { 'destructuring': 'all' }]
+  'no-constant-condition': off
+
+  # ts
   '@typescript-eslint/ban-ts-comment': off
   '@typescript-eslint/no-unused-vars': off
   '@typescript-eslint/no-non-null-assertion': off
   '@typescript-eslint/no-explicit-any': off
-  'prefer-const': warn
   '@typescript-eslint/no-namespace': off
-  'no-constant-condition': off
+  # '@typescript-eslint/consistent-type-imports': [warn, { 'fixStyle': 'inline-type-imports' }]
+  '@typescript-eslint/consistent-type-imports': [warn, { 'fixStyle': 'separate-type-imports' }]

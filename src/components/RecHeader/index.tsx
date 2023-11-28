@@ -7,20 +7,13 @@ import { settings, useSettingsSnapshot } from '$settings'
 import { shouldDisableShortcut } from '$utility/dom'
 import { useKeyPress, useMemoizedFn } from 'ahooks'
 import { Button, Space } from 'antd'
-import {
-  CSSProperties,
-  MouseEvent,
-  MouseEventHandler,
-  ReactNode,
-  forwardRef,
-  useImperativeHandle,
-  useRef,
-  useState,
-} from 'react'
+import type { CSSProperties, MouseEvent, MouseEventHandler, ReactNode } from 'react'
+import { forwardRef, useImperativeHandle, useRef, useState } from 'react'
 // import { useSticky } from 'react-use-sticky'
 import { verticalAlignStyle } from '$common/emotion-css'
 import { useSticky } from '$common/hooks/useSticky'
-import { OnRefresh, OnRefreshContext } from '$components/RecGrid/useRefresh'
+import type { OnRefresh } from '$components/RecGrid/useRefresh'
+import { OnRefreshContext } from '$components/RecGrid/useRefresh'
 import { getIsInternalTesting } from '$platform'
 import { useAnimate } from 'framer-motion'
 import { proxy, useSnapshot } from 'valtio'

@@ -1,11 +1,11 @@
-import { android } from './app-recommend.android'
-import { ipad } from './app-recommend.ipad'
+import type { android } from './app-recommend.android'
+import type { ipad } from './app-recommend.ipad'
 import { DmJson } from './dm'
-import { FavItemExtend } from './fav'
-import { DynamicFeedItem } from './pc-dynamic-feed'
-import { PcRecItem } from './pc-recommend'
-import { PopularGeneralItem } from './popular-general'
-import { PopularWeeklyItem } from './popular-weekly'
+import type { FavItemExtend } from './fav'
+import type { DynamicFeedItem } from './pc-dynamic-feed'
+import type { PcRecItem } from './pc-recommend'
+import type { PopularGeneralItem } from './popular-general'
+import type { PopularWeeklyItem } from './popular-weekly'
 
 export { FavItem, FavItemExtend } from './fav'
 export { DynamicFeedItem, DynamicFeedJson } from './pc-dynamic-feed'
@@ -14,7 +14,7 @@ export { WatchLaterItem, WatchLaterJson } from './watchlater'
 export { DmJson, PvideoJson }
 
 import { PvideoJson } from './pvideo'
-import { WatchLaterItem } from './watchlater'
+import type { WatchLaterItem } from './watchlater'
 export type PvideoData = PvideoJson['data']
 export type DmData = DmJson['data']
 

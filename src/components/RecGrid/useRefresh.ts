@@ -1,6 +1,7 @@
 import { useRefInit } from '$common/hooks/useRefInit'
-import { TabConfigMap, TabType, getCurrentSourceTab } from '$components/RecHeader/tab.shared'
-import { RecItemType } from '$define'
+import type { TabType } from '$components/RecHeader/tab.shared'
+import { TabConfigMap, getCurrentSourceTab } from '$components/RecHeader/tab.shared'
+import type { RecItemType } from '$define'
 import { DynamicFeedRecService, dynamicFeedFilterStore } from '$service/rec/dynamic-feed'
 import { FavRecService } from '$service/rec/fav'
 import { PcRecService } from '$service/rec/pc'
@@ -8,7 +9,7 @@ import { PopularGeneralService } from '$service/rec/popular-general'
 import { WatchLaterRecService } from '$service/rec/watchlater'
 import { nextTick } from '$utility'
 import { useGetState, useMemoizedFn } from 'ahooks'
-import { Debugger } from 'debug'
+import type { Debugger } from 'debug'
 import { createContext, useContext, useState } from 'react'
 
 export type OnRefreshOoptions = { watchlaterKeepOrder?: boolean }

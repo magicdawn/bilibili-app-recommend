@@ -1,5 +1,5 @@
 import { useMemoizedFn } from 'ahooks'
-import { Emitter, EventType, Handler } from 'mitt'
+import type { Emitter, EventType, Handler } from 'mitt'
 import { useEffect } from 'react'
 
 export function useMittOn<Events extends Record<EventType, unknown>, Key extends keyof Events>(

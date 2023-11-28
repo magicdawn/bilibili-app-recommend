@@ -11,8 +11,9 @@ import { HelpInfo } from '$components/piece'
 import { updateSettings, useSettingsSnapshot } from '$settings'
 import { css } from '@emotion/react'
 import { ColorPicker } from 'antd'
-import { Color } from 'antd/es/color-picker'
-import { Fragment, ReactNode, useMemo, useState } from 'react'
+import type { Color } from 'antd/es/color-picker'
+import type { ReactNode } from 'react'
+import { Fragment, useMemo, useState } from 'react'
 import { DEFAULT_BILI_PINK_THEME, ThemeGroups, useCurrentTheme } from './theme.shared'
 
 export function ThemesSelect() {

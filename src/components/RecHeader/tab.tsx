@@ -7,7 +7,8 @@ import { useSettingsSnapshot } from '$settings'
 import { checkLoginStatus, useHasLogined } from '$utility'
 import { css } from '@emotion/react'
 import { Radio } from 'antd'
-import { TabType, toastNeedLogin, useCurrentSourceTab, useCurrentTabConfig } from './tab.shared'
+import type { TabType } from './tab.shared'
+import { toastNeedLogin, useCurrentSourceTab, useCurrentTabConfig } from './tab.shared'
 
 export const VIDEO_SOURCE_TAB_STORAGE_KEY = `${APP_NAME}-video-source-tab`
 

@@ -1,7 +1,7 @@
 import { APP_NAME } from '$common'
 import { AntdTooltip } from '$components/AntdApp'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
-import {
+import type {
   AndroidAppRecItemExtend,
   AppRecItemExtend,
   DynamicFeedItemExtend,
@@ -11,7 +11,7 @@ import {
   RecItemType,
   WatchLaterItemExtend,
 } from '$define'
-import { FavItemExtend } from '$define/fav'
+import type { FavItemExtend } from '$define/fav'
 import { IconPark } from '$icon-park'
 import { toHttps } from '$utility'
 import {
@@ -24,8 +24,9 @@ import {
 } from '$utility/video'
 import { BvCode } from '@mgdn/bvid'
 import dayjs from 'dayjs'
-import { ReactNode } from 'react'
-import { AppRecIconField, AppRecIconMap, getField } from '../app-rec-icon'
+import type { ReactNode } from 'react'
+import type { AppRecIconField } from '../app-rec-icon'
+import { AppRecIconMap, getField } from '../app-rec-icon'
 import { STAT_NUMBER_FALLBACK } from '../index.shared'
 
 export type StatItemType = { field: AppRecIconField; value: string }

@@ -5,11 +5,13 @@
 import { APP_NAME, baseDebug } from '$common'
 import { useModalDislikeVisible } from '$components/ModalDislike'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
-import { TabType, useCurrentSourceTab } from '$components/RecHeader/tab.shared'
-import { VideoCard, VideoCardEmitter, VideoCardEvents } from '$components/VideoCard'
+import type { TabType } from '$components/RecHeader/tab.shared'
+import { useCurrentSourceTab } from '$components/RecHeader/tab.shared'
+import type { VideoCardEmitter, VideoCardEvents } from '$components/VideoCard'
+import { VideoCard } from '$components/VideoCard'
 import { borderRadiusValue } from '$components/VideoCard/index.shared'
-import { IVideoCardData } from '$components/VideoCard/process/normalize'
-import { RecItemType } from '$define'
+import type { IVideoCardData } from '$components/VideoCard/process/normalize'
+import type { RecItemType } from '$define'
 import { getHeaderHeight } from '$header'
 import { IconPark } from '$icon-park'
 import { cx } from '$libs'
@@ -23,15 +25,8 @@ import { useEventListener, useLatest, useMemoizedFn, useMount } from 'ahooks'
 import delay from 'delay'
 import mitt from 'mitt'
 import ms from 'ms'
-import {
-  ReactNode,
-  RefObject,
-  forwardRef,
-  useImperativeHandle,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import type { ReactNode, RefObject } from 'react'
+import { forwardRef, useImperativeHandle, useMemo, useRef, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
 import { VirtuosoGrid } from 'react-virtuoso'
 import {
@@ -42,7 +37,8 @@ import {
   videoGridInternalTesting,
   videoGridNewHomepage,
 } from '../video-grid.module.less'
-import { OnRefresh, useRefresh } from './useRefresh'
+import type { OnRefresh } from './useRefresh'
+import { useRefresh } from './useRefresh'
 import { useShortcut } from './useShortcut'
 
 const debug = baseDebug.extend('components:RecGrid')
@@ -345,7 +341,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
         const index = items.findIndex((x) => x.uniqId === item.uniqId)
         if (index === -1) return items
 
-        let newItems = items.slice()
+        const newItems = items.slice()
         newItems.splice(index, 1)
         toast(`已移除: ${data.title}`, 4000)
 

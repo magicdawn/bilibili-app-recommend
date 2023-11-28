@@ -40,7 +40,7 @@ export async function modifyRelations(upMid: string, act: number) {
 function d() {
   let t
   let e
-  let i =
+  const i =
     // @ts-ignore
     (null === (t = window.reportObserver) || void 0 === t || null === (e = t.cache) || void 0 === e
       ? void 0

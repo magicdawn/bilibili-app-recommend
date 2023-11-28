@@ -1,5 +1,5 @@
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
-import { RecItemType, WatchLaterItemExtend, WatchLaterJson } from '$define'
+import type { RecItemType, WatchLaterItemExtend, WatchLaterJson } from '$define'
 import { request } from '$request'
 import { settings, updateSettings, useSettingsSnapshot } from '$settings'
 import { getHasLogined } from '$utility'
@@ -7,10 +7,10 @@ import { toast } from '$utility/toast'
 import { Switch, Tag } from 'antd'
 import dayjs from 'dayjs'
 import { cloneDeep, shuffle } from 'lodash'
-import { ComponentProps, ReactNode } from 'react'
+import type { ComponentProps, ReactNode } from 'react'
 import { proxy, useSnapshot } from 'valtio'
 import { proxySet } from 'valtio/utils'
-import { IService } from './base'
+import type { IService } from './base'
 
 export const watchLaterState = proxy({
   updatedAt: 0,

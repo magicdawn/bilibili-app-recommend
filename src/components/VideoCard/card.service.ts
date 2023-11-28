@@ -1,5 +1,5 @@
 import { HOST_APP } from '$common'
-import { AppRecItem, DmJson, PvideoJson } from '$define'
+import type { AppRecItem, DmJson, PvideoJson } from '$define'
 import { gmrequest, isWebApiSuccess, request } from '$request'
 import { getCsrfToken } from '$utility'
 import { toast } from '$utility/toast'

@@ -12,7 +12,8 @@ import {
   updateStore,
   whenQrCodeModalHide,
 } from './TvQrCodeAuth'
-import { PollResult, getQrCodeInfo, poll } from './api'
+import type { PollResult } from './api'
+import { getQrCodeInfo, poll } from './api'
 
 async function refreshQrCode() {
   const qrinfo = await getQrCodeInfo()
