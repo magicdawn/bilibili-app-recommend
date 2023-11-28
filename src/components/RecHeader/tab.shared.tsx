@@ -72,14 +72,16 @@ export const TabConfig: TabConfigItem[] = [
   },
   {
     key: 'popular-general',
-    icon: 'Star',
+    icon: 'Fire',
+    iconProps: { size: 16 },
     label: '综合热门',
     desc: '各个领域中新奇好玩的优质内容都在这里~',
     swr: true,
   },
   {
     key: 'popular-weekly',
-    icon: 'Star',
+    icon: 'TrendTwo',
+    iconProps: { size: 15 },
     label: '每周必看',
     desc: '每周五晚 18:00 更新',
     swr: true,
