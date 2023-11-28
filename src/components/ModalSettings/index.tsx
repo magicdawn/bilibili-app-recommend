@@ -2,7 +2,7 @@ import { APP_NAME } from '$common'
 import { AccessKeyManage } from '$components/AccessKeyManage'
 import { BaseModal, BaseModalClass, ModalClose } from '$components/BaseModal'
 import { iconCss } from '$components/RecHeader/tab'
-import { TabConfig, TabType, useCurrentShowingTabKeys } from '$components/RecHeader/tab.shared'
+import { TabConfig, TabKeys, useCurrentShowingTabKeys } from '$components/RecHeader/tab.shared'
 import { FlagSettingItem, HelpInfo } from '$components/piece'
 import { IconPark } from '$icon-park'
 import { cx } from '$libs'
@@ -521,14 +521,17 @@ function TabPaneAdvance() {
                 if (!newVal.length) {
                   return toast('至少选择一项!')
                 }
-                updateSettings({ showingTabKeys: newVal as TabType[] })
+
+                updateSettings({
+                  hidingTabKeys: TabKeys.filter((k) => !newVal.includes(k)),
+                })
               }}
             />
           </div>
           <Button
             style={{ marginTop: 5 }}
             onClick={() => {
-              updateSettings({ showingTabKeys: [] })
+              updateSettings({ hidingTabKeys: [] })
             }}
           >
             重置

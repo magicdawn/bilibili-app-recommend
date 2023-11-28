@@ -90,14 +90,11 @@ export const TabConfigMap = TabConfig.reduce((val, configItem) => {
   return { ...val, [configItem.key]: configItem }
 }, {}) as Record<TabType, TabConfigItem>
 
-export const TAB_ALLOW_VALUES = TabConfig.map((x) => x.key)
+export const TabKeys = TabConfig.map((x) => x.key)
 
 export function useCurrentShowingTabKeys(): TabType[] {
-  const { showingTabKeys } = useSettingsSnapshot()
-  return useMemo(
-    () => (showingTabKeys.length ? showingTabKeys : TabConfig.map((x) => x.key)),
-    [showingTabKeys]
-  )
+  const { hidingTabKeys } = useSettingsSnapshot()
+  return useMemo(() => TabKeys.filter((key) => !hidingTabKeys.includes(key)), [hidingTabKeys])
 }
 
 export function useCurrentTabConfig() {
@@ -114,7 +111,7 @@ export function useCurrentTabConfig() {
 
 function _getCurrentSourceTab(videoSourceTab: TabType, logined: boolean): TabType {
   // invalid
-  if (!TAB_ALLOW_VALUES.includes(videoSourceTab)) return 'recommend-app'
+  if (!TabKeys.includes(videoSourceTab)) return 'recommend-app'
 
   // not logined
   if (!logined) {
