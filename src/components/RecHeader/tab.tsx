@@ -46,7 +46,7 @@ export const TabConfig: TabConfigItem[] = [
     key: 'recommend-app',
     icon: 'Iphone',
     label: '推荐',
-    desc: '使用手机 APP 端推荐 API',
+    desc: '使用 Bilibili App 端推荐 API',
   },
   {
     key: 'recommend-pc',

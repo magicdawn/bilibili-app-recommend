@@ -190,6 +190,8 @@ export function useRefresh({
       return
     }
 
+    // update items
+    await new Promise((r) => requestIdleCallback(r, { timeout: 400 }))
     setItems(_items)
 
     // if swr, save list starting part only

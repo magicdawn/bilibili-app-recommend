@@ -76,6 +76,7 @@
     "antd": "^5.11.4",
     "axios": "0",
     "axios-userscript-adapter": "0",
+    "classnames": "^2.3.2",
     "dayjs": "1.11.10",
     "debug": "^4.3.4",
     "delay": "^6.0.0",

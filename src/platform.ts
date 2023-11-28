@@ -20,6 +20,8 @@ export const getIsInternalTesting = once(() => {
  */
 
 const getIsDarkMode = () => document.body.classList.contains('dark')
+// ||
+// document.documentElement.getAttribute('data-darkreader-scheme') === 'dark'
 const isDarkModeState = proxy({ value: getIsDarkMode() }) // like vue3 ref()
 
 export function useIsDarkMode() {
@@ -36,15 +38,19 @@ export function useColors() {
   return { bg, c }
 }
 
-const bodyOb = new MutationObserver(function () {
+const darkOb = new MutationObserver(function () {
   isDarkModeState.value = getIsDarkMode()
 })
-bodyOb.observe(document.body, {
+darkOb.observe(document.body, {
   attributes: true,
   attributeFilter: ['class'],
 })
+darkOb.observe(document.documentElement, {
+  attributes: true,
+  attributeFilter: ['data-darkreader-scheme'],
+})
 window.addEventListener('unload', () => {
-  bodyOb.disconnect()
+  darkOb.disconnect()
 })
 
 export const uaParseResult = UAParser()

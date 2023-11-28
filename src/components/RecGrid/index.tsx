@@ -5,7 +5,7 @@
 import { APP_NAME, baseDebug } from '$common'
 import { useModalDislikeVisible } from '$components/ModalDislike'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
-import { useCurrentSourceTab } from '$components/RecHeader/tab'
+import { TabType, useCurrentSourceTab } from '$components/RecHeader/tab'
 import { VideoCard, VideoCardEmitter, VideoCardEvents } from '$components/VideoCard'
 import { borderRadiusValue } from '$components/VideoCard/index.shared'
 import { IVideoCardData } from '$components/VideoCard/process/normalize'
@@ -105,26 +105,23 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
     // before refresh
     const preAction = useMemoizedFn(async () => {
       clearActiveIndex()
-      setExtraInfo?.()
+      setExtraInfo?.(getUsageInfo(tab))
     })
 
     // after refresh, setItems
     const postAction = useMemoizedFn(() => {
       clearActiveIndex()
       setLoadCompleteCount(1)
-
-      if (tab === 'watchlater') {
-        setExtraInfo?.(watchLaterService.usageInfo)
-      }
-      if (tab === 'fav') {
-        setExtraInfo?.(favService.usageInfo)
-      }
-      if (tab === 'dynamic-feed') {
-        setExtraInfo?.(dynamicFeedService.usageInfo)
-      }
+      setExtraInfo?.(getUsageInfo(tab))
 
       // check need loadMore
       checkShouldLoadMore()
+    })
+
+    const getUsageInfo = useMemoizedFn((tab: TabType): ReactNode => {
+      if (tab === 'watchlater') return watchLaterService.usageInfo
+      if (tab === 'fav') return favService.usageInfo
+      if (tab === 'dynamic-feed') return dynamicFeedService.usageInfo
     })
 
     const {
