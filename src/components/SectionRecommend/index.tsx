@@ -1,6 +1,6 @@
 import { baseDebug } from '$common'
 import { useRefresh } from '$components/RecGrid/useRefresh'
-import { useCurrentSourceTab } from '$components/RecHeader/tab'
+import { useCurrentSourceTab } from '$components/RecHeader/tab.shared'
 import {
   limitTwoLines,
   videoGrid,

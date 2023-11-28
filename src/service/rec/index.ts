@@ -2,7 +2,7 @@
 import { baseDebug } from '$common'
 import { FetcherOptions } from '$components/RecGrid/useRefresh'
 import { getColumnCount } from '$components/RecGrid/useShortcut'
-import { TabType } from '$components/RecHeader/tab'
+import { TabType } from '$components/RecHeader/tab.shared'
 import { anyFilterEnabled, filterRecItems } from '$components/VideoCard/process/filter'
 import { lookinto } from '$components/VideoCard/process/normalize'
 import { RecItemType } from '$define'
@@ -14,11 +14,12 @@ const debug = baseDebug.extend('service')
 
 export const recItemUniqer = (item: RecItemType) =>
   lookinto<string | number>(item, {
-    pc: (item) => item.id,
-    app: (item) => item.param,
-    dynamic: (item) => item.modules.module_dynamic.major.archive.aid,
-    watchlater: (item) => item.bvid,
-    fav: (item) => item.bvid,
+    'pc': (item) => item.id,
+    'app': (item) => item.param,
+    'dynamic': (item) => item.modules.module_dynamic.major.archive.aid,
+    'watchlater': (item) => item.bvid,
+    'fav': (item) => item.bvid,
+    'popular-general': (item) => item.bvid,
   })
 
 export function uniqConcat(existing: RecItemType[], newItems: RecItemType[]) {
@@ -38,8 +39,15 @@ export async function getMinCount(
   fetcherOptions: FetcherOptions,
   filterMultiplier = 5
 ) {
-  const { pcRecService, dynamicFeedService, watchLaterService, favService, tab, abortSignal } =
-    fetcherOptions
+  const {
+    tab,
+    abortSignal,
+    pcRecService,
+    dynamicFeedService,
+    watchLaterService,
+    favService,
+    popularGeneralService,
+  } = fetcherOptions
   const appRecService = new AppRecService()
 
   let items: RecItemType[] = []
@@ -48,24 +56,41 @@ export async function getMinCount(
   const addMore = async (restCount: number) => {
     let cur: RecItemType[] = []
 
-    // 动态
-    if (tab === 'dynamic-feed') {
-      cur = (await dynamicFeedService.loadMore(abortSignal)) || []
-      hasMore = dynamicFeedService.hasMore
-      items = items.concat(cur)
-      return
-    }
-    // 稍候再看
-    if (tab === 'watchlater') {
-      cur = (await watchLaterService.loadMore()) || []
-      hasMore = watchLaterService.hasMore
-      items = items.concat(cur)
-      return
-    }
-    // 收藏
-    if (tab === 'fav') {
-      cur = (await favService.loadMore()) || []
-      hasMore = favService.hasMore
+    if (
+      tab === 'dynamic-feed' ||
+      tab === 'watchlater' ||
+      tab === 'fav' ||
+      tab === 'popular-general'
+    ) {
+      switch (tab) {
+        // 动态
+        case 'dynamic-feed':
+          cur = (await dynamicFeedService.loadMore(abortSignal)) || []
+          hasMore = dynamicFeedService.hasMore
+          break
+
+        // 稍候再看
+        case 'watchlater':
+          cur = (await watchLaterService.loadMore()) || []
+          hasMore = watchLaterService.hasMore
+          break
+
+        // 收藏
+        case 'fav':
+          cur = (await favService.loadMore()) || []
+          hasMore = favService.hasMore
+          break
+
+        // 综合热门
+        case 'popular-general':
+          cur = (await popularGeneralService.loadMore()) || []
+          hasMore = popularGeneralService.hasMore
+          break
+
+        default:
+          break
+      }
+
       items = items.concat(cur)
       return
     }

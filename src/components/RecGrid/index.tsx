@@ -5,7 +5,7 @@
 import { APP_NAME, baseDebug } from '$common'
 import { useModalDislikeVisible } from '$components/ModalDislike'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
-import { TabType, useCurrentSourceTab } from '$components/RecHeader/tab'
+import { TabType, useCurrentSourceTab } from '$components/RecHeader/tab.shared'
 import { VideoCard, VideoCardEmitter, VideoCardEvents } from '$components/VideoCard'
 import { borderRadiusValue } from '$components/VideoCard/index.shared'
 import { IVideoCardData } from '$components/VideoCard/process/normalize'
@@ -143,6 +143,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
       dynamicFeedService,
       watchLaterService,
       favService,
+      popularGeneralService,
     } = useRefresh({
       tab,
       debug,
@@ -196,18 +197,29 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
       loadMoreRequesting.current = { [refreshAtWhenStart]: true }
 
       let newItems = items
-      let _hasMore = true
+      let newHasMore = true
       try {
         if (tab === 'dynamic-feed') {
           newItems = newItems.concat((await dynamicFeedService.loadMore()) || [])
-          _hasMore = dynamicFeedService.hasMore
-        } else if (tab === 'watchlater') {
+          newHasMore = dynamicFeedService.hasMore
+        }
+        //
+        else if (tab === 'watchlater') {
           newItems = newItems.concat((await watchLaterService.loadMore()) || [])
-          _hasMore = watchLaterService.hasMore
-        } else if (tab === 'fav') {
+          newHasMore = watchLaterService.hasMore
+        }
+        //
+        else if (tab === 'fav') {
           newItems = newItems.concat((await favService.loadMore()) || [])
-          _hasMore = favService.hasMore
-        } else {
+          newHasMore = favService.hasMore
+        }
+        //
+        else if (tab === 'popular-general') {
+          newItems = newItems.concat((await popularGeneralService.loadMore()) || [])
+          newHasMore = popularGeneralService.hasMore
+        }
+        //
+        else {
           // loadMore 至少 load 一项, 需要触发 InfiniteScroll.componentDidUpdate
           while (!(newItems.length > items.length)) {
             // keep-follow-only 需要大基数
@@ -234,7 +246,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
       }
 
       debug('loadMore: seq(%s) len %s -> %s', loadCompleteCount + 1, items.length, newItems.length)
-      setHasMore(_hasMore)
+      setHasMore(newHasMore)
       setItems(newItems)
       setLoadCompleteCount((c) => c + 1)
       loadMoreRequesting.current[refreshAtWhenStart] = false

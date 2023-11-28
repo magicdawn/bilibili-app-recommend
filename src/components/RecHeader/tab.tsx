@@ -2,15 +2,12 @@ import { APP_NAME } from '$common'
 import { proxyWithLocalStorage } from '$common/hooks/proxyWithLocalStorage'
 import { type OnRefresh } from '$components/RecGrid/useRefresh'
 import { HelpInfo } from '$components/piece'
-import { IconName, IconPark } from '$icon-park'
+import { IconPark } from '$icon-park'
 import { useSettingsSnapshot } from '$settings'
-import { checkLoginStatus, getHasLogined, useHasLogined } from '$utility'
-import { toast } from '$utility/toast'
+import { checkLoginStatus, useHasLogined } from '$utility'
 import { css } from '@emotion/react'
-import { type Icon } from '@icon-park/react/es/runtime'
 import { Radio } from 'antd'
-import { ComponentProps, useMemo } from 'react'
-import { useSnapshot } from 'valtio'
+import { TabType, toastNeedLogin, useCurrentSourceTab, useCurrentTabConfig } from './tab.shared'
 
 export const VIDEO_SOURCE_TAB_STORAGE_KEY = `${APP_NAME}-video-source-tab`
 
@@ -22,127 +19,6 @@ export const videoSourceTabState = proxyWithLocalStorage<{ value: TabType }>(
 export const iconCss = css`
   margin-right: 4px;
 `
-
-export type TabType =
-  | 'recommend-app'
-  | 'recommend-pc'
-  | 'keep-follow-only'
-  | 'dynamic-feed'
-  | 'watchlater'
-  | 'fav'
-
-type TabConfigItem = {
-  key: TabType
-  icon: IconName
-  iconProps?: ComponentProps<Icon>
-  label: string
-  desc: string
-  swr?: boolean // stale while revalidate
-  reuseable?: boolean // can reuse
-}
-
-export const TabConfig: TabConfigItem[] = [
-  {
-    key: 'recommend-app',
-    icon: 'Iphone',
-    label: '推荐',
-    desc: '使用 Bilibili App 端推荐 API',
-  },
-  {
-    key: 'recommend-pc',
-    icon: 'Computer',
-    label: '推荐',
-    desc: '使用新版首页顶部推荐 API',
-  },
-  {
-    key: 'keep-follow-only',
-    icon: 'Concern',
-    label: '已关注',
-    desc: '推荐中只保留「已关注」,会很慢',
-  },
-  {
-    key: 'dynamic-feed',
-    icon: 'Tumblr',
-    iconProps: { size: 16 },
-    label: '动态',
-    desc: '视频投稿动态',
-    swr: true,
-  },
-  {
-    key: 'watchlater',
-    icon: 'FileCabinet',
-    iconProps: { size: 15 },
-    label: '稍后再看',
-    desc: '你添加的稍后再看; 默认随机乱序, 可在设置-高级设置 或 稍后再看 Tab 中关闭乱序',
-    swr: true,
-  },
-  {
-    key: 'fav',
-    icon: 'Star',
-    iconProps: { size: 15 },
-    label: '收藏',
-    desc: '你添加的收藏; 默认随机乱序, 可在设置-高级设置 或 收藏 Tab 中关闭乱序',
-    reuseable: false,
-  },
-]
-
-export const TabConfigMap = TabConfig.reduce((val, configItem) => {
-  return { ...val, [configItem.key]: configItem }
-}, {}) as Record<TabType, TabConfigItem>
-
-export const TAB_ALLOW_VALUES = TabConfig.map((x) => x.key)
-
-export function useCurrentShowingTabKeys(): TabType[] {
-  const { showingTabKeys } = useSettingsSnapshot()
-  return useMemo(
-    () => (showingTabKeys.length ? showingTabKeys : TabConfig.map((x) => x.key)),
-    [showingTabKeys]
-  )
-}
-
-function useCurrentTabConfig() {
-  const currentShowingTabKeys = useCurrentShowingTabKeys()
-  const logined = useHasLogined()
-  return useMemo(
-    () =>
-      TabConfig.filter(
-        (x) => currentShowingTabKeys.includes(x.key) || (!logined && x.key === 'recommend-app')
-      ),
-    [currentShowingTabKeys, logined]
-  )
-}
-
-function _getCurrentSourceTab(videoSourceTab: TabType, logined: boolean): TabType {
-  // invalid
-  if (!TAB_ALLOW_VALUES.includes(videoSourceTab)) return 'recommend-app'
-
-  // not logined
-  if (!logined) {
-    if (videoSourceTab === 'recommend-app' || videoSourceTab === 'recommend-pc') {
-      return videoSourceTab
-    } else {
-      return 'recommend-app'
-    }
-  }
-
-  return videoSourceTab
-}
-
-export function useCurrentSourceTab(): TabType {
-  return _getCurrentSourceTab(useSnapshot(videoSourceTabState).value, useHasLogined())
-}
-export function getCurrentSourceTab(): TabType {
-  return _getCurrentSourceTab(videoSourceTabState.value, getHasLogined())
-}
-
-function toastNeedLogin() {
-  return toast('你需要登录B站后使用该功能! 如已完成登录, 请刷新网页重试~')
-}
-
-function gotoLogin() {
-  const href = 'https://passport.bilibili.com/login'
-  location.href = href
-}
 
 const radioBtnCss = css`
   height: 26px;

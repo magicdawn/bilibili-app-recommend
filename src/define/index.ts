@@ -4,12 +4,19 @@ import { DmJson } from './dm'
 import { FavItemExtend } from './fav'
 import { DynamicFeedItem } from './pc-dynamic-feed'
 import { PcRecItem } from './pc-recommend'
+import { PopularGeneralItem } from './popular-general'
+import { PopularWeeklyItem } from './popular-weekly'
 
 export { FavItem, FavItemExtend } from './fav'
 export { DynamicFeedItem, DynamicFeedJson } from './pc-dynamic-feed'
 export { PcRecItem, PcRecommendJson } from './pc-recommend'
 export { WatchLaterItem, WatchLaterJson } from './watchlater'
 export { DmJson, PvideoJson }
+
+import { PvideoJson } from './pvideo'
+import { WatchLaterItem } from './watchlater'
+export type PvideoData = PvideoJson['data']
+export type DmData = DmJson['data']
 
 /**
  * app
@@ -47,6 +54,8 @@ export type RecItemType =
   | DynamicFeedItemExtend
   | WatchLaterItemExtend
   | FavItemExtend
+  | PopularGeneralItemExtend
+// | PopularWeeklyItemExtend
 
 export interface PcRecItemExtend extends PcRecItem {
   uniqId: string
@@ -63,7 +72,12 @@ export interface WatchLaterItemExtend extends WatchLaterItem {
   api: 'watchlater'
 }
 
-import { PvideoJson } from './pvideo'
-import { WatchLaterItem } from './watchlater'
-export type PvideoData = PvideoJson['data']
-export type DmData = DmJson['data']
+export interface PopularGeneralItemExtend extends PopularGeneralItem {
+  uniqId: string
+  api: 'popular-general'
+}
+
+export interface PopularWeeklyItemExtend extends PopularWeeklyItem {
+  uniqId: string
+  api: 'popular-weekly'
+}

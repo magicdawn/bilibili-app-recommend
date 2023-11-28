@@ -7,6 +7,7 @@ import {
   DynamicFeedItemExtend,
   IpadAppRecItemExtend,
   PcRecItemExtend,
+  PopularGeneralItemExtend,
   RecItemType,
   WatchLaterItemExtend,
 } from '$define'
@@ -69,36 +70,32 @@ export interface IVideoCardData {
 export function lookinto<T>(
   item: RecItemType,
   opts: {
-    pc: (item: PcRecItemExtend) => T
-    app: (item: AppRecItemExtend) => T
-    dynamic: (item: DynamicFeedItemExtend) => T
-    watchlater: (item: WatchLaterItemExtend) => T
-    fav: (item: FavItemExtend) => T
+    'pc': (item: PcRecItemExtend) => T
+    'app': (item: AppRecItemExtend) => T
+    'dynamic': (item: DynamicFeedItemExtend) => T
+    'watchlater': (item: WatchLaterItemExtend) => T
+    'fav': (item: FavItemExtend) => T
+    'popular-general': (item: PopularGeneralItemExtend) => T
   }
 ): T {
-  /**
-   * raw data
-   */
-  const isPc = item.api === 'pc'
-  const isApp = item.api === 'app'
-  const isDynamic = item.api === 'dynamic'
-  const isWatchlater = item.api === 'watchlater'
-  const isFav = item.api === 'fav'
+  if (item.api === 'pc') return opts.pc(item)
+  if (item.api === 'app') return opts.app(item)
+  if (item.api === 'dynamic') return opts.dynamic(item)
+  if (item.api === 'watchlater') return opts.watchlater(item)
+  if (item.api === 'fav') return opts.fav(item)
+  if (item.api === 'popular-general') return opts['popular-general'](item)
 
-  if (isPc) return opts.pc(item)
-  if (isApp) return opts.app(item)
-  if (isDynamic) return opts.dynamic(item)
-  if (isWatchlater) return opts.watchlater(item)
-  return opts.fav(item)
+  throw new Error('unexpected api type')
 }
 
 export function normalizeCardData(item: RecItemType) {
   const ret = lookinto<IVideoCardData>(item, {
-    pc: apiPcAdapter,
-    app: apiAppAdapter,
-    dynamic: apiDynamicAdapter,
-    watchlater: apiWatchLaterAdapter,
-    fav: apiFavAdapter,
+    'pc': apiPcAdapter,
+    'app': apiAppAdapter,
+    'dynamic': apiDynamicAdapter,
+    'watchlater': apiWatchLaterAdapter,
+    'fav': apiFavAdapter,
+    'popular-general': apiPopularGeneralAdapter,
   })
 
   // handle mixed content
@@ -477,5 +474,39 @@ export function apiFavAdapter(item: FavItemExtend): IVideoCardData {
     authorName: item.upper.name,
     authorFace: item.upper.face,
     authorMid: String(item.upper.mid),
+  }
+}
+
+export function apiPopularGeneralAdapter(item: PopularGeneralItemExtend): IVideoCardData {
+  return {
+    // video
+    avid: String(item.aid),
+    bvid: item.bvid,
+    goto: 'av',
+    href: `/video/${item.bvid}/`,
+    title: item.title,
+    cover: item.pic,
+    pubts: item.pubdate,
+    pubdateDisplay: formatTimeStamp(item.pubdate),
+    duration: item.duration,
+    durationStr: formatDuration(item.duration),
+    recommendReason: item.rcmd_reason?.content,
+
+    // stat
+    play: item.stat.view,
+    like: item.stat.like,
+    coin: undefined,
+    danmaku: item.stat.danmaku,
+    favorite: undefined,
+    statItems: [
+      { field: 'play', value: formatCount(item.stat.view) || STAT_NUMBER_FALLBACK },
+      { field: 'like', value: formatCount(item.stat.like) || STAT_NUMBER_FALLBACK },
+      { field: 'danmaku', value: formatCount(item.stat.danmaku) || STAT_NUMBER_FALLBACK },
+    ] as StatItemType[],
+
+    // author
+    authorName: item.owner.name,
+    authorFace: item.owner.face,
+    authorMid: String(item.owner.mid),
   }
 }

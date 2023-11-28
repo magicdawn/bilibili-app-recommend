@@ -26,7 +26,8 @@ import { useAnimate } from 'framer-motion'
 import { proxy, useSnapshot } from 'valtio'
 import { AccessKeyManage } from '../AccessKeyManage'
 import { ModalFeed } from '../ModalFeed'
-import { VideoSourceTab, useCurrentSourceTab } from './tab'
+import { VideoSourceTab } from './tab'
+import { useCurrentSourceTab } from './tab.shared'
 
 const debug = baseDebug.extend('RecHeader')
 

@@ -1,9 +1,10 @@
 import { useRefInit } from '$common/hooks/useRefInit'
-import { TabConfigMap, TabType, getCurrentSourceTab } from '$components/RecHeader/tab'
+import { TabConfigMap, TabType, getCurrentSourceTab } from '$components/RecHeader/tab.shared'
 import { RecItemType } from '$define'
 import { DynamicFeedRecService, dynamicFeedFilterStore } from '$service/rec/dynamic-feed'
 import { FavRecService } from '$service/rec/fav'
 import { PcRecService } from '$service/rec/pc'
+import { PopularGeneralService } from '$service/rec/popular-general'
 import { WatchLaterRecService } from '$service/rec/watchlater'
 import { nextTick } from '$utility'
 import { useGetState, useMemoizedFn } from 'ahooks'
@@ -20,11 +21,13 @@ export function useOnRefreshContext() {
 
 export type FetcherOptions = {
   tab: TabType
+  abortSignal: AbortSignal
+
   pcRecService: PcRecService
   dynamicFeedService: DynamicFeedRecService
   watchLaterService: WatchLaterRecService
   favService: FavRecService
-  abortSignal: AbortSignal
+  popularGeneralService: PopularGeneralService
 }
 
 export function useRefresh({
@@ -61,6 +64,9 @@ export function useRefresh({
   )
   const [watchLaterService, setWatchLaterService] = useState(() => new WatchLaterRecService())
   const [favService, setFavService] = useState(() => new FavRecService())
+  const [popularGeneralService, setPopularGeneralService] = useState(
+    () => new PopularGeneralService()
+  )
 
   const [refreshing, setRefreshing] = useState(false)
   const [refreshedAt, setRefreshedAt, getRefreshedAt] = useGetState<number>(() => Date.now())
@@ -154,6 +160,12 @@ export function useRefresh({
       }
     }
 
+    let _popularGeneralService = popularGeneralService
+    if (tab === 'popular-general') {
+      _popularGeneralService = new PopularGeneralService()
+      setPopularGeneralService(_popularGeneralService)
+    }
+
     const _abortController = new AbortController()
     const _signal = _abortController.signal
     setRefreshAbortController(_abortController)
@@ -164,6 +176,7 @@ export function useRefresh({
       dynamicFeedService: _dynamicFeedService,
       watchLaterService: _watchLaterService,
       favService: _favServive,
+      popularGeneralService: _popularGeneralService,
       abortSignal: _signal,
     }
 
@@ -207,6 +220,7 @@ export function useRefresh({
     if (tab === 'dynamic-feed') setHasMore(_dynamicFeedService.hasMore)
     if (tab === 'watchlater') setHasMore(_watchLaterService.hasMore)
     if (tab === 'fav') setHasMore(_favServive.hasMore)
+    if (tab === 'popular-general') setHasMore(_popularGeneralService.hasMore)
 
     await postAction?.()
 
@@ -243,11 +257,13 @@ export function useRefresh({
     dynamicFeedService,
     watchLaterService,
     favService,
+    popularGeneralService,
 
     setPcRecService,
     setDynamicFeedService,
     setWatchLaterService,
     setFavService,
+    setPopularGeneralService,
 
     refresh,
   }

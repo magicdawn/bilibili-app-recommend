@@ -1,4 +1,4 @@
-import { TabType } from '$components/RecHeader/tab'
+import { TabType } from '$components/RecHeader/tab.shared'
 import { RecItemType } from '$define'
 import { settings } from '$settings'
 import { normalizeCardData } from './normalize'
