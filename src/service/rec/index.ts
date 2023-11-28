@@ -1,6 +1,6 @@
 /* eslint-disable no-constant-condition */
 import { baseDebug } from '$common'
-import type { FetcherOptions } from '$components/RecGrid/useRefresh'
+import type { FetcherOptions, ServiceMap } from '$components/RecGrid/useRefresh'
 import { getColumnCount } from '$components/RecGrid/useShortcut'
 import type { TabType } from '$components/RecHeader/tab.shared'
 import { anyFilterEnabled, filterRecItems } from '$components/VideoCard/process/filter'
@@ -20,6 +20,7 @@ export const recItemUniqer = (item: RecItemType) =>
     'watchlater': (item) => item.bvid,
     'fav': (item) => item.bvid,
     'popular-general': (item) => item.bvid,
+    'popular-weekly': (item) => item.bvid,
   })
 
 export function uniqConcat(existing: RecItemType[], newItems: RecItemType[]) {
@@ -39,15 +40,7 @@ export async function getMinCount(
   fetcherOptions: FetcherOptions,
   filterMultiplier = 5
 ) {
-  const {
-    tab,
-    abortSignal,
-    pcRecService,
-    dynamicFeedService,
-    watchLaterService,
-    favService,
-    popularGeneralService,
-  } = fetcherOptions
+  const { tab, abortSignal, pcRecService, serviceMap } = fetcherOptions
   const appRecService = new AppRecService()
 
   let items: RecItemType[] = []
@@ -56,43 +49,19 @@ export async function getMinCount(
   const addMore = async (restCount: number) => {
     let cur: RecItemType[] = []
 
-    if (
-      tab === 'dynamic-feed' ||
-      tab === 'watchlater' ||
-      tab === 'fav' ||
-      tab === 'popular-general'
-    ) {
-      switch (tab) {
-        // 动态
-        case 'dynamic-feed':
-          cur = (await dynamicFeedService.loadMore(abortSignal)) || []
-          hasMore = dynamicFeedService.hasMore
-          break
-
-        // 稍候再看
-        case 'watchlater':
-          cur = (await watchLaterService.loadMore()) || []
-          hasMore = watchLaterService.hasMore
-          break
-
-        // 收藏
-        case 'fav':
-          cur = (await favService.loadMore()) || []
-          hasMore = favService.hasMore
-          break
-
-        // 综合热门
-        case 'popular-general':
-          cur = (await popularGeneralService.loadMore()) || []
-          hasMore = popularGeneralService.hasMore
-          break
-
-        default:
-          break
+    // tab === 'dynamic-feed' || // 动态
+    // tab === 'watchlater' || // 稍候再看
+    // tab === 'fav' || // 收藏
+    // tab === 'popular-general' || // 综合热门
+    // tab === 'popular-weekly' // 每周必看
+    if (tab in serviceMap) {
+      const service = serviceMap[tab as keyof ServiceMap]
+      if (service) {
+        cur = (await service.loadMore(abortSignal)) || []
+        hasMore = service.hasMore
+        items = items.concat(cur)
+        return
       }
-
-      items = items.concat(cur)
-      return
     }
 
     let times: number

@@ -17,6 +17,7 @@ import { IconPark } from '$icon-park'
 import { cx } from '$libs'
 import { getIsInternalTesting, isSafari } from '$platform'
 import { getRecommendTimes, refreshForGrid, uniqConcat } from '$service/rec'
+import type { IService } from '$service/rec/base'
 import { useSettingsSnapshot } from '$settings'
 import { toast } from '$utility/toast'
 import { css as styled } from '@emotion/css'
@@ -115,9 +116,11 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
     })
 
     const getUsageInfo = useMemoizedFn((tab: TabType): ReactNode => {
-      if (tab === 'watchlater') return watchLaterService.usageInfo
-      if (tab === 'fav') return favService.usageInfo
-      if (tab === 'dynamic-feed') return dynamicFeedService.usageInfo
+      const s: IService | undefined = getIService(tab, serviceMap)
+      return s?.usageInfo
+      // if (tab === 'watchlater') return serviceMap.watchlater.usageInfo
+      // if (tab === 'fav') return serviceMap.fav.usageInfo
+      // if (tab === 'dynamic-feed') return serviceMap['dynamic-feed'].usageInfo
     })
 
     const {
@@ -135,11 +138,10 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
       hasMore,
       setHasMore,
 
+      refreshAbortController,
       pcRecService,
-      dynamicFeedService,
-      watchLaterService,
-      favService,
-      popularGeneralService,
+      serviceMap,
+      getIService,
     } = useRefresh({
       tab,
       debug,
@@ -195,26 +197,18 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
       let newItems = items
       let newHasMore = true
       try {
-        if (tab === 'dynamic-feed') {
-          newItems = newItems.concat((await dynamicFeedService.loadMore()) || [])
-          newHasMore = dynamicFeedService.hasMore
+        // tab === 'dynamic-feed' ||
+        // tab === 'watchlater' ||
+        // tab === 'fav' ||
+        // tab === 'popular-general' ||
+        // tab === 'popular-weekly'
+        const service = getIService(tab, serviceMap)
+        if (service) {
+          newItems = newItems.concat((await service.loadMore(refreshAbortController.signal)) || [])
+          newHasMore = service.hasMore
         }
-        //
-        else if (tab === 'watchlater') {
-          newItems = newItems.concat((await watchLaterService.loadMore()) || [])
-          newHasMore = watchLaterService.hasMore
-        }
-        //
-        else if (tab === 'fav') {
-          newItems = newItems.concat((await favService.loadMore()) || [])
-          newHasMore = favService.hasMore
-        }
-        //
-        else if (tab === 'popular-general') {
-          newItems = newItems.concat((await popularGeneralService.loadMore()) || [])
-          newHasMore = popularGeneralService.hasMore
-        }
-        //
+
+        // others
         else {
           // loadMore 至少 load 一项, 需要触发 InfiniteScroll.componentDidUpdate
           while (!(newItems.length > items.length)) {
@@ -346,12 +340,12 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
         toast(`已移除: ${data.title}`, 4000)
 
         if (tab === 'watchlater') {
-          watchLaterService.count--
-          setExtraInfo?.(watchLaterService.usageInfo)
+          serviceMap.watchlater.count--
+          setExtraInfo?.(serviceMap.watchlater.usageInfo)
         }
         if (tab === 'fav') {
-          favService.total--
-          setExtraInfo?.(favService.usageInfo)
+          serviceMap.fav.total--
+          setExtraInfo?.(serviceMap.fav.usageInfo)
         }
 
         return newItems

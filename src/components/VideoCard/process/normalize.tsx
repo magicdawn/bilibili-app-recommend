@@ -8,6 +8,7 @@ import type {
   IpadAppRecItemExtend,
   PcRecItemExtend,
   PopularGeneralItemExtend,
+  PopularWeeklyItemExtend,
   RecItemType,
   WatchLaterItemExtend,
 } from '$define'
@@ -77,6 +78,7 @@ export function lookinto<T>(
     'watchlater': (item: WatchLaterItemExtend) => T
     'fav': (item: FavItemExtend) => T
     'popular-general': (item: PopularGeneralItemExtend) => T
+    'popular-weekly': (item: PopularWeeklyItemExtend) => T
   }
 ): T {
   if (item.api === 'pc') return opts.pc(item)
@@ -85,8 +87,9 @@ export function lookinto<T>(
   if (item.api === 'watchlater') return opts.watchlater(item)
   if (item.api === 'fav') return opts.fav(item)
   if (item.api === 'popular-general') return opts['popular-general'](item)
+  if (item.api === 'popular-weekly') return opts['popular-weekly'](item)
 
-  throw new Error('unexpected api type')
+  throw new Error(`unknown api type`)
 }
 
 export function normalizeCardData(item: RecItemType) {
@@ -97,6 +100,7 @@ export function normalizeCardData(item: RecItemType) {
     'watchlater': apiWatchLaterAdapter,
     'fav': apiFavAdapter,
     'popular-general': apiPopularGeneralAdapter,
+    'popular-weekly': apiPopularWeeklyAdapter,
   })
 
   // handle mixed content
@@ -492,6 +496,40 @@ export function apiPopularGeneralAdapter(item: PopularGeneralItemExtend): IVideo
     duration: item.duration,
     durationStr: formatDuration(item.duration),
     recommendReason: item.rcmd_reason?.content,
+
+    // stat
+    play: item.stat.view,
+    like: item.stat.like,
+    coin: undefined,
+    danmaku: item.stat.danmaku,
+    favorite: undefined,
+    statItems: [
+      { field: 'play', value: formatCount(item.stat.view) || STAT_NUMBER_FALLBACK },
+      { field: 'like', value: formatCount(item.stat.like) || STAT_NUMBER_FALLBACK },
+      { field: 'danmaku', value: formatCount(item.stat.danmaku) || STAT_NUMBER_FALLBACK },
+    ] as StatItemType[],
+
+    // author
+    authorName: item.owner.name,
+    authorFace: item.owner.face,
+    authorMid: String(item.owner.mid),
+  }
+}
+
+export function apiPopularWeeklyAdapter(item: PopularWeeklyItemExtend): IVideoCardData {
+  return {
+    // video
+    avid: String(item.aid),
+    bvid: item.bvid,
+    goto: 'av',
+    href: `/video/${item.bvid}/`,
+    title: item.title,
+    cover: item.pic,
+    pubts: item.pubdate,
+    pubdateDisplay: formatTimeStamp(item.pubdate),
+    duration: item.duration,
+    durationStr: formatDuration(item.duration),
+    recommendReason: item.rcmd_reason,
 
     // stat
     play: item.stat.view,

@@ -55,7 +55,7 @@ export type RecItemType =
   | WatchLaterItemExtend
   | FavItemExtend
   | PopularGeneralItemExtend
-// | PopularWeeklyItemExtend
+  | PopularWeeklyItemExtend
 
 export interface PcRecItemExtend extends PcRecItem {
   uniqId: string

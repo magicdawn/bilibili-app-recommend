@@ -1033,6 +1033,7 @@ const VideoCardInner = memo(function VideoCardInner({
             css={css`
               flex: 1;
               margin-left: 10px;
+              overflow: hidden;
             `}
           >
             <a href={href} target='_blank'>
@@ -1088,6 +1089,7 @@ const VideoCardInner = memo(function VideoCardInner({
                       css={css`
                         margin-top: 4px;
                         padding-left: 0;
+                        max-width: 100%;
                       `}
                     >
                       {recommendReason}

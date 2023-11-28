@@ -6,6 +6,7 @@ import { DynamicFeedRecService, dynamicFeedFilterStore } from '$service/rec/dyna
 import { FavRecService } from '$service/rec/fav'
 import { PcRecService } from '$service/rec/pc'
 import { PopularGeneralService } from '$service/rec/popular-general'
+import { PopularWeeklyService } from '$service/rec/popular-weekly'
 import { WatchLaterRecService } from '$service/rec/watchlater'
 import { nextTick } from '$utility'
 import { useGetState, useMemoizedFn } from 'ahooks'
@@ -20,15 +21,24 @@ export function useOnRefreshContext() {
   return useContext(OnRefreshContext)
 }
 
+const serviceFactories = {
+  'dynamic-feed': () => new DynamicFeedRecService(dynamicFeedFilterStore.upMid),
+  'watchlater': () => new WatchLaterRecService(),
+  'fav': () => new FavRecService(),
+  'popular-general': () => new PopularGeneralService(),
+  'popular-weekly': () => new PopularWeeklyService(),
+}
+
+export type ServiceMap = {
+  [K in keyof typeof serviceFactories]: ReturnType<(typeof serviceFactories)[K]>
+}
+
 export type FetcherOptions = {
   tab: TabType
   abortSignal: AbortSignal
+  serviceMap: ServiceMap
 
   pcRecService: PcRecService
-  dynamicFeedService: DynamicFeedRecService
-  watchLaterService: WatchLaterRecService
-  favService: FavRecService
-  popularGeneralService: PopularGeneralService
 }
 
 export function useRefresh({
@@ -59,15 +69,12 @@ export function useRefresh({
   const [hasMore, setHasMore] = useState(true)
   const [items, setItems] = useState<RecItemType[]>([])
 
+  const [serviceMap, setServiceMap] = useState<ServiceMap>(() => {
+    return Object.fromEntries(
+      Object.entries(serviceFactories).map(([key, factory]) => [key, factory()])
+    ) as unknown as ServiceMap
+  })
   const [pcRecService, setPcRecService] = useState(() => new PcRecService())
-  const [dynamicFeedService, setDynamicFeedService] = useState(
-    () => new DynamicFeedRecService(dynamicFeedFilterStore.upMid)
-  )
-  const [watchLaterService, setWatchLaterService] = useState(() => new WatchLaterRecService())
-  const [favService, setFavService] = useState(() => new FavRecService())
-  const [popularGeneralService, setPopularGeneralService] = useState(
-    () => new PopularGeneralService()
-  )
 
   const [refreshing, setRefreshing] = useState(false)
   const [refreshedAt, setRefreshedAt, getRefreshedAt] = useGetState<number>(() => Date.now())
@@ -139,46 +146,41 @@ export function useRefresh({
       setPcRecService(_pcRecService)
     }
 
-    let _dynamicFeedService = dynamicFeedService
+    const newServiceMap = { ...serviceMap }
     if (tab === 'dynamic-feed') {
-      _dynamicFeedService = new DynamicFeedRecService(dynamicFeedFilterStore.upMid)
-      setDynamicFeedService(_dynamicFeedService)
+      newServiceMap[tab] = serviceFactories[tab]()
+      setServiceMap(newServiceMap)
     }
-
-    let _watchLaterService = watchLaterService
     if (tab === 'watchlater') {
-      _watchLaterService = new WatchLaterRecService(options?.watchlaterKeepOrder)
-      setWatchLaterService(_watchLaterService)
+      newServiceMap[tab] = serviceFactories[tab]()
+      setServiceMap(newServiceMap)
     }
-
-    let _favServive = favService
     if (tab === 'fav') {
       if (shouldReuse) {
-        _favServive.restore()
+        serviceMap.fav.restore()
       } else {
-        _favServive = new FavRecService()
-        setFavService(_favServive)
+        newServiceMap[tab] = serviceFactories[tab]()
+        setServiceMap(newServiceMap)
       }
     }
-
-    let _popularGeneralService = popularGeneralService
     if (tab === 'popular-general') {
-      _popularGeneralService = new PopularGeneralService()
-      setPopularGeneralService(_popularGeneralService)
+      newServiceMap[tab] = serviceFactories[tab]()
+      setServiceMap(newServiceMap)
+    }
+    if (tab === 'popular-weekly') {
+      newServiceMap[tab] = serviceFactories[tab]()
+      setServiceMap(newServiceMap)
     }
 
     const _abortController = new AbortController()
     const _signal = _abortController.signal
     setRefreshAbortController(_abortController)
 
-    const fetcherOptions = {
+    const fetcherOptions: FetcherOptions = {
       tab,
-      pcRecService: _pcRecService,
-      dynamicFeedService: _dynamicFeedService,
-      watchLaterService: _watchLaterService,
-      favService: _favServive,
-      popularGeneralService: _popularGeneralService,
       abortSignal: _signal,
+      serviceMap: newServiceMap,
+      pcRecService: _pcRecService,
     }
 
     debug('refresh(): shouldReuse=%s swr=%s', shouldReuse, swr)
@@ -218,15 +220,20 @@ export function useRefresh({
     }
 
     // hasMore check
-    if (tab === 'dynamic-feed') setHasMore(_dynamicFeedService.hasMore)
-    if (tab === 'watchlater') setHasMore(_watchLaterService.hasMore)
-    if (tab === 'fav') setHasMore(_favServive.hasMore)
-    if (tab === 'popular-general') setHasMore(_popularGeneralService.hasMore)
+    // only items in serviceMap need hasMore check
+    const service = getIService(tab, newServiceMap)
+    if (service) setHasMore(service.hasMore)
 
     await postAction?.()
 
     const cost = performance.now() - start
     debug('refresh(): [success] cost %s ms', cost.toFixed(0))
+  })
+
+  const getIService = useMemoizedFn((tab: TabType, serviceMap: ServiceMap) => {
+    if (tab in serviceMap) {
+      return serviceMap[tab as keyof ServiceMap]
+    }
   })
 
   return {
@@ -255,16 +262,11 @@ export function useRefresh({
     setSwr,
 
     pcRecService,
-    dynamicFeedService,
-    watchLaterService,
-    favService,
-    popularGeneralService,
+    serviceMap,
 
     setPcRecService,
-    setDynamicFeedService,
-    setWatchLaterService,
-    setFavService,
-    setPopularGeneralService,
+    setServiceMap,
+    getIService,
 
     refresh,
   }

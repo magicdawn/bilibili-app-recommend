@@ -1,9 +1,11 @@
+import type { TabType } from '$components/RecHeader/tab.shared'
 import type { PopularGeneralItemExtend } from '$define'
 import type { PopularGeneralJson } from '$define/popular-general'
 import { request } from '$request'
 import type { IService } from './base'
 
 export class PopularGeneralService implements IService {
+  forTab: TabType = 'popular-general'
   hasMore = true
   page = 1
 

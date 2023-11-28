@@ -1,4 +1,5 @@
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
+import type { TabType } from '$components/RecHeader/tab.shared'
 import type { FavItemExtend } from '$define/fav'
 import type { FavFolderListAllItem, FavFolderListAllJson } from '$define/fav/folder-list-all'
 import type { FavFolderDetailInfo, ResourceListJSON } from '$define/fav/resource-list'
@@ -21,6 +22,7 @@ export function formatFavFolderUrl(id: number) {
 
 export class FavRecService implements IService {
   static PAGE_SIZE = 20
+  forTab: TabType = 'fav'
 
   useShuffle: boolean
   constructor() {

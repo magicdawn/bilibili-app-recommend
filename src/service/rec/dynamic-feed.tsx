@@ -1,5 +1,6 @@
 import { verticalAlignStyle } from '$common/emotion-css'
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
+import type { TabType } from '$components/RecHeader/tab.shared'
 import type { DynamicFeedItemExtend, DynamicFeedJson } from '$define'
 import { IconPark } from '$icon-park'
 import { request } from '$request'
@@ -19,6 +20,7 @@ import type { IService } from './base'
 
 export class DynamicFeedRecService implements IService {
   static PAGE_SIZE = 15
+  forTab: TabType = 'dynamic-feed'
 
   offset: string = ''
   page = 0

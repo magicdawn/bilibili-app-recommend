@@ -1,4 +1,5 @@
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
+import type { TabType } from '$components/RecHeader/tab.shared'
 import type { RecItemType, WatchLaterItemExtend, WatchLaterJson } from '$define'
 import { request } from '$request'
 import { settings, updateSettings, useSettingsSnapshot } from '$settings'
@@ -34,6 +35,8 @@ if (getHasLogined()) {
 export class WatchLaterRecService implements IService {
   static PAGE_SIZE = 15
   static LAST_ITEMS: WatchLaterItemExtend[] = []
+
+  forTab: TabType = 'watchlater'
 
   constructor(keepOrder?: boolean) {
     this.keepOrder = keepOrder ?? false
