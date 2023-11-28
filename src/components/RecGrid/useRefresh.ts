@@ -5,6 +5,7 @@ import { DynamicFeedRecService, dynamicFeedFilterStore } from '$service/rec/dyna
 import { FavRecService } from '$service/rec/fav'
 import { PcRecService } from '$service/rec/pc'
 import { WatchLaterRecService } from '$service/rec/watchlater'
+import { nextTick } from '$utility'
 import { useGetState, useMemoizedFn } from 'ahooks'
 import { Debugger } from 'debug'
 import { createContext, useContext, useState } from 'react'
@@ -105,6 +106,7 @@ export function useRefresh({
     setError(undefined)
     setHasMore(true)
 
+    await nextTick() // wait setState works
     await preAction?.()
 
     let _items: RecItemType[] = []

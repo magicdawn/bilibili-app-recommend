@@ -79,3 +79,9 @@ export function getElementOffset(el: HTMLElement) {
     left: box.left + window.pageXOffset - docElem.clientLeft,
   }
 }
+
+export function nextTick(): Promise<void> {
+  return new Promise((resolve) => {
+    setTimeout(resolve, 0)
+  })
+}
