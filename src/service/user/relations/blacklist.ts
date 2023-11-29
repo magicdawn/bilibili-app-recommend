@@ -22,7 +22,7 @@ export const UserBlacklistService = {
 
 const STORAGE_KEY = `${APP_NAME}-blacklist-mids`
 const initialVaue = (localStorage.getItem(STORAGE_KEY) || '').split(',')
-export const blacklistIds = proxySet<string>(...initialVaue)
+export const blacklistIds = proxySet<string>(initialVaue)
 subscribe(blacklistIds, (val) => {
   localStorage.setItem(STORAGE_KEY, Array.from(snapshot(blacklistIds)).join(','))
 })
