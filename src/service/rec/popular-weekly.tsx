@@ -36,6 +36,12 @@ export class PopularWeeklyService implements IService {
 
   hasMore = true
 
+  static id = 0
+  id: number
+  constructor() {
+    this.id = PopularWeeklyService.id++
+  }
+
   async loadMore() {
     if (!this.hasMore) return
 

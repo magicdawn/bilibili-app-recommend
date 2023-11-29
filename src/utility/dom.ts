@@ -82,6 +82,6 @@ export function getElementOffset(el: HTMLElement) {
 
 export function nextTick(): Promise<void> {
   return new Promise((resolve) => {
-    setTimeout(resolve, 0)
+    queueMicrotask(resolve)
   })
 }

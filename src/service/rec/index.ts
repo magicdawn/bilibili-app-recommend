@@ -1,6 +1,6 @@
 /* eslint-disable no-constant-condition */
 import { baseDebug } from '$common'
-import type { FetcherOptions, ServiceMap } from '$components/RecGrid/useRefresh'
+import { getIService, type FetcherOptions } from '$components/RecGrid/useRefresh'
 import { getColumnCount } from '$components/RecGrid/useShortcut'
 import type { TabType } from '$components/RecHeader/tab.shared'
 import { anyFilterEnabled, filterRecItems } from '$components/VideoCard/process/filter'
@@ -49,19 +49,17 @@ export async function getMinCount(
   const addMore = async (restCount: number) => {
     let cur: RecItemType[] = []
 
-    // tab === 'dynamic-feed' || // 动态
-    // tab === 'watchlater' || // 稍候再看
-    // tab === 'fav' || // 收藏
-    // tab === 'popular-general' || // 综合热门
-    // tab === 'popular-weekly' // 每周必看
-    if (tab in serviceMap) {
-      const service = serviceMap[tab as keyof ServiceMap]
-      if (service) {
-        cur = (await service.loadMore(abortSignal)) || []
-        hasMore = service.hasMore
-        items = items.concat(cur)
-        return
-      }
+    // dynamic-feed     动态
+    // watchlater       稍候再看
+    // fav              收藏
+    // popular-general  综合热门
+    // popular-weekly   每周必看
+    const service = getIService(serviceMap, tab)
+    if (service) {
+      cur = (await service.loadMore(abortSignal)) || []
+      hasMore = service.hasMore
+      items = items.concat(cur)
+      return
     }
 
     let times: number

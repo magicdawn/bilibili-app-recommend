@@ -17,7 +17,6 @@ import { IconPark } from '$icon-park'
 import { cx } from '$libs'
 import { getIsInternalTesting, isSafari } from '$platform'
 import { getRecommendTimes, refreshForGrid, uniqConcat } from '$service/rec'
-import type { IService } from '$service/rec/base'
 import { useSettingsSnapshot } from '$settings'
 import { toast } from '$utility/toast'
 import { css as styled } from '@emotion/css'
@@ -39,7 +38,7 @@ import {
   videoGridNewHomepage,
 } from '../video-grid.module.less'
 import type { OnRefresh } from './useRefresh'
-import { useRefresh } from './useRefresh'
+import { getIService, useRefresh } from './useRefresh'
 import { useShortcut } from './useShortcut'
 
 const debug = baseDebug.extend('components:RecGrid')
@@ -102,25 +101,23 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
     // before refresh
     const preAction = useMemoizedFn(async () => {
       clearActiveIndex()
-      setExtraInfo?.(getUsageInfo(tab))
+      updateExtraInfo(tab)
     })
 
     // after refresh, setItems
     const postAction = useMemoizedFn(() => {
       clearActiveIndex()
       setLoadCompleteCount(1)
-      setExtraInfo?.(getUsageInfo(tab))
+      updateExtraInfo(tab)
 
       // check need loadMore
       checkShouldLoadMore()
     })
 
-    const getUsageInfo = useMemoizedFn((tab: TabType): ReactNode => {
-      const s: IService | undefined = getIService(tab, serviceMap)
-      return s?.usageInfo
-      // if (tab === 'watchlater') return serviceMap.watchlater.usageInfo
-      // if (tab === 'fav') return serviceMap.fav.usageInfo
-      // if (tab === 'dynamic-feed') return serviceMap['dynamic-feed'].usageInfo
+    const updateExtraInfo = useMemoizedFn((tab: TabType) => {
+      const info = getIService(serviceMap, tab)?.usageInfo ?? null
+      console.log('updateExtraInfo', tab, getIService(serviceMap, tab), info)
+      setExtraInfo?.(info)
     })
 
     const {
@@ -141,7 +138,6 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
       refreshAbortController,
       pcRecService,
       serviceMap,
-      getIService,
     } = useRefresh({
       tab,
       debug,
@@ -202,7 +198,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
         // tab === 'fav' ||
         // tab === 'popular-general' ||
         // tab === 'popular-weekly'
-        const service = getIService(tab, serviceMap)
+        const service = getIService(serviceMap, tab)
         if (service) {
           newItems = newItems.concat((await service.loadMore(refreshAbortController.signal)) || [])
           newHasMore = service.hasMore
@@ -341,11 +337,11 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
 
         if (tab === 'watchlater') {
           serviceMap.watchlater.count--
-          setExtraInfo?.(serviceMap.watchlater.usageInfo)
+          updateExtraInfo(tab)
         }
         if (tab === 'fav') {
           serviceMap.fav.total--
-          setExtraInfo?.(serviceMap.fav.usageInfo)
+          updateExtraInfo(tab)
         }
 
         return newItems

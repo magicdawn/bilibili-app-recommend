@@ -2,6 +2,7 @@ import { useRefInit } from '$common/hooks/useRefInit'
 import type { TabType } from '$components/RecHeader/tab.shared'
 import { TabConfigMap, getCurrentSourceTab } from '$components/RecHeader/tab.shared'
 import type { RecItemType } from '$define'
+import type { IService } from '$service/rec/base'
 import { DynamicFeedRecService, dynamicFeedFilterStore } from '$service/rec/dynamic-feed'
 import { FavRecService } from '$service/rec/fav'
 import { PcRecService } from '$service/rec/pc'
@@ -27,17 +28,22 @@ const serviceFactories = {
   'fav': () => new FavRecService(),
   'popular-general': () => new PopularGeneralService(),
   'popular-weekly': () => new PopularWeeklyService(),
-}
+} satisfies Partial<Record<TabType, () => IService>>
+
+export type ServiceMapKey = keyof typeof serviceFactories
 
 export type ServiceMap = {
-  [K in keyof typeof serviceFactories]: ReturnType<(typeof serviceFactories)[K]>
+  [K in ServiceMapKey]: ReturnType<(typeof serviceFactories)[K]>
+}
+
+export function getIService(serviceMap: ServiceMap, tab: TabType): IService | undefined {
+  return serviceMap[tab as ServiceMapKey]
 }
 
 export type FetcherOptions = {
   tab: TabType
   abortSignal: AbortSignal
   serviceMap: ServiceMap
-
   pcRecService: PcRecService
 }
 
@@ -120,7 +126,6 @@ export function useRefresh({
     setError(undefined)
     setHasMore(true)
 
-    await nextTick() // wait setState works
     await preAction?.()
 
     let _items: RecItemType[] = []
@@ -147,29 +152,30 @@ export function useRefresh({
     }
 
     const newServiceMap = { ...serviceMap }
-    if (tab === 'dynamic-feed') {
+    const recreateFor = (tab: ServiceMapKey) => {
+      // @ts-ignore
       newServiceMap[tab] = serviceFactories[tab]()
       setServiceMap(newServiceMap)
     }
+
+    if (tab === 'dynamic-feed') {
+      recreateFor(tab)
+    }
     if (tab === 'watchlater') {
-      newServiceMap[tab] = serviceFactories[tab]()
-      setServiceMap(newServiceMap)
+      recreateFor(tab)
     }
     if (tab === 'fav') {
       if (shouldReuse) {
         serviceMap.fav.restore()
       } else {
-        newServiceMap[tab] = serviceFactories[tab]()
-        setServiceMap(newServiceMap)
+        recreateFor(tab)
       }
     }
     if (tab === 'popular-general') {
-      newServiceMap[tab] = serviceFactories[tab]()
-      setServiceMap(newServiceMap)
+      recreateFor(tab)
     }
     if (tab === 'popular-weekly') {
-      newServiceMap[tab] = serviceFactories[tab]()
-      setServiceMap(newServiceMap)
+      recreateFor(tab)
     }
 
     const _abortController = new AbortController()
@@ -219,21 +225,15 @@ export function useRefresh({
       itemsCache.current[tab] = _items
     }
 
-    // hasMore check
-    // only items in serviceMap need hasMore check
-    const service = getIService(tab, newServiceMap)
+    // hasMore check: only ServiceMapKey need hasMore check
+    const service = getIService(newServiceMap, tab)
     if (service) setHasMore(service.hasMore)
 
+    await nextTick() // wait setState works, if neccssary
     await postAction?.()
 
     const cost = performance.now() - start
     debug('refresh(): [success] cost %s ms', cost.toFixed(0))
-  })
-
-  const getIService = useMemoizedFn((tab: TabType, serviceMap: ServiceMap) => {
-    if (tab in serviceMap) {
-      return serviceMap[tab as keyof ServiceMap]
-    }
   })
 
   return {
@@ -266,7 +266,6 @@ export function useRefresh({
 
     setPcRecService,
     setServiceMap,
-    getIService,
 
     refresh,
   }
