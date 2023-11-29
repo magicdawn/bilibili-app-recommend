@@ -231,12 +231,14 @@ export const RefreshButton = forwardRef<RefreshButtonActions, RefreshButtonProps
   )
 
   const tab = useCurrentSourceTab()
-  const { shuffleForFav, shuffleForWatchLater } = useSettingsSnapshot()
+  const { shuffleForFav, shuffleForWatchLater, shuffleForPopularWeekly } = useSettingsSnapshot()
 
   const text =
     tab === 'dynamic-feed' ||
     (tab === 'watchlater' && !shuffleForWatchLater) ||
-    (tab === 'fav' && !shuffleForFav)
+    (tab === 'fav' && !shuffleForFav) ||
+    tab === 'popular-general' ||
+    (tab === 'popular-weekly' && !shuffleForPopularWeekly)
       ? '刷新'
       : '换一换'
 
