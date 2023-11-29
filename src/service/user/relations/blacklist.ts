@@ -52,7 +52,6 @@ function blacklistActionFactory(action: 'follow' | 'remove') {
 
 export async function getUserBlacklist() {
   const ps = 20
-  let pn = 1
 
   const getPage = async (pn: number) => {
     const res = await request.get('/x/relation/blacks', {
@@ -77,7 +76,7 @@ export async function getUserBlacklist() {
 
   if (total) {
     const maxPn = Math.ceil(total / ps)
-    for (pn++; pn <= maxPn; pn++) {
+    for (let pn = 2; pn <= maxPn; pn++) {
       const { mids = [] } = (await getPage(pn)) || {}
       blackMids = blackMids.concat(mids)
     }
