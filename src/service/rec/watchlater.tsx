@@ -6,6 +6,7 @@ import { getHasLogined } from '$utility'
 import { toast } from '$utility/toast'
 import { Switch, Tag } from 'antd'
 import dayjs from 'dayjs'
+import delay from 'delay'
 import { cloneDeep, shuffle } from 'lodash'
 import type { ComponentProps, ReactNode } from 'react'
 import { proxy, useSnapshot } from 'valtio'
@@ -159,11 +160,10 @@ function WatchLaterUsageInfo({ count }: { count: number }) {
         checkedChildren='随机顺序'
         unCheckedChildren='添加顺序'
         checked={shuffleForWatchLater}
-        onChange={(checked) => {
+        onChange={async (checked) => {
           updateSettings({ shuffleForWatchLater: checked })
-          setTimeout(() => {
-            onRefresh?.()
-          })
+          await delay(100)
+          onRefresh?.()
         }}
       />
     </>

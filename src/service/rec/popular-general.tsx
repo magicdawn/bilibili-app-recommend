@@ -4,6 +4,7 @@ import type { PopularGeneralJson } from '$define/popular-general'
 import { request } from '$request'
 import { settings, updateSettings, useSettingsSnapshot } from '$settings'
 import { Switch } from 'antd'
+import delay from 'delay'
 import type { IService } from './base'
 
 export class PopularGeneralService implements IService {
@@ -67,8 +68,9 @@ function PopularGeneralUsageInfo() {
       <Switch
         style={{ margin: '0 10px' }}
         checked={anonymousForPopularGeneral}
-        onChange={(val) => {
+        onChange={async (val) => {
           updateSettings({ anonymousForPopularGeneral: val })
+          await delay(100)
           onRefresh?.()
         }}
         checkedChildren='匿名访问'

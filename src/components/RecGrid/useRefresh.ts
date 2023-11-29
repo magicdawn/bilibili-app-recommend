@@ -175,7 +175,11 @@ export function useRefresh({
       recreateFor(tab)
     }
     if (tab === 'popular-weekly') {
-      recreateFor(tab)
+      if (shouldReuse) {
+        serviceMap['popular-weekly'].restore()
+      } else {
+        recreateFor(tab)
+      }
     }
 
     const _abortController = new AbortController()
@@ -216,6 +220,10 @@ export function useRefresh({
 
     // update items
     await new Promise((r) => requestIdleCallback(r, { timeout: 400 }))
+    if (_signal.aborted) {
+      debug('refresh(): [legacy] skip setItems/err for aborted, legacy tab = %s', tab)
+      return
+    }
     setItems(_items)
 
     // if swr, save list starting part only

@@ -33,47 +33,120 @@ async function getEpisodeList() {
 
 export class PopularWeeklyService implements IService {
   static id = 0
+  static PAGE_SIZE = 20
 
+  episodesLoaded = false
   episodes: PopularWeeklyListItem[] = []
-  episodeIndex = 0
-  episodeNum = -1
-  hasMore = true
 
   id: number
-  shuffle: boolean
+  useShuffle: boolean
   constructor() {
     this.id = PopularWeeklyService.id++
-    this.shuffle = settings.shuffleForPopularWeekly
+    this.useShuffle = settings.shuffleForPopularWeekly
+  }
+
+  // full-list = returnedItems + bufferQueue + more
+  #returnedItems: PopularWeeklyItemExtend[] = []
+  #bufferQueue: PopularWeeklyItemExtend[] = []
+
+  private doReturnItems(items: PopularWeeklyItemExtend[] | undefined) {
+    this.#returnedItems = this.#returnedItems.concat(items || [])
+    return items
+  }
+
+  restore() {
+    this.#bufferQueue = [...this.#returnedItems, ...this.#bufferQueue]
+    this.#returnedItems = []
+  }
+
+  sliceFromQueue() {
+    if (this.#bufferQueue.length) {
+      const sliced = this.#bufferQueue.slice(0, PopularWeeklyService.PAGE_SIZE)
+      this.#bufferQueue = this.#bufferQueue.slice(PopularWeeklyService.PAGE_SIZE)
+      return this.doReturnItems(sliced)
+    }
+  }
+
+  get hasMore() {
+    if (!this.episodesLoaded) return true // not loaded yet
+    return !!this.#bufferQueue.length || !!this.episodes.length
   }
 
   async loadMore() {
-    if (!this.hasMore) return
-
-    // load list
-    if (!this.episodes.length) {
+    // load ep list
+    if (!this.episodesLoaded) {
       this.episodes = await getEpisodeList()
-      if (this.shuffle) this.episodes = shuffle(this.episodes)
-      this.episodeIndex = 0
+      this.episodesLoaded = true
+      if (this.useShuffle) this.episodes = shuffle(this.episodes)
     }
 
-    this.episodeNum = this.episodes[this.episodeIndex].number
-    this.hasMore = this.episodeIndex < this.episodes.length - 1
-    const res = await request.get('/x/web-interface/popular/series/one', {
-      params: { number: this.episodeNum },
-    })
-    const json = res.data as PopularWeeklyJson
-    const items = (json.data.list || []).map((item) => {
-      return { ...item, api: 'popular-weekly', uniqId: item.bvid } as PopularWeeklyItemExtend
-    })
+    if (!this.hasMore) return
 
-    this.episodeIndex++
+    /**
+     * no shuffle
+     */
 
-    return items
+    if (!this.useShuffle) {
+      // from queue
+      if (this.#bufferQueue.length) return this.sliceFromQueue()
+
+      // fill queue
+      const episodeNum = this.episodes[0].number
+      const items = await fetchWeeklyItems(episodeNum)
+      this.#bufferQueue = this.#bufferQueue.concat(items)
+      this.episodes = this.episodes.slice(1) // consume 1
+
+      return this.sliceFromQueue()
+    }
+
+    /**
+     * shuffle
+     */
+
+    // make queue enough
+    const prefetchPage = 5
+    while (
+      this.#bufferQueue.length < PopularWeeklyService.PAGE_SIZE * prefetchPage &&
+      this.episodes.length
+    ) {
+      this.episodes = shuffle(this.episodes)
+      const episodes = this.episodes.slice(0, prefetchPage) // slice
+      this.episodes = this.episodes.slice(prefetchPage) // rest
+      const fetched = await Promise.all(
+        episodes.map((x) => x.number).map((episodeNum) => fetchWeeklyItems(episodeNum))
+      )
+      this.#bufferQueue = shuffle([...this.#bufferQueue, ...fetched.flat()])
+    }
+
+    return this.sliceFromQueue()
   }
 
   get usageInfo() {
     return <PopularWeeklyUsageInfo />
   }
+}
+
+/**
+ * 每期必看, 应该不会变吧~
+ */
+
+const cache: Record<number, PopularWeeklyItemExtend[]> = {}
+
+async function fetchWeeklyItems(episodeNum: number) {
+  if (cache[episodeNum]?.length) {
+    return cache[episodeNum]
+  }
+
+  const res = await request.get('/x/web-interface/popular/series/one', {
+    params: { number: episodeNum },
+  })
+  const json = res.data as PopularWeeklyJson
+  const items = (json.data.list || []).map((item) => {
+    return { ...item, api: 'popular-weekly', uniqId: item.bvid } as PopularWeeklyItemExtend
+  })
+
+  cache[episodeNum] = items
+  return items
 }
 
 function PopularWeeklyUsageInfo() {
