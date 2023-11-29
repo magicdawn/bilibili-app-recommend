@@ -2,6 +2,7 @@ import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
 import type { PopularGeneralItemExtend } from '$define'
 import type { PopularGeneralJson } from '$define/popular-general'
 import { request } from '$request'
+import { blacklistIds } from '$service/user/relations/blacklist'
 import { settings, updateSettings, useSettingsSnapshot } from '$settings'
 import { Switch } from 'antd'
 import delay from 'delay'
@@ -32,14 +33,16 @@ export class PopularGeneralService implements IService {
     const json = res.data as PopularGeneralJson
 
     this.hasMore = !json.data.no_more
-    const items = (json.data.list || []).map((item) => {
+
+    let items = (json.data.list || []).map((item) => {
       return {
         ...item,
         api: 'popular-general',
         uniqId: item.bvid,
       } as PopularGeneralItemExtend
     })
-
+    // 过滤黑名单
+    items = items.filter((item) => !blacklistIds.has(item.owner.mid.toString()))
     return items
   }
 

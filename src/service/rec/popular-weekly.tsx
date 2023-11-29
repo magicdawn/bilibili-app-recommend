@@ -3,6 +3,7 @@ import type { PopularWeeklyItemExtend } from '$define'
 import type { PopularWeeklyJson } from '$define/popular-weekly'
 import type { PopularWeeklyListItem, PopularWeeklyListJson } from '$define/popular-weekly.list'
 import { request } from '$request'
+import { blacklistIds } from '$service/user/relations/blacklist'
 import { settings, updateSettings, useSettingsSnapshot } from '$settings'
 import { Switch } from 'antd'
 import dayjs from 'dayjs'
@@ -133,19 +134,21 @@ export class PopularWeeklyService implements IService {
 const cache: Record<number, PopularWeeklyItemExtend[]> = {}
 
 async function fetchWeeklyItems(episodeNum: number) {
-  if (cache[episodeNum]?.length) {
-    return cache[episodeNum]
+  if (!cache[episodeNum]?.length) {
+    const res = await request.get('/x/web-interface/popular/series/one', {
+      params: { number: episodeNum },
+    })
+    const json = res.data as PopularWeeklyJson
+    const items = (json.data.list || []).map((item) => {
+      return { ...item, api: 'popular-weekly', uniqId: item.bvid } as PopularWeeklyItemExtend
+    })
+
+    cache[episodeNum] = items
   }
+  let items = cache[episodeNum]
 
-  const res = await request.get('/x/web-interface/popular/series/one', {
-    params: { number: episodeNum },
-  })
-  const json = res.data as PopularWeeklyJson
-  const items = (json.data.list || []).map((item) => {
-    return { ...item, api: 'popular-weekly', uniqId: item.bvid } as PopularWeeklyItemExtend
-  })
-
-  cache[episodeNum] = items
+  // 过滤黑名单
+  items = items.filter((x) => !blacklistIds.has(x.owner.mid.toString()))
   return items
 }
 

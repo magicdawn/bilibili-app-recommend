@@ -2,11 +2,15 @@
  * user blacklist services
  */
 
+import { APP_NAME, baseDebug } from '$common'
 import { isWebApiSuccess, request } from '$request'
-import { useSnapshot } from 'valtio'
+import { whenIdle } from '$utility'
+import { snapshot, subscribe, useSnapshot } from 'valtio'
 import { proxySet } from 'valtio/utils'
 import type { ListBlackJson } from './api.list-black'
 import { modifyRelations } from './common'
+
+const debug = baseDebug.extend('service:user:relations:blacklist')
 
 export const blacklistAdd = blacklistActionFactory('follow')
 export const blacklistRemove = blacklistActionFactory('remove')
@@ -16,7 +20,13 @@ export const UserBlacklistService = {
   remove: blacklistRemove,
 }
 
-export const blacklistIds = proxySet<string>()
+const STORAGE_KEY = `${APP_NAME}-blacklist-mids`
+const initialVaue = (localStorage.getItem(STORAGE_KEY) || '').split(',')
+export const blacklistIds = proxySet<string>(...initialVaue)
+subscribe(blacklistIds, (val) => {
+  localStorage.setItem(STORAGE_KEY, Array.from(snapshot(blacklistIds)).join(','))
+})
+
 export function useInBlacklist(upMid?: string) {
   const set = useSnapshot(blacklistIds)
   return upMid && set.has(upMid)
@@ -75,3 +85,16 @@ export async function getUserBlacklist() {
 
   return blackMids
 }
+
+export const getUserBlacklistPromise = (async () => {
+  await whenIdle()
+  const ids = await getUserBlacklist()
+
+  blacklistIds.clear()
+  ids.forEach((x) => {
+    blacklistIds.add(x.toString())
+  })
+
+  debug('user blocklist fetched: %o', ids)
+  return ids
+})()

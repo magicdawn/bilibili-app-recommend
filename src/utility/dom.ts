@@ -85,3 +85,9 @@ export function nextTick(): Promise<void> {
     queueMicrotask(resolve)
   })
 }
+
+export function whenIdle(): Promise<void> {
+  return new Promise((resolve) => {
+    requestIdleCallback(() => resolve())
+  })
+}
