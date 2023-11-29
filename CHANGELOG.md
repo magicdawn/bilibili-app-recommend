@@ -1,5 +1,31 @@
 # Changelog
 
+## v0.19.0
+
+- tab 显示/隐藏 改为黑名单机制
+- new tab: 综合热门 & 每周必看
+
+details
+
+- 132d7ff chore: tweak blackids
+- a3bc65a chore: clean up unused settings flag
+- 1dd9ca5 chore: tweak
+- e15d27d feat: filter against blacklist
+- 2c1a18e feat: impl shuffle for popular-weekly
+- 5e63b17 chore: more tweaks
+- 9d4e12e refactor more service related
+- 1efa2dc feat: refactor services & impl tab = popular-weekly
+- d19df63 feat: eslint fix type imports
+- 072a918 feat: add new tab icons
+- a4e4192 feat: tab 显示/隐藏 改为黑名单机制
+- 67caf8d feat: popular-general 综合热门
+- a15bfe0 chore: add nextTick before exec preAction
+- 77d99a7 feat: add classnames package back
+- e8ae11b chore: update pnpm lock file
+- 1290854 chore: clean up
+- 77f41e8 chore: use 0 as stat number fallback
+- 63efe00 feat: add stat number fallback
+
 ## v0.18.5
 
 - feat: watch later add 动画
