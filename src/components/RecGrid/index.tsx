@@ -116,7 +116,6 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
 
     const updateExtraInfo = useMemoizedFn((tab: TabType) => {
       const info = getIService(serviceMap, tab)?.usageInfo ?? null
-      console.log('updateExtraInfo', tab, getIService(serviceMap, tab), info)
       setExtraInfo?.(info)
     })
 
@@ -200,7 +199,8 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(
         // tab === 'popular-weekly'
         const service = getIService(serviceMap, tab)
         if (service) {
-          newItems = newItems.concat((await service.loadMore(refreshAbortController.signal)) || [])
+          const more = (await service.loadMore(refreshAbortController.signal)) || []
+          newItems = uniqConcat(newItems, more)
           newHasMore = service.hasMore
         }
 

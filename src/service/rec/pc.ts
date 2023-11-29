@@ -1,4 +1,3 @@
-import type { TabType } from '$components/RecHeader/tab.shared'
 import type { PcRecItem, PcRecItemExtend, PcRecommendJson } from '$define'
 import { request } from '$request'
 import { toast } from '$utility/toast'
@@ -11,7 +10,6 @@ import type { IService } from './base'
 
 export class PcRecService implements IService {
   static PAGE_SIZE = 14
-  forTab: TabType = 'recommend-pc'
 
   page = 0
 

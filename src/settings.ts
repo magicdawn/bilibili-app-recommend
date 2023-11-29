@@ -46,6 +46,17 @@ export const initialSettings = {
   excludeFavFolderIds: [] as string[], // 忽略的收藏夹
 
   /**
+   * tab=popular-general
+   */
+  shuffleForPopularGeneral: false, // shuffle
+  anonymousForPopularGeneral: false, // without credentials
+
+  /**
+   * tab=popular-weekly
+   */
+  shuffleForPopularWeekly: false,
+
+  /**
    * 过滤器模块
    * 使用 flat config 方便使用 FlagSettingItem
    */

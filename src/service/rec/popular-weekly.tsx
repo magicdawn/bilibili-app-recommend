@@ -1,9 +1,13 @@
-import type { TabType } from '$components/RecHeader/tab.shared'
+import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
 import type { PopularWeeklyItemExtend } from '$define'
 import type { PopularWeeklyJson } from '$define/popular-weekly'
 import type { PopularWeeklyListItem, PopularWeeklyListJson } from '$define/popular-weekly.list'
 import { request } from '$request'
+import { settings, updateSettings, useSettingsSnapshot } from '$settings'
+import { Switch } from 'antd'
 import dayjs from 'dayjs'
+import delay from 'delay'
+import { shuffle } from 'lodash'
 import type { IService } from './base'
 
 let episodes: PopularWeeklyListItem[] = []
@@ -28,18 +32,18 @@ async function getEpisodeList() {
 }
 
 export class PopularWeeklyService implements IService {
-  forTab: TabType = 'popular-weekly'
+  static id = 0
 
   episodes: PopularWeeklyListItem[] = []
   episodeIndex = 0
   episodeNum = -1
-
   hasMore = true
 
-  static id = 0
   id: number
+  shuffle: boolean
   constructor() {
     this.id = PopularWeeklyService.id++
+    this.shuffle = settings.shuffleForPopularWeekly
   }
 
   async loadMore() {
@@ -48,6 +52,7 @@ export class PopularWeeklyService implements IService {
     // load list
     if (!this.episodes.length) {
       this.episodes = await getEpisodeList()
+      if (this.shuffle) this.episodes = shuffle(this.episodes)
       this.episodeIndex = 0
     }
 
@@ -65,4 +70,29 @@ export class PopularWeeklyService implements IService {
 
     return items
   }
+
+  get usageInfo() {
+    return <PopularWeeklyUsageInfo />
+  }
+}
+
+function PopularWeeklyUsageInfo() {
+  const { shuffleForPopularWeekly } = useSettingsSnapshot()
+  const onRefresh = useOnRefreshContext()
+
+  return (
+    <>
+      <Switch
+        style={{ marginLeft: '10px' }}
+        checked={shuffleForPopularWeekly}
+        onChange={async (val) => {
+          updateSettings({ shuffleForPopularWeekly: val })
+          await delay(100)
+          onRefresh?.()
+        }}
+        checkedChildren='随机顺序'
+        unCheckedChildren='默认顺序'
+      />
+    </>
+  )
 }

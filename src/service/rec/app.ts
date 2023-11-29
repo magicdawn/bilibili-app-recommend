@@ -1,5 +1,4 @@
 import { APP_NAME, HOST_APP } from '$common'
-import type { TabType } from '$components/RecHeader/tab.shared'
 import type { AppRecItem, AppRecItemExtend, AppRecommendJson } from '$define'
 import type { ipad } from '$define/app-recommend.ipad'
 import { gmrequest } from '$request'
@@ -89,8 +88,6 @@ export async function tryGetRecommend() {
 
 export class AppRecService implements IService {
   static PAGE_SIZE = 10
-
-  forTab: TabType = 'recommend-app'
 
   hasMore = true
 

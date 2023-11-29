@@ -1,4 +1,3 @@
-import type { TabType } from '$components/RecHeader/tab.shared'
 import type { RecItemType } from '$define'
 import type { ReactNode } from 'react'
 
@@ -10,7 +9,6 @@ export abstract class BaseService {
 }
 
 export interface IService {
-  forTab: TabType
   hasMore: boolean
   loadMore(abortSignal: AbortSignal): Promise<RecItemType[] | undefined>
   usageInfo?: ReactNode
