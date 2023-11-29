@@ -48,7 +48,7 @@ export const initialSettings = {
   /**
    * tab=popular-general
    */
-  shuffleForPopularGeneral: false, // shuffle
+  // shuffleForPopularGeneral: false, // shuffle
   anonymousForPopularGeneral: false, // without credentials
 
   /**

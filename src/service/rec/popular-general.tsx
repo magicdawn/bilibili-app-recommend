@@ -12,11 +12,11 @@ export class PopularGeneralService implements IService {
   hasMore = true
   page = 1
 
-  shuffle: boolean
+  // shuffle: boolean
   anonymous: boolean
 
   constructor() {
-    this.shuffle = settings.shuffleForPopularGeneral
+    // this.shuffle = settings.shuffleForPopularGeneral
     this.anonymous = settings.anonymousForPopularGeneral
   }
 
@@ -52,7 +52,7 @@ export class PopularGeneralService implements IService {
 }
 
 function PopularGeneralUsageInfo() {
-  const { shuffleForPopularGeneral, anonymousForPopularGeneral } = useSettingsSnapshot()
+  const { anonymousForPopularGeneral } = useSettingsSnapshot()
 
   const onRefresh = useOnRefreshContext()
 
