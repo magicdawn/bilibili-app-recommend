@@ -70,9 +70,10 @@ export async function getUserBlacklist() {
     return { total, mids }
   }
 
-  let blackMids: number[] = []
-  const { total, mids = [] } = (await getPage(1)) || {}
-  blackMids = blackMids.concat(mids)
+  const ret = await getPage(1)
+  if (!ret) return
+  const { total, mids = [] } = ret
+  let blackMids: number[] = mids
 
   if (total) {
     const maxPn = Math.ceil(total / ps)
@@ -89,10 +90,12 @@ export const getUserBlacklistPromise = (async () => {
   await whenIdle()
   const ids = await getUserBlacklist()
 
-  blacklistIds.clear()
-  ids.forEach((x) => {
-    blacklistIds.add(x.toString())
-  })
+  if (ids) {
+    blacklistIds.clear()
+    ids.forEach((x) => {
+      blacklistIds.add(x.toString())
+    })
+  }
 
   debug('user blocklist fetched: %o', ids)
   return ids
