@@ -81,8 +81,8 @@ function useHotkeyForConfig(
 }
 
 const modalSettingsStore = proxy({
-  // tab: 'basic',
-  tab: 'recommend-tab-config',
+  tab: 'basic',
+  // tab: 'video-source-tab-config',
 })
 
 export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => void }) {
@@ -285,8 +285,8 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
               ),
             },
             {
-              label: 'Tab 配置',
-              key: 'recommend-tab-config',
+              label: 'Tab 设置',
+              key: 'video-source-tab-config',
               children: <TabPaneRecommendTabConfig />,
             },
             {
@@ -559,7 +559,7 @@ function TabPaneRecommendTabConfig() {
     <div className={styles.tabPane}>
       <div className={styles.settingsGroup}>
         <div className={styles.settingsGroupTitle}>
-          Tab 配置
+          Tab 设置
           <HelpInfo
             iconProps={{ name: 'Tips', style: { marginLeft: 5, marginRight: 20 } }}
             tooltip={<>勾选显示, 拖动排序</>}
@@ -602,7 +602,7 @@ function TabPaneRecommendTabConfig() {
               >
                 <SortableContext items={sortedTabKeys} strategy={verticalListSortingStrategy}>
                   {sortedTabKeys.map((key) => (
-                    <TabSortableItem key={key} id={key} />
+                    <VideoSourceTabSortableItem key={key} id={key} />
                   ))}
                 </SortableContext>
               </DndContext>
@@ -614,7 +614,7 @@ function TabPaneRecommendTabConfig() {
   )
 }
 
-function TabSortableItem({ id }: { id: TabType }) {
+function VideoSourceTabSortableItem({ id }: { id: TabType }) {
   const { attributes, listeners, setNodeRef, transform, transition, setActivatorNodeRef } =
     useSortable({ id })
 
@@ -670,13 +670,14 @@ function TabSortableItem({ id }: { id: TabType }) {
 
       <div
         {...listeners}
+        ref={setActivatorNodeRef}
         css={css`
           cursor: grab;
           font-size: 0;
           padding: 5px 10px;
         `}
       >
-        <IconPark ref={setActivatorNodeRef} name='Drag' size={18} />
+        <IconPark name='Drag' size={18} />
       </div>
     </div>
   )
