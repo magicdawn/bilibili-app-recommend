@@ -101,6 +101,18 @@ _\* 截图均为不带 access_key 匿名获取, 不代表作者喜好_
 
 > 收藏夹内容的抓取
 
+#### 综合热门
+
+> 数据来源 https://www.bilibili.com/v/popular/all/
+
+#### 每周必看
+
+> 数据来源 https://www.bilibili.com/v/popular/weekly
+
+#### 自定义
+
+可在 设置-高级设置 隐藏不想使用的 Tab
+
 ### 模式
 
 可以基于个人喜好定制
