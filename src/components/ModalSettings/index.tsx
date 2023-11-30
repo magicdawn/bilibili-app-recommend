@@ -565,7 +565,6 @@ function TabPaneRecommendTabConfig() {
             tooltip={<>勾选显示, 拖动排序</>}
           />
           <Button
-            style={{ marginTop: 5 }}
             onClick={() => {
               updateSettings({ hidingTabKeys: [], customTabKeysOrder: [] })
             }}
