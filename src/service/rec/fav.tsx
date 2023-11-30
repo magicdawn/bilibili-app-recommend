@@ -13,7 +13,7 @@ import delay from 'delay'
 import { shuffle } from 'lodash'
 import type { ReactNode } from 'react'
 import { useMemo, useState } from 'react'
-import type { IService } from './base'
+import { QueueStrategy, type IService } from './base'
 
 export function formatFavFolderUrl(id: number) {
   const uid = getUid()
@@ -32,25 +32,14 @@ export class FavRecService implements IService {
   allFolderServices: FavFolderService[] = [] // before exclude
   folderServices: FavFolderService[] = [] // after exclude
 
-  // full-list = returnedItems + bufferQueue + folderServices.more
-  #bufferQueue: FavItemExtend[] = []
-  #returnedItems: FavItemExtend[] = []
-
-  private doReturnItems(items: FavItemExtend[] | undefined) {
-    this.#returnedItems = this.#returnedItems.concat(items || [])
-    return items
-  }
-
-  restore() {
-    this.#bufferQueue = [...this.#returnedItems, ...this.#bufferQueue]
-    this.#returnedItems = []
-  }
+  // full-list = qs.returnQueue + qs.bufferQueue + folderServices.more
+  qs = new QueueStrategy<FavItemExtend>(FavRecService.PAGE_SIZE)
 
   get folderHasMore() {
     return this.folderServices.some((s) => s.hasMore)
   }
   get hasMore() {
-    return this.#bufferQueue.length > 0 || this.folderHasMore
+    return this.qs.bufferQueue.length > 0 || this.folderHasMore
   }
 
   get usageInfo(): ReactNode {
@@ -62,50 +51,42 @@ export class FavRecService implements IService {
     if (!this.foldersLoaded) await this.getAllFolders()
     if (!this.hasMore) return
 
-    const sliceFromQueue = () => {
-      if (this.#bufferQueue.length) {
-        const sliced = this.#bufferQueue.slice(0, FavRecService.PAGE_SIZE)
-        this.#bufferQueue = this.#bufferQueue.slice(FavRecService.PAGE_SIZE)
-        return this.doReturnItems(sliced)
-      }
-    }
-
     /**
      * in sequence order
      */
 
     if (!this.useShuffle) {
       // from queue if queue not empty
-      if (this.#bufferQueue.length) {
-        return sliceFromQueue()
+      if (this.qs.bufferQueue.length) {
+        return this.qs.sliceFromQueue()
       }
       // api request
       const service = this.folderServices.find((s) => s.hasMore)
       if (!service) return
       const items = await service.loadMore()
-      return this.doReturnItems(items)
+      return this.qs.doReturnItems(items)
     }
 
     /**
      * in shuffle order
      */
 
-    if (this.#bufferQueue.length < FavRecService.PAGE_SIZE) {
+    if (this.qs.bufferQueue.length < FavRecService.PAGE_SIZE) {
       // 1.fill queue
-      while (this.folderHasMore && this.#bufferQueue.length < 100) {
+      while (this.folderHasMore && this.qs.bufferQueue.length < 100) {
         const restServices = this.folderServices.filter((s) => s.hasMore)
         const pickedServices = shuffle(restServices).slice(0, 5)
         const fetched = (
           await Promise.all(pickedServices.map(async (s) => (await s.loadMore()) || []))
         ).flat()
-        this.#bufferQueue = [...this.#bufferQueue, ...fetched]
+        this.qs.bufferQueue = [...this.qs.bufferQueue, ...fetched]
       }
       // 2.shuffle
-      this.#bufferQueue = shuffle(this.#bufferQueue)
+      this.qs.bufferQueue = shuffle(this.qs.bufferQueue)
     }
 
     // next: take from queue
-    return sliceFromQueue()
+    return this.qs.sliceFromQueue()
   }
 
   foldersLoaded = false

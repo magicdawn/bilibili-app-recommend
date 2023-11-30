@@ -166,7 +166,7 @@ export function useRefresh({
     }
     if (tab === 'fav') {
       if (shouldReuse) {
-        serviceMap.fav.restore()
+        serviceMap.fav.qs.restore()
       } else {
         recreateFor(tab)
       }
@@ -176,7 +176,7 @@ export function useRefresh({
     }
     if (tab === 'popular-weekly') {
       if (shouldReuse) {
-        serviceMap['popular-weekly'].restore()
+        serviceMap['popular-weekly'].qs.restore()
       } else {
         recreateFor(tab)
       }

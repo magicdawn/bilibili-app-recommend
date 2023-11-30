@@ -10,6 +10,7 @@ import dayjs from 'dayjs'
 import delay from 'delay'
 import { shuffle } from 'lodash'
 import type { IService } from './base'
+import { QueueStrategy } from './base'
 
 let episodes: PopularWeeklyListItem[] = []
 let cacheKey = ''
@@ -47,30 +48,11 @@ export class PopularWeeklyService implements IService {
   }
 
   // full-list = returnedItems + bufferQueue + more
-  #returnedItems: PopularWeeklyItemExtend[] = []
-  #bufferQueue: PopularWeeklyItemExtend[] = []
-
-  private doReturnItems(items: PopularWeeklyItemExtend[] | undefined) {
-    this.#returnedItems = this.#returnedItems.concat(items || [])
-    return items
-  }
-
-  restore() {
-    this.#bufferQueue = [...this.#returnedItems, ...this.#bufferQueue]
-    this.#returnedItems = []
-  }
-
-  sliceFromQueue() {
-    if (this.#bufferQueue.length) {
-      const sliced = this.#bufferQueue.slice(0, PopularWeeklyService.PAGE_SIZE)
-      this.#bufferQueue = this.#bufferQueue.slice(PopularWeeklyService.PAGE_SIZE)
-      return this.doReturnItems(sliced)
-    }
-  }
+  qs = new QueueStrategy<PopularWeeklyItemExtend>(PopularWeeklyService.PAGE_SIZE)
 
   get hasMore() {
     if (!this.episodesLoaded) return true // not loaded yet
-    return !!this.#bufferQueue.length || !!this.episodes.length
+    return !!this.qs.bufferQueue.length || !!this.episodes.length
   }
 
   async loadMore() {
@@ -89,15 +71,15 @@ export class PopularWeeklyService implements IService {
 
     if (!this.useShuffle) {
       // from queue
-      if (this.#bufferQueue.length) return this.sliceFromQueue()
+      if (this.qs.bufferQueue.length) return this.qs.sliceFromQueue()
 
       // fill queue
       const episodeNum = this.episodes[0].number
       const items = await fetchWeeklyItems(episodeNum)
-      this.#bufferQueue = this.#bufferQueue.concat(items)
+      this.qs.bufferQueue = this.qs.bufferQueue.concat(items)
       this.episodes = this.episodes.slice(1) // consume 1
 
-      return this.sliceFromQueue()
+      return this.qs.sliceFromQueue()
     }
 
     /**
@@ -107,7 +89,7 @@ export class PopularWeeklyService implements IService {
     // make queue enough
     const prefetchPage = 5
     while (
-      this.#bufferQueue.length < PopularWeeklyService.PAGE_SIZE * prefetchPage &&
+      this.qs.bufferQueue.length < PopularWeeklyService.PAGE_SIZE * prefetchPage &&
       this.episodes.length
     ) {
       this.episodes = shuffle(this.episodes)
@@ -116,10 +98,10 @@ export class PopularWeeklyService implements IService {
       const fetched = await Promise.all(
         episodes.map((x) => x.number).map((episodeNum) => fetchWeeklyItems(episodeNum))
       )
-      this.#bufferQueue = shuffle([...this.#bufferQueue, ...fetched.flat()])
+      this.qs.bufferQueue = shuffle([...this.qs.bufferQueue, ...fetched.flat()])
     }
 
-    return this.sliceFromQueue()
+    return this.qs.sliceFromQueue()
   }
 
   get usageInfo() {
