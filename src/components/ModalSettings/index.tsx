@@ -22,6 +22,7 @@ import { useKeyPress } from 'ahooks'
 import { Button, Checkbox, InputNumber, Popconfirm, Slider, Space, Switch, Tabs, Tag } from 'antd'
 import delay from 'delay'
 import { pick } from 'lodash'
+import { proxy, useSnapshot } from 'valtio'
 import styles from './index.module.less'
 import { set_HAS_RESTORED_SETTINGS } from './index.shared'
 import { ThemesSelect } from './theme'
@@ -68,6 +69,10 @@ function useHotkeyForConfig(
   )
 }
 
+const modalSettingsStore = proxy({
+  tab: 'basic',
+})
+
 export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => void }) {
   const {
     filterEnabled,
@@ -82,6 +87,8 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
   useHotkeyForConfig(['shift.m'], 'autoPreviewWhenHover', '鼠标悬浮后自动开始预览')
   useHotkeyForConfig(['shift.c'], 'useNarrowMode', '居中模式')
   useHotkeyForConfig(['shift.y'], 'styleFancy', 'Fancy Style')
+
+  const { tab } = useSnapshot(modalSettingsStore)
 
   return (
     <BaseModal
@@ -109,8 +116,10 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
         <Tabs
           tabPosition='left'
           size='middle'
-          defaultActiveKey='basic'
           className={styles.settingTabs}
+          // defaultActiveKey='basic'
+          activeKey={tab}
+          onChange={(tab) => (modalSettingsStore.tab = tab)}
           items={[
             {
               label: '常规设置',
