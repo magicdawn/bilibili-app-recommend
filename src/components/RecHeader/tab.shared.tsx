@@ -25,7 +25,6 @@ type TabConfigItem = {
   label: string
   desc: string
   swr?: boolean // stale while revalidate
-  reuseable?: boolean // can reuse
 }
 
 export const TabConfig: TabConfigItem[] = [
@@ -69,7 +68,6 @@ export const TabConfig: TabConfigItem[] = [
     iconProps: { size: 15 },
     label: '收藏',
     desc: '你添加的收藏; 默认随机乱序, 可在设置-高级设置 或 收藏 Tab 中关闭乱序',
-    reuseable: false,
   },
   {
     key: 'popular-general',
@@ -85,7 +83,6 @@ export const TabConfig: TabConfigItem[] = [
     iconProps: { size: 15 },
     label: '每周必看',
     desc: '每周五晚 18:00 更新',
-    swr: true,
   },
 ]
 

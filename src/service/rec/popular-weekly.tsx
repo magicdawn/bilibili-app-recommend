@@ -15,9 +15,10 @@ import { QueueStrategy } from './base'
 let episodes: PopularWeeklyListItem[] = []
 let cacheKey = ''
 
+// 每周五晚 18:00 更新
 function genCacheKey() {
   const now = dayjs()
-  return [now.format('YYYYMMDD'), now.hour() < 18 ? 'less-18' : 'gte-18'].join('-')
+  return [now.format('YYYYMMDD'), now.hour() < 18 ? 'lt-18' : 'gte-18'].join('_')
 }
 
 async function getEpisodeList() {

@@ -9,6 +9,7 @@ import { PcRecService } from '$service/rec/pc'
 import { PopularGeneralService } from '$service/rec/popular-general'
 import { PopularWeeklyService } from '$service/rec/popular-weekly'
 import { WatchLaterRecService } from '$service/rec/watchlater'
+import { settings } from '$settings'
 import { nextTick } from '$utility'
 import { useGetState, useMemoizedFn } from 'ahooks'
 import type { Debugger } from 'debug'
@@ -72,6 +73,8 @@ export function useRefresh({
   const tab = getCurrentSourceTab()
 
   const itemsCache = useRefInit<Partial<Record<TabType, RecItemType[]>>>(() => ({}))
+  const itemsHasCache = useRefInit<Partial<Record<TabType, boolean>>>(() => ({}))
+
   const [hasMore, setHasMore] = useState(true)
   const [items, setItems] = useState<RecItemType[]>([])
 
@@ -130,20 +133,42 @@ export function useRefresh({
 
     let _items: RecItemType[] = []
     let err: any
-
-    // reuse
-    const shouldReuse = Boolean(reuse && itemsCache.current[tab]?.length)
-    const swr = Boolean(shouldReuse && (TabConfigMap[tab].swr || tab === 'fav'))
-    setSwr(swr)
-    // fav is not swr, but need call FavService.loadMore
-    const shouldRequestWhenReuse = shouldReuse && (swr || tab === 'fav')
-
     const doFetch = async () => {
       try {
         _items = await fetcher(fetcherOptions)
       } catch (e) {
         err = e
       }
+    }
+
+    /**
+     * 推荐类 tab: 使用 grid-cache, 切换 tab 不 doFetch
+     *
+     * 动态/稍后再看/综合热门: swr 策略
+     * 即: 使用 grid-cache 保存前30项, 并重新网络请求 (recreate-service + doFetch)
+     *
+     * 收藏/每周必看:
+     * 默认顺序: swr 策略
+     * 乱序: 使用 QueueStrategy cache, 即 own cache, 切换 tab 要重 doFetch
+     */
+
+    // reuse
+    const shouldReuse = reuse && !!itemsHasCache.current[tab]
+    const swr =
+      shouldReuse &&
+      (!!TabConfigMap[tab].swr ||
+        (tab === 'fav' && !serviceMap.fav.useShuffle && !settings.shuffleForFav) ||
+        (tab === 'popular-weekly' &&
+          !serviceMap['popular-weekly'].useShuffle &&
+          !settings.shuffleForPopularWeekly))
+
+    // all reuse case, do not show skeleton
+    setSwr(shouldReuse)
+
+    let useGridCache = true
+    if ((tab === 'fav' || tab === 'popular-weekly') && !swr) {
+      // use own cache
+      useGridCache = false
     }
 
     const _pcRecService = recreateService ? new PcRecService() : pcRecService
@@ -166,7 +191,11 @@ export function useRefresh({
     }
     if (tab === 'fav') {
       if (shouldReuse) {
-        serviceMap.fav.qs.restore()
+        if (swr) {
+          recreateFor(tab)
+        } else {
+          serviceMap.fav.qs.restore()
+        }
       } else {
         recreateFor(tab)
       }
@@ -176,7 +205,11 @@ export function useRefresh({
     }
     if (tab === 'popular-weekly') {
       if (shouldReuse) {
-        serviceMap['popular-weekly'].qs.restore()
+        if (swr) {
+          recreateFor(tab)
+        } else {
+          serviceMap['popular-weekly'].qs.restore()
+        }
       } else {
         recreateFor(tab)
       }
@@ -193,11 +226,23 @@ export function useRefresh({
       pcRecService: _pcRecService,
     }
 
-    debug('refresh(): shouldReuse=%s swr=%s', shouldReuse, swr)
+    debug('refresh(): shouldReuse=%s swr=%s useGridCache=%s', shouldReuse, swr, useGridCache)
     if (shouldReuse) {
-      _items = itemsCache.current[tab] || []
-      setItems(_items)
-      if (shouldRequestWhenReuse) await doFetch()
+      if (swr) {
+        _items = itemsCache.current[tab] || []
+        setItems(_items)
+        await doFetch()
+      }
+      // for 收藏/每日必看 乱序, 已经 retore, 需要 doFetch
+      else if (!useGridCache) {
+        itemsCache.current[tab] = []
+        await doFetch()
+      }
+      // for 推荐类 tab
+      else {
+        _items = itemsCache.current[tab] || []
+        // setItems(_items) // setItems will be called next
+      }
     } else {
       itemsCache.current[tab] = []
       await doFetch()
@@ -218,6 +263,17 @@ export function useRefresh({
       return
     }
 
+    if (_items.length) {
+      itemsHasCache.current[tab] = true // mark refreshed
+
+      // if swr or possibile-swr, save list starting part only
+      if (TabConfigMap[tab].swr || tab === 'fav' || tab === 'popular-weekly') {
+        itemsCache.current[tab] = _items.slice(0, 30)
+      } else {
+        itemsCache.current[tab] = _items
+      }
+    }
+
     // update items
     await new Promise((r) => requestIdleCallback(r, { timeout: 400 }))
     if (_signal.aborted) {
@@ -225,13 +281,6 @@ export function useRefresh({
       return
     }
     setItems(_items)
-
-    // if swr, save list starting part only
-    if (TabConfigMap[tab].swr) {
-      itemsCache.current[tab] = _items.slice(0, 30)
-    } else {
-      itemsCache.current[tab] = _items
-    }
 
     // hasMore check: only ServiceMapKey need hasMore check
     const service = getIService(newServiceMap, tab)

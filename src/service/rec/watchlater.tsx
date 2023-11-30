@@ -1,5 +1,5 @@
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
-import type { RecItemType, WatchLaterItemExtend, WatchLaterJson } from '$define'
+import type { WatchLaterItemExtend, WatchLaterJson } from '$define'
 import { request } from '$request'
 import { settings, updateSettings, useSettingsSnapshot } from '$settings'
 import { getHasLogined } from '$utility'
@@ -7,11 +7,11 @@ import { toast } from '$utility/toast'
 import { Switch, Tag } from 'antd'
 import dayjs from 'dayjs'
 import delay from 'delay'
-import { cloneDeep, shuffle } from 'lodash'
+import { shuffle } from 'lodash'
 import type { ComponentProps, ReactNode } from 'react'
 import { proxy, useSnapshot } from 'valtio'
 import { proxySet } from 'valtio/utils'
-import type { IService } from './base'
+import { QueueStrategy, type IService } from './base'
 
 export const watchLaterState = proxy({
   updatedAt: 0,
@@ -33,8 +33,10 @@ if (getHasLogined()) {
  */
 
 export class WatchLaterRecService implements IService {
-  static PAGE_SIZE = 15
-  static LAST_ITEMS: WatchLaterItemExtend[] = []
+  static PAGE_SIZE = 20
+  static LAST_BVID_ARR: string[] = []
+
+  qs = new QueueStrategy<WatchLaterItemExtend>(WatchLaterRecService.PAGE_SIZE)
 
   constructor(keepOrder?: boolean) {
     this.keepOrder = keepOrder ?? false
@@ -66,11 +68,12 @@ export class WatchLaterRecService implements IService {
       let items2 = items.slice(firstNotTodayAddedIndex)
 
       // 保持顺序
-      if (this.keepOrder && WatchLaterRecService.LAST_ITEMS.length) {
+      if (this.keepOrder && WatchLaterRecService.LAST_BVID_ARR.length) {
         items2 = items2
           .map((item) => ({
             item,
-            index: WatchLaterRecService.LAST_ITEMS.findIndex((i) => i.bvid === item.bvid),
+            // if not found, -1, front-most
+            index: WatchLaterRecService.LAST_BVID_ARR.findIndex((bvid) => item.bvid === bvid),
           }))
           .sort((a, b) => a.index - b.index)
           .map((x) => x.item)
@@ -88,17 +91,16 @@ export class WatchLaterRecService implements IService {
     // this.count = this.items.length
 
     this.count = json.data.count
-    this.items = items
 
     // save for next keepOrder=true
-    WatchLaterRecService.LAST_ITEMS = items
+    WatchLaterRecService.LAST_BVID_ARR = items.map((item) => item.bvid)
+
+    return items
   }
 
   loaded = false
   page = -1
-  hasMore = true
   count: number = 0
-  items: RecItemType[] = []
   keepOrder: boolean
 
   get usageInfo(): ReactNode {
@@ -107,30 +109,21 @@ export class WatchLaterRecService implements IService {
     return <WatchLaterUsageInfo count={count} />
   }
 
+  get hasMore() {
+    if (!this.loaded) return true
+    return !!this.qs.bufferQueue.length
+  }
+
   async loadMore() {
     if (!this.hasMore) return
 
-    let hasApiCall = false
     if (!this.loaded) {
-      hasApiCall = true
-      await this.fetch()
+      const items = await this.fetch()
+      this.qs.bufferQueue.push(...items)
       this.loaded = true
     }
 
-    this.page++
-    const start = this.page * WatchLaterRecService.PAGE_SIZE
-    const end = start + WatchLaterRecService.PAGE_SIZE
-
-    const items = cloneDeep(this.items.slice(start, end))
-    this.hasMore = end <= this.count - 1
-
-    if (!hasApiCall) {
-      // wait a moment
-      // 不知道是否更流畅, 好像有, 也好像没有!
-      // await delay(50)
-    }
-
-    return items
+    return this.qs.sliceFromQueue()
   }
 }
 
