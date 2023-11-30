@@ -1,3 +1,4 @@
+import { APP_KEY_PREFIX } from '$common'
 import { useRefInit } from '$common/hooks/useRefInit'
 import type { TabType } from '$components/RecHeader/tab.shared'
 import { TabConfigMap, getCurrentSourceTab } from '$components/RecHeader/tab.shared'
@@ -13,7 +14,7 @@ import { settings } from '$settings'
 import { nextTick } from '$utility'
 import { useGetState, useMemoizedFn } from 'ahooks'
 import type { Debugger } from 'debug'
-import { createContext, useContext, useState } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
 
 export type OnRefreshOoptions = { watchlaterKeepOrder?: boolean }
 export type OnRefresh = (reuse?: boolean, options?: OnRefreshOoptions) => void | Promise<void>
@@ -77,6 +78,13 @@ export function useRefresh({
 
   const [hasMore, setHasMore] = useState(true)
   const [items, setItems] = useState<RecItemType[]>([])
+  useEffect(() => {
+    try {
+      ;(unsafeWindow as any)[`${APP_KEY_PREFIX}_gridItems`] = items
+    } catch (e) {
+      // noop
+    }
+  }, [items])
 
   const [serviceMap, setServiceMap] = useState<ServiceMap>(() => {
     return Object.fromEntries(

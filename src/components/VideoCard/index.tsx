@@ -811,6 +811,7 @@ const VideoCardInner = memo(function VideoCardInner({
 
   return (
     <div
+      data-bvid={bvid || ''}
       className='bili-video-card__wrap __scale-wrap'
       css={css`
         background-color: unset;

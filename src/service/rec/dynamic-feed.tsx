@@ -73,14 +73,29 @@ export class DynamicFeedRecService implements IService {
   }
 }
 
+/**
+ * view dynamic of <mid> via query
+ */
+const hash = location.hash
+let upMidInitial: number | undefined = undefined
+let upNameInitial: string | undefined = undefined
+if (hash.includes('?')) {
+  const queryInHash = location.hash.slice(location.hash.indexOf('?'))
+  const searchParams = new URLSearchParams(queryInHash)
+  if (searchParams.get('dyn-mid')) {
+    upMidInitial = Number(searchParams.get('dyn-mid'))
+    upNameInitial = searchParams.get('dyn-mid') ?? undefined
+  }
+}
+
 export const dynamicFeedFilterStore = proxy<{
   upMid: number | undefined
   upName: string | undefined
   upList: DynamicPortalUp[]
   upListUpdatedAt: number
 }>({
-  upMid: undefined,
-  upName: undefined,
+  upMid: upMidInitial,
+  upName: upNameInitial,
   upList: [],
   upListUpdatedAt: 0,
 })
