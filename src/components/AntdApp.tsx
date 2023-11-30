@@ -6,7 +6,11 @@ import { ConfigProvider, Tooltip, theme } from 'antd'
 import zhCN from 'antd/locale/zh_CN'
 import { LazyMotion, domAnimation } from 'framer-motion'
 import type { ComponentProps, ReactNode } from 'react'
-import { colorPrimaryIdentifier, useCurrentTheme } from './ModalSettings/theme.shared'
+import {
+  colorPrimaryIdentifier,
+  colorPrimaryValue,
+  useCurrentTheme,
+} from './ModalSettings/theme.shared'
 
 // bilibili.com default: PingFang SC,HarmonyOS_Regular,Helvetica Neue,Microsoft YaHei,sans-serif
 export const USING_FONT_FAMILY =
@@ -55,6 +59,10 @@ function GlobalStyle() {
 
           .${APP_NAME_ROOT_CLASSNAME} {
             font-family: ${USING_FONT_FAMILY};
+
+            .bili-video-card a:not(.disable-hover):hover{
+              color: ${colorPrimaryValue} !important;
+            }
           }
         `}
       />
