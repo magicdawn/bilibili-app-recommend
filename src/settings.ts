@@ -100,6 +100,7 @@ export const initialSettings = {
    * 如果使用白名单, 新增的 tab 会被隐藏
    */
   hidingTabKeys: [] as TabType[],
+  customTabKeysOrder: [] as TabType[],
 }
 
 export type Settings = typeof initialSettings

@@ -1,5 +1,5 @@
 import { type Icon } from '@icon-park/react/es/runtime'
-import { type ComponentProps } from 'react'
+import { forwardRef, type ComponentProps } from 'react'
 
 import {
   AddTwo,
@@ -11,6 +11,7 @@ import {
   Delete,
   DislikeTwo,
   DistraughtFace,
+  Drag,
   EfferentFour,
   FileCabinet,
   Fire,
@@ -61,17 +62,15 @@ export const ImportedIcons = {
   Split,
   Fire,
   TrendTwo,
+  Drag,
 } satisfies Record<string, Icon>
 
 export type IconName = keyof typeof ImportedIcons
 
-export function IconPark({
-  name,
-  theme,
-  size,
-  fill,
-  ...props
-}: { name: IconName } & ComponentProps<Icon>) {
+export const IconPark = forwardRef(function IconPark(
+  { name, theme, size, fill, ...props }: { name: IconName } & ComponentProps<Icon>,
+  ref
+) {
   theme ||= 'outline'
   size ||= 24
   fill ||= 'currentColor'
@@ -79,6 +78,8 @@ export function IconPark({
   const Comp = ImportedIcons[name]
   return (
     <Comp
+      // @ts-ignore
+      ref={ref}
       {...{ theme, size, fill, ...props }}
       style={{
         fontSize: 0,
@@ -86,4 +87,4 @@ export function IconPark({
       }}
     />
   )
-}
+})

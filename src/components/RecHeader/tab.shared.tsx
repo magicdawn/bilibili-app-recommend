@@ -97,16 +97,32 @@ export function useCurrentShowingTabKeys(): TabType[] {
   return useMemo(() => TabKeys.filter((key) => !hidingTabKeys.includes(key)), [hidingTabKeys])
 }
 
+export function sortTabKeys(customTabKeysOrder: TabType[]) {
+  return TabKeys.slice().sort((a, b) => {
+    let aIndex = customTabKeysOrder.indexOf(a)
+    let bIndex = customTabKeysOrder.indexOf(b)
+    if (aIndex === -1) aIndex = TabKeys.indexOf(a)
+    if (bIndex === -1) bIndex = TabKeys.indexOf(b)
+    return aIndex - bIndex
+  })
+}
+
+export function useSortedTabKeys() {
+  const { customTabKeysOrder } = useSettingsSnapshot()
+  return useMemo(() => sortTabKeys(customTabKeysOrder), [customTabKeysOrder])
+}
+
 export function useCurrentTabConfig() {
-  const currentShowingTabKeys = useCurrentShowingTabKeys()
+  const { hidingTabKeys, customTabKeysOrder } = useSettingsSnapshot()
   const logined = useHasLogined()
-  return useMemo(
-    () =>
-      TabConfig.filter(
-        (x) => currentShowingTabKeys.includes(x.key) || (!logined && x.key === 'recommend-app')
-      ),
-    [currentShowingTabKeys, logined]
-  )
+
+  return useMemo(() => {
+    let tabkeys = sortTabKeys(customTabKeysOrder)
+    tabkeys = tabkeys.filter(
+      (key) => !hidingTabKeys.includes(key) || (!logined && key === 'recommend-app')
+    )
+    return tabkeys.map((k) => TabConfigMap[k])
+  }, [hidingTabKeys, customTabKeysOrder, logined])
 }
 
 function _getCurrentSourceTab(videoSourceTab: TabType, logined: boolean): TabType {

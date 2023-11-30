@@ -1,8 +1,14 @@
 import { APP_NAME } from '$common'
 import { AccessKeyManage } from '$components/AccessKeyManage'
+import { AntdTooltip } from '$components/AntdApp'
 import { BaseModal, BaseModalClass, ModalClose } from '$components/BaseModal'
-import { iconCss } from '$components/RecHeader/tab'
-import { TabConfig, TabKeys, useCurrentShowingTabKeys } from '$components/RecHeader/tab.shared'
+import type { TabType } from '$components/RecHeader/tab.shared'
+import {
+  TabConfigMap,
+  TabKeys,
+  useCurrentShowingTabKeys,
+  useSortedTabKeys,
+} from '$components/RecHeader/tab.shared'
 import { FlagSettingItem, HelpInfo } from '$components/piece'
 import { IconPark } from '$icon-park'
 import { cx } from '$libs'
@@ -17,8 +23,13 @@ import {
 } from '$settings'
 import { shouldDisableShortcut } from '$utility/dom'
 import { toast } from '$utility/toast'
+import type { DragEndEvent } from '@dnd-kit/core'
+import { DndContext, PointerSensor, closestCenter, useSensor, useSensors } from '@dnd-kit/core'
+import { restrictToParentElement, restrictToVerticalAxis } from '@dnd-kit/modifiers'
+import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
 import { css } from '@emotion/react'
-import { useKeyPress } from 'ahooks'
+import { useKeyPress, useMemoizedFn } from 'ahooks'
 import { Button, Checkbox, InputNumber, Popconfirm, Slider, Space, Switch, Tabs, Tag } from 'antd'
 import delay from 'delay'
 import { pick } from 'lodash'
@@ -70,7 +81,8 @@ function useHotkeyForConfig(
 }
 
 const modalSettingsStore = proxy({
-  tab: 'basic',
+  // tab: 'basic',
+  tab: 'recommend-tab-config',
 })
 
 export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => void }) {
@@ -273,6 +285,11 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
               ),
             },
             {
+              label: 'Tab 配置',
+              key: 'recommend-tab-config',
+              children: <TabPaneRecommendTabConfig />,
+            },
+            {
               label: '高级设置',
               key: 'advance',
               children: <TabPaneAdvance />,
@@ -422,7 +439,6 @@ function TabPaneBasic() {
 }
 
 function TabPaneAdvance() {
-  const currentShowingTabKeys = useCurrentShowingTabKeys()
   const { autoPreviewUpdateInterval } = useSettingsSnapshot()
 
   return (
@@ -493,61 +509,6 @@ function TabPaneAdvance() {
         </div>
 
         <div className={styles.settingsGroupTitle} style={{ marginTop: 15 }}>
-          Tab 显示
-        </div>
-        <div className={cx(styles.settingsGroupContent)}>
-          <div className={styles.row}>
-            <Checkbox.Group
-              css={css`
-                .ant-checkbox-group-item {
-                  align-items: center;
-                }
-              `}
-              options={TabConfig.map(({ label, key, icon, iconProps }) => {
-                return {
-                  label: (
-                    <span
-                      css={css`
-                        display: flex;
-                        align-items: center;
-                        margin-right: 15px;
-                      `}
-                    >
-                      <IconPark
-                        name={icon}
-                        {...iconProps}
-                        size={iconProps?.size || 18}
-                        css={iconCss}
-                      />
-                      {label}
-                    </span>
-                  ),
-                  value: key,
-                }
-              })}
-              value={currentShowingTabKeys}
-              onChange={(newVal) => {
-                if (!newVal.length) {
-                  return toast('至少选择一项!')
-                }
-
-                updateSettings({
-                  hidingTabKeys: TabKeys.filter((k) => !newVal.includes(k)),
-                })
-              }}
-            />
-          </div>
-          <Button
-            style={{ marginTop: 5 }}
-            onClick={() => {
-              updateSettings({ hidingTabKeys: [] })
-            }}
-          >
-            重置
-          </Button>
-        </div>
-
-        <div className={styles.settingsGroupTitle} style={{ marginTop: 15 }}>
           预览
         </div>
         <div style={{ width: '100%', display: 'flex', alignItems: 'center' }}>
@@ -562,6 +523,160 @@ function TabPaneAdvance() {
           />
           <span style={{ width: '65px' }}>({autoPreviewUpdateInterval}ms)</span>
         </div>
+      </div>
+    </div>
+  )
+}
+
+function TabPaneRecommendTabConfig() {
+  const currentShowingTabKeys = useCurrentShowingTabKeys()
+  const sortedTabKeys = useSortedTabKeys()
+
+  const sensors = useSensors(useSensor(PointerSensor))
+
+  const handleDragEnd = useMemoizedFn((e: DragEndEvent) => {
+    const { over, active } = e
+    // console.log(e, over, active)
+
+    // no change
+    if (!over?.id) return
+    if (over.id === active.id) return
+
+    // change
+    const oldIndex = sortedTabKeys.indexOf(active.id.toString())
+    const newIndex = sortedTabKeys.indexOf(over.id.toString())
+    // console.log('re-order:', oldIndex, newIndex)
+
+    // save
+    const item = sortedTabKeys[oldIndex]
+    const newSortedKeys = sortedTabKeys.slice()
+    newSortedKeys.splice(oldIndex, 1)
+    newSortedKeys.splice(newIndex, 0, item)
+    updateSettings({ customTabKeysOrder: newSortedKeys })
+  })
+
+  return (
+    <div className={styles.tabPane}>
+      <div className={styles.settingsGroup}>
+        <div className={styles.settingsGroupTitle}>
+          Tab 配置
+          <HelpInfo
+            iconProps={{ name: 'Tips', style: { marginLeft: 5, marginRight: 20 } }}
+            tooltip={<>勾选显示, 拖动排序</>}
+          />
+          <Button
+            style={{ marginTop: 5 }}
+            onClick={() => {
+              updateSettings({ hidingTabKeys: [], customTabKeysOrder: [] })
+            }}
+          >
+            重置
+          </Button>
+        </div>
+        <div className={cx(styles.settingsGroupContent)}>
+          <div
+            css={css`
+              width: 300px;
+            `}
+          >
+            <Checkbox.Group
+              css={css`
+                display: block;
+                line-height: unset;
+              `}
+              value={currentShowingTabKeys}
+              onChange={(newVal) => {
+                if (!newVal.length) {
+                  return toast('至少选择一项!')
+                }
+                updateSettings({
+                  hidingTabKeys: TabKeys.filter((k) => !newVal.includes(k)),
+                })
+              }}
+            >
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={handleDragEnd}
+                modifiers={[restrictToVerticalAxis, restrictToParentElement]}
+              >
+                <SortableContext items={sortedTabKeys} strategy={verticalListSortingStrategy}>
+                  {sortedTabKeys.map((key) => (
+                    <TabSortableItem key={key} id={key} />
+                  ))}
+                </SortableContext>
+              </DndContext>
+            </Checkbox.Group>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function TabSortableItem({ id }: { id: TabType }) {
+  const { attributes, listeners, setNodeRef, transform, transition, setActivatorNodeRef } =
+    useSortable({ id })
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  }
+
+  const { label, desc, icon, iconProps } = TabConfigMap[id]
+  return (
+    <div
+      key={id}
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      css={css`
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        height: 35px;
+
+        padding-left: 20px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+
+        margin-top: 6px;
+      `}
+    >
+      <Checkbox value={id} />
+      <AntdTooltip
+        title={desc}
+        css={css`
+          display: inline-flex;
+          align-items: center;
+        `}
+      >
+        <IconPark
+          name={icon}
+          {...iconProps}
+          size={iconProps?.size || 18}
+          css={css`
+            margin: 0 5px 0 10px;
+          `}
+        />
+        {label}
+      </AntdTooltip>
+
+      <div
+        css={css`
+          flex: 1;
+        `}
+      />
+
+      <div
+        {...listeners}
+        css={css`
+          cursor: grab;
+          font-size: 0;
+          padding: 5px 10px;
+        `}
+      >
+        <IconPark ref={setActivatorNodeRef} name='Drag' size={18} />
       </div>
     </div>
   )
