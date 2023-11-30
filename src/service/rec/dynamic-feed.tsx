@@ -210,7 +210,7 @@ export function DynamicFeedUsageInfo() {
         </Dropdown>
         {!!upName && (
           <Button onClick={onClear} css={[verticalAlignStyle]}>
-            <IconPark name='Return' size={14} style={{ marginRight: 5 }} />
+            <IconPark name='Return' size={14} style={{ marginRight: 5, marginTop: -2 }} />
             清除
           </Button>
         )}
