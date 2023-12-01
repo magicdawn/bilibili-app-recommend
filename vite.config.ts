@@ -188,24 +188,21 @@ export default defineConfig(({ command }) => ({
           'react': cdn.npmmirror('React', 'umd/react.production.min.js'),
           'react-dom': cdn.npmmirror('ReactDOM', 'umd/react-dom.production.min.js'),
           'ua-parser-js': cdn.npmmirror('UAParser', 'dist/ua-parser.min.js'),
+          'framer-motion': cdn.npmmirror('Motion', 'dist/framer-motion.js'),
+
+          // size:
+          //     external 944kB + 36kB
+          // not-external 946kB
+          // antd use @emotion/* too
+          // '@emotion/css': cdn.npmmirror('emotion', 'dist/emotion-css.umd.min.js'),
+          // '@emotion/react': cdn.npmmirror('emotionReact', 'dist/emotion-react.umd.min.js'),
 
           // 'lodash': cdn.npmmirror('_', 'lodash.min.js'),
           // // ahooks use these
           // 'lodash/throttle': '_.throttle',
           // 'lodash/debounce': '_.debounce',
           // 'lodash/isEqual': '_.isEqual',
-
-          // '@emotion/css': cdn.unpkg('emotion', 'dist/emotion-css.umd.min.js'),
-          // '@emotion/react': cdn.unpkg('emotionReact', 'dist/emotion-react.umd.min.js'),
         },
-
-        // externalGlobals: {
-        //   'react': cdn.baomitu('React', 'umd/react.production.min.js'),
-        //   'react-dom': cdn.baomitu('ReactDOM', 'umd/react-dom.production.min.js'),
-        //   'ua-parser-js': baomitu('UAParser', 'ua-parser.min.js', 'UAParser.js'),
-        //   // 'axios': cdn.baomitu('axios', 'axios.min.js'),
-        //   // 'lodash': baomitu('_', 'lodash.min.js', 'lodash.js'),
-        // },
       },
     }),
 
