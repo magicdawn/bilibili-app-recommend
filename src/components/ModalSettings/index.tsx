@@ -12,6 +12,7 @@ import {
 import { FlagSettingItem, HelpInfo } from '$components/piece'
 import { IconPark } from '$icon-park'
 import { cx } from '$libs'
+import { useIsDarkMode } from '$platform'
 import { getData } from '$service/user/article-draft'
 import type { BooleanSettingsKey } from '$settings'
 import {
@@ -82,8 +83,8 @@ function useHotkeyForConfig(
 
 const modalSettingsStore = proxy({
   // FIXME: default tab should be basic
-  tab: 'basic',
-  // tab: 'video-source-tab-config',
+  // tab: 'basic',
+  tab: 'video-source-tab-config',
 })
 
 export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => void }) {
@@ -624,6 +625,9 @@ function VideoSourceTabSortableItem({ id }: { id: TabType }) {
   }
 
   const { label, desc, icon, iconProps } = TabConfigMap[id]
+
+  const dark = useIsDarkMode()
+
   return (
     <div
       key={id}
@@ -637,7 +641,7 @@ function VideoSourceTabSortableItem({ id }: { id: TabType }) {
         height: 35px;
 
         padding-left: 20px;
-        border: 1px solid #ddd;
+        border: 1px solid ${!dark ? '#ddd' : '#444'};
         border-radius: 6px;
 
         margin-top: 6px;
@@ -674,7 +678,12 @@ function VideoSourceTabSortableItem({ id }: { id: TabType }) {
         css={css`
           cursor: grab;
           font-size: 0;
-          padding: 5px 10px;
+          padding: 5px;
+          margin-right: 10px;
+          border-radius: 5px;
+          &:hover {
+            background-color: ${!dark ? '#eee' : '#999'};
+          }
         `}
       >
         <IconPark name='Drag' size={18} />
