@@ -35,7 +35,7 @@ import { Button, Checkbox, InputNumber, Popconfirm, Slider, Space, Switch, Tabs,
 import delay from 'delay'
 import { pick } from 'lodash'
 import { proxy, useSnapshot } from 'valtio'
-import styles from './index.module.less'
+import styles from './index.module.scss'
 import { set_HAS_RESTORED_SETTINGS } from './index.shared'
 import { ThemesSelect } from './theme'
 

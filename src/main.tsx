@@ -20,7 +20,7 @@ dayjs.extend(duration)
 
 // styles
 import '@icon-park/react/styles/index.css'
-import './common/global.less'
+import './common/global.scss'
 
 import { APP_NAME, APP_NAME_ROOT_CLASSNAME } from '$common'
 import { AntdApp } from '$components/AntdApp'

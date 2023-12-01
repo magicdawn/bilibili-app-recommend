@@ -6,7 +6,7 @@ import { useKeyPress, useMemoizedFn } from 'ahooks'
 import type { CSSProperties, ComponentProps, MouseEvent, ReactNode } from 'react'
 import { useId, useLayoutEffect, useMemo, useRef } from 'react'
 import { createPortal } from 'react-dom'
-import BaseModalClass from './BaseModal.module.less'
+import BaseModalClass from './BaseModal.module.scss'
 
 export { BaseModalClass }
 

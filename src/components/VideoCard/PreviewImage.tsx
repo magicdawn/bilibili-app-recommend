@@ -3,7 +3,7 @@ import type { PvideoData } from '$define'
 import { cx } from '$libs'
 import { useMount, useMouse } from 'ahooks'
 import { useMemo, useRef, useState } from 'react'
-import styles from './index.module.less'
+import styles from './index.module.scss'
 
 interface IProps {
   className?: string

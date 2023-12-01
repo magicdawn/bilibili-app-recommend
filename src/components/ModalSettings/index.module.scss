@@ -1,3 +1,4 @@
+@use 'sass:math';
 .config-icon {
   line-height: 1;
   margin-right: 5px;
@@ -58,7 +59,7 @@
 }
 
 .tab-pane {
-  min-height: ~'min(360px, calc(90vh - 50px - 56px - 15px))';
-  max-height: calc(90vh - 50px - 56px - 15px);
+  min-height: min(360px, calc(90vh - #{50px + 56px + 15px}));
+  max-height: calc(90vh - #{50px + 56px + 15px});
   overflow-y: scroll;
 }

@@ -2,24 +2,24 @@
   "$schema": "https://turbo.build/schema.json",
   "pipeline": {
     "build:vite": {
-      "dependsOn": ["build:less"],
+      "dependsOn": ["build:scss"],
       "env": ["RELEASE", "RELEASE_NIGHTLY"],
       "inputs": ["src/**/*.{ts,tsx}", "tsconfig.json", "vite.config.ts", "package.json"],
       "outputs": ["dist/bilibili-app-recommend.mini.user.js"]
     },
     "build:vite-raw": {
-      "dependsOn": ["build:less"],
+      "dependsOn": ["build:scss"],
       "env": ["RELEASE", "RELEASE_NIGHTLY"],
       "inputs": ["src/**/*.{ts,tsx}", "tsconfig.json", "vite.config.ts", "package.json"],
       "outputs": ["dist/bilibili-app-recommend.user.js"]
     },
     "typecheck": {
-      "dependsOn": ["build:less"],
+      "dependsOn": ["build:scss"],
       "inputs": ["src/**/*.{ts,tsx}", "tsconfig.json"]
     },
-    "build:less": {
-      "inputs": ["src/**/*.less"],
-      "outputs": ["src/**/*.less.d.ts"]
+    "build:scss": {
+      "inputs": ["src/**/*.scss"],
+      "outputs": ["src/**/*.scss.d.ts"]
     }
   }
 }

@@ -5,13 +5,13 @@
   "type": "module",
   "scripts": {
     "prepare": "husky install",
-    "dev:less": "tlm src --watch",
-    "dev": "concurrently -k npm:dev:less vite",
+    "dev:scss": "typed-scss-modules src --watch",
+    "dev": "concurrently -k npm:dev:scss vite",
     "typecheck": "tsc --noEmit",
-    "build:less": "tlm src",
+    "build:scss": "typed-scss-modules src",
     "build:vite": "vite build",
     "//": "//",
-    "build:real-build": "turbo build:less typecheck build:vite",
+    "build:real-build": "turbo build:scss typecheck build:vite",
     "build": "pnpm build:real-build && pnpm preview",
     "build:vite-raw": "vite build -- --no-minify",
     "build:vite-analyze": "vite build -- --no-minify --analyze",
@@ -25,7 +25,6 @@
     "@babel/core": "^7.23.5",
     "@emotion/babel-plugin": "^11.11.0",
     "@magicdawn/prettier-config": "^0.0.2",
-    "@qiniu/typed-less-modules": "^0.1.2",
     "@styled/typescript-styled-plugin": "^1.0.0",
     "@types/debug": "^4.1.12",
     "@types/lodash": "4.14.202",
@@ -49,15 +48,16 @@
     "eslint-config-prettier": "^9.0.0",
     "esm-utils": "^4.2.1",
     "husky": "^8.0.3",
-    "less": "^4.2.0",
     "lint-staged": "^15.1.0",
     "open": "^9.1.0",
     "postcss-media-minmax": "^5.0.0",
     "prettier": "^3.1.0",
     "rollup-plugin-node-polyfills": "^0.2.1",
     "rollup-plugin-visualizer": "^5.9.3",
+    "sass": "^1.69.5",
     "turbo": "^1.10.16",
     "type-fest": "^4.8.2",
+    "typed-scss-modules": "^8.0.0",
     "typescript": "^5.3.2",
     "vite": "^5.0.4",
     "vite-plugin-importer": "^0.2.5",
@@ -107,14 +107,8 @@
       "eslint --fix",
       "prettier --write"
     ],
-    "*.{less,md}": [
+    "*.{less,scss,md}": [
       "prettier --write"
     ]
-  },
-  "pnpm": {
-    "patchedDependencies": {},
-    "overrides": {
-      "@qiniu/typed-less-modules>less": "4"
-    }
   }
 }

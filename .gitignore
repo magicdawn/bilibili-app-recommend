@@ -1,8 +1,8 @@
 dist
 node_modules
 
-**/*.module.less.d.ts
-**/*.less.d.ts
+*.less.d.ts
+*.scss.d.ts
 
 # visualizer
 /stats.html

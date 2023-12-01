@@ -4,7 +4,7 @@ import { shouldDisableShortcut } from '$utility/dom'
 import { useKeyPress, useMemoizedFn } from 'ahooks'
 import type { RefObject } from 'react'
 import { useState } from 'react'
-import { videoGrid } from '../video-grid.module.less'
+import { videoGrid } from '../video-grid.module.scss'
 import { CardClassNames } from './index'
 
 interface IOptions {

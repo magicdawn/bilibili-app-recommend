@@ -1,5 +1,3 @@
-@import '../../common/vars.less';
-
 .modal-mask {
   &.narrow-mode {
     background-color: rgba(0, 0, 0, 0.9);
@@ -15,12 +13,12 @@
   // 只有 "dark mode" + "全屏弹窗", 需要 border, 看不清边界
   // in js
   // :global(body.dark) & {
-  //   border: 1px solid @bili-pink;
+  //   border: 1px solid $bili-pink;
   // }
 
   &.narrow-mode {
-    @card-width: 283px;
-    width: @card-width * 2 + 40px;
+    $card-width: 283px;
+    width: $card-width * 2 + 40px;
     height: calc(100vh - 10px);
 
     border: none;

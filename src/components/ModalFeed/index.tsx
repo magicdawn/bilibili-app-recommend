@@ -15,7 +15,7 @@ import type { CSSProperties, ReactNode } from 'react'
 import { memo, useMemo, useRef, useState } from 'react'
 import { BaseModal, BaseModalClass, ModalClose } from '../BaseModal'
 import { CollapseBtn } from '../CollapseBtn'
-import styles from './index.module.less'
+import styles from './index.module.scss'
 
 interface IProps {
   show: boolean

@@ -59,20 +59,20 @@
 }
 
 // less mixin
-// .gen-col(@col) {
-//   --col: @col;
-//   @limit1: @col + 1;
-//   @limit2: @col * 2 + 1;
+// @mixin gen-col($col){
+//   --col: $col;
+//   $limit1: $col + 1;
+//   $limit2: $col * 2 + 1;
 
-//   &.limit-one-line > *:nth-of-type(1n + @limit1) {
+//   &.limit-one-line > *:nth-of-type(1n + $limit1) {
 //     display: none !important;
 //   }
-//   &.limit-two-lines > *:nth-of-type(1n + @limit2) {
+//   &.limit-two-lines > *:nth-of-type(1n + $limit2) {
 //     display: none !important;
 //   }
 // }
-// .gen-col(4);
-// .gen-col(5);
+// @include gen-col(4);
+// @include gen-col(5);
 
 @media (width < 1400px) {
   .video-grid-internal-testing {
@@ -106,39 +106,39 @@
   container-type: inline-size;
 }
 
-@gap-row: 50px;
-@gap-col: 20px;
-@card-min-width: 250px;
+$gap-row: 50px;
+$gap-col: 20px;
+$card-min-width: 250px;
 
 .video-grid-fancy {
-  grid-gap: @gap-row @gap-col;
+  grid-gap: $gap-row $gap-col;
   --video-card-border-radius: 15px;
-  --col: 2; // when width < @min-2
+  --col: 2; // when width < $min-2
 }
 
-@min-2: (@card-min-width + @gap-col) * 2 - @gap-col;
-@container video-grid-container (width >= @min-2) {
+$min-2: ($card-min-width + $gap-col) * 2 - $gap-col;
+@container video-grid-container (width >= #{$min-2}) {
   .video-grid-fancy {
     --col: 2;
   }
 }
 
-@min-3: (@card-min-width + @gap-col) * 3 - @gap-col;
-@container video-grid-container (width >= @min-3) {
+$min-3: ($card-min-width + $gap-col) * 3 - $gap-col;
+@container video-grid-container (width >= #{$min-3}) {
   .video-grid-fancy {
     --col: 3;
   }
 }
 
-@min-4: (@card-min-width + @gap-col) * 4 - @gap-col;
-@container video-grid-container (width >= @min-4) {
+$min-4: ($card-min-width + $gap-col) * 4 - $gap-col;
+@container video-grid-container (width >= #{$min-4}) {
   .video-grid-fancy {
     --col: 4;
   }
 }
 
-@min-5: (@card-min-width + @gap-col) * 5 - @gap-col;
-@container video-grid-container (width >= @min-5) {
+$min-5: ($card-min-width + $gap-col) * 5 - $gap-col;
+@container video-grid-container (width >= #{$min-5}) {
   .video-grid-fancy {
     --col: 5;
   }

@@ -1,4 +1,4 @@
-@import '../../common/vars.less';
+@use '../../common/_vars.scss';
 
 .modal {
   width: 500px;
@@ -31,7 +31,7 @@
   }
 
   &.active {
-    border-color: @bili-pink;
+    border-color: vars.$bili-pink;
     border-radius: 4px;
   }
 
@@ -45,18 +45,18 @@
   position: absolute;
   left: 6px;
 
-  @size: 20px;
-  width: @size;
-  height: @size;
+  $size: 20px;
+  width: $size;
+  height: $size;
   border-radius: 50%;
-  top: (32px/2 - @size / 2);
+  top: #{calc((32px - $size) / 2)};
 
   display: flex;
   align-items: center;
   justify-content: center;
 
   background-color: slateblue;
-  background-color: @bili-pink;
+  background-color: vars.$bili-pink;
   color: #fff;
 }
 

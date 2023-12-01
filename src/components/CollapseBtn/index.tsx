@@ -3,7 +3,7 @@ import { useToggle } from 'ahooks'
 import type { Actions } from 'ahooks/lib/useToggle'
 import type { ReactNode } from 'react'
 import { forwardRef, useImperativeHandle } from 'react'
-import styles from './index.module.less'
+import styles from './index.module.scss'
 
 interface IProps {
   children: ReactNode

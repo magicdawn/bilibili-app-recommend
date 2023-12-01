@@ -6,7 +6,7 @@ import {
   videoGrid,
   videoGridInternalTesting,
   videoGridNewHomepage,
-} from '$components/video-grid.module.less'
+} from '$components/video-grid.module.scss'
 import { cx } from '$libs'
 import { getIsInternalTesting } from '$platform'
 import { refreshForHome } from '$service/rec'

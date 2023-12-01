@@ -36,7 +36,7 @@ import {
   videoGridFancy,
   videoGridInternalTesting,
   videoGridNewHomepage,
-} from '../video-grid.module.less'
+} from '../video-grid.module.scss'
 import type { OnRefresh } from './useRefresh'
 import { getIService, useRefresh } from './useRefresh'
 import { useShortcut } from './useShortcut'
