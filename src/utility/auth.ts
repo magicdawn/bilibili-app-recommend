@@ -2,7 +2,7 @@ import { settings } from '$settings'
 import { getAccessKeyByQrCode } from './access-key/tv-qrcode'
 import { toast } from './toast'
 
-export async function auth() {
+export async function getAccessKey() {
   const accessKey = await getAccessKeyByQrCode()
   if (!accessKey) return
 
@@ -11,7 +11,7 @@ export async function auth() {
   return accessKey
 }
 
-export function deleteAccessToken() {
+export function deleteAccessKey() {
   settings.accessKey = ''
   toast('已删除 access_key')
 }

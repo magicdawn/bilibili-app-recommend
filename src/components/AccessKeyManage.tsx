@@ -1,10 +1,8 @@
 import { useSettingsSnapshot } from '$settings'
-import { GET_ACCESS_KEY_VIA_GMREQUEST_REDIRECT } from '$utility/access-key/by-cookie'
-import { auth, deleteAccessToken } from '$utility/auth'
+import { deleteAccessKey, getAccessKey } from '$utility/auth'
 import { useRequest } from 'ahooks'
 import { Button, Space } from 'antd'
-import type { CSSProperties, ReactNode } from 'react'
-import { AntdTooltip } from './AntdApp'
+import type { CSSProperties } from 'react'
 
 const btnAccessKeyHelpLink = (
   <Button
@@ -22,34 +20,24 @@ export function AccessKeyManage({
   style?: CSSProperties
   className?: string
 }) {
-  const { runAsync, loading } = useRequest(auth, { manual: true })
+  const { runAsync, loading } = useRequest(getAccessKey, { manual: true })
   const { accessKey } = useSettingsSnapshot()
-  const onDeleteAccessToken = deleteAccessToken
-
-  const waitWindowTip = '请允许弹出窗口并等待窗口自动关闭'
-  const wrapTooltip = (child: ReactNode) => {
-    const usingPopupWindow = !GET_ACCESS_KEY_VIA_GMREQUEST_REDIRECT
-    return usingPopupWindow ? <AntdTooltip title={waitWindowTip}>{child}</AntdTooltip> : child
-  }
+  const onDeleteAccessToken = deleteAccessKey
 
   return (
     <Space size='small' style={style} className={className}>
       {!accessKey ? (
         <>
-          {wrapTooltip(
-            <Button onClick={runAsync} disabled={loading} size='middle'>
-              <span>获取 access_key</span>
-            </Button>
-          )}
+          <Button onClick={runAsync} disabled={loading}>
+            <span>获取 access_key</span>
+          </Button>
           {btnAccessKeyHelpLink}
         </>
       ) : (
         <>
-          {wrapTooltip(
-            <Button onClick={runAsync} disabled={loading}>
-              <span>重新获取 access_key</span>
-            </Button>
-          )}
+          <Button onClick={runAsync} disabled={loading}>
+            <span>重新获取 access_key</span>
+          </Button>
           <Button onClick={onDeleteAccessToken}>
             <span>删除 access_key</span>
           </Button>
