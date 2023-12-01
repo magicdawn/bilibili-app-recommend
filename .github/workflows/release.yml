@@ -35,7 +35,7 @@ jobs:
           key: turbo-cache-${{ runner.os }}
 
       # code check
-      - run: pnpm turbo build:less typecheck
+      - run: pnpm turbo build:scss typecheck
 
       # test
       - run: pnpm test
