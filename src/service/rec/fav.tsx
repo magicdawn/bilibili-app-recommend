@@ -1,4 +1,5 @@
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
+import type { ItemsSeparator } from '$define'
 import type { FavItemExtend } from '$define/fav'
 import type { FavFolderListAllItem, FavFolderListAllJson } from '$define/fav/folder-list-all'
 import type { FavFolderDetailInfo, ResourceListJSON } from '$define/fav/resource-list'
@@ -33,7 +34,7 @@ export class FavRecService implements IService {
   folderServices: FavFolderService[] = [] // after exclude
 
   // full-list = qs.returnQueue + qs.bufferQueue + folderServices.more
-  qs = new QueueStrategy<FavItemExtend>(FavRecService.PAGE_SIZE)
+  qs = new QueueStrategy<FavItemExtend | ItemsSeparator>(FavRecService.PAGE_SIZE)
 
   get folderHasMore() {
     return this.folderServices.some((s) => s.hasMore)
@@ -64,7 +65,18 @@ export class FavRecService implements IService {
       const service = this.folderServices.find((s) => s.hasMore)
       if (!service) return
       const items = await service.loadMore()
-      return this.qs.doReturnItems(items)
+      return this.qs.doReturnItems(
+        service.page === 1
+          ? [
+              {
+                api: 'separator',
+                uniqId: `fav-folder-${service.entry.id}`,
+                text: `收藏夹: ${service.entry.title}`,
+              },
+              ...(items || []),
+            ]
+          : items
+      )
     }
 
     /**
