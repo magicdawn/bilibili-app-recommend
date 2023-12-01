@@ -66,6 +66,20 @@ function GlobalStyle() {
           }
         `}
       />
+      {pureRecommend && (
+        <Global
+          styles={css`
+            /* 刷新内容按钮 */
+            .palette-button-outer {
+              .palette-button-wrap {
+                .flexible-roll-btn {
+                  display: none;
+                }
+              }
+            }
+          `}
+        />
+      )}
       {pureRecommend && styleFancy && (
         <Global
           styles={css`
@@ -97,17 +111,13 @@ function GlobalStyle() {
               }
             } */
 
-            .palette-button-outer {
+            /* .palette-button-outer {
               .palette-button-wrap {
-                /* left: unset !important;
+                left: unset !important;
                 right: 30px;
-                bottom: 80px; */
-
-                .flexible-roll-btn {
-                  display: none;
-                }
+                bottom: 80px;
               }
-            }
+            } */
           `}
         />
       )}
