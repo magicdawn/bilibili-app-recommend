@@ -566,13 +566,15 @@ function TabPaneRecommendTabConfig() {
             iconProps={{ name: 'Tips', style: { marginLeft: 5, marginRight: 20 } }}
             tooltip={<>勾选显示, 拖动排序</>}
           />
-          <Button
-            onClick={() => {
+          <Popconfirm
+            title='确定'
+            description='确定不是手欠点着玩? 再点一次确定吧~'
+            onConfirm={() => {
               updateSettings({ hidingTabKeys: [], customTabKeysOrder: [] })
             }}
           >
-            重置
-          </Button>
+            <Button>重置</Button>
+          </Popconfirm>
         </div>
         <div className={cx(styles.settingsGroupContent)}>
           <div
