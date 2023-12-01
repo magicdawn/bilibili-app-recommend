@@ -81,6 +81,7 @@ function useHotkeyForConfig(
 }
 
 const modalSettingsStore = proxy({
+  // FIXME: default tab should be basic
   tab: 'basic',
   // tab: 'video-source-tab-config',
 })
