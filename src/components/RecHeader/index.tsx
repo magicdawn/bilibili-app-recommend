@@ -168,20 +168,19 @@ export const RecHeader = forwardRef<
                 refreshHotkeyEnabled={!(modalConfigVisible || modalFeedVisible)}
               />
 
-              {!pureRecommend && (
-                <Button css={verticalAlignStyle} onClick={showModalFeed}>
-                  <span>查看更多</span>
-                  <svg
-                    css={css`
-                      width: 12px;
-                      height: 12px;
-                      margin-left: 2px;
-                    `}
-                  >
-                    <use href='#widget-arrow'></use>
-                  </svg>
-                </Button>
-              )}
+              {/* !pureRecommend && */}
+              <Button css={verticalAlignStyle} onClick={showModalFeed}>
+                <span>查看更多</span>
+                <svg
+                  css={css`
+                    width: 12px;
+                    height: 12px;
+                    margin-left: 2px;
+                  `}
+                >
+                  <use href='#widget-arrow'></use>
+                </svg>
+              </Button>
             </Space>
           </div>
         </div>

@@ -7,15 +7,16 @@ import styles from './index.module.scss'
 
 interface IProps {
   children: ReactNode
+  initialOpen?: boolean
 }
 
 export type CollapseBtnRef = Actions<boolean>
 
 export const CollapseBtn = forwardRef<CollapseBtnRef, IProps>(function CollapseBtn(
-  { children }: IProps,
+  { children, initialOpen = false }: IProps,
   ref
 ) {
-  const [buttonsExpanded, buttonsExpandedActions] = useToggle(false)
+  const [buttonsExpanded, buttonsExpandedActions] = useToggle(initialOpen)
 
   useImperativeHandle(ref, () => buttonsExpandedActions, [buttonsExpandedActions])
 

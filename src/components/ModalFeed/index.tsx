@@ -26,9 +26,31 @@ export const ModalFeed = memo(function ModalFeed({ show, onHide }: IProps) {
   const scrollerRef = useRef<HTMLDivElement>(null)
   const recGridRef = useRef<RecGridRef>(null)
 
-  // 窄屏模式
-  const { useNarrowMode } = useSettingsSnapshot()
-  const narrowStyleObj = useMemo(() => ({ [styles.narrowMode]: useNarrowMode }), [useNarrowMode])
+  const {
+    // 双列模式
+    useNarrowMode,
+    // 全屏模式
+    modalFeedFullScreen,
+  } = useSettingsSnapshot()
+
+  const useFullScreen = !useNarrowMode && modalFeedFullScreen
+  const dark = useIsDarkMode()
+
+  const moreStyles = useMemo(
+    () => ({
+      [styles.narrowMode]: useNarrowMode,
+      [styles.fullScreenMode]: useFullScreen,
+    }),
+    [useNarrowMode, useFullScreen]
+  )
+
+  const modalBorderStyle: CSSProperties | undefined = useMemo(() => {
+    if (useFullScreen) {
+      return { border: `5px solid ${colorPrimaryValue}` }
+    } else if (dark) {
+      return { border: `1px solid ${colorPrimaryValue}` }
+    }
+  }, [dark, useFullScreen])
 
   const onRefresh: OnRefresh = useMemoizedFn((...args) => {
     return recGridRef.current?.refresh(...args)
@@ -42,42 +64,31 @@ export const ModalFeed = memo(function ModalFeed({ show, onHide }: IProps) {
     }
   })
 
-  const dark = useIsDarkMode()
-  const modalBorderStyle: CSSProperties | undefined = useMemo(
-    () => (dark ? { border: `1px solid ${colorPrimaryValue}` } : undefined),
-    [dark]
-  )
-
   const [refreshing, setRefreshing] = useState(false)
 
   return (
     <BaseModal
       {...{ show, onHide }}
-      clsModalMask={cx(narrowStyleObj)}
-      clsModal={cx(styles.modal, narrowStyleObj)}
+      clsModalMask={cx(moreStyles)}
+      clsModal={cx(styles.modal, moreStyles)}
       styleModal={{
         ...modalBorderStyle,
       }}
     >
       <OnRefreshContext.Provider value={onRefresh}>
         <div className={cx(BaseModalClass.modalHeader, styles.modalHeader)}>
-          {/* <div
-          className={BaseModalClass.modalTitle}
-          css={css`
-            margin-right: 4px;
-          `}
-        >
-          推荐
-        </div> */}
-
           <VideoSourceTab onRefresh={onRefresh} />
           {extraInfo}
 
           <div className='space' style={{ flex: 1 }}></div>
 
-          <CollapseBtn>
+          {useNarrowMode ? null : useFullScreen ? (
             <ModalFeedConfigChecks />
-          </CollapseBtn>
+          ) : (
+            <CollapseBtn initialOpen>
+              <ModalFeedConfigChecks />
+            </CollapseBtn>
+          )}
 
           <RefreshButton
             css={css`

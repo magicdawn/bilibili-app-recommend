@@ -47,7 +47,7 @@ export function AntdApp({
 
 function GlobalStyle() {
   const { colorPrimary } = useCurrentTheme()
-  const { styleFancy } = useSettingsSnapshot()
+  const { styleFancy, pureRecommend } = useSettingsSnapshot()
 
   return (
     <>
@@ -66,7 +66,7 @@ function GlobalStyle() {
           }
         `}
       />
-      {styleFancy && (
+      {pureRecommend && styleFancy && (
         <Global
           styles={css`
             body,
@@ -74,6 +74,39 @@ function GlobalStyle() {
             #i_cecream,
             .bili-header .bili-header__channel {
               background-color: var(--bg2);
+            }
+
+            /* @media (min-width: 1140px) and (max-width: 1299.9px) {
+              :root {
+                --layout-padding: 60px;
+              }
+            }
+            @media (min-width: 1400px) and (max-width: 1559.9px) {
+              :root {
+                --layout-padding: 60px;
+              }
+            }
+            @media (min-width: 1560px) and (max-width: 2059.9px) {
+              :root {
+                --layout-padding: 80px;
+              }
+            }
+            @media (min-width: 2060px) {
+              :root {
+                --layout-padding: 100px;
+              }
+            } */
+
+            .palette-button-outer {
+              .palette-button-wrap {
+                /* left: unset !important;
+                right: 30px;
+                bottom: 80px; */
+
+                .flexible-roll-btn {
+                  display: none;
+                }
+              }
             }
           `}
         />

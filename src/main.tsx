@@ -121,17 +121,17 @@ async function initHomepagePureRecommend() {
      * 右侧边按钮
      */
     // 刷新内容
-    tryToRemove('.palette-button-wrap .flexible-roll-btn')
-    // 三个点
-    tryAction('.palette-button-wrap .storage-box', (el) => el.classList.remove('hidden'))
-    // 回到顶部
-    tryAction('.palette-button-wrap .top-btn-wrap .top-btn', (el) => el.classList.add('visible'))
+    // tryToRemove('.palette-button-wrap .flexible-roll-btn')
+    // // 三个点
+    // tryAction('.palette-button-wrap .storage-box', (el) => el.classList.remove('hidden'))
+    // // 回到顶部
+    // tryAction('.palette-button-wrap .top-btn-wrap .top-btn', (el) => el.classList.add('visible'))
 
-    if (process.env.NODE_ENV === 'production') {
-      tryAction('.palette-button-wrap', (el) => {
-        el.style.position = 'absolute'
-      })
-    }
+    // if (process.env.NODE_ENV === 'production') {
+    //   tryAction('.palette-button-wrap', (el) => {
+    //     el.style.position = 'absolute'
+    //   })
+    // }
   } else {
     document.querySelector('.bili-layout')?.remove()
     tryToRemove('.bili-footer') // build 版本, .bili-footer 还不存在, 后来出来的

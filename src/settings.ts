@@ -17,6 +17,7 @@ export const initialSettings = {
 
   // 自动查看更多
   initialShowMore: false,
+  modalFeedFullScreen: false,
 
   // 纯推荐模式
   pureRecommend: false,

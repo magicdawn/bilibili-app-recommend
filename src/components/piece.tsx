@@ -1,6 +1,7 @@
 import { IconPark } from '$icon-park'
 import type { BooleanSettingsKey } from '$settings'
 import { updateSettings, useSettingsSnapshot } from '$settings'
+import { toast } from '$utility'
 import { css } from '@emotion/react'
 import { Checkbox, Tooltip } from 'antd'
 import type { CheckboxChangeEvent } from 'antd/es/checkbox'
@@ -51,8 +52,24 @@ export const ModalFeedConfigChecks = function () {
   `
   return (
     <>
-      <FlagSettingItem configKey={'initialShowMore'} label='自动查看更多' css={inModalFeedStyle} />
-      <FlagSettingItem configKey={'useNarrowMode'} label='启用居中模式' css={inModalFeedStyle} />
+      <FlagSettingItem
+        configKey={'initialShowMore'}
+        label='自动查看更多'
+        tooltip='打开首页时默认打开推荐弹窗'
+        css={inModalFeedStyle}
+        extraAction={(val) => {
+          if (val) {
+            toast('已开启自动查看更多: 下次打开首页时将直接展示推荐弹窗')
+          }
+        }}
+      />
+
+      <FlagSettingItem
+        configKey='modalFeedFullScreen'
+        label='全屏'
+        tooltip='世界清净了~~~'
+        css={inModalFeedStyle}
+      />
     </>
   )
 }
