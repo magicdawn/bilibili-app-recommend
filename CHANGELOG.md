@@ -9,21 +9,21 @@
 
 details:
 
-c5a5afd chore: tweak external libs
-7d1e8e2 refactor: rename access_key things
-4335689 chore: style tweak
-e8c6f70 chore: rm unused style
-38d46a7 chore: ncu deps
-e652604 fix: default settings activeKey & rename things
-a51c5b9 feat: dnd sort for video-source-tab
-32676a8 feat: persist page level modal settings tab
-1a9cc86 feat: card link hover color use colorPrimary
-bf1f7ca chore: more readme
-99a5427 feat: add data-bvid & window.bilibili_app_recommend_gridItems
-fb3cfb7 refactor: useRefresh swr related
-271fef5 feat: add QueueStrategy class
-85c2a2b chore: new tab refresh text tweaks
-88c71c9 chore: ncu deps
+- c5a5afd chore: tweak external libs
+- 7d1e8e2 refactor: rename access_key things
+- 4335689 chore: style tweak
+- e8c6f70 chore: rm unused style
+- 38d46a7 chore: ncu deps
+- e652604 fix: default settings activeKey & rename things
+- a51c5b9 feat: dnd sort for video-source-tab
+- 32676a8 feat: persist page level modal settings tab
+- 1a9cc86 feat: card link hover color use colorPrimary
+- bf1f7ca chore: more readme
+- 99a5427 feat: add data-bvid & window.bilibili_app_recommend_gridItems
+- fb3cfb7 refactor: useRefresh swr related
+- 271fef5 feat: add QueueStrategy class
+- 85c2a2b chore: new tab refresh text tweaks
+- 88c71c9 chore: ncu deps
 
 ## v0.19.0
 
