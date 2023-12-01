@@ -22,13 +22,13 @@ import { toast } from '$utility/toast'
 import { css as styled } from '@emotion/css'
 import { css } from '@emotion/react'
 import { useEventListener, useLatest, useMemoizedFn, useMount } from 'ahooks'
+import { Divider } from 'antd'
 import delay from 'delay'
 import mitt from 'mitt'
 import ms from 'ms'
 import type { ReactNode, RefObject } from 'react'
 import { forwardRef, useImperativeHandle, useMemo, useRef, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
-import { VirtuosoGrid } from 'react-virtuoso'
 import {
   narrowMode,
   videoGrid,
@@ -281,10 +281,14 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
   // 不喜欢弹窗
   const modalDislikeVisible = useModalDislikeVisible()
 
+  const videoItems = useMemo(() => {
+    return items.filter((x) => x.api !== 'separator')
+  }, [items])
+
   // emitters
   const videoCardEmittersMap = useMemo(() => new Map<string, VideoCardEmitter>(), [refreshedAt])
   const videoCardEmitters = useMemo(() => {
-    return items.map(({ uniqId: cacheKey }) => {
+    return videoItems.map(({ uniqId: cacheKey }) => {
       return (
         videoCardEmittersMap.get(cacheKey) ||
         (() => {
@@ -294,13 +298,13 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
         })()
       )
     })
-  }, [items])
+  }, [videoItems])
 
   // 快捷键
   const { activeIndex, clearActiveIndex } = useShortcut({
     enabled: shortcutEnabled && !modalDislikeVisible,
     refresh,
-    maxIndex: items.length - 1,
+    maxIndex: videoItems.length - 1,
     containerRef,
     getScrollerRect,
     videoCardEmitters,
@@ -436,45 +440,34 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
     )
   }
 
-  // virtual grid
-  // 有个缺点, 开始的时候只显示一个 video-card
-  if (ENABLE_VIRTUAL_GRID) {
-    return (
-      <div className={videoGridContainer}>
-        <VirtuosoGrid
-          style={{
-            // at least 1 line
-            minHeight: '300px',
-          }}
-          useWindowScroll
-          data={items}
-          overscan={20}
-          // listClassName={gridClassName}
-          computeItemKey={(index, item) => item.uniqId}
-          components={{
-            List: forwardRef((props, ref) => {
-              return (
-                <div
-                  ref={(el) => {
-                    // @ts-ignore
-                    containerRef.current = el
-                    if (ref) {
-                      if (typeof ref === 'function') ref(el)
-                      else ref.current = el
-                    }
-                  }}
-                  {...props}
-                  className={cx(props.className, gridClassName)}
-                />
-              )
-            }),
+  // plain dom
+  return (
+    <div style={{ minHeight: '100%' }} className={videoGridContainer}>
+      <div ref={containerRef} className={gridClassName}>
+        {/* items */}
+        {items.map((item) => {
+          if (item.api === 'separator') {
+            return (
+              <Divider
+                key={item.uniqId}
+                css={css`
+                  grid-column: span var(--col);
 
-            // render footer here cause error
-            // Footer() {
-            //   return <></>
-            // },
-          }}
-          itemContent={(index, item) => {
+                  &.ant-divider-horizontal.ant-divider-with-text {
+                    margin-bottom: -30px;
+                    margin-top: -20px;
+                    &:first-of-type {
+                      margin-top: 0;
+                    }
+                  }
+                `}
+                orientation='left'
+              >
+                {item.text}
+              </Divider>
+            )
+          } else {
+            const index = videoItems.findIndex((x) => x.uniqId === item.uniqId)
             const active = index === activeIndex
             return (
               <VideoCard
@@ -488,32 +481,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
                 emitter={videoCardEmitters[index]}
               />
             )
-          }}
-        />
-        {footer}
-      </div>
-    )
-  }
-
-  // plain dom
-  return (
-    <div style={{ minHeight: '100%' }} className={videoGridContainer}>
-      <div ref={containerRef} className={gridClassName}>
-        {/* items */}
-        {items.map((item, index) => {
-          const active = index === activeIndex
-          return (
-            <VideoCard
-              key={item.uniqId}
-              className={cx(CardClassNames.card, { [CardClassNames.cardActive]: active })}
-              item={item}
-              active={active}
-              onRemoveCurrent={handleRemoveCard}
-              onMoveToFirst={handleMoveCardToFirst}
-              onRefresh={refresh}
-              emitter={videoCardEmitters[index]}
-            />
-          )
+          }
         })}
       </div>
       {footer}

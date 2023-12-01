@@ -1,5 +1,5 @@
 import type { TabType } from '$components/RecHeader/tab.shared'
-import type { RecItemType } from '$define'
+import type { RecItemExtraType } from '$define'
 import { settings } from '$settings'
 import { normalizeCardData } from './normalize'
 
@@ -13,12 +13,15 @@ export function anyFilterEnabled(tab: TabType) {
   )
 }
 
-export function filterRecItems(items: RecItemType[], tab: TabType) {
+export function filterRecItems(items: RecItemExtraType[], tab: TabType) {
   if (!anyFilterEnabled(tab)) {
     return items
   }
 
   return items.filter((item) => {
+    // just keep it
+    if (item.api === 'separator') return true
+
     const { play, duration, recommendReason, goto } = normalizeCardData(item)
     const isFollowed = recommendReason === '已关注' || recommendReason?.includes('关注')
 

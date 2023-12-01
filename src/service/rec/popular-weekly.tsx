@@ -1,5 +1,5 @@
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
-import type { PopularWeeklyItemExtend } from '$define'
+import type { ItemsSeparator, PopularWeeklyItemExtend } from '$define'
 import type { PopularWeeklyJson } from '$define/popular-weekly'
 import type { PopularWeeklyListItem, PopularWeeklyListJson } from '$define/popular-weekly.list'
 import { request } from '$request'
@@ -49,7 +49,7 @@ export class PopularWeeklyService implements IService {
   }
 
   // full-list = returnedItems + bufferQueue + more
-  qs = new QueueStrategy<PopularWeeklyItemExtend>(PopularWeeklyService.PAGE_SIZE)
+  qs = new QueueStrategy<PopularWeeklyItemExtend | ItemsSeparator>(PopularWeeklyService.PAGE_SIZE)
 
   get hasMore() {
     if (!this.episodesLoaded) return true // not loaded yet
@@ -75,9 +75,13 @@ export class PopularWeeklyService implements IService {
       if (this.qs.bufferQueue.length) return this.qs.sliceFromQueue()
 
       // fill queue
-      const episodeNum = this.episodes[0].number
-      const items = await fetchWeeklyItems(episodeNum)
-      this.qs.bufferQueue = this.qs.bufferQueue.concat(items)
+      const ep = this.episodes[0]
+      const epNum = ep.number
+      const items = await fetchWeeklyItems(epNum)
+      this.qs.bufferQueue.push(
+        { api: 'separator', uniqId: `popular-weekly-${epNum}`, text: `${ep.name}` },
+        ...items
+      )
       this.episodes = this.episodes.slice(1) // consume 1
 
       return this.qs.sliceFromQueue()

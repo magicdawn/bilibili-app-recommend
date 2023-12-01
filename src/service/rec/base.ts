@@ -1,20 +1,13 @@
-import type { RecItemType } from '$define'
+import type { RecItemExtraType } from '$define'
 import type { ReactNode } from 'react'
-
-export abstract class BaseService {
-  abstract hasMore: boolean
-  abstract refreshForHome(): Promise<RecItemType[] | undefined>
-  abstract refreshForGrid(): Promise<RecItemType[] | undefined>
-  abstract loadMore(): Promise<RecItemType[] | undefined>
-}
 
 export interface IService {
   hasMore: boolean
-  loadMore(abortSignal: AbortSignal): Promise<RecItemType[] | undefined>
+  loadMore(abortSignal: AbortSignal): Promise<RecItemExtraType[] | undefined>
   usageInfo?: ReactNode
 }
 
-export class QueueStrategy<T extends RecItemType = RecItemType> {
+export class QueueStrategy<T extends RecItemExtraType = RecItemExtraType> {
   // full-list = returnQueue + bufferQueue + more
   private returnQueue: T[] = []
   bufferQueue: T[] = []

@@ -2,7 +2,7 @@ import { APP_KEY_PREFIX } from '$common'
 import { useRefInit } from '$common/hooks/useRefInit'
 import type { TabType } from '$components/RecHeader/tab.shared'
 import { TabConfigMap, getCurrentSourceTab } from '$components/RecHeader/tab.shared'
-import type { RecItemType } from '$define'
+import type { RecItemExtraType } from '$define'
 import type { IService } from '$service/rec/base'
 import { DynamicFeedRecService, dynamicFeedFilterStore } from '$service/rec/dynamic-feed'
 import { FavRecService } from '$service/rec/fav'
@@ -63,7 +63,7 @@ export function useRefresh({
 }: {
   tab: TabType
   debug: Debugger
-  fetcher: (opts: FetcherOptions) => Promise<RecItemType[]>
+  fetcher: (opts: FetcherOptions) => Promise<RecItemExtraType[]>
   recreateService: boolean
   preAction?: () => void | Promise<void>
   postAction?: () => void | Promise<void>
@@ -73,11 +73,11 @@ export function useRefresh({
 }) {
   const tab = getCurrentSourceTab()
 
-  const itemsCache = useRefInit<Partial<Record<TabType, RecItemType[]>>>(() => ({}))
+  const itemsCache = useRefInit<Partial<Record<TabType, RecItemExtraType[]>>>(() => ({}))
   const itemsHasCache = useRefInit<Partial<Record<TabType, boolean>>>(() => ({}))
 
   const [hasMore, setHasMore] = useState(true)
-  const [items, setItems] = useState<RecItemType[]>([])
+  const [items, setItems] = useState<RecItemExtraType[]>([])
   useEffect(() => {
     try {
       ;(unsafeWindow as any)[`${APP_KEY_PREFIX}_gridItems`] = items
@@ -139,7 +139,7 @@ export function useRefresh({
 
     await preAction?.()
 
-    let _items: RecItemType[] = []
+    let _items: RecItemExtraType[] = []
     let err: any
     const doFetch = async () => {
       try {

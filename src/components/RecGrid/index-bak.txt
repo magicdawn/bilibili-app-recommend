@@ -83,3 +83,63 @@ import InfiniteScroll from 'react-infinite-scroller'
   style={{ minHeight: '100%' }}
 >
 </InfiniteScroll>
+
+
+// virtual grid
+  // 有个缺点, 开始的时候只显示一个 video-card
+  if (ENABLE_VIRTUAL_GRID) {
+    return (
+      <div className={videoGridContainer}>
+        <VirtuosoGrid
+          style={{
+            // at least 1 line
+            minHeight: '300px',
+          }}
+          useWindowScroll
+          data={items}
+          overscan={20}
+          // listClassName={gridClassName}
+          computeItemKey={(index, item) => item.uniqId}
+          components={{
+            List: forwardRef((props, ref) => {
+              return (
+                <div
+                  ref={(el) => {
+                    // @ts-ignore
+                    containerRef.current = el
+                    if (ref) {
+                      if (typeof ref === 'function') ref(el)
+                      else ref.current = el
+                    }
+                  }}
+                  {...props}
+                  className={cx(props.className, gridClassName)}
+                />
+              )
+            }),
+
+            // render footer here cause error
+            // Footer() {
+            //   return <></>
+            // },
+          }}
+          itemContent={(index, item) => {
+            const active = index === activeIndex
+            return (
+              <VideoCard
+                key={item.uniqId}
+                className={cx(CardClassNames.card, { [CardClassNames.cardActive]: active })}
+                item={item}
+                active={active}
+                onRemoveCurrent={handleRemoveCard}
+                onMoveToFirst={handleMoveCardToFirst}
+                onRefresh={refresh}
+                emitter={videoCardEmitters[index]}
+              />
+            )
+          }}
+        />
+        {footer}
+      </div>
+    )
+  }

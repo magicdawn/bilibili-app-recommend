@@ -56,7 +56,7 @@ export function SectionRecommend() {
         {showSkeleton
           ? skeletonPlaceholders.map((id) => <VideoCard key={id} />)
           : items.map((item) => {
-              return <VideoCard key={item.uniqId} item={item} />
+              return item.api === 'separator' ? null : <VideoCard key={item.uniqId} item={item} />
             })}
       </div>
     </section>

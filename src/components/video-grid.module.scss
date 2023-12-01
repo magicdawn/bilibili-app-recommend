@@ -71,8 +71,8 @@
   container-type: inline-size;
 }
 
-$gap-row: 50px;
-$gap-col: 20px;
+$gap-row: 40px;
+$gap-col: 18px;
 $card-min-width: 250px;
 
 .video-grid-fancy {
@@ -92,6 +92,7 @@ $card-min-width: 250px;
 /**
  * 双列模式
  */
+
 .narrow-mode {
   --col: 2 !important;
 }

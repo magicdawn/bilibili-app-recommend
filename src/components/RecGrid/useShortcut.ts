@@ -67,29 +67,74 @@ export function useShortcut({
     return true
   })
 
-  const addActiveIndex = (step: number | (() => number)) => (e?: KeyboardEvent) => {
+  function getStep(direction: 'up' | 'down'): number {
+    const card = getCardAt(activeIndex!)
+    const activeLeft = card.getBoundingClientRect().left
+    const isLeftSame = (left: number) => Math.abs(activeLeft - left) < 1
+
+    /**
+     * quick try +- col-count
+     */
+    {
+      const col = getColumnCount(containerRef.current)
+      const step = direction === 'down' ? col : -col
+      const newCard = getCardAt(activeIndex! + step)
+      if (newCard) {
+        const left = newCard.getBoundingClientRect().left
+        if (isLeftSame(left)) {
+          return step
+        }
+      }
+    }
+
+    /**
+     * step by step
+     */
+    let step = 0
+    let cur: Element = card
+    const next = () => (direction === 'down' ? cur.nextElementSibling : cur.previousElementSibling)
+    while (next()) {
+      cur = next()!
+      if (!cur.classList.contains(CardClassNames.card)) continue
+
+      direction === 'down' ? step++ : step--
+      const left = cur.getBoundingClientRect().left
+      if (isLeftSame(left)) {
+        return step
+      }
+    }
+
+    return 0
+  }
+
+  const addActiveIndex = (step: number | 'up' | 'down') => (e?: KeyboardEvent) => {
     if (!isEnabled()) return
 
     // 防止 scroller focus 的情况下, 因键盘产生滑动, 进而页面抖动
     e?.preventDefault()
 
-    const _step = typeof step === 'number' ? step : step()
-    const index = activeIndexIsValid() ? activeIndex! + _step : getInitialIndex()
+    let newActiveIndex: number
+    if (activeIndexIsValid()) {
+      const _step = typeof step === 'number' ? step : getStep(step)
+      newActiveIndex = activeIndex! + _step
+    } else {
+      newActiveIndex = getInitialIndex()
+    }
 
     // overflow
-    if (index < minIndex) {
+    if (newActiveIndex < minIndex) {
       makeVisible(minIndex)
       return
     }
-    if (index > maxIndex) {
+    if (newActiveIndex > maxIndex) {
       // 滚动到最后一项: 防止不能向下移动, 也不会加载更多, 卡死状态
       makeVisible(maxIndex)
       return
     }
 
     // console.log({ activeIndex, index, initialIndex: getInitialIndex() })
-    setActiveIndex(index)
-    makeVisible(index)
+    setActiveIndex(newActiveIndex)
+    makeVisible(newActiveIndex)
   }
 
   // by 1
@@ -100,14 +145,9 @@ export function useShortcut({
   useKeyPress('shift.tab', addActiveIndex(-1), { exactMatch: true })
 
   // by row
-  // 在 render 时调用 getColCount 会出现 useNarrowMode:false, UI 还没更新, 返回还是两列的情况
-  const _getColCount = () => getColumnCount(containerRef.current)
-  useKeyPress(
-    'uparrow',
-    addActiveIndex(() => -_getColCount()),
-    { exactMatch: true }
-  )
-  useKeyPress('downarrow', addActiveIndex(_getColCount), { exactMatch: true })
+  // 不使用 getColCount 是因为, Separator 类型导致有空的位置
+  useKeyPress('uparrow', addActiveIndex('up'), { exactMatch: true })
+  useKeyPress('downarrow', addActiveIndex('down'), { exactMatch: true })
 
   // actions
   const clearActiveIndex = () => {

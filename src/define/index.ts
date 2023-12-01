@@ -57,6 +57,10 @@ export type RecItemType =
   | PopularGeneralItemExtend
   | PopularWeeklyItemExtend
 
+export type RecItemExtraType = RecItemType | ItemsSeparator
+
+export type ItemsSeparator = { uniqId: string; api: 'separator'; text: string }
+
 export interface PcRecItemExtend extends PcRecItem {
   uniqId: string
   api: 'pc'
