@@ -6,7 +6,8 @@
   "scripts": {
     "prepare": "husky install",
     "dev:scss": "typed-scss-modules src --watch",
-    "dev": "concurrently -k npm:dev:scss vite",
+    "dev:vite": "vite",
+    "dev": "concurrently -k npm:dev:*",
     "typecheck": "tsc --noEmit",
     "build:scss": "typed-scss-modules src",
     "build:vite": "vite build",
