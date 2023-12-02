@@ -1,5 +1,29 @@
 # Changelog
 
+## v0.19.2
+
+- Tab 配置优化: dark-mode, drag handle hover 样式, 重置前确认等.
+- 重构 less -> scss, less sucks & scss rocks. grid 使用 `--col` css variable.
+- 支持 `ItemsSeparator`, video grid 支持非视频卡片的展示, 键盘移动相应重构.
+- 查看更多按钮, 总是展示, 增加全屏样式.
+
+details:
+
+- 5ddd387 chore: revert some internal-testing setup
+- f276003 feat: hide native refresh button
+- d4d1b45 feat: popconfirm for reset video-source-tab dnd
+- f5a2a29 feat: add fav none-shuffle separator
+- d75350c feat: video grid support Separator type
+- 6ce8c80 feat: modal-feed fullscreen
+- 3e373a0 chore: more less -> scss
+- 407e52b feat: scss is awesome
+- bfb644d feat: move less -> scss
+- 084d674 feat: 简化 less grid template columns
+- 2f1489b chore: tweak dynamic-feed usageInfo clean button style
+- 558477d chore: fix changelog ul
+- 4b301ae chore: revert fixme
+- 2c95d8e feat: video-source-tab dnd sort dark-mode tweaks
+
 ## v0.19.1
 
 - 设置页切换 panel 关闭后, 再次打开会保留 panel, 刷新回到默认
