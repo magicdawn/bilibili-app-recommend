@@ -8,7 +8,7 @@ import { VideoSourceTab } from '$components/RecHeader/tab'
 import { cx } from '$libs'
 import { useIsDarkMode } from '$platform'
 import { useSettingsSnapshot } from '$settings'
-import { message } from '$utility'
+import { AntdMessage } from '$utility'
 import { css } from '@emotion/react'
 import { useMemoizedFn } from 'ahooks'
 import type { CSSProperties, ReactNode } from 'react'
@@ -133,7 +133,7 @@ function ModalFeedConfigChecks() {
         css={inModalFeedStyle}
         extraAction={(val) => {
           if (val) {
-            message.success('已开启自动查看更多: 下次打开首页时将直接展示推荐弹窗')
+            AntdMessage.success('已开启自动查看更多: 下次打开首页时将直接展示推荐弹窗')
           }
         }}
       />

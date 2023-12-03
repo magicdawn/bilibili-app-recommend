@@ -4,7 +4,7 @@ import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import type { AppRecItem, AppRecItemExtend } from '$define'
 import { IconPark } from '$icon-park'
 import { cx } from '$libs'
-import { message } from '$utility'
+import { AntdMessage } from '$utility'
 import { toastRequestFail } from '$utility/toast'
 import { useKeyPress, useMemoizedFn, useUpdateLayoutEffect } from 'ahooks'
 import { useMemo, useState } from 'react'
@@ -63,7 +63,7 @@ function ModalDislike({ show, onHide, item }: IProps) {
       return toastRequestFail()
     }
 
-    success ? message.success('已标记不想看') : message.error(OPERATION_FAIL_MSG)
+    success ? AntdMessage.success('已标记不想看') : AntdMessage.error(OPERATION_FAIL_MSG)
     if (success) {
       dislikedIds.set(item.param, { ...reason })
       onHide()

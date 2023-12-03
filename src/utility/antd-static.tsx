@@ -10,8 +10,9 @@ import type {
 } from 'antd/es/message/interface'
 import type { NotificationInstance } from 'antd/es/notification/interface'
 
-let message: MessageInstance = _message
-let notification: NotificationInstance = _notification
+// 如果使用 message, notification 经常会自动从 antd import
+let AntdMessage: MessageInstance = _message
+let AntdNotification: NotificationInstance = _notification
 
 const messageConfig: MessageConfigOptions = {
   // FIXME: clean up this
@@ -32,9 +33,9 @@ export function UseApp() {
 
 function UseAppInner() {
   const staticFunction = App.useApp()
-  message = staticFunction.message
-  notification = staticFunction.notification
+  AntdMessage = staticFunction.message
+  AntdNotification = staticFunction.notification
   return null
 }
 
-export { message, notification }
+export { AntdMessage, AntdNotification }

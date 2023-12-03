@@ -16,12 +16,13 @@ import { UserFavService, defaultFavFolderName } from '$service/user/fav'
 import { UserBlacklistService, useInBlacklist } from '$service/user/relations/blacklist'
 import { UserfollowService } from '$service/user/relations/follow'
 import { settings, useSettingsSnapshot } from '$settings'
+import { AntdMessage } from '$utility'
 import { toastRequestFail } from '$utility/toast'
 import { formatCount } from '$utility/video'
 import { css } from '@emotion/react'
 import { useEventListener, useHover, useMemoizedFn, usePrevious, useUpdateEffect } from 'ahooks'
 import type { MenuProps } from 'antd'
-import { Avatar, Dropdown, message } from 'antd'
+import { Avatar, Dropdown } from 'antd'
 import delay from 'delay'
 import { motion } from 'framer-motion'
 import type { Emitter } from 'mitt'
@@ -40,7 +41,7 @@ import { usePreviewAnimation } from './usePreviewAnimation'
 
 function copyContent(content: string) {
   GM.setClipboard(content)
-  message.success(`已复制: ${content}`)
+  AntdMessage.success(`已复制: ${content}`)
 }
 
 export type VideoCardEvents = {
@@ -200,7 +201,7 @@ const DislikedCard = memo(function DislikedCard({
       return toastRequestFail()
     }
 
-    success ? message.success('已撤销') : message.error(OPERATION_FAIL_MSG)
+    success ? AntdMessage.success('已撤销') : AntdMessage.error(OPERATION_FAIL_MSG)
     if (success) {
       delDislikeId(item.param)
     }
@@ -233,7 +234,7 @@ const BlacklistCard = memo(function BlacklistCard({ cardData }: { cardData: IVid
   const onCancel = useMemoizedFn(async () => {
     if (!authorMid) return
     const success = await UserBlacklistService.remove(authorMid)
-    if (success) message.success(`已移出黑名单: ${authorName}`)
+    if (success) AntdMessage.success(`已移出黑名单: ${authorName}`)
   })
 
   return (
@@ -454,7 +455,7 @@ const VideoCardInner = memo(function VideoCardInner({
         }
         // 其他 Tab
         else {
-          message.success(`已${targetState ? '添加' : '移除'}稍后再看`)
+          AntdMessage.success(`已${targetState ? '添加' : '移除'}稍后再看`)
         }
       }
 
@@ -473,10 +474,10 @@ const VideoCardInner = memo(function VideoCardInner({
 
     if (!hasDislikeEntry) {
       if (item.api !== 'app') {
-        return message.error('当前视频不支持提交「我不想看」')
+        return AntdMessage.error('当前视频不支持提交「我不想看」')
       }
       if (!authed) {
-        return message.error('请先获取 access_key')
+        return AntdMessage.error('请先获取 access_key')
       }
       return
     }
@@ -589,10 +590,10 @@ const VideoCardInner = memo(function VideoCardInner({
     tab === 'popular-weekly'
 
   const onBlacklistUp = useMemoizedFn(async () => {
-    if (!authorMid) return message.error('UP mid 为空!')
+    if (!authorMid) return AntdMessage.error('UP mid 为空!')
     const success = await UserBlacklistService.add(authorMid)
     if (success) {
-      message.success(`已加入黑名单: ${authorName}`)
+      AntdMessage.success(`已加入黑名单: ${authorName}`)
     }
   })
 
@@ -607,7 +608,7 @@ const VideoCardInner = memo(function VideoCardInner({
     if (!authorMid) return
     const success = await UserfollowService.unfollow(authorMid)
     if (success) {
-      message.success('已取消关注')
+      AntdMessage.success('已取消关注')
     }
   })
 
@@ -714,7 +715,7 @@ const VideoCardInner = memo(function VideoCardInner({
           else {
             const success = await UserFavService.addFav(avid)
             if (success) {
-              message.success(`已加入收藏夹「${defaultFavFolderName}」`)
+              AntdMessage.success(`已加入收藏夹「${defaultFavFolderName}」`)
             }
           }
         },
