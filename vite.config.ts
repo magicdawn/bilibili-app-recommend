@@ -18,7 +18,6 @@ const useHttps =
   (process.argv.includes('--https') || process.env.VITE_DEV_HTTPS)
 
 const scriptName = packageName
-let scriptVersion = packageVersion
 
 let downloadURL =
   'https://greasyfork.org/scripts/443530-bilibili-app-recommend/code/bilibili-app-recommend.user.js'
@@ -28,12 +27,15 @@ if (process.env.RELEASE) {
 } else if (process.env.RELEASE_NIGHTLY) {
   downloadURL =
     'https://github.com/magicdawn/bilibili-app-recommend/raw/release-nightly/bilibili-app-recommend.mini.user.js'
+}
 
+let scriptVersion = packageVersion
+if (process.env.RELEASE) {
+  // release Actions
+} else {
+  // local & nightly Actions
+  // use `git describe`
   // https://stackoverflow.com/questions/8595391/how-to-show-git-commit-using-number-of-commits-since-a-tag
-  // const commitCount = execSync(`git rev-list v0.19.2.. --count`).toString().trim()
-  // const commitHash = ''
-  // version += `.${commitCount}_${commitHash}`
-  // scriptName += ' CI'
   const gitDescribe = process.env.GHD_DESCRIBE || execSync(`git describe`).toString().trim() // e.g v0.19.2-6-g0230769
   scriptVersion = gitDescribe.slice(1) // rm prefix v
 }
