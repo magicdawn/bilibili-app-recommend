@@ -18,11 +18,10 @@ import { cx } from '$libs'
 import { getIsInternalTesting, isSafari } from '$platform'
 import { getRecommendTimes, refreshForGrid, uniqConcat } from '$service/rec'
 import { useSettingsSnapshot } from '$settings'
-import { toast } from '$utility/toast'
 import { css as styled } from '@emotion/css'
 import { css } from '@emotion/react'
 import { useEventListener, useLatest, useMemoizedFn, useMount } from 'ahooks'
-import { Divider } from 'antd'
+import { Divider, message } from 'antd'
 import delay from 'delay'
 import mitt from 'mitt'
 import ms from 'ms'
@@ -336,7 +335,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
 
       const newItems = items.slice()
       newItems.splice(index, 1)
-      toast(`已移除: ${data.title}`, 4000)
+      message.success(`已移除: ${data.title}`, 4000)
 
       if (tab === 'watchlater') {
         serviceMap.watchlater.count--

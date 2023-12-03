@@ -19,6 +19,7 @@ export const videoSourceTabState = proxyWithLocalStorage<{ value: TabType }>(
 
 export const iconCss = css`
   margin-right: 4px;
+  margin-top: -1px;
 `
 
 const radioBtnCss = css`

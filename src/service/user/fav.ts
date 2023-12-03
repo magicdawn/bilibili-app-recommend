@@ -5,10 +5,11 @@
  * https://socialsisteryi.github.io/bilibili-API-collect/docs/video/action.html#%E6%94%B6%E8%97%8F%E8%A7%86%E9%A2%91-%E5%8F%8C%E7%AB%AF
  */
 
+import { OPERATION_FAIL_MSG } from '$common'
 import type { FavFolderListAllJson } from '$define/fav/folder-list-all'
 import { isWebApiSuccess, request } from '$request'
 import { apiFavFolderListAll, formatFavFolderUrl } from '$service/rec/fav'
-import { OPERATION_FAIL_MSG, getCsrfToken, getHasLogined, getUid, toast } from '$utility'
+import { getCsrfToken, getHasLogined, getUid, toast } from '$utility'
 
 export const UserFavService = {
   removeFav,

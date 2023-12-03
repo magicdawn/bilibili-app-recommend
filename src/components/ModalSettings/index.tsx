@@ -22,8 +22,7 @@ import {
   updateSettings,
   useSettingsSnapshot,
 } from '$settings'
-import { shouldDisableShortcut } from '$utility/dom'
-import { toast } from '$utility/toast'
+import { message, shouldDisableShortcut } from '$utility'
 import type { DragEndEvent } from '@dnd-kit/core'
 import { DndContext, PointerSensor, closestCenter, useSensor, useSensors } from '@dnd-kit/core'
 import { restrictToParentElement, restrictToVerticalAxis } from '@dnd-kit/modifiers'
@@ -40,7 +39,7 @@ import { set_HAS_RESTORED_SETTINGS } from './index.shared'
 import { ThemesSelect } from './theme'
 
 async function toastAndReload() {
-  toast('即将刷新网页')
+  message.info('即将刷新网页')
   await delay(500)
   location.reload()
 }
@@ -56,7 +55,7 @@ async function onRestoreSettings() {
 
   const len = Object.keys(pickedSettings).length
   if (!len) {
-    return toast('备份不存在或没有有效的配置')
+    return message.error('备份不存在或没有有效的配置')
   }
 
   set_HAS_RESTORED_SETTINGS(true)
@@ -75,7 +74,7 @@ function useHotkeyForConfig(
       if (shouldDisableShortcut()) return
       settings[configKey] = !settings[configKey]
       const isCancel = !settings[configKey]
-      toast(`已${isCancel ? '禁用' : '启用'}「${label}」`)
+      message.success(`已${isCancel ? '禁用' : '启用'}「${label}」`)
     },
     { exactMatch: true }
   )
@@ -354,7 +353,7 @@ function TabPaneBasic() {
             className={styles.check}
             extraAction={(val) => {
               if (val) {
-                toast('已开启自动查看更多: 下次打开首页时将直接展示推荐弹窗')
+                message.success('已开启自动查看更多: 下次打开首页时将直接展示推荐弹窗')
               }
             }}
           />
@@ -590,7 +589,7 @@ function TabPaneRecommendTabConfig() {
               value={currentShowingTabKeys}
               onChange={(newVal) => {
                 if (!newVal.length) {
-                  return toast('至少选择一项!')
+                  return message.error('至少选择一项!')
                 }
                 updateSettings({
                   hidingTabKeys: TabKeys.filter((k) => !newVal.includes(k)),

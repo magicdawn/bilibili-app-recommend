@@ -1,4 +1,4 @@
-import { APP_KEY_PREFIX, APP_NAME } from '$common'
+import { APP_KEY_PREFIX, APP_NAME, OPERATION_FAIL_MSG } from '$common'
 import { useMittOn } from '$common/hooks/useMitt'
 import type { Reason } from '$components/ModalDislike'
 import { delDislikeId, showModalDislike, useDislikedReason } from '$components/ModalDislike'
@@ -16,14 +16,14 @@ import { UserFavService, defaultFavFolderName } from '$service/user/fav'
 import { UserBlacklistService, useInBlacklist } from '$service/user/relations/blacklist'
 import { UserfollowService } from '$service/user/relations/follow'
 import { settings, useSettingsSnapshot } from '$settings'
-import { toast, toastOperationFail, toastRequestFail } from '$utility/toast'
+import { toastRequestFail } from '$utility/toast'
 import { formatCount } from '$utility/video'
 import { css } from '@emotion/react'
 import { useEventListener, useHover, useMemoizedFn, usePrevious, useUpdateEffect } from 'ahooks'
 import type { MenuProps } from 'antd'
-import { Avatar, Dropdown } from 'antd'
+import { Avatar, Dropdown, message } from 'antd'
 import delay from 'delay'
-import { m } from 'framer-motion'
+import { motion } from 'framer-motion'
 import type { Emitter } from 'mitt'
 import mitt from 'mitt'
 import type { CSSProperties, ComponentProps, MouseEvent } from 'react'
@@ -40,7 +40,7 @@ import { usePreviewAnimation } from './usePreviewAnimation'
 
 function copyContent(content: string) {
   GM.setClipboard(content)
-  toast(`已复制: ${content}`)
+  message.success(`已复制: ${content}`)
 }
 
 export type VideoCardEvents = {
@@ -200,7 +200,7 @@ const DislikedCard = memo(function DislikedCard({
       return toastRequestFail()
     }
 
-    success ? toast('已撤销') : toastOperationFail()
+    success ? message.success('已撤销') : message.error(OPERATION_FAIL_MSG)
     if (success) {
       delDislikeId(item.param)
     }
@@ -233,7 +233,7 @@ const BlacklistCard = memo(function BlacklistCard({ cardData }: { cardData: IVid
   const onCancel = useMemoizedFn(async () => {
     if (!authorMid) return
     const success = await UserBlacklistService.remove(authorMid)
-    if (success) toast(`已移出黑名单: ${authorName}`)
+    if (success) message.success(`已移出黑名单: ${authorName}`)
   })
 
   return (
@@ -454,7 +454,7 @@ const VideoCardInner = memo(function VideoCardInner({
         }
         // 其他 Tab
         else {
-          toast(`已${targetState ? '添加' : '移除'}稍后再看`)
+          message.success(`已${targetState ? '添加' : '移除'}稍后再看`)
         }
       }
 
@@ -473,10 +473,10 @@ const VideoCardInner = memo(function VideoCardInner({
 
     if (!hasDislikeEntry) {
       if (item.api !== 'app') {
-        return toast('当前视频不支持提交「我不想看」')
+        return message.error('当前视频不支持提交「我不想看」')
       }
       if (!authed) {
-        return toast('请先获取 access_key')
+        return message.error('请先获取 access_key')
       }
       return
     }
@@ -589,10 +589,10 @@ const VideoCardInner = memo(function VideoCardInner({
     tab === 'popular-weekly'
 
   const onBlacklistUp = useMemoizedFn(async () => {
-    if (!authorMid) return toast('UP mid 为空!')
+    if (!authorMid) return message.error('UP mid 为空!')
     const success = await UserBlacklistService.add(authorMid)
     if (success) {
-      toast(`已加入黑名单: ${authorName}`)
+      message.success(`已加入黑名单: ${authorName}`)
     }
   })
 
@@ -607,7 +607,7 @@ const VideoCardInner = memo(function VideoCardInner({
     if (!authorMid) return
     const success = await UserfollowService.unfollow(authorMid)
     if (success) {
-      toast('已取消关注')
+      message.success('已取消关注')
     }
   })
 
@@ -714,7 +714,7 @@ const VideoCardInner = memo(function VideoCardInner({
           else {
             const success = await UserFavService.addFav(avid)
             if (success) {
-              toast(`已加入收藏夹「${defaultFavFolderName}」`)
+              message.success(`已加入收藏夹「${defaultFavFolderName}」`)
             }
           }
         },
@@ -880,7 +880,7 @@ const VideoCardInner = memo(function VideoCardInner({
                 >
                   {watchLaterAdded ? (
                     <svg className='bili-watch-later__icon' viewBox='0 0 200 200'>
-                      <m.path
+                      <motion.path
                         d='M25,100 l48,48 a 8.5,8.5 0 0 0 10,0 l90,-90'
                         strokeWidth='20'
                         stroke='currentColor'

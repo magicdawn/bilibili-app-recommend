@@ -1,4 +1,4 @@
-import { APP_NAME_ROOT_CLASSNAME } from '$common'
+import { APP_NAME_ROOT_CLASSNAME, OPERATION_FAIL_MSG, REQUEST_FAIL_MSG } from '$common'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import { css } from '@emotion/css'
 
@@ -39,9 +39,6 @@ export function toast(msg: string, duration = 2000) {
   document.body.appendChild(div)
   setTimeout(() => div.remove(), duration)
 }
-
-export const REQUEST_FAIL_MSG = '请求失败, 请重试 !!!'
-export const OPERATION_FAIL_MSG = '操作失败, 请重试 !!!'
 
 export function toastRequestFail() {
   return toast(REQUEST_FAIL_MSG)

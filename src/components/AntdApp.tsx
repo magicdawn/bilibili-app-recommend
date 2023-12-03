@@ -1,10 +1,10 @@
 import { APP_NAME_ROOT_CLASSNAME } from '$common'
 import { useIsDarkMode } from '$platform'
 import { useSettingsSnapshot } from '$settings'
+import { UseApp } from '$utility/antd-static'
 import { Global, css as _css, css } from '@emotion/react'
 import { ConfigProvider, Tooltip, theme } from 'antd'
 import zhCN from 'antd/locale/zh_CN'
-import { LazyMotion, domAnimation } from 'framer-motion'
 import type { ComponentProps, ReactNode } from 'react'
 import {
   colorPrimaryIdentifier,
@@ -14,13 +14,16 @@ import {
 
 // bilibili.com default: PingFang SC,HarmonyOS_Regular,Helvetica Neue,Microsoft YaHei,sans-serif
 const USING_FONT_FAMILY = 'HarmonyOS_Regular,PingFang SC,Helvetica Neue,Microsoft YaHei,sans-serif'
+// const USING_FONT_FAMILY = 'PingFang SC,HarmonyOS_Regular,Helvetica Neue,Microsoft YaHei,sans-serif'
 
 export function AntdApp({
   children,
   injectGlobalStyle = false,
+  renderAppComponent = false,
 }: {
   children: ReactNode
   injectGlobalStyle?: boolean
+  renderAppComponent?: boolean
 }) {
   const dark = useIsDarkMode()
   const { colorPrimary } = useCurrentTheme()
@@ -38,8 +41,12 @@ export function AntdApp({
         },
       }}
     >
+      {renderAppComponent && <UseApp />}
       {injectGlobalStyle && <GlobalStyle />}
-      <LazyMotion features={domAnimation}>{children}</LazyMotion>
+
+      {/* using framer-motion UMD */}
+      {/* <LazyMotion features={domAnimation}>{children}</LazyMotion> */}
+      {children}
     </ConfigProvider>
   )
 }

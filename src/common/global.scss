@@ -41,3 +41,10 @@ body button:where(.ant-switch) {
     outline: unset;
   }
 }
+
+.ant-message-custom-content {
+  [role='img'] {
+    position: relative;
+    top: -2px;
+  }
+}

@@ -1,10 +1,11 @@
-import { APP_NAME_ROOT_CLASSNAME } from '$common'
+import { APP_NAME_ROOT_CLASSNAME, OPERATION_FAIL_MSG } from '$common'
 import { BaseModal, BaseModalClass, ModalClose } from '$components/BaseModal'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import type { AppRecItem, AppRecItemExtend } from '$define'
 import { IconPark } from '$icon-park'
 import { cx } from '$libs'
-import { toast, toastOperationFail, toastRequestFail } from '$utility/toast'
+import { message } from '$utility'
+import { toastRequestFail } from '$utility/toast'
 import { useKeyPress, useMemoizedFn, useUpdateLayoutEffect } from 'ahooks'
 import { useMemo, useState } from 'react'
 import type { Root } from 'react-dom/client'
@@ -62,7 +63,7 @@ function ModalDislike({ show, onHide, item }: IProps) {
       return toastRequestFail()
     }
 
-    success ? toast('已标记不想看') : toastOperationFail()
+    success ? message.success('已标记不想看') : message.error(OPERATION_FAIL_MSG)
     if (success) {
       dislikedIds.set(item.param, { ...reason })
       onHide()
