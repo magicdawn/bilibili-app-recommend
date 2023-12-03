@@ -1,5 +1,6 @@
 import react from '@vitejs/plugin-react'
 import reactSwc from '@vitejs/plugin-react-swc'
+import { execSync } from 'child_process'
 import fs from 'fs'
 import postcssMediaMinmax from 'postcss-media-minmax'
 import { visualizer } from 'rollup-plugin-visualizer'
@@ -7,7 +8,7 @@ import { defineConfig } from 'vite'
 import importer from 'vite-plugin-importer'
 import monkey, { cdn } from 'vite-plugin-monkey'
 import tsconfigPaths from 'vite-tsconfig-paths'
-import { name as packageName, version } from './package.json'
+import { name as packageName, version as packageVersion } from './package.json'
 
 const shouldMinify = !process.argv.includes('--no-minify')
 
@@ -15,6 +16,8 @@ const useHttps =
   process.env.MY_KEY_FILE &&
   process.env.MY_CERT_FILE &&
   (process.argv.includes('--https') || process.env.VITE_DEV_HTTPS)
+
+let version = packageVersion
 
 let downloadURL =
   'https://greasyfork.org/scripts/443530-bilibili-app-recommend/code/bilibili-app-recommend.user.js'
@@ -24,6 +27,14 @@ if (process.env.RELEASE) {
 } else if (process.env.RELEASE_NIGHTLY) {
   downloadURL =
     'https://github.com/magicdawn/bilibili-app-recommend/raw/release-nightly/bilibili-app-recommend.mini.user.js'
+
+  // https://stackoverflow.com/questions/8595391/how-to-show-git-commit-using-number-of-commits-since-a-tag
+  const commitCount = execSync(`git rev-list v0.19.2.. --count`).toString().trim()
+  const commitHash = ''
+  // version += `.${commitCount}_${commitHash}`
+
+  const gitDescribe = execSync(`git describe`).toString().trim() // e.g v0.19.2-6-g0230769
+  version = gitDescribe.slice(1) // rm prefix v
 }
 
 // https://vitejs.dev/config/
