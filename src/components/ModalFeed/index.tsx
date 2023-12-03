@@ -1,4 +1,3 @@
-import { ModalFeedConfigChecks } from '$components/ModalFeedConfigChecks'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import type { RecGridRef } from '$components/RecGrid'
 import { RecGrid } from '$components/RecGrid'
@@ -9,12 +8,14 @@ import { VideoSourceTab } from '$components/RecHeader/tab'
 import { cx } from '$libs'
 import { useIsDarkMode } from '$platform'
 import { useSettingsSnapshot } from '$settings'
+import { message } from '$utility'
 import { css } from '@emotion/react'
 import { useMemoizedFn } from 'ahooks'
 import type { CSSProperties, ReactNode } from 'react'
 import { memo, useMemo, useRef, useState } from 'react'
 import { BaseModal, BaseModalClass, ModalClose } from '../BaseModal'
 import { CollapseBtn } from '../CollapseBtn'
+import { FlagSettingItem } from '../piece'
 import styles from './index.module.scss'
 
 interface IProps {
@@ -118,3 +119,31 @@ export const ModalFeed = memo(function ModalFeed({ show, onHide }: IProps) {
     </BaseModal>
   )
 })
+
+function ModalFeedConfigChecks() {
+  const inModalFeedStyle = css`
+    margin-left: 5px;
+  `
+  return (
+    <>
+      <FlagSettingItem
+        configKey={'initialShowMore'}
+        label='自动查看更多'
+        tooltip='打开首页时默认打开推荐弹窗'
+        css={inModalFeedStyle}
+        extraAction={(val) => {
+          if (val) {
+            message.success('已开启自动查看更多: 下次打开首页时将直接展示推荐弹窗')
+          }
+        }}
+      />
+
+      <FlagSettingItem
+        configKey='modalFeedFullScreen'
+        label='全屏'
+        tooltip='世界清净了~'
+        css={inModalFeedStyle}
+      />
+    </>
+  )
+}
