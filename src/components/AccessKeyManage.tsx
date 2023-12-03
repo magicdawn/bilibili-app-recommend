@@ -1,5 +1,5 @@
 import { useSettingsSnapshot } from '$settings'
-import { deleteAccessKey, getAccessKey } from '$utility/auth'
+import { deleteAccessKey, getAccessKey } from '$utility/access-key'
 import { useRequest } from 'ahooks'
 import { Button, Space } from 'antd'
 import type { CSSProperties } from 'react'
@@ -22,7 +22,7 @@ export function AccessKeyManage({
 }) {
   const { runAsync, loading } = useRequest(getAccessKey, { manual: true })
   const { accessKey } = useSettingsSnapshot()
-  const onDeleteAccessToken = deleteAccessKey
+  const onDeleteAccessKey = deleteAccessKey
 
   return (
     <Space size='small' style={style} className={className}>
@@ -38,7 +38,7 @@ export function AccessKeyManage({
           <Button onClick={runAsync} disabled={loading}>
             <span>重新获取 access_key</span>
           </Button>
-          <Button onClick={onDeleteAccessToken}>
+          <Button onClick={onDeleteAccessKey}>
             <span>删除 access_key</span>
           </Button>
           {btnAccessKeyHelpLink}

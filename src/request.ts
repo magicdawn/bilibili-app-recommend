@@ -1,6 +1,8 @@
-import { HOST_API } from '$common'
+import { HOST_API, TVKeyInfo } from '$common'
+import { appSign } from '$utility/app-sign'
 import { encWbi } from '$utility/wbi'
 import axios from 'axios'
+import gmAdapter from 'axios-userscript-adapter'
 import { settings } from './settings'
 
 export const request = axios.create({
@@ -30,16 +32,10 @@ export function isWebApiSuccess(json: any) {
 }
 
 // 可以跨域
-import { TVKeyInfo } from '$common'
-import { appSign } from '$utility/app-sign'
-import gmAdapter from 'axios-userscript-adapter'
 export const gmrequest = axios.create({
   // @ts-ignore
   adapter: gmAdapter,
 })
-
-// const appkey = '27eb53fc9058f8c3'
-// const appsec = 'c2ed53a74eeefe3cf99fbd01d8c9c375'
 
 const appkey = TVKeyInfo.appkey
 const appsec = TVKeyInfo.appsec
