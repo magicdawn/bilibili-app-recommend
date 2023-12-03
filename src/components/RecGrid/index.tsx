@@ -335,7 +335,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
 
       const newItems = items.slice()
       newItems.splice(index, 1)
-      message.success(`已移除: ${data.title}`, 4000)
+      message.success(`已移除: ${data.title}`, 4)
 
       if (tab === 'watchlater') {
         serviceMap.watchlater.count--
