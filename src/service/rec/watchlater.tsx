@@ -99,7 +99,6 @@ export class WatchLaterRecService implements IService {
   }
 
   loaded = false
-  page = -1
   count: number = 0
   keepOrder: boolean
 

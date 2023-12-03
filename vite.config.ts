@@ -26,17 +26,6 @@ if (process.env.RELEASE) {
     'https://github.com/magicdawn/bilibili-app-recommend/raw/release-nightly/bilibili-app-recommend.mini.user.js'
 }
 
-// cdn.js-package-name 与 npm-package-name 可能不一致
-function baomitu(exportVarName: string, pathname: string, cdnjsPackageName?: string) {
-  return [
-    exportVarName,
-    (version: string, name: string, _importName = '', resolveName = '') => {
-      const p = pathname || resolveName
-      return `https://lib.baomitu.com/${cdnjsPackageName || name}/${version}/${p}`
-    },
-  ]
-}
-
 // https://vitejs.dev/config/
 export default defineConfig(({ command }) => ({
   define: {

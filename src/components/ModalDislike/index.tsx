@@ -22,10 +22,11 @@ interface IProps {
 
 export type Reason = { id: number; name: string; toast: string }
 
-export const dislikedIds = proxyMap<string, Reason>()
-export function useDislikedIds() {
+const dislikedIds = proxyMap<string, Reason>()
+function useDislikedIds() {
   return useSnapshot(dislikedIds)
 }
+
 export function useDislikedReason(id?: string | false) {
   const map = useDislikedIds()
   if (!id) return undefined
@@ -35,8 +36,11 @@ export function useDislikedReason(id?: string | false) {
 function clearDislikedIds() {
   dislikedIds.clear()
 }
+export function delDislikeId(id: string) {
+  dislikedIds.delete(id)
+}
 
-export function ModalDislike({ show, onHide, item }: IProps) {
+function ModalDislike({ show, onHide, item }: IProps) {
   const [isRequesting, setIsRequesting] = useState(false)
 
   const onDislike = useMemoizedFn(async (reason: Reason) => {

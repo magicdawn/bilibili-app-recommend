@@ -1,7 +1,7 @@
 import { APP_KEY_PREFIX, APP_NAME } from '$common'
 import { useMittOn } from '$common/hooks/useMitt'
 import type { Reason } from '$components/ModalDislike'
-import { dislikedIds, showModalDislike, useDislikedReason } from '$components/ModalDislike'
+import { delDislikeId, showModalDislike, useDislikedReason } from '$components/ModalDislike'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import type { OnRefresh } from '$components/RecGrid/useRefresh'
 import { useCurrentSourceTab } from '$components/RecHeader/tab.shared'
@@ -202,7 +202,7 @@ const DislikedCard = memo(function DislikedCard({
 
     success ? toast('已撤销') : toastOperationFail()
     if (success) {
-      dislikedIds.delete(item.param)
+      delDislikeId(item.param)
     }
   })
 

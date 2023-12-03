@@ -13,8 +13,7 @@ import {
 } from './ModalSettings/theme.shared'
 
 // bilibili.com default: PingFang SC,HarmonyOS_Regular,Helvetica Neue,Microsoft YaHei,sans-serif
-export const USING_FONT_FAMILY =
-  'HarmonyOS_Regular,PingFang SC,Helvetica Neue,Microsoft YaHei,sans-serif'
+const USING_FONT_FAMILY = 'HarmonyOS_Regular,PingFang SC,Helvetica Neue,Microsoft YaHei,sans-serif'
 
 export function AntdApp({
   children,
