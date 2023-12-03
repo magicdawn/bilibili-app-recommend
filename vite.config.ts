@@ -29,11 +29,11 @@ if (process.env.RELEASE) {
     'https://github.com/magicdawn/bilibili-app-recommend/raw/release-nightly/bilibili-app-recommend.mini.user.js'
 
   // https://stackoverflow.com/questions/8595391/how-to-show-git-commit-using-number-of-commits-since-a-tag
-  const commitCount = execSync(`git rev-list v0.19.2.. --count`).toString().trim()
-  const commitHash = ''
+  // const commitCount = execSync(`git rev-list v0.19.2.. --count`).toString().trim()
+  // const commitHash = ''
   // version += `.${commitCount}_${commitHash}`
 
-  const gitDescribe = execSync(`git describe`).toString().trim() // e.g v0.19.2-6-g0230769
+  const gitDescribe = process.env.GHD_DESCRIBE || execSync(`git describe`).toString().trim() // e.g v0.19.2-6-g0230769
   version = gitDescribe.slice(1) // rm prefix v
 }
 
