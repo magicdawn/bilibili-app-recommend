@@ -17,7 +17,7 @@ const useHttps =
   process.env.MY_CERT_FILE &&
   (process.argv.includes('--https') || process.env.VITE_DEV_HTTPS)
 
-let scriptName = packageName
+const scriptName = packageName
 let scriptVersion = packageVersion
 
 let downloadURL =
@@ -33,8 +33,7 @@ if (process.env.RELEASE) {
   // const commitCount = execSync(`git rev-list v0.19.2.. --count`).toString().trim()
   // const commitHash = ''
   // version += `.${commitCount}_${commitHash}`
-
-  scriptName += ' CI'
+  // scriptName += ' CI'
   const gitDescribe = process.env.GHD_DESCRIBE || execSync(`git describe`).toString().trim() // e.g v0.19.2-6-g0230769
   scriptVersion = gitDescribe.slice(1) // rm prefix v
 }
@@ -166,7 +165,8 @@ export default defineConfig(({ command }) => ({
       },
 
       server: {
-        prefix: (name) => `${name} Dev`, // 一样的, 避免切换
+        // prefix: (name) => `${name} Dev`,
+        prefix: false, // 一样的, 避免切换
         open: true,
         mountGmApi: true,
       },
