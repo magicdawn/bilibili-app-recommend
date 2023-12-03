@@ -17,7 +17,8 @@ const useHttps =
   process.env.MY_CERT_FILE &&
   (process.argv.includes('--https') || process.env.VITE_DEV_HTTPS)
 
-let version = packageVersion
+let scriptName = packageName
+let scriptVersion = packageVersion
 
 let downloadURL =
   'https://greasyfork.org/scripts/443530-bilibili-app-recommend/code/bilibili-app-recommend.user.js'
@@ -33,8 +34,9 @@ if (process.env.RELEASE) {
   // const commitHash = ''
   // version += `.${commitCount}_${commitHash}`
 
+  scriptName += ' CI'
   const gitDescribe = process.env.GHD_DESCRIBE || execSync(`git describe`).toString().trim() // e.g v0.19.2-6-g0230769
-  version = gitDescribe.slice(1) // rm prefix v
+  scriptVersion = gitDescribe.slice(1) // rm prefix v
 }
 
 // https://vitejs.dev/config/
@@ -134,9 +136,9 @@ export default defineConfig(({ command }) => ({
     monkey({
       entry: 'src/main.tsx',
       userscript: {
-        name: 'bilibili-app-recommend',
+        name: scriptName,
+        version: scriptVersion,
         namespace: 'https://magicdawn.fun',
-        version,
         description: '为 B 站首页添加像 App 一样的推荐',
         icon: 'https://www.bilibili.com/favicon.ico',
         // 'description': 'Add app like recommend part to bilibili homepage',
@@ -164,7 +166,7 @@ export default defineConfig(({ command }) => ({
       },
 
       server: {
-        prefix: false, // 一样的, 避免切换
+        prefix: (name) => `${name} Dev`, // 一样的, 避免切换
         open: true,
         mountGmApi: true,
       },
