@@ -338,7 +338,7 @@ const VideoCardInner = memo(function VideoCardInner({
 
     try {
       isFetchingVideoData.current = true
-      setVideoData(await getVideoData(avid))
+      setVideoData(await getVideoData(bvid))
     } finally {
       isFetchingVideoData.current = false
     }
@@ -863,7 +863,7 @@ const VideoCardInner = memo(function VideoCardInner({
               {(isHovering || typeof previewAnimationProgress === 'number') && (
                 <PreviewImage
                   videoDuration={duration}
-                  pvideo={videoData?.pvideoData}
+                  pvideo={videoData?.videoshotData}
                   mouseEnterRelativeX={mouseEnterRelativeX}
                   previewAnimationProgress={previewAnimationProgress}
                 />

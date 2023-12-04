@@ -7,10 +7,10 @@ import QuickLRU from 'quick-lru'
 
 // api.bilibili.com/pvideo?aid=${target.dataset.id}&_=${Date.now()
 // 视频预览
-export async function pvideo(aid: string) {
+export async function videoshot(bvid: string) {
   // 2023-09-08 pvideo 出现 404, 切换为 videoshot
   // const res = await request.get('/pvideo', { params: { aid } })
-  const res = await request.get('/x/player/videoshot', { params: { aid, index: '1' } })
+  const res = await request.get('/x/player/videoshot', { params: { bvid, index: '1' } })
   const json = res.data as PvideoJson
 
   // TODO: process errors
@@ -31,32 +31,33 @@ export async function dm(aid: string) {
   return json.data
 }
 
-export const cache = new QuickLRU<string, VideoData>({ maxSize: 1000 })
+export const cache = new QuickLRU<string, VideoData>({ maxSize: 1_0000 })
 
 export type VideoData = {
-  pvideoData: PvideoJson['data']
+  videoshotData: PvideoJson['data']
   dmData: DmJson['data']
 }
 
-export async function getVideoData(id: string) {
-  if (cache.has(id)) {
-    return cache.get(id) as VideoData
+export async function getVideoData(bvid: string) {
+  if (cache.has(bvid)) {
+    return cache.get(bvid) as VideoData
   }
 
-  const [pvideoData, dmData] = await Promise.all([pvideo(id), dm(id)])
-  cache.set(id, { pvideoData, dmData })
-
-  return { pvideoData, dmData }
+  const videoshotData = await videoshot(bvid)
+  const dmData: string[] = []
+  cache.set(bvid, { videoshotData, dmData })
+  return { videoshotData, dmData }
 }
 
 /**
  * 添加/删除 "稍后再看"
+ * add 支持 avid & bvid, del 只支持 avid. 故使用 avid
  */
 
 function watchLaterFactory(action: 'add' | 'del') {
-  return async function watchLaterOp(id: string) {
+  return async function watchLaterOp(avid: string) {
     const form = new URLSearchParams({
-      aid: id,
+      aid: avid,
       csrf: getCsrfToken(),
     })
     const res = await request.post('/x/v2/history/toview/' + action, form)
