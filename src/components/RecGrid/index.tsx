@@ -18,7 +18,7 @@ import { cx } from '$libs'
 import { getIsInternalTesting, isSafari } from '$platform'
 import { getRecommendTimes, refreshForGrid, uniqConcat } from '$service/rec'
 import { useSettingsSnapshot } from '$settings'
-import { AntdMessage } from '$utility'
+import { AntdMessage, nextTick } from '$utility'
 import { css as styled } from '@emotion/css'
 import { css } from '@emotion/react'
 import { useEventListener, useLatest, useMemoizedFn, useMount } from 'ahooks'
@@ -104,12 +104,13 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
   })
 
   // after refresh, setItems
-  const postAction = useMemoizedFn(() => {
+  const postAction = useMemoizedFn(async () => {
     clearActiveIndex()
     setLoadCompleteCount(1)
     updateExtraInfo(tab)
 
     // check need loadMore
+    await nextTick()
     checkShouldLoadMore()
   })
 
