@@ -4,6 +4,7 @@ import type { Reason } from '$components/ModalDislike'
 import { delDislikeId, showModalDislike, useDislikedReason } from '$components/ModalDislike'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import type { OnRefresh } from '$components/RecGrid/useRefresh'
+import { videoSourceTabState } from '$components/RecHeader/tab'
 import { useCurrentSourceTab } from '$components/RecHeader/tab.shared'
 import type { AppRecItem, AppRecItemExtend, RecItemType } from '$define'
 import { IconPark } from '$icon-park'
@@ -616,10 +617,12 @@ const VideoCardInner = memo(function VideoCardInner({
    * 动态筛选
    */
 
-  const hasDynamicFeedFilterSelectUpEntry = item.api === 'dynamic' && !!onRefresh
+  const hasDynamicFeedFilterSelectUpEntry =
+    isNormalVideo && !!authorMid && !!authorName && !!onRefresh
   const onDynamicFeedFilterSelectUp = useMemoizedFn(async () => {
     if (!authorMid || !authorName) return
     dynamicFeedFilterSelectUp({ upMid: Number(authorMid), upName: authorName })
+    videoSourceTabState.value = 'dynamic-feed'
     await delay(100)
     await onRefresh?.()
   })
