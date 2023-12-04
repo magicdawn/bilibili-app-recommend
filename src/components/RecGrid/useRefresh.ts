@@ -26,11 +26,11 @@ export function useOnRefreshContext() {
 
 const serviceFactories = {
   'dynamic-feed': () => new DynamicFeedRecService(dynamicFeedFilterStore.upMid),
-  'watchlater': () => new WatchLaterRecService(),
+  'watchlater': (options) => new WatchLaterRecService(options?.watchlaterKeepOrder),
   'fav': () => new FavRecService(),
   'popular-general': () => new PopularGeneralService(),
   'popular-weekly': () => new PopularWeeklyService(),
-} satisfies Partial<Record<TabType, () => IService>>
+} satisfies Partial<Record<TabType, (options?: OnRefreshOoptions) => IService>>
 
 export type ServiceMapKey = keyof typeof serviceFactories
 
@@ -88,7 +88,7 @@ export function useRefresh({
 
   const [serviceMap, setServiceMap] = useState<ServiceMap>(() => {
     return Object.fromEntries(
-      Object.entries(serviceFactories).map(([key, factory]) => [key, factory()])
+      Object.entries(serviceFactories).map(([key, factory]) => [key, factory(undefined)])
     ) as unknown as ServiceMap
   })
   const [pcRecService, setPcRecService] = useState(() => new PcRecService())
@@ -187,7 +187,7 @@ export function useRefresh({
     const newServiceMap = { ...serviceMap }
     const recreateFor = (tab: ServiceMapKey) => {
       // @ts-ignore
-      newServiceMap[tab] = serviceFactories[tab]()
+      newServiceMap[tab] = serviceFactories[tab](options)
       setServiceMap(newServiceMap)
     }
 
