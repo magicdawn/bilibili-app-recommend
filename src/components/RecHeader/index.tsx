@@ -41,7 +41,7 @@ const configStyles = {
 }
 
 export const headerState = proxy({
-  modalFeedVisible: settings.initialShowMore,
+  modalFeedVisible: settings.showModalFeedOnLoad,
   modalConfigVisible: false,
 })
 
@@ -76,9 +76,9 @@ export const RecHeader = forwardRef<
     rightSlot?: ReactNode
   }
 >(function RecHeader({ onRefresh, refreshing, leftSlot, rightSlot }, ref) {
-  const { accessKey, pureRecommend, styleFancy } = useSettingsSnapshot()
-
+  const { accessKey, pureRecommend, styleFancy, showModalFeedEntry } = useSettingsSnapshot()
   const { modalFeedVisible, modalConfigVisible } = useSnapshot(headerState)
+
   useKeyPress(
     ['shift.comma'],
     (e) => {
@@ -168,19 +168,20 @@ export const RecHeader = forwardRef<
                 refreshHotkeyEnabled={!(modalConfigVisible || modalFeedVisible)}
               />
 
-              {/* !pureRecommend && */}
-              <Button css={verticalAlignStyle} onClick={showModalFeed}>
-                <span>查看更多</span>
-                <svg
-                  css={css`
-                    width: 12px;
-                    height: 12px;
-                    margin-left: 2px;
-                  `}
-                >
-                  <use href='#widget-arrow'></use>
-                </svg>
-              </Button>
+              {showModalFeedEntry && (
+                <Button css={verticalAlignStyle} onClick={showModalFeed}>
+                  <span>查看更多</span>
+                  <svg
+                    css={css`
+                      width: 12px;
+                      height: 12px;
+                      margin-left: 2px;
+                    `}
+                  >
+                    <use href='#widget-arrow'></use>
+                  </svg>
+                </Button>
+              )}
             </Space>
           </div>
         </div>

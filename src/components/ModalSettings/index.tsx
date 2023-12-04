@@ -346,17 +346,7 @@ function TabPaneBasic() {
             className={styles.check}
             extraAction={toastAndReload}
           />
-          <FlagSettingItem
-            configKey={'initialShowMore'}
-            label='自动查看更多'
-            tooltip='打开首页时默认打开推荐弹窗'
-            className={styles.check}
-            extraAction={(val) => {
-              if (val) {
-                AntdMessage.success('已开启自动查看更多: 下次打开首页时将直接展示推荐弹窗')
-              }
-            }}
-          />
+
           <FlagSettingItem
             configKey={'useNarrowMode'}
             label='启用居中模式'
@@ -367,6 +357,27 @@ function TabPaneBasic() {
                 切换设置快捷键: <Tag color='green'>shift+c</Tag>
               </>
             }
+            className={styles.check}
+          />
+
+          <FlagSettingItem
+            configKey={'showModalFeedOnLoad'}
+            label='自动「查看更多」'
+            tooltip='打开首页时自动打开「查看更多」弹窗'
+            className={styles.check}
+            extraAction={(val) => {
+              if (val) {
+                AntdMessage.success(
+                  '已开启自动「查看更多」: 下次打开首页时将自动打开「查看更多」弹窗'
+                )
+              }
+            }}
+          />
+
+          <FlagSettingItem
+            configKey={'showModalFeedEntry'}
+            label='「查看更多」按钮'
+            tooltip='是否展示「查看更多」按钮'
             className={styles.check}
           />
         </div>

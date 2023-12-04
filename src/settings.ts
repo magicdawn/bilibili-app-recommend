@@ -15,12 +15,25 @@ export const initialSettings = {
   // 窄屏模式
   useNarrowMode: false,
 
-  // 自动查看更多
-  initialShowMore: false,
-  modalFeedFullScreen: false,
-
   // 纯推荐模式
   pureRecommend: false,
+
+  /**
+   * 查看更多, aka ModalFeed
+   */
+
+  // 自动查看更多
+  showModalFeedOnLoad: false,
+
+  // "查看更多" 按钮
+  showModalFeedEntry: true,
+
+  // ModalFeed.全屏
+  modalFeedFullScreen: false,
+
+  /**
+   * Video Card
+   */
 
   // 自动开始预览
   autoPreviewWhenKeyboardSelect: false,
