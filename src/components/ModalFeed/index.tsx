@@ -127,7 +127,7 @@ function ModalFeedConfigChecks() {
   return (
     <>
       <FlagSettingItem
-        configKey={'initialShowMore'}
+        configKey={'showModalFeedOnLoad'}
         label='自动查看更多'
         tooltip='打开首页时默认打开推荐弹窗'
         css={inModalFeedStyle}
