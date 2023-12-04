@@ -262,10 +262,8 @@ export function useRefresh({
       return
     }
 
-    // err or not
-    updateRefreshing(false)
-
     if (err) {
+      updateRefreshing(false)
       console.error(err)
       setError(err)
       return
@@ -299,6 +297,8 @@ export function useRefresh({
 
     const cost = performance.now() - start
     debug('refresh(): [success] cost %s ms', cost.toFixed(0))
+
+    updateRefreshing(false)
   })
 
   return {
