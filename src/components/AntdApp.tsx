@@ -32,12 +32,19 @@ export function AntdApp({
     <ConfigProvider
       locale={zhCN}
       theme={{
+        cssVar: true,
         algorithm: dark ? theme.darkAlgorithm : theme.defaultAlgorithm,
         token: {
           colorPrimary,
           colorBgSpotlight: colorPrimary, // tooltip bg
           zIndexPopupBase: 11000, // base-modal 10002
           fontFamily: USING_FONT_FAMILY,
+        },
+        components: {
+          Message: {
+            contentBg: colorPrimary,
+            colorText: '#fff',
+          },
         },
       }}
     >

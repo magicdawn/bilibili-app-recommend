@@ -15,8 +15,7 @@ let AntdMessage: MessageInstance = _message
 let AntdNotification: NotificationInstance = _notification
 
 const messageConfig: MessageConfigOptions = {
-  // FIXME: clean up this
-  // duration: 1_000, // default 3, 单位秒
+  // duration: default 3, 单位秒
   maxCount: 5,
   top: getHeaderHeight() + 5,
 }
