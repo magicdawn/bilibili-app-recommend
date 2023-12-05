@@ -5,6 +5,9 @@
     "lineWidth": 100,
     "ignore": ["dist/", "node_modules/"]
   },
+  "linter": {
+    "enabled": false
+  },
   "javascript": {
     "formatter": {
       "quoteStyle": "single",

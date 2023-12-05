@@ -31,6 +31,7 @@ export async function encWbi(params: Record<string, string | number>) {
   const curr_time = Math.round(Date.now() / 1000)
   const chr_filter = /[!'()*]/g
   const query: string[] = []
+  console.log(1)
 
   // 添加 wts 字段
   params = { ...params, wts: curr_time }
