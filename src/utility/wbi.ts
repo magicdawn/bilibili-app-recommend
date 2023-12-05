@@ -24,15 +24,15 @@ function getMixinKey(orig: string) {
 }
 
 // 为请求参数进行 wbi 签名
-export async function encWbi(params: Record<string, string | number>) {
+export async function encWbi(_params: Record<string, string | number>) {
   const { img_key, sub_key } = await getWbiKeys()
   const mixin_key = getMixinKey(img_key + sub_key)
 
   const wts = Math.round(Date.now() / 1000)
 
-  const newParams = { ...params, wts }
+  const params: Record<string, string | number> = { ..._params, wts }
   const chr_filter = /[!'()*]/g
-  const query = Object.keys(newParams)
+  const query = Object.keys(params)
     .sort() // 按照 key 重排参数
     .map((key) => {
       return `${encodeURIComponent(key)}=${encodeURIComponent(
