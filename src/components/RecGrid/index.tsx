@@ -461,6 +461,13 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
                       margin-top: 0;
                     }
                   }
+
+                  .ant-divider-inner-text a {
+                    color: var(--ant-color-link);
+                    &:hover {
+                      color: var(--ant-color-primary);
+                    }
+                  }
                 `}
                 orientation='left'
               >

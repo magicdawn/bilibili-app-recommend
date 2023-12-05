@@ -82,7 +82,11 @@ export class PopularWeeklyService implements IService {
         {
           api: 'separator',
           uniqId: `popular-weekly-${epNum}`,
-          text: `${ep.name}`,
+          text: (
+            <a target='_blank' href={`https://www.bilibili.com/v/popular/weekly?num=${epNum}`}>
+              {ep.name}
+            </a>
+          ),
         },
         ...items,
       )

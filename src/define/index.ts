@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import type { android } from './app-recommend.android'
 import type { ipad } from './app-recommend.ipad'
 import { DmJson } from './dm'
@@ -59,7 +60,7 @@ export type RecItemType =
 
 export type RecItemExtraType = RecItemType | ItemsSeparator
 
-export type ItemsSeparator = { uniqId: string; api: 'separator'; text: string }
+export type ItemsSeparator = { uniqId: string; api: 'separator'; text: ReactNode }
 
 export interface PcRecItemExtend extends PcRecItem {
   uniqId: string

@@ -27,9 +27,10 @@ export class QueueStrategy<T extends RecItemExtraType = RecItemExtraType> {
 
   // add to returnQueue
   doReturnItems(items: T[] | undefined) {
-    this.returnQueue.push(...(items || []))
+    this.returnQueue = this.returnQueue.concat(items || [])
     return items
   }
+
   // restore from returnQueue
   restore() {
     this.bufferQueue = [...this.returnQueue, ...this.bufferQueue]
