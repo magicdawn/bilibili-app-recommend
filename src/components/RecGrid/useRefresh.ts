@@ -88,7 +88,7 @@ export function useRefresh({
 
   const [serviceMap, setServiceMap] = useState<ServiceMap>(() => {
     return Object.fromEntries(
-      Object.entries(serviceFactories).map(([key, factory]) => [key, factory(undefined)])
+      Object.entries(serviceFactories).map(([key, factory]) => [key, factory(undefined)]),
     ) as unknown as ServiceMap
   })
   const [pcRecService, setPcRecService] = useState(() => new PcRecService())
@@ -97,7 +97,7 @@ export function useRefresh({
   const [refreshedAt, setRefreshedAt, getRefreshedAt] = useGetState<number>(() => Date.now())
   const [refreshFor, setRefreshFor] = useState<TabType>(tab)
   const [refreshAbortController, setRefreshAbortController] = useState<AbortController>(
-    () => new AbortController()
+    () => new AbortController(),
   )
   const [swr, setSwr] = useState(false)
   const [error, setError] = useState<any>(undefined)

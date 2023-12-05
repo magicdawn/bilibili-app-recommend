@@ -51,7 +51,7 @@ export async function getRecommend() {
     // 未知错误, 不重试
     toast(
       `${APP_NAME}: 未知错误, 请联系开发者\n\n  code=${json.code} message=${json.message || ''}`,
-      5000
+      5000,
     )
     return []
   }

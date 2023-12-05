@@ -54,7 +54,7 @@ export function TvQrCodeAuth() {
 
   const { runAsync: confirmRun, loading: confirmLoading } = useRequest(
     confirmQrCodeLoginWithCookie,
-    { manual: true }
+    { manual: true },
   )
 
   return (
@@ -125,6 +125,6 @@ const renderOnce = once(function render() {
   r.render(
     <AntdApp>
       <TvQrCodeAuth />
-    </AntdApp>
+    </AntdApp>,
   )
 })

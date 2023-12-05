@@ -118,7 +118,7 @@ function ModalDislike({ show, onHide, item }: IProps) {
       e.stopImmediatePropagation()
       document.querySelector<HTMLButtonElement>(`.${styles.reason}.${styles.active}`)?.click()
     },
-    { exactMatch: true }
+    { exactMatch: true },
   )
 
   const activeReasonName = useMemo(() => {
@@ -149,9 +149,13 @@ function ModalDislike({ show, onHide, item }: IProps) {
           {reasons.map((reason, index) => {
             return (
               <button
-                className={cx(styles.reason, { [styles.active]: index === activeIndex })}
+                className={cx(styles.reason, {
+                  [styles.active]: index === activeIndex,
+                })}
                 style={{
-                  ...(index === activeIndex && { borderColor: colorPrimaryValue }),
+                  ...(index === activeIndex && {
+                    borderColor: colorPrimaryValue,
+                  }),
                 }}
                 key={reason.id}
                 data-id={reason.id}

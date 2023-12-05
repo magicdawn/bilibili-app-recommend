@@ -61,7 +61,11 @@ export function HelpInfo({
             name={'Info'}
             size={18}
             {...iconProps}
-            style={{ cursor: 'pointer', marginLeft: '4px', ...iconProps?.style }}
+            style={{
+              cursor: 'pointer',
+              marginLeft: '4px',
+              ...iconProps?.style,
+            }}
           />
         </AntdTooltip>
       )}

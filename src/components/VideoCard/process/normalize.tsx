@@ -79,7 +79,7 @@ export function lookinto<T>(
     'fav': (item: FavItemExtend) => T
     'popular-general': (item: PopularGeneralItemExtend) => T
     'popular-weekly': (item: PopularWeeklyItemExtend) => T
-  }
+  },
 ): T {
   if (item.api === 'pc') return opts.pc(item)
   if (item.api === 'app') return opts.app(item)
@@ -271,8 +271,14 @@ export function apiIpadAppAdapter(item: IpadAppRecItemExtend): IVideoCardData {
   const statItems: StatItemType[] = [
     { field: 'play', value: formatCount(play) || STAT_NUMBER_FALLBACK },
     typeof danmaku === 'number'
-      ? { field: 'danmaku', value: formatCount(danmaku) || STAT_NUMBER_FALLBACK }
-      : { field: 'bangumiFollow', value: formatCount(bangumiFollow) || STAT_NUMBER_FALLBACK },
+      ? {
+          field: 'danmaku',
+          value: formatCount(danmaku) || STAT_NUMBER_FALLBACK,
+        }
+      : {
+          field: 'bangumiFollow',
+          value: formatCount(bangumiFollow) || STAT_NUMBER_FALLBACK,
+        },
   ]
 
   return {
@@ -331,8 +337,14 @@ export function apiPcAdapter(item: PcRecItemExtend): IVideoCardData {
     danmaku: item.stat.danmaku,
     favorite: undefined,
     statItems: [
-      { field: 'play', value: formatCount(item.stat.view) || STAT_NUMBER_FALLBACK },
-      { field: 'like', value: formatCount(item.stat.like) || STAT_NUMBER_FALLBACK },
+      {
+        field: 'play',
+        value: formatCount(item.stat.view) || STAT_NUMBER_FALLBACK,
+      },
+      {
+        field: 'like',
+        value: formatCount(item.stat.like) || STAT_NUMBER_FALLBACK,
+      },
     ] as StatItemType[],
 
     // author
@@ -413,7 +425,7 @@ export function apiWatchLaterAdapter(item: WatchLaterItemExtend): IVideoCardData
     pubdateDisplay: formatTimeStamp(item.pubdate),
     pubdateDisplayTitle: `${formatTimeStamp(item.pubdate, true)} 发布, ${formatTimeStamp(
       item.add_at,
-      true
+      true,
     )} 添加稍后再看`,
     duration: item.duration,
     durationStr: formatDuration(item.duration),
@@ -504,9 +516,18 @@ export function apiPopularGeneralAdapter(item: PopularGeneralItemExtend): IVideo
     danmaku: item.stat.danmaku,
     favorite: undefined,
     statItems: [
-      { field: 'play', value: formatCount(item.stat.view) || STAT_NUMBER_FALLBACK },
-      { field: 'like', value: formatCount(item.stat.like) || STAT_NUMBER_FALLBACK },
-      { field: 'danmaku', value: formatCount(item.stat.danmaku) || STAT_NUMBER_FALLBACK },
+      {
+        field: 'play',
+        value: formatCount(item.stat.view) || STAT_NUMBER_FALLBACK,
+      },
+      {
+        field: 'like',
+        value: formatCount(item.stat.like) || STAT_NUMBER_FALLBACK,
+      },
+      {
+        field: 'danmaku',
+        value: formatCount(item.stat.danmaku) || STAT_NUMBER_FALLBACK,
+      },
     ] as StatItemType[],
 
     // author
@@ -538,9 +559,18 @@ export function apiPopularWeeklyAdapter(item: PopularWeeklyItemExtend): IVideoCa
     danmaku: item.stat.danmaku,
     favorite: undefined,
     statItems: [
-      { field: 'play', value: formatCount(item.stat.view) || STAT_NUMBER_FALLBACK },
-      { field: 'like', value: formatCount(item.stat.like) || STAT_NUMBER_FALLBACK },
-      { field: 'danmaku', value: formatCount(item.stat.danmaku) || STAT_NUMBER_FALLBACK },
+      {
+        field: 'play',
+        value: formatCount(item.stat.view) || STAT_NUMBER_FALLBACK,
+      },
+      {
+        field: 'like',
+        value: formatCount(item.stat.like) || STAT_NUMBER_FALLBACK,
+      },
+      {
+        field: 'danmaku',
+        value: formatCount(item.stat.danmaku) || STAT_NUMBER_FALLBACK,
+      },
     ] as StatItemType[],
 
     // author

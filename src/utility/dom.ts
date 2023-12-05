@@ -9,7 +9,7 @@ const DELAY_INTERVAL = 200
 export async function tryAction(
   selector: string,
   action: (el: HTMLElement) => void | Promise<void>,
-  selectorPredicate: (el: HTMLElement) => boolean = () => true
+  selectorPredicate: (el: HTMLElement) => boolean = () => true,
 ) {
   let arr: HTMLElement[] = []
   const query = () => {
@@ -42,7 +42,7 @@ export async function tryAction(
 export async function tryToRemove(
   selector: string,
   selectorPredicate?: (el: HTMLElement) => boolean,
-  delayMs?: number
+  delayMs?: number,
 ) {
   if (typeof delayMs === 'number') await delay(delayMs)
   return tryAction(selector, (el) => el.remove(), selectorPredicate)

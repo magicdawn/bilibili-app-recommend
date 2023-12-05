@@ -66,7 +66,7 @@ async function onRestoreSettings() {
 function useHotkeyForConfig(
   hotkey: string | string[],
   configKey: BooleanSettingsKey,
-  label: string
+  label: string,
 ) {
   return useKeyPress(
     hotkey,
@@ -76,7 +76,7 @@ function useHotkeyForConfig(
       const isCancel = !settings[configKey]
       AntdMessage.success(`已${isCancel ? '禁用' : '启用'}「${label}」`)
     },
-    { exactMatch: true }
+    { exactMatch: true },
   )
 }
 
@@ -368,7 +368,7 @@ function TabPaneBasic() {
             extraAction={(val) => {
               if (val) {
                 AntdMessage.success(
-                  '已开启自动「查看更多」: 下次打开首页时将自动打开「查看更多」弹窗'
+                  '已开启自动「查看更多」: 下次打开首页时将自动打开「查看更多」弹窗',
                 )
               }
             }}
@@ -483,7 +483,11 @@ function TabPaneAdvance() {
             />
 
             <a
-              style={{ marginLeft: 15, display: 'inline-flex', alignItems: 'center' }}
+              style={{
+                marginLeft: 15,
+                display: 'inline-flex',
+                alignItems: 'center',
+              }}
               href='https://member.bilibili.com/platform/upload/text/draft'
               target='_blank'
             >
@@ -573,7 +577,10 @@ function TabPaneRecommendTabConfig() {
         <div className={styles.settingsGroupTitle}>
           Tab 设置
           <HelpInfo
-            iconProps={{ name: 'Tips', style: { marginLeft: 5, marginRight: 20 } }}
+            iconProps={{
+              name: 'Tips',
+              style: { marginLeft: 5, marginRight: 20 },
+            }}
             tooltip={<>勾选显示, 拖动排序</>}
           />
           <Popconfirm

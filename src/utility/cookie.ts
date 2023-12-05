@@ -39,10 +39,16 @@ export function getHasLogined(): boolean {
   return !!cookies.DedeUserID // SESSDATA 是 httponly
 }
 
-export const loginState = proxy({ cookie: document.cookie, logined: getHasLogined() })
+export const loginState = proxy({
+  cookie: document.cookie,
+  logined: getHasLogined(),
+})
 
 export function checkLoginStatus(): boolean {
-  Object.assign(loginState, { cookie: document.cookie, logined: getHasLogined() })
+  Object.assign(loginState, {
+    cookie: document.cookie,
+    logined: getHasLogined(),
+  })
   return loginState.logined
 }
 

@@ -25,7 +25,7 @@ export function usePreviewAnimation({
   const DEBUG_ANIMATION = process.env.NODE_ENV !== 'production' && false
 
   const [previewAnimationProgress, setPreviewAnimationProgress] = useRafState<number | undefined>(
-    undefined
+    undefined,
   )
 
   const [mouseMoved, setMouseMoved] = useState(false)
@@ -44,19 +44,19 @@ export function usePreviewAnimation({
           console.log(
             `[${APP_NAME}]: [animation] mouseenter onStartPreviewAnimation bvid=%s title=%s`,
             bvid,
-            title
+            title,
           )
         onStartPreviewAnimation(true)
       }
     },
-    { target: videoPreviewWrapperRef }
+    { target: videoPreviewWrapperRef },
   )
   useEventListener(
     'mouseleave',
     (e) => {
       isHovering.current = false
     },
-    { target: videoPreviewWrapperRef }
+    { target: videoPreviewWrapperRef },
   )
 
   useEventListener(
@@ -67,7 +67,7 @@ export function usePreviewAnimation({
         stopAnimation()
       }
     },
-    { target: videoPreviewWrapperRef }
+    { target: videoPreviewWrapperRef },
   )
 
   const unmounted = useUnmountedRef()
@@ -198,5 +198,9 @@ export function usePreviewAnimation({
     idRef.current = requestAnimationFrame(frame)
   })
 
-  return { onHotkeyPreviewAnimation, onStartPreviewAnimation, previewAnimationProgress }
+  return {
+    onHotkeyPreviewAnimation,
+    onStartPreviewAnimation,
+    previewAnimationProgress,
+  }
 }

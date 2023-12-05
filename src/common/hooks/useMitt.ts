@@ -5,7 +5,7 @@ import { useEffect } from 'react'
 export function useMittOn<Events extends Record<EventType, unknown>, Key extends keyof Events>(
   emitter: Emitter<Events>,
   type: Key,
-  handler: Handler<Events[Key]>
+  handler: Handler<Events[Key]>,
 ) {
   const fn = useMemoizedFn(handler)
   useEffect(() => {

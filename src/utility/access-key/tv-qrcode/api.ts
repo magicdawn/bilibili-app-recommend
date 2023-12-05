@@ -21,7 +21,7 @@ export async function getQrCodeInfo() {
       appkey: TVKeyInfo.appkey,
       local_id: '0',
       ts: '0',
-    })
+    }),
     // sign: 'e134154ed6add881d28fbdf68653cd9c',
   )
 
@@ -50,7 +50,7 @@ export async function poll(auth_code: string): Promise<PollResult> {
       auth_code,
       local_id: '0',
       ts: '0',
-    })
+    }),
   )
 
   const json = res.data as PollJson
@@ -92,7 +92,7 @@ export async function qrcodeConfirm(auth_code: string) {
       auth_code,
       scanning_type: '1',
       csrf: getCsrfToken(),
-    })
+    }),
   )
   const json = res.data
   if (!isWebApiSuccess(json)) {

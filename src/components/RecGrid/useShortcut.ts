@@ -178,7 +178,7 @@ export function useShortcut({
       if (!isEnabled() || typeof activeIndex !== 'number') return
       getActiveEmitter()?.emit('toggle-watch-later')
     },
-    { exactMatch: true }
+    { exactMatch: true },
   )
 
   useKeyPress(
@@ -187,7 +187,7 @@ export function useShortcut({
       if (!isEnabled() || typeof activeIndex !== 'number') return
       getActiveEmitter()?.emit('hotkey-preview-animation')
     },
-    { exactMatch: true }
+    { exactMatch: true },
   )
 
   function getInitialIndex() {

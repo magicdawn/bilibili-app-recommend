@@ -20,7 +20,7 @@ const debug = baseDebug.extend('components:SectionRecommend')
 export function SectionRecommend() {
   const skeletonPlaceholders = useMemo(
     () => new Array(20).fill(0).map(() => crypto.randomUUID()),
-    []
+    [],
   )
 
   const isInternalTesting = getIsInternalTesting()
@@ -49,7 +49,7 @@ export function SectionRecommend() {
         className={cx(
           videoGrid,
           limitTwoLines,
-          isInternalTesting ? videoGridInternalTesting : videoGridNewHomepage
+          isInternalTesting ? videoGridInternalTesting : videoGridNewHomepage,
         )}
         style={{ marginBottom: isInternalTesting ? 30 : 0 }}
       >

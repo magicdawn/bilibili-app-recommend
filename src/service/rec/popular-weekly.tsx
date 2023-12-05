@@ -79,8 +79,12 @@ export class PopularWeeklyService implements IService {
       const epNum = ep.number
       const items = await fetchWeeklyItems(epNum)
       this.qs.bufferQueue.push(
-        { api: 'separator', uniqId: `popular-weekly-${epNum}`, text: `${ep.name}` },
-        ...items
+        {
+          api: 'separator',
+          uniqId: `popular-weekly-${epNum}`,
+          text: `${ep.name}`,
+        },
+        ...items,
       )
       this.episodes = this.episodes.slice(1) // consume 1
 
@@ -101,7 +105,7 @@ export class PopularWeeklyService implements IService {
       const episodes = this.episodes.slice(0, prefetchPage) // slice
       this.episodes = this.episodes.slice(prefetchPage) // rest
       const fetched = await Promise.all(
-        episodes.map((x) => x.number).map((episodeNum) => fetchWeeklyItems(episodeNum))
+        episodes.map((x) => x.number).map((episodeNum) => fetchWeeklyItems(episodeNum)),
       )
       this.qs.bufferQueue = shuffle([...this.qs.bufferQueue, ...fetched.flat()])
     }
@@ -127,7 +131,11 @@ async function fetchWeeklyItems(episodeNum: number) {
     })
     const json = res.data as PopularWeeklyJson
     const items = (json.data.list || []).map((item) => {
-      return { ...item, api: 'popular-weekly', uniqId: item.bvid } as PopularWeeklyItemExtend
+      return {
+        ...item,
+        api: 'popular-weekly',
+        uniqId: item.bvid,
+      } as PopularWeeklyItemExtend
     })
 
     cache[episodeNum] = items

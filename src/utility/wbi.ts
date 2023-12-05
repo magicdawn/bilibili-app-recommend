@@ -42,8 +42,8 @@ export async function encWbi(params: Record<string, string | number>) {
       query.push(
         `${encodeURIComponent(key)}=${encodeURIComponent(
           // 过滤 value 中的 "!'()*" 字符
-          params[key].toString().replace(chr_filter, '')
-        )}`
+          params[key].toString().replace(chr_filter, ''),
+        )}`,
       )
     })
 

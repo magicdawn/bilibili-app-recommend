@@ -14,7 +14,7 @@ export type CollapseBtnRef = Actions<boolean>
 
 export const CollapseBtn = forwardRef<CollapseBtnRef, IProps>(function CollapseBtn(
   { children, initialOpen = false }: IProps,
-  ref
+  ref,
 ) {
   const [buttonsExpanded, buttonsExpandedActions] = useToggle(initialOpen)
 

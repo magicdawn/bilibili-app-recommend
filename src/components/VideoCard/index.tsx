@@ -362,7 +362,7 @@ const VideoCardInner = memo(function VideoCardInner({
       const relativeX = e.pageX - window.pageXOffset - x
       setMouseEnterRelativeX(relativeX)
     },
-    { target: videoPreviewWrapperRef }
+    { target: videoPreviewWrapperRef },
   )
   const isHovering = useHover(videoPreviewWrapperRef)
   const { autoPreviewWhenHover } = useSettingsSnapshot()
@@ -419,7 +419,7 @@ const VideoCardInner = memo(function VideoCardInner({
   const onToggleWatchLater = useMemoizedFn(
     async (
       e?: MouseEvent,
-      usingAction?: typeof watchLaterDel | typeof watchLaterAdd
+      usingAction?: typeof watchLaterDel | typeof watchLaterAdd,
     ): Promise<{ success: boolean; targetState?: boolean }> => {
       e?.preventDefault()
 
@@ -461,7 +461,7 @@ const VideoCardInner = memo(function VideoCardInner({
       }
 
       return { success, targetState }
-    }
+    },
   )
 
   /**
@@ -505,7 +505,9 @@ const VideoCardInner = memo(function VideoCardInner({
       <span className='bili-video-card__stats--item'>
         <svg
           className='bili-video-card__stats--icon'
-          style={{ transform: iconSvgScale ? `scale(${iconSvgScale})` : undefined }}
+          style={{
+            transform: iconSvgScale ? `scale(${iconSvgScale})` : undefined,
+          }}
         >
           <use href={iconSvgName}></use>
         </svg>
@@ -764,7 +766,7 @@ const VideoCardInner = memo(function VideoCardInner({
                 if (item.api !== 'fav') return
                 const success = await UserFavService.removeFav(
                   item.folder.id,
-                  `${item.id}:${item.type}`
+                  `${item.id}:${item.type}`,
                 )
                 if (success) {
                   onRemoveCurrent?.(item, cardData)

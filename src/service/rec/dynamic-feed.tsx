@@ -49,7 +49,10 @@ export class DynamicFeedRecService implements IService {
       params.host_mid = this.upMid
     }
 
-    const res = await request.get('/x/polymer/web-dynamic/v1/feed/all', { signal, params })
+    const res = await request.get('/x/polymer/web-dynamic/v1/feed/all', {
+      signal,
+      params,
+    })
     const json = res.data as DynamicFeedJson
 
     this.hasMore = json.data.has_more

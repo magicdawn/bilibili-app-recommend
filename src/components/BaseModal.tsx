@@ -142,7 +142,7 @@ export function BaseModal({
         {children}
       </div>
     </div>,
-    container
+    container,
   )
 }
 

@@ -90,7 +90,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
     setRefreshing: setUpperRefreshing,
     setExtraInfo,
   },
-  ref
+  ref,
 ) {
   const { useNarrowMode, styleFancy } = useSettingsSnapshot()
   const tab = useCurrentSourceTab()
@@ -171,7 +171,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
         refresh(true, { watchlaterKeepOrder: true })
       }
     },
-    { target: document }
+    { target: document },
   )
 
   const loadMoreRequesting = useRef<Record<number, boolean>>({})
@@ -226,7 +226,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
       debug(
         'loadMore: skip update for mismatch refreshedAt, %s != %s',
         refreshAtWhenStart,
-        getRefreshedAt()
+        getRefreshedAt(),
       )
       return
     }
@@ -422,7 +422,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
         : videoGridNewHomepage, // default
 
     useNarrowMode && narrowMode, // 居中
-    className
+    className,
   )
 
   const showSkeleton = !items.length || refreshError || (refreshing && !swr)
@@ -473,7 +473,9 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
             return (
               <VideoCard
                 key={item.uniqId}
-                className={cx(CardClassNames.card, { [CardClassNames.cardActive]: active })}
+                className={cx(CardClassNames.card, {
+                  [CardClassNames.cardActive]: active,
+                })}
                 item={item}
                 active={active}
                 onRemoveCurrent={handleRemoveCard}

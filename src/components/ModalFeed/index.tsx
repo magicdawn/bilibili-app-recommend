@@ -42,7 +42,7 @@ export const ModalFeed = memo(function ModalFeed({ show, onHide }: IProps) {
       [styles.narrowMode]: useNarrowMode,
       [styles.fullScreenMode]: useFullScreen,
     }),
-    [useNarrowMode, useFullScreen]
+    [useNarrowMode, useFullScreen],
   )
 
   const modalBorderStyle: CSSProperties | undefined = useMemo(() => {

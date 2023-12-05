@@ -22,7 +22,7 @@ export function ThemesSelect() {
   // color-picker
   const { colorPickerThemeSelectedColor } = useSettingsSnapshot()
   const [customColor, setCustomColor] = useState<Color | string>(
-    colorPickerThemeSelectedColor || DEFAULT_BILI_PINK_THEME.colorPrimary
+    colorPickerThemeSelectedColor || DEFAULT_BILI_PINK_THEME.colorPrimary,
   )
   const customColorHex = useMemo(() => {
     return typeof customColor === 'string' ? customColor : customColor.toHexString()
@@ -96,7 +96,9 @@ export function ThemesSelect() {
                       onOpenChange={(open) => {
                         // 关闭时
                         if (!open) {
-                          updateSettings({ colorPickerThemeSelectedColor: customColorHex })
+                          updateSettings({
+                            colorPickerThemeSelectedColor: customColorHex,
+                          })
                         }
                       }}
                     >

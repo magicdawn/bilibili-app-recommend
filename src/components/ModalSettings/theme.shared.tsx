@@ -67,10 +67,14 @@ const LongwashingThemes = toThemes(
   #FBD26A 申布伦黄
   #470024 勃艮第红
   #492D22 凡戴克棕
-  `
+  `,
 )
 
-export const ThemeGroups: { name: string; tooltip?: ReactNode; themes: LxTheme[] }[] = [
+export const ThemeGroups: {
+  name: string
+  tooltip?: ReactNode
+  themes: LxTheme[]
+}[] = [
   {
     name: '预设',
     themes: [

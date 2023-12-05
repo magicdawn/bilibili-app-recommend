@@ -98,7 +98,12 @@ export async function listAll() {
 }
 
 export async function addupdate(
-  payload: Partial<{ aid: string; title: string; content: string; words: string }>
+  payload: Partial<{
+    aid: string
+    title: string
+    content: string
+    words: string
+  }>,
 ) {
   const form = new URLSearchParams({
     title: '',
@@ -177,7 +182,9 @@ export async function setData<T = any>(data: T): Promise<boolean> {
     const draft = allDrafts.find((d) => d.title === APP_NAME)
     if (!draft) {
       // create new draft
-      const { success, aid: newDraftAid } = await addupdate({ title: APP_NAME })
+      const { success, aid: newDraftAid } = await addupdate({
+        title: APP_NAME,
+      })
       if (!success) return false
       aid = newDraftAid
     } else {

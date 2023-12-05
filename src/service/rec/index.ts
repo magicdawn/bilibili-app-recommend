@@ -31,7 +31,7 @@ export function uniqConcat(existing: RecItemExtraType[], newItems: RecItemExtraT
   return existing.concat(
     newItems.filter((item) => {
       return !ids.includes(recItemUniqer(item))
-    })
+    }),
   )
 }
 
@@ -40,7 +40,7 @@ export const usePcApi = (tab: TabType) => tab === 'keep-follow-only' || tab === 
 export async function getMinCount(
   count: number,
   fetcherOptions: FetcherOptions,
-  filterMultiplier = 5
+  filterMultiplier = 5,
 ) {
   const { tab, abortSignal, pcRecService, serviceMap } = fetcherOptions
   const appRecService = new AppRecService()
@@ -88,7 +88,7 @@ export async function getMinCount(
         restCount,
         multipler,
         pagesize,
-        times
+        times,
       )
     }
 

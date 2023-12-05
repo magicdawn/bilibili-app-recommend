@@ -168,7 +168,11 @@ function SimplePregressBar({ progress }: { progress: number }) {
     >
       <div
         className='bar'
-        style={{ backgroundColor: colorPrimaryValue, height: '100%', width: `${progress * 100}%` }}
+        style={{
+          backgroundColor: colorPrimaryValue,
+          height: '100%',
+          width: `${progress * 100}%`,
+        }}
       />
     </div>
   )

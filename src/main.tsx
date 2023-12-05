@@ -96,7 +96,7 @@ async function initHomepageSection() {
   root.render(
     <AntdApp injectGlobalStyle renderAppComponent>
       <SectionRecommend />
-    </AntdApp>
+    </AntdApp>,
   )
 
   // header
@@ -141,7 +141,7 @@ async function initHomepagePureRecommend() {
     tryToRemove(
       '.palette-button-wrap > .primary-btn',
       (el) => el.innerText.includes('分区'),
-      2000
+      2000,
     ).then(() => {
       document.querySelectorAll('.palette-button-wrap .primary-btn').forEach((el) => {
         el.classList.remove('hidden')
@@ -168,7 +168,7 @@ async function initHomepagePureRecommend() {
   const biliLayout = document.createElement('div')
   biliLayout.classList.add(
     getIsInternalTesting() ? 'bili-feed4-layout' : 'bili-layout',
-    'pure-recommend'
+    'pure-recommend',
   )
   insertFn(biliLayout)
 
@@ -181,6 +181,6 @@ async function initHomepagePureRecommend() {
   root.render(
     <AntdApp injectGlobalStyle renderAppComponent>
       <PureRecommend />
-    </AntdApp>
+    </AntdApp>,
   )
 }

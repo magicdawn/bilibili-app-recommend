@@ -119,7 +119,7 @@ export function useCurrentTabConfig() {
   return useMemo(() => {
     let tabkeys = sortTabKeys(customTabKeysOrder)
     tabkeys = tabkeys.filter(
-      (key) => !hidingTabKeys.includes(key) || (!logined && key === 'recommend-app')
+      (key) => !hidingTabKeys.includes(key) || (!logined && key === 'recommend-app'),
     )
     return tabkeys.map((k) => TabConfigMap[k])
   }, [hidingTabKeys, customTabKeysOrder, logined])

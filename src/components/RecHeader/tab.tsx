@@ -14,7 +14,7 @@ export const VIDEO_SOURCE_TAB_STORAGE_KEY = `${APP_NAME}-video-source-tab`
 
 export const videoSourceTabState = proxyWithLocalStorage<{ value: TabType }>(
   { value: 'recommend-app' },
-  VIDEO_SOURCE_TAB_STORAGE_KEY
+  VIDEO_SOURCE_TAB_STORAGE_KEY,
 )
 
 export const iconCss = css`

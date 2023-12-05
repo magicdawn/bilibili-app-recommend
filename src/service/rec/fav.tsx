@@ -75,7 +75,7 @@ export class FavRecService implements IService {
               },
               ...(items || []),
             ]
-          : items
+          : items,
       )
     }
 
@@ -107,7 +107,7 @@ export class FavRecService implements IService {
     this.foldersLoaded = true
     this.allFolderServices = folders.map((f) => new FavFolderService(f))
     this.folderServices = this.allFolderServices.filter(
-      (s) => !settings.excludeFavFolderIds.includes(s.entry.id.toString())
+      (s) => !settings.excludeFavFolderIds.includes(s.entry.id.toString()),
     )
     this.total = this.folderServices.reduce((count, f) => count + f.entry.media_count, 0)
   }
@@ -190,7 +190,7 @@ export function FavUsageInfo({
     (newTargetKeys: string[], direction: TransferDirection, moveKeys: string[]) => {
       setExcludeFavFolderIdsChanged(true)
       updateSettings({ excludeFavFolderIds: newTargetKeys })
-    }
+    },
   )
 
   // may contains legacy ids, so not `allFavFolderServices.length - excludeFavFolderIds.length`
@@ -198,7 +198,7 @@ export function FavUsageInfo({
     () =>
       allFavFolderServices.filter((x) => !excludeFavFolderIds.includes(x.entry.id.toString()))
         .length,
-    [allFavFolderServices, excludeFavFolderIds]
+    [allFavFolderServices, excludeFavFolderIds],
   )
 
   const videosCount = useMemo(() => {

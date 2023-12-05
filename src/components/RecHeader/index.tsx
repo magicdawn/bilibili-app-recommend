@@ -85,7 +85,7 @@ export const RecHeader = forwardRef<
       if (shouldDisableShortcut()) return
       headerState.modalConfigVisible = !headerState.modalConfigVisible
     },
-    { exactMatch: true }
+    { exactMatch: true },
   )
 
   const [stickyRef, sticky] = useSticky<HTMLDivElement>()
@@ -104,7 +104,7 @@ export const RecHeader = forwardRef<
         'changing scroll on refresh: rect.top = %s, headerHeight = %s, scrollTop -= %s',
         rect.top,
         headerHeight,
-        relativeScrolltop
+        relativeScrolltop,
       )
       document.documentElement.scrollTop -= relativeScrolltop
     }
@@ -203,7 +203,7 @@ export type RefreshButtonProps = {
 }
 export const RefreshButton = forwardRef<RefreshButtonActions, RefreshButtonProps>(function (
   { onRefresh, className = '', style, refreshHotkeyEnabled, refreshing },
-  ref
+  ref,
 ) {
   refreshHotkeyEnabled ??= true
 
@@ -227,7 +227,7 @@ export const RefreshButton = forwardRef<RefreshButtonActions, RefreshButtonProps
       if (!refreshHotkeyEnabled) return
       click()
     },
-    { exactMatch: true }
+    { exactMatch: true },
   )
 
   const tab = useCurrentSourceTab()

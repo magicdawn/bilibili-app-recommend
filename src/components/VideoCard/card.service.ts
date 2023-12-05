@@ -10,7 +10,9 @@ import QuickLRU from 'quick-lru'
 export async function videoshot(bvid: string) {
   // 2023-09-08 pvideo 出现 404, 切换为 videoshot
   // const res = await request.get('/pvideo', { params: { aid } })
-  const res = await request.get('/x/player/videoshot', { params: { bvid, index: '1' } })
+  const res = await request.get('/x/player/videoshot', {
+    params: { bvid, index: '1' },
+  })
   const json = res.data as PvideoJson
 
   // TODO: process errors
@@ -133,5 +135,7 @@ export const cancelDislike = dislikeFactory('cancel')
  */
 
 export async function getRelated(bvid: string) {
-  const res = await request.get('/x/web-interface/archive/relation', { params: { bvid } })
+  const res = await request.get('/x/web-interface/archive/relation', {
+    params: { bvid },
+  })
 }
