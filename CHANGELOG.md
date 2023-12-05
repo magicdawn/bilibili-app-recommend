@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.19.4
+
+- 956264f Fix broken wbi-sign
+
 ## v0.19.3
 
 - feat: 通知类消息使用 antd.message, toast 作为一种更强的提示
