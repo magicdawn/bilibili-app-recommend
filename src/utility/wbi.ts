@@ -28,31 +28,23 @@ export async function encWbi(params: Record<string, string | number>) {
   const { img_key, sub_key } = await getWbiKeys()
   const mixin_key = getMixinKey(img_key + sub_key)
 
-  const curr_time = Math.round(Date.now() / 1000)
+  const wts = Math.round(Date.now() / 1000)
+
+  const newParams = { ...params, wts }
   const chr_filter = /[!'()*]/g
-  const query: string[] = []
-  console.log(1)
-
-  // 添加 wts 字段
-  params = { ...params, wts: curr_time }
-
-  // 按照 key 重排参数
-  Object.keys(params)
-    .sort()
-    .forEach((key) => {
-      query.push(
-        `${encodeURIComponent(key)}=${encodeURIComponent(
-          // 过滤 value 中的 "!'()*" 字符
-          params[key].toString().replace(chr_filter, ''),
-        )}`,
-      )
+  const query = Object.keys(newParams)
+    .sort() // 按照 key 重排参数
+    .map((key) => {
+      return `${encodeURIComponent(key)}=${encodeURIComponent(
+        // 过滤 value 中的 "!'()*" 字符
+        params[key].toString().replace(chr_filter, ''),
+      )}`
     })
-
-  const queryStr = query.join('&')
-  const wbi_sign = md5(queryStr + mixin_key) // 计算 w_rid
+    .join('&')
+  const wbi_sign = md5(query + mixin_key) // 计算 w_rid
 
   // extra params
-  return { wts: curr_time, w_rid: wbi_sign }
+  return { wts, w_rid: wbi_sign }
 }
 
 type Keys = { img_key: string; sub_key: string }
