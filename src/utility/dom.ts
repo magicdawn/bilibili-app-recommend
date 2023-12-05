@@ -88,6 +88,9 @@ export function nextTick(): Promise<void> {
 
 export function whenIdle(): Promise<void> {
   return new Promise((resolve) => {
-    requestIdleCallback(() => resolve())
+    // safari has no requestIdleCallback
+    typeof requestIdleCallback === 'function'
+      ? requestIdleCallback(() => resolve)
+      : setTimeout(resolve)
   })
 }
