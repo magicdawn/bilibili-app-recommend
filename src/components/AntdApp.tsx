@@ -41,10 +41,10 @@ export function AntdApp({
           fontFamily: USING_FONT_FAMILY,
         },
         components: {
-          Message: {
-            contentBg: colorPrimary,
-            colorText: '#fff',
-          },
+          // Message: {
+          //   contentBg: colorPrimary,
+          //   colorText: '#fff',
+          // },
         },
       }}
     >
