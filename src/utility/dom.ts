@@ -86,11 +86,11 @@ export function nextTick(): Promise<void> {
   })
 }
 
-export function whenIdle(): Promise<void> {
+export function whenIdle(options?: IdleRequestOptions): Promise<void> {
   return new Promise((resolve) => {
     // safari has no requestIdleCallback
     typeof requestIdleCallback === 'function'
-      ? requestIdleCallback(() => resolve)
+      ? requestIdleCallback(() => resolve, options)
       : setTimeout(resolve)
   })
 }

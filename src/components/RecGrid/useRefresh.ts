@@ -11,7 +11,7 @@ import { PopularGeneralService } from '$service/rec/popular-general'
 import { PopularWeeklyService } from '$service/rec/popular-weekly'
 import { WatchLaterRecService } from '$service/rec/watchlater'
 import { settings } from '$settings'
-import { nextTick } from '$utility'
+import { nextTick, whenIdle } from '$utility'
 import { useGetState, useMemoizedFn } from 'ahooks'
 import type { Debugger } from 'debug'
 import { createContext, useContext, useEffect, useState } from 'react'
@@ -281,9 +281,9 @@ export function useRefresh({
     }
 
     // update items
-    await new Promise((r) => requestIdleCallback(r, { timeout: 400 }))
+    await whenIdle({ timeout: 400 })
     if (_signal.aborted) {
-      debug('refresh(): [legacy] skip setItems/err for aborted, legacy tab = %s', tab)
+      debug('refresh(): [legacy] skip setItems-postAction etc for aborted, legacy tab = %s', tab)
       return
     }
     setItems(_items)
