@@ -1,5 +1,47 @@
 # Changelog
 
+## v0.19.3
+
+- feat: 通知类消息使用 antd.message, toast 作为一种更强的提示
+- feat: CI build 使用 `git describe` 作为版本号, 使用 CI build 也能正常更新
+- feat: 查看更多按钮可配置
+- feat: 在所有 Tab 右键菜单都可以 "查看UP动态"
+- fix: 修复某些情况刷新太快列表不完整的问题 (a07bd34)
+- fix: sarari 兼容问题
+- feat: ItemsSeparator 支持链接
+
+details:
+
+- 059409d feat: support using ReactNode in ItemsSeparator
+- f372fac chore: eliminate requestIdleCallback direct usage
+- 654118e chore: fix safari + requestIdleCallback
+- 3bbe089 chore: tweak wbi.ts
+- 99f0227 chore: prettier still rocks
+- fdad689 chore: prettier triallingComma use prettier default: all
+- 1956206 fix: call checkShouldLoadMore in nextTick in the impl of postAction
+- a07bd34 Fix update refreshing too early caused list error
+- b5e45a8 chore: fix service construct
+- 7d5efd4 feat: dynamicFeedFilterSelectUp in any tab
+- 3fb66f8 chore: fix broken types
+- a35c481 feat: config for showModalFeedEntry
+- 5ccac3f chore: use bvid if possible
+- 2b9abc2 feat: use antd css vars
+- d194060 chore: more fix
+- 1f8ac94 Fix antd message imports
+- ec31273 feat: tweak message top config
+- 9ec2121 Fix removeCard message duration
+- 993b08a chore: fix scriptVersion
+- 23a5863 chore: back to use same name, since name -> monkey storage
+- b5b7da3 chore: use CI suffix in ci build
+- c8cc9fc chore: use process.env.GHD\_\*
+- 92779f0 feat: add ci version
+- 0230769 chore: rm prev-fix
+- b7d92f4 chore: fix mistakes
+- 5f93382 feat: substitute toast with more lightweighted antd.message
+- 8e4d7c4 chore: clean up codes
+- 0a5e630 chore: clean up using knip
+- b2f8335 chore: explore scss
+
 ## v0.19.2
 
 - Tab 配置优化: dark-mode, drag handle hover 样式, 重置前确认等.
