@@ -111,11 +111,16 @@ export class AppRecService implements IService {
     // 并行: 快,but 好多重复啊
     await (true ? parallel : sequence)()
 
-    // rm ad
+    // rm ad & unsupported card_type
     list = list.filter((item) => {
+      // ad
       if (item.goto.includes('ad')) return false
       if (item.card_goto.includes('ad')) return false
       if ((item as any).ad_info) return false
+
+      // unsupported: bannner
+      if ((item.card_goto as string | undefined) === 'banner') return false
+
       return true
     })
 
