@@ -1,4 +1,4 @@
-import { verticalAlignStyle } from '$common/emotion-css'
+import { antdBtnTextStyle, verticalAlignStyle } from '$common/emotion-css'
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
 import type { DynamicFeedItemExtend, DynamicFeedJson } from '$define'
 import { IconPark } from '$icon-park'
@@ -214,7 +214,7 @@ export function DynamicFeedUsageInfo() {
         {!!upName && (
           <Button onClick={onClear} css={[verticalAlignStyle]}>
             <IconPark name='Return' size={14} style={{ marginRight: 5 }} />
-            <span style={{ display: 'inline-block', marginTop: 3 }}>清除</span>
+            <span css={antdBtnTextStyle}>清除</span>
           </Button>
         )}
       </Space>

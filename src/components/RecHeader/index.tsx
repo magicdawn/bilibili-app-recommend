@@ -10,7 +10,7 @@ import { Button, Space } from 'antd'
 import type { CSSProperties, MouseEvent, MouseEventHandler, ReactNode } from 'react'
 import { forwardRef, useImperativeHandle, useRef, useState } from 'react'
 // import { useSticky } from 'react-use-sticky'
-import { verticalAlignStyle } from '$common/emotion-css'
+import { antdBtnTextStyle, verticalAlignStyle } from '$common/emotion-css'
 import { useSticky } from '$common/hooks/useSticky'
 import type { OnRefresh } from '$components/RecGrid/useRefresh'
 import { OnRefreshContext } from '$components/RecGrid/useRefresh'
@@ -170,7 +170,7 @@ export const RecHeader = forwardRef<
 
               {showModalFeedEntry && (
                 <Button css={verticalAlignStyle} onClick={showModalFeed}>
-                  <span>查看更多</span>
+                  <span css={antdBtnTextStyle}>查看更多</span>
                   <svg
                     css={css`
                       width: 12px;
@@ -273,7 +273,7 @@ export const RefreshButton = forwardRef<RefreshButtonActions, RefreshButtonProps
       >
         <use href='#widget-roll'></use>
       </svg>
-      <span>{text}</span>
+      <span css={antdBtnTextStyle}>{text}</span>
     </Button>
   )
 })
