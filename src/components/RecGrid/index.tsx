@@ -18,7 +18,7 @@ import { cx } from '$libs'
 import { getIsInternalTesting, isSafari } from '$platform'
 import { getRecommendTimes, refreshForGrid, uniqConcat } from '$service/rec'
 import { useSettingsSnapshot } from '$settings'
-import { AntdMessage, nextTick } from '$utility'
+import { AntdMessage } from '$utility'
 import { css as styled } from '@emotion/css'
 import { css } from '@emotion/react'
 import { useEventListener, useLatest, useMemoizedFn, useMount } from 'ahooks'
@@ -98,20 +98,18 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
   const [loadCompleteCount, setLoadCompleteCount] = useState(0) // 已加载完成的 load call count, 类似 page
 
   // before refresh
-  const preAction = useMemoizedFn(async () => {
+  const preAction = useMemoizedFn(() => {
     clearActiveIndex()
     updateExtraInfo(tab)
   })
 
   // after refresh, setItems
-  const postAction = useMemoizedFn(async () => {
+  const postAction = useMemoizedFn(() => {
     clearActiveIndex()
     setLoadCompleteCount(1)
     updateExtraInfo(tab)
-
     // check need loadMore
-    await nextTick()
-    checkShouldLoadMore()
+    queueMicrotask(checkShouldLoadMore)
   })
 
   const updateExtraInfo = useMemoizedFn((tab: TabType) => {
