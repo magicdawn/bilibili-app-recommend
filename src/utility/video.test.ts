@@ -16,7 +16,7 @@ describe.concurrent('$utility/video', () => {
   })
 
   it('.formatCount', () => {
-    expect(formatCount(10000)).to.equal('1万')
+    expect(formatCount(1_0000)).to.equal('1万')
     expect(formatCount(1_2000)).to.equal('1.2万')
     expect(formatCount(2_0000)).to.equal('2万')
     expect(formatCount(1234)).to.equal('1234')
