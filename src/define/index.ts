@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import type { android } from './app-recommend.android'
 import type { ipad } from './app-recommend.ipad'
-import { DmJson } from './dm'
+import type { DmJson } from './dm'
 import type { FavItemExtend } from './fav'
 import type { DynamicFeedItem } from './pc-dynamic-feed'
 import type { PcRecItem } from './pc-recommend'
@@ -60,7 +60,7 @@ export type RecItemType =
 
 export type RecItemExtraType = RecItemType | ItemsSeparator
 
-export type ItemsSeparator = { uniqId: string; api: 'separator'; text: ReactNode }
+export type ItemsSeparator = { uniqId: string; api: 'separator'; content: ReactNode }
 
 export interface PcRecItemExtend extends PcRecItem {
   uniqId: string

@@ -469,7 +469,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
                 `}
                 orientation='left'
               >
-                {item.text}
+                {item.content}
               </Divider>
             )
           } else {

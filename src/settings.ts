@@ -4,7 +4,6 @@ import type { TabType } from '$components/RecHeader/tab.shared'
 import { setData } from '$service/user/article-draft'
 import { omit, pick, throttle } from 'lodash'
 import ms from 'ms'
-import type { INTERNAL_Snapshot } from 'valtio'
 import { proxy, snapshot, subscribe, useSnapshot } from 'valtio'
 
 const debug = baseDebug.extend('settings')
@@ -160,26 +159,22 @@ export async function save() {
   await GM.setValue(key, newVal)
 
   // http backup
-  await saveToDraft(newVal)
+  await saveToDraft(newVal as Readonly<Settings>)
 }
 
-async function saveToDraft(newVal: INTERNAL_Snapshot<Settings>) {
-  if (!newVal.backupSettingsToArticleDraft) return
+async function saveToDraft(val: Readonly<Settings>) {
+  if (!val.backupSettingsToArticleDraft) return
 
   // skip when `HAS_RESTORED_SETTINGS=true`
   if (HAS_RESTORED_SETTINGS) return
 
-  const httpBackupVal = omit(newVal, ['accessKey'])
+  const httpBackupVal = omit(val, ['accessKey'])
   try {
     await setDataThrottled(httpBackupVal)
     debug('backup to article draft complete')
   } catch (e: any) {
     console.error(e.stack || e)
   }
-}
-
-export function clean() {
-  return GM.deleteValue(key)
 }
 
 /**

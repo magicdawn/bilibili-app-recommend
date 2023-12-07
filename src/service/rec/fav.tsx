@@ -71,7 +71,7 @@ export class FavRecService implements IService {
               {
                 api: 'separator',
                 uniqId: `fav-folder-${service.entry.id}`,
-                text: (
+                content: (
                   <>
                     收藏夹:{' '}
                     <a target='_blank' href={formatFavFolderUrl(service.entry.id)}>
