@@ -20,7 +20,7 @@ export class PcRecService implements IService {
   }
 
   async getRecommend(signal: AbortSignal | undefined = undefined) {
-    const curpage = ++this.page
+    const curpage = ++this.page // this has parallel call, can not ++ after success
 
     // /x/web-interface/index/top/rcmd
     // /x/web-interface/wbi/index/top/rcmd

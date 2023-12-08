@@ -1,3 +1,4 @@
+import { REQUEST_FAIL_MSG } from '$common'
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
 import type { ItemsSeparator } from '$define'
 import type { FavItemExtend } from '$define/fav'
@@ -140,7 +141,7 @@ export class FavFolderService {
 
   hasMore: boolean
   info: FavFolderDetailInfo | undefined
-  page = 0
+  page = 0 // pages loaded
 
   async loadMore(): Promise<FavItemExtend[] | undefined> {
     if (!this.hasMore) return
@@ -148,7 +149,7 @@ export class FavFolderService {
     const res = await request.get('/x/v3/fav/resource/list', {
       params: {
         media_id: this.entry.id,
-        pn: ++this.page, // start from 1
+        pn: this.page + 1, // start from 1
         ps: 20,
         keyword: '',
         order: 'mtime', // mtime(最近收藏)  view(最多播放) pubtime(最新投稿)
@@ -160,10 +161,11 @@ export class FavFolderService {
 
     const json = res.data as ResourceListJSON
     if (!isWebApiSuccess(json)) {
-      toast(json.message)
+      toast(json.message || REQUEST_FAIL_MSG)
       return
     }
 
+    this.page++
     this.hasMore = json.data.has_more
     this.info = json.data.info
 

@@ -1,0 +1,6 @@
+page: 0 // pages loaded
+request should use ++this.page
+but request may fail, so split `++this.page`
+
+- use `page: this.page + 1`
+- when success `this.page++`

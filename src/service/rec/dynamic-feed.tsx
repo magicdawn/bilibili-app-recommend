@@ -1,10 +1,12 @@
+import { REQUEST_FAIL_MSG } from '$common'
 import { antdBtnTextStyle, verticalAlignStyle } from '$common/emotion-css'
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
 import type { DynamicFeedItemExtend, DynamicFeedJson } from '$define'
 import { IconPark } from '$icon-park'
-import { request } from '$request'
+import { isWebApiSuccess, request } from '$request'
 import { getRecentUpdateUpList } from '$service/dynamic'
 import type { DynamicPortalUp } from '$service/dynamic/portal'
+import { toast } from '$utility'
 import type { ArrayItem } from '$utility/type'
 import { css } from '@emotion/react'
 import { useMemoizedFn, useMount } from 'ahooks'
@@ -21,7 +23,7 @@ export class DynamicFeedRecService implements IService {
   static PAGE_SIZE = 15
 
   offset: string = ''
-  page = 0
+  page = 0 // pages loaded
   hasMore = true
   upMid: number | undefined = undefined
 
@@ -34,13 +36,11 @@ export class DynamicFeedRecService implements IService {
       return
     }
 
-    this.page++
-
     const params: Record<string, number | string> = {
       timezone_offset: '-480',
       type: 'video',
       features: 'itemOpusStyle',
-      page: this.page,
+      page: this.page + 1, // ++this.page, starts from 1
     }
     if (this.offset) {
       params.offset = this.offset
@@ -54,7 +54,12 @@ export class DynamicFeedRecService implements IService {
       params,
     })
     const json = res.data as DynamicFeedJson
+    if (!isWebApiSuccess(json)) {
+      toast(json.message || REQUEST_FAIL_MSG)
+      return
+    }
 
+    this.page++
     this.hasMore = json.data.has_more
     this.offset = json.data.offset
 

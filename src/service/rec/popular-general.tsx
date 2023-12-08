@@ -1,16 +1,18 @@
+import { REQUEST_FAIL_MSG } from '$common'
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
 import type { PopularGeneralItemExtend } from '$define'
 import type { PopularGeneralJson } from '$define/popular-general'
-import { request } from '$request'
+import { isWebApiSuccess, request } from '$request'
 import { blacklistIds } from '$service/user/relations/blacklist'
 import { settings, updateSettings, useSettingsSnapshot } from '$settings'
+import { toast } from '$utility'
 import { Switch } from 'antd'
 import delay from 'delay'
 import type { IService } from './base'
 
 export class PopularGeneralService implements IService {
   hasMore = true
-  page = 1
+  page = 0 // pages loaded
 
   // shuffle: boolean
   anonymous: boolean
@@ -26,12 +28,16 @@ export class PopularGeneralService implements IService {
     const res = await request.get('/x/web-interface/popular', {
       params: {
         ps: 20,
-        pn: this.page++,
+        pn: this.page + 1,
       },
       withCredentials: !this.anonymous,
     })
     const json = res.data as PopularGeneralJson
+    if (!isWebApiSuccess(json)) {
+      return toast(json.message || REQUEST_FAIL_MSG), undefined
+    }
 
+    this.page++
     this.hasMore = !json.data.no_more
 
     let items = (json.data.list || []).map((item) => {
