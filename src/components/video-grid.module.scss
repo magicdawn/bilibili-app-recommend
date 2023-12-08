@@ -71,7 +71,9 @@
   container-type: inline-size;
 }
 
-$gap-row: max(min(40px, 1.6vw), 20px); // 20px <= $gap-row <=40px
+// 20px <= $gap-row <= 40px
+// max(min(40px, 1.6vw), 20px);
+$gap-row: clamp(20px, 1.6vw, 40px);
 $gap-col: 20px;
 $card-min-width: 250px;
 
