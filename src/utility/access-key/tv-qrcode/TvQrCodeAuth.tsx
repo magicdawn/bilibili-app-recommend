@@ -1,9 +1,7 @@
 import { APP_NAME_ROOT_CLASSNAME } from '$common'
-import { AntdApp, AntdTooltip } from '$components/AntdApp'
+import { AntdApp } from '$components/AntdApp'
 import { BaseModal, BaseModalClass, ModalClose } from '$components/BaseModal'
 import { css } from '@emotion/react'
-import { useRequest } from 'ahooks'
-import { Button } from 'antd'
 import { once } from 'lodash'
 import mitt from 'mitt'
 import { pEvent } from 'p-event'
@@ -41,7 +39,10 @@ export function whenQrCodeModalHide() {
   return pEvent(emitter, 'hide')
 }
 
-// https://github.com/lzghzr/TampermonkeyJS/blob/master/libBilibiliToken/libBilibiliToken.js#L99-L106
+/**
+ * 掉登录, 风控, 所以不再提供
+ * https://github.com/lzghzr/TampermonkeyJS/blob/master/libBilibiliToken/libBilibiliToken.js#L99-L106
+ */
 async function confirmQrCodeLoginWithCookie() {
   if (!store.auth_code) return
   await qrcodeConfirm(store.auth_code)
@@ -49,14 +50,7 @@ async function confirmQrCodeLoginWithCookie() {
 
 export function TvQrCodeAuth() {
   const { qrcode, show, message } = useSnapshot(store)
-
   const onHide = hideQrCodeModal
-
-  const { runAsync: confirmRun, loading: confirmLoading } = useRequest(
-    confirmQrCodeLoginWithCookie,
-    { manual: true },
-  )
-
   return (
     <BaseModal
       {...{
@@ -98,19 +92,6 @@ export function TvQrCodeAuth() {
           ) : (
             <div className='qrcode-placeholder'></div>
           )}
-        </div>
-
-        <div
-          css={css`
-            margin: 10px 15px;
-            text-align: right;
-          `}
-        >
-          <AntdTooltip title='可能会导致桌面端掉登录, 谨慎使用'>
-            <Button onClick={confirmRun} loading={confirmLoading}>
-              使用桌面端确认
-            </Button>
-          </AntdTooltip>
         </div>
       </div>
     </BaseModal>

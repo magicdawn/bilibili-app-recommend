@@ -59,7 +59,7 @@
     "type-fest": "^4.8.3",
     "typed-scss-modules": "^8.0.0",
     "typescript": "^5.3.3",
-    "vite": "^5.0.6",
+    "vite": "^5.0.7",
     "vite-plugin-importer": "^0.2.5",
     "vite-plugin-inspect": "^0.8.1",
     "vite-plugin-monkey": "^3.5.0",
