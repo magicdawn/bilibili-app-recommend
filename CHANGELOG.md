@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.19.5
+
+- 1c328af Fix GM.openInTab isssue on TamperMonkey, close #63
+- 550f280 chore: polish settings text
+- 7c3db46 chore: rm btn confirm-by-web-cookie
+- 4ec3899 refactor: unify page in rec services
+- ad7c324 Use css clamp() function
+- 696ffaa chore: style tweaks
+- 000a59d chore: ncu deps
+- 481fd0f chore: clean up unused code
+- e066228 chore: fix refresh postAction
+- 61913e5 chore: prevent potential access goto error
+- e6cf4e9 chore: filter out banner
+
 ## v0.19.4
 
 - 956264f Fix broken wbi-sign

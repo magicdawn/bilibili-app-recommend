@@ -114,8 +114,9 @@ export class AppRecService implements IService {
     // rm ad & unsupported card_type
     list = list.filter((item) => {
       // ad
-      if (item.card_goto.includes('ad')) return false
-      if (item.goto?.includes('ad')) return false // card_type & card_goto exists, goto may exists
+      // card_type & card_goto exists, goto may exists
+      if (item.card_goto?.includes('ad')) return false
+      if (item.goto?.includes('ad')) return false
       if ((item as any).ad_info) return false
 
       // unsupported: bannner
