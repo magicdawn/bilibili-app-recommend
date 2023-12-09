@@ -546,7 +546,10 @@ const VideoCardInner = memo(function VideoCardInner({
   })
 
   const onOpenInBackground = useMemoizedFn(() => {
-    GM.openInTab(href, {
+    // `/video/BV1234` when used in TamperMonkey, it relatives to extension root
+    // see https://github.com/magicdawn/bilibili-app-recommend/issues/63
+    const fullHref = new URL(href, location.href).href
+    GM.openInTab(fullHref, {
       active: false,
       insert: true,
     })
