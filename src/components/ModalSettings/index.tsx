@@ -335,7 +335,7 @@ function TabPaneBasic() {
         <div className={cx(styles.settingsGroupContent, styles.row)}>
           <FlagSettingItem
             configKey='pureRecommend'
-            label='开启纯推荐模式'
+            label='纯推荐模式'
             tooltip={
               <>
                 首页只保留推荐
@@ -349,7 +349,7 @@ function TabPaneBasic() {
 
           <FlagSettingItem
             configKey={'useNarrowMode'}
-            label='启用居中模式'
+            label='居中模式'
             tooltip={
               <>
                 居中两列
