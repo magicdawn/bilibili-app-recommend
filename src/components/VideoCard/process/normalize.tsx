@@ -222,9 +222,9 @@ export function apiIpadAppAdapter(item: IpadAppRecItemExtend): IVideoCardData {
     }
 
     if (target === 'bangumiFollow') {
-      const text = arr.find((text) => /追剧$/.test(text))
+      const text = arr.find((text) => /追[剧番]$/.test(text))
       if (!text) return
-      const rest = text.replace(/追剧$/, '')
+      const rest = text.replace(/追[剧番]$/, '')
       return parseCount(rest)
     }
   }
