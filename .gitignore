@@ -1,5 +1,7 @@
 dist
 node_modules
+.turbo
+tmp/
 
 *.less.d.ts
 *.scss.d.ts
@@ -8,11 +10,10 @@ node_modules
 /stats.html
 /stats.*
 
-.turbo
-
-tmp/
-
 # privacy
 src/define/watchlater-full.json
 
 /.vite-inspect
+
+# temporary files
+/vite.config.ts.timestamp*
