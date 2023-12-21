@@ -25,8 +25,79 @@ $z: 3;
   }
 }
 
-.watch-later {
+@mixin icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  position: absolute;
+  top: 8px;
+  // need left or right
+
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  cursor: pointer;
+  background-color: rgba(33, 33, 33, 0.8);
+  transform: translateZ(0);
+  z-index: 9;
+}
+@mixin icon {
+  pointer-events: none;
+  user-select: none;
+  color: #fff;
+}
+@mixin tip {
+  position: absolute;
+  bottom: -6px;
+  // need left or right
+
+  pointer-events: none;
+  user-select: none;
+  transform: translateY(100%);
+  font-size: 12px;
+  color: #fff;
+  border-radius: 4px;
+  line-height: 18px;
+  padding: 4px 8px;
+  background-color: rgba(0, 0, 0, 0.8);
+  white-space: nowrap;
+}
+
+.btn-dislike {
+  @include icon-wrapper();
+  left: 8px;
   z-index: $z + 2;
+
+  .btn-dislike-icon {
+    @include icon();
+    width: 12px;
+    height: 12px;
+  }
+
+  .btn-dislike-tip {
+    @include tip();
+    left: -5px;
+  }
+}
+
+// https://github.com/magicdawn/bilibili-app-recommend/issues/66
+// B站自己的样式 className 会变
+.watch-later {
+  @include icon-wrapper();
+  right: 8px;
+  z-index: $z + 2;
+
+  .watch-later-icon {
+    @include icon();
+    aspect-ratio: 1;
+    width: 22px;
+  }
+
+  .watch-later-tip {
+    @include tip();
+    right: -5px;
+  }
 }
 
 .badge {
@@ -64,46 +135,6 @@ $z: 3;
 
 .bangumi-desc {
   color: default;
-}
-
-.btn-dislike {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  top: 8px;
-  left: 8px;
-  width: 28px;
-  height: 28px;
-  border-radius: 6px;
-  cursor: pointer;
-  background-color: rgba(33, 33, 33, 0.8);
-  z-index: 9;
-  transform: translateZ(0);
-
-  .btn-dislike-icon {
-    pointer-events: none;
-    user-select: none;
-    width: 12px;
-    height: 12px;
-    color: #fff;
-  }
-
-  .btn-dislike-tip {
-    pointer-events: none;
-    user-select: none;
-    position: absolute;
-    bottom: -6px;
-    left: -5px;
-    transform: translateY(100%);
-    font-size: 12px;
-    color: #fff;
-    border-radius: 4px;
-    line-height: 18px;
-    padding: 4px 8px;
-    background-color: rgba(0, 0, 0, 0.8);
-    white-space: nowrap;
-  }
 }
 
 .disliked-wrapper {

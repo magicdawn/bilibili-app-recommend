@@ -836,7 +836,7 @@ const VideoCardInner = memo(function VideoCardInner({
           <div
             className='bili-video-card__image __scale-player-wrap'
             ref={videoPreviewWrapperRef}
-            style={{ ...borderRadiusStyle, aspectRatio: '16 / 9' }}
+            style={{ ...borderRadiusStyle, aspectRatio: '16 / 9', overflow: 'hidden' }}
           >
             {/* __image--wrap 上有 padding-top: 56.25% = 9/16, 用于保持高度, 在 firefox 中有明显的文字位移 */}
             {/* picture: absolute, top:0, left: 0  */}
@@ -880,7 +880,7 @@ const VideoCardInner = memo(function VideoCardInner({
               {/* 稍后再看 */}
               {hasWatchLaterEntry && (
                 <div
-                  className={`bili-watch-later ${styles.watchLater}`}
+                  className={`${styles.watchLater}`}
                   style={{
                     display: isHovering || active ? 'flex' : 'none',
                   }}
@@ -888,7 +888,7 @@ const VideoCardInner = memo(function VideoCardInner({
                   onClick={onToggleWatchLater}
                 >
                   {watchLaterAdded ? (
-                    <svg className='bili-watch-later__icon' viewBox='0 0 200 200'>
+                    <svg className={styles.watchLaterIcon} viewBox='0 0 200 200'>
                       <motion.path
                         d='M25,100 l48,48 a 8.5,8.5 0 0 0 10,0 l90,-90'
                         strokeWidth='20'
@@ -904,13 +904,13 @@ const VideoCardInner = memo(function VideoCardInner({
                       />
                     </svg>
                   ) : (
-                    <svg className='bili-watch-later__icon'>
+                    <svg className={styles.watchLaterIcon}>
                       <use href={'#widget-watch-later'} />
                     </svg>
                   )}
                   {/* <use href={watchLaterAdded ? '#widget-watch-save' : '#widget-watch-later'} /> */}
                   <span
-                    className='bili-watch-later__tip'
+                    className={styles.watchLaterTip}
                     style={{ display: isWatchLaterHovering ? 'block' : 'none' }}
                   >
                     {watchLaterAdded ? '移除稍后再看' : '稍后再看'}
@@ -919,7 +919,7 @@ const VideoCardInner = memo(function VideoCardInner({
               )}
 
               {/* 我不想看 */}
-              {hasDislikeEntry && (
+              {(hasDislikeEntry || true) && (
                 <div
                   ref={btnDislikeRef}
                   className={styles.btnDislike}
