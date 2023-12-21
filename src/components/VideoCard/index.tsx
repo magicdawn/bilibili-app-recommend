@@ -836,7 +836,7 @@ const VideoCardInner = memo(function VideoCardInner({
           <div
             className='bili-video-card__image __scale-player-wrap'
             ref={videoPreviewWrapperRef}
-            style={{ ...borderRadiusStyle, aspectRatio: '16 / 9', overflow: 'hidden' }}
+            style={{ ...borderRadiusStyle, aspectRatio: '16 / 9' }}
           >
             {/* __image--wrap 上有 padding-top: 56.25% = 9/16, 用于保持高度, 在 firefox 中有明显的文字位移 */}
             {/* picture: absolute, top:0, left: 0  */}
