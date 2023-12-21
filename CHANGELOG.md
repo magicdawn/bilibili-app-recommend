@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.19.7
+
+- 修复 v0.19.6 带来的不喜欢按钮总是显示的问题.
+
 ## v0.19.6
 
 - fix 预览卡片变高的问题, [#65](https://github.com/magicdawn/bilibili-app-recommend/issues/65) & [#66](https://github.com/magicdawn/bilibili-app-recommend/issues/66)
