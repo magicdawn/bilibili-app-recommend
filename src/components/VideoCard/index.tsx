@@ -919,7 +919,7 @@ const VideoCardInner = memo(function VideoCardInner({
               )}
 
               {/* 我不想看 */}
-              {(hasDislikeEntry || true) && (
+              {hasDislikeEntry && (
                 <div
                   ref={btnDislikeRef}
                   className={styles.btnDislike}
