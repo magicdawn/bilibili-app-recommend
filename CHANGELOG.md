@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.19.6
+
+- fix 预览卡片变高的问题, [#65](https://github.com/magicdawn/bilibili-app-recommend/issues/65) & [#66](https://github.com/magicdawn/bilibili-app-recommend/issues/66)
+
+其他
+
+- 07f0842 Fix bangumi <num>追番
+- 5d0ff2d TS: use export {} to turn .d.ts to a module augmentation
+
 ## v0.19.5
 
 - 1c328af Fix GM.openInTab isssue on TamperMonkey, close #63
