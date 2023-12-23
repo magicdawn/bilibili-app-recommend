@@ -1,7 +1,9 @@
 import { APP_NAME, HOST_APP } from '$common'
 import type { AppRecItem, AppRecItemExtend, AppRecommendJson } from '$define'
+import { AppApiDevice } from '$define'
 import type { ipad } from '$define/app-recommend.ipad'
 import { gmrequest } from '$request'
+import { settings } from '$settings'
 import { toast } from '$utility/toast'
 import { uniqBy } from 'lodash'
 import pretry, { RetryError } from 'promise.retry'
@@ -18,20 +20,26 @@ class RecReqError extends Error {
   }
 }
 
-export async function getRecommend() {
+export async function getRecommend(device: AppApiDevice) {
+  let platformParams: Record<string, string | number> = {}
+  if (device === 'android') {
+    platformParams = { mobi_app: 'android' }
+  }
+  if (device === 'ipad') {
+    platformParams = {
+      // has avatar, date, etc
+      // see BewlyBewly usage
+      mobi_app: 'iphone',
+      device: 'pad',
+    }
+  }
+
   // /x/feed/index
   const res = await gmrequest.get(HOST_APP + '/x/v2/feed/index', {
     responseType: 'json',
     params: {
       build: '1',
-
-      // mobi_app: 'android',
-
-      // has avatar, date, etc
-      // see BewlyBewly usage
-      mobi_app: 'iphone',
-      device: 'pad',
-
+      ...platformParams,
       idx:
         (Date.now() / 1000).toFixed(0) +
         '0' +
@@ -67,9 +75,9 @@ const tryfn = pretry(getRecommend, {
     console.info('[%s] tryGetRecommend onerror: index=%s', APP_NAME, index, err)
   },
 })
-export async function tryGetRecommend() {
+export async function tryGetRecommend(device: AppApiDevice) {
   try {
-    return await tryfn()
+    return await tryfn(device)
   } catch (e) {
     if (e instanceof RetryError) {
       console.error(e.errors)
@@ -99,12 +107,17 @@ export class AppRecService implements IService {
   async getRecommendTimes(times: number) {
     let list: AppRecItem[] = []
 
+    let device: AppApiDevice = settings.appApiDecice
+    if (device !== AppApiDevice.ipad && device !== AppApiDevice.android) {
+      device = AppApiDevice.ipad
+    }
+
     const parallel = async () => {
-      list = (await Promise.all(new Array(times).fill(0).map(() => tryGetRecommend()))).flat()
+      list = (await Promise.all(new Array(times).fill(0).map(() => tryGetRecommend(device)))).flat()
     }
     const sequence = async () => {
       for (let x = 1; x <= times; x++) {
-        list = list.concat(await tryGetRecommend())
+        list = list.concat(await tryGetRecommend(device))
       }
     }
 
@@ -134,7 +147,7 @@ export class AppRecService implements IService {
       return {
         ...item,
         api: 'app',
-        device: 'ipad',
+        device, // android | ipad
         uniqId: item.param + '-' + crypto.randomUUID(),
       } as AppRecItemExtend
     })

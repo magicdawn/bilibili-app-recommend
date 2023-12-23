@@ -7,15 +7,15 @@ import type { DynamicFeedItem } from './pc-dynamic-feed'
 import type { PcRecItem } from './pc-recommend'
 import type { PopularGeneralItem } from './popular-general'
 import type { PopularWeeklyItem } from './popular-weekly'
-
-export { FavItem, FavItemExtend } from './fav'
-export { DynamicFeedItem, DynamicFeedJson } from './pc-dynamic-feed'
-export { PcRecItem, PcRecommendJson } from './pc-recommend'
-export { WatchLaterItem, WatchLaterJson } from './watchlater'
-export { DmJson, PvideoJson }
-
-import { PvideoJson } from './pvideo'
+import type { PvideoJson } from './pvideo'
 import type { WatchLaterItem } from './watchlater'
+
+export type { FavItem, FavItemExtend } from './fav'
+export type { DynamicFeedItem, DynamicFeedJson } from './pc-dynamic-feed'
+export type { PcRecItem, PcRecommendJson } from './pc-recommend'
+export type { WatchLaterItem, WatchLaterJson } from './watchlater'
+export type { DmJson, PvideoJson }
+
 export type PvideoData = PvideoJson['data']
 export type DmData = DmJson['data']
 
@@ -28,16 +28,21 @@ export type DmData = DmJson['data']
 export type AndroidAppRecItem = android.AppRecItem
 export type IpadAppRecItem = ipad.AppRecItem
 
+export const enum AppApiDevice {
+  android = 'android',
+  ipad = 'ipad',
+}
+
 export interface AndroidAppRecItemExtend extends AndroidAppRecItem {
   uniqId: string
   api: 'app'
-  device: 'android'
+  device: AppApiDevice.android
 }
 
 export interface IpadAppRecItemExtend extends ipad.AppRecItem {
   uniqId: string
   api: 'app'
-  device: 'ipad'
+  device: AppApiDevice.ipad
 }
 
 export type AppRecItem = AndroidAppRecItem | IpadAppRecItem

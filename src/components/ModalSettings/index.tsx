@@ -10,6 +10,7 @@ import {
   useSortedTabKeys,
 } from '$components/RecHeader/tab.shared'
 import { FlagSettingItem, HelpInfo } from '$components/piece'
+import { AppApiDevice } from '$define'
 import { IconPark } from '$icon-park'
 import { cx } from '$libs'
 import { useIsDarkMode } from '$platform'
@@ -30,7 +31,18 @@ import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-
 import { CSS } from '@dnd-kit/utilities'
 import { css } from '@emotion/react'
 import { useKeyPress, useMemoizedFn } from 'ahooks'
-import { Button, Checkbox, InputNumber, Popconfirm, Slider, Space, Switch, Tabs, Tag } from 'antd'
+import {
+  Button,
+  Checkbox,
+  InputNumber,
+  Popconfirm,
+  Radio,
+  Slider,
+  Space,
+  Switch,
+  Tabs,
+  Tag,
+} from 'antd'
 import delay from 'delay'
 import { pick } from 'lodash'
 import { proxy, useSnapshot } from 'valtio'
@@ -451,7 +463,7 @@ function TabPaneBasic() {
 }
 
 function TabPaneAdvance() {
-  const { autoPreviewUpdateInterval } = useSettingsSnapshot()
+  const { autoPreviewUpdateInterval, appApiDecice } = useSettingsSnapshot()
 
   return (
     <div className={styles.tabPane}>
@@ -538,6 +550,34 @@ function TabPaneAdvance() {
             value={autoPreviewUpdateInterval}
           />
           <span style={{ width: '65px' }}>({autoPreviewUpdateInterval}ms)</span>
+        </div>
+
+        <div className={styles.settingsGroupTitle} style={{ marginTop: 15 }}>
+          App 推荐
+        </div>
+        <div style={{ width: '100%', display: 'flex', alignItems: 'center' }}>
+          App API 设备类型
+          <HelpInfo
+            iconProps={{
+              name: 'Tips',
+              style: { marginLeft: 5, marginRight: 10 },
+            }}
+            tooltip={
+              <>
+                默认 ipad, 视频有 头像/日期 等信息
+                <br />
+                可选 android, 有图文类型的推荐
+              </>
+            }
+          />
+          <Radio.Group
+            optionType='button'
+            buttonStyle='solid'
+            size='small'
+            options={[AppApiDevice.ipad, AppApiDevice.android]}
+            value={appApiDecice}
+            onChange={(e) => updateSettings({ appApiDecice: e.target.value })}
+          />
         </div>
       </div>
     </div>

@@ -1,6 +1,7 @@
 import { APP_NAME, baseDebug } from '$common'
 import { HAS_RESTORED_SETTINGS } from '$components/ModalSettings/index.shared'
 import type { TabType } from '$components/RecHeader/tab.shared'
+import { AppApiDevice } from '$define'
 import { setData } from '$service/user/article-draft'
 import { omit, pick, throttle } from 'lodash'
 import ms from 'ms'
@@ -16,6 +17,11 @@ export const initialSettings = {
 
   // 纯推荐模式
   pureRecommend: false,
+
+  /**
+   * app recommend
+   */
+  appApiDecice: AppApiDevice.ipad,
 
   /**
    * 查看更多, aka ModalFeed
