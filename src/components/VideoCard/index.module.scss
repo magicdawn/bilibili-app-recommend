@@ -30,7 +30,7 @@ $z: 3;
 
 @mixin generate-action-button($class-name, $horizontal-position, $icon-size) {
   @if $horizontal-position != left and $horizontal-position != right {
-    @error "$horizontal-position allowed: (left | right), but got #{$horizontal-position}";
+    @error "$horizontal-position allowed: [left, right], but got #{$horizontal-position}";
   }
 
   .#{$class-name} {
