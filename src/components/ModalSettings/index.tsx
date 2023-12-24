@@ -1,4 +1,4 @@
-import { APP_NAME } from '$common'
+import { APP_NAME, __PROD__ } from '$common'
 import { AccessKeyManage } from '$components/AccessKeyManage'
 import { AntdTooltip } from '$components/AntdApp'
 import { BaseModal, BaseModalClass, ModalClose } from '$components/BaseModal'
@@ -92,11 +92,11 @@ function useHotkeyForConfig(
   )
 }
 
-const modalSettingsStore = proxy({
-  // FIXME: default tab should be basic
-  tab: 'basic',
-  // tab: 'video-source-tab-config',
-})
+const tab = __PROD__
+  ? 'basic'
+  : // for debug, free to change this
+    'basic'
+const modalSettingsStore = proxy({ tab })
 
 export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => void }) {
   const {

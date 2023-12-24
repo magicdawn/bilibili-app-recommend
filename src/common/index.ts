@@ -20,3 +20,6 @@ export const APP_NAME_ROOT_CLASSNAME = `${APP_NAME}-root`
 
 export const REQUEST_FAIL_MSG = '请求失败, 请重试 !!!'
 export const OPERATION_FAIL_MSG = '操作失败, 请重试 !!!'
+
+export const __DEV__ = import.meta.env.DEV
+export const __PROD__ = import.meta.env.PROD
