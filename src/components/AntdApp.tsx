@@ -72,27 +72,21 @@ function GlobalStyle() {
 
           .${APP_NAME_ROOT_CLASSNAME} {
             font-family: ${USING_FONT_FAMILY};
+            --back-top-right: 24px;
 
             .bili-video-card a:not(.disable-hover):hover{
               color: ${colorPrimaryValue} !important;
             }
           }
+
+          @media (max-width: 1440px) {
+            .${APP_NAME_ROOT_CLASSNAME} {
+              --back-top-right: 16px;
+            }
+          }
         `}
       />
-      {pureRecommend && (
-        <Global
-          styles={css`
-            /* 刷新内容按钮 */
-            .palette-button-outer {
-              .palette-button-wrap {
-                .flexible-roll-btn {
-                  display: none;
-                }
-              }
-            }
-          `}
-        />
-      )}
+
       {pureRecommend && styleFancy && (
         <Global
           styles={css`
@@ -102,35 +96,6 @@ function GlobalStyle() {
             .bili-header .bili-header__channel {
               background-color: var(--bg2);
             }
-
-            /* @media (min-width: 1140px) and (max-width: 1299.9px) {
-              :root {
-                --layout-padding: 60px;
-              }
-            }
-            @media (min-width: 1400px) and (max-width: 1559.9px) {
-              :root {
-                --layout-padding: 60px;
-              }
-            }
-            @media (min-width: 1560px) and (max-width: 2059.9px) {
-              :root {
-                --layout-padding: 80px;
-              }
-            }
-            @media (min-width: 2060px) {
-              :root {
-                --layout-padding: 100px;
-              }
-            } */
-
-            /* .palette-button-outer {
-              .palette-button-wrap {
-                left: unset !important;
-                right: 30px;
-                bottom: 80px;
-              }
-            } */
           `}
         />
       )}

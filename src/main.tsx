@@ -25,6 +25,7 @@ import './common/global.scss'
 import { APP_NAME, APP_NAME_ROOT_CLASSNAME } from '$common'
 import { AntdApp } from '$components/AntdApp'
 import { tryAction, tryToRemove } from '$utility/dom'
+import { FloatButton } from 'antd'
 import delay from 'delay'
 import { createRoot } from 'react-dom/client'
 import { PureRecommend } from './components/PureRecommend'
@@ -112,28 +113,24 @@ async function initHomepagePureRecommend() {
   // let bilibili default content run
   if (isSafari) await delay(500)
 
-  // 新版 bili-feed4
+  // antd 回到顶部
+  let renderBackTop = false
+
+  // 旧版 v1, 不做支持
+  // 新版 v2,
+  // 内测 v3,
+
+  // 内测 bili-feed4
   if (getIsInternalTesting()) {
     document.querySelector('.bili-feed4 .bili-feed4-layout')?.remove()
     tryToRemove('.bili-feed4 .header-channel')
+    //右侧边按钮
+    tryToRemove('.palette-button-wrap')
+    renderBackTop = true
+  }
 
-    /**
-     * 右侧边按钮
-     */
-
-    // 刷新内容
-    tryToRemove('.palette-button-wrap .flexible-roll-btn')
-    // 三个点
-    tryAction('.palette-button-wrap .storage-box', (el) => el.classList.remove('hidden'))
-    // 回到顶部
-    tryAction('.palette-button-wrap .top-btn-wrap .top-btn', (el) => el.classList.add('visible'))
-
-    // if (__PROD__) {
-    //   tryAction('.palette-button-wrap', (el) => {
-    //     el.style.position = 'absolute'
-    //   })
-    // }
-  } else {
+  // 新版首页(v2)
+  else {
     document.querySelector('.bili-layout')?.remove()
     tryToRemove('.bili-footer') // build 版本, .bili-footer 还不存在, 后来出来的
 
@@ -181,6 +178,14 @@ async function initHomepagePureRecommend() {
   root.render(
     <AntdApp injectGlobalStyle renderAppComponent>
       <PureRecommend />
+      {renderBackTop && (
+        <FloatButton.BackTop
+          style={{
+            // right
+            insetInlineEnd: 'var(--back-top-right, 24px)',
+          }}
+        />
+      )}
     </AntdApp>,
   )
 }
