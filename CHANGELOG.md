@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.19.8
+
+- e906cc7 feat: use 3rd party back-to-top & rm default float buttons
+- 1cae0ff chore: revert float buttons tweak
+- 138356f chore: copy bilibili-default.scss
+- d0161bd refactor: scss mixin
+- c0ae6c1 chore: utilize import.meta.env.DEV / PROD
+- b2b9f50 feat: add appApiDevice settings item
+- 072a4c4 chore: tweak issue template
+
 ## v0.19.7
 
 - 修复 v0.19.6 带来的不喜欢按钮总是显示的问题.
