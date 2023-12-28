@@ -128,11 +128,11 @@ async function initHomepagePureRecommend() {
     // 回到顶部
     tryAction('.palette-button-wrap .top-btn-wrap .top-btn', (el) => el.classList.add('visible'))
 
-    if (process.env.NODE_ENV === 'production') {
-      tryAction('.palette-button-wrap', (el) => {
-        el.style.position = 'absolute'
-      })
-    }
+    // if (__PROD__) {
+    //   tryAction('.palette-button-wrap', (el) => {
+    //     el.style.position = 'absolute'
+    //   })
+    // }
   } else {
     document.querySelector('.bili-layout')?.remove()
     tryToRemove('.bili-footer') // build 版本, .bili-footer 还不存在, 后来出来的
