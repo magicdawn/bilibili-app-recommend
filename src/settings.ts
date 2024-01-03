@@ -1,7 +1,7 @@
 import { APP_NAME, baseDebug } from '$common'
 import { HAS_RESTORED_SETTINGS } from '$components/ModalSettings/index.shared'
 import type { TabType } from '$components/RecHeader/tab.shared'
-import { AppApiDevice } from '$define'
+import { AppApiDevice } from '$define/index.shared'
 import { setData } from '$service/user/article-draft'
 import { omit, pick, throttle } from 'lodash'
 import ms from 'ms'
@@ -57,12 +57,14 @@ export const initialSettings = {
    * tab=watchlater
    */
   shuffleForWatchLater: true, // 打乱顺序
+  addSeparatorForWatchLater: true, // 添加 "近期" / "更早" 分割线
 
   /**
    * tab=fav
    */
   shuffleForFav: true, // 打乱顺序
   excludeFavFolderIds: [] as string[], // 忽略的收藏夹
+  addSeparatorForFav: true, // 收藏夹分割线
 
   /**
    * tab=popular-general

@@ -11,7 +11,8 @@ import type { VideoCardEmitter, VideoCardEvents } from '$components/VideoCard'
 import { VideoCard } from '$components/VideoCard'
 import { borderRadiusValue } from '$components/VideoCard/index.shared'
 import type { IVideoCardData } from '$components/VideoCard/process/normalize'
-import type { RecItemType } from '$define'
+import { type RecItemType } from '$define'
+import { ApiType } from '$define/index.shared'
 import { getHeaderHeight } from '$header'
 import { IconPark } from '$icon-park'
 import { cx } from '$libs'
@@ -281,7 +282,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
   const modalDislikeVisible = useModalDislikeVisible()
 
   const videoItems = useMemo(() => {
-    return items.filter((x) => x.api !== 'separator')
+    return items.filter((x) => x.api !== ApiType.separator)
   }, [items])
 
   // emitters
@@ -356,8 +357,11 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
       const index = items.indexOf(currentItem)
 
       const newItems = items.slice()
+      // rm
       newItems.splice(index, 1)
-      newItems.unshift(currentItem)
+      // insert
+      const newIndex = newItems.findIndex((x) => x.api !== ApiType.separator)
+      newItems.splice(newIndex, 0, currentItem)
 
       return newItems
     })
@@ -445,20 +449,12 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
       <div ref={containerRef} className={gridClassName}>
         {/* items */}
         {items.map((item) => {
-          if (item.api === 'separator') {
+          if (item.api === ApiType.separator) {
             return (
               <Divider
                 key={item.uniqId}
                 css={css`
                   grid-column: span var(--col);
-
-                  &.ant-divider-horizontal.ant-divider-with-text {
-                    margin-bottom: -30px;
-                    margin-top: -20px;
-                    &:first-of-type {
-                      margin-top: 0;
-                    }
-                  }
 
                   .ant-divider-inner-text a {
                     color: var(--ant-color-link);

@@ -16,8 +16,8 @@ import { useGetState, useMemoizedFn } from 'ahooks'
 import type { Debugger } from 'debug'
 import { createContext, useContext, useEffect, useState } from 'react'
 
-export type OnRefreshOoptions = { watchlaterKeepOrder?: boolean }
-export type OnRefresh = (reuse?: boolean, options?: OnRefreshOoptions) => void | Promise<void>
+export type OnRefreshOptions = { watchlaterKeepOrder?: boolean }
+export type OnRefresh = (reuse?: boolean, options?: OnRefreshOptions) => void | Promise<void>
 
 export const OnRefreshContext = createContext<OnRefresh | undefined>(undefined)
 export function useOnRefreshContext() {
@@ -30,7 +30,7 @@ const serviceFactories = {
   'fav': () => new FavRecService(),
   'popular-general': () => new PopularGeneralService(),
   'popular-weekly': () => new PopularWeeklyService(),
-} satisfies Partial<Record<TabType, (options?: OnRefreshOoptions) => IService>>
+} satisfies Partial<Record<TabType, (options?: OnRefreshOptions) => IService>>
 
 export type ServiceMapKey = keyof typeof serviceFactories
 

@@ -6,6 +6,7 @@ import type { TabType } from '$components/RecHeader/tab.shared'
 import { anyFilterEnabled, filterRecItems } from '$components/VideoCard/process/filter'
 import { lookinto } from '$components/VideoCard/process/normalize'
 import type { RecItemExtraType } from '$define'
+import { ApiType } from '$define/index.shared'
 import { uniqBy } from 'lodash'
 import { AppRecService } from './app'
 import { PcRecService } from './pc'
@@ -13,7 +14,7 @@ import { PcRecService } from './pc'
 const debug = baseDebug.extend('service')
 
 export const recItemUniqer = (item: RecItemExtraType) =>
-  item.api === 'separator'
+  item.api === ApiType.separator
     ? item.uniqId
     : lookinto<string | number>(item, {
         'pc': (item) => item.bvid,
@@ -115,7 +116,10 @@ export async function getMinCount(
     }
 
     // enough
-    if (items.length >= count) break
+    const len = items.filter((x) => x.api !== ApiType.separator).length
+    if (len >= count) {
+      break
+    }
     await addMore(count - items.length)
   }
 

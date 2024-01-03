@@ -3,6 +3,7 @@ import type { android } from './app-recommend.android'
 import type { ipad } from './app-recommend.ipad'
 import type { DmJson } from './dm'
 import type { FavItemExtend } from './fav'
+import type { ApiType, AppApiDevice } from './index.shared'
 import type { DynamicFeedItem } from './pc-dynamic-feed'
 import type { PcRecItem } from './pc-recommend'
 import type { PopularGeneralItem } from './popular-general'
@@ -28,20 +29,15 @@ export type DmData = DmJson['data']
 export type AndroidAppRecItem = android.AppRecItem
 export type IpadAppRecItem = ipad.AppRecItem
 
-export const enum AppApiDevice {
-  android = 'android',
-  ipad = 'ipad',
-}
-
 export interface AndroidAppRecItemExtend extends AndroidAppRecItem {
   uniqId: string
-  api: 'app'
+  api: ApiType.app
   device: AppApiDevice.android
 }
 
 export interface IpadAppRecItemExtend extends ipad.AppRecItem {
   uniqId: string
-  api: 'app'
+  api: ApiType.app
   device: AppApiDevice.ipad
 }
 
@@ -65,29 +61,29 @@ export type RecItemType =
 
 export type RecItemExtraType = RecItemType | ItemsSeparator
 
-export type ItemsSeparator = { uniqId: string; api: 'separator'; content: ReactNode }
+export type ItemsSeparator = { uniqId: string; api: ApiType.separator; content: ReactNode }
 
 export interface PcRecItemExtend extends PcRecItem {
   uniqId: string
-  api: 'pc'
+  api: ApiType.pc
 }
 
 export interface DynamicFeedItemExtend extends DynamicFeedItem {
   uniqId: string
-  api: 'dynamic'
+  api: ApiType.dynamic
 }
 
 export interface WatchLaterItemExtend extends WatchLaterItem {
   uniqId: string
-  api: 'watchlater'
+  api: ApiType.watchlater
 }
 
 export interface PopularGeneralItemExtend extends PopularGeneralItem {
   uniqId: string
-  api: 'popular-general'
+  api: ApiType.popularGeneral
 }
 
 export interface PopularWeeklyItemExtend extends PopularWeeklyItem {
   uniqId: string
-  api: 'popular-weekly'
+  api: ApiType.popularWeekly
 }

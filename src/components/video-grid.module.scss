@@ -42,6 +42,16 @@
 .video-grid-internal-testing {
   // grid-gap: 60px 20px; // original
   grid-gap: 20px 20px;
+
+  :global {
+    .ant-divider-horizontal.ant-divider-with-text {
+      margin-bottom: -15px;
+      margin-top: -15px;
+      &:first-of-type {
+        margin-top: 0;
+      }
+    }
+  }
 }
 
 @mixin homepage-internal-testing-mixin($col) {
@@ -73,18 +83,37 @@
 
 // 20px <= $gap-row <= 40px
 // max(min(40px, 1.6vw), 20px);
-$gap-row: clamp(20px, 1.6vw, 40px);
-$gap-col: 20px;
+$row-gap: clamp(20px, 1.6vw, 40px);
+$col-gap: 20px;
 $card-min-width: 250px;
 
 .video-grid-fancy {
-  grid-gap: $gap-row $gap-col;
   --video-card-border-radius: 15px;
   --col: 2; // when width < $min-2
+
+  // gap
+  column-gap: $col-gap;
+  row-gap: 0;
+  --row-gap: #{$row-gap};
+
+  :global {
+    .bili-video-card {
+      margin-bottom: var(--row-gap);
+    }
+
+    .ant-divider-horizontal.ant-divider-with-text {
+      margin-bottom: 5px;
+      // margin-top: -20px;
+      margin-top: calc(10px - var(--row-gap));
+      &:first-of-type {
+        margin-top: 0;
+      }
+    }
+  }
 }
 
 @for $i from 2 through 5 {
-  @container video-grid-container (width >= #{($card-min-width + $gap-col) * $i - $gap-col}) {
+  @container video-grid-container (width >= #{($card-min-width + $col-gap) * $i - $col-gap}) {
     .video-grid-fancy {
       --col: #{$i};
     }

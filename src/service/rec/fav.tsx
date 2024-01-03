@@ -1,9 +1,10 @@
 import { REQUEST_FAIL_MSG } from '$common'
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
-import type { ItemsSeparator } from '$define'
+import { type ItemsSeparator } from '$define'
 import type { FavItemExtend } from '$define/fav'
 import type { FavFolderListAllItem, FavFolderListAllJson } from '$define/fav/folder-list-all'
 import type { FavFolderDetailInfo, ResourceListJSON } from '$define/fav/resource-list'
+import { ApiType } from '$define/index.shared'
 import { isWebApiSuccess, request } from '$request'
 import { settings, updateSettings, useSettingsSnapshot } from '$settings'
 import { getUid, toast } from '$utility'
@@ -26,8 +27,10 @@ export class FavRecService implements IService {
   static PAGE_SIZE = 20
 
   useShuffle: boolean
+  addSeparator: boolean
   constructor() {
     this.useShuffle = settings.shuffleForFav
+    this.addSeparator = settings.addSeparatorForFav
   }
 
   total = 0
@@ -69,8 +72,8 @@ export class FavRecService implements IService {
       return this.qs.doReturnItems(
         service.page === 1
           ? [
-              {
-                api: 'separator',
+              this.addSeparator && {
+                api: ApiType.separator as const,
                 uniqId: `fav-folder-${service.entry.id}`,
                 content: (
                   <>
@@ -82,7 +85,7 @@ export class FavRecService implements IService {
                 ),
               },
               ...(items || []),
-            ]
+            ].filter(Boolean)
           : items,
       )
     }
@@ -179,7 +182,7 @@ export class FavFolderService {
       return {
         ...item,
         folder: this.info!,
-        api: 'fav',
+        api: ApiType.fav,
         uniqId: `fav-${this.info?.id}-${item.bvid}`,
       }
     })

@@ -1,7 +1,7 @@
 import { APP_NAME, HOST_APP } from '$common'
 import type { AppRecItem, AppRecItemExtend, AppRecommendJson } from '$define'
-import { AppApiDevice } from '$define'
 import type { ipad } from '$define/app-recommend.ipad'
+import { AppApiDevice } from '$define/index.shared'
 import { gmrequest } from '$request'
 import { settings } from '$settings'
 import { toast } from '$utility/toast'

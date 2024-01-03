@@ -1,6 +1,7 @@
 import { REQUEST_FAIL_MSG } from '$common'
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
-import type { PopularGeneralItemExtend } from '$define'
+import { type PopularGeneralItemExtend } from '$define'
+import { ApiType } from '$define/index.shared'
 import type { PopularGeneralJson } from '$define/popular-general'
 import { isWebApiSuccess, request } from '$request'
 import { blacklistIds } from '$service/user/relations/blacklist'
@@ -43,7 +44,7 @@ export class PopularGeneralService implements IService {
     let items = (json.data.list || []).map((item) => {
       return {
         ...item,
-        api: 'popular-general',
+        api: ApiType.popularGeneral,
         uniqId: item.bvid,
       } as PopularGeneralItemExtend
     })

@@ -1,5 +1,6 @@
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
-import type { WatchLaterItemExtend, WatchLaterJson } from '$define'
+import { type ItemsSeparator, type WatchLaterItemExtend, type WatchLaterJson } from '$define'
+import { ApiType } from '$define/index.shared'
 import { request } from '$request'
 import { settings, updateSettings, useSettingsSnapshot } from '$settings'
 import { getHasLogined } from '$utility'
@@ -36,19 +37,23 @@ export class WatchLaterRecService implements IService {
   static PAGE_SIZE = 20
   static LAST_BVID_ARR: string[] = []
 
-  qs = new QueueStrategy<WatchLaterItemExtend>(WatchLaterRecService.PAGE_SIZE)
+  qs = new QueueStrategy<WatchLaterItemExtend | ItemsSeparator>(WatchLaterRecService.PAGE_SIZE)
 
+  useShuffle: boolean
+  addSeparator: boolean
   constructor(keepOrder?: boolean) {
     this.keepOrder = keepOrder ?? false
+    this.useShuffle = settings.shuffleForWatchLater
+    this.addSeparator = settings.addSeparatorForWatchLater
   }
 
   private async fetch() {
     const res = await request.get('/x/v2/history/toview/web')
     const json = res.data as WatchLaterJson
-    let items: WatchLaterItemExtend[] = json.data.list.map((item) => {
+    const items: WatchLaterItemExtend[] = json.data.list.map((item) => {
       return {
         ...item,
-        api: 'watchlater',
+        api: ApiType.watchlater,
         uniqId: `watchlater-${item.bvid}`,
       }
     })
@@ -63,13 +68,15 @@ export class WatchLaterRecService implements IService {
     const gate = dayjs().subtract(2, 'days').unix()
     const firstNotTodayAddedIndex = items.findIndex((item) => item.add_at < gate)
 
+    let itemsWithSeparator: Array<WatchLaterItemExtend | ItemsSeparator> = items
+
     if (firstNotTodayAddedIndex !== -1) {
-      const items1 = items.slice(0, firstNotTodayAddedIndex)
-      let items2 = items.slice(firstNotTodayAddedIndex)
+      const recent = items.slice(0, firstNotTodayAddedIndex)
+      let earlier = items.slice(firstNotTodayAddedIndex)
 
       // 保持顺序
       if (this.keepOrder && WatchLaterRecService.LAST_BVID_ARR.length) {
-        items2 = items2
+        earlier = earlier
           .map((item) => ({
             item,
             // if not found, -1, front-most
@@ -77,12 +84,30 @@ export class WatchLaterRecService implements IService {
           }))
           .sort((a, b) => a.index - b.index)
           .map((x) => x.item)
-        items = [...items1, ...items2]
       }
       // 洗牌
-      else if (settings.shuffleForWatchLater) {
-        items = [...items1, ...shuffle(items2)]
+      else if (this.useShuffle) {
+        earlier = shuffle(earlier)
       }
+
+      // combine
+      itemsWithSeparator = [
+        !!recent.length &&
+          this.addSeparator && {
+            api: ApiType.separator as const,
+            uniqId: 'watchlater-recent',
+            content: '近期',
+          },
+        ...recent,
+
+        !!earlier.length &&
+          this.addSeparator && {
+            api: ApiType.separator as const,
+            uniqId: 'watchlater-earlier',
+            content: '更早',
+          },
+        ...earlier,
+      ].filter(Boolean)
     }
 
     // FIXME: 测试 watchlater 不足一屏的情况
@@ -93,9 +118,11 @@ export class WatchLaterRecService implements IService {
     this.count = json.data.count
 
     // save for next keepOrder=true
-    WatchLaterRecService.LAST_BVID_ARR = items.map((item) => item.bvid)
+    WatchLaterRecService.LAST_BVID_ARR = itemsWithSeparator
+      .map((item) => item.api === ApiType.watchlater && item.bvid)
+      .filter(Boolean)
 
-    return items
+    return itemsWithSeparator
   }
 
   loaded = false

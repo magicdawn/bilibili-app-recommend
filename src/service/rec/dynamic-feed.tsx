@@ -1,7 +1,8 @@
 import { REQUEST_FAIL_MSG } from '$common'
 import { antdBtnTextStyle, verticalAlignStyle } from '$common/emotion-css'
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
-import type { DynamicFeedItemExtend, DynamicFeedJson } from '$define'
+import { type DynamicFeedItemExtend, type DynamicFeedJson } from '$define'
+import { ApiType } from '$define/index.shared'
 import { IconPark } from '$icon-park'
 import { isWebApiSuccess, request } from '$request'
 import { getRecentUpdateUpList } from '$service/dynamic'
@@ -69,7 +70,7 @@ export class DynamicFeedRecService implements IService {
       .map((item) => {
         return {
           ...item,
-          api: 'dynamic',
+          api: ApiType.dynamic,
           uniqId: item.id_str || crypto.randomUUID(),
         }
       })

@@ -10,7 +10,7 @@ import {
   useSortedTabKeys,
 } from '$components/RecHeader/tab.shared'
 import { FlagSettingItem, HelpInfo } from '$components/piece'
-import { AppApiDevice } from '$define'
+import { AppApiDevice } from '$define/index.shared'
 import { IconPark } from '$icon-park'
 import { cx } from '$libs'
 import { useIsDarkMode } from '$platform'
@@ -95,7 +95,7 @@ function useHotkeyForConfig(
 const tab = __PROD__
   ? 'basic'
   : // for debug, free to change this
-    'basic'
+    'advance'
 const modalSettingsStore = proxy({ tab })
 
 export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => void }) {
@@ -525,14 +525,44 @@ function TabPaneAdvance() {
         </div>
         <div className={cx(styles.settingsGroupContent)}>
           <div className={styles.row}>
+            <span
+              css={css`
+                min-width: 140px;
+              `}
+            >
+              「稍后再看」Tab:
+            </span>
             <FlagSettingItem
               configKey='shuffleForWatchLater'
-              label='对「稍后再看」Tab 使用随机顺序'
-              tooltip={<>不包括最近添加的「稍后再看」</>}
+              label='随机顺序'
+              tooltip={<>不包括近期添加的「稍后再看」</>}
+            />
+            <FlagSettingItem
+              configKey='addSeparatorForWatchLater'
+              label='添加分割线'
+              tooltip={<>添加「近期」「更早」分割线</>}
+              css={css`
+                margin-left: 20px !important;
+              `}
             />
           </div>
           <div className={styles.row}>
-            <FlagSettingItem configKey='shuffleForFav' label='对「收藏」Tab 使用随机顺序' />
+            <span
+              css={css`
+                min-width: 140px;
+              `}
+            >
+              「收藏」Tab:
+            </span>
+            <FlagSettingItem configKey='shuffleForFav' label='随机顺序' />
+            <FlagSettingItem
+              configKey='addSeparatorForFav'
+              label='添加分割线'
+              tooltip={<>按收藏夹显示, 添加分割线</>}
+              css={css`
+                margin-left: 20px !important;
+              `}
+            />
           </div>
         </div>
 

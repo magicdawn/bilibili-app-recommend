@@ -1,5 +1,6 @@
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
-import type { ItemsSeparator, PopularWeeklyItemExtend } from '$define'
+import { type ItemsSeparator, type PopularWeeklyItemExtend } from '$define'
+import { ApiType } from '$define/index.shared'
 import type { PopularWeeklyJson } from '$define/popular-weekly'
 import type { PopularWeeklyListItem, PopularWeeklyListJson } from '$define/popular-weekly.list'
 import { request } from '$request'
@@ -80,7 +81,7 @@ export class PopularWeeklyService implements IService {
       const items = await fetchWeeklyItems(epNum)
       this.qs.bufferQueue.push(
         {
-          api: 'separator',
+          api: ApiType.separator,
           uniqId: `popular-weekly-${epNum}`,
           content: (
             <a target='_blank' href={`https://www.bilibili.com/v/popular/weekly?num=${epNum}`}>
@@ -137,7 +138,7 @@ async function fetchWeeklyItems(episodeNum: number) {
     const items = (json.data.list || []).map((item) => {
       return {
         ...item,
-        api: 'popular-weekly',
+        api: ApiType.popularWeekly,
         uniqId: item.bvid,
       } as PopularWeeklyItemExtend
     })
