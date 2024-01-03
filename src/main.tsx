@@ -122,11 +122,13 @@ async function initHomepagePureRecommend() {
 
   // 内测 bili-feed4
   if (getIsInternalTesting()) {
-    document.querySelector('.bili-feed4 .bili-feed4-layout')?.remove()
     tryToRemove('.bili-feed4 .header-channel')
-    //右侧边按钮
+
+    // 右侧浮动按钮
     tryToRemove('.palette-button-wrap')
     renderBackTop = true
+
+    await tryToRemove('.bili-feed4 .bili-feed4-layout')
   }
 
   // 新版首页(v2)
