@@ -10,6 +10,7 @@ import { Switch } from 'antd'
 import dayjs from 'dayjs'
 import delay from 'delay'
 import { shuffle } from 'lodash'
+import pmap from 'promise.map'
 import type { IService } from './base'
 import { QueueStrategy } from './base'
 
@@ -109,9 +110,14 @@ export class PopularWeeklyService implements IService {
       this.episodes = shuffle(this.episodes)
       const episodes = this.episodes.slice(0, prefetchPage) // slice
       this.episodes = this.episodes.slice(prefetchPage) // rest
-      const fetched = await Promise.all(
-        episodes.map((x) => x.number).map((episodeNum) => fetchWeeklyItems(episodeNum)),
+
+      // 小心风控, code: -352, 需要去热门页面点验证码
+      const fetched = await pmap(
+        episodes.map((x) => x.number),
+        (episodeNum) => fetchWeeklyItems(episodeNum),
+        2,
       )
+
       this.qs.bufferQueue = shuffle([...this.qs.bufferQueue, ...fetched.flat()])
     }
 

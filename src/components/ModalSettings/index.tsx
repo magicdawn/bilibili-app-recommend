@@ -92,10 +92,19 @@ function useHotkeyForConfig(
   )
 }
 
+const enum TabPaneKey {
+  basic = 'basic',
+  filter = 'filter',
+  ui = 'ui',
+  themeSelect = 'theme-select',
+  videoSourceTabConfig = 'video-source-tab-config',
+  advance = 'advance',
+}
+
 const tab = __PROD__
-  ? 'basic'
+  ? TabPaneKey.basic
   : // for debug, free to change this
-    'advance'
+    TabPaneKey.videoSourceTabConfig
 const modalSettingsStore = proxy({ tab })
 
 export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => void }) {
@@ -142,18 +151,17 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
           tabPosition='left'
           size='middle'
           className={styles.settingTabs}
-          // defaultActiveKey='basic'
           activeKey={tab}
-          onChange={(tab) => (modalSettingsStore.tab = tab)}
+          onChange={(tab) => (modalSettingsStore.tab = tab as TabPaneKey)}
           items={[
             {
               label: '常规设置',
-              key: 'basic',
+              key: TabPaneKey.basic,
               children: <TabPaneBasic />,
             },
             {
               label: '内容过滤',
-              key: 'filter',
+              key: TabPaneKey.filter,
               children: (
                 <div className={styles.tabPane}>
                   <div className={styles.settingsGroup}>
@@ -246,7 +254,7 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
             },
             {
               label: '外观设置',
-              key: 'ui',
+              key: TabPaneKey.ui,
               children: (
                 <div className={styles.tabPane}>
                   <div className={styles.settingsGroup}>
@@ -283,7 +291,7 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
             },
             {
               label: '主题选择',
-              key: 'theme-select',
+              key: TabPaneKey.themeSelect,
               children: (
                 <div className={styles.tabPane}>
                   <div className={styles.settingsGroup}>
@@ -299,12 +307,12 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
             },
             {
               label: 'Tab 设置',
-              key: 'video-source-tab-config',
-              children: <TabPaneRecommendTabConfig />,
+              key: TabPaneKey.videoSourceTabConfig,
+              children: <TabPaneVideoSourceTabConfig />,
             },
             {
               label: '高级设置',
-              key: 'advance',
+              key: TabPaneKey.advance,
               children: <TabPaneAdvance />,
             },
           ]}
@@ -521,52 +529,6 @@ function TabPaneAdvance() {
         </div>
 
         <div className={styles.settingsGroupTitle} style={{ marginTop: 15 }}>
-          稍后再看 & 收藏
-        </div>
-        <div className={cx(styles.settingsGroupContent)}>
-          <div className={styles.row}>
-            <span
-              css={css`
-                min-width: 140px;
-              `}
-            >
-              「稍后再看」Tab:
-            </span>
-            <FlagSettingItem
-              configKey='shuffleForWatchLater'
-              label='随机顺序'
-              tooltip={<>不包括近期添加的「稍后再看」</>}
-            />
-            <FlagSettingItem
-              configKey='addSeparatorForWatchLater'
-              label='添加分割线'
-              tooltip={<>添加「近期」「更早」分割线</>}
-              css={css`
-                margin-left: 20px !important;
-              `}
-            />
-          </div>
-          <div className={styles.row}>
-            <span
-              css={css`
-                min-width: 140px;
-              `}
-            >
-              「收藏」Tab:
-            </span>
-            <FlagSettingItem configKey='shuffleForFav' label='随机顺序' />
-            <FlagSettingItem
-              configKey='addSeparatorForFav'
-              label='添加分割线'
-              tooltip={<>按收藏夹显示, 添加分割线</>}
-              css={css`
-                margin-left: 20px !important;
-              `}
-            />
-          </div>
-        </div>
-
-        <div className={styles.settingsGroupTitle} style={{ marginTop: 15 }}>
           预览
         </div>
         <div style={{ width: '100%', display: 'flex', alignItems: 'center' }}>
@@ -614,7 +576,90 @@ function TabPaneAdvance() {
   )
 }
 
-function TabPaneRecommendTabConfig() {
+function TabPaneVideoSourceTabConfig() {
+  return (
+    <div className={styles.tabPane}>
+      <div className={styles.settingsGroup}>
+        <div className={styles.settingsGroupTitle}>
+          Tab 设置
+          <HelpInfo
+            iconProps={{
+              name: 'Tips',
+              style: { marginLeft: 5, marginRight: 20 },
+            }}
+            tooltip={<>勾选显示, 拖动排序</>}
+          />
+          <Popconfirm
+            title='确定'
+            description='确定不是手欠点着玩? 再点一次确定吧~'
+            onConfirm={() => {
+              updateSettings({ hidingTabKeys: [], customTabKeysOrder: [] })
+            }}
+          >
+            <Button>重置</Button>
+          </Popconfirm>
+        </div>
+
+        <div
+          css={css`
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            column-gap: 20px;
+          `}
+        >
+          <VideoSourceTabOrder />
+          <div>
+            <div className={styles.settingsGroupTitle}>更多设置</div>
+            <div className={cx(styles.settingsGroupContent)}>
+              <div className={styles.row}>
+                <span
+                  css={css`
+                    min-width: 100px;
+                  `}
+                >
+                  「稍后再看」
+                </span>
+                <FlagSettingItem
+                  configKey='shuffleForWatchLater'
+                  label='随机顺序'
+                  tooltip='不包括近期添加的「稍后再看」'
+                />
+                <FlagSettingItem
+                  configKey='addSeparatorForWatchLater'
+                  label='添加分割线'
+                  tooltip='添加「近期」「更早」分割线'
+                  css={css`
+                    margin-left: 20px !important;
+                  `}
+                />
+              </div>
+              <div className={styles.row}>
+                <span
+                  css={css`
+                    min-width: 100px;
+                  `}
+                >
+                  「收藏」
+                </span>
+                <FlagSettingItem configKey='shuffleForFav' label='随机顺序' tooltip='随机收藏' />
+                <FlagSettingItem
+                  configKey='addSeparatorForFav'
+                  label='添加分割线'
+                  tooltip='顺序显示时, 按收藏夹添加分割线'
+                  css={css`
+                    margin-left: 20px !important;
+                  `}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function VideoSourceTabOrder() {
   const currentShowingTabKeys = useCurrentShowingTabKeys()
   const sortedTabKeys = useSortedTabKeys()
 
@@ -642,64 +687,35 @@ function TabPaneRecommendTabConfig() {
   })
 
   return (
-    <div className={styles.tabPane}>
-      <div className={styles.settingsGroup}>
-        <div className={styles.settingsGroupTitle}>
-          Tab 设置
-          <HelpInfo
-            iconProps={{
-              name: 'Tips',
-              style: { marginLeft: 5, marginRight: 20 },
-            }}
-            tooltip={<>勾选显示, 拖动排序</>}
-          />
-          <Popconfirm
-            title='确定'
-            description='确定不是手欠点着玩? 再点一次确定吧~'
-            onConfirm={() => {
-              updateSettings({ hidingTabKeys: [], customTabKeysOrder: [] })
-            }}
-          >
-            <Button>重置</Button>
-          </Popconfirm>
-        </div>
-        <div className={cx(styles.settingsGroupContent)}>
-          <div
-            css={css`
-              width: 300px;
-            `}
-          >
-            <Checkbox.Group
-              css={css`
-                display: block;
-                line-height: unset;
-              `}
-              value={currentShowingTabKeys}
-              onChange={(newVal) => {
-                if (!newVal.length) {
-                  return AntdMessage.error('至少选择一项!')
-                }
-                updateSettings({
-                  hidingTabKeys: TabKeys.filter((k) => !newVal.includes(k)),
-                })
-              }}
-            >
-              <DndContext
-                sensors={sensors}
-                collisionDetection={closestCenter}
-                onDragEnd={handleDragEnd}
-                modifiers={[restrictToVerticalAxis, restrictToParentElement]}
-              >
-                <SortableContext items={sortedTabKeys} strategy={verticalListSortingStrategy}>
-                  {sortedTabKeys.map((key) => (
-                    <VideoSourceTabSortableItem key={key} id={key} />
-                  ))}
-                </SortableContext>
-              </DndContext>
-            </Checkbox.Group>
-          </div>
-        </div>
-      </div>
+    <div>
+      <Checkbox.Group
+        css={css`
+          display: block;
+          line-height: unset;
+        `}
+        value={currentShowingTabKeys}
+        onChange={(newVal) => {
+          if (!newVal.length) {
+            return AntdMessage.error('至少选择一项!')
+          }
+          updateSettings({
+            hidingTabKeys: TabKeys.filter((k) => !newVal.includes(k)),
+          })
+        }}
+      >
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}
+          modifiers={[restrictToVerticalAxis, restrictToParentElement]}
+        >
+          <SortableContext items={sortedTabKeys} strategy={verticalListSortingStrategy}>
+            {sortedTabKeys.map((key) => (
+              <VideoSourceTabSortableItem key={key} id={key} />
+            ))}
+          </SortableContext>
+        </DndContext>
+      </Checkbox.Group>
     </div>
   )
 }

@@ -59,7 +59,7 @@ export const TabConfig: TabConfigItem[] = [
     icon: 'FileCabinet',
     iconProps: { size: 15 },
     label: '稍后再看',
-    desc: '你添加的稍后再看; 默认随机乱序, 可在设置-高级设置 或 稍后再看 Tab 中关闭乱序',
+    desc: '你添加的稍后再看; 默认随机乱序, 可在设置中关闭乱序',
     swr: true,
   },
   {
@@ -67,7 +67,7 @@ export const TabConfig: TabConfigItem[] = [
     icon: 'Star',
     iconProps: { size: 15 },
     label: '收藏',
-    desc: '你添加的收藏; 默认随机乱序, 可在设置-高级设置 或 收藏 Tab 中关闭乱序',
+    desc: '你添加的收藏; 默认随机乱序, 可在设置中关闭乱序',
   },
   {
     key: 'popular-general',

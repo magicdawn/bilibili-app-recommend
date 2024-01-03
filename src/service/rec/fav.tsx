@@ -14,6 +14,7 @@ import { Popover, Switch, Tag, Transfer } from 'antd'
 import type { TransferDirection } from 'antd/es/transfer'
 import delay from 'delay'
 import { shuffle } from 'lodash'
+import pmap from 'promise.map'
 import type { ReactNode } from 'react'
 import { useMemo, useState } from 'react'
 import { QueueStrategy, type IService } from './base'
@@ -100,7 +101,7 @@ export class FavRecService implements IService {
         const restServices = this.folderServices.filter((s) => s.hasMore)
         const pickedServices = shuffle(restServices).slice(0, 5)
         const fetched = (
-          await Promise.all(pickedServices.map(async (s) => (await s.loadMore()) || []))
+          await pmap(pickedServices, async (s) => (await s.loadMore()) || [], 2)
         ).flat()
         this.qs.bufferQueue = [...this.qs.bufferQueue, ...fetched]
       }
