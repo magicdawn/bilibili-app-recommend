@@ -87,16 +87,32 @@ function GlobalStyle() {
         `}
       />
 
-      {pureRecommend && styleFancy && (
+      {pureRecommend && (
         <Global
-          styles={css`
-            body,
-            .large-header,
-            #i_cecream,
-            .bili-header .bili-header__channel {
-              background-color: var(--bg2);
-            }
-          `}
+          styles={[
+            css`
+              /* hide original main, in case not deleted */
+              #i_cecream .bili-feed4-layout {
+                display: none;
+              }
+            `,
+
+            styleFancy
+              ? css`
+                  body,
+                  .large-header,
+                  #i_cecream,
+                  .bili-header .bili-header__channel {
+                    background-color: var(--bg2);
+                  }
+                `
+              : css`
+                  /* same as #i_cecream */
+                  body {
+                    background-color: var(--bg1);
+                  }
+                `,
+          ]}
         />
       )}
     </>

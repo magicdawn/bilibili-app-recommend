@@ -122,13 +122,11 @@ async function initHomepagePureRecommend() {
 
   // 内测 bili-feed4
   if (getIsInternalTesting()) {
+    tryToRemove('#i_cecream .bili-feed4-layout') // main
     tryToRemove('.bili-feed4 .header-channel')
-
     // 右侧浮动按钮
     tryToRemove('.palette-button-wrap')
     renderBackTop = true
-
-    await tryToRemove('.bili-feed4 .bili-feed4-layout')
   }
 
   // 新版首页(v2)
@@ -149,20 +147,7 @@ async function initHomepagePureRecommend() {
     })
   }
 
-  let insertFn: ((reactContainer: HTMLElement) => void) | undefined
-  const header = document.querySelector('.bili-header')
-  if (header) {
-    insertFn = (reactContainer) => header.insertAdjacentElement('afterend', reactContainer)
-  } else {
-    if (isHashEntry) {
-      insertFn = (reactContainer) => document.body.appendChild(reactContainer)
-    }
-  }
-
-  if (!insertFn) {
-    console.error(`[${APP_NAME}]: init fail, no .bili-header found`)
-    return
-  }
+  const insertFn = (reactContainer: HTMLElement) => document.body.appendChild(reactContainer)
 
   const biliLayout = document.createElement('div')
   biliLayout.classList.add(
