@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.19.9
+
+- 稍后再看添加分割线, 可配置
+- 使用 body 作为 PureRecommend container, 因与 Bilibili 默认代码冲突
+
+details:
+
+- 9c9a4fd chore: TabPaneVideoSourceTabConfig style tweak
+- 4003a3c feat: use body as PureRecommend container
+- ffad529 feat: move tab related settings to TabPaneVideoSourceTabConfig
+- 56f7466 fix: await default .bili-feed4-layout removal
+- b5134ee feat: make separator configurable
+
 ## v0.19.8
 
 - e906cc7 feat: use 3rd party back-to-top & rm default float buttons
