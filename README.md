@@ -2,6 +2,9 @@
 
 > 为 B 站首页添加像 App 一样的推荐
 
+[![Greasy Fork Version](https://img.shields.io/greasyfork/v/443530?style=flat-square)](https://greasyfork.org/zh-CN/scripts/443530-bilibili-app-recommend)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/magicdawn/bilibili-app-recommend/ci.yml?branch=main&style=flat-square&label=CI%20Build)](https://github.com/magicdawn/bilibili-app-recommend/actions/workflows/ci.yml)
+
 ## 功能
 
 - [x] 纯推荐模式, 无限滚动 (设置中开启)
