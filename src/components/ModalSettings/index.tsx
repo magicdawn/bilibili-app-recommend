@@ -579,78 +579,78 @@ function TabPaneAdvance() {
 function TabPaneVideoSourceTabConfig() {
   return (
     <div className={styles.tabPane}>
-      <div className={styles.settingsGroup}>
-        <div className={styles.settingsGroupTitle}>
-          Tab 设置
-          <HelpInfo
-            iconProps={{
-              name: 'Tips',
-              style: { marginLeft: 5, marginRight: 20 },
-            }}
-            tooltip={<>勾选显示, 拖动排序</>}
-          />
-          <Popconfirm
-            title='确定'
-            description='确定不是手欠点着玩? 再点一次确定吧~'
-            onConfirm={() => {
-              updateSettings({ hidingTabKeys: [], customTabKeysOrder: [] })
-            }}
-          >
-            <Button>重置</Button>
-          </Popconfirm>
+      <div
+        css={css`
+          display: grid;
+          grid-template-columns: 300px 1fr;
+          column-gap: 20px;
+        `}
+      >
+        <div className={styles.settingsGroup}>
+          <div className={styles.settingsGroupTitle}>
+            Tab 设置
+            <HelpInfo
+              iconProps={{
+                name: 'Tips',
+                style: { marginLeft: 5, marginRight: 20 },
+              }}
+              tooltip={<>勾选显示, 拖动排序</>}
+            />
+            <Popconfirm
+              title='确定'
+              description='确定不是手欠点着玩? 再点一次确定吧~'
+              onConfirm={() => {
+                updateSettings({ hidingTabKeys: [], customTabKeysOrder: [] })
+              }}
+            >
+              <Button>重置</Button>
+            </Popconfirm>
+          </div>
+          <VideoSourceTabOrder />
         </div>
 
-        <div
-          css={css`
-            display: grid;
-            grid-template-columns: 300px 1fr;
-            column-gap: 20px;
-          `}
-        >
-          <VideoSourceTabOrder />
-          <div>
-            <div className={styles.settingsGroupTitle}>更多设置</div>
-            <div className={cx(styles.settingsGroupContent)}>
-              <div className={styles.row}>
-                <span
-                  css={css`
-                    min-width: 100px;
-                  `}
-                >
-                  「稍后再看」
-                </span>
-                <FlagSettingItem
-                  configKey='shuffleForWatchLater'
-                  label='随机顺序'
-                  tooltip='不包括近期添加的「稍后再看」'
-                />
-                <FlagSettingItem
-                  configKey='addSeparatorForWatchLater'
-                  label='添加分割线'
-                  tooltip='添加「近期」「更早」分割线'
-                  css={css`
-                    margin-left: 20px !important;
-                  `}
-                />
-              </div>
-              <div className={styles.row}>
-                <span
-                  css={css`
-                    min-width: 100px;
-                  `}
-                >
-                  「收藏」
-                </span>
-                <FlagSettingItem configKey='shuffleForFav' label='随机顺序' tooltip='随机收藏' />
-                <FlagSettingItem
-                  configKey='addSeparatorForFav'
-                  label='添加分割线'
-                  tooltip='顺序显示时, 按收藏夹添加分割线'
-                  css={css`
-                    margin-left: 20px !important;
-                  `}
-                />
-              </div>
+        <div className={styles.settingsGroup}>
+          <div className={styles.settingsGroupTitle}>更多设置</div>
+          <div className={cx(styles.settingsGroupContent)}>
+            <div className={styles.row}>
+              <span
+                css={css`
+                  min-width: 100px;
+                `}
+              >
+                「稍后再看」
+              </span>
+              <FlagSettingItem
+                configKey='shuffleForWatchLater'
+                label='随机顺序'
+                tooltip='不包括近期添加的「稍后再看」'
+              />
+              <FlagSettingItem
+                configKey='addSeparatorForWatchLater'
+                label='添加分割线'
+                tooltip='添加「近期」「更早」分割线'
+                css={css`
+                  margin-left: 20px !important;
+                `}
+              />
+            </div>
+            <div className={styles.row}>
+              <span
+                css={css`
+                  min-width: 100px;
+                `}
+              >
+                「收藏」
+              </span>
+              <FlagSettingItem configKey='shuffleForFav' label='随机顺序' tooltip='随机收藏' />
+              <FlagSettingItem
+                configKey='addSeparatorForFav'
+                label='添加分割线'
+                tooltip='顺序显示时, 按收藏夹添加分割线'
+                css={css`
+                  margin-left: 20px !important;
+                `}
+              />
             </div>
           </div>
         </div>
