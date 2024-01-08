@@ -430,6 +430,7 @@ const VideoCardInner = memo(function VideoCardInner({
       usingAction?: typeof watchLaterDel | typeof watchLaterAdd,
     ): Promise<{ success: boolean; targetState?: boolean }> => {
       e?.preventDefault()
+      e?.stopPropagation()
 
       usingAction ??= watchLaterAdded ? watchLaterDel : watchLaterAdd
       if (usingAction !== watchLaterAdd && usingAction !== watchLaterDel) {
@@ -478,8 +479,8 @@ const VideoCardInner = memo(function VideoCardInner({
   const btnDislikeRef = useRef(null)
   const isBtnDislikeHovering = useHover(btnDislikeRef)
   const onTriggerDislike = useMemoizedFn((e?: MouseEvent) => {
-    e?.stopPropagation()
     e?.preventDefault()
+    e?.stopPropagation()
 
     if (!hasDislikeEntry) {
       if (item.api !== 'app') {
