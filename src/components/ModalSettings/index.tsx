@@ -409,7 +409,7 @@ function TabPaneBasic() {
           <FlagSettingItem
             configKey={'openVideoInPopupWhenClick'}
             label='默认「小窗打开」'
-            tooltip='点击视频链接默认行为改为「小窗打开」,并自动网页全屏'
+            tooltip='点击视频链接默认行为改为「小窗打开」并自动网页全屏'
             className={styles.check}
           />
 
