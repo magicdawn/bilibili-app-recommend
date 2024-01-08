@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.20.0
+
+- 支持在弹出窗口打开视频, 支持自动网页全屏 / 全屏
+
+details:
+
+- e44f97a fix: stopPropagation in watchlater click
+- 7fda966 chore: tweak tooltip text
+- ac61582 feat: add auto fullscreen
+- 7aba9f3 feat: open video in popup window
+- 5b1c36e fix reference style link
+- 2fef454 chore: use markdown rerference link
+- 927241a chore: more badges
+- a93d37c doc: add readme badges
+
 ## v0.19.9
 
 - 稍后再看添加分割线, 可配置
