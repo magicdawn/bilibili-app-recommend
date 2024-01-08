@@ -119,6 +119,9 @@ export const initialSettings = {
   // 点击视频默认在 popup 中打开
   openVideoInPopupWhenClick: false,
 
+  // 新标签打开时, 自动全屏
+  openVideoAutoFullscreen: false,
+
   /**
    * 隐藏的 tab, 使用黑名单, 功能迭代之后新增的 tab, 默认开启.
    * 如果使用白名单, 新增的 tab 会被隐藏

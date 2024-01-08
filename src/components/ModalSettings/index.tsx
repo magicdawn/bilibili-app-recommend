@@ -381,13 +381,6 @@ function TabPaneBasic() {
           />
 
           <FlagSettingItem
-            configKey={'openVideoInPopupWhenClick'}
-            label='默认「小窗打开」'
-            tooltip='点击视频链接默认行为改为「小窗打开」'
-            className={styles.check}
-          />
-
-          <FlagSettingItem
             configKey={'showModalFeedOnLoad'}
             label='自动「查看更多」'
             tooltip='打开首页时自动打开「查看更多」弹窗'
@@ -405,6 +398,25 @@ function TabPaneBasic() {
             configKey={'showModalFeedEntry'}
             label='「查看更多」按钮'
             tooltip='是否展示「查看更多」按钮'
+            className={styles.check}
+          />
+        </div>
+      </div>
+
+      <div className={styles.settingsGroup}>
+        <div className={styles.settingsGroupTitle}>视频链接</div>
+        <div className={cx(styles.settingsGroupContent, styles.row)}>
+          <FlagSettingItem
+            configKey={'openVideoInPopupWhenClick'}
+            label='默认「小窗打开」'
+            tooltip='点击视频链接默认行为改为「小窗打开」,并自动网页全屏'
+            className={styles.check}
+          />
+
+          <FlagSettingItem
+            configKey={'openVideoAutoFullscreen'}
+            label='打开视频后自动全屏'
+            tooltip='点击视频链接新窗口打开视频后「自动全屏」'
             className={styles.check}
           />
         </div>

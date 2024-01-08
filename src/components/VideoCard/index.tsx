@@ -36,7 +36,12 @@ import { AppRecIconScaleMap, AppRecIconSvgNameMap } from './app-rec-icon'
 import type { VideoData } from './card.service'
 import { cancelDislike, getVideoData, watchLaterAdd, watchLaterDel } from './card.service'
 import styles from './index.module.scss'
-import { AUTO_PAGE_FULLSCREEN, STAT_NUMBER_FALLBACK, borderRadiusStyle } from './index.shared'
+import {
+  PLAYER_SCREEN_MODE,
+  PlayerScreenMode,
+  STAT_NUMBER_FALLBACK,
+  borderRadiusStyle,
+} from './index.shared'
 import type { IVideoCardData } from './process/normalize'
 import { normalizeCardData } from './process/normalize'
 import { usePreviewAnimation } from './usePreviewAnimation'
@@ -580,7 +585,7 @@ const VideoCardInner = memo(function VideoCardInner({
     ].join(',')
 
     const u = new URL(href, location.href)
-    u.searchParams.append(AUTO_PAGE_FULLSCREEN.key, AUTO_PAGE_FULLSCREEN.value)
+    u.searchParams.append(PLAYER_SCREEN_MODE, PlayerScreenMode.WebFullscreen)
     const newHref = u.href
 
     debug('openInPopup: features -> %s', features)
@@ -588,9 +593,20 @@ const VideoCardInner = memo(function VideoCardInner({
   })
 
   const handleVideoLinkClick: MouseEventHandler = useMemoizedFn((e) => {
-    if (!settings.openVideoInPopupWhenClick) return
-    e.preventDefault()
-    onOpenInPopup()
+    if (settings.openVideoInPopupWhenClick) {
+      e.preventDefault()
+      onOpenInPopup()
+      return
+    }
+
+    if (settings.openVideoAutoFullscreen) {
+      e.preventDefault()
+      const u = new URL(href, location.href)
+      u.searchParams.set(PLAYER_SCREEN_MODE, PlayerScreenMode.Fullscreen)
+      const newHref = u.href
+      window.open(newHref, '_blank')
+      return
+    }
   })
 
   const onOpenInBackground = useMemoizedFn(() => {

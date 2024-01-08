@@ -1,5 +1,10 @@
+/**
+ * 创意来源: https://github.com/hakadao/BewlyBewly/issues/101#issuecomment-1874308120
+ * 试用了下, 感觉不错, 在本脚本里实现了
+ */
+
 import { baseDebug } from '$common'
-import { AUTO_PAGE_FULLSCREEN } from '$components/VideoCard/index.shared'
+import { PLAYER_SCREEN_MODE, PlayerScreenMode } from '$components/VideoCard/index.shared'
 import delay from 'delay'
 import ms from 'ms'
 
@@ -10,26 +15,30 @@ export function initVideoPlayPage() {
 }
 
 async function handleFullscreen() {
-  const autoPageFullscreen =
-    new URL(location.href).searchParams.get(AUTO_PAGE_FULLSCREEN.key) === AUTO_PAGE_FULLSCREEN.value
-  if (!autoPageFullscreen) return
+  const targetMode = new URL(location.href).searchParams.get(PLAYER_SCREEN_MODE)
+  const next =
+    targetMode === PlayerScreenMode.WebFullscreen || targetMode === PlayerScreenMode.Fullscreen
+  if (!next) return
 
+  let action: (() => void) | undefined
   // NOTE: aria-label 使用中文, 目前没找到 bilibili.com 在哪切换语言, 应该只有中文
-  const getBtn = () => document.querySelector<HTMLElement>('[role="button"][aria-label="网页全屏"]')
+  if (targetMode === PlayerScreenMode.WebFullscreen) {
+    action = () =>
+      document.querySelector<HTMLElement>('[role="button"][aria-label="网页全屏"]')?.click()
+  }
+  if (targetMode === PlayerScreenMode.Fullscreen) {
+    action = () =>
+      document.querySelector<HTMLElement>('[role="button"][aria-label="全屏"]')?.click()
+  }
+
   const getCurrentMode = (): PlayerScreenMode =>
     (document.querySelector<HTMLDivElement>('#bilibili-player .bpx-player-container')?.dataset
       .screen as PlayerScreenMode | undefined) || PlayerScreenMode.Normal
 
   const timeoutAt = Date.now() + ms('30s')
-  while (getCurrentMode() !== PlayerScreenMode.WebFullscreen && Date.now() <= timeoutAt) {
-    getBtn()?.click()
+  while (getCurrentMode() !== targetMode && Date.now() <= timeoutAt) {
+    action?.()
     await delay(100)
   }
-  debug('AUTO_PAGE_FULLSCREEN fulfilled')
-}
-
-const enum PlayerScreenMode {
-  Normal = 'normal',
-  Wide = 'wide',
-  WebFullscreen = 'web',
+  debug('handleFullscreen to %s complete', targetMode)
 }
