@@ -7,3 +7,8 @@ export const borderRadiusStyle: CSSProperties = {
 }
 
 export const STAT_NUMBER_FALLBACK = '0'
+
+export const AUTO_PAGE_FULLSCREEN = {
+  key: 'auto-page-fullscreen',
+  value: 'true',
+} as const

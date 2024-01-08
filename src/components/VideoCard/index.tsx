@@ -1,4 +1,4 @@
-import { APP_KEY_PREFIX, APP_NAME, OPERATION_FAIL_MSG } from '$common'
+import { APP_KEY_PREFIX, APP_NAME, OPERATION_FAIL_MSG, baseDebug } from '$common'
 import { useMittOn } from '$common/hooks/useMitt'
 import type { Reason } from '$components/ModalDislike'
 import { delDislikeId, showModalDislike, useDislikedReason } from '$components/ModalDislike'
@@ -7,6 +7,7 @@ import type { OnRefresh } from '$components/RecGrid/useRefresh'
 import { videoSourceTabState } from '$components/RecHeader/tab'
 import { useCurrentSourceTab } from '$components/RecHeader/tab.shared'
 import type { AppRecItem, AppRecItemExtend, RecItemType } from '$define'
+import { ApiType } from '$define/index.shared'
 import { IconPark } from '$icon-park'
 import { cx } from '$libs'
 import { isMac, isSafari } from '$platform'
@@ -28,17 +29,19 @@ import delay from 'delay'
 import { motion } from 'framer-motion'
 import type { Emitter } from 'mitt'
 import mitt from 'mitt'
-import type { CSSProperties, ComponentProps, MouseEvent } from 'react'
+import type { CSSProperties, ComponentProps, MouseEvent, MouseEventHandler } from 'react'
 import { Fragment, memo, useEffect, useMemo, useRef, useState } from 'react'
 import { PreviewImage } from './PreviewImage'
 import { AppRecIconScaleMap, AppRecIconSvgNameMap } from './app-rec-icon'
 import type { VideoData } from './card.service'
 import { cancelDislike, getVideoData, watchLaterAdd, watchLaterDel } from './card.service'
 import styles from './index.module.scss'
-import { STAT_NUMBER_FALLBACK, borderRadiusStyle } from './index.shared'
+import { AUTO_PAGE_FULLSCREEN, STAT_NUMBER_FALLBACK, borderRadiusStyle } from './index.shared'
 import type { IVideoCardData } from './process/normalize'
 import { normalizeCardData } from './process/normalize'
 import { usePreviewAnimation } from './usePreviewAnimation'
+
+const debug = baseDebug.extend('components:VideoCard')
 
 function copyContent(content: string) {
   GM.setClipboard(content)
@@ -545,6 +548,51 @@ const VideoCardInner = memo(function VideoCardInner({
     window.open(href, '_blank')
   })
 
+  const onOpenInPopup = useMemoizedFn(() => {
+    let popupWidth = 1000
+    let popupHeight = Math.ceil((popupWidth / 16) * 9)
+
+    // try detect 竖屏视频
+    if (item.api === ApiType.app && item.uri?.startsWith('bilibili://')) {
+      const searchParams = new URL(item.uri).searchParams
+      const playerWidth = Number(searchParams.get('player_width') || 0)
+      const playerHeight = Number(searchParams.get('player_height') || 0)
+
+      if (playerWidth && playerHeight && !isNaN(playerWidth) && !isNaN(playerHeight)) {
+        // 竖屏视频
+        if (playerWidth < playerHeight) {
+          popupWidth = 720
+          popupHeight = Math.floor((popupWidth / 9) * 16)
+        }
+      }
+    }
+
+    // 将 left 减去 50px，你可以根据需要调整这个值
+    const left = (window.innerWidth - popupWidth) / 2
+    const top = (window.innerHeight - popupHeight) / 2 - 50
+
+    const features = [
+      'popup=true',
+      `width=${popupWidth}`,
+      `height=${popupHeight}`,
+      `left=${left}`,
+      `top=${top}`,
+    ].join(',')
+
+    const u = new URL(href, location.href)
+    u.searchParams.append(AUTO_PAGE_FULLSCREEN.key, AUTO_PAGE_FULLSCREEN.value)
+    const newHref = u.href
+
+    debug('openInPopup: features -> %s', features)
+    window.open(newHref, '_blank', features)
+  })
+
+  const handleVideoLinkClick: MouseEventHandler = useMemoizedFn((e) => {
+    if (!settings.openVideoInPopupWhenClick) return
+    e.preventDefault()
+    onOpenInPopup()
+  })
+
   const onOpenInBackground = useMemoizedFn(() => {
     // `/video/BV1234` when used in TamperMonkey, it relatives to extension root
     // see https://github.com/magicdawn/bilibili-app-recommend/issues/63
@@ -641,6 +689,12 @@ const VideoCardInner = memo(function VideoCardInner({
         label: '打开',
         icon: <IconPark name='EfferentFour' size={15} />,
         onClick: onOpen,
+      },
+      {
+        key: 'open-link-in-popup',
+        label: '小窗打开',
+        icon: <IconPark name='EfferentFour' size={15} />,
+        onClick: onOpenInPopup,
       },
       {
         key: 'open-link-in-background',
@@ -832,7 +886,7 @@ const VideoCardInner = memo(function VideoCardInner({
         trigger={['contextMenu']}
         onOpenChange={onContextMenuOpenChange}
       >
-        <a href={href} target='_blank'>
+        <a href={href} target='_blank' onClick={handleVideoLinkClick}>
           <div
             className='bili-video-card__image __scale-player-wrap'
             ref={videoPreviewWrapperRef}
@@ -994,6 +1048,7 @@ const VideoCardInner = memo(function VideoCardInner({
               data-mod='partition_recommend'
               data-idx='content'
               data-ext='click'
+              onClick={handleVideoLinkClick}
             >
               <h3 className='bili-video-card__info--tit' title={title}>
                 {titleRender ?? title}
@@ -1035,7 +1090,7 @@ const VideoCardInner = memo(function VideoCardInner({
             margin-top: 15px;
           `}
         >
-          <a href={authorHref} target='_blank'>
+          <a href={authorHref} target='_blank' onClick={handleVideoLinkClick}>
             {authorFace ? (
               <Avatar src={authorFace} />
             ) : (

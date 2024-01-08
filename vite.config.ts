@@ -153,6 +153,8 @@ export default defineConfig(({ command }) => ({
           'https://www.bilibili.com/?*',
           'https://www.bilibili.com/index.html',
           'https://www.bilibili.com/index.html?*',
+          'https://www.bilibili.com/video/*',
+          'https://www.bilibili.com/list/watchlater?*',
         ],
         connect: [
           //
@@ -187,7 +189,7 @@ export default defineConfig(({ command }) => ({
           'axios': cdn.npmmirror('axios', 'dist/axios.min.js'),
           'axios-userscript-adapter': cdn.npmmirror(
             'axiosGmxhrAdapter',
-            'dist/axiosGmxhrAdapter.min.js'
+            'dist/axiosGmxhrAdapter.min.js',
           ),
           'react': cdn.npmmirror('React', 'umd/react.production.min.js'),
           'react-dom': cdn.npmmirror('ReactDOM', 'umd/react-dom.production.min.js'),

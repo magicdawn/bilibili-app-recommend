@@ -116,6 +116,9 @@ export const initialSettings = {
    */
   backupSettingsToArticleDraft: false,
 
+  // 点击视频默认在 popup 中打开
+  openVideoInPopupWhenClick: false,
+
   /**
    * 隐藏的 tab, 使用黑名单, 功能迭代之后新增的 tab, 默认开启.
    * 如果使用白名单, 新增的 tab 会被隐藏

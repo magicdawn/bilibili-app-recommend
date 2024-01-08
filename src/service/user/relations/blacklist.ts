@@ -2,7 +2,7 @@
  * user blacklist services
  */
 
-import { APP_NAME, baseDebug } from '$common'
+import { APP_NAME, IN_BILIBILI_HOMEPAGE, baseDebug } from '$common'
 import { isWebApiSuccess, request } from '$request'
 import { whenIdle } from '$utility'
 import { snapshot, subscribe, useSnapshot } from 'valtio'
@@ -86,7 +86,10 @@ export async function getUserBlacklist() {
   return blackMids
 }
 
-export const getUserBlacklistPromise = (async () => {
+;(async () => {
+  // 首页需要
+  if (!IN_BILIBILI_HOMEPAGE) return
+
   await whenIdle()
   const ids = await getUserBlacklist()
 

@@ -1,4 +1,4 @@
-import { REQUEST_FAIL_MSG } from '$common'
+import { IN_BILIBILI_HOMEPAGE, REQUEST_FAIL_MSG } from '$common'
 import { antdBtnTextStyle, verticalAlignStyle } from '$common/emotion-css'
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
 import { type DynamicFeedItemExtend, type DynamicFeedJson } from '$define'
@@ -110,6 +110,8 @@ export const dynamicFeedFilterStore = proxy<{
 })
 
 setTimeout(() => {
+  if (!IN_BILIBILI_HOMEPAGE) return
+
   if (!dynamicFeedFilterStore.upList.length) {
     requestIdleCallback(() => {
       updateUpList()

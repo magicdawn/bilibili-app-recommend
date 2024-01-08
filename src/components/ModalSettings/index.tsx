@@ -104,7 +104,7 @@ const enum TabPaneKey {
 const tab = __PROD__
   ? TabPaneKey.basic
   : // for debug, free to change this
-    TabPaneKey.videoSourceTabConfig
+    TabPaneKey.basic
 const modalSettingsStore = proxy({ tab })
 
 export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => void }) {
@@ -377,6 +377,13 @@ function TabPaneBasic() {
                 切换设置快捷键: <Tag color='green'>shift+c</Tag>
               </>
             }
+            className={styles.check}
+          />
+
+          <FlagSettingItem
+            configKey={'openVideoInPopupWhenClick'}
+            label='默认「小窗打开」'
+            tooltip='点击视频链接默认行为改为「小窗打开」'
             className={styles.check}
           />
 
