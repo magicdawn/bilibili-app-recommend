@@ -3,29 +3,44 @@ import delay from 'delay'
 
 const debug = baseDebug.extend('utility:dom')
 
-const TIMEOUT = 10 * 1000
-const DELAY_INTERVAL = 200
+const DEFAULT_TIMEOUT = 10 * 1000
+const DEFAULT_DELAY_INTERVAL = 200
+
+export interface TryActionOptions {
+  selectorPredicate?: (el: HTMLElement) => boolean
+  delayInterval?: number
+  timeout?: number
+  warnOnTimeout?: boolean
+}
 
 export async function tryAction(
   selector: string,
   action: (el: HTMLElement) => void | Promise<void>,
-  selectorPredicate: (el: HTMLElement) => boolean = () => true,
+  moreOptions?: TryActionOptions,
 ) {
+  const selectorPredicate = moreOptions?.selectorPredicate
+  const timeout = moreOptions?.timeout ?? DEFAULT_TIMEOUT
+  const delayInterval = moreOptions?.delayInterval ?? DEFAULT_DELAY_INTERVAL
+  const warnOnTimeout = moreOptions?.warnOnTimeout ?? true
+
   let arr: HTMLElement[] = []
   const query = () => {
-    arr = Array.from(document.querySelectorAll<HTMLElement>(selector)).filter(selectorPredicate)
+    arr = Array.from(document.querySelectorAll<HTMLElement>(selector))
+    if (selectorPredicate) arr = arr.filter(selectorPredicate)
   }
   query()
 
   const start = performance.now()
-  const timeoutAt = start + TIMEOUT
+  const timeoutAt = start + timeout
   while (!arr.length && performance.now() < timeoutAt) {
-    await delay(DELAY_INTERVAL)
+    await delay(delayInterval)
     query()
   }
 
   if (!arr.length) {
-    console.warn(`[${APP_NAME}]: tryAction timeout, selector = \`%s\``, selector)
+    if (warnOnTimeout) {
+      console.warn(`[${APP_NAME}]: tryAction timeout, selector = \`%s\``, selector)
+    }
     return
   }
 
@@ -45,7 +60,7 @@ export async function tryToRemove(
   delayMs?: number,
 ) {
   if (typeof delayMs === 'number') await delay(delayMs)
-  return tryAction(selector, (el) => el.remove(), selectorPredicate)
+  return tryAction(selector, (el) => el.remove(), { selectorPredicate })
 }
 
 /**

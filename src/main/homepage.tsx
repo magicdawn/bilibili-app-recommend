@@ -3,6 +3,7 @@ import { AntdApp } from '$components/AntdApp'
 import { tryAction, tryToRemove } from '$utility/dom'
 import { FloatButton } from 'antd'
 import delay from 'delay'
+import type { Root } from 'react-dom/client'
 import { createRoot } from 'react-dom/client'
 import { PureRecommend } from '../components/PureRecommend'
 import { SectionRecommend } from '../components/SectionRecommend'
@@ -12,13 +13,34 @@ import { settings } from '../settings'
 // in this entry, if no insert point found, render to document body
 const isHashEntry = (location.hash || '').startsWith(`#/${APP_NAME}/`)
 
+function hasBewlyBewly() {
+  return !isHashEntry && document.documentElement.classList.contains('bewly-design')
+}
+
+// 有时入口检测不到 bewly, bewly 比本脚本后运行, 在渲染完成后, 持续检测一段时间, 检测到取消渲染
+async function tryDetectBewlyBewly() {
+  return tryAction(
+    'html.bewly-design',
+    () => {
+      console.warn(`${APP_NAME}: unmount for using bewly-design`)
+      root?.unmount()
+    },
+    {
+      timeout: 5_000,
+      warnOnTimeout: false,
+    },
+  )
+}
+
+let root: Root | undefined
+
 export async function initHomepage() {
   // 提示有插件影响
   tryToRemove('.adblock-tips')
   // 变灰
   tryAction('html.gray', (el) => el.classList.remove('gray'))
 
-  if (!isHashEntry && document.documentElement.classList.contains('bewly-design')) {
+  if (hasBewlyBewly()) {
     console.warn(`${APP_NAME}: quit for using bewly-design`)
     return
   }
@@ -63,7 +85,7 @@ async function initHomepageSection() {
   insert(recommendContainer)
 
   // react render
-  const root = createRoot(recommendContainer)
+  root = createRoot(recommendContainer)
   root.render(
     <AntdApp injectGlobalStyle renderAppComponent>
       <SectionRecommend />
@@ -77,6 +99,8 @@ async function initHomepageSection() {
   if (getIsInternalTesting()) {
     tryToRemove('.bili-feed4 .header-channel')
   }
+
+  tryDetectBewlyBewly()
 }
 
 async function initHomepagePureRecommend() {
@@ -130,7 +154,7 @@ async function initHomepagePureRecommend() {
   biliLayout.appendChild(reactContainer)
 
   // react render
-  const root = createRoot(reactContainer)
+  root = createRoot(reactContainer)
   root.render(
     <AntdApp injectGlobalStyle renderAppComponent>
       <PureRecommend />
@@ -144,4 +168,6 @@ async function initHomepagePureRecommend() {
       )}
     </AntdApp>,
   )
+
+  tryDetectBewlyBewly()
 }
