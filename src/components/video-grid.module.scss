@@ -114,7 +114,11 @@ $card-min-width: 250px;
 
 @for $i from 2 through 5 {
   @container video-grid-container (width >= #{($card-min-width + $col-gap) * $i - $col-gap}) {
-    .video-grid-fancy {
+    // 使用 .video-grid 增加权重, fix dark-reader 兼容性
+    // https://greasyfork.org/zh-CN/scripts/443530-bilibili-app-recommend/discussions/222126
+    // dark-reader 会将 没有@container 修饰的 .vdieo-grid-fancy 再次添加, 导致 --col 覆盖为 2
+    // 也可以使用 :where 降低默认 .video-grid-fancy 权重
+    .video-grid.video-grid-fancy {
       --col: #{$i};
     }
   }
