@@ -19,7 +19,9 @@ export const getIsInternalTesting = once(() => {
  * document.querySelector('[data-name=darkMode] .main-content').click()
  */
 
-const getIsDarkMode = () => document.body.classList.contains('dark') || document.body.classList.contains('bilibili-helper-dark-mode')
+const getIsDarkMode = () =>
+  document.body.classList.contains('dark') ||
+  document.body.classList.contains('bilibili-helper-dark-mode')
 // ||
 // document.documentElement.getAttribute('data-darkreader-scheme') === 'dark'
 const isDarkModeState = proxy({ value: getIsDarkMode() }) // like vue3 ref()
