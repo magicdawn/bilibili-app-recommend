@@ -111,6 +111,9 @@ export const initialSettings = {
   // video-source-tab 高度, 默认 compact
   styleUseStandardVideoSourceTab: false,
 
+  // sticky header
+  styleUseStickyHeaderInPureRecommend: true,
+
   /**
    * 功能
    */

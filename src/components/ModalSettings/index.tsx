@@ -284,6 +284,19 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                           tooltip='默认紧凑高度'
                         />
                       </div>
+                      <div className={styles.row} style={{ marginTop: 5 }}>
+                        <FlagSettingItem
+                          configKey='styleUseStickyHeaderInPureRecommend'
+                          label='纯推荐模式: stick tab bar'
+                          tooltip={
+                            <>
+                              默认勾选: Tab 栏会吸附在顶栏下方
+                              <br />
+                              取消选中: Tab 栏会随页面一起滚动
+                            </>
+                          }
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>

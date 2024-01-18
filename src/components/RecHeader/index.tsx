@@ -76,7 +76,13 @@ export const RecHeader = forwardRef<
     rightSlot?: ReactNode
   }
 >(function RecHeader({ onRefresh, refreshing, leftSlot, rightSlot }, ref) {
-  const { accessKey, pureRecommend, styleFancy, showModalFeedEntry } = useSettingsSnapshot()
+  const {
+    accessKey,
+    pureRecommend,
+    styleFancy,
+    showModalFeedEntry,
+    styleUseStickyHeaderInPureRecommend,
+  } = useSettingsSnapshot()
   const { modalFeedVisible, modalConfigVisible } = useSnapshot(headerState)
 
   useKeyPress(
@@ -127,12 +133,14 @@ export const RecHeader = forwardRef<
               height: 50px;
             `,
             pureRecommend &&
+              styleUseStickyHeaderInPureRecommend &&
               css`
                 position: sticky;
                 top: ${headerHeight - 1}px; // 有缝隙, 故 -1 px
                 z-index: 1000;
               `,
             pureRecommend &&
+              styleUseStickyHeaderInPureRecommend &&
               sticky &&
               css`
                 background-color: var(--${styleFancy ? 'bg2' : 'bg1'}_float);
