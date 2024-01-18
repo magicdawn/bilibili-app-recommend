@@ -6,7 +6,7 @@
  * http://www.apache.org/licenses/
  */
 
-import { verticalAlignStyle } from '$common/emotion-css'
+import { flexCenterStyle } from '$common/emotion-css'
 import { HelpInfo } from '$components/piece'
 import { updateSettings, useSettingsSnapshot } from '$settings'
 import { css } from '@emotion/react'
@@ -53,37 +53,36 @@ export function ThemesSelect() {
                 const isActive = activeId === t.id
                 const isCustom = t.isCustom
 
-                const preview = (
-                  <div
-                    className='preview'
-                    css={css`
-                      aspect-ratio: 1;
-                      width: 42px;
-                      background-color: ${isCustom ? customColorHex : t.colorPrimary};
-                      border-radius: 6px;
-                    `}
-                  />
-                )
-
                 let previewWrapper: ReactNode = (
                   <div
                     className='preview-wrapper'
                     css={[
                       css`
                         aspect-ratio: 1;
-                        width: 50px;
-                        border: 2px solid transparent;
-                        border-radius: 6px;
+                        width: 38px;
+                        border: 3px solid transparent;
+                        border-radius: 50%;
+                        /* border-radius: 6px; */
                         margin: 0 auto;
+                        font-size: 0;
                       `,
-                      verticalAlignStyle,
+                      flexCenterStyle,
                       isActive &&
                         css`
                           border-color: ${t.colorPrimary};
                         `,
                     ]}
                   >
-                    {preview}
+                    <div
+                      className='preview'
+                      css={css`
+                        aspect-ratio: 1;
+                        width: 30px;
+                        background-color: ${isCustom ? customColorHex : t.colorPrimary};
+                        border-radius: 50%;
+                        /* border-radius: 4px; */
+                      `}
+                    />
                   </div>
                 )
 

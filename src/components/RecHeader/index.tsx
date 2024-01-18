@@ -10,7 +10,7 @@ import { Button, Space } from 'antd'
 import type { CSSProperties, MouseEvent, MouseEventHandler, ReactNode } from 'react'
 import { forwardRef, useImperativeHandle, useRef, useState } from 'react'
 // import { useSticky } from 'react-use-sticky'
-import { antdBtnTextStyle, verticalAlignStyle } from '$common/emotion-css'
+import { antdBtnTextStyle, flexCenterStyle } from '$common/emotion-css'
 import { useSticky } from '$common/hooks/useSticky'
 import type { OnRefresh } from '$components/RecGrid/useRefresh'
 import { OnRefreshContext } from '$components/RecGrid/useRefresh'
@@ -30,7 +30,7 @@ const configStyles = {
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    ${verticalAlignStyle}
+    ${flexCenterStyle}
   `,
   icon: css`
     svg {
@@ -169,7 +169,7 @@ export const RecHeader = forwardRef<
               />
 
               {showModalFeedEntry && (
-                <Button css={verticalAlignStyle} onClick={showModalFeed}>
+                <Button css={flexCenterStyle} onClick={showModalFeed}>
                   <span css={antdBtnTextStyle}>查看更多</span>
                   <svg
                     css={css`
@@ -255,7 +255,7 @@ export const RefreshButton = forwardRef<RefreshButtonActions, RefreshButtonProps
       className={className}
       style={style}
       css={css`
-        ${verticalAlignStyle}
+        ${flexCenterStyle}
         &.ant-btn:not(:disabled):focus-visible {
           outline: none;
         }

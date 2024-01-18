@@ -1,6 +1,6 @@
 import { css } from '@emotion/react'
 
-export const verticalAlignStyle = css`
+export const flexCenterStyle = css`
   display: flex;
   align-items: center;
   justify-content: center;

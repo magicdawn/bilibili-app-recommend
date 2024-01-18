@@ -1,5 +1,5 @@
 import { IN_BILIBILI_HOMEPAGE, REQUEST_FAIL_MSG } from '$common'
-import { antdBtnTextStyle, verticalAlignStyle } from '$common/emotion-css'
+import { antdBtnTextStyle, flexCenterStyle } from '$common/emotion-css'
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
 import { type DynamicFeedItemExtend, type DynamicFeedJson } from '$define'
 import { ApiType } from '$define/index.shared'
@@ -220,7 +220,7 @@ export function DynamicFeedUsageInfo() {
           <Button>{upName ? `UP: ${upName}` : '全部'}</Button>
         </Dropdown>
         {!!upName && (
-          <Button onClick={onClear} css={[verticalAlignStyle]}>
+          <Button onClick={onClear} css={[flexCenterStyle]}>
             <IconPark name='Return' size={14} style={{ marginRight: 5 }} />
             <span css={antdBtnTextStyle}>清除</span>
           </Button>
