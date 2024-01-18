@@ -59,8 +59,8 @@ export function ThemesSelect() {
                     css={[
                       css`
                         aspect-ratio: 1;
-                        width: 38px;
-                        border: 3px solid transparent;
+                        width: 40px;
+                        border: 2px solid transparent;
                         border-radius: 50%;
                         /* border-radius: 6px; */
                         margin: 0 auto;
