@@ -286,7 +286,7 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                       </div>
                       <div className={styles.row} style={{ marginTop: 5 }}>
                         <FlagSettingItem
-                          configKey='styleUseStickyHeaderInPureRecommend'
+                          configKey='styleUseStickyTabbarInPureRecommend'
                           label='纯推荐模式: stick tab bar'
                           tooltip={
                             <>

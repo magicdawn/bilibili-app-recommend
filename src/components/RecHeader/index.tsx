@@ -81,7 +81,7 @@ export const RecHeader = forwardRef<
     pureRecommend,
     styleFancy,
     showModalFeedEntry,
-    styleUseStickyHeaderInPureRecommend,
+    styleUseStickyTabbarInPureRecommend,
   } = useSettingsSnapshot()
   const { modalFeedVisible, modalConfigVisible } = useSnapshot(headerState)
 
@@ -133,14 +133,14 @@ export const RecHeader = forwardRef<
               height: 50px;
             `,
             pureRecommend &&
-              styleUseStickyHeaderInPureRecommend &&
+              styleUseStickyTabbarInPureRecommend &&
               css`
                 position: sticky;
                 top: ${headerHeight - 1}px; // 有缝隙, 故 -1 px
                 z-index: 1000;
               `,
             pureRecommend &&
-              styleUseStickyHeaderInPureRecommend &&
+              styleUseStickyTabbarInPureRecommend &&
               sticky &&
               css`
                 background-color: var(--${styleFancy ? 'bg2' : 'bg1'}_float);
