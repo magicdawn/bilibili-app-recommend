@@ -7,6 +7,8 @@ export const AppRecIconSvgNameMap = {
   danmaku: '#widget-video-danmaku',
   like: '#widget-agree',
   bangumiFollow: '#widget-followed',
+  favorite: '#widget-favorite',
+  coin: '#widget-coin',
 }
 
 export type AppRecIconField = keyof typeof AppRecIconSvgNameMap
@@ -22,6 +24,7 @@ export const AppRecIconMap: Record<number, keyof typeof AppRecIconSvgNameMap> = 
 
 export const AppRecIconScaleMap: Partial<Record<keyof typeof AppRecIconSvgNameMap, number>> = {
   bangumiFollow: 1.3,
+  favorite: 0.9,
 }
 
 export function getField(id: number) {
