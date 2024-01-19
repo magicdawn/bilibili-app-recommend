@@ -56,7 +56,7 @@ export async function getAccessKeyByQrCode() {
     // poll
     if (shouldBreak()) return
     res = await poll(qrcodeStore.auth_code)
-    const { success, accessKey, message, action } = res
+    const { success, accessKey, accessKeyExpireAt, message, action } = res
     if (shouldBreak()) return
 
     /**
@@ -69,7 +69,7 @@ export async function getAccessKeyByQrCode() {
     if (success) {
       await delay(1000)
       hideQrCodeModal()
-      return accessKey
+      return { accessKey, accessKeyExpireAt }
     }
 
     // refresh

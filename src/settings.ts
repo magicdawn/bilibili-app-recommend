@@ -1,8 +1,9 @@
-import { APP_NAME, baseDebug } from '$common'
+import { APP_NAME, IN_BILIBILI_HOMEPAGE, baseDebug } from '$common'
 import { HAS_RESTORED_SETTINGS } from '$components/ModalSettings/index.shared'
 import type { TabType } from '$components/RecHeader/tab.shared'
 import { AppApiDevice } from '$define/index.shared'
 import { setData } from '$service/user/article-draft'
+import { toast } from '$utility'
 import { omit, pick, throttle } from 'lodash'
 import ms from 'ms'
 import { proxy, snapshot, subscribe, useSnapshot } from 'valtio'
@@ -11,6 +12,7 @@ const debug = baseDebug.extend('settings')
 
 export const initialSettings = {
   accessKey: '',
+  accessKeyExpireAt: 0,
 
   // 窄屏模式
   useNarrowMode: false,
@@ -185,7 +187,7 @@ async function saveToDraft(val: Readonly<Settings>) {
   // skip when `HAS_RESTORED_SETTINGS=true`
   if (HAS_RESTORED_SETTINGS) return
 
-  const httpBackupVal = omit(val, ['accessKey'])
+  const httpBackupVal = omit(val, ['accessKey', 'accessKeyExpireAt'])
   try {
     await setDataThrottled(httpBackupVal)
     debug('backup to article draft complete')
@@ -212,3 +214,15 @@ export function resetSettings() {
  * load on init
  */
 await load()
+
+/**
+ * access_key expire check
+ */
+if (
+  IN_BILIBILI_HOMEPAGE &&
+  settings.accessKey &&
+  settings.accessKeyExpireAt &&
+  Date.now() >= settings.accessKeyExpireAt
+) {
+  toast('access_key 已过期, 请重新获取 !!!')
+}

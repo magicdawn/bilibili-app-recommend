@@ -38,6 +38,7 @@ export async function getQrCodeInfo() {
 export type PollResult = {
   success: boolean
   accessKey?: string
+  accessKeyExpireAt?: number
   message: string
   action?: 'refresh' | 'wait' | 'break'
 }
@@ -82,7 +83,13 @@ export async function poll(auth_code: string): Promise<PollResult> {
   }
 
   const accessKey = json.data.access_token
-  return { success: true, accessKey, message: '获取成功' }
+  const accessKeyExpireAt = Date.now() + json.data.expires_in * 1000
+  return {
+    success: true,
+    message: '获取成功',
+    accessKey,
+    accessKeyExpireAt,
+  }
 }
 
 export async function qrcodeConfirm(auth_code: string) {

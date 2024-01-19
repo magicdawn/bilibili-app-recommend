@@ -62,7 +62,7 @@ export function TvQrCodeAuth() {
       }}
     >
       <div className={BaseModalClass.modalHeader}>
-        <div className={BaseModalClass.modalTitle}>使用移动端 Bilibili App 扫码获取 access_key</div>
+        <div className={BaseModalClass.modalTitle}></div>
         <div className='space' style={{ flex: 1 }}></div>
         <ModalClose onClick={onHide} />
       </div>
@@ -74,21 +74,29 @@ export function TvQrCodeAuth() {
             text-align: center;
           `}
         >
+          <h2
+            css={css`
+              font-size: 20px;
+            `}
+          >
+            使用「哔哩哔哩」或「bilibili」APP 扫码获取 access_key
+          </h2>
+
           <div
             css={css`
-              height: 30px;
+              font-size: 14px;
               display: flex;
               align-items: center;
               justify-content: center;
-              font-size: 20px;
-              margin-bottom: 5px;
+              min-height: 20px;
+              margin: 10px 0 5px;
             `}
           >
             {message || ''}
           </div>
 
           {qrcode ? (
-            <QRCodeSVG value={qrcode} size={200} />
+            <QRCodeSVG value={qrcode} size={200} includeMargin />
           ) : (
             <div className='qrcode-placeholder'></div>
           )}
