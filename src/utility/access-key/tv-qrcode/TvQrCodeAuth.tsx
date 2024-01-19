@@ -1,6 +1,7 @@
 import { APP_NAME_ROOT_CLASSNAME } from '$common'
 import { AntdApp } from '$components/AntdApp'
 import { BaseModal, BaseModalClass, ModalClose } from '$components/BaseModal'
+import { useIsDarkMode } from '$platform'
 import { css } from '@emotion/react'
 import { once } from 'lodash'
 import mitt from 'mitt'
@@ -51,6 +52,9 @@ async function confirmQrCodeLoginWithCookie() {
 export function TvQrCodeAuth() {
   const { qrcode, show, message } = useSnapshot(store)
   const onHide = hideQrCodeModal
+
+  const dark = useIsDarkMode()
+
   return (
     <BaseModal
       {...{
@@ -96,7 +100,7 @@ export function TvQrCodeAuth() {
           </div>
 
           {qrcode ? (
-            <QRCodeSVG value={qrcode} size={200} includeMargin />
+            <QRCodeSVG value={qrcode} size={200} includeMargin={dark} />
           ) : (
             <div className='qrcode-placeholder'></div>
           )}
