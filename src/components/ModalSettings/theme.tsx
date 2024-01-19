@@ -8,6 +8,7 @@
 
 import { flexCenterStyle } from '$common/emotion-css'
 import { HelpInfo } from '$components/piece'
+import { IconPark } from '$icon-park'
 import { updateSettings, useSettingsSnapshot } from '$settings'
 import { css } from '@emotion/react'
 import { ColorPicker } from 'antd'
@@ -53,13 +54,16 @@ export function ThemesSelect() {
                 const isActive = activeId === t.id
                 const isCustom = t.isCustom
 
+                const innerSize = 30
+                const outerSize = innerSize + 8
+
                 let previewWrapper: ReactNode = (
                   <div
                     className='preview-wrapper'
                     css={[
                       css`
                         aspect-ratio: 1;
-                        width: 40px;
+                        width: ${outerSize}px;
                         border: 2px solid transparent;
                         border-radius: 50%;
                         /* border-radius: 6px; */
@@ -75,14 +79,19 @@ export function ThemesSelect() {
                   >
                     <div
                       className='preview'
-                      css={css`
-                        aspect-ratio: 1;
-                        width: 30px;
-                        background-color: ${isCustom ? customColorHex : t.colorPrimary};
-                        border-radius: 50%;
-                        /* border-radius: 4px; */
-                      `}
-                    />
+                      css={[
+                        css`
+                          aspect-ratio: 1;
+                          width: ${innerSize}px;
+                          background-color: ${isCustom ? customColorHex : t.colorPrimary};
+                          border-radius: 50%;
+                          /* border-radius: 4px; */
+                        `,
+                        flexCenterStyle,
+                      ]}
+                    >
+                      {isActive && <IconPark name='CheckSmall' size={18} fill='#fff' />}
+                    </div>
                   </div>
                 )
 

@@ -3,6 +3,7 @@ import { type ComponentProps } from 'react'
 
 import {
   AddTwo,
+  CheckSmall,
   Close,
   Computer,
   Concern,
@@ -63,6 +64,7 @@ export const ImportedIcons = {
   Fire,
   TrendTwo,
   Drag,
+  CheckSmall,
 } satisfies Record<string, Icon>
 
 export type IconName = keyof typeof ImportedIcons
