@@ -454,7 +454,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
               <Divider
                 key={item.uniqId}
                 css={css`
-                  grid-column: span var(--col);
+                  grid-column: 1 / -1;
 
                   .ant-divider-inner-text a {
                     color: var(--ant-color-link);
