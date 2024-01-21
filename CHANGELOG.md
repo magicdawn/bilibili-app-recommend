@@ -1,5 +1,33 @@
 # Changelog
 
+## v0.20.1
+
+- PR #74
+- fix BewlyBewly 检测
+- new ThemeSelect style
+- new TvQrCodeAuth style
+- access_key 过期提示
+- new config: sticky tabbar 配置
+
+details:
+
+- abb0bed chore: update deps
+- 2016420 feat: update TvQrCodeAuth modal
+- 74566a9 feat: qrcode includeMargin only in dark mode
+- 5f845fe feat: save access_key expire at
+- 6b9044a feat: add check mark to ThemeSelect
+- 05f8d5b chore: tweak ThemeSelect style
+- 2632c82 chore: tweak stat items
+- 4a63d40 chore: rename to sticky tabbar
+- acf8279 feat: add config for sticky tabbar
+- e4da06d feat: use circle in ThemeSelect
+- f17dd7d chore: ncu deps
+- e3747d0 fix: col=2 with dark-reader issue
+- 9306803 feat: add tryDetectBewlyBewly after react render
+- 7c4f6b1 chore: ncu deps & re-format src
+- bfd494b Merge pull request #74 from owwkmidream/patch-1
+- f4bfa08 feat: support the dark theme for ACGHelper (formerly Bilibili Helper).
+
 ## v0.20.0
 
 - 支持在弹出窗口打开视频, 支持自动网页全屏 / 全屏
