@@ -2,6 +2,7 @@ import { APP_NAME_ROOT_CLASSNAME } from '$common'
 import { IconPark } from '$icon-park'
 import { cx } from '$libs'
 import { useIsDarkMode } from '$platform'
+import type { SerializedStyles } from '@emotion/react'
 import { useKeyPress, useMemoizedFn } from 'ahooks'
 import type { CSSProperties, ComponentProps, MouseEvent, ReactNode } from 'react'
 import { useId, useLayoutEffect, useMemo, useRef } from 'react'
@@ -16,10 +17,14 @@ interface IProps {
   children: ReactNode
 
   // classNames
-  clsModalMask?: string
-  clsModal?: string
   styleModalMask?: CSSProperties
+  clsModalMask?: string
+  cssModalMask?: SerializedStyles
+
   styleModal?: CSSProperties
+  clsModal?: string
+  cssModal?: SerializedStyles
+
   width?: CSSProperties['width']
 
   // behaviors
@@ -47,8 +52,10 @@ export function BaseModal({
 
   styleModalMask,
   clsModalMask,
+  cssModalMask,
   styleModal,
   clsModal,
+  cssModal,
 
   width,
   hideWhenMaskOnClick = false,
@@ -130,13 +137,15 @@ export function BaseModal({
 
   return createPortal(
     <div
-      className={cx(BaseModalClass.modalMask, clsModalMask)}
       style={styleModalMask}
+      className={cx(BaseModalClass.modalMask, clsModalMask)}
+      css={cssModalMask}
       onClick={onMaskClick}
     >
       <div
-        className={cx(BaseModalClass.modal, clsModal)}
         style={{ ...wrapperStyle, width, ...styleModal }}
+        className={cx(BaseModalClass.modal, clsModal)}
+        css={cssModal}
         ref={wrapperRef}
       >
         {children}

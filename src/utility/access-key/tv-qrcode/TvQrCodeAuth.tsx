@@ -17,7 +17,7 @@ const initialValue = {
   auth_code: '',
   message: '',
 }
-const store = proxy({ ...initialValue })
+export const store = proxy({ ...initialValue })
 export const qrcodeStore = store
 
 export function updateStore(data: Partial<typeof initialValue>) {
@@ -57,13 +57,16 @@ export function TvQrCodeAuth() {
 
   return (
     <BaseModal
-      {...{
-        show,
-        onHide,
-        hideWhenMaskOnClick: false,
-        hideWhenEsc: false,
-        styleModal: { width: '600px' },
-      }}
+      show={show}
+      onHide={onHide}
+      hideWhenMaskOnClick={false}
+      hideWhenEsc={false}
+      cssModalMask={css`
+        backdrop-filter: blur(10px);
+      `}
+      cssModal={css`
+        width: 280px;
+      `}
     >
       <div className={BaseModalClass.modalHeader}>
         <div className={BaseModalClass.modalTitle}></div>
@@ -76,34 +79,46 @@ export function TvQrCodeAuth() {
           className='wrapper'
           css={css`
             text-align: center;
+            padding-top: 15px;
           `}
         >
-          <h2
-            css={css`
-              font-size: 20px;
-            `}
-          >
-            使用「哔哩哔哩」或「bilibili」APP 扫码获取 access_key
-          </h2>
-
           <div
+            className='qr-wrapper'
             css={css`
-              font-size: 14px;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              min-height: 20px;
-              margin: 10px 0 5px;
+              margin-top: 20px;
+              margin-bottom: 40px;
             `}
           >
-            {message || ''}
+            <div
+              css={css`
+                font-size: 14px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                min-height: 25px;
+                margin-bottom: 5px;
+              `}
+            >
+              {message || ''}
+            </div>
+
+            {qrcode ? (
+              <QRCodeSVG value={qrcode} size={200} includeMargin={dark} />
+            ) : (
+              <div className='qrcode-placeholder'></div>
+            )}
           </div>
 
-          {qrcode ? (
-            <QRCodeSVG value={qrcode} size={200} includeMargin={dark} />
-          ) : (
-            <div className='qrcode-placeholder'></div>
-          )}
+          <div
+            className='footnote'
+            css={css`
+              font-size: 13px;
+              margin-bottom: 20px;
+            `}
+          >
+            打开「哔哩哔哩」或「bilibili」APP <br />
+            扫码获取 access_key
+          </div>
         </div>
       </div>
     </BaseModal>

@@ -2,13 +2,9 @@ import { APP_NAME, __PROD__ } from '$common'
 import { AccessKeyManage } from '$components/AccessKeyManage'
 import { AntdTooltip } from '$components/AntdApp'
 import { BaseModal, BaseModalClass, ModalClose } from '$components/BaseModal'
+import { useCurrentShowingTabKeys, useSortedTabKeys } from '$components/RecHeader/tab'
 import type { TabType } from '$components/RecHeader/tab.shared'
-import {
-  TabConfigMap,
-  TabKeys,
-  useCurrentShowingTabKeys,
-  useSortedTabKeys,
-} from '$components/RecHeader/tab.shared'
+import { TabConfigMap, TabKeys } from '$components/RecHeader/tab.shared'
 import { FlagSettingItem, HelpInfo } from '$components/piece'
 import { AppApiDevice } from '$define/index.shared'
 import { IconPark } from '$icon-park'
@@ -466,7 +462,34 @@ function TabPaneBasic() {
       </div>
 
       <div className={styles.settingsGroup}>
-        <div className={styles.settingsGroupTitle}>帮助</div>
+        <div className={styles.settingsGroupTitle}>
+          帮助
+          <span
+            css={css`
+              margin-left: 8px;
+              margin-right: 4px;
+              font-size: 14px;
+              position: relative;
+              top: 4px;
+            `}
+          >
+            (当前版本: v{__SCRIPT_VERSION__})
+          </span>
+          <IconPark
+            name={'Copy'}
+            size={16}
+            onClick={() => {
+              const content = `v${__SCRIPT_VERSION__}`
+              GM.setClipboard(content)
+              AntdMessage.success(`已复制当前版本: ${content}`)
+            }}
+            css={css`
+              position: relative;
+              top: 4px;
+              cursor: pointer;
+            `}
+          />
+        </div>
         <div className={cx(styles.settingsGroupContent)}>
           <div className={styles.row}>
             <Space size='small'>

@@ -1,12 +1,7 @@
 import type { IconName } from '$icon-park'
-import { useSettingsSnapshot } from '$settings'
-import { getHasLogined, useHasLogined } from '$utility'
 import { toast } from '$utility/toast'
 import { type Icon } from '@icon-park/react/es/runtime'
 import type { ComponentProps } from 'react'
-import { useMemo } from 'react'
-import { useSnapshot } from 'valtio'
-import { videoSourceTabState } from './tab'
 
 export type TabType =
   | 'recommend-app'
@@ -91,63 +86,6 @@ export const TabConfigMap = TabConfig.reduce((val, configItem) => {
 }, {}) as Record<TabType, TabConfigItem>
 
 export const TabKeys = TabConfig.map((x) => x.key)
-
-export function useCurrentShowingTabKeys(): TabType[] {
-  const { hidingTabKeys } = useSettingsSnapshot()
-  return useMemo(() => TabKeys.filter((key) => !hidingTabKeys.includes(key)), [hidingTabKeys])
-}
-
-export function sortTabKeys(customTabKeysOrder: TabType[]) {
-  return TabKeys.slice().sort((a, b) => {
-    let aIndex = customTabKeysOrder.indexOf(a)
-    let bIndex = customTabKeysOrder.indexOf(b)
-    if (aIndex === -1) aIndex = TabKeys.indexOf(a)
-    if (bIndex === -1) bIndex = TabKeys.indexOf(b)
-    return aIndex - bIndex
-  })
-}
-
-export function useSortedTabKeys() {
-  const { customTabKeysOrder } = useSettingsSnapshot()
-  return useMemo(() => sortTabKeys(customTabKeysOrder), [customTabKeysOrder])
-}
-
-export function useCurrentTabConfig() {
-  const { hidingTabKeys, customTabKeysOrder } = useSettingsSnapshot()
-  const logined = useHasLogined()
-
-  return useMemo(() => {
-    let tabkeys = sortTabKeys(customTabKeysOrder)
-    tabkeys = tabkeys.filter(
-      (key) => !hidingTabKeys.includes(key) || (!logined && key === 'recommend-app'),
-    )
-    return tabkeys.map((k) => TabConfigMap[k])
-  }, [hidingTabKeys, customTabKeysOrder, logined])
-}
-
-function _getCurrentSourceTab(videoSourceTab: TabType, logined: boolean): TabType {
-  // invalid
-  if (!TabKeys.includes(videoSourceTab)) return 'recommend-app'
-
-  // not logined
-  if (!logined) {
-    if (videoSourceTab === 'recommend-app' || videoSourceTab === 'recommend-pc') {
-      return videoSourceTab
-    } else {
-      return 'recommend-app'
-    }
-  }
-
-  return videoSourceTab
-}
-
-export function useCurrentSourceTab(): TabType {
-  return _getCurrentSourceTab(useSnapshot(videoSourceTabState).value, useHasLogined())
-}
-
-export function getCurrentSourceTab(): TabType {
-  return _getCurrentSourceTab(videoSourceTabState.value, getHasLogined())
-}
 
 export function toastNeedLogin() {
   return toast('你需要登录B站后使用该功能! 如已完成登录, 请刷新网页重试~')

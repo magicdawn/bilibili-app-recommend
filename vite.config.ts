@@ -44,6 +44,7 @@ if (process.env.RELEASE) {
 export default defineConfig(({ command }) => ({
   define: {
     'import.meta.vitest': 'undefined',
+    '__SCRIPT_VERSION__': JSON.stringify(scriptVersion),
   },
 
   css: {

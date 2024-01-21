@@ -4,11 +4,13 @@ import { type OnRefresh } from '$components/RecGrid/useRefresh'
 import { HelpInfo } from '$components/piece'
 import { IconPark } from '$icon-park'
 import { useSettingsSnapshot } from '$settings'
-import { checkLoginStatus, useHasLogined } from '$utility'
+import { checkLoginStatus, getHasLogined, useHasLogined } from '$utility'
 import { css } from '@emotion/react'
 import { Radio } from 'antd'
+import { useMemo } from 'react'
+import { useSnapshot } from 'valtio'
 import type { TabType } from './tab.shared'
-import { toastNeedLogin, useCurrentSourceTab, useCurrentTabConfig } from './tab.shared'
+import { TabConfigMap, TabKeys, toastNeedLogin } from './tab.shared'
 
 export const VIDEO_SOURCE_TAB_STORAGE_KEY = `${APP_NAME}-video-source-tab`
 
@@ -16,6 +18,62 @@ export const videoSourceTabState = proxyWithLocalStorage<{ value: TabType }>(
   { value: 'recommend-app' },
   VIDEO_SOURCE_TAB_STORAGE_KEY,
 )
+
+export function useCurrentShowingTabKeys(): TabType[] {
+  const { hidingTabKeys } = useSettingsSnapshot()
+  return useMemo(() => TabKeys.filter((key) => !hidingTabKeys.includes(key)), [hidingTabKeys])
+}
+
+export function sortTabKeys(customTabKeysOrder: TabType[]) {
+  return TabKeys.slice().sort((a, b) => {
+    let aIndex = customTabKeysOrder.indexOf(a)
+    let bIndex = customTabKeysOrder.indexOf(b)
+    if (aIndex === -1) aIndex = TabKeys.indexOf(a)
+    if (bIndex === -1) bIndex = TabKeys.indexOf(b)
+    return aIndex - bIndex
+  })
+}
+
+export function useSortedTabKeys() {
+  const { customTabKeysOrder } = useSettingsSnapshot()
+  return useMemo(() => sortTabKeys(customTabKeysOrder), [customTabKeysOrder])
+}
+
+export function useCurrentTabConfig() {
+  const { hidingTabKeys, customTabKeysOrder } = useSettingsSnapshot()
+  const logined = useHasLogined()
+
+  return useMemo(() => {
+    let tabkeys = sortTabKeys(customTabKeysOrder)
+    tabkeys = tabkeys.filter(
+      (key) => !hidingTabKeys.includes(key) || (!logined && key === 'recommend-app'),
+    )
+    return tabkeys.map((k) => TabConfigMap[k])
+  }, [hidingTabKeys, customTabKeysOrder, logined])
+}
+function _getCurrentSourceTab(videoSourceTab: TabType, logined: boolean): TabType {
+  // invalid
+  if (!TabKeys.includes(videoSourceTab)) return 'recommend-app'
+
+  // not logined
+  if (!logined) {
+    if (videoSourceTab === 'recommend-app' || videoSourceTab === 'recommend-pc') {
+      return videoSourceTab
+    } else {
+      return 'recommend-app'
+    }
+  }
+
+  return videoSourceTab
+}
+
+export function useCurrentSourceTab(): TabType {
+  return _getCurrentSourceTab(useSnapshot(videoSourceTabState).value, useHasLogined())
+}
+
+export function getCurrentSourceTab(): TabType {
+  return _getCurrentSourceTab(videoSourceTabState.value, getHasLogined())
+}
 
 export const iconCss = css`
   margin-right: 4px;
