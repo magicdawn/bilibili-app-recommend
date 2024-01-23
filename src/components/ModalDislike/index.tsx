@@ -6,14 +6,14 @@ import { IconPark } from '$icon-park'
 import { cx } from '$libs'
 import { AntdMessage } from '$utility'
 import { toastRequestFail } from '$utility/toast'
+import { css } from '@emotion/react'
 import { useKeyPress, useMemoizedFn, useUpdateLayoutEffect } from 'ahooks'
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import type { Root } from 'react-dom/client'
 import { createRoot } from 'react-dom/client'
 import { proxy, useSnapshot } from 'valtio'
 import { proxyMap } from 'valtio/utils'
 import { dislike } from '../VideoCard/card.service'
-import styles from './index.module.scss'
 
 interface IProps {
   show: boolean
@@ -76,6 +76,8 @@ function ModalDislike({ show, onHide, item }: IProps) {
     return item?.three_point?.dislike_reasons || []
   }, [item])
 
+  const modalBodyRef = useRef<HTMLDivElement>(null)
+
   const keyPressEnabled = () => !!show && !!item
 
   const KEYS = ['1', '2', '3', '4', '5', '6']
@@ -86,7 +88,7 @@ function ModalDislike({ show, onHide, item }: IProps) {
     const index = Number(e.key) - 1
     setActiveIndex(index)
 
-    const btn = document.querySelectorAll<HTMLButtonElement>(`.${styles.reason}`)[index] || null
+    const btn = modalBodyRef.current?.querySelectorAll<HTMLButtonElement>('.reason')[index]
     btn?.click()
   })
 
@@ -116,7 +118,9 @@ function ModalDislike({ show, onHide, item }: IProps) {
       if (activeIndex < 0 || activeIndex > reasons.length - 1) return
       e.preventDefault()
       e.stopImmediatePropagation()
-      document.querySelector<HTMLButtonElement>(`.${styles.reason}.${styles.active}`)?.click()
+
+      const btn = modalBodyRef.current?.querySelector<HTMLButtonElement>('.reason.active')
+      btn?.click()
     },
     { exactMatch: true },
   )
@@ -127,36 +131,45 @@ function ModalDislike({ show, onHide, item }: IProps) {
 
   return (
     <BaseModal
-      {...{
-        show,
-        onHide,
-        clsModal: styles.modal,
-        hideWhenMaskOnClick: true,
-        hideWhenEsc: true,
-      }}
+      show={show}
+      onHide={onHide}
+      hideWhenMaskOnClick={true}
+      hideWhenEsc={true}
+      width={500}
     >
       <div className={BaseModalClass.modalHeader}>
         <div className={BaseModalClass.modalTitle}>
           我不想看
-          <span className={styles.titleDesc}>(选择后将减少相似内容推荐)</span>
+          <span
+            css={css`
+              margin-left: 5px;
+              font-size: 40%;
+            `}
+          >
+            (选择后将减少相似内容推荐)
+          </span>
         </div>
         <div className='space' style={{ flex: 1 }}></div>
         <ModalClose onClick={onHide} />
       </div>
 
-      <div className={BaseModalClass.modalBody}>
-        <div className={styles.reasonList}>
+      <div className={BaseModalClass.modalBody} ref={modalBodyRef}>
+        <div
+          className='reason-list'
+          css={css`
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+          `}
+        >
           {reasons.map((reason, index) => {
+            const active = index === activeIndex
+
             return (
               <button
-                className={cx(styles.reason, {
-                  [styles.active]: index === activeIndex,
-                })}
-                style={{
-                  ...(index === activeIndex && {
-                    borderColor: colorPrimaryValue,
-                  }),
-                }}
+                className={cx('reason', { active })}
+                css={[_css.reason, active && _css.reasonActive]}
                 key={reason.id}
                 data-id={reason.id}
                 onClick={() => {
@@ -165,7 +178,25 @@ function ModalDislike({ show, onHide, item }: IProps) {
                 }}
                 disabled={isRequesting}
               >
-                <span className={styles.reasonNo} style={{ backgroundColor: colorPrimaryValue }}>
+                <span
+                  className='reason-no'
+                  css={css`
+                    position: absolute;
+                    left: 6px;
+
+                    width: 20px;
+                    height: 20px;
+                    border-radius: 50%;
+                    top: ${(32 - 20) / 2}px;
+
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+
+                    background-color: ${colorPrimaryValue};
+                    color: #fff;
+                  `}
+                >
                   {index + 1}
                 </span>
                 {reason.name}
@@ -174,13 +205,18 @@ function ModalDislike({ show, onHide, item }: IProps) {
           })}
         </div>
 
-        <div className={styles.tipsContainer}>
-          <div className={styles.tips}>
+        <div
+          className='tips-container'
+          css={css`
+            margin-top: 20px;
+          `}
+        >
+          <div className='tips' css={_css.tips}>
             <IconPark name='Info' size={15} style={{ marginRight: 5 }} />
             使用删除键打开弹窗, 数字键选择, Esc 关闭
           </div>
           {activeReasonName && (
-            <div className={styles.tips}>
+            <div className='tips' css={_css.tips}>
               <IconPark name='Info' size={15} style={{ marginRight: 5 }} />
               已选择「{activeReasonName}」, 回车键提交
             </div>
@@ -189,6 +225,40 @@ function ModalDislike({ show, onHide, item }: IProps) {
       </div>
     </BaseModal>
   )
+}
+
+const _css = {
+  reason: css`
+    color: inherit;
+    width: 48%;
+    text-align: center;
+    line-height: 20px;
+    position: relative;
+
+    border-radius: 4px;
+    border: 2px solid #eee;
+
+    * :where(body.dark) & {
+      border-color: #333;
+    }
+
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+  `,
+
+  reasonActive: css`
+    /* to increase specificity */
+    &.active {
+      border-color: ${colorPrimaryValue};
+    }
+  `,
+
+  tips: css`
+    display: flex;
+    align-items: center;
+  `,
 }
 
 const currentProps: IProps = {
