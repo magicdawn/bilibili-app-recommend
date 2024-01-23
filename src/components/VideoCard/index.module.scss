@@ -217,6 +217,11 @@ $z: 3;
   body.dark .bili-video-card__skeleton--avatar {
     background-color: #444;
   }
+
+  .bili-video-card__skeleton--text.tiny {
+    margin-top: 4px;
+    width: 15%;
+  }
 }
 
 .skeleton-active {

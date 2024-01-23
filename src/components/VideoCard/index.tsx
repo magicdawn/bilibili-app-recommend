@@ -177,6 +177,7 @@ const SkeletonCard = memo(function SkeletonCard({ loading }: { loading: boolean 
             <p className='bili-video-card__skeleton--text'></p>
             <p className='bili-video-card__skeleton--text short'></p>
             <p className='bili-video-card__skeleton--light'></p>
+            <p className='bili-video-card__skeleton--text tiny'></p>
           </div>
         </div>
       )}
