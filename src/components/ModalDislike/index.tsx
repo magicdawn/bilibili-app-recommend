@@ -238,6 +238,7 @@ const _css = {
     border-radius: 4px;
     border: 2px solid #eee;
 
+    /* https://github.com/emotion-js/emotion/issues/2836 */
     * :where(body.dark) & {
       border-color: #333;
     }
