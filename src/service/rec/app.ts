@@ -7,7 +7,6 @@ import { settings } from '$settings'
 import { toast } from '$utility/toast'
 import { uniqBy } from 'lodash'
 import pretry, { RetryError } from 'promise.retry'
-import { format as fmt } from 'util'
 import type { IService } from './base'
 
 class RecReqError extends Error {
@@ -82,8 +81,8 @@ export async function tryGetRecommend(device: AppApiDevice) {
     if (e instanceof RetryError) {
       console.error(e.errors)
       const msg = [
-        fmt('请求出错, 已重试%s次:', e.times),
-        ...e.errors.map((innerError, index) => fmt('  %s) %s', index + 1, innerError.message)),
+        `请求出错, 已重试${e.times}次:`,
+        ...e.errors.map((innerError, index) => `  ${index + 1}) ${innerError.message}`),
         '',
         '请重新获取 access_key 后重试~',
       ].join('\n')

@@ -3,13 +3,13 @@
   "pipeline": {
     "build:vite": {
       "dependsOn": ["build:scss"],
-      "env": ["RELEASE", "RELEASE_NIGHTLY"],
+      "env": ["RELEASE", "RELEASE_NIGHTLY", "MINIFY"],
       "inputs": ["src/**/*.{ts,tsx}", "tsconfig.json", "vite.config.ts", "package.json"],
       "outputs": ["dist/bilibili-app-recommend.mini.user.js"]
     },
     "build:vite-raw": {
       "dependsOn": ["build:scss"],
-      "env": ["RELEASE", "RELEASE_NIGHTLY"],
+      "env": ["RELEASE", "RELEASE_NIGHTLY", "MINIFY"],
       "inputs": ["src/**/*.{ts,tsx}", "tsconfig.json", "vite.config.ts", "package.json"],
       "outputs": ["dist/bilibili-app-recommend.user.js"]
     },

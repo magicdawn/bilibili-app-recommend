@@ -1,7 +1,6 @@
 import react from '@vitejs/plugin-react'
 import reactSwc from '@vitejs/plugin-react-swc'
 import { execSync } from 'child_process'
-import fs from 'fs'
 import postcssMediaMinmax from 'postcss-media-minmax'
 import { visualizer } from 'rollup-plugin-visualizer'
 import { defineConfig } from 'vite'
@@ -10,25 +9,10 @@ import monkey, { cdn } from 'vite-plugin-monkey'
 import tsconfigPaths from 'vite-tsconfig-paths'
 import { name as packageName, version as packageVersion } from './package.json'
 
-const shouldMinify = !process.argv.includes('--no-minify')
-
-const useHttps =
-  process.env.MY_KEY_FILE &&
-  process.env.MY_CERT_FILE &&
-  (process.argv.includes('--https') || process.env.VITE_DEV_HTTPS)
-
+// name
 const scriptName = packageName
 
-let downloadURL =
-  'https://greasyfork.org/scripts/443530-bilibili-app-recommend/code/bilibili-app-recommend.user.js'
-if (process.env.RELEASE) {
-  downloadURL =
-    'https://github.com/magicdawn/bilibili-app-recommend/raw/release/bilibili-app-recommend.mini.user.js'
-} else if (process.env.RELEASE_NIGHTLY) {
-  downloadURL =
-    'https://github.com/magicdawn/bilibili-app-recommend/raw/release-nightly/bilibili-app-recommend.mini.user.js'
-}
-
+// version
 let scriptVersion = packageVersion
 if (process.env.RELEASE) {
   // release Actions
@@ -40,11 +24,35 @@ if (process.env.RELEASE) {
   scriptVersion = gitDescribe.slice(1) // rm prefix v
 }
 
+// minify
+let shouldMinify = true
+// turn off via argv
+if (process.argv.includes('--no-minify')) {
+  shouldMinify = false
+}
+// no minify for GreasyFork
+if (process.env.RELEASE) {
+  shouldMinify = false
+}
+// no minify
+if ((process.env.MINIFY = 'false')) {
+  shouldMinify = false
+}
+
+let downloadURL =
+  'https://greasyfork.org/scripts/443530-bilibili-app-recommend/code/bilibili-app-recommend.user.js'
+if (process.env.RELEASE) {
+  downloadURL =
+    'https://github.com/magicdawn/bilibili-app-recommend/raw/release/bilibili-app-recommend.user.js'
+} else if (process.env.RELEASE_NIGHTLY) {
+  downloadURL =
+    'https://github.com/magicdawn/bilibili-app-recommend/raw/release-nightly/bilibili-app-recommend.mini.user.js'
+}
+
 // https://vitejs.dev/config/
 export default defineConfig(({ command }) => ({
   define: {
-    'import.meta.vitest': 'undefined',
-    '__SCRIPT_VERSION__': JSON.stringify(scriptVersion),
+    __SCRIPT_VERSION__: JSON.stringify(scriptVersion),
   },
 
   css: {
@@ -62,19 +70,8 @@ export default defineConfig(({ command }) => ({
   resolve: {
     alias: {
       // lodash: 'lodash-es',
-      util: 'rollup-plugin-node-polyfills/polyfills/util',
+      // util: 'rollup-plugin-node-polyfills/polyfills/util',
     },
-  },
-
-  // enable https, can load in safari
-  // but still not available for development
-  server: {
-    https: useHttps
-      ? {
-          key: fs.readFileSync(process.env.MY_KEY_FILE!),
-          cert: fs.readFileSync(process.env.MY_CERT_FILE!),
-        }
-      : undefined,
   },
 
   build: {
@@ -88,30 +85,23 @@ export default defineConfig(({ command }) => ({
   plugins: [
     tsconfigPaths(),
 
-    // nodePolyfills({
-    //   globals: {
-    //     Buffer: false,
-    //     global: false,
-    //     process: false,
-    //   },
-    // }),
-
     /**
      * babel-plugin-import
      */
-    command === 'build' &&
-      importer({
-        libraryName: 'antd',
-        libraryDirectory: 'es',
-      }),
+
+    // command === 'build' &&
+    //   importer({
+    //     libraryName: 'antd',
+    //     libraryDirectory: 'es',
+    //   }),
 
     // import {get} from 'lodash' -> import get from 'lodash/get'
-    command === 'build' &&
-      importer({
-        libraryName: 'lodash',
-        libraryDirectory: '',
-        camel2DashComponentName: false,
-      }),
+    // command === 'build' &&
+    //   importer({
+    //     libraryName: 'lodash',
+    //     libraryDirectory: '',
+    //     camel2DashComponentName: false,
+    //   }),
 
     command === 'build' &&
       importer({
@@ -198,17 +188,23 @@ export default defineConfig(({ command }) => ({
           'framer-motion': cdn.npmmirror('Motion', 'dist/framer-motion.js'),
 
           // size:
-          //     external 944kB + 36kB
-          // not-external 946kB
+          //  external 944kB + 36kB
+          //  not-external 946kB
           // antd use @emotion/* too
           // '@emotion/css': cdn.npmmirror('emotion', 'dist/emotion-css.umd.min.js'),
           // '@emotion/react': cdn.npmmirror('emotionReact', 'dist/emotion-react.umd.min.js'),
 
-          // 'lodash': cdn.npmmirror('_', 'lodash.min.js'),
-          // // ahooks use these
-          // 'lodash/throttle': '_.throttle',
-          // 'lodash/debounce': '_.debounce',
-          // 'lodash/isEqual': '_.isEqual',
+          'lodash': cdn.npmmirror('_', 'lodash.min.js'),
+          // ahooks use these
+          'lodash/throttle': '_.throttle',
+          'lodash/debounce': '_.debounce',
+          'lodash/isEqual': '_.isEqual',
+
+          // antd deps = [react, react-dom, dayjs]
+          'dayjs': cdn.npmmirror('dayjs', 'dayjs.min.js'),
+          'dayjs/plugin/duration': cdn.npmmirror('dayjs_plugin_duration', 'plugin/duration.js'),
+          'antd': cdn.npmmirror('antd', 'dist/antd-with-locales.min.js'),
+          'antd/locale/zh_CN': 'antd.locales.zh_CN',
         },
       },
     }),
