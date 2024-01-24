@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.20.2
+
+- GreasyFork build 关闭最小化
+
 ## v0.20.1
 
 - PR #74
