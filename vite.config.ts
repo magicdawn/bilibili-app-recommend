@@ -35,7 +35,7 @@ if (process.env.RELEASE) {
   shouldMinify = false
 }
 // no minify
-if ((process.env.MINIFY = 'false')) {
+if (process.env.MINIFY === 'false') {
   shouldMinify = false
 }
 
@@ -89,19 +89,21 @@ export default defineConfig(({ command }) => ({
      * babel-plugin-import
      */
 
-    // command === 'build' &&
-    //   importer({
-    //     libraryName: 'antd',
-    //     libraryDirectory: 'es',
-    //   }),
+    command === 'build' &&
+      shouldMinify &&
+      importer({
+        libraryName: 'antd',
+        libraryDirectory: 'es',
+      }),
 
     // import {get} from 'lodash' -> import get from 'lodash/get'
-    // command === 'build' &&
-    //   importer({
-    //     libraryName: 'lodash',
-    //     libraryDirectory: '',
-    //     camel2DashComponentName: false,
-    //   }),
+    command === 'build' &&
+      shouldMinify &&
+      importer({
+        libraryName: 'lodash',
+        libraryDirectory: '',
+        camel2DashComponentName: false,
+      }),
 
     command === 'build' &&
       importer({
@@ -194,17 +196,27 @@ export default defineConfig(({ command }) => ({
           // '@emotion/css': cdn.npmmirror('emotion', 'dist/emotion-css.umd.min.js'),
           // '@emotion/react': cdn.npmmirror('emotionReact', 'dist/emotion-react.umd.min.js'),
 
-          'lodash': cdn.npmmirror('_', 'lodash.min.js'),
-          // ahooks use these
-          'lodash/throttle': '_.throttle',
-          'lodash/debounce': '_.debounce',
-          'lodash/isEqual': '_.isEqual',
+          ...(shouldMinify
+            ? {}
+            : // external more when no-minify
+              //  - lodash
+              //  - antd
+              {
+                'lodash': cdn.npmmirror('_', 'lodash.min.js'),
+                // ahooks use these
+                'lodash/throttle': '_.throttle',
+                'lodash/debounce': '_.debounce',
+                'lodash/isEqual': '_.isEqual',
 
-          // antd deps = [react, react-dom, dayjs]
-          'dayjs': cdn.npmmirror('dayjs', 'dayjs.min.js'),
-          'dayjs/plugin/duration': cdn.npmmirror('dayjs_plugin_duration', 'plugin/duration.js'),
-          'antd': cdn.npmmirror('antd', 'dist/antd-with-locales.min.js'),
-          'antd/locale/zh_CN': 'antd.locales.zh_CN',
+                // antd deps = [react, react-dom, dayjs]
+                'dayjs': cdn.npmmirror('dayjs', 'dayjs.min.js'),
+                'dayjs/plugin/duration': cdn.npmmirror(
+                  'dayjs_plugin_duration',
+                  'plugin/duration.js',
+                ),
+                'antd': cdn.npmmirror('antd', 'dist/antd-with-locales.min.js'),
+                'antd/locale/zh_CN': 'antd.locales.zh_CN',
+              }),
         },
       },
     }),
