@@ -31,7 +31,7 @@
 - 安装地址 https://greasyfork.org/zh-CN/scripts/443530-bilibili-app-recommend
 - 源代码 https://github.com/magicdawn/bilibili-app-recommend 如果对你有用,请来个 Star :)
 - 从 GitHub 安装
-  - Release https://github.com/magicdawn/bilibili-app-recommend/raw/release/bilibili-app-recommend.mini.user.js
+  - Release https://github.com/magicdawn/bilibili-app-recommend/raw/release/bilibili-app-recommend.user.js (GreasyFork 同步自此)
   - CI build https://github.com/magicdawn/bilibili-app-recommend/raw/release-nightly/bilibili-app-recommend.mini.user.js
 
 ## 声明
