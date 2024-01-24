@@ -9,6 +9,7 @@
 // @homepageURL  https://greasyfork.org/zh-CN/scripts/443530-bilibili-app-recommend
 // @supportURL   https://github.com/magicdawn/bilibili-app-recommend/issues
 // @downloadURL  https://github.com/magicdawn/bilibili-app-recommend/raw/release/bilibili-app-recommend.user.js
+// @updateURL    https://github.com/magicdawn/bilibili-app-recommend/raw/release/bilibili-app-recommend.meta.js
 // @match        https://www.bilibili.com/
 // @match        https://www.bilibili.com/?*
 // @match        https://www.bilibili.com/index.html
