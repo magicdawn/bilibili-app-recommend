@@ -9,9 +9,6 @@ import monkey, { cdn } from 'vite-plugin-monkey'
 import tsconfigPaths from 'vite-tsconfig-paths'
 import { name as packageName, version as packageVersion } from './package.json'
 
-// name
-const scriptName = packageName
-
 // version
 let scriptVersion = packageVersion
 if (process.env.RELEASE) {
@@ -25,28 +22,32 @@ if (process.env.RELEASE) {
 }
 
 // minify
-let shouldMinify = true
+let minify = true
 // turn off via argv
-if (process.argv.includes('--no-minify')) {
-  shouldMinify = false
-}
-// no minify for GreasyFork
-if (process.env.RELEASE) {
-  shouldMinify = false
-}
-// no minify
-if (process.env.MINIFY === 'false') {
-  shouldMinify = false
-}
+if (process.argv.includes('--no-minify')) minify = false
 
-let downloadURL =
-  'https://greasyfork.org/scripts/443530-bilibili-app-recommend/code/bilibili-app-recommend.user.js'
+// GreasyFork: default no minify
+if (process.env.RELEASE) minify = false
+
+// env.MINIFY
+if (process.env.MINIFY === 'false') minify = false
+if (process.env.MINIFY === 'true') minify = true
+
+const miniSuffix = minify ? '.mini' : ''
+const fileName = `${packageName}${miniSuffix}.user.js`
+const metaFileName = process.env.CI ? `${packageName}${miniSuffix}.meta.js` : undefined
+
+let downloadURL: string | undefined
+let updateURL: string | undefined
+
 if (process.env.RELEASE) {
-  downloadURL =
-    'https://github.com/magicdawn/bilibili-app-recommend/raw/release/bilibili-app-recommend.user.js'
+  const baseUrl = 'https://github.com/magicdawn/bilibili-app-recommend/raw/release/'
+  downloadURL = `${baseUrl}${fileName}`
+  updateURL = `${baseUrl}${metaFileName}`
 } else if (process.env.RELEASE_NIGHTLY) {
-  downloadURL =
-    'https://github.com/magicdawn/bilibili-app-recommend/raw/release-nightly/bilibili-app-recommend.mini.user.js'
+  const baseUrl = 'https://github.com/magicdawn/bilibili-app-recommend/raw/release-nightly/'
+  downloadURL = `${baseUrl}${fileName}`
+  updateURL = `${baseUrl}${metaFileName}`
 }
 
 // https://vitejs.dev/config/
@@ -76,8 +77,8 @@ export default defineConfig(({ command }) => ({
 
   build: {
     emptyOutDir: true,
-    cssMinify: shouldMinify,
-    minify: shouldMinify,
+    cssMinify: minify,
+    minify: minify,
     // target defaults `modules`, = ['es2020', 'edge88', 'firefox78', 'chrome87', 'safari14']
     // target: ''
   },
@@ -90,7 +91,7 @@ export default defineConfig(({ command }) => ({
      */
 
     command === 'build' &&
-      shouldMinify &&
+      minify &&
       importer({
         libraryName: 'antd',
         libraryDirectory: 'es',
@@ -98,7 +99,7 @@ export default defineConfig(({ command }) => ({
 
     // import {get} from 'lodash' -> import get from 'lodash/get'
     command === 'build' &&
-      shouldMinify &&
+      minify &&
       importer({
         libraryName: 'lodash',
         libraryDirectory: '',
@@ -130,7 +131,7 @@ export default defineConfig(({ command }) => ({
     monkey({
       entry: 'src/main.tsx',
       userscript: {
-        name: scriptName,
+        name: packageName,
         version: scriptVersion,
         namespace: 'https://magicdawn.fun',
         description: '为 B 站首页添加像 App 一样的推荐',
@@ -140,6 +141,7 @@ export default defineConfig(({ command }) => ({
         supportURL: 'https://github.com/magicdawn/bilibili-app-recommend/issues',
         homepageURL: 'https://greasyfork.org/zh-CN/scripts/443530-bilibili-app-recommend',
         downloadURL,
+        updateURL,
         license: 'MIT',
         match: [
           'https://www.bilibili.com/',
@@ -169,7 +171,8 @@ export default defineConfig(({ command }) => ({
       },
 
       build: {
-        fileName: packageName + (shouldMinify ? '.mini' : '') + '.user.js',
+        fileName,
+        metaFileName,
 
         // unpkg is not stable
         // https://greasyfork.org/zh-CN/scripts/443530-bilibili-app-recommend/discussions/197900
@@ -196,7 +199,7 @@ export default defineConfig(({ command }) => ({
           // '@emotion/css': cdn.npmmirror('emotion', 'dist/emotion-css.umd.min.js'),
           // '@emotion/react': cdn.npmmirror('emotionReact', 'dist/emotion-react.umd.min.js'),
 
-          ...(shouldMinify
+          ...(minify
             ? {}
             : // external more when no-minify
               //  - lodash
