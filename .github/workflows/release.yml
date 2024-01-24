@@ -40,8 +40,15 @@ jobs:
       # test
       - run: pnpm test
 
-      # build
+      # build for greasyfork
       - run: pnpm build:real-build
+        env:
+          MINIFY: 'false'
+
+      # build minified version
+      - run: pnpm build:real-build
+        env:
+          MINIFY: 'true'
 
       # prepare
       - run: cp README.md CHANGELOG.md ./dist

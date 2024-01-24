@@ -76,7 +76,7 @@ export default defineConfig(({ command }) => ({
   },
 
   build: {
-    emptyOutDir: true,
+    emptyOutDir: process.env.RELEASE ? false : true,
     cssMinify: minify,
     minify: minify,
     // target defaults `modules`, = ['es2020', 'edge88', 'firefox78', 'chrome87', 'safari14']
