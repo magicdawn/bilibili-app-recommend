@@ -1,7 +1,3 @@
 module.exports = {
-  reject: [
-    //
-    'axios',
-    // 'antd', // rc-field-form has patch
-  ],
+  reject: ['axios', 'husky'],
 }

@@ -57,8 +57,8 @@ dependencies:
     specifier: ^6.0.0
     version: 6.0.0
   framer-motion:
-    specifier: ^10.18.0
-    version: 10.18.0(react-dom@18.2.0)(react@18.2.0)
+    specifier: ^11.0.3
+    version: 11.0.3(react-dom@18.2.0)(react@18.2.0)
   lodash:
     specifier: ^4.17.21
     version: 4.17.21
@@ -209,8 +209,8 @@ devDependencies:
     specifier: ^1.11.3
     version: 1.11.3
   type-fest:
-    specifier: ^4.10.0
-    version: 4.10.0
+    specifier: ^4.10.1
+    version: 4.10.1
   typed-scss-modules:
     specifier: ^8.0.0
     version: 8.0.0(sass@1.70.0)
@@ -224,8 +224,8 @@ devDependencies:
     specifier: ^0.2.5
     version: 0.2.5
   vite-plugin-inspect:
-    specifier: ^0.8.2
-    version: 0.8.2(vite@5.0.12)
+    specifier: ^0.8.3
+    version: 0.8.3(vite@5.0.12)
   vite-plugin-monkey:
     specifier: ^3.5.1
     version: 3.5.1(vite@5.0.12)
@@ -3635,8 +3635,8 @@ packages:
       mime-types: 2.1.35
     dev: false
 
-  /framer-motion@10.18.0(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-oGlDh1Q1XqYPksuTD/usb0I70hq95OUzmL9+6Zd+Hs4XV0oaISBa/UUMSjYiq6m8EUF32132mOJ8xVZS+I0S6w==}
+  /framer-motion@11.0.3(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-6x2poQpIWBdbZwLd73w6cKZ1I9IEPIU94C6/Swp1Zt3LJ+sB5bPe1E2wC6EH5hSISXNkMJ4afH7AdwS7MrtkWw==}
     peerDependencies:
       react: ^18.0.0
       react-dom: ^18.0.0
@@ -4376,6 +4376,7 @@ packages:
 
   /lodash-es@4.17.21:
     resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==}
+    dev: false
 
   /lodash.camelcase@4.3.0:
     resolution: {integrity: sha512-TwuEnCnxbc3rAvhf/LbG7tJUDzhqXyFnv3dtzLOPgCG/hODL7WFnsbwktkD7yUV0RrreP/l1PALq/YSg6VvjlA==}
@@ -4979,6 +4980,10 @@ packages:
 
   /pathval@1.1.1:
     resolution: {integrity: sha512-Dp6zGqpTdETdR63lehJYPeIOqpiNBNtc7BpWSLrOje7UaIsE5aY92r/AunQA7rsXvet3lrJ3JnZX29UPTKXyKQ==}
+    dev: true
+
+  /perfect-debounce@1.0.0:
+    resolution: {integrity: sha512-xCy9V055GLEqoFaHoC1SoLIaLmWctgCUaBaWxDZ7/Zx4CTyX7cJQLJOok/orfjZAh9kEYpjJa4d0KcJmCbctZA==}
     dev: true
 
   /picocolors@1.0.0:
@@ -6508,8 +6513,8 @@ packages:
     engines: {node: '>=14.16'}
     dev: true
 
-  /type-fest@4.10.0:
-    resolution: {integrity: sha512-NPaKJsb4wyJ16qc8zBQrWswLKv/YirgBFykvUQ1Iajt2wd+twC8E4hFXdlIXqiMl6kWA0zY8tUJ9ELVAdu5h7w==}
+  /type-fest@4.10.1:
+    resolution: {integrity: sha512-7ZnJYTp6uc04uYRISWtiX3DSKB/fxNQT0B5o1OUeCqiQiwF+JC9+rJiZIDrPrNCLLuTqyQmh4VdQqh/ZOkv9MQ==}
     engines: {node: '>=16'}
     dev: true
 
@@ -6714,8 +6719,8 @@ packages:
       - supports-color
     dev: true
 
-  /vite-plugin-inspect@0.8.2(vite@5.0.12):
-    resolution: {integrity: sha512-lMqPHkh1UNev0CwuO1g2naDfUanHRM7aorjx52SGrcVmAnhNxnbWzIuFNI3nCOXsSiOUeff4ZJSmR9tMAyMaSg==}
+  /vite-plugin-inspect@0.8.3(vite@5.0.12):
+    resolution: {integrity: sha512-SBVzOIdP/kwe6hjkt7LSW4D0+REqqe58AumcnCfRNw4Kt3mbS9pEBkch+nupu2PBxv2tQi69EQHQ1ZA1vgB/Og==}
     engines: {node: '>=14'}
     peerDependencies:
       '@nuxt/kit': '*'
@@ -6729,8 +6734,8 @@ packages:
       debug: 4.3.4
       error-stack-parser-es: 0.1.1
       fs-extra: 11.2.0
-      lodash-es: 4.17.21
       open: 10.0.3
+      perfect-debounce: 1.0.0
       picocolors: 1.0.0
       sirv: 2.0.4
       vite: 5.0.12(@types/node@20.11.6)(sass@1.70.0)
