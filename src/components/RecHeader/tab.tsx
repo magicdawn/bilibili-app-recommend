@@ -12,7 +12,7 @@ import { useSnapshot } from 'valtio'
 import type { TabType } from './tab.shared'
 import { TabConfigMap, TabKeys, toastNeedLogin } from './tab.shared'
 
-export const VIDEO_SOURCE_TAB_STORAGE_KEY = `${APP_NAME}-video-source-tab`
+const VIDEO_SOURCE_TAB_STORAGE_KEY = `${APP_NAME}-video-source-tab`
 
 export const videoSourceTabState = proxyWithLocalStorage<{ value: TabType }>(
   { value: 'recommend-app' },

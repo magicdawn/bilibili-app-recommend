@@ -74,7 +74,8 @@ const tryfn = pretry(getRecommend, {
     console.info('[%s] tryGetRecommend onerror: index=%s', APP_NAME, index, err)
   },
 })
-export async function tryGetRecommend(device: AppApiDevice) {
+
+async function tryGetRecommend(device: AppApiDevice) {
   try {
     return await tryfn(device)
   } catch (e) {

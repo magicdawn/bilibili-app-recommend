@@ -110,11 +110,11 @@ export function normalizeCardData(item: RecItemType) {
   return ret
 }
 
-export function apiAppAdapter(item: AppRecItemExtend): IVideoCardData {
+function apiAppAdapter(item: AppRecItemExtend): IVideoCardData {
   return item.device === 'android' ? apiAndroidAppAdapter(item) : apiIpadAppAdapter(item)
 }
 
-export function apiAndroidAppAdapter(item: AndroidAppRecItemExtend): IVideoCardData {
+function apiAndroidAppAdapter(item: AndroidAppRecItemExtend): IVideoCardData {
   const extractCountFor = (target: AppRecIconField) => {
     const { cover_left_icon_1, cover_left_text_1, cover_left_icon_2, cover_left_text_2 } = item
     if (cover_left_icon_1 && AppRecIconMap[cover_left_icon_1] === target) {
@@ -203,7 +203,7 @@ export function apiAndroidAppAdapter(item: AndroidAppRecItemExtend): IVideoCardD
     appBadgeDesc: item.desc_button?.text || item.desc || '',
   }
 }
-export function apiIpadAppAdapter(item: IpadAppRecItemExtend): IVideoCardData {
+function apiIpadAppAdapter(item: IpadAppRecItemExtend): IVideoCardData {
   const extractCountFor = (target: AppRecIconField) => {
     const { cover_left_text_1, cover_left_text_2, cover_left_text_3 } = item
     const arr = [cover_left_text_1, cover_left_text_2, cover_left_text_3].filter(Boolean)
@@ -315,7 +315,7 @@ export function apiIpadAppAdapter(item: IpadAppRecItemExtend): IVideoCardData {
   }
 }
 
-export function apiPcAdapter(item: PcRecItemExtend): IVideoCardData {
+function apiPcAdapter(item: PcRecItemExtend): IVideoCardData {
   return {
     // video
     avid: String(item.id),
@@ -354,7 +354,7 @@ export function apiPcAdapter(item: PcRecItemExtend): IVideoCardData {
   }
 }
 
-export function apiDynamicAdapter(item: DynamicFeedItemExtend): IVideoCardData {
+function apiDynamicAdapter(item: DynamicFeedItemExtend): IVideoCardData {
   const v = item.modules.module_dynamic.major.archive
   const author = item.modules.module_author
 
@@ -396,7 +396,7 @@ export function apiDynamicAdapter(item: DynamicFeedItemExtend): IVideoCardData {
   }
 }
 
-export function apiWatchLaterAdapter(item: WatchLaterItemExtend): IVideoCardData {
+function apiWatchLaterAdapter(item: WatchLaterItemExtend): IVideoCardData {
   const invalidReason = getVideoInvalidReason(item.state)
   const title = `${item.viewed ? '【已观看】· ' : ''}${item.title}`
   const titleRender: ReactNode = invalidReason ? (
@@ -452,7 +452,7 @@ export function apiWatchLaterAdapter(item: WatchLaterItemExtend): IVideoCardData
   }
 }
 
-export function apiFavAdapter(item: FavItemExtend): IVideoCardData {
+function apiFavAdapter(item: FavItemExtend): IVideoCardData {
   return {
     // video
     avid: String(item.id),
@@ -505,7 +505,7 @@ export function apiFavAdapter(item: FavItemExtend): IVideoCardData {
   }
 }
 
-export function apiPopularGeneralAdapter(item: PopularGeneralItemExtend): IVideoCardData {
+function apiPopularGeneralAdapter(item: PopularGeneralItemExtend): IVideoCardData {
   return {
     // video
     avid: String(item.aid),
@@ -539,7 +539,7 @@ export function apiPopularGeneralAdapter(item: PopularGeneralItemExtend): IVideo
   }
 }
 
-export function apiPopularWeeklyAdapter(item: PopularWeeklyItemExtend): IVideoCardData {
+function apiPopularWeeklyAdapter(item: PopularWeeklyItemExtend): IVideoCardData {
   return {
     // video
     avid: String(item.aid),

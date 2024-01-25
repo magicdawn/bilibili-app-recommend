@@ -34,7 +34,7 @@ import {
   Unlike,
 } from '@icon-park/react'
 
-export const ImportedIcons = {
+const ImportedIcons = {
   Close,
   Config,
   DistraughtFace,

@@ -117,9 +117,8 @@ export async function getMinCount(
 
     // enough
     const len = items.filter((x) => x.api !== ApiType.separator).length
-    if (len >= count) {
-      break
-    }
+    if (len >= count) break
+
     await addMore(count - items.length)
   }
 

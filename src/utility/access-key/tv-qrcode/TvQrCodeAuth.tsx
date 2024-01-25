@@ -17,7 +17,7 @@ const initialValue = {
   auth_code: '',
   message: '',
 }
-export const store = proxy({ ...initialValue })
+const store = proxy({ ...initialValue })
 export const qrcodeStore = store
 
 export function updateStore(data: Partial<typeof initialValue>) {
