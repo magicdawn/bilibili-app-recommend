@@ -21,10 +21,10 @@ class RecReqError extends Error {
 
 export async function getRecommend(device: AppApiDevice) {
   let platformParams: Record<string, string | number> = {}
-  if (device === 'android') {
+  if (device === AppApiDevice.android) {
     platformParams = { mobi_app: 'android' }
   }
-  if (device === 'ipad') {
+  if (device === AppApiDevice.ipad) {
     platformParams = {
       // has avatar, date, etc
       // see BewlyBewly usage

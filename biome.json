@@ -1,13 +1,24 @@
 {
   "$schema": "https://biomejs.dev/schemas/1.4.0/schema.json",
-  "formatter": {
-    "indentStyle": "space",
-    "lineWidth": 100,
-    "ignore": ["dist/", "node_modules/"]
+
+  "files": {
+    "ignoreUnknown": true,
+    "ignore": [".vscode/", "dist/", "node_modules/"]
   },
+
   "linter": {
     "enabled": false
   },
+
+  "formatter": {
+    "indentStyle": "space",
+    "lineWidth": 100
+  },
+
+  "organizeImports": {
+    "enabled": true
+  },
+
   "javascript": {
     "formatter": {
       "quoteStyle": "single",
