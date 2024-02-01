@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.20.4
+
+- update @mgdn/bvid@0.2.0 to fix #75
+
 ## v0.20.3
 
 - no change, in order to trigger github webhook -> update greasyfork

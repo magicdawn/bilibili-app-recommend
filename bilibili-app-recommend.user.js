@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bilibili-app-recommend
 // @namespace    https://magicdawn.fun
-// @version      0.20.3
+// @version      0.20.4
 // @author       magicdawn
 // @description  为 B 站首页添加像 App 一样的推荐
 // @license      MIT
@@ -21,11 +21,11 @@
 // @require      https://registry.npmmirror.com/react/18.2.0/files/umd/react.production.min.js
 // @require      https://registry.npmmirror.com/react-dom/18.2.0/files/umd/react-dom.production.min.js
 // @require      https://registry.npmmirror.com/ua-parser-js/1.0.37/files/dist/ua-parser.min.js
-// @require      https://registry.npmmirror.com/framer-motion/10.18.0/files/dist/framer-motion.js
+// @require      https://registry.npmmirror.com/framer-motion/11.0.3/files/dist/framer-motion.js
 // @require      https://registry.npmmirror.com/lodash/4.17.21/files/lodash.min.js
 // @require      https://registry.npmmirror.com/dayjs/1.11.10/files/dayjs.min.js
 // @require      https://registry.npmmirror.com/dayjs/1.11.10/files/plugin/duration.js
-// @require      https://registry.npmmirror.com/antd/5.13.2/files/dist/antd-with-locales.min.js
+// @require      https://registry.npmmirror.com/antd/5.13.3/files/dist/antd-with-locales.min.js
 // @connect      app.bilibili.com
 // @connect      passport.bilibili.com
 // @grant        GM.getValue
@@ -3926,7 +3926,7 @@ body.dark ._btn-refresh_14tde_29 {
     }
   }
   let aid = "";
-  async function setData(data) {
+  async function setData(data2) {
     if (!aid) {
       const allDrafts = await listAll();
       const draft = allDrafts.find((d2) => d2.title === APP_NAME);
@@ -3944,7 +3944,7 @@ body.dark ._btn-refresh_14tde_29 {
         aid = draft.id.toString();
       }
     }
-    const dataStr = JSON.stringify(data);
+    const dataStr = JSON.stringify(data2);
     const {
       success
     } = await addupdate({
@@ -5914,10 +5914,10 @@ body.dark ._btn-refresh_14tde_29 {
     });
   };
   var listeners$2 = {};
-  var trigger = function(key2, data) {
+  var trigger = function(key2, data2) {
     if (listeners$2[key2]) {
       listeners$2[key2].forEach(function(item) {
-        return item(data);
+        return item(data2);
       });
     }
   };
@@ -5964,9 +5964,9 @@ body.dark ._btn-refresh_14tde_29 {
           fetchInstance.state.loading = false;
         }
       }
-      unSubscribeRef.current = subscribe$2(cacheKey2, function(data) {
+      unSubscribeRef.current = subscribe$2(cacheKey2, function(data2) {
         fetchInstance.setState({
-          data
+          data: data2
         });
       });
     }, []);
@@ -6011,12 +6011,12 @@ body.dark ._btn-refresh_14tde_29 {
           servicePromise
         };
       },
-      onSuccess: function(data, params) {
+      onSuccess: function(data2, params) {
         var _a3;
         if (cacheKey2) {
           (_a3 = unSubscribeRef.current) === null || _a3 === void 0 ? void 0 : _a3.call(unSubscribeRef);
           _setCache(cacheKey2, {
-            data,
+            data: data2,
             params,
             time: (/* @__PURE__ */ new Date()).getTime()
           });
@@ -6027,12 +6027,12 @@ body.dark ._btn-refresh_14tde_29 {
           });
         }
       },
-      onMutate: function(data) {
+      onMutate: function(data2) {
         var _a3;
         if (cacheKey2) {
           (_a3 = unSubscribeRef.current) === null || _a3 === void 0 ? void 0 : _a3.call(unSubscribeRef);
           _setCache(cacheKey2, {
-            data,
+            data: data2,
             params: fetchInstance.state.params,
             time: (/* @__PURE__ */ new Date()).getTime()
           });
@@ -6524,8 +6524,8 @@ body.dark ._btn-refresh_14tde_29 {
       Fetch2.prototype.refreshAsync = function() {
         return this.runAsync.apply(this, __spreadArray([], __read(this.state.params || []), false));
       };
-      Fetch2.prototype.mutate = function(data) {
-        var targetData = isFunction(data) ? data(this.state.data) : data;
+      Fetch2.prototype.mutate = function(data2) {
+        var targetData = isFunction(data2) ? data2(this.state.data) : data2;
         this.runPluginHandler("onMutate", targetData);
         this.setState({
           data: targetData
@@ -6884,6 +6884,9 @@ body.dark ._btn-refresh_14tde_29 {
       return event.metaKey;
     }
   };
+  function isValidKeyType(value) {
+    return isString(value) || isNumber(value);
+  }
   function countKeyByEvent(event) {
     var countOfModifier = Object.keys(modifierKey).reduce(function(total, key2) {
       if (modifierKey[key2](event)) {
@@ -6899,7 +6902,7 @@ body.dark ._btn-refresh_14tde_29 {
       return false;
     }
     if (isNumber(keyFilter)) {
-      return event.keyCode === keyFilter;
+      return event.keyCode === keyFilter ? keyFilter : false;
     }
     var genArr = keyFilter.split(".");
     var genLen = 0;
@@ -6926,22 +6929,22 @@ body.dark ._btn-refresh_14tde_29 {
       }
     }
     if (exactMatch) {
-      return genLen === genArr.length && countKeyByEvent(event) === genArr.length;
+      return genLen === genArr.length && countKeyByEvent(event) === genArr.length ? keyFilter : false;
     }
-    return genLen === genArr.length;
+    return genLen === genArr.length ? keyFilter : false;
   }
   function genKeyFormatter(keyFilter, exactMatch) {
     if (isFunction(keyFilter)) {
       return keyFilter;
     }
-    if (isString(keyFilter) || isNumber(keyFilter)) {
+    if (isValidKeyType(keyFilter)) {
       return function(event) {
         return genFilterKey(event, keyFilter, exactMatch);
       };
     }
     if (Array.isArray(keyFilter)) {
       return function(event) {
-        return keyFilter.some(function(item) {
+        return keyFilter.find(function(item) {
           return genFilterKey(event, item, exactMatch);
         });
       };
@@ -6965,8 +6968,10 @@ body.dark ._btn-refresh_14tde_29 {
       var callbackHandler = function(event) {
         var _a4;
         var genGuard = genKeyFormatter(keyFilterRef.current, exactMatch);
-        if (genGuard(event)) {
-          return (_a4 = eventHandlerRef.current) === null || _a4 === void 0 ? void 0 : _a4.call(eventHandlerRef, event);
+        var keyGuard = genGuard(event);
+        var firedKey = isValidKeyType(keyGuard) ? keyGuard : event.key;
+        if (keyGuard) {
+          return (_a4 = eventHandlerRef.current) === null || _a4 === void 0 ? void 0 : _a4.call(eventHandlerRef, event, firedKey);
         }
       };
       try {
@@ -7521,8 +7526,8 @@ body.dark ._btn-refresh_14tde_29 {
         const segs = qrcodegen2.QrSegment.makeSegments(text);
         return _QrCode.encodeSegments(segs, ecl);
       }
-      static encodeBinary(data, ecl) {
-        const seg = qrcodegen2.QrSegment.makeBytes(data);
+      static encodeBinary(data2, ecl) {
+        const seg = qrcodegen2.QrSegment.makeBytes(data2);
         return _QrCode.encodeSegments([seg], ecl);
       }
       static encodeSegments(segs, ecl, minVersion = 1, maxVersion = 40, mask = -1, boostEcl = true) {
@@ -7591,11 +7596,11 @@ body.dark ._btn-refresh_14tde_29 {
         this.drawVersion();
       }
       drawFormatBits(mask) {
-        const data = this.errorCorrectionLevel.formatBits << 3 | mask;
-        let rem = data;
+        const data2 = this.errorCorrectionLevel.formatBits << 3 | mask;
+        let rem = data2;
         for (let i2 = 0; i2 < 10; i2++)
           rem = rem << 1 ^ (rem >>> 9) * 1335;
-        const bits = (data << 10 | rem) ^ 21522;
+        const bits = (data2 << 10 | rem) ^ 21522;
         assert(bits >>> 15 == 0);
         for (let i2 = 0; i2 <= 5; i2++)
           this.setFunctionModule(8, i2, getBit(bits, i2));
@@ -7647,10 +7652,10 @@ body.dark ._btn-refresh_14tde_29 {
         this.modules[y2][x2] = isDark;
         this.isFunction[y2][x2] = true;
       }
-      addEccAndInterleave(data) {
+      addEccAndInterleave(data2) {
         const ver = this.version;
         const ecl = this.errorCorrectionLevel;
-        if (data.length != _QrCode.getNumDataCodewords(ver, ecl))
+        if (data2.length != _QrCode.getNumDataCodewords(ver, ecl))
           throw new RangeError("Invalid argument");
         const numBlocks = _QrCode.NUM_ERROR_CORRECTION_BLOCKS[ecl.ordinal][ver];
         const blockEccLen = _QrCode.ECC_CODEWORDS_PER_BLOCK[ecl.ordinal][ver];
@@ -7660,7 +7665,7 @@ body.dark ._btn-refresh_14tde_29 {
         let blocks = [];
         const rsDiv = _QrCode.reedSolomonComputeDivisor(blockEccLen);
         for (let i2 = 0, k2 = 0; i2 < numBlocks; i2++) {
-          let dat = data.slice(k2, k2 + shortBlockLen - blockEccLen + (i2 < numShortBlocks ? 0 : 1));
+          let dat = data2.slice(k2, k2 + shortBlockLen - blockEccLen + (i2 < numShortBlocks ? 0 : 1));
           k2 += dat.length;
           const ecc = _QrCode.reedSolomonComputeRemainder(dat, rsDiv);
           if (i2 < numShortBlocks)
@@ -7677,8 +7682,8 @@ body.dark ._btn-refresh_14tde_29 {
         assert(result.length == rawCodewords);
         return result;
       }
-      drawCodewords(data) {
-        if (data.length != Math.floor(_QrCode.getNumRawDataModules(this.version) / 8))
+      drawCodewords(data2) {
+        if (data2.length != Math.floor(_QrCode.getNumRawDataModules(this.version) / 8))
           throw new RangeError("Invalid argument");
         let i2 = 0;
         for (let right = this.size - 1; right >= 1; right -= 2) {
@@ -7689,14 +7694,14 @@ body.dark ._btn-refresh_14tde_29 {
               const x2 = right - j;
               const upward = (right + 1 & 2) == 0;
               const y2 = upward ? this.size - 1 - vert : vert;
-              if (!this.isFunction[y2][x2] && i2 < data.length * 8) {
-                this.modules[y2][x2] = getBit(data[i2 >>> 3], 7 - (i2 & 7));
+              if (!this.isFunction[y2][x2] && i2 < data2.length * 8) {
+                this.modules[y2][x2] = getBit(data2[i2 >>> 3], 7 - (i2 & 7));
                 i2++;
               }
             }
           }
         }
-        assert(i2 == data.length * 8);
+        assert(i2 == data2.length * 8);
       }
       applyMask(mask) {
         if (mask < 0 || mask > 7)
@@ -7844,9 +7849,9 @@ body.dark ._btn-refresh_14tde_29 {
         }
         return result;
       }
-      static reedSolomonComputeRemainder(data, divisor) {
+      static reedSolomonComputeRemainder(data2, divisor) {
         let result = divisor.map((_) => 0);
-        for (const b2 of data) {
+        for (const b2 of data2) {
           const factor = b2 ^ result.shift();
           result.push(0);
           divisor.forEach((coef, i2) => result[i2] ^= _QrCode.reedSolomonMultiply(coef, factor));
@@ -7918,11 +7923,11 @@ body.dark ._btn-refresh_14tde_29 {
           throw new RangeError("Invalid argument");
         this.bitData = bitData.slice();
       }
-      static makeBytes(data) {
+      static makeBytes(data2) {
         let bb = [];
-        for (const b2 of data)
+        for (const b2 of data2)
           appendBits(b2, 8, bb);
-        return new _QrSegment(_QrSegment.Mode.BYTE, data.length, bb);
+        return new _QrSegment(_QrSegment.Mode.BYTE, data2.length, bb);
       }
       static makeNumeric(digits) {
         if (!_QrSegment.isNumeric(digits))
@@ -8277,14 +8282,14 @@ body.dark ._btn-refresh_14tde_29 {
     ...initialValue
   });
   const qrcodeStore = store;
-  function updateStore(data) {
+  function updateStore(data2) {
     renderOnce();
-    Object.assign(store, data);
+    Object.assign(store, data2);
   }
-  function showQrCodeModal(data) {
+  function showQrCodeModal(data2) {
     updateStore({
       ...initialValue,
-      ...data,
+      ...data2,
       show: true
     });
   }
@@ -11204,37 +11209,33 @@ body.dark ._btn-refresh_14tde_29 {
     PlayerScreenMode2["Fullscreen"] = "full";
     return PlayerScreenMode2;
   })(PlayerScreenMode || {});
-  var _BvCode = class _BvCode2 {
-    static av2bv(av) {
-      const x_ = (av ^ this.XOR) + this.ADD;
-      const r2 = ["B", "V", "1", , , "4", , "1", , "7"];
-      for (let i2 = 0; i2 < 6; i2++) {
-        r2[this.S[i2]] = this.TABEL[Math.floor(x_ / 58 ** i2) % 58];
-      }
-      return r2.join("");
+  var XOR_CODE = 23442827791579n;
+  var MASK_CODE = 2251799813685247n;
+  var MAX_AID = 1n << 51n;
+  var BASE = 58n;
+  var data = "FcwAPNKTMug3GV5Lj7EJnHpWsx4tb8haYeviqBz6rkCy12mUSDQX9RdoZf";
+  function av2bv(aid2) {
+    const bytes = ["B", "V", "1", "0", "0", "0", "0", "0", "0", "0", "0", "0"];
+    let bvIndex = bytes.length - 1;
+    let tmp = (MAX_AID | BigInt(aid2)) ^ XOR_CODE;
+    while (tmp > 0) {
+      bytes[bvIndex] = data[Number(tmp % BigInt(BASE))];
+      tmp = tmp / BASE;
+      bvIndex -= 1;
     }
-    static bv2av(bv) {
-      let r2 = 0;
-      for (let i2 = 0; i2 < 6; i2++) {
-        r2 += this.TR[bv[this.S[i2]]] * 58 ** i2;
-      }
-      return r2 - this.ADD ^ this.XOR;
-    }
-  };
-  _BvCode.TABEL = "fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF";
-  _BvCode.TR = {};
-  _BvCode.S = [11, 10, 3, 8, 4, 6];
-  _BvCode.XOR = 177451812;
-  _BvCode.ADD = 8728348608;
-  (() => {
-    const len = _BvCode.TABEL.length;
-    for (let i2 = 0; i2 < len; i2++) {
-      _BvCode.TR[_BvCode.TABEL[i2]] = i2;
-    }
-  })();
-  var BvCode = _BvCode;
-  BvCode.av2bv.bind(BvCode);
-  BvCode.bv2av.bind(BvCode);
+    [bytes[3], bytes[9]] = [bytes[9], bytes[3]];
+    [bytes[4], bytes[7]] = [bytes[7], bytes[4]];
+    return bytes.join("");
+  }
+  function bv2av(bvid) {
+    const bvidArr = Array.from(bvid);
+    [bvidArr[3], bvidArr[9]] = [bvidArr[9], bvidArr[3]];
+    [bvidArr[4], bvidArr[7]] = [bvidArr[7], bvidArr[4]];
+    bvidArr.splice(0, 3);
+    const tmp = bvidArr.reduce((pre, bvidChar) => pre * BASE + BigInt(data.indexOf(bvidChar)), 0n);
+    return Number(tmp & MASK_CODE ^ XOR_CODE);
+  }
+  var BvCode = { av2bv, bv2av };
   function lookinto(item, opts) {
     if (item.api === "pc")
       return opts.pc(item);
@@ -12614,12 +12615,12 @@ body.dark ._btn-refresh_14tde_29 {
   async function getRecommend(device) {
     var _a2;
     let platformParams = {};
-    if (device === "android") {
+    if (device === AppApiDevice.android) {
       platformParams = {
         mobi_app: "android"
       };
     }
-    if (device === "ipad") {
+    if (device === AppApiDevice.ipad) {
       platformParams = {
         // has avatar, date, etc
         // see BewlyBewly usage
@@ -12774,9 +12775,8 @@ body.dark ._btn-refresh_14tde_29 {
         break;
       }
       const len = items.filter((x2) => x2.api !== ApiType.separator).length;
-      if (len >= count) {
+      if (len >= count)
         break;
-      }
       await addMore(count - items.length);
     }
     return items;
@@ -13160,14 +13160,14 @@ body.dark ._btn-refresh_14tde_29 {
       } : void 0
     });
     const isInternalTesting = getIsInternalTesting();
-    const handleRemoveCard = useMemoizedFn((item, data) => {
+    const handleRemoveCard = useMemoizedFn((item, data2) => {
       setItems((items2) => {
         const index = items2.findIndex((x2) => x2.uniqId === item.uniqId);
         if (index === -1)
           return items2;
         const newItems = items2.slice();
         newItems.splice(index, 1);
-        AntdMessage.success(`已移除: ${data.title}`, 4);
+        AntdMessage.success(`已移除: ${data2.title}`, 4);
         if (tab2 === "watchlater") {
           serviceMap.watchlater.count--;
           updateExtraInfo(tab2);
@@ -13179,7 +13179,7 @@ body.dark ._btn-refresh_14tde_29 {
         return newItems;
       });
     });
-    const handleMoveCardToFirst = useMemoizedFn((item, data) => {
+    const handleMoveCardToFirst = useMemoizedFn((item, data2) => {
       setItems((items2) => {
         const currentItem = items2.find((x2) => x2.uniqId === item.uniqId);
         if (!currentItem)
@@ -16410,7 +16410,7 @@ body.dark ._btn-refresh_14tde_29 {
   function useDraggable(_ref13) {
     let {
       id,
-      data,
+      data: data2,
       disabled = false,
       attributes
     } = _ref13;
@@ -16434,7 +16434,7 @@ body.dark ._btn-refresh_14tde_29 {
     const [node2, setNodeRef] = useNodeRef();
     const [activatorNode, setActivatorNodeRef] = useNodeRef();
     const listeners2 = useSyntheticListeners(activators, id);
-    const dataRef = useLatestValue(data);
+    const dataRef = useLatestValue(data2);
     useIsomorphicLayoutEffect(
       () => {
         draggableNodes.set(id, {
@@ -16485,7 +16485,7 @@ body.dark ._btn-refresh_14tde_29 {
   };
   function useDroppable(_ref13) {
     let {
-      data,
+      data: data2,
       disabled = false,
       id,
       resizeObserverConfig
@@ -16546,7 +16546,7 @@ body.dark ._btn-refresh_14tde_29 {
       }
     }, [resizeObserver]);
     const [nodeRef, setNodeRef] = useNodeRef(handleNodeChange);
-    const dataRef = useLatestValue(data);
+    const dataRef = useLatestValue(data2);
     React__default.useEffect(() => {
       if (!resizeObserver || !nodeRef.current) {
         return;
@@ -16929,7 +16929,7 @@ body.dark ._btn-refresh_14tde_29 {
     } = React__default.useContext(Context);
     const disabled = normalizeLocalDisabled(localDisabled, globalDisabled);
     const index = items.indexOf(id);
-    const data = React__default.useMemo(() => ({
+    const data2 = React__default.useMemo(() => ({
       sortable: {
         containerId,
         index,
@@ -16945,7 +16945,7 @@ body.dark ._btn-refresh_14tde_29 {
       setNodeRef: setDroppableNodeRef
     } = useDroppable({
       id,
-      data,
+      data: data2,
       disabled: disabled.droppable,
       resizeObserverConfig: {
         updateMeasurementsFor: itemsAfterCurrentSortable,
@@ -16965,7 +16965,7 @@ body.dark ._btn-refresh_14tde_29 {
       transform
     } = useDraggable({
       id,
-      data,
+      data: data2,
       attributes: {
         ...defaultAttributes,
         ...userDefinedAttributes
@@ -17047,7 +17047,7 @@ body.dark ._btn-refresh_14tde_29 {
       active,
       activeIndex,
       attributes,
-      data,
+      data: data2,
       rect,
       index,
       newIndex,
@@ -17260,8 +17260,8 @@ body.dark ._btn-refresh_14tde_29 {
       if (val) {
         AntdMessage.success("已开启自动「查看更多」: 下次打开首页时将自动打开「查看更多」弹窗");
       }
-    } }), /* @__PURE__ */ jsx(FlagSettingItem, { configKey: "showModalFeedEntry", label: "「查看更多」按钮", tooltip: "是否展示「查看更多」按钮", className: styles$1.check })] })] }), /* @__PURE__ */ jsxs("div", { className: styles$1.settingsGroup, children: [/* @__PURE__ */ jsx("div", { className: styles$1.settingsGroupTitle, children: "视频链接" }), /* @__PURE__ */ jsxs("div", { className: cx(styles$1.settingsGroupContent, styles$1.row), children: [/* @__PURE__ */ jsx(FlagSettingItem, { configKey: "openVideoInPopupWhenClick", label: "默认「小窗打开」", tooltip: "点击视频链接默认行为改为「小窗打开」并自动网页全屏", className: styles$1.check }), /* @__PURE__ */ jsx(FlagSettingItem, { configKey: "openVideoAutoFullscreen", label: "打开视频后自动全屏", tooltip: "点击视频链接新窗口打开视频后「自动全屏」", className: styles$1.check })] })] }), /* @__PURE__ */ jsxs("div", { className: styles$1.settingsGroup, children: [/* @__PURE__ */ jsx("div", { className: styles$1.settingsGroupTitle, children: "预览" }), /* @__PURE__ */ jsxs("div", { className: cx(styles$1.settingsGroupContent, styles$1.row), children: [/* @__PURE__ */ jsx(FlagSettingItem, { configKey: "autoPreviewWhenKeyboardSelect", label: "键盘选中后自动开始预览", className: styles$1.check, tooltip: /* @__PURE__ */ jsxs(Fragment, { children: ["手动预览快捷键: ", /* @__PURE__ */ jsx(antd.Tag, { color: "green", children: "." }), " or ", /* @__PURE__ */ jsx(antd.Tag, { color: "green", children: "p" }), /* @__PURE__ */ jsx("br", {}), "切换设置快捷键: ", /* @__PURE__ */ jsx(antd.Tag, { color: "green", children: "shift+p" })] }) }), /* @__PURE__ */ jsx(FlagSettingItem, { configKey: "autoPreviewWhenHover", label: "鼠标悬浮后自动开始预览", className: styles$1.check, tooltip: /* @__PURE__ */ jsxs(Fragment, { children: ["鼠标悬浮后自动开始预览, 预览不再跟随鼠标位置 ", /* @__PURE__ */ jsx("br", {}), "切换设置快捷键: ", /* @__PURE__ */ jsx(antd.Tag, { color: "green", children: "shift+m" })] }) })] })] }), /* @__PURE__ */ jsxs("div", { className: styles$1.settingsGroup, children: [/* @__PURE__ */ jsxs("div", { className: styles$1.settingsGroupTitle, children: ["帮助", /* @__PURE__ */ jsxs("span", { css: _ref11, children: ["(当前版本: v", "0.20.3", ")"] }), /* @__PURE__ */ jsx(IconPark, { name: "Copy", size: 16, onClick: () => {
-      const content = `v${"0.20.3"}`;
+    } }), /* @__PURE__ */ jsx(FlagSettingItem, { configKey: "showModalFeedEntry", label: "「查看更多」按钮", tooltip: "是否展示「查看更多」按钮", className: styles$1.check })] })] }), /* @__PURE__ */ jsxs("div", { className: styles$1.settingsGroup, children: [/* @__PURE__ */ jsx("div", { className: styles$1.settingsGroupTitle, children: "视频链接" }), /* @__PURE__ */ jsxs("div", { className: cx(styles$1.settingsGroupContent, styles$1.row), children: [/* @__PURE__ */ jsx(FlagSettingItem, { configKey: "openVideoInPopupWhenClick", label: "默认「小窗打开」", tooltip: "点击视频链接默认行为改为「小窗打开」并自动网页全屏", className: styles$1.check }), /* @__PURE__ */ jsx(FlagSettingItem, { configKey: "openVideoAutoFullscreen", label: "打开视频后自动全屏", tooltip: "点击视频链接新窗口打开视频后「自动全屏」", className: styles$1.check })] })] }), /* @__PURE__ */ jsxs("div", { className: styles$1.settingsGroup, children: [/* @__PURE__ */ jsx("div", { className: styles$1.settingsGroupTitle, children: "预览" }), /* @__PURE__ */ jsxs("div", { className: cx(styles$1.settingsGroupContent, styles$1.row), children: [/* @__PURE__ */ jsx(FlagSettingItem, { configKey: "autoPreviewWhenKeyboardSelect", label: "键盘选中后自动开始预览", className: styles$1.check, tooltip: /* @__PURE__ */ jsxs(Fragment, { children: ["手动预览快捷键: ", /* @__PURE__ */ jsx(antd.Tag, { color: "green", children: "." }), " or ", /* @__PURE__ */ jsx(antd.Tag, { color: "green", children: "p" }), /* @__PURE__ */ jsx("br", {}), "切换设置快捷键: ", /* @__PURE__ */ jsx(antd.Tag, { color: "green", children: "shift+p" })] }) }), /* @__PURE__ */ jsx(FlagSettingItem, { configKey: "autoPreviewWhenHover", label: "鼠标悬浮后自动开始预览", className: styles$1.check, tooltip: /* @__PURE__ */ jsxs(Fragment, { children: ["鼠标悬浮后自动开始预览, 预览不再跟随鼠标位置 ", /* @__PURE__ */ jsx("br", {}), "切换设置快捷键: ", /* @__PURE__ */ jsx(antd.Tag, { color: "green", children: "shift+m" })] }) })] })] }), /* @__PURE__ */ jsxs("div", { className: styles$1.settingsGroup, children: [/* @__PURE__ */ jsxs("div", { className: styles$1.settingsGroupTitle, children: ["帮助", /* @__PURE__ */ jsxs("span", { css: _ref11, children: ["(当前版本: v", "0.20.4", ")"] }), /* @__PURE__ */ jsx(IconPark, { name: "Copy", size: 16, onClick: () => {
+      const content = `v${"0.20.4"}`;
       GM.setClipboard(content);
       AntdMessage.success(`已复制当前版本: ${content}`);
     }, css: _ref10 })] }), /* @__PURE__ */ jsx("div", { className: cx(styles$1.settingsGroupContent), children: /* @__PURE__ */ jsx("div", { className: styles$1.row, children: /* @__PURE__ */ jsxs(antd.Space, { size: "small", children: [/* @__PURE__ */ jsx(antd.Button, { href: "https://github.com/magicdawn/bilibili-app-recommend", target: "_blank", children: "GitHub 主页" }), /* @__PURE__ */ jsx(antd.Button, { href: "https://greasyfork.org/zh-CN/scripts/443530-bilibili-app-recommend", target: "_blank", children: "GreasyFork 主页" }), /* @__PURE__ */ jsx(antd.Button, { href: "https://github.com/magicdawn/bilibili-app-recommend#%E5%BF%AB%E6%8D%B7%E9%94%AE%E8%AF%B4%E6%98%8E", target: "_blank", children: "查看可用的快捷键" }), /* @__PURE__ */ jsx(antd.Button, { href: "https://github.com/magicdawn/bilibili-app-recommend/blob/main/CHANGELOG.md", target: "_blank", children: "更新日志" }), /* @__PURE__ */ jsx(antd.Button, { href: "https://afdian.net/a/magicdawn", target: "_blank", children: "用 ❤️ 发电" })] }) }) })] })] });

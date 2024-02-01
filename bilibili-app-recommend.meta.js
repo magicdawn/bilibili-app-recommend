@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bilibili-app-recommend
 // @namespace    https://magicdawn.fun
-// @version      0.20.3
+// @version      0.20.4
 // @author       magicdawn
 // @description  为 B 站首页添加像 App 一样的推荐
 // @license      MIT
@@ -21,11 +21,11 @@
 // @require      https://registry.npmmirror.com/react/18.2.0/files/umd/react.production.min.js
 // @require      https://registry.npmmirror.com/react-dom/18.2.0/files/umd/react-dom.production.min.js
 // @require      https://registry.npmmirror.com/ua-parser-js/1.0.37/files/dist/ua-parser.min.js
-// @require      https://registry.npmmirror.com/framer-motion/10.18.0/files/dist/framer-motion.js
+// @require      https://registry.npmmirror.com/framer-motion/11.0.3/files/dist/framer-motion.js
 // @require      https://registry.npmmirror.com/lodash/4.17.21/files/lodash.min.js
 // @require      https://registry.npmmirror.com/dayjs/1.11.10/files/dayjs.min.js
 // @require      https://registry.npmmirror.com/dayjs/1.11.10/files/plugin/duration.js
-// @require      https://registry.npmmirror.com/antd/5.13.2/files/dist/antd-with-locales.min.js
+// @require      https://registry.npmmirror.com/antd/5.13.3/files/dist/antd-with-locales.min.js
 // @connect      app.bilibili.com
 // @connect      passport.bilibili.com
 // @grant        GM.getValue
