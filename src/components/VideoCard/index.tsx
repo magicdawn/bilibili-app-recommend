@@ -929,7 +929,7 @@ const VideoCardInner = memo(function VideoCardInner({
                 />
                 <img
                   src={`${cover}@672w_378h_1c_!web-home-common-cover`}
-                  loading='eager'
+                  loading='lazy'
                   // in firefox, alt text is visible during loading
                   // alt={title}
                 />
