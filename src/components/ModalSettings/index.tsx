@@ -41,6 +41,7 @@ import {
 } from 'antd'
 import delay from 'delay'
 import { pick } from 'lodash'
+import type { CSSProperties } from 'react'
 import { proxy, useSnapshot } from 'valtio'
 import styles from './index.module.scss'
 import { set_HAS_RESTORED_SETTINGS } from './index.shared'
@@ -637,7 +638,7 @@ function TabPaneVideoSourceTabConfig() {
       <div
         css={css`
           display: grid;
-          grid-template-columns: 300px 1fr;
+          grid-template-columns: 220px 1fr;
           column-gap: 20px;
         `}
       >
@@ -661,7 +662,11 @@ function TabPaneVideoSourceTabConfig() {
               <Button>重置</Button>
             </Popconfirm>
           </div>
-          <VideoSourceTabOrder />
+          <VideoSourceTabOrder
+            css={css`
+              width: 215px;
+            `}
+          />
         </div>
 
         <div className={styles.settingsGroup}>
@@ -714,7 +719,7 @@ function TabPaneVideoSourceTabConfig() {
   )
 }
 
-function VideoSourceTabOrder() {
+function VideoSourceTabOrder({ className, style }: { className?: string; style?: CSSProperties }) {
   const currentShowingTabKeys = useCurrentShowingTabKeys()
   const sortedTabKeys = useSortedTabKeys()
 
@@ -742,7 +747,7 @@ function VideoSourceTabOrder() {
   })
 
   return (
-    <div>
+    <div {...{ className, style }}>
       <Checkbox.Group
         css={css`
           display: block;
@@ -798,13 +803,13 @@ function VideoSourceTabSortableItem({ id }: { id: TabType }) {
         display: flex;
         align-items: center;
         justify-content: flex-start;
-        height: 35px;
+        height: 30px;
 
         padding-left: 20px;
         border: 1px solid ${!dark ? '#ddd' : '#444'};
         border-radius: 6px;
 
-        margin-top: 6px;
+        margin-top: 5px;
       `}
     >
       <Checkbox value={id} />
@@ -823,7 +828,13 @@ function VideoSourceTabSortableItem({ id }: { id: TabType }) {
             margin: 0 5px 0 10px;
           `}
         />
-        {label}
+        <span
+          css={css`
+            user-select: none;
+          `}
+        >
+          {label}
+        </span>
       </AntdTooltip>
 
       <div
@@ -838,7 +849,7 @@ function VideoSourceTabSortableItem({ id }: { id: TabType }) {
         css={css`
           cursor: grab;
           font-size: 0;
-          padding: 5px;
+          padding: 3px 5px;
           margin-right: 10px;
           border-radius: 5px;
           &:hover {
