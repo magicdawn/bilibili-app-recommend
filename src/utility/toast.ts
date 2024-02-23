@@ -1,8 +1,8 @@
 import { APP_NAME_ROOT_CLASSNAME, OPERATION_FAIL_MSG, REQUEST_FAIL_MSG } from '$common'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
-import { css } from '@emotion/css'
+import { styled } from '$libs'
 
-const toastContainer = css`
+const toastContainer = styled.generateClassName`
   position: fixed;
   top: 50%;
   left: 50%;
@@ -23,7 +23,7 @@ const toastContainer = css`
   white-space: pre-wrap;
 `
 
-const singleLine = css`
+const singleLine = styled.generateClassName`
   text-align: center;
 `
 

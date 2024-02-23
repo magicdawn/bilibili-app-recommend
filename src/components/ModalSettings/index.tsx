@@ -101,7 +101,7 @@ const enum TabPaneKey {
 const tab = __PROD__
   ? TabPaneKey.basic
   : // for debug, free to change this
-    TabPaneKey.basic
+    TabPaneKey.videoSourceTabConfig
 const modalSettingsStore = proxy({ tab })
 
 export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => void }) {
@@ -803,38 +803,44 @@ function VideoSourceTabSortableItem({ id }: { id: TabType }) {
         display: flex;
         align-items: center;
         justify-content: flex-start;
-        height: 30px;
+        height: 32px;
 
-        padding-left: 20px;
+        padding-left: 10px;
+        padding-right: 6px;
         border: 1px solid ${!dark ? '#ddd' : '#444'};
         border-radius: 6px;
 
         margin-top: 5px;
       `}
     >
-      <Checkbox value={id} />
       <AntdTooltip
+        align={{ offset: [0, -6] }}
         title={desc}
         css={css`
           display: inline-flex;
           align-items: center;
         `}
       >
-        <IconPark
-          name={icon}
-          {...iconProps}
-          size={iconProps?.size || 18}
+        <Checkbox
+          value={id}
           css={css`
-            margin: 0 5px 0 10px;
-          `}
-        />
-        <span
-          css={css`
-            user-select: none;
+            .ant-checkbox + span {
+              user-select: none;
+              display: inline-flex;
+              align-items: center;
+            }
           `}
         >
+          <IconPark
+            name={icon}
+            {...iconProps}
+            size={iconProps?.size || 18}
+            css={css`
+              margin-right: 5px;
+            `}
+          />
           {label}
-        </span>
+        </Checkbox>
       </AntdTooltip>
 
       <div
@@ -850,7 +856,6 @@ function VideoSourceTabSortableItem({ id }: { id: TabType }) {
           cursor: grab;
           font-size: 0;
           padding: 3px 5px;
-          margin-right: 10px;
           border-radius: 5px;
           &:hover {
             background-color: ${!dark ? '#eee' : '#999'};

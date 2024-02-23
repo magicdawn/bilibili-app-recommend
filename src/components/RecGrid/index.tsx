@@ -15,12 +15,11 @@ import { type RecItemType } from '$define'
 import { ApiType } from '$define/index.shared'
 import { getHeaderHeight } from '$header'
 import { IconPark } from '$icon-park'
-import { cx } from '$libs'
+import { cx, styled } from '$libs'
 import { getIsInternalTesting, isSafari } from '$platform'
 import { getRecommendTimes, refreshForGrid, uniqConcat } from '$service/rec'
 import { useSettingsSnapshot } from '$settings'
 import { AntdMessage } from '$utility'
-import { css as styled } from '@emotion/css'
 import { css } from '@emotion/react'
 import { useEventListener, useLatest, useMemoizedFn, useMount } from 'ahooks'
 import { Divider } from 'antd'
@@ -47,7 +46,7 @@ const debug = baseDebug.extend('components:RecGrid')
 const ENABLE_VIRTUAL_GRID = false
 
 export const CardClassNames = {
-  card: styled`
+  card: styled.generateClassName`
     border: 2px solid transparent;
 
     /* global class under .card */
@@ -58,7 +57,7 @@ export const CardClassNames = {
     }
   `,
 
-  cardActive: styled`
+  cardActive: styled.generateClassName`
     border-color: ${colorPrimaryValue};
     border-radius: ${borderRadiusValue};
     overflow: hidden;

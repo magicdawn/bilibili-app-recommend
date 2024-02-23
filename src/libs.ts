@@ -3,8 +3,8 @@
 
 // vscode syntax highlight 只支持特定 tag
 // https://github.com/magicdawn/magicdawn/issues/152#issuecomment-1703950025
-// export { css as styled } from '@emotion/css'
-// export { css } from '@emotion/react' // css`` to object style
+import { css as generateClassName } from '@emotion/css'
+export const styled = { generateClassName }
 
 export { default as axios } from 'axios'
 
