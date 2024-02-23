@@ -276,10 +276,13 @@ https://github.com/magicdawn/bilibili-app-recommend/raw/release-nightly/bilibili
 
 ## 参考的项目
 
+代码 / 样式 / 文档
+
 - https://github.com/indefined/UserScripts/tree/master/bilibiliHome
 - https://socialsisteryi.github.io/bilibili-API-collect/
 - https://github.com/hakadao/BewlyBewly/issues/101#issuecomment-1874308120
 - https://greasyfork.org/zh-CN/scripts/415804-%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9-bilibili-com-%E6%92%AD%E6%94%BE%E9%A1%B5%E8%B0%83%E6%95%B4
+- https://github.com/imsyy/SPlayer
 - ...more
 
 ## License
