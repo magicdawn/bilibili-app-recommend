@@ -23,7 +23,12 @@ import { AntdMessage, shouldDisableShortcut } from '$utility'
 import type { DragEndEvent } from '@dnd-kit/core'
 import { DndContext, PointerSensor, closestCenter, useSensor, useSensors } from '@dnd-kit/core'
 import { restrictToParentElement, restrictToVerticalAxis } from '@dnd-kit/modifiers'
-import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable'
+import {
+  SortableContext,
+  arrayMove,
+  useSortable,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { css } from '@emotion/react'
 import { useKeyPress, useMemoizedFn } from 'ahooks'
@@ -727,23 +732,13 @@ function VideoSourceTabOrder({ className, style }: { className?: string; style?:
 
   const handleDragEnd = useMemoizedFn((e: DragEndEvent) => {
     const { over, active } = e
-    // console.log(e, over, active)
+    if (!over?.id || over.id === active.id) return
 
-    // no change
-    if (!over?.id) return
-    if (over.id === active.id) return
-
-    // change
     const oldIndex = sortedTabKeys.indexOf(active.id.toString())
     const newIndex = sortedTabKeys.indexOf(over.id.toString())
     // console.log('re-order:', oldIndex, newIndex)
-
-    // save
-    const item = sortedTabKeys[oldIndex]
-    const newSortedKeys = sortedTabKeys.slice()
-    newSortedKeys.splice(oldIndex, 1)
-    newSortedKeys.splice(newIndex, 0, item)
-    updateSettings({ customTabKeysOrder: newSortedKeys })
+    const newList = arrayMove(sortedTabKeys, oldIndex, newIndex)
+    updateSettings({ customTabKeysOrder: newList })
   })
 
   return (
