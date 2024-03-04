@@ -157,26 +157,23 @@ export function VideoSourceTab({ onRefresh }: { onRefresh: OnRefresh }) {
           </Radio.Button>
         ))}
       </Radio.Group>
-      <HelpInfo
-        iconProps={{ name: 'Tips', size: 16, style: { marginLeft: 6 } }}
-        tooltip={
-          <>
-            {currentTabConfig.map(({ key, label, icon, iconProps, desc }) => (
-              <div
-                key={key}
-                css={css`
-                  display: flex;
-                  align-items: center;
-                  height: 22px;
-                `}
-              >
-                <IconPark name={icon} {...iconProps} size={iconProps?.size || 18} css={iconCss} />
-                {label}: {desc}
-              </div>
-            ))}
-          </>
-        }
-      />
+      <HelpInfo iconProps={{ name: 'Tips', size: 16, style: { marginLeft: 6 } }}>
+        <>
+          {currentTabConfig.map(({ key, label, icon, iconProps, desc }) => (
+            <div
+              key={key}
+              css={css`
+                display: flex;
+                align-items: center;
+                height: 22px;
+              `}
+            >
+              <IconPark name={icon} {...iconProps} size={iconProps?.size || 18} css={iconCss} />
+              {label}: {desc}
+            </div>
+          ))}
+        </>
+      </HelpInfo>
     </>
   )
 }

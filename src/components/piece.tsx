@@ -45,18 +45,18 @@ export function FlagSettingItem({
 }
 
 export function HelpInfo({
-  tooltip,
+  children,
   iconProps,
   tooltipProps,
 }: {
-  tooltip?: ReactNode
+  children?: ReactNode
   tooltipProps?: Partial<ComponentProps<typeof AntdTooltip>>
   iconProps?: SetOptional<ComponentProps<typeof IconPark>, 'name'>
 }) {
   return (
     <>
-      {tooltip && (
-        <AntdTooltip {...tooltipProps} title={tooltip}>
+      {children && (
+        <AntdTooltip {...tooltipProps} title={children}>
           <IconPark
             name={'Info'}
             size={18}

@@ -44,7 +44,7 @@ export function ThemesSelect() {
             >
               {name}
               <HelpInfo
-                tooltip={tooltip}
+                children={tooltip}
                 tooltipProps={{ color: 'rgba(0, 0, 0, 0.85)' }} // 默认使用 colorPrimary, 链接可能看不清
                 iconProps={{ name: 'Tips', size: 16 }}
               />

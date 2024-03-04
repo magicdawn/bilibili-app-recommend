@@ -169,15 +169,10 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                   <div className={styles.settingsGroup}>
                     <div className={styles.settingsGroupTitle}>
                       内容过滤
-                      <HelpInfo
-                        iconProps={{ name: 'Tips' }}
-                        tooltip={
-                          <>
-                            启用过滤会大幅降低加载速度, 谨慎开启! <br />
-                            仅推荐类 Tab 生效
-                          </>
-                        }
-                      />
+                      <HelpInfo iconProps={{ name: 'Tips' }}>
+                        启用过滤会大幅降低加载速度, 谨慎开启! <br />
+                        仅推荐类 Tab 生效
+                      </HelpInfo>
                       <Switch
                         css={css`
                           margin-left: 10px;
@@ -349,14 +344,11 @@ function TabPaneBasic() {
               size: 18,
               style: { marginTop: 6, marginLeft: 5 },
             }}
-            tooltip={
-              <>
-                用于「推荐」Tab
-                <br />
-                用于 获取推荐 / 提交不喜欢等操作
-              </>
-            }
-          />
+          >
+            用于「推荐」Tab
+            <br />
+            用于 获取推荐 / 提交不喜欢等操作
+          </HelpInfo>
         </div>
         <div className={cx(styles.settingsGroupContent)}>
           <div className={styles.row} style={{ marginTop: 5 }}>
@@ -615,14 +607,11 @@ function TabPaneAdvance() {
               name: 'Tips',
               style: { marginLeft: 5, marginRight: 10 },
             }}
-            tooltip={
-              <>
-                默认 ipad, 视频有 头像/日期 等信息
-                <br />
-                可选 android, 有图文类型的推荐
-              </>
-            }
-          />
+          >
+            默认 ipad, 视频有 头像/日期 等信息
+            <br />
+            可选 android, 有图文类型的推荐
+          </HelpInfo>
           <Radio.Group
             optionType='button'
             buttonStyle='solid'
@@ -655,8 +644,9 @@ function TabPaneVideoSourceTabConfig() {
                 name: 'Tips',
                 style: { marginLeft: 5, marginRight: 20 },
               }}
-              tooltip={<>勾选显示, 拖动排序</>}
-            />
+            >
+              勾选显示, 拖动排序
+            </HelpInfo>
             <Popconfirm
               title='确定'
               description='确定不是手欠点着玩? 再点一次确定吧~'
