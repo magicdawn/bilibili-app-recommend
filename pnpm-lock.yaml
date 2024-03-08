@@ -145,12 +145,6 @@ devDependencies:
   '@types/ua-parser-js':
     specifier: ^0.7.39
     version: 0.7.39
-  '@typescript-eslint/eslint-plugin':
-    specifier: ^7.1.1
-    version: 7.1.1(@typescript-eslint/parser@7.1.1)(eslint@8.57.0)(typescript@5.3.3)
-  '@typescript-eslint/parser':
-    specifier: ^7.1.1
-    version: 7.1.1(eslint@8.57.0)(typescript@5.3.3)
   '@violentmonkey/types':
     specifier: ^0.1.7
     version: 0.1.7
@@ -181,6 +175,9 @@ devDependencies:
   esm-utils:
     specifier: ^4.2.1
     version: 4.2.1
+  globals:
+    specifier: ^14.0.0
+    version: 14.0.0
   husky:
     specifier: ^8.0.3
     version: 8.0.3
@@ -220,6 +217,9 @@ devDependencies:
   typescript:
     specifier: ^5.3.3
     version: 5.3.3
+  typescript-eslint:
+    specifier: ^7.1.1
+    version: 7.1.1(eslint@8.57.0)(typescript@5.3.3)
   vite:
     specifier: ^5.1.4
     version: 5.1.4(@types/node@20.11.24)(sass@1.71.1)
@@ -3869,6 +3869,11 @@ packages:
       type-fest: 0.20.2
     dev: true
 
+  /globals@14.0.0:
+    resolution: {integrity: sha512-oahGvuMGQlPw/ivIYBjVSrWAfWLBeku5tpPE2fOPLi+WHffIWbuh2tCjhyQhTBPMf5E9jDEH4FOmTYgYwbKwtQ==}
+    engines: {node: '>=18'}
+    dev: true
+
   /globby@11.1.0:
     resolution: {integrity: sha512-jhIXaOzy1sb8IyocaruWSn1TjmnBVs8Ayhcy83rmxNJ8q2uWKCAj3CnJY+KpGSXCueAPc0i05kVvVKtP1t9S3g==}
     engines: {node: '>=10'}
@@ -6619,6 +6624,24 @@ packages:
       sass: 1.71.1
       slash: 3.0.0
       yargs: 17.7.2
+    dev: true
+
+  /typescript-eslint@7.1.1(eslint@8.57.0)(typescript@5.3.3):
+    resolution: {integrity: sha512-vScnjSkm0pjZqySB5o8ZbfywfGWamVOqIGtJeOnUuDDGFaGKwMqdZWVa7EYKBnLCUSuwD8MN2a2ur9OgaKu6Tg==}
+    engines: {node: ^16.0.0 || >=18.0.0}
+    peerDependencies:
+      eslint: ^8.56.0
+      typescript: '*'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+    dependencies:
+      '@typescript-eslint/eslint-plugin': 7.1.1(@typescript-eslint/parser@7.1.1)(eslint@8.57.0)(typescript@5.3.3)
+      '@typescript-eslint/parser': 7.1.1(eslint@8.57.0)(typescript@5.3.3)
+      eslint: 8.57.0
+      typescript: 5.3.3
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /typescript-template-language-service-decorator@2.3.2:
