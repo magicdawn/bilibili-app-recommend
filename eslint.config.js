@@ -6,8 +6,11 @@ import eslintConfigPrettier from 'eslint-config-prettier'
 import globals from 'globals'
 
 export default tseslint.config(
+  // must use single `ignores` key
   {
     ignores: ['dist/', '**/*.module.less.d.ts'],
+  },
+  {
     languageOptions: {
       globals: {
         ...globals.browser,
@@ -18,6 +21,8 @@ export default tseslint.config(
 
   eslint.configs.recommended,
   ...tseslint.configs.recommended,
+  eslintConfigPrettier,
+
   {
     rules: {
       //
@@ -35,6 +40,4 @@ export default tseslint.config(
       '@typescript-eslint/consistent-type-imports': ['warn', { fixStyle: 'separate-type-imports' }],
     },
   },
-
-  eslintConfigPrettier,
 )
