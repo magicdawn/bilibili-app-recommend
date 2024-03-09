@@ -11,7 +11,7 @@ import type { VideoCardEmitter, VideoCardEvents } from '$components/VideoCard'
 import { VideoCard } from '$components/VideoCard'
 import { borderRadiusValue } from '$components/VideoCard/index.shared'
 import type { IVideoCardData } from '$components/VideoCard/process/normalize'
-import { type RecItemType } from '$define'
+import { type RecItemExtraType, type RecItemType } from '$define'
 import { ApiType } from '$define/index.shared'
 import { getHeaderHeight } from '$header'
 import { IconPark } from '$icon-park'
@@ -442,50 +442,52 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
     )
   }
 
+  const renderItem = (item: RecItemExtraType) => {
+    if (item.api === ApiType.separator) {
+      return (
+        <Divider
+          key={item.uniqId}
+          css={css`
+            grid-column: 1 / -1;
+
+            .ant-divider-inner-text a {
+              color: var(--ant-color-link);
+              &:hover {
+                color: var(--ant-color-primary);
+              }
+            }
+          `}
+          orientation='left'
+        >
+          {item.content}
+        </Divider>
+      )
+    } else {
+      const index = videoItems.findIndex((x) => x.uniqId === item.uniqId)
+      const active = index === activeIndex
+      return (
+        <VideoCard
+          key={item.uniqId}
+          className={cx(CardClassNames.card, {
+            [CardClassNames.cardActive]: active,
+          })}
+          item={item}
+          active={active}
+          onRemoveCurrent={handleRemoveCard}
+          onMoveToFirst={handleMoveCardToFirst}
+          onRefresh={refresh}
+          emitter={videoCardEmitters[index]}
+        />
+      )
+    }
+  }
+
   // plain dom
   return (
     <div style={{ minHeight: '100%' }} className={videoGridContainer}>
       <div ref={containerRef} className={gridClassName}>
         {/* items */}
-        {items.map((item) => {
-          if (item.api === ApiType.separator) {
-            return (
-              <Divider
-                key={item.uniqId}
-                css={css`
-                  grid-column: 1 / -1;
-
-                  .ant-divider-inner-text a {
-                    color: var(--ant-color-link);
-                    &:hover {
-                      color: var(--ant-color-primary);
-                    }
-                  }
-                `}
-                orientation='left'
-              >
-                {item.content}
-              </Divider>
-            )
-          } else {
-            const index = videoItems.findIndex((x) => x.uniqId === item.uniqId)
-            const active = index === activeIndex
-            return (
-              <VideoCard
-                key={item.uniqId}
-                className={cx(CardClassNames.card, {
-                  [CardClassNames.cardActive]: active,
-                })}
-                item={item}
-                active={active}
-                onRemoveCurrent={handleRemoveCard}
-                onMoveToFirst={handleMoveCardToFirst}
-                onRefresh={refresh}
-                emitter={videoCardEmitters[index]}
-              />
-            )
-          }
-        })}
+        {items.map((item) => renderItem(item))}
       </div>
       {footer}
     </div>

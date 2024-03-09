@@ -1,69 +1,37 @@
 virtuoso
 
-const renderContainer = (children: ReactNode) => {
-      /* 这里只定义列数, 宽度 100% */
-      return (
-        <div ref={(el) => (containerRef.current = el)} className={containerClassName}>
-          {children}
-        </div>
-      )
-    }
-
-    const showSkeleton = refreshError || (refreshing && !swr)
-
-    // skeleton loading
-    if (showSkeleton) {
-      renderContainer(
-        new Array(28).fill(undefined).map((_, index) => {
-          const x = <VideoCard key={index} loading={true} className={CardClassNames.card} />
-          return <VideoCard key={index} loading={true} className={CardClassNames.card} />
-        })
-      )
-
-    } else {
-      return (
-        <div>
+  if (ENABLE_VIRTUAL_GRID) {
+    return (
+      <div style={{ minHeight: '100%' }} className={videoGridContainer}>
+        {/* className={gridClassName} */}
+        <div ref={containerRef}>
           <VirtuosoGrid
-            scrollerRef={(el) => (containerRef.current = el)}
+            scrollerRef={(el) => {
+              // @ts-ignore
+              // containerRef.current = el
+            }}
             useWindowScroll
             data={items}
-            listClassName={containerClassName}
+            listClassName={gridClassName}
             logLevel={LogLevel.DEBUG}
             // endReached={loadMore}
-            overscan={window.innerHeight}
+            overscan={20}
             computeItemKey={(index, item) => item.uniqId}
             components={{
               Footer() {
-                return <></>
+                return null
+                // return <>{footer}</>
               },
             }}
             itemContent={(index, item) => {
-              const active = index === activeIndex
-              return (
-                <VideoCard
-                  ref={(val) => (videoCardRefs[index] = val)}
-                  key={item.uniqId}
-                  className={cx(CardClassNames.card, { [CardClassNames.cardActive]: active })}
-                  item={item}
-                  active={active}
-                  onRemoveCurrent={handleRemoveCard}
-                />
-              )
+              return renderItem(item)
             }}
           />
-          <div
-            ref={footerRef}
-            css={css`
-              text-align: center;
-              line-height: 60px;
-              font-size: 120%;
-            `}
-          >
-            {!refreshing && (!hasMore ? <>没有更多了~</> : <>加载中...</>)}
-          </div>
+          {footer}
         </div>
-      )
-    }
+      </div>
+    )
+  }
 
 
 ---------------

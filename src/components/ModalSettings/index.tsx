@@ -605,7 +605,7 @@ function TabPaneAdvance() {
           <FlagSettingItem
             configKey={'coverUseAvif'}
             label='使用 avif'
-            tooltip=<>视频封面是否使用 avif 格式图片</>
+            tooltip={<>视频封面是否使用 avif 格式图片</>}
           />
         </div>
       </div>
