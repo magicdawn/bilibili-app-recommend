@@ -51,6 +51,9 @@ export const initialSettings = {
   // 鼠标悬浮自动预览, 不再跟随鼠标位置, 默认: 跟随鼠标
   autoPreviewWhenHover: false,
 
+  // 使用 avif ?
+  coverUseAvif: true,
+
   // 颜色主题
   theme: '',
   colorPickerThemeSelectedColor: '', // 自定义颜色
@@ -133,6 +136,10 @@ export const initialSettings = {
    */
   hidingTabKeys: [] as TabType[],
   customTabKeysOrder: [] as TabType[],
+
+  /**
+   *
+   */
 }
 
 export type Settings = typeof initialSettings

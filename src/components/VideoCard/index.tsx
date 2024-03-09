@@ -9,7 +9,7 @@ import type { AppRecItem, AppRecItemExtend, RecItemType } from '$define'
 import { ApiType } from '$define/index.shared'
 import { IconPark } from '$icon-park'
 import { cx } from '$libs'
-import { isMac, isSafari } from '$platform'
+import { isFirefox, isMac, isSafari } from '$platform'
 import { dynamicFeedFilterSelectUp } from '$service/rec/dynamic-feed'
 import { formatFavFolderUrl } from '$service/rec/fav'
 import { useWatchLaterState, watchLaterState } from '$service/rec/watchlater'
@@ -289,7 +289,7 @@ const VideoCardInner = memo(function VideoCardInner({
   const isWatchlater = item.api === 'watchlater'
   const isFav = item.api === 'fav'
 
-  const { styleFancy } = useSettingsSnapshot()
+  const { styleFancy, coverUseAvif } = useSettingsSnapshot()
 
   let {
     // video
@@ -917,7 +917,7 @@ const VideoCardInner = memo(function VideoCardInner({
                 className='v-img bili-video-card__cover'
                 style={{ borderRadius: 'inherit', overflow: 'hidden' }}
               >
-                {!isSafari && (
+                {!isSafari && coverUseAvif && (
                   <source
                     srcSet={`${cover}@672w_378h_1c_!web-home-common-cover.avif`}
                     type='image/avif'
@@ -931,7 +931,7 @@ const VideoCardInner = memo(function VideoCardInner({
                   src={`${cover}@672w_378h_1c_!web-home-common-cover`}
                   loading='lazy'
                   // in firefox, alt text is visible during loading
-                  // alt={title}
+                  alt={isFirefox ? '' : title}
                 />
               </picture>
 

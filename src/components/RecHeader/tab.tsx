@@ -2,7 +2,6 @@ import { APP_NAME } from '$common'
 import { proxyWithLocalStorage } from '$common/hooks/proxyWithLocalStorage'
 import { type OnRefresh } from '$components/RecGrid/useRefresh'
 import { HelpInfo } from '$components/piece'
-import { IconPark } from '$icon-park'
 import { useSettingsSnapshot } from '$settings'
 import { checkLoginStatus, getHasLogined, useHasLogined } from '$utility'
 import { css } from '@emotion/react'
@@ -10,7 +9,7 @@ import { Radio } from 'antd'
 import { useMemo } from 'react'
 import { useSnapshot } from 'valtio'
 import type { TabType } from './tab.shared'
-import { TabConfigMap, TabKeys, toastNeedLogin } from './tab.shared'
+import { TabConfigMap, TabIcon, TabKeys, toastNeedLogin } from './tab.shared'
 
 const VIDEO_SOURCE_TAB_STORAGE_KEY = `${APP_NAME}-video-source-tab`
 
@@ -151,7 +150,7 @@ export function VideoSourceTab({ onRefresh }: { onRefresh: OnRefresh }) {
                 height: 100%;
               `}
             >
-              <IconPark name={icon} {...iconProps} size={iconProps?.size || 18} css={iconCss} />
+              <TabIcon tabKey={key} css={iconCss} />
               {label}
             </span>
           </Radio.Button>
@@ -168,7 +167,7 @@ export function VideoSourceTab({ onRefresh }: { onRefresh: OnRefresh }) {
                 height: 22px;
               `}
             >
-              <IconPark name={icon} {...iconProps} size={iconProps?.size || 18} css={iconCss} />
+              <TabIcon tabKey={key} css={iconCss} />
               {label}: {desc}
             </div>
           ))}

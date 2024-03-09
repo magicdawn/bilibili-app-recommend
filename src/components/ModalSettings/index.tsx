@@ -4,7 +4,7 @@ import { AntdTooltip } from '$components/AntdApp'
 import { BaseModal, BaseModalClass, ModalClose } from '$components/BaseModal'
 import { useCurrentShowingTabKeys, useSortedTabKeys } from '$components/RecHeader/tab'
 import type { TabType } from '$components/RecHeader/tab.shared'
-import { TabConfigMap, TabKeys } from '$components/RecHeader/tab.shared'
+import { TabConfigMap, TabIcon, TabKeys } from '$components/RecHeader/tab.shared'
 import { FlagSettingItem, HelpInfo } from '$components/piece'
 import { AppApiDevice } from '$define/index.shared'
 import { IconPark } from '$icon-park'
@@ -35,6 +35,7 @@ import { useKeyPress, useMemoizedFn } from 'ahooks'
 import {
   Button,
   Checkbox,
+  Col,
   InputNumber,
   Popconfirm,
   Radio,
@@ -598,27 +599,13 @@ function TabPaneAdvance() {
         </div>
 
         <div className={styles.settingsGroupTitle} style={{ marginTop: 15 }}>
-          App 推荐
+          视频卡片
         </div>
         <div style={{ width: '100%', display: 'flex', alignItems: 'center' }}>
-          App API 设备类型
-          <HelpInfo
-            iconProps={{
-              name: 'Tips',
-              style: { marginLeft: 5, marginRight: 10 },
-            }}
-          >
-            默认 ipad, 视频有 头像/日期 等信息
-            <br />
-            可选 android, 有图文类型的推荐
-          </HelpInfo>
-          <Radio.Group
-            optionType='button'
-            buttonStyle='solid'
-            size='small'
-            options={[AppApiDevice.ipad, AppApiDevice.android]}
-            value={appApiDecice}
-            onChange={(e) => updateSettings({ appApiDecice: e.target.value })}
+          <FlagSettingItem
+            configKey={'coverUseAvif'}
+            label='使用 avif'
+            tooltip=<>视频封面是否使用 avif 格式图片</>
           />
         </div>
       </div>
@@ -627,13 +614,16 @@ function TabPaneAdvance() {
 }
 
 function TabPaneVideoSourceTabConfig() {
+  const { appApiDecice } = useSettingsSnapshot()
+  const sortedTabKeys = useSortedTabKeys()
+
   return (
     <div className={styles.tabPane}>
       <div
         css={css`
           display: grid;
-          grid-template-columns: 220px 1fr;
-          column-gap: 20px;
+          grid-template-columns: 250px 1fr;
+          column-gap: 50px;
         `}
       >
         <div className={styles.settingsGroup}>
@@ -647,6 +637,7 @@ function TabPaneVideoSourceTabConfig() {
             >
               勾选显示, 拖动排序
             </HelpInfo>
+            <Col flex={1} />
             <Popconfirm
               title='确定'
               description='确定不是手欠点着玩? 再点一次确定吧~'
@@ -657,55 +648,96 @@ function TabPaneVideoSourceTabConfig() {
               <Button>重置</Button>
             </Popconfirm>
           </div>
-          <VideoSourceTabOrder
-            css={css`
-              width: 215px;
-            `}
-          />
+          <VideoSourceTabOrder />
         </div>
 
         <div className={styles.settingsGroup}>
           <div className={styles.settingsGroupTitle}>更多设置</div>
-          <div className={cx(styles.settingsGroupContent)}>
-            <div className={styles.row}>
-              <span
-                css={css`
-                  min-width: 100px;
-                `}
-              >
-                「稍后再看」
-              </span>
-              <FlagSettingItem
-                configKey='shuffleForWatchLater'
-                label='随机顺序'
-                tooltip='不包括近期添加的「稍后再看」'
-              />
-              <FlagSettingItem
-                configKey='addSeparatorForWatchLater'
-                label='添加分割线'
-                tooltip='添加「近期」「更早」分割线'
-                css={css`
-                  margin-left: 20px !important;
-                `}
-              />
+          <div
+            className={cx(styles.settingsGroupContent)}
+            css={css`
+              display: flex;
+              flex-direction: column;
+            `}
+          >
+            <div
+              css={css`
+                order: ${sortedTabKeys.indexOf('watchlater') + 1};
+              `}
+            >
+              <div className={styles.settingsGroupSubTitle}>
+                <TabIcon tabKey='watchlater' mr={5} mt={-1} />
+                稍后再看
+              </div>
+              <div className={styles.row}>
+                <FlagSettingItem
+                  configKey='shuffleForWatchLater'
+                  label='随机顺序'
+                  tooltip='不包括近期添加的「稍后再看」'
+                />
+                <FlagSettingItem
+                  configKey='addSeparatorForWatchLater'
+                  label='添加分割线'
+                  tooltip='添加「近期」「更早」分割线'
+                  css={css`
+                    margin-left: 20px !important;
+                  `}
+                />
+              </div>
             </div>
-            <div className={styles.row}>
-              <span
-                css={css`
-                  min-width: 100px;
-                `}
-              >
-                「收藏」
-              </span>
-              <FlagSettingItem configKey='shuffleForFav' label='随机顺序' tooltip='随机收藏' />
-              <FlagSettingItem
-                configKey='addSeparatorForFav'
-                label='添加分割线'
-                tooltip='顺序显示时, 按收藏夹添加分割线'
-                css={css`
-                  margin-left: 20px !important;
-                `}
-              />
+
+            <div
+              css={css`
+                order: ${sortedTabKeys.indexOf('fav') + 1};
+              `}
+            >
+              <div className={styles.settingsGroupSubTitle}>
+                <TabIcon tabKey='fav' mr={5} mt={-2} />
+                收藏
+              </div>
+              <div className={styles.row}>
+                <FlagSettingItem configKey='shuffleForFav' label='随机顺序' tooltip='随机收藏' />
+                <FlagSettingItem
+                  configKey='addSeparatorForFav'
+                  label='添加分割线'
+                  tooltip='顺序显示时, 按收藏夹添加分割线'
+                  css={css`
+                    margin-left: 20px !important;
+                  `}
+                />
+              </div>
+            </div>
+
+            <div
+              css={css`
+                order: ${sortedTabKeys.indexOf('recommend-app') + 1};
+              `}
+            >
+              <div className={styles.settingsGroupSubTitle}>
+                <TabIcon tabKey='recommend-app' mr={5} />
+                App 推荐
+              </div>
+              <div style={{ width: '100%', display: 'flex', alignItems: 'center' }}>
+                App API 设备类型
+                <HelpInfo
+                  iconProps={{
+                    name: 'Tips',
+                    style: { marginLeft: 5, marginRight: 10 },
+                  }}
+                >
+                  默认 ipad, 视频有 头像/日期 等信息
+                  <br />
+                  可选 android, 有图文类型的推荐
+                </HelpInfo>
+                <Radio.Group
+                  optionType='button'
+                  buttonStyle='solid'
+                  size='small'
+                  options={[AppApiDevice.ipad, AppApiDevice.android]}
+                  value={appApiDecice}
+                  onChange={(e) => updateSettings({ appApiDecice: e.target.value })}
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -788,14 +820,13 @@ function VideoSourceTabSortableItem({ id }: { id: TabType }) {
         display: flex;
         align-items: center;
         justify-content: flex-start;
-        height: 32px;
+        height: 35px;
 
         padding-left: 10px;
         padding-right: 6px;
         border: 1px solid ${!dark ? '#ddd' : '#444'};
         border-radius: 6px;
-
-        margin-top: 5px;
+        margin-top: 8px;
       `}
     >
       <AntdTooltip
@@ -816,14 +847,7 @@ function VideoSourceTabSortableItem({ id }: { id: TabType }) {
             }
           `}
         >
-          <IconPark
-            name={icon}
-            {...iconProps}
-            size={iconProps?.size || 18}
-            css={css`
-              margin-right: 5px;
-            `}
-          />
+          <TabIcon tabKey={id} mr={5} />
           {label}
         </Checkbox>
       </AntdTooltip>

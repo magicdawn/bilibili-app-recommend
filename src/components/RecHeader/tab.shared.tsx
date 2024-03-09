@@ -1,4 +1,4 @@
-import type { IconName } from '$icon-park'
+import { IconPark, type IconName } from '$icon-park'
 import { toast } from '$utility/toast'
 import { type Icon } from '@icon-park/react/es/runtime'
 import type { ComponentProps } from 'react'
@@ -84,6 +84,42 @@ export const TabConfig: TabConfigItem[] = [
 export const TabConfigMap = TabConfig.reduce((val, configItem) => {
   return { ...val, [configItem.key]: configItem }
 }, {}) as Record<TabType, TabConfigItem>
+
+export function TabIcon({
+  tabKey,
+  ml,
+  mr,
+  mt,
+  mb,
+  ...props
+}: {
+  tabKey: TabType
+  className?: string
+  style?: React.CSSProperties
+  ml?: number
+  mr?: number
+  mt?: number
+  mb?: number
+}) {
+  const { icon, iconProps } = TabConfigMap[tabKey]
+  return (
+    <IconPark
+      {...props}
+      {...{
+        size: 18,
+        ...iconProps,
+      }}
+      name={icon}
+      style={{
+        ...props.style,
+        ...(ml ? { marginLeft: ml + 'px' } : {}),
+        ...(mr ? { marginRight: mr + 'px' } : {}),
+        ...(mt ? { marginTop: mt + 'px' } : {}),
+        ...(mb ? { marginBottom: mb + 'px' } : {}),
+      }}
+    />
+  )
+}
 
 export const TabKeys = TabConfig.map((x) => x.key)
 
