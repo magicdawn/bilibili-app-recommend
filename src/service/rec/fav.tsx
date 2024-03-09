@@ -97,11 +97,13 @@ export class FavRecService implements IService {
 
     if (this.qs.bufferQueue.length < FavRecService.PAGE_SIZE) {
       // 1.fill queue
-      while (this.folderHasMore && this.qs.bufferQueue.length < 100) {
+      while (this.folderHasMore && this.qs.bufferQueue.length < FavRecService.PAGE_SIZE) {
         const restServices = this.folderServices.filter((s) => s.hasMore)
-        const pickedServices = shuffle(restServices).slice(0, 5)
+        const count = 4
+        const batch = 2
+        const pickedServices = shuffle(restServices).slice(0, count)
         const fetched = (
-          await pmap(pickedServices, async (s) => (await s.loadMore()) || [], 2)
+          await pmap(pickedServices, async (s) => (await s.loadMore()) || [], batch)
         ).flat()
         this.qs.bufferQueue = [...this.qs.bufferQueue, ...fetched]
       }
@@ -173,7 +175,8 @@ export class FavFolderService {
     this.hasMore = json.data.has_more
     this.info = json.data.info
 
-    let items = json.data.medias
+    // 新建空收藏夹, medias = null
+    let items = json.data.medias || []
     items = items.filter((item) => {
       if (item.title === '已失效视频') return false
       return true
