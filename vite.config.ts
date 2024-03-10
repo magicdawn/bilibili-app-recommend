@@ -19,6 +19,10 @@ if (process.env.RELEASE) {
   // https://stackoverflow.com/questions/8595391/how-to-show-git-commit-using-number-of-commits-since-a-tag
   const gitDescribe = process.env.GHD_DESCRIBE || execSync(`git describe`).toString().trim() // e.g v0.19.2-6-g0230769
   scriptVersion = gitDescribe.slice(1) // rm prefix v
+
+  // v0.0.1-:commit_num-:commit_hash 居然比 v0.0.1 小
+  // 变成 v0.0.1.:commit_num-:commit_hash
+  scriptVersion = scriptVersion.replace(/^(\d+\.\d+\.\d+)-/, (match, p1) => `${p1}.`)
 }
 
 // minify
