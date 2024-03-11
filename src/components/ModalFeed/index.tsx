@@ -77,31 +77,57 @@ export const ModalFeed = memo(function ModalFeed({ show, onHide }: IProps) {
       }}
     >
       <OnRefreshContext.Provider value={onRefresh}>
-        <div className={cx(BaseModalClass.modalHeader, styles.modalHeader)}>
-          <VideoSourceTab onRefresh={onRefresh} />
-          {extraInfo}
-
-          <div className='space' style={{ flex: 1 }}></div>
-
-          {useNarrowMode ? null : useFullScreen ? (
-            <ModalFeedConfigChecks />
-          ) : (
-            <CollapseBtn initialOpen>
-              <ModalFeedConfigChecks />
-            </CollapseBtn>
-          )}
-
-          <RefreshButton
+        <div
+          className={cx(BaseModalClass.modalHeader, styles.modalHeader)}
+          css={css`
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            column-gap: 20px;
+          `}
+        >
+          <div
+            className='left'
             css={css`
-              margin-left: 8px;
+              flex-shrink: 1;
+              display: flex;
+              align-content: center;
+              flex-wrap: wrap;
+              row-gap: 4px;
+              column-gap: 15px;
             `}
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-            className={styles.btnRefresh}
-            refreshHotkeyEnabled={show}
-          />
+          >
+            <VideoSourceTab onRefresh={onRefresh} />
+            {extraInfo}
+          </div>
+          <div
+            className='right'
+            css={css`
+              display: flex;
+              align-items: center;
+              flex-shrink: 0;
+            `}
+          >
+            {useNarrowMode ? null : useFullScreen ? (
+              <ModalFeedConfigChecks />
+            ) : (
+              <CollapseBtn initialOpen>
+                <ModalFeedConfigChecks />
+              </CollapseBtn>
+            )}
 
-          <ModalClose onClick={onHide} />
+            <RefreshButton
+              css={css`
+                margin-left: 8px;
+              `}
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              className={styles.btnRefresh}
+              refreshHotkeyEnabled={show}
+            />
+
+            <ModalClose onClick={onHide} />
+          </div>
         </div>
 
         <div className={cx(BaseModalClass.modalBody, styles.modalBody)} ref={scrollerRef}>

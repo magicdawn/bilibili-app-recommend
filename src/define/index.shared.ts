@@ -1,9 +1,9 @@
-export const enum AppApiDevice {
+export enum AppApiDevice {
   android = 'android',
   ipad = 'ipad',
 }
 
-export const enum ApiType {
+export enum ApiType {
   app = 'app',
   pc = 'pc',
   dynamic = 'dynamic',

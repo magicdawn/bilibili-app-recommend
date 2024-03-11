@@ -5,7 +5,7 @@ import { settings, updateSettings, useSettingsSnapshot } from '$modules/settings
 import { request } from '$request'
 import { getHasLogined } from '$utility'
 import { toast } from '$utility/toast'
-import { Switch, Tag } from 'antd'
+import { Space, Switch, Tag } from 'antd'
 import dayjs from 'dayjs'
 import delay from 'delay'
 import { shuffle } from 'lodash'
@@ -162,11 +162,10 @@ function WatchLaterUsageInfo({ count }: { count: number }) {
   const onRefresh = useOnRefreshContext()
 
   return (
-    <>
+    <Space>
       <Tag
         color={color}
         style={{
-          marginLeft: 20,
           marginRight: 0,
           marginTop: 1,
           cursor: 'pointer',
@@ -180,7 +179,6 @@ function WatchLaterUsageInfo({ count }: { count: number }) {
       </Tag>
 
       <Switch
-        style={{ marginLeft: 15 }}
         checkedChildren='随机顺序'
         unCheckedChildren='添加顺序'
         checked={shuffleForWatchLater}
@@ -190,6 +188,6 @@ function WatchLaterUsageInfo({ count }: { count: number }) {
           onRefresh?.()
         }}
       />
-    </>
+    </Space>
   )
 }

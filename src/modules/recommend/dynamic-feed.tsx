@@ -204,28 +204,22 @@ export function DynamicFeedUsageInfo() {
   }, [upList, upList.map((x) => !!x.has_update)])
 
   return (
-    <div
-      css={css`
-        margin-left: 15px;
-      `}
-    >
-      <Space>
-        <Dropdown
-          placement='bottomLeft'
-          menu={{
-            items: menuItems,
-            style: { maxHeight: '50vh', overflowY: 'scroll' },
-          }}
-        >
-          <Button>{upName ? `UP: ${upName}` : '全部'}</Button>
-        </Dropdown>
-        {!!upName && (
-          <Button onClick={onClear} css={[flexCenterStyle]}>
-            <IconPark name='Return' size={14} style={{ marginRight: 5 }} />
-            <span css={antdBtnTextStyle}>清除</span>
-          </Button>
-        )}
-      </Space>
-    </div>
+    <Space>
+      <Dropdown
+        placement='bottomLeft'
+        menu={{
+          items: menuItems,
+          style: { maxHeight: '50vh', overflowY: 'scroll' },
+        }}
+      >
+        <Button>{upName ? `UP: ${upName}` : '全部'}</Button>
+      </Dropdown>
+      {!!upName && (
+        <Button onClick={onClear} css={[flexCenterStyle]}>
+          <IconPark name='Return' size={14} style={{ marginRight: 5 }} />
+          <span css={antdBtnTextStyle}>清除</span>
+        </Button>
+      )}
+    </Space>
   )
 }

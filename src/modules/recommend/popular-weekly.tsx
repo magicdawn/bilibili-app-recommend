@@ -6,7 +6,7 @@ import type { PopularWeeklyListItem, PopularWeeklyListJson } from '$define/popul
 import { settings, updateSettings, useSettingsSnapshot } from '$modules/settings'
 import { blacklistIds } from '$modules/user/relations/blacklist'
 import { request } from '$request'
-import { Switch } from 'antd'
+import { Space, Switch } from 'antd'
 import dayjs from 'dayjs'
 import delay from 'delay'
 import { shuffle } from 'lodash'
@@ -163,7 +163,7 @@ function PopularWeeklyUsageInfo() {
   const onRefresh = useOnRefreshContext()
 
   return (
-    <>
+    <Space>
       <Switch
         style={{ marginLeft: '10px' }}
         checked={shuffleForPopularWeekly}
@@ -175,6 +175,6 @@ function PopularWeeklyUsageInfo() {
         checkedChildren='随机顺序'
         unCheckedChildren='默认顺序'
       />
-    </>
+    </Space>
   )
 }

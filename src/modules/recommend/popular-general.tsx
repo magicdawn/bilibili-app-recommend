@@ -7,7 +7,7 @@ import { settings, updateSettings, useSettingsSnapshot } from '$modules/settings
 import { blacklistIds } from '$modules/user/relations/blacklist'
 import { isWebApiSuccess, request } from '$request'
 import { toast } from '$utility'
-import { Switch } from 'antd'
+import { Space, Switch } from 'antd'
 import delay from 'delay'
 import type { IService } from './base'
 
@@ -64,28 +64,17 @@ function PopularGeneralUsageInfo() {
   const onRefresh = useOnRefreshContext()
 
   return (
-    <>
-      {/* <Switch
-        style={{ margin: '0 10px' }}
-        checked={shuffleForPopularGeneral}
-        onChange={(val) => {
-          updateSettings({ shuffleForPopularGeneral: val })
-          onRefresh?.()
-        }}
-        checkedChildren='随机顺序'
-        unCheckedChildren='默认顺序'
-      /> */}
+    <Space>
       <Switch
-        style={{ margin: '0 10px' }}
+        checkedChildren='匿名访问'
+        unCheckedChildren='登录访问'
         checked={anonymousForPopularGeneral}
         onChange={async (val) => {
           updateSettings({ anonymousForPopularGeneral: val })
           await delay(100)
           onRefresh?.()
         }}
-        checkedChildren='匿名访问'
-        unCheckedChildren='登录访问'
       />
-    </>
+    </Space>
   )
 }

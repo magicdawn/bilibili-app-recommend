@@ -10,7 +10,7 @@ import { isWebApiSuccess, request } from '$request'
 import { getUid, toast } from '$utility'
 import { css } from '@emotion/react'
 import { useMemoizedFn } from 'ahooks'
-import { Popover, Switch, Tag, Transfer } from 'antd'
+import { Popover, Space, Switch, Tag, Transfer } from 'antd'
 import type { TransferDirection } from 'antd/es/transfer'
 import delay from 'delay'
 import { shuffle } from 'lodash'
@@ -238,7 +238,7 @@ export function FavUsageInfo({
   })
 
   return (
-    <>
+    <Space>
       <Popover
         trigger={'click'}
         placement='bottom'
@@ -262,7 +262,6 @@ export function FavUsageInfo({
         <Tag
           color='success'
           css={css`
-            margin-left: 15px;
             cursor: pointer;
             font-size: 12px;
           `}
@@ -272,7 +271,6 @@ export function FavUsageInfo({
       </Popover>
 
       <Switch
-        style={{ marginLeft: 15 }}
         checkedChildren='随机顺序'
         unCheckedChildren='默认顺序'
         checked={shuffleForFav}
@@ -282,6 +280,6 @@ export function FavUsageInfo({
           onRefresh?.()
         }}
       />
-    </>
+    </Space>
   )
 }

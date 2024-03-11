@@ -104,6 +104,13 @@ export const RecHeader = forwardRef<
 
   const isInternalTesting = getIsInternalTesting()
 
+  const S_leftright = css`
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  `
+
   return (
     <>
       <OnRefreshContext.Provider value={onRefresh}>
@@ -113,7 +120,9 @@ export const RecHeader = forwardRef<
           css={[
             css`
               margin-bottom: 0;
-              height: 50px;
+              padding: 8px 0;
+              height: auto;
+              column-gap: 20px; // gap between left & right
             `,
             pureRecommend &&
               styleUseStickyTabbarInPureRecommend &&
@@ -131,7 +140,21 @@ export const RecHeader = forwardRef<
               `,
           ]}
         >
-          <div className='left'>
+          <div
+            data-class-name='left'
+            css={[
+              S_leftright,
+              css`
+                /* as item */
+                flex-shrink: 1;
+
+                /* as container */
+                flex-wrap: wrap;
+                row-gap: 4px;
+                column-gap: 15px;
+              `,
+            ]}
+          >
             {/* section logo: 推荐 logo, 魔法棒 */}
             {!pureRecommend && !isInternalTesting && (
               <svg className='icon'>
@@ -143,7 +166,15 @@ export const RecHeader = forwardRef<
             {leftSlot}
           </div>
 
-          <div className='right'>
+          <div
+            data-class-name='right'
+            css={[
+              S_leftright,
+              css`
+                flex-shrink: 0;
+              `,
+            ]}
+          >
             <Space size={'small'}>
               {rightSlot}
 

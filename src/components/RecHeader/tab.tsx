@@ -1,4 +1,5 @@
 import { APP_NAME } from '$common'
+import { flexVerticalCenterStyle } from '$common/emotion-css'
 import { proxyWithLocalStorage } from '$common/hooks/proxyWithLocalStorage'
 import { type OnRefresh } from '$components/RecGrid/useRefresh'
 import { HelpInfo } from '$components/piece'
@@ -104,7 +105,7 @@ export function VideoSourceTab({ onRefresh }: { onRefresh: OnRefresh }) {
   const currentTabConfig = useCurrentTabConfig()
 
   return (
-    <>
+    <div css={flexVerticalCenterStyle}>
       <Radio.Group
         optionType='button'
         buttonStyle='solid'
@@ -173,6 +174,6 @@ export function VideoSourceTab({ onRefresh }: { onRefresh: OnRefresh }) {
           ))}
         </>
       </HelpInfo>
-    </>
+    </div>
   )
 }
