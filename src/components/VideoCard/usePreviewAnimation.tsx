@@ -1,5 +1,5 @@
 import { APP_NAME } from '$common'
-import { settings } from '$settings'
+import { settings } from '$modules/settings'
 import { useEventListener, useGetState, useMemoizedFn, useRafState, useUnmountedRef } from 'ahooks'
 import type { MouseEvent, RefObject } from 'react'
 import { useRef, useState } from 'react'

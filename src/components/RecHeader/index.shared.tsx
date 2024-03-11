@@ -1,4 +1,4 @@
-import { settings } from '$settings'
+import { settings } from '$modules/settings'
 import { proxy, useSnapshot } from 'valtio'
 
 export const headerState = proxy({

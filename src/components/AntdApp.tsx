@@ -1,6 +1,6 @@
 import { APP_NAME_ROOT_CLASSNAME } from '$common'
+import { useSettingsSnapshot } from '$modules/settings'
 import { useIsDarkMode } from '$platform'
-import { useSettingsSnapshot } from '$settings'
 import { UseApp } from '$utility/antd-static'
 import { Global, css as _css, css } from '@emotion/react'
 import { ConfigProvider, Tooltip, theme } from 'antd'

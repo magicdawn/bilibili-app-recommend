@@ -9,16 +9,16 @@ import { FlagSettingItem, HelpInfo } from '$components/piece'
 import { AppApiDevice } from '$define/index.shared'
 import { IconPark } from '$icon-park'
 import { cx } from '$libs'
-import { getData } from '$modules/user/article-draft'
-import { useIsDarkMode } from '$platform'
-import type { BooleanSettingsKey } from '$settings'
+import type { BooleanSettingsKey } from '$modules/settings'
 import {
   allowedSettingsKeys,
   resetSettings,
   settings,
   updateSettings,
   useSettingsSnapshot,
-} from '$settings'
+} from '$modules/settings'
+import { getData } from '$modules/user/article-draft'
+import { useIsDarkMode } from '$platform'
 import { AntdMessage, shouldDisableShortcut } from '$utility'
 import type { DragEndEvent } from '@dnd-kit/core'
 import { DndContext, PointerSensor, closestCenter, useSensor, useSensors } from '@dnd-kit/core'

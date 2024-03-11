@@ -1,5 +1,5 @@
 import type { VideoCardEmitter } from '$components/VideoCard'
-import { settings } from '$settings'
+import { settings } from '$modules/settings'
 import { shouldDisableShortcut } from '$utility/dom'
 import { useKeyPress, useMemoizedFn } from 'ahooks'
 import type { RefObject } from 'react'

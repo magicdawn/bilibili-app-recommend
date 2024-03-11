@@ -1,5 +1,5 @@
 import { APP_NAME } from '$common'
-import { settings, useSettingsSnapshot } from '$settings'
+import { settings, useSettingsSnapshot } from '$modules/settings'
 import type { ReactNode } from 'react'
 import { useMemo } from 'react'
 import LX_THEMES from './lx-themes.json'

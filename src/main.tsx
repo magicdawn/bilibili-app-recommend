@@ -11,7 +11,7 @@
  */
 
 // load config first
-import './settings'
+import './modules/settings'
 
 // dayjs setup
 import dayjs from 'dayjs'

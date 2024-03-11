@@ -9,7 +9,7 @@
 import { flexCenterStyle } from '$common/emotion-css'
 import { HelpInfo } from '$components/piece'
 import { IconPark } from '$icon-park'
-import { updateSettings, useSettingsSnapshot } from '$settings'
+import { updateSettings, useSettingsSnapshot } from '$modules/settings'
 import { css } from '@emotion/react'
 import { ColorPicker } from 'antd'
 import type { Color } from 'antd/es/color-picker'

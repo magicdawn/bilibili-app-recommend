@@ -1,7 +1,7 @@
 import type { TabType } from '$components/RecHeader/tab.shared'
 import type { RecItemExtraType } from '$define'
 import { ApiType } from '$define/index.shared'
-import { settings } from '$settings'
+import { settings } from '$modules/settings'
 import { normalizeCardData } from './normalize'
 
 export function anyFilterEnabled(tab: TabType) {

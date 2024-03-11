@@ -1,6 +1,6 @@
 import { IconPark } from '$icon-park'
-import type { BooleanSettingsKey } from '$settings'
-import { updateSettings, useSettingsSnapshot } from '$settings'
+import type { BooleanSettingsKey } from '$modules/settings'
+import { updateSettings, useSettingsSnapshot } from '$modules/settings'
 import { Checkbox, Tooltip } from 'antd'
 import type { CheckboxChangeEvent } from 'antd/es/checkbox'
 import type { ComponentProps, ReactNode } from 'react'

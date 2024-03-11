@@ -3,7 +3,7 @@ import { appSign } from '$utility/app-sign'
 import { encWbi } from '$utility/wbi'
 import axios from 'axios'
 import gmAdapter from 'axios-userscript-adapter'
-import { settings } from './settings'
+import { settings } from './modules/settings'
 
 export const request = axios.create({
   baseURL: HOST_API,

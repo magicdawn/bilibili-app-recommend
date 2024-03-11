@@ -1,4 +1,4 @@
-import { settings } from '$settings'
+import { settings } from '$modules/settings'
 import { toast } from '../../utility/toast'
 import { getAccessKeyByQrCode } from './tv-qrcode'
 

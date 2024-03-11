@@ -1,6 +1,6 @@
 import { antdBtnTextStyle, flexCenterStyle } from '$common/emotion-css'
 import type { OnRefresh } from '$components/RecGrid/useRefresh'
-import { useSettingsSnapshot } from '$settings'
+import { useSettingsSnapshot } from '$modules/settings'
 import { shouldDisableShortcut } from '$utility/dom'
 import { css } from '@emotion/react'
 import { useKeyPress, useMemoizedFn } from 'ahooks'

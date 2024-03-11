@@ -7,8 +7,8 @@ import type { Root } from 'react-dom/client'
 import { createRoot } from 'react-dom/client'
 import { PureRecommend } from '../components/PureRecommend'
 import { SectionRecommend } from '../components/SectionRecommend'
+import { settings } from '../modules/settings'
 import { getIsInternalTesting, isSafari } from '../platform'
-import { settings } from '../settings'
 
 // in this entry, if no insert point found, render to document body
 const isHashEntry = (location.hash || '').startsWith(`#/${APP_NAME}/`)
