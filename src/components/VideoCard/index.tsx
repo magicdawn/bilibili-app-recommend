@@ -656,10 +656,10 @@ const VideoCardInner = memo(function VideoCardInner({
   // 已关注 item.api 也为 'pc', 故使用 tab, 而不是 api 区分
   const tab = useCurrentSourceTab()
   const hasBlacklistEntry =
-    tab === 'recommend-app' ||
-    tab === 'recommend-pc' ||
-    tab === 'popular-general' ||
-    tab === 'popular-weekly'
+    tab === ETabType.RecommendApp ||
+    tab === ETabType.RecommendPc ||
+    tab === ETabType.PopularGeneral ||
+    tab === ETabType.PopularWeekly
 
   const onBlacklistUp = useMemoizedFn(async () => {
     if (!authorMid) return AntdMessage.error('UP mid 为空!')

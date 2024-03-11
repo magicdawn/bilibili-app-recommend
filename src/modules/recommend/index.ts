@@ -36,7 +36,8 @@ export function uniqConcat(existing: RecItemExtraType[], newItems: RecItemExtraT
   )
 }
 
-export const usePcApi = (tab: ETabType) => tab === 'keep-follow-only' || tab === 'recommend-pc'
+export const usePcApi = (tab: ETabType) =>
+  tab === ETabType.KeepFollowOnly || tab === ETabType.RecommendPc
 
 export async function getMinCount(
   count: number,
@@ -69,7 +70,7 @@ export async function getMinCount(
     let times: number
 
     // 已关注
-    if (tab === 'keep-follow-only') {
+    if (tab === ETabType.KeepFollowOnly) {
       times = 8
       debug('getMinCount: addMore(restCount = %s) times=%s', restCount, times)
     }
@@ -127,7 +128,7 @@ export async function getMinCount(
 
 export async function refreshForHome(fetcherOptions: FetcherOptions) {
   let items = await getMinCount(getColumnCount(undefined, false) * 2, fetcherOptions, 5) // 7 * 2-row
-  if (fetcherOptions.tab === 'watchlater') {
+  if (fetcherOptions.tab === ETabType.Watchlater) {
     items = items.slice(0, 20)
   }
   return items
@@ -138,7 +139,7 @@ export async function refreshForGrid(fetcherOptions: FetcherOptions) {
 
   if (
     fetcherOptions.tab === ETabType.DynamicFeed &&
-    fetcherOptions.serviceMap['dynamic-feed'].searchText
+    fetcherOptions.serviceMap[ETabType.DynamicFeed].searchText
   ) {
     minCount = 1
   }

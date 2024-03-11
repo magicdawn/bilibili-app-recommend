@@ -9,6 +9,7 @@ import { useAnimate } from 'framer-motion'
 import type { CSSProperties, MouseEvent, MouseEventHandler } from 'react'
 import { forwardRef, useImperativeHandle, useRef, useState } from 'react'
 import { useCurrentSourceTab } from './tab'
+import { ETabType } from './tab.shared'
 
 export type RefreshButtonActions = { click: () => void }
 export type RefreshButtonProps = {
@@ -51,11 +52,11 @@ export const RefreshButton = forwardRef<RefreshButtonActions, RefreshButtonProps
   const { shuffleForFav, shuffleForWatchLater, shuffleForPopularWeekly } = useSettingsSnapshot()
 
   const text =
-    tab === 'dynamic-feed' ||
-    (tab === 'watchlater' && !shuffleForWatchLater) ||
-    (tab === 'fav' && !shuffleForFav) ||
-    tab === 'popular-general' ||
-    (tab === 'popular-weekly' && !shuffleForPopularWeekly)
+    tab === ETabType.DynamicFeed ||
+    (tab === ETabType.Watchlater && !shuffleForWatchLater) ||
+    (tab === ETabType.Fav && !shuffleForFav) ||
+    tab === ETabType.PopularGeneral ||
+    (tab === ETabType.PopularWeekly && !shuffleForPopularWeekly)
       ? '刷新'
       : '换一换'
 

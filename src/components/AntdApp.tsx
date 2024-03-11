@@ -30,6 +30,7 @@ export function AntdApp({
 
   return (
     <ConfigProvider
+      autoInsertSpaceInButton={false}
       locale={zhCN}
       theme={{
         cssVar: true,

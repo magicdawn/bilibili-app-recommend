@@ -6,7 +6,7 @@ import { APP_NAME, baseDebug } from '$common'
 import { useModalDislikeVisible } from '$components/ModalDislike'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import { useCurrentSourceTab } from '$components/RecHeader/tab'
-import type { ETabType } from '$components/RecHeader/tab.shared'
+import { ETabType } from '$components/RecHeader/tab.shared'
 import type { VideoCardEmitter, VideoCardEvents } from '$components/VideoCard'
 import { VideoCard } from '$components/VideoCard'
 import { borderRadiusValue } from '$components/VideoCard/index.shared'
@@ -165,7 +165,11 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
 
       // 场景
       // 当前 Tab: 稍后再看, 点视频进去, 在视频页移除了, 关闭视频页, 回到首页
-      if (tab === 'watchlater' && goOutAt.current && Date.now() - goOutAt.current > ms('1h')) {
+      if (
+        tab === ETabType.Watchlater &&
+        goOutAt.current &&
+        Date.now() - goOutAt.current > ms('1h')
+      ) {
         refresh(true, { watchlaterKeepOrder: true })
       }
     },
@@ -190,11 +194,6 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
     let newItems = items
     let newHasMore = true
     try {
-      // tab === 'dynamic-feed' ||
-      // tab === 'watchlater' ||
-      // tab === 'fav' ||
-      // tab === 'popular-general' ||
-      // tab === 'popular-weekly'
       const service = getIService(serviceMap, tab)
       if (service) {
         const more = (await service.loadMore(refreshAbortController.signal)) || []
@@ -207,7 +206,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
         // loadMore 至少 load 一项, 需要触发 InfiniteScroll.componentDidUpdate
         while (!(newItems.length > items.length)) {
           // keep-follow-only 需要大基数
-          const times = tab === 'keep-follow-only' ? 5 : 2
+          const times = tab === ETabType.KeepFollowOnly ? 5 : 2
           const more = await getRecommendTimes(times, tab, pcRecService)
           newItems = uniqConcat(newItems, more)
         }
@@ -355,12 +354,12 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
       newItems.splice(index, 1)
       AntdMessage.success(`已移除: ${data.title}`, 4)
 
-      if (tab === 'watchlater') {
-        serviceMap.watchlater.count--
+      if (tab === ETabType.Watchlater) {
+        serviceMap[tab].count--
         updateExtraInfo(tab)
       }
-      if (tab === 'fav') {
-        serviceMap.fav.total--
+      if (tab === ETabType.Fav) {
+        serviceMap[tab].total--
         updateExtraInfo(tab)
       }
 

@@ -181,16 +181,16 @@ export function useRefresh({
     const swr =
       shouldReuse &&
       (!!TabConfigMap[tab].swr ||
-        (tab === 'fav' && !serviceMap.fav.useShuffle && !settings.shuffleForFav) ||
-        (tab === 'popular-weekly' &&
-          !serviceMap['popular-weekly'].useShuffle &&
+        (tab === ETabType.Fav && !serviceMap[ETabType.Fav].useShuffle && !settings.shuffleForFav) ||
+        (tab === ETabType.PopularWeekly &&
+          !serviceMap[ETabType.PopularWeekly].useShuffle &&
           !settings.shuffleForPopularWeekly))
 
     // all reuse case, do not show skeleton
     setSwr(shouldReuse)
 
     let useGridCache = true
-    if ((tab === 'fav' || tab === 'popular-weekly') && !swr) {
+    if ((tab === ETabType.Fav || tab === ETabType.PopularWeekly) && !swr) {
       // use own cache
       useGridCache = false
     }
@@ -207,32 +207,32 @@ export function useRefresh({
       setServiceMap(newServiceMap)
     }
 
-    if (tab === 'dynamic-feed') {
+    if (tab === ETabType.DynamicFeed) {
       recreateFor(tab)
     }
-    if (tab === 'watchlater') {
+    if (tab === ETabType.Watchlater) {
       recreateFor(tab)
     }
-    if (tab === 'fav') {
+    if (tab === ETabType.Fav) {
       if (shouldReuse) {
         if (swr) {
           recreateFor(tab)
         } else {
-          serviceMap.fav.qs.restore()
+          serviceMap[tab].qs.restore()
         }
       } else {
         recreateFor(tab)
       }
     }
-    if (tab === 'popular-general') {
+    if (tab === ETabType.PopularGeneral) {
       recreateFor(tab)
     }
-    if (tab === 'popular-weekly') {
+    if (tab === ETabType.PopularWeekly) {
       if (shouldReuse) {
         if (swr) {
           recreateFor(tab)
         } else {
-          serviceMap['popular-weekly'].qs.restore()
+          serviceMap[tab].qs.restore()
         }
       } else {
         recreateFor(tab)
@@ -289,7 +289,7 @@ export function useRefresh({
       itemsHasCache.current[tab] = true // mark refreshed
 
       // if swr or possibile-swr, save list starting part only
-      if (TabConfigMap[tab].swr || tab === 'fav' || tab === 'popular-weekly') {
+      if (TabConfigMap[tab].swr || tab === ETabType.Fav || tab === ETabType.PopularWeekly) {
         itemsCache.current[tab] = _items.slice(0, 30)
       } else {
         itemsCache.current[tab] = _items

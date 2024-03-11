@@ -45,7 +45,7 @@ export function useCurrentTabConfig() {
   return useMemo(() => {
     let tabkeys = sortTabKeys(customTabKeysOrder)
     tabkeys = tabkeys.filter(
-      (key) => !hidingTabKeys.includes(key) || (!logined && key === 'recommend-app'),
+      (key) => !hidingTabKeys.includes(key) || (!logined && key === ETabType.RecommendApp),
     )
     return tabkeys.map((k) => TabConfigMap[k])
   }, [hidingTabKeys, customTabKeysOrder, logined])
@@ -119,7 +119,7 @@ export function VideoSourceTab({ onRefresh }: { onRefresh: OnRefresh }) {
         onChange={(e) => {
           const newValue = e.target.value as ETabType
 
-          if (newValue !== 'recommend-app' && newValue !== 'recommend-pc' && !logined) {
+          if (newValue !== ETabType.RecommendApp && newValue !== ETabType.RecommendPc && !logined) {
             if (!checkLoginStatus()) {
               return toastNeedLogin()
             }
