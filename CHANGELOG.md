@@ -5,6 +5,8 @@
 - 动态支持搜索
 - 其他不值一提的变更
 
+![image](https://github.com/magicdawn/bilibili-app-recommend/assets/4067115/f506ddee-b59f-4918-a275-67d01f2e8fd0)
+
 ## v0.20.4
 
 - update @mgdn/bvid@0.2.0 to fix #75
