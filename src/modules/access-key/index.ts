@@ -1,6 +1,6 @@
 import { settings } from '$settings'
-import { getAccessKeyByQrCode } from './access-key/tv-qrcode'
-import { toast } from './toast'
+import { toast } from '../../utility/toast'
+import { getAccessKeyByQrCode } from './tv-qrcode'
 
 export async function getAccessKey() {
   const { accessKey, accessKeyExpireAt } = (await getAccessKeyByQrCode()) || {}

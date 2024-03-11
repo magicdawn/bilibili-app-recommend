@@ -1,5 +1,5 @@
+import { deleteAccessKey, getAccessKey } from '$modules/access-key'
 import { useSettingsSnapshot } from '$settings'
-import { deleteAccessKey, getAccessKey } from '$utility/access-key'
 import { useRequest } from 'ahooks'
 import { Button, Space } from 'antd'
 import type { CSSProperties } from 'react'

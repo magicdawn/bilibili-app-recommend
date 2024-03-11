@@ -9,8 +9,8 @@ import { FlagSettingItem, HelpInfo } from '$components/piece'
 import { AppApiDevice } from '$define/index.shared'
 import { IconPark } from '$icon-park'
 import { cx } from '$libs'
+import { getData } from '$modules/user/article-draft'
 import { useIsDarkMode } from '$platform'
-import { getData } from '$service/user/article-draft'
 import type { BooleanSettingsKey } from '$settings'
 import {
   allowedSettingsKeys,

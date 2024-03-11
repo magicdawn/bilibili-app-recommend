@@ -7,8 +7,8 @@
 
 import { OPERATION_FAIL_MSG } from '$common'
 import type { FavFolderListAllJson } from '$define/fav/folder-list-all'
+import { apiFavFolderListAll, formatFavFolderUrl } from '$modules/recommend/fav'
 import { isWebApiSuccess, request } from '$request'
-import { apiFavFolderListAll, formatFavFolderUrl } from '$service/rec/fav'
 import { getCsrfToken, getHasLogined, getUid, toast } from '$utility'
 
 export const UserFavService = {
