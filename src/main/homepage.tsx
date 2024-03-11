@@ -39,6 +39,8 @@ export async function initHomepage() {
   tryToRemove('.adblock-tips')
   // 变灰
   tryAction('html.gray', (el) => el.classList.remove('gray'))
+  // 登录-大会员券
+  tryToRemove('.vip-login-tip')
 
   if (hasBewlyBewly()) {
     console.warn(`${APP_NAME}: quit for using bewly-design`)

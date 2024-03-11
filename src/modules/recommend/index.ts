@@ -94,11 +94,15 @@ export async function getMinCount(
       )
     }
 
-    cur = usePcApi(tab)
-      ? await pcRecService.getRecommendTimes(times, abortSignal)
-      : await appRecService.getRecommendTimes(times)
-    cur = filterRecItems(cur, tab)
+    if (usePcApi(tab)) {
+      cur = await pcRecService.getRecommendTimes(times, abortSignal)
+      hasMore = pcRecService.hasMore
+    } else {
+      cur = await appRecService.getRecommendTimes(times)
+      hasMore = appRecService.hasMore
+    }
 
+    cur = filterRecItems(cur, tab)
     items = items.concat(cur)
     items = uniqBy(items, recItemUniqer)
   }

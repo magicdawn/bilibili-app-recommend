@@ -60,6 +60,12 @@ export class DynamicFeedRecService implements IService {
     const json = res.data as DynamicFeedJson
     if (!isWebApiSuccess(json)) {
       toast(json.message || REQUEST_FAIL_MSG)
+
+      // prevent infinite call
+      if (json.message === '账号未登录') {
+        this.hasMore = false
+      }
+
       return
     }
 
@@ -93,16 +99,13 @@ export class DynamicFeedRecService implements IService {
 /**
  * view dynamic of <mid> via query
  */
-const hash = location.hash
+
 let upMidInitial: number | undefined = undefined
 let upNameInitial: string | undefined = undefined
-if (hash.includes('?')) {
-  const queryInHash = location.hash.slice(location.hash.indexOf('?'))
-  const searchParams = new URLSearchParams(queryInHash)
-  if (searchParams.get('dyn-mid')) {
-    upMidInitial = Number(searchParams.get('dyn-mid'))
-    upNameInitial = searchParams.get('dyn-mid') ?? undefined
-  }
+const searchParams = new URLSearchParams(location.search)
+if (searchParams.get('dyn-mid')) {
+  upMidInitial = Number(searchParams.get('dyn-mid'))
+  upNameInitial = searchParams.get('dyn-name') ?? searchParams.get('dyn-mid') ?? undefined
 }
 
 export const dynamicFeedFilterStore = proxy({

@@ -65,9 +65,8 @@ function _getCurrentSourceTab(videoSourceTab: ETabType, logined: boolean): ETabT
 
   // not logined
   if (!logined) {
-    if (videoSourceTab === ETabType.RecommendApp || videoSourceTab === ETabType.RecommendPc) {
-      return videoSourceTab
-    } else {
+    // 不允许游客访问
+    if (!TabConfig[videoSourceTab].anonymousUsage) {
       return ETabType.RecommendApp
     }
   }
@@ -128,9 +127,11 @@ export function VideoSourceTab({ onRefresh }: { onRefresh: OnRefresh }) {
         onChange={(e) => {
           const newValue = e.target.value as ETabType
 
-          if (newValue !== ETabType.RecommendApp && newValue !== ETabType.RecommendPc && !logined) {
-            if (!checkLoginStatus()) {
-              return toastNeedLogin()
+          if (!logined) {
+            if (!TabConfig[newValue].anonymousUsage) {
+              if (!checkLoginStatus()) {
+                return toastNeedLogin()
+              }
             }
           }
 

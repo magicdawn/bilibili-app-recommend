@@ -1,5 +1,5 @@
 import type { PcRecItem, PcRecItemExtend, PcRecommendJson } from '$define'
-import { request } from '$request'
+import { isWebApiSuccess, request } from '$request'
 import { toast } from '$utility/toast'
 import { uniqBy } from 'lodash'
 import type { IService } from './base'
@@ -37,10 +37,18 @@ export class PcRecService implements IService {
     })
 
     const json = res.data as PcRecommendJson
+
+    if (!isWebApiSuccess(json)) {
+      /** code: -62011, data: null, message: "暂时没有更多内容了", ttl: 1 */
+      if (json.code === -62011 && json.message === '暂时没有更多内容了') {
+        this.hasMore = false
+        return []
+      }
+    }
+
     if (!json.data?.item) {
       toast(json.message || 'API 请求没有返回结果')
     }
-
     const items = json.data?.item || []
     return items
   }

@@ -20,6 +20,7 @@ export type TabConfigItem = {
   label: string
   desc: string
   swr?: boolean // stale while revalidate
+  anonymousUsage?: boolean // 游客可访问?
 }
 
 export const TabConfig: Record<ETabType, TabConfigItem> = {
@@ -27,11 +28,13 @@ export const TabConfig: Record<ETabType, TabConfigItem> = {
     icon: 'Iphone',
     label: '推荐',
     desc: '使用 Bilibili App 端推荐 API',
+    anonymousUsage: true,
   },
   [ETabType.RecommendPc]: {
     icon: 'Computer',
     label: '推荐',
     desc: '使用新版首页顶部推荐 API',
+    anonymousUsage: true,
   },
   [ETabType.KeepFollowOnly]: {
     icon: 'Concern',
@@ -44,6 +47,7 @@ export const TabConfig: Record<ETabType, TabConfigItem> = {
     label: '动态',
     desc: '视频投稿动态',
     swr: true,
+    anonymousUsage: true,
   },
   [ETabType.Watchlater]: {
     icon: 'FileCabinet',
@@ -64,12 +68,14 @@ export const TabConfig: Record<ETabType, TabConfigItem> = {
     label: '综合热门',
     desc: '各个领域中新奇好玩的优质内容都在这里~',
     swr: true,
+    anonymousUsage: true,
   },
   [ETabType.PopularWeekly]: {
     icon: 'TrendTwo',
     iconProps: { size: 15 },
     label: '每周必看',
     desc: '每周五晚 18:00 更新',
+    anonymousUsage: true,
   },
 }
 
