@@ -74,8 +74,12 @@ export function IconPark({
   theme,
   size,
   fill,
+  ml,
+  mr,
+  mt,
+  mb,
   ...props
-}: { name: IconName } & ComponentProps<Icon>) {
+}: { name: IconName; ml?: number; mr?: number; mt?: number; mb?: number } & ComponentProps<Icon>) {
   theme ||= 'outline'
   size ||= 24
   fill ||= 'currentColor'
@@ -86,6 +90,10 @@ export function IconPark({
       {...{ theme, size, fill, ...props }}
       style={{
         fontSize: 0,
+        ...(ml ? { marginLeft: ml + 'px' } : {}),
+        ...(mr ? { marginRight: mr + 'px' } : {}),
+        ...(mt ? { marginTop: mt + 'px' } : {}),
+        ...(mb ? { marginBottom: mb + 'px' } : {}),
         ...props.style,
       }}
     />

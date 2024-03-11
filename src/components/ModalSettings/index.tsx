@@ -3,7 +3,7 @@ import { AccessKeyManage } from '$components/AccessKeyManage'
 import { AntdTooltip } from '$components/AntdApp'
 import { BaseModal, BaseModalClass, ModalClose } from '$components/BaseModal'
 import { useCurrentShowingTabKeys, useSortedTabKeys } from '$components/RecHeader/tab'
-import { ETabType, TabConfigMap, TabIcon, TabKeys } from '$components/RecHeader/tab.shared'
+import { ETabType, TabConfig, TabIcon, TabKeys } from '$components/RecHeader/tab.shared'
 import { FlagSettingItem, HelpInfo } from '$components/piece'
 import { EAppApiDevice } from '$define/index.shared'
 import { IconPark } from '$icon-park'
@@ -805,7 +805,7 @@ function VideoSourceTabSortableItem({ id }: { id: ETabType }) {
     transition,
   }
 
-  const { label, desc, icon, iconProps } = TabConfigMap[id]
+  const { label, desc, icon, iconProps } = TabConfig[id]
 
   const dark = useIsDarkMode()
 

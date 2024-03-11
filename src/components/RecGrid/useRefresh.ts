@@ -1,7 +1,7 @@
 import { APP_KEY_PREFIX } from '$common'
 import { useRefInit } from '$common/hooks/useRefInit'
 import { getCurrentSourceTab } from '$components/RecHeader/tab'
-import { ETabType, TabConfigMap } from '$components/RecHeader/tab.shared'
+import { ETabType, TabConfig } from '$components/RecHeader/tab.shared'
 import type { RecItemExtraType } from '$define'
 import type { IService } from '$modules/recommend/base'
 import { DynamicFeedRecService, dynamicFeedFilterStore } from '$modules/recommend/dynamic-feed'
@@ -180,7 +180,7 @@ export function useRefresh({
     const shouldReuse = reuse && !!itemsHasCache.current[tab]
     const swr =
       shouldReuse &&
-      (!!TabConfigMap[tab].swr ||
+      (!!TabConfig[tab].swr ||
         (tab === ETabType.Fav && !serviceMap[ETabType.Fav].useShuffle && !settings.shuffleForFav) ||
         (tab === ETabType.PopularWeekly &&
           !serviceMap[ETabType.PopularWeekly].useShuffle &&
@@ -289,7 +289,7 @@ export function useRefresh({
       itemsHasCache.current[tab] = true // mark refreshed
 
       // if swr or possibile-swr, save list starting part only
-      if (TabConfigMap[tab].swr || tab === ETabType.Fav || tab === ETabType.PopularWeekly) {
+      if (TabConfig[tab].swr || tab === ETabType.Fav || tab === ETabType.PopularWeekly) {
         itemsCache.current[tab] = _items.slice(0, 30)
       } else {
         itemsCache.current[tab] = _items

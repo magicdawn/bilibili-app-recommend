@@ -9,7 +9,14 @@ import { css } from '@emotion/react'
 import { Radio } from 'antd'
 import { useMemo } from 'react'
 import { useSnapshot } from 'valtio'
-import { ETabType, TabConfigMap, TabIcon, TabKeys, toastNeedLogin } from './tab.shared'
+import {
+  ETabType,
+  TabConfig,
+  TabIcon,
+  TabKeys,
+  toastNeedLogin,
+  type TabConfigItem,
+} from './tab.shared'
 
 const VIDEO_SOURCE_TAB_STORAGE_KEY = `${APP_NAME}-video-source-tab`
 
@@ -38,7 +45,8 @@ export function useSortedTabKeys() {
   return useMemo(() => sortTabKeys(customTabKeysOrder), [customTabKeysOrder])
 }
 
-export function useCurrentTabConfig() {
+//
+export function useCurrentTabConfigList(): ({ key: ETabType } & TabConfigItem)[] {
   const { hidingTabKeys, customTabKeysOrder } = useSettingsSnapshot()
   const logined = useHasLogined()
 
@@ -47,9 +55,10 @@ export function useCurrentTabConfig() {
     tabkeys = tabkeys.filter(
       (key) => !hidingTabKeys.includes(key) || (!logined && key === ETabType.RecommendApp),
     )
-    return tabkeys.map((k) => TabConfigMap[k])
+    return tabkeys.map((k) => ({ key: k, ...TabConfig[k] }))
   }, [hidingTabKeys, customTabKeysOrder, logined])
 }
+
 function _getCurrentSourceTab(videoSourceTab: ETabType, logined: boolean): ETabType {
   // invalid
   if (!TabKeys.includes(videoSourceTab)) return ETabType.RecommendApp
@@ -101,7 +110,7 @@ export function VideoSourceTab({ onRefresh }: { onRefresh: OnRefresh }) {
   const logined = useHasLogined()
   const tab = useCurrentSourceTab()
   const { styleUseStandardVideoSourceTab } = useSettingsSnapshot()
-  const currentTabConfig = useCurrentTabConfig()
+  const currentTabConfigList = useCurrentTabConfigList()
 
   return (
     <div css={flexVerticalCenterStyle}>
@@ -134,7 +143,7 @@ export function VideoSourceTab({ onRefresh }: { onRefresh: OnRefresh }) {
           })
         }}
       >
-        {currentTabConfig.map(({ key, label, icon, iconProps }) => (
+        {currentTabConfigList.map(({ key, label, icon, iconProps }) => (
           <Radio.Button
             css={[radioBtnCss, styleUseStandardVideoSourceTab && radioBtnStandardCss]}
             className='video-source-tab' // can be used to customize css
@@ -158,7 +167,7 @@ export function VideoSourceTab({ onRefresh }: { onRefresh: OnRefresh }) {
       </Radio.Group>
       <HelpInfo iconProps={{ name: 'Tips', size: 16, style: { marginLeft: 6 } }}>
         <>
-          {currentTabConfig.map(({ key, label, icon, iconProps, desc }) => (
+          {currentTabConfigList.map(({ key, label, icon, iconProps, desc }) => (
             <div
               key={key}
               css={css`

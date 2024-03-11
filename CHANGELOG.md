@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.20.5
+
+- 动态支持搜索
+- 其他不值一提的变更
+
 ## v0.20.4
 
 - update @mgdn/bvid@0.2.0 to fix #75
