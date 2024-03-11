@@ -1,7 +1,7 @@
 import { APP_NAME, IN_BILIBILI_HOMEPAGE, baseDebug } from '$common'
 import { HAS_RESTORED_SETTINGS } from '$components/ModalSettings/index.shared'
-import type { TabType } from '$components/RecHeader/tab.shared'
-import { AppApiDevice } from '$define/index.shared'
+import type { ETabType } from '$components/RecHeader/tab.shared'
+import { EAppApiDevice } from '$define/index.shared'
 import { setData } from '$modules/user/article-draft'
 import { toast } from '$utility/toast'
 import { omit, pick, throttle } from 'lodash'
@@ -23,7 +23,7 @@ export const initialSettings = {
   /**
    * app recommend
    */
-  appApiDecice: AppApiDevice.ipad,
+  appApiDecice: EAppApiDevice.ipad,
 
   /**
    * 查看更多, aka ModalFeed
@@ -134,8 +134,8 @@ export const initialSettings = {
    * 隐藏的 tab, 使用黑名单, 功能迭代之后新增的 tab, 默认开启.
    * 如果使用白名单, 新增的 tab 会被隐藏
    */
-  hidingTabKeys: [] as TabType[],
-  customTabKeysOrder: [] as TabType[],
+  hidingTabKeys: [] as ETabType[],
+  customTabKeysOrder: [] as ETabType[],
 
   /**
    *

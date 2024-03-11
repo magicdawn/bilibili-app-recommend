@@ -1,10 +1,10 @@
-import type { TabType } from '$components/RecHeader/tab.shared'
+import type { ETabType } from '$components/RecHeader/tab.shared'
 import type { RecItemExtraType } from '$define'
-import { ApiType } from '$define/index.shared'
+import { EApiType } from '$define/index.shared'
 import { settings } from '$modules/settings'
 import { normalizeCardData } from './normalize'
 
-export function anyFilterEnabled(tab: TabType) {
+export function anyFilterEnabled(tab: ETabType) {
   return (
     tab === 'keep-follow-only' ||
     (settings.filterEnabled &&
@@ -14,14 +14,14 @@ export function anyFilterEnabled(tab: TabType) {
   )
 }
 
-export function filterRecItems(items: RecItemExtraType[], tab: TabType) {
+export function filterRecItems(items: RecItemExtraType[], tab: ETabType) {
   if (!anyFilterEnabled(tab)) {
     return items
   }
 
   return items.filter((item) => {
     // just keep it
-    if (item.api === ApiType.separator) return true
+    if (item.api === EApiType.separator) return true
 
     const { play, duration, recommendReason, goto } = normalizeCardData(item)
     const isFollowed = recommendReason === '已关注' || recommendReason?.includes('关注')

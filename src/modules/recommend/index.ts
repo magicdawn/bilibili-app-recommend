@@ -2,11 +2,11 @@
 import { baseDebug } from '$common'
 import { getIService, type FetcherOptions } from '$components/RecGrid/useRefresh'
 import { getColumnCount } from '$components/RecGrid/useShortcut'
-import type { TabType } from '$components/RecHeader/tab.shared'
+import type { ETabType } from '$components/RecHeader/tab.shared'
 import { anyFilterEnabled, filterRecItems } from '$components/VideoCard/process/filter'
 import { lookinto } from '$components/VideoCard/process/normalize'
 import type { RecItemExtraType } from '$define'
-import { ApiType } from '$define/index.shared'
+import { EApiType } from '$define/index.shared'
 import { uniqBy } from 'lodash'
 import { AppRecService } from './app'
 import { PcRecService } from './pc'
@@ -14,7 +14,7 @@ import { PcRecService } from './pc'
 const debug = baseDebug.extend('service')
 
 export const recItemUniqer = (item: RecItemExtraType) =>
-  item.api === ApiType.separator
+  item.api === EApiType.separator
     ? item.uniqId
     : lookinto<string | number>(item, {
         'pc': (item) => item.bvid,
@@ -36,7 +36,7 @@ export function uniqConcat(existing: RecItemExtraType[], newItems: RecItemExtraT
   )
 }
 
-export const usePcApi = (tab: TabType) => tab === 'keep-follow-only' || tab === 'recommend-pc'
+export const usePcApi = (tab: ETabType) => tab === 'keep-follow-only' || tab === 'recommend-pc'
 
 export async function getMinCount(
   count: number,
@@ -116,7 +116,7 @@ export async function getMinCount(
     }
 
     // enough
-    const len = items.filter((x) => x.api !== ApiType.separator).length
+    const len = items.filter((x) => x.api !== EApiType.separator).length
     if (len >= count) break
 
     await addMore(count - items.length)
@@ -137,7 +137,7 @@ export async function refreshForGrid(fetcherOptions: FetcherOptions) {
   return getMinCount(getColumnCount() * 3 + 1, fetcherOptions, 5) // 7 * 3-row, 1 screen
 }
 
-export async function getRecommendTimes(times: number, tab: TabType, pcRecService: PcRecService) {
+export async function getRecommendTimes(times: number, tab: ETabType, pcRecService: PcRecService) {
   let items: RecItemExtraType[] = usePcApi(tab)
     ? await pcRecService.getRecommendTimes(times)
     : await new AppRecService().getRecommendTimes(times)

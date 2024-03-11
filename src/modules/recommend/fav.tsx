@@ -4,7 +4,7 @@ import { type ItemsSeparator } from '$define'
 import type { FavItemExtend } from '$define/fav'
 import type { FavFolderListAllItem, FavFolderListAllJson } from '$define/fav/folder-list-all'
 import type { FavFolderDetailInfo, ResourceListJSON } from '$define/fav/resource-list'
-import { ApiType } from '$define/index.shared'
+import { EApiType } from '$define/index.shared'
 import { settings, updateSettings, useSettingsSnapshot } from '$modules/settings'
 import { isWebApiSuccess, request } from '$request'
 import { getUid, toast } from '$utility'
@@ -74,7 +74,7 @@ export class FavRecService implements IService {
         service.page === 1
           ? [
               this.addSeparator && {
-                api: ApiType.separator as const,
+                api: EApiType.separator as const,
                 uniqId: `fav-folder-${service.entry.id}`,
                 content: (
                   <>
@@ -186,7 +186,7 @@ export class FavFolderService {
       return {
         ...item,
         folder: this.info!,
-        api: ApiType.fav,
+        api: EApiType.fav,
         uniqId: `fav-${this.info?.id}-${item.bvid}`,
       }
     })

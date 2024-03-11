@@ -1,6 +1,6 @@
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
 import { type ItemsSeparator, type WatchLaterItemExtend, type WatchLaterJson } from '$define'
-import { ApiType } from '$define/index.shared'
+import { EApiType } from '$define/index.shared'
 import { settings, updateSettings, useSettingsSnapshot } from '$modules/settings'
 import { request } from '$request'
 import { getHasLogined } from '$utility'
@@ -53,7 +53,7 @@ export class WatchLaterRecService implements IService {
     const items: WatchLaterItemExtend[] = json.data.list.map((item) => {
       return {
         ...item,
-        api: ApiType.watchlater,
+        api: EApiType.watchlater,
         uniqId: `watchlater-${item.bvid}`,
       }
     })
@@ -94,7 +94,7 @@ export class WatchLaterRecService implements IService {
       itemsWithSeparator = [
         !!recent.length &&
           this.addSeparator && {
-            api: ApiType.separator as const,
+            api: EApiType.separator as const,
             uniqId: 'watchlater-recent',
             content: '近期',
           },
@@ -102,7 +102,7 @@ export class WatchLaterRecService implements IService {
 
         !!earlier.length &&
           this.addSeparator && {
-            api: ApiType.separator as const,
+            api: EApiType.separator as const,
             uniqId: 'watchlater-earlier',
             content: '更早',
           },
@@ -119,7 +119,7 @@ export class WatchLaterRecService implements IService {
 
     // save for next keepOrder=true
     WatchLaterRecService.LAST_BVID_ARR = itemsWithSeparator
-      .map((item) => item.api === ApiType.watchlater && item.bvid)
+      .map((item) => item.api === EApiType.watchlater && item.bvid)
       .filter(Boolean)
 
     return itemsWithSeparator

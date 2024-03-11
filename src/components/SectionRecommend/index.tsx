@@ -7,7 +7,7 @@ import {
   videoGridInternalTesting,
   videoGridNewHomepage,
 } from '$components/video-grid.module.scss'
-import { ApiType } from '$define/index.shared'
+import { EApiType } from '$define/index.shared'
 import { cx } from '$libs'
 import { refreshForHome } from '$modules/recommend'
 import { getIsInternalTesting } from '$platform'
@@ -57,7 +57,7 @@ export function SectionRecommend() {
         {showSkeleton
           ? skeletonPlaceholders.map((id) => <VideoCard key={id} />)
           : items.map((item) => {
-              return item.api === ApiType.separator ? null : (
+              return item.api === EApiType.separator ? null : (
                 <VideoCard key={item.uniqId} item={item} />
               )
             })}

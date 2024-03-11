@@ -6,17 +6,18 @@ import { APP_NAME, baseDebug } from '$common'
 import { useModalDislikeVisible } from '$components/ModalDislike'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import { useCurrentSourceTab } from '$components/RecHeader/tab'
-import type { TabType } from '$components/RecHeader/tab.shared'
+import { ETabType } from '$components/RecHeader/tab.shared'
 import type { VideoCardEmitter, VideoCardEvents } from '$components/VideoCard'
 import { VideoCard } from '$components/VideoCard'
 import { borderRadiusValue } from '$components/VideoCard/index.shared'
 import type { IVideoCardData } from '$components/VideoCard/process/normalize'
 import { type RecItemExtraType, type RecItemType } from '$define'
-import { ApiType } from '$define/index.shared'
+import { EApiType } from '$define/index.shared'
 import { getHeaderHeight } from '$header'
 import { IconPark } from '$icon-park'
 import { cx, styled } from '$libs'
 import { getRecommendTimes, refreshForGrid, uniqConcat } from '$modules/recommend'
+import { dynamicFeedFilterStore } from '$modules/recommend/dynamic-feed'
 import { useSettingsSnapshot } from '$modules/settings'
 import { getIsInternalTesting, isSafari } from '$platform'
 import { AntdMessage } from '$utility'
@@ -29,6 +30,7 @@ import ms from 'ms'
 import type { ReactNode, RefObject } from 'react'
 import { forwardRef, useImperativeHandle, useMemo, useRef, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
+import { useSnapshot } from 'valtio'
 import {
   narrowMode,
   videoGrid,
@@ -112,7 +114,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
     queueMicrotask(checkShouldLoadMore)
   })
 
-  const updateExtraInfo = useMemoizedFn((tab: TabType) => {
+  const updateExtraInfo = useMemoizedFn((tab: ETabType) => {
     const info = getIService(serviceMap, tab)?.usageInfo ?? null
     setExtraInfo?.(info)
   })
@@ -262,6 +264,23 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
     // scroller?.dispatchEvent(new CustomEvent('scroll'))
   })
 
+  /**
+   * filter fetched items
+   */
+  const { hasSelectedUp, searchText } = useSnapshot(dynamicFeedFilterStore)
+  const filteredItems = useMemo(() => {
+    if (tab !== ETabType.DynamicFeed) return items
+    if (!hasSelectedUp || !searchText) return items
+    return items.filter((item) => {
+      if (item.api !== EApiType.dynamic) return true
+      const title = item.modules.module_dynamic.major.archive.title || ''
+      return title.includes(searchText)
+    })
+  }, [items, tab, hasSelectedUp, searchText])
+
+  // 渲染使用的 items
+  const usingItems = filteredItems
+
   // .video-grid
   const containerRef = useRef<HTMLDivElement>(null)
 
@@ -280,14 +299,14 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
   // 不喜欢弹窗
   const modalDislikeVisible = useModalDislikeVisible()
 
-  const videoItems = useMemo(() => {
-    return items.filter((x) => x.api !== ApiType.separator)
-  }, [items])
+  const usingVideoItems = useMemo(() => {
+    return items.filter((x) => x.api !== EApiType.separator)
+  }, [usingItems])
 
   // emitters
   const videoCardEmittersMap = useMemo(() => new Map<string, VideoCardEmitter>(), [refreshedAt])
   const videoCardEmitters = useMemo(() => {
-    return videoItems.map(({ uniqId: cacheKey }) => {
+    return usingVideoItems.map(({ uniqId: cacheKey }) => {
       return (
         videoCardEmittersMap.get(cacheKey) ||
         (() => {
@@ -297,13 +316,13 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
         })()
       )
     })
-  }, [videoItems])
+  }, [usingVideoItems])
 
   // 快捷键
   const { activeIndex, clearActiveIndex } = useShortcut({
     enabled: shortcutEnabled && !modalDislikeVisible,
     refresh,
-    maxIndex: videoItems.length - 1,
+    maxIndex: usingVideoItems.length - 1,
     containerRef,
     getScrollerRect,
     videoCardEmitters,
@@ -359,7 +378,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
       // rm
       newItems.splice(index, 1)
       // insert
-      const newIndex = newItems.findIndex((x) => x.api !== ApiType.separator)
+      const newIndex = newItems.findIndex((x) => x.api !== EApiType.separator)
       newItems.splice(newIndex, 0, currentItem)
 
       return newItems
@@ -443,7 +462,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
   }
 
   const renderItem = (item: RecItemExtraType) => {
-    if (item.api === ApiType.separator) {
+    if (item.api === EApiType.separator) {
       return (
         <Divider
           key={item.uniqId}
@@ -463,7 +482,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
         </Divider>
       )
     } else {
-      const index = videoItems.findIndex((x) => x.uniqId === item.uniqId)
+      const index = usingVideoItems.findIndex((x) => x.uniqId === item.uniqId)
       const active = index === activeIndex
       return (
         <VideoCard
@@ -486,8 +505,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
   return (
     <div style={{ minHeight: '100%' }} className={videoGridContainer}>
       <div ref={containerRef} className={gridClassName}>
-        {/* items */}
-        {items.map((item) => renderItem(item))}
+        {usingItems.map((item) => renderItem(item))}
       </div>
       {footer}
     </div>

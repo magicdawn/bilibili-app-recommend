@@ -9,22 +9,21 @@ import { css } from '@emotion/react'
 import { Radio } from 'antd'
 import { useMemo } from 'react'
 import { useSnapshot } from 'valtio'
-import type { TabType } from './tab.shared'
-import { TabConfigMap, TabIcon, TabKeys, toastNeedLogin } from './tab.shared'
+import { ETabType, TabConfigMap, TabIcon, TabKeys, toastNeedLogin } from './tab.shared'
 
 const VIDEO_SOURCE_TAB_STORAGE_KEY = `${APP_NAME}-video-source-tab`
 
-export const videoSourceTabState = proxyWithLocalStorage<{ value: TabType }>(
-  { value: 'recommend-app' },
+export const videoSourceTabState = proxyWithLocalStorage<{ value: ETabType }>(
+  { value: ETabType.RecommendApp },
   VIDEO_SOURCE_TAB_STORAGE_KEY,
 )
 
-export function useCurrentShowingTabKeys(): TabType[] {
+export function useCurrentShowingTabKeys(): ETabType[] {
   const { hidingTabKeys } = useSettingsSnapshot()
   return useMemo(() => TabKeys.filter((key) => !hidingTabKeys.includes(key)), [hidingTabKeys])
 }
 
-export function sortTabKeys(customTabKeysOrder: TabType[]) {
+export function sortTabKeys(customTabKeysOrder: ETabType[]) {
   return TabKeys.slice().sort((a, b) => {
     let aIndex = customTabKeysOrder.indexOf(a)
     let bIndex = customTabKeysOrder.indexOf(b)
@@ -51,27 +50,27 @@ export function useCurrentTabConfig() {
     return tabkeys.map((k) => TabConfigMap[k])
   }, [hidingTabKeys, customTabKeysOrder, logined])
 }
-function _getCurrentSourceTab(videoSourceTab: TabType, logined: boolean): TabType {
+function _getCurrentSourceTab(videoSourceTab: ETabType, logined: boolean): ETabType {
   // invalid
-  if (!TabKeys.includes(videoSourceTab)) return 'recommend-app'
+  if (!TabKeys.includes(videoSourceTab)) return ETabType.RecommendApp
 
   // not logined
   if (!logined) {
-    if (videoSourceTab === 'recommend-app' || videoSourceTab === 'recommend-pc') {
+    if (videoSourceTab === ETabType.RecommendApp || videoSourceTab === ETabType.RecommendPc) {
       return videoSourceTab
     } else {
-      return 'recommend-app'
+      return ETabType.RecommendApp
     }
   }
 
   return videoSourceTab
 }
 
-export function useCurrentSourceTab(): TabType {
+export function useCurrentSourceTab(): ETabType {
   return _getCurrentSourceTab(useSnapshot(videoSourceTabState).value, useHasLogined())
 }
 
-export function getCurrentSourceTab(): TabType {
+export function getCurrentSourceTab(): ETabType {
   return _getCurrentSourceTab(videoSourceTabState.value, getHasLogined())
 }
 
@@ -118,7 +117,7 @@ export function VideoSourceTab({ onRefresh }: { onRefresh: OnRefresh }) {
           target.blur()
         }}
         onChange={(e) => {
-          const newValue = e.target.value as TabType
+          const newValue = e.target.value as ETabType
 
           if (newValue !== 'recommend-app' && newValue !== 'recommend-pc' && !logined) {
             if (!checkLoginStatus()) {

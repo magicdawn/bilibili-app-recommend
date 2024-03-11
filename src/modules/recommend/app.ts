@@ -1,7 +1,7 @@
 import { APP_NAME, HOST_APP } from '$common'
 import type { AppRecItem, AppRecItemExtend, AppRecommendJson } from '$define'
 import type { ipad } from '$define/app-recommend.ipad'
-import { AppApiDevice } from '$define/index.shared'
+import { EAppApiDevice } from '$define/index.shared'
 import { settings } from '$modules/settings'
 import { gmrequest } from '$request'
 import { toast } from '$utility/toast'
@@ -19,12 +19,12 @@ class RecReqError extends Error {
   }
 }
 
-export async function getRecommend(device: AppApiDevice) {
+export async function getRecommend(device: EAppApiDevice) {
   let platformParams: Record<string, string | number> = {}
-  if (device === AppApiDevice.android) {
+  if (device === EAppApiDevice.android) {
     platformParams = { mobi_app: 'android' }
   }
-  if (device === AppApiDevice.ipad) {
+  if (device === EAppApiDevice.ipad) {
     platformParams = {
       // has avatar, date, etc
       // see BewlyBewly usage
@@ -75,7 +75,7 @@ const tryfn = pretry(getRecommend, {
   },
 })
 
-async function tryGetRecommend(device: AppApiDevice) {
+async function tryGetRecommend(device: EAppApiDevice) {
   try {
     return await tryfn(device)
   } catch (e) {
@@ -107,9 +107,9 @@ export class AppRecService implements IService {
   async getRecommendTimes(times: number) {
     let list: AppRecItem[] = []
 
-    let device: AppApiDevice = settings.appApiDecice
-    if (device !== AppApiDevice.ipad && device !== AppApiDevice.android) {
-      device = AppApiDevice.ipad
+    let device: EAppApiDevice = settings.appApiDecice
+    if (device !== EAppApiDevice.ipad && device !== EAppApiDevice.android) {
+      device = EAppApiDevice.ipad
     }
 
     const parallel = async () => {

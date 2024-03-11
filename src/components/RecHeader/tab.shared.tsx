@@ -3,18 +3,19 @@ import { toast } from '$utility/toast'
 import { type Icon } from '@icon-park/react/es/runtime'
 import type { ComponentProps } from 'react'
 
-export type TabType =
-  | 'recommend-app'
-  | 'recommend-pc'
-  | 'keep-follow-only'
-  | 'dynamic-feed'
-  | 'watchlater'
-  | 'fav'
-  | 'popular-general'
-  | 'popular-weekly'
+export enum ETabType {
+  RecommendApp = 'recommend-app',
+  RecommendPc = 'recommend-pc',
+  KeepFollowOnly = 'keep-follow-only',
+  DynamicFeed = 'dynamic-feed',
+  Watchlater = 'watchlater',
+  Fav = 'fav',
+  PopularGeneral = 'popular-general',
+  PopularWeekly = 'popular-weekly',
+}
 
 type TabConfigItem = {
-  key: TabType
+  key: ETabType
   icon: IconName
   iconProps?: ComponentProps<Icon>
   label: string
@@ -24,25 +25,25 @@ type TabConfigItem = {
 
 export const TabConfig: TabConfigItem[] = [
   {
-    key: 'recommend-app',
+    key: ETabType.RecommendApp,
     icon: 'Iphone',
     label: '推荐',
     desc: '使用 Bilibili App 端推荐 API',
   },
   {
-    key: 'recommend-pc',
+    key: ETabType.RecommendPc,
     icon: 'Computer',
     label: '推荐',
     desc: '使用新版首页顶部推荐 API',
   },
   {
-    key: 'keep-follow-only',
+    key: ETabType.KeepFollowOnly,
     icon: 'Concern',
     label: '已关注',
     desc: '推荐中只保留「已关注」,会很慢',
   },
   {
-    key: 'dynamic-feed',
+    key: ETabType.DynamicFeed,
     icon: 'Tumblr',
     iconProps: { size: 16 },
     label: '动态',
@@ -50,7 +51,7 @@ export const TabConfig: TabConfigItem[] = [
     swr: true,
   },
   {
-    key: 'watchlater',
+    key: ETabType.Watchlater,
     icon: 'FileCabinet',
     iconProps: { size: 15 },
     label: '稍后再看',
@@ -58,14 +59,14 @@ export const TabConfig: TabConfigItem[] = [
     swr: true,
   },
   {
-    key: 'fav',
+    key: ETabType.Fav,
     icon: 'Star',
     iconProps: { size: 15 },
     label: '收藏',
     desc: '你添加的收藏; 默认随机乱序, 可在设置中关闭乱序',
   },
   {
-    key: 'popular-general',
+    key: ETabType.PopularGeneral,
     icon: 'Fire',
     iconProps: { size: 16 },
     label: '综合热门',
@@ -73,7 +74,7 @@ export const TabConfig: TabConfigItem[] = [
     swr: true,
   },
   {
-    key: 'popular-weekly',
+    key: ETabType.PopularWeekly,
     icon: 'TrendTwo',
     iconProps: { size: 15 },
     label: '每周必看',
@@ -83,7 +84,7 @@ export const TabConfig: TabConfigItem[] = [
 
 export const TabConfigMap = TabConfig.reduce((val, configItem) => {
   return { ...val, [configItem.key]: configItem }
-}, {}) as Record<TabType, TabConfigItem>
+}, {}) as Record<ETabType, TabConfigItem>
 
 export function TabIcon({
   tabKey,
@@ -93,7 +94,7 @@ export function TabIcon({
   mb,
   ...props
 }: {
-  tabKey: TabType
+  tabKey: ETabType
   className?: string
   style?: React.CSSProperties
   ml?: number

@@ -1,7 +1,7 @@
 import { APP_KEY_PREFIX } from '$common'
 import { useRefInit } from '$common/hooks/useRefInit'
 import { getCurrentSourceTab } from '$components/RecHeader/tab'
-import type { TabType } from '$components/RecHeader/tab.shared'
+import type { ETabType } from '$components/RecHeader/tab.shared'
 import { TabConfigMap } from '$components/RecHeader/tab.shared'
 import type { RecItemExtraType } from '$define'
 import type { IService } from '$modules/recommend/base'
@@ -31,7 +31,7 @@ const serviceFactories = {
   'fav': () => new FavRecService(),
   'popular-general': () => new PopularGeneralService(),
   'popular-weekly': () => new PopularWeeklyService(),
-} satisfies Partial<Record<TabType, (options?: OnRefreshOptions) => IService>>
+} satisfies Partial<Record<ETabType, (options?: OnRefreshOptions) => IService>>
 
 export type ServiceMapKey = keyof typeof serviceFactories
 
@@ -39,12 +39,12 @@ export type ServiceMap = {
   [K in ServiceMapKey]: ReturnType<(typeof serviceFactories)[K]>
 }
 
-export function getIService(serviceMap: ServiceMap, tab: TabType): IService | undefined {
+export function getIService(serviceMap: ServiceMap, tab: ETabType): IService | undefined {
   return serviceMap[tab as ServiceMapKey]
 }
 
 export type FetcherOptions = {
-  tab: TabType
+  tab: ETabType
   abortSignal: AbortSignal
   serviceMap: ServiceMap
   pcRecService: PcRecService
@@ -62,7 +62,7 @@ export function useRefresh({
   onScrollToTop,
   setUpperRefreshing,
 }: {
-  tab: TabType
+  tab: ETabType
   debug: Debugger
   fetcher: (opts: FetcherOptions) => Promise<RecItemExtraType[]>
   recreateService: boolean
@@ -74,8 +74,8 @@ export function useRefresh({
 }) {
   const tab = getCurrentSourceTab()
 
-  const itemsCache = useRefInit<Partial<Record<TabType, RecItemExtraType[]>>>(() => ({}))
-  const itemsHasCache = useRefInit<Partial<Record<TabType, boolean>>>(() => ({}))
+  const itemsCache = useRefInit<Partial<Record<ETabType, RecItemExtraType[]>>>(() => ({}))
+  const itemsHasCache = useRefInit<Partial<Record<ETabType, boolean>>>(() => ({}))
 
   const [hasMore, setHasMore] = useState(true)
   const [items, setItems] = useState<RecItemExtraType[]>([])
@@ -96,7 +96,7 @@ export function useRefresh({
 
   const [refreshing, setRefreshing] = useState(false)
   const [refreshedAt, setRefreshedAt, getRefreshedAt] = useGetState<number>(() => Date.now())
-  const [refreshFor, setRefreshFor] = useState<TabType>(tab)
+  const [refreshFor, setRefreshFor] = useState<ETabType>(tab)
   const [refreshAbortController, setRefreshAbortController] = useState<AbortController>(
     () => new AbortController(),
   )

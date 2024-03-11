@@ -3,10 +3,9 @@ import { AccessKeyManage } from '$components/AccessKeyManage'
 import { AntdTooltip } from '$components/AntdApp'
 import { BaseModal, BaseModalClass, ModalClose } from '$components/BaseModal'
 import { useCurrentShowingTabKeys, useSortedTabKeys } from '$components/RecHeader/tab'
-import type { TabType } from '$components/RecHeader/tab.shared'
-import { TabConfigMap, TabIcon, TabKeys } from '$components/RecHeader/tab.shared'
+import { ETabType, TabConfigMap, TabIcon, TabKeys } from '$components/RecHeader/tab.shared'
 import { FlagSettingItem, HelpInfo } from '$components/piece'
-import { AppApiDevice } from '$define/index.shared'
+import { EAppApiDevice } from '$define/index.shared'
 import { IconPark } from '$icon-park'
 import { cx } from '$libs'
 import type { BooleanSettingsKey } from '$modules/settings'
@@ -666,7 +665,7 @@ function TabPaneVideoSourceTabConfig() {
               `}
             >
               <div className={styles.settingsGroupSubTitle}>
-                <TabIcon tabKey='watchlater' mr={5} mt={-1} />
+                <TabIcon tabKey={ETabType.Watchlater} mr={5} mt={-1} />
                 稍后再看
               </div>
               <div className={styles.row}>
@@ -692,7 +691,7 @@ function TabPaneVideoSourceTabConfig() {
               `}
             >
               <div className={styles.settingsGroupSubTitle}>
-                <TabIcon tabKey='fav' mr={5} mt={-2} />
+                <TabIcon tabKey={ETabType.Fav} mr={5} mt={-2} />
                 收藏
               </div>
               <div className={styles.row}>
@@ -714,7 +713,7 @@ function TabPaneVideoSourceTabConfig() {
               `}
             >
               <div className={styles.settingsGroupSubTitle}>
-                <TabIcon tabKey='recommend-app' mr={5} />
+                <TabIcon tabKey={ETabType.RecommendApp} mr={5} />
                 App 推荐
               </div>
               <div style={{ width: '100%', display: 'flex', alignItems: 'center' }}>
@@ -733,7 +732,7 @@ function TabPaneVideoSourceTabConfig() {
                   optionType='button'
                   buttonStyle='solid'
                   size='small'
-                  options={[AppApiDevice.ipad, AppApiDevice.android]}
+                  options={[EAppApiDevice.ipad, EAppApiDevice.android]}
                   value={appApiDecice}
                   onChange={(e) => updateSettings({ appApiDecice: e.target.value })}
                 />
@@ -797,7 +796,7 @@ function VideoSourceTabOrder({ className, style }: { className?: string; style?:
   )
 }
 
-function VideoSourceTabSortableItem({ id }: { id: TabType }) {
+function VideoSourceTabSortableItem({ id }: { id: ETabType }) {
   const { attributes, listeners, setNodeRef, transform, transition, setActivatorNodeRef } =
     useSortable({ id })
 

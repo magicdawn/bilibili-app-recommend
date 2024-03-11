@@ -5,8 +5,9 @@ import { delDislikeId, showModalDislike, useDislikedReason } from '$components/M
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import type { OnRefresh } from '$components/RecGrid/useRefresh'
 import { useCurrentSourceTab, videoSourceTabState } from '$components/RecHeader/tab'
+import { ETabType } from '$components/RecHeader/tab.shared'
 import type { AppRecItem, AppRecItemExtend, RecItemType } from '$define'
-import { ApiType } from '$define/index.shared'
+import { EApiType } from '$define/index.shared'
 import { IconPark } from '$icon-park'
 import { cx } from '$libs'
 import { dynamicFeedFilterSelectUp } from '$modules/recommend/dynamic-feed'
@@ -559,7 +560,7 @@ const VideoCardInner = memo(function VideoCardInner({
     let popupHeight = Math.ceil((popupWidth / 16) * 9)
 
     // try detect 竖屏视频
-    if (item.api === ApiType.app && item.uri?.startsWith('bilibili://')) {
+    if (item.api === EApiType.app && item.uri?.startsWith('bilibili://')) {
       const searchParams = new URL(item.uri).searchParams
       const playerWidth = Number(searchParams.get('player_width') || 0)
       const playerHeight = Number(searchParams.get('player_height') || 0)
@@ -691,8 +692,12 @@ const VideoCardInner = memo(function VideoCardInner({
     isNormalVideo && !!authorMid && !!authorName && !!onRefresh
   const onDynamicFeedFilterSelectUp = useMemoizedFn(async () => {
     if (!authorMid || !authorName) return
-    dynamicFeedFilterSelectUp({ upMid: Number(authorMid), upName: authorName })
-    videoSourceTabState.value = 'dynamic-feed'
+    dynamicFeedFilterSelectUp({
+      upMid: Number(authorMid),
+      upName: authorName,
+      searchText: undefined,
+    })
+    videoSourceTabState.value = ETabType.DynamicFeed
     await delay(100)
     await onRefresh?.()
   })
