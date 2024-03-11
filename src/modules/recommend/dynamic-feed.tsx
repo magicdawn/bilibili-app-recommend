@@ -26,10 +26,12 @@ export class DynamicFeedRecService implements IService {
   offset: string = ''
   page = 0 // pages loaded
   hasMore = true
-  upMid: number | undefined = undefined
+  upMid: number | undefined
+  searchText: string | undefined
 
-  constructor(upMid: number | undefined) {
+  constructor(upMid?: number, searchText?: string) {
     this.upMid = upMid
+    this.searchText = searchText
   }
 
   async loadMore(signal: AbortSignal | undefined = undefined) {
@@ -66,7 +68,12 @@ export class DynamicFeedRecService implements IService {
 
     const arr = json.data.items
     const items: DynamicFeedItemExtend[] = arr
-      .filter((x) => x.type === 'DYNAMIC_TYPE_AV') // 处理不了别的类型
+      .filter((it) => it.type === 'DYNAMIC_TYPE_AV') // 处理不了别的类型
+      .filter((it) => {
+        if (!this.searchText) return true
+        const title = it?.modules?.module_dynamic?.major?.archive?.title || ''
+        return title.includes(this.searchText)
+      })
       .map((item) => {
         return {
           ...item,
@@ -213,7 +220,7 @@ export function DynamicFeedUsageInfo() {
 
   return (
     <>
-      {hasSelectedUp && flexBreak}
+      {/* {hasSelectedUp && flexBreak} */}
       <Space>
         <Dropdown
           placement='bottomLeft'
@@ -244,9 +251,13 @@ export function DynamicFeedUsageInfo() {
             placeholder='按标题过滤'
             type='text'
             name='searchText'
+            autoCorrect='off'
+            autoCapitalize='off'
+            // 有自带的你是记录, 何乐而不为
+            // autoComplete='off'
             allowClear
             onSearch={async (val) => {
-              dynamicFeedFilterStore.searchText = val
+              dynamicFeedFilterStore.searchText = val || undefined
               await delay(100)
               onRefresh?.()
             }}

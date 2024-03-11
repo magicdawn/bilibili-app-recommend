@@ -2,7 +2,7 @@
 import { baseDebug } from '$common'
 import { getIService, type FetcherOptions } from '$components/RecGrid/useRefresh'
 import { getColumnCount } from '$components/RecGrid/useShortcut'
-import type { ETabType } from '$components/RecHeader/tab.shared'
+import { ETabType } from '$components/RecHeader/tab.shared'
 import { anyFilterEnabled, filterRecItems } from '$components/VideoCard/process/filter'
 import { lookinto } from '$components/VideoCard/process/normalize'
 import type { RecItemExtraType } from '$define'
@@ -134,7 +134,16 @@ export async function refreshForHome(fetcherOptions: FetcherOptions) {
 }
 
 export async function refreshForGrid(fetcherOptions: FetcherOptions) {
-  return getMinCount(getColumnCount() * 3 + 1, fetcherOptions, 5) // 7 * 3-row, 1 screen
+  let minCount = getColumnCount() * 3 + 1 // 7 * 3-row, 1 screen
+
+  if (
+    fetcherOptions.tab === ETabType.DynamicFeed &&
+    fetcherOptions.serviceMap['dynamic-feed'].searchText
+  ) {
+    minCount = 1
+  }
+
+  return getMinCount(minCount, fetcherOptions, 5)
 }
 
 export async function getRecommendTimes(times: number, tab: ETabType, pcRecService: PcRecService) {

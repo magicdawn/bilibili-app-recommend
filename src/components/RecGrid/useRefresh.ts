@@ -1,8 +1,7 @@
 import { APP_KEY_PREFIX } from '$common'
 import { useRefInit } from '$common/hooks/useRefInit'
 import { getCurrentSourceTab } from '$components/RecHeader/tab'
-import type { ETabType } from '$components/RecHeader/tab.shared'
-import { TabConfigMap } from '$components/RecHeader/tab.shared'
+import { ETabType, TabConfigMap } from '$components/RecHeader/tab.shared'
 import type { RecItemExtraType } from '$define'
 import type { IService } from '$modules/recommend/base'
 import { DynamicFeedRecService, dynamicFeedFilterStore } from '$modules/recommend/dynamic-feed'
@@ -26,11 +25,12 @@ export function useOnRefreshContext() {
 }
 
 const serviceFactories = {
-  'dynamic-feed': () => new DynamicFeedRecService(dynamicFeedFilterStore.upMid),
-  'watchlater': (options) => new WatchLaterRecService(options?.watchlaterKeepOrder),
-  'fav': () => new FavRecService(),
-  'popular-general': () => new PopularGeneralService(),
-  'popular-weekly': () => new PopularWeeklyService(),
+  [ETabType.DynamicFeed]: () =>
+    new DynamicFeedRecService(dynamicFeedFilterStore.upMid, dynamicFeedFilterStore.searchText),
+  [ETabType.Watchlater]: (options) => new WatchLaterRecService(options?.watchlaterKeepOrder),
+  [ETabType.Fav]: () => new FavRecService(),
+  [ETabType.PopularGeneral]: () => new PopularGeneralService(),
+  [ETabType.PopularWeekly]: () => new PopularWeeklyService(),
 } satisfies Partial<Record<ETabType, (options?: OnRefreshOptions) => IService>>
 
 export type ServiceMapKey = keyof typeof serviceFactories
@@ -108,10 +108,25 @@ export function useRefresh({
 
     // when already in refreshing
     if (refreshing) {
-      // prevent same tab `refresh()`
+      // same tab
       if (tab === refreshFor) {
-        debug('refresh(): [start] [refreshing] prevent same tab(%s) refresh()', tab)
-        return
+        // same tab but conditions changed
+        if (
+          tab === ETabType.DynamicFeed &&
+          serviceMap[ETabType.DynamicFeed].searchText !== dynamicFeedFilterStore.searchText
+        ) {
+          debug(
+            'refresh(): [start] [refreshing] sametab(%s) but conditions change, abort existing',
+            tab,
+          )
+          refreshAbortController.abort()
+        }
+
+        // prevent same tab `refresh()`
+        else {
+          debug('refresh(): [start] [refreshing] prevent same tab(%s) refresh()', tab)
+          return
+        }
       }
       // switch tab
       else {

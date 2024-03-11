@@ -6,7 +6,7 @@ import { APP_NAME, baseDebug } from '$common'
 import { useModalDislikeVisible } from '$components/ModalDislike'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import { useCurrentSourceTab } from '$components/RecHeader/tab'
-import { ETabType } from '$components/RecHeader/tab.shared'
+import type { ETabType } from '$components/RecHeader/tab.shared'
 import type { VideoCardEmitter, VideoCardEvents } from '$components/VideoCard'
 import { VideoCard } from '$components/VideoCard'
 import { borderRadiusValue } from '$components/VideoCard/index.shared'
@@ -17,7 +17,6 @@ import { getHeaderHeight } from '$header'
 import { IconPark } from '$icon-park'
 import { cx, styled } from '$libs'
 import { getRecommendTimes, refreshForGrid, uniqConcat } from '$modules/recommend'
-import { dynamicFeedFilterStore } from '$modules/recommend/dynamic-feed'
 import { useSettingsSnapshot } from '$modules/settings'
 import { getIsInternalTesting, isSafari } from '$platform'
 import { AntdMessage } from '$utility'
@@ -30,7 +29,6 @@ import ms from 'ms'
 import type { ReactNode, RefObject } from 'react'
 import { forwardRef, useImperativeHandle, useMemo, useRef, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
-import { useSnapshot } from 'valtio'
 import {
   narrowMode,
   videoGrid,
@@ -264,22 +262,23 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
     // scroller?.dispatchEvent(new CustomEvent('scroll'))
   })
 
+  // 渲染使用的 items
+  const usingItems = items
+
   /**
    * filter fetched items
    */
-  const { hasSelectedUp, searchText } = useSnapshot(dynamicFeedFilterStore)
-  const filteredItems = useMemo(() => {
-    if (tab !== ETabType.DynamicFeed) return items
-    if (!hasSelectedUp || !searchText) return items
-    return items.filter((item) => {
-      if (item.api !== EApiType.dynamic) return true
-      const title = item.modules.module_dynamic.major.archive.title || ''
-      return title.includes(searchText)
-    })
-  }, [items, tab, hasSelectedUp, searchText])
 
-  // 渲染使用的 items
-  const usingItems = filteredItems
+  // const { hasSelectedUp, searchText } = useSnapshot(dynamicFeedFilterStore)
+  // usingItems = useMemo(() => {
+  //   if (tab !== ETabType.DynamicFeed) return items
+  //   if (!hasSelectedUp || !searchText) return items
+  //   return items.filter((item) => {
+  //     if (item.api !== EApiType.dynamic) return true
+  //     const title = item.modules.module_dynamic.major.archive.title || ''
+  //     return title.includes(searchText)
+  //   })
+  // }, [usingItems, tab, hasSelectedUp, searchText])
 
   // .video-grid
   const containerRef = useRef<HTMLDivElement>(null)
@@ -445,9 +444,23 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
     className,
   )
 
-  const showSkeleton = !items.length || refreshError || (refreshing && !swr)
+  if (refreshError) {
+    console.error(refreshError.stack || refreshError)
+    return (
+      <div
+        css={css`
+          font-size: 20px;
+          padding: 20px;
+          text-align: center;
+        `}
+      >
+        <p>出错了, 请刷新重试!</p>
+      </div>
+    )
+  }
 
   // skeleton loading
+  const showSkeleton = refreshing && !swr
   if (showSkeleton) {
     return (
       <div className={videoGridContainer}>
