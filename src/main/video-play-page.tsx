@@ -20,6 +20,11 @@ async function handleFullscreen() {
     targetMode === PlayerScreenMode.WebFullscreen || targetMode === PlayerScreenMode.Fullscreen
   if (!next) return
 
+  // make it focus
+  // window.focus()
+  // document.body.focus()
+  // document.body.click()
+
   let action: (() => void) | undefined
   // NOTE: aria-label 使用中文, 目前没找到 bilibili.com 在哪切换语言, 应该只有中文
   if (targetMode === PlayerScreenMode.WebFullscreen) {
@@ -41,4 +46,15 @@ async function handleFullscreen() {
     await delay(100)
   }
   debug('handleFullscreen to %s complete', targetMode)
+
+  // make it focus
+  // 啊, 没找到怎么弄!!! 还是需要点一下
+  //
+  // window.focus()
+  // document.body.focus()
+  // document.body.click()
+  // // @ts-ignore
+  // window['bilibili-player']?.click()
+  // // @ts-ignore
+  // window['bilibili-player']?.focus()
 }

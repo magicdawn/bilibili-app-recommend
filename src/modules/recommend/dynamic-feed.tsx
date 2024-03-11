@@ -15,6 +15,7 @@ import type { MenuProps } from 'antd'
 import { Avatar, Badge, Button, Dropdown, Input, Space } from 'antd'
 import delay from 'delay'
 import ms from 'ms'
+import { orderBy } from 'natural-orderby'
 import type { ReactNode } from 'react'
 import { useMemo } from 'react'
 import { proxy, useSnapshot } from 'valtio'
@@ -176,7 +177,31 @@ export function DynamicFeedUsageInfo() {
       onClick: onClear,
     }
 
-    const items: MenuItemType[] = upList.map((up) => {
+    function mapName(name: string) {
+      return (
+        name
+          .toLowerCase()
+          // 让字母在前面
+          .replace(/^([a-z])/, '999999$1')
+      )
+    }
+
+    // lodash.orderBy order参数只支持 asc | desc
+    // see https://github.com/lodash/lodash/pull/3764
+    const upListSorted = orderBy(
+      upList,
+      [(item) => (item.has_update ? 1 : 0), (it) => it.uname],
+      [
+        'desc',
+        (_a, _b) => {
+          let [a, b] = [_a, _b] as string[]
+          ;[a, b] = [a, b].map(mapName)
+          return a.localeCompare(b, 'zh-CN')
+        },
+      ],
+    )
+
+    const items: MenuItemType[] = upListSorted.map((up) => {
       let avatar: ReactNode = <Avatar size={'small'} src={up.face} />
       if (up.has_update) {
         avatar = <Badge dot>{avatar}</Badge>
@@ -226,7 +251,7 @@ export function DynamicFeedUsageInfo() {
           placement='bottomLeft'
           menu={{
             items: menuItems,
-            style: { maxHeight: '50vh', overflowY: 'scroll' },
+            style: { maxHeight: '70vh', overflowY: 'scroll' },
           }}
         >
           <Button>{upName ? `UP: ${upName}` : '全部'}</Button>
@@ -249,12 +274,13 @@ export function DynamicFeedUsageInfo() {
               }
             `}
             placeholder='按标题过滤'
-            type='text'
-            name='searchText'
+            type='search'
             autoCorrect='off'
             autoCapitalize='off'
-            // 有自带的你是记录, 何乐而不为
+            name={`searchText_${upMid}`}
+            // 有自带的历史记录, 何乐而不为
             // autoComplete='off'
+            autoComplete='on'
             allowClear
             onSearch={async (val) => {
               dynamicFeedFilterStore.searchText = val || undefined

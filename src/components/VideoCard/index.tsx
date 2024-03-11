@@ -606,7 +606,7 @@ const VideoCardInner = memo(function VideoCardInner({
       const u = new URL(href, location.href)
       u.searchParams.set(PLAYER_SCREEN_MODE, PlayerScreenMode.Fullscreen)
       const newHref = u.href
-      window.open(newHref, '_blank')
+      window.open(newHref, '_blank')?.focus()
       return
     }
   })

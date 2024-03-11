@@ -74,6 +74,9 @@ dependencies:
   ms:
     specifier: ^2.1.3
     version: 2.1.3
+  natural-orderby:
+    specifier: ^3.0.2
+    version: 3.0.2
   p-event:
     specifier: ^6.0.1
     version: 6.0.1
@@ -4699,6 +4702,11 @@ packages:
   /natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
     dev: true
+
+  /natural-orderby@3.0.2:
+    resolution: {integrity: sha512-x7ZdOwBxZCEm9MM7+eQCjkrNLrW3rkBKNHVr78zbtqnMGVNlnDi6C/eUEYgxHNrcbu0ymvjzcwIL/6H1iHri9g==}
+    engines: {node: '>=18'}
+    dev: false
 
   /ndjson@2.0.0:
     resolution: {integrity: sha512-nGl7LRGrzugTtaFcJMhLbpzJM6XdivmbkdlaGcrk/LXg2KL/YBC6z1g70xh0/al+oFuVFP8N8kiWRucmeEH/qQ==}
