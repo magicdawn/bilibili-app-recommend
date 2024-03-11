@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bilibili-app-recommend
 // @namespace    https://magicdawn.fun
-// @version      0.20.4
+// @version      0.20.5
 // @author       magicdawn
 // @description  为 B 站首页添加像 App 一样的推荐
 // @license      MIT
@@ -21,11 +21,11 @@
 // @require      https://registry.npmmirror.com/react/18.2.0/files/umd/react.production.min.js
 // @require      https://registry.npmmirror.com/react-dom/18.2.0/files/umd/react-dom.production.min.js
 // @require      https://registry.npmmirror.com/ua-parser-js/1.0.37/files/dist/ua-parser.min.js
-// @require      https://registry.npmmirror.com/framer-motion/11.0.3/files/dist/framer-motion.js
+// @require      https://registry.npmmirror.com/framer-motion/11.0.8/files/dist/framer-motion.js
 // @require      https://registry.npmmirror.com/lodash/4.17.21/files/lodash.min.js
 // @require      https://registry.npmmirror.com/dayjs/1.11.10/files/dayjs.min.js
 // @require      https://registry.npmmirror.com/dayjs/1.11.10/files/plugin/duration.js
-// @require      https://registry.npmmirror.com/antd/5.13.3/files/dist/antd-with-locales.min.js
+// @require      https://registry.npmmirror.com/antd/5.15.2/files/dist/antd-with-locales.min.js
 // @connect      app.bilibili.com
 // @connect      passport.bilibili.com
 // @grant        GM.getValue
@@ -640,7 +640,7 @@ body.dark ._btn-refresh_14tde_29 {
     __accessCheck(obj, member, "access private method");
     return method;
   };
-  var _a, _b, _size, _cache, _oldCache, _maxSize, _maxAge, _onEviction, _emitEvictions, emitEvictions_fn, _deleteIfExpired, deleteIfExpired_fn, _getOrDeleteIfExpired, getOrDeleteIfExpired_fn, _getItemValue, getItemValue_fn, _peek, peek_fn, _set, set_fn, _moveToRecent, moveToRecent_fn, _entriesAscending, entriesAscending_fn;
+  var _a, _b, _c, _size, _cache, _oldCache, _maxSize, _maxAge, _onEviction, _emitEvictions, emitEvictions_fn, _deleteIfExpired, deleteIfExpired_fn, _getOrDeleteIfExpired, getOrDeleteIfExpired_fn, _getItemValue, getItemValue_fn, _peek, peek_fn, _set, set_fn, _moveToRecent, moveToRecent_fn, _entriesAscending, entriesAscending_fn;
   function getDefaultExportFromCjs(x2) {
     return x2 && x2.__esModule && Object.prototype.hasOwnProperty.call(x2, "default") ? x2["default"] : x2;
   }
@@ -1027,22 +1027,22 @@ body.dark ._btn-refresh_14tde_29 {
   function set_HAS_RESTORED_SETTINGS(val) {
     HAS_RESTORED_SETTINGS = val;
   }
-  var AppApiDevice = /* @__PURE__ */ ((AppApiDevice2) => {
-    AppApiDevice2["android"] = "android";
-    AppApiDevice2["ipad"] = "ipad";
-    return AppApiDevice2;
-  })(AppApiDevice || {});
-  var ApiType = /* @__PURE__ */ ((ApiType2) => {
-    ApiType2["app"] = "app";
-    ApiType2["pc"] = "pc";
-    ApiType2["dynamic"] = "dynamic";
-    ApiType2["watchlater"] = "watchlater";
-    ApiType2["fav"] = "fav";
-    ApiType2["popularGeneral"] = "popular-general";
-    ApiType2["popularWeekly"] = "popular-weekly";
-    ApiType2["separator"] = "separator";
-    return ApiType2;
-  })(ApiType || {});
+  var EAppApiDevice = /* @__PURE__ */ ((EAppApiDevice2) => {
+    EAppApiDevice2["android"] = "android";
+    EAppApiDevice2["ipad"] = "ipad";
+    return EAppApiDevice2;
+  })(EAppApiDevice || {});
+  var EApiType = /* @__PURE__ */ ((EApiType2) => {
+    EApiType2["app"] = "app";
+    EApiType2["pc"] = "pc";
+    EApiType2["dynamic"] = "dynamic";
+    EApiType2["watchlater"] = "watchlater";
+    EApiType2["fav"] = "fav";
+    EApiType2["popularGeneral"] = "popular-general";
+    EApiType2["popularWeekly"] = "popular-weekly";
+    EApiType2["separator"] = "separator";
+    return EApiType2;
+  })(EApiType || {});
   var md5$1 = { exports: {} };
   var crypt = { exports: {} };
   (function() {
@@ -1286,9 +1286,9 @@ body.dark ._btn-refresh_14tde_29 {
   const md5 = /* @__PURE__ */ getDefaultExportFromCjs(md5Exports);
   function appSign(params, appkey2, appsec2) {
     params.appkey = appkey2;
-    const searchParams = new URLSearchParams(params);
-    searchParams.sort();
-    return md5(searchParams.toString() + appsec2);
+    const searchParams2 = new URLSearchParams(params);
+    searchParams2.sort();
+    return md5(searchParams2.toString() + appsec2);
   }
   var s$1 = 1e3;
   var m$4 = s$1 * 60;
@@ -1541,13 +1541,13 @@ body.dark ._btn-refresh_14tde_29 {
       };
       return s3 && (i2.set = i2.deleteProperty = () => false), [i2, c3];
     })(y2, !!h2), w2[1].p = o(h2 || y2, w2[0]), f2 && f2.set(y2, w2)), w2[1][r$2] = c2, w2[1].c = f2, w2[1].t = p2, w2[1].p;
-  }, p$3 = (e2, t2, r2, o2) => {
-    if (Object.is(e2, t2))
+  }, p$3 = (e2, t2, r2, o2, s2 = Object.is) => {
+    if (s2(e2, t2))
       return false;
     if (!f$2(e2) || !f$2(t2))
       return true;
-    const s2 = r2.get(u$1(e2));
-    if (!s2)
+    const c2 = r2.get(u$1(e2));
+    if (!c2)
       return true;
     if (o2) {
       const r3 = o2.get(e2);
@@ -1558,29 +1558,29 @@ body.dark ._btn-refresh_14tde_29 {
         g: false
       });
     }
-    let c2 = null;
+    let l2 = null;
     try {
-      for (const r3 of s2.h || [])
-        if (c2 = Reflect.has(e2, r3) !== Reflect.has(t2, r3), c2)
-          return c2;
-      if (true === s2[n$3]) {
-        if (c2 = ((e3, t3) => {
+      for (const r3 of c2.h || [])
+        if (l2 = Reflect.has(e2, r3) !== Reflect.has(t2, r3), l2)
+          return l2;
+      if (true === c2[n$3]) {
+        if (l2 = ((e3, t3) => {
           const r3 = Reflect.ownKeys(e3), n2 = Reflect.ownKeys(t3);
           return r3.length !== n2.length || r3.some((e4, t4) => e4 !== n2[t4]);
-        })(e2, t2), c2)
-          return c2;
+        })(e2, t2), l2)
+          return l2;
       } else
-        for (const r3 of s2.o || [])
-          if (c2 = !!Reflect.getOwnPropertyDescriptor(e2, r3) != !!Reflect.getOwnPropertyDescriptor(t2, r3), c2)
-            return c2;
-      for (const n2 of s2.k || [])
-        if (c2 = p$3(e2[n2], t2[n2], r2, o2), c2)
-          return c2;
-      return null === c2 && (c2 = true), c2;
+        for (const r3 of c2.o || [])
+          if (l2 = !!Reflect.getOwnPropertyDescriptor(e2, r3) != !!Reflect.getOwnPropertyDescriptor(t2, r3), l2)
+            return l2;
+      for (const n2 of c2.k || [])
+        if (l2 = p$3(e2[n2], t2[n2], r2, o2, s2), l2)
+          return l2;
+      return null === l2 && (l2 = true), l2;
     } finally {
       o2 && o2.set(e2, {
         n: t2,
-        g: c2
+        g: l2
       });
     }
   }, y$1 = (e2) => l$3(e2) && e2[t$2] || null, h$2 = (e2, t2 = true) => {
@@ -1615,10 +1615,10 @@ body.dark ._btn-refresh_14tde_29 {
     return c2(e2), o2;
   };
   var define_import_meta_env_default$1 = { BASE_URL: "/", MODE: "production", DEV: false, PROD: true, SSR: false };
-  const isObject = (x2) => typeof x2 === "object" && x2 !== null;
+  const isObject$1 = (x2) => typeof x2 === "object" && x2 !== null;
   const proxyStateMap = /* @__PURE__ */ new WeakMap();
   const refSet = /* @__PURE__ */ new WeakSet();
-  const buildProxyFunction = (objectIs = Object.is, newProxy = (target, handler) => new Proxy(target, handler), canProxy = (x2) => isObject(x2) && !refSet.has(x2) && (Array.isArray(x2) || !(Symbol.iterator in x2)) && !(x2 instanceof WeakMap) && !(x2 instanceof WeakSet) && !(x2 instanceof Error) && !(x2 instanceof Number) && !(x2 instanceof Date) && !(x2 instanceof String) && !(x2 instanceof RegExp) && !(x2 instanceof ArrayBuffer), defaultHandlePromise = (promise) => {
+  const buildProxyFunction = (objectIs = Object.is, newProxy = (target, handler) => new Proxy(target, handler), canProxy = (x2) => isObject$1(x2) && !refSet.has(x2) && (Array.isArray(x2) || !(Symbol.iterator in x2)) && !(x2 instanceof WeakMap) && !(x2 instanceof WeakSet) && !(x2 instanceof Error) && !(x2 instanceof Number) && !(x2 instanceof Date) && !(x2 instanceof String) && !(x2 instanceof RegExp) && !(x2 instanceof ArrayBuffer), defaultHandlePromise = (promise) => {
     switch (promise.status) {
       case "fulfilled":
         return promise.value;
@@ -1670,7 +1670,7 @@ body.dark ._btn-refresh_14tde_29 {
     });
     return Object.preventExtensions(snap);
   }, proxyCache = /* @__PURE__ */ new WeakMap(), versionHolder = [1, 1], proxyFunction = (initialObject) => {
-    if (!isObject(initialObject)) {
+    if (!isObject$1(initialObject)) {
       throw new Error("object required");
     }
     const found = proxyCache.get(initialObject);
@@ -1765,7 +1765,7 @@ body.dark ._btn-refresh_14tde_29 {
           return true;
         }
         removePropListener(prop);
-        if (isObject(value)) {
+        if (isObject$1(value)) {
           value = y$1(value) || value;
         }
         let nextValue = value;
@@ -2129,7 +2129,7 @@ body.dark ._btn-refresh_14tde_29 {
   var abs = Math.abs;
   var from = String.fromCharCode;
   var assign = Object.assign;
-  function hash$1(value, length2) {
+  function hash(value, length2) {
     return charat(value, 0) ^ 45 ? (((length2 << 2 ^ charat(value, 0)) << 2 ^ charat(value, 1)) << 2 ^ charat(value, 2)) << 2 ^ charat(value, 3) : 0;
   }
   function trim(value) {
@@ -2437,7 +2437,7 @@ body.dark ._btn-refresh_14tde_29 {
       output += callback(children[i2], i2, children, callback) || "";
     return output;
   }
-  function stringify(element, index, children, callback) {
+  function stringify$1(element, index, children, callback) {
     switch (element.type) {
       case LAYER:
         if (element.children.length)
@@ -2568,7 +2568,7 @@ body.dark ._btn-refresh_14tde_29 {
     }
   };
   function prefix(value, length2) {
-    switch (hash$1(value, length2)) {
+    switch (hash(value, length2)) {
       case 5103:
         return WEBKIT + "print-" + value + value;
       case 5737:
@@ -2752,7 +2752,7 @@ body.dark ._btn-refresh_14tde_29 {
     var omnipresentPlugins = [compat, removeLabel];
     {
       var currentSheet;
-      var finalizingPlugins = [stringify, rulesheet(function(rule) {
+      var finalizingPlugins = [stringify$1, rulesheet(function(rule) {
         currentSheet.insert(rule);
       })];
       var serializer = middleware(omnipresentPlugins.concat(stylisPlugins, finalizingPlugins));
@@ -3194,7 +3194,7 @@ body.dark ._btn-refresh_14tde_29 {
   var useInsertionEffect = React__default__namespace["useInsertionEffect"] ? React__default__namespace["useInsertionEffect"] : false;
   var useInsertionEffectAlwaysWithSyncFallback = useInsertionEffect || syncFallback;
   var useInsertionEffectWithLayoutFallback = useInsertionEffect || React__default__namespace.useLayoutEffect;
-  var hasOwnProperty = {}.hasOwnProperty;
+  var hasOwn = {}.hasOwnProperty;
   var EmotionCacheContext = /* @__PURE__ */ React__default__namespace.createContext(
     // we're doing this to avoid preconstruct's dead code elimination in this one case
     // because this module is primarily intended for the browser and node
@@ -3218,15 +3218,15 @@ body.dark ._btn-refresh_14tde_29 {
   var createEmotionProps = function createEmotionProps2(type, props) {
     var newProps = {};
     for (var key2 in props) {
-      if (hasOwnProperty.call(props, key2)) {
+      if (hasOwn.call(props, key2)) {
         newProps[key2] = props[key2];
       }
     }
     newProps[typePropName] = type;
     return newProps;
   };
-  var Insertion = function Insertion2(_ref13) {
-    var cache2 = _ref13.cache, serialized = _ref13.serialized, isStringTag = _ref13.isStringTag;
+  var Insertion = function Insertion2(_ref12) {
+    var cache2 = _ref12.cache, serialized = _ref12.serialized, isStringTag = _ref12.isStringTag;
     registerStyles(cache2, serialized, isStringTag);
     useInsertionEffectAlwaysWithSyncFallback(function() {
       return insertStyles(cache2, serialized, isStringTag);
@@ -3250,7 +3250,7 @@ body.dark ._btn-refresh_14tde_29 {
     className += cache2.key + "-" + serialized.name;
     var newProps = {};
     for (var key2 in props) {
-      if (hasOwnProperty.call(props, key2) && key2 !== "css" && key2 !== typePropName && true) {
+      if (hasOwn.call(props, key2) && key2 !== "css" && key2 !== typePropName && true) {
         newProps[key2] = props[key2];
       }
     }
@@ -3265,13 +3265,13 @@ body.dark ._btn-refresh_14tde_29 {
   var Emotion$1 = Emotion;
   var Fragment = jsxRuntimeExports.Fragment;
   function jsx(type, props, key2) {
-    if (!hasOwnProperty.call(props, "css")) {
+    if (!hasOwn.call(props, "css")) {
       return jsxRuntimeExports.jsx(type, props, key2);
     }
     return jsxRuntimeExports.jsx(Emotion$1, createEmotionProps(type, props), key2);
   }
   function jsxs(type, props, key2) {
-    if (!hasOwnProperty.call(props, "css")) {
+    if (!hasOwn.call(props, "css")) {
       return jsxRuntimeExports.jsxs(type, props, key2);
     }
     return jsxRuntimeExports.jsxs(Emotion$1, createEmotionProps(type, props), key2);
@@ -3798,11 +3798,91 @@ body.dark ._btn-refresh_14tde_29 {
   var _createEmotion = createEmotion({
     key: "css"
   }), css$1 = _createEmotion.css;
-  const toastContainer = /* @__PURE__ */ css$1("position:fixed;top:50%;left:50%;transform:translate(-50%, -50%);z-index:90000;padding:12px 24px;font-size:14px;min-width:200px;width:max-content;max-width:450px;color:#fff;background-color:#ffb243;background-color:", colorPrimaryValue, ";border-radius:6px;white-space:pre-wrap;", "");
-  const singleLine = /* @__PURE__ */ css$1({
-    name: "1azakc",
-    styles: "text-align:center"
-  });
+  var classnames = { exports: {} };
+  /*!
+  	Copyright (c) 2018 Jed Watson.
+  	Licensed under the MIT License (MIT), see
+  	http://jedwatson.github.io/classnames
+  */
+  (function(module) {
+    (function() {
+      var hasOwn2 = {}.hasOwnProperty;
+      function classNames() {
+        var classes = "";
+        for (var i2 = 0; i2 < arguments.length; i2++) {
+          var arg = arguments[i2];
+          if (arg) {
+            classes = appendClass(classes, parseValue(arg));
+          }
+        }
+        return classes;
+      }
+      function parseValue(arg) {
+        if (typeof arg === "string" || typeof arg === "number") {
+          return arg;
+        }
+        if (typeof arg !== "object") {
+          return "";
+        }
+        if (Array.isArray(arg)) {
+          return classNames.apply(null, arg);
+        }
+        if (arg.toString !== Object.prototype.toString && !arg.toString.toString().includes("[native code]")) {
+          return arg.toString();
+        }
+        var classes = "";
+        for (var key2 in arg) {
+          if (hasOwn2.call(arg, key2) && arg[key2]) {
+            classes = appendClass(classes, key2);
+          }
+        }
+        return classes;
+      }
+      function appendClass(value, newClass) {
+        if (!newClass) {
+          return value;
+        }
+        if (value) {
+          return value + " " + newClass;
+        }
+        return value + newClass;
+      }
+      if (module.exports) {
+        classNames.default = classNames;
+        module.exports = classNames;
+      } else {
+        window.classNames = classNames;
+      }
+    })();
+  })(classnames);
+  var classnamesExports = classnames.exports;
+  const cx = /* @__PURE__ */ getDefaultExportFromCjs(classnamesExports);
+  const styled = {
+    generateClassName: css$1
+  };
+  const toastContainer = styled.generateClassName`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  z-index: 90000;
+  padding: 12px 24px;
+  font-size: 14px;
+
+  min-width: 200px;
+  width: max-content;
+  max-width: 450px;
+
+  color: #fff;
+  background-color: #ffb243;
+  background-color: ${colorPrimaryValue};
+  border-radius: 6px;
+  white-space: pre-wrap;
+`;
+  const singleLine = styled.generateClassName`
+  text-align: center;
+`;
   function toast(msg, duration2 = 2e3) {
     const div = document.createElement("div");
     div.classList.add(toastContainer, APP_NAME_ROOT_CLASSNAME);
@@ -3966,7 +4046,7 @@ body.dark ._btn-refresh_14tde_29 {
     /**
      * app recommend
      */
-    appApiDecice: AppApiDevice.ipad,
+    appApiDecice: EAppApiDevice.ipad,
     /**
      * 查看更多, aka ModalFeed
      */
@@ -3985,6 +4065,8 @@ body.dark ._btn-refresh_14tde_29 {
     autoPreviewUpdateInterval: 400,
     // 鼠标悬浮自动预览, 不再跟随鼠标位置, 默认: 跟随鼠标
     autoPreviewWhenHover: false,
+    // 使用 avif ?
+    coverUseAvif: true,
     // 颜色主题
     theme: "",
     colorPickerThemeSelectedColor: "",
@@ -4057,6 +4139,9 @@ body.dark ._btn-refresh_14tde_29 {
      */
     hidingTabKeys: [],
     customTabKeysOrder: []
+    /**
+     *
+     */
   };
   const settings = proxy({
     ...initialSettings
@@ -4132,6 +4217,7 @@ body.dark ._btn-refresh_14tde_29 {
   const uaParseResult = UAParser();
   const isMac = ((_a = uaParseResult.os.name) == null ? void 0 : _a.toLowerCase()) === "mac os";
   const isSafari = ((_b = uaParseResult.browser.name) == null ? void 0 : _b.toLowerCase()) === "safari";
+  const isFirefox = ((_c = uaParseResult.browser.name) == null ? void 0 : _c.toLowerCase()) === "firefox";
   const defaultHeader = () => document.querySelector(".bili-header__bar");
   function isUsingCustomHeader() {
     const el = defaultHeader();
@@ -4264,6 +4350,7 @@ body.dark ._btn-refresh_14tde_29 {
       colorPrimary
     } = useCurrentTheme();
     return /* @__PURE__ */ jsxs(antd.ConfigProvider, {
+      autoInsertSpaceInButton: false,
       locale: zhCN,
       theme: {
         cssVar: true,
@@ -4290,11 +4377,11 @@ body.dark ._btn-refresh_14tde_29 {
     name: "ykj9m0",
     styles: "body{background-color:var(--bg1);}"
   };
-  var _ref2$b = {
+  var _ref2$a = {
     name: "bts51",
     styles: "body,.large-header,#i_cecream,.bili-header .bili-header__channel{background-color:var(--bg2);}"
   };
-  var _ref3$5 = {
+  var _ref3$9 = {
     name: "8xrafg",
     styles: "#i_cecream .bili-feed4-layout{display:none;}"
   };
@@ -4329,7 +4416,7 @@ body.dark ._btn-refresh_14tde_29 {
           }
         `
       }), pureRecommend && /* @__PURE__ */ jsx(Global, {
-        styles: [_ref3$5, styleFancy ? _ref2$b : _ref$c, "", ""]
+        styles: [_ref3$9, styleFancy ? _ref2$a : _ref$c, "", ""]
       })]
     });
   }
@@ -5506,6 +5593,10 @@ body.dark ._btn-refresh_14tde_29 {
     theme: theme2,
     size,
     fill,
+    ml,
+    mr,
+    mt,
+    mb,
     ...props
   }) {
     theme2 || (theme2 = "outline");
@@ -5521,69 +5612,22 @@ body.dark ._btn-refresh_14tde_29 {
       },
       style: {
         fontSize: 0,
+        ...ml ? {
+          marginLeft: ml + "px"
+        } : {},
+        ...mr ? {
+          marginRight: mr + "px"
+        } : {},
+        ...mt ? {
+          marginTop: mt + "px"
+        } : {},
+        ...mb ? {
+          marginBottom: mb + "px"
+        } : {},
         ...props.style
       }
     });
   }
-  var classnames = { exports: {} };
-  /*!
-  	Copyright (c) 2018 Jed Watson.
-  	Licensed under the MIT License (MIT), see
-  	http://jedwatson.github.io/classnames
-  */
-  (function(module) {
-    (function() {
-      var hasOwn = {}.hasOwnProperty;
-      function classNames() {
-        var classes = "";
-        for (var i2 = 0; i2 < arguments.length; i2++) {
-          var arg = arguments[i2];
-          if (arg) {
-            classes = appendClass(classes, parseValue(arg));
-          }
-        }
-        return classes;
-      }
-      function parseValue(arg) {
-        if (typeof arg === "string" || typeof arg === "number") {
-          return arg;
-        }
-        if (typeof arg !== "object") {
-          return "";
-        }
-        if (Array.isArray(arg)) {
-          return classNames.apply(null, arg);
-        }
-        if (arg.toString !== Object.prototype.toString && !arg.toString.toString().includes("[native code]")) {
-          return arg.toString();
-        }
-        var classes = "";
-        for (var key2 in arg) {
-          if (hasOwn.call(arg, key2) && arg[key2]) {
-            classes = appendClass(classes, key2);
-          }
-        }
-        return classes;
-      }
-      function appendClass(value, newClass) {
-        if (!newClass) {
-          return value;
-        }
-        if (value) {
-          return value + " " + newClass;
-        }
-        return value + newClass;
-      }
-      if (module.exports) {
-        classNames.default = classNames;
-        module.exports = classNames;
-      } else {
-        window.classNames = classNames;
-      }
-    })();
-  })(classnames);
-  var classnamesExports = classnames.exports;
-  const cx = /* @__PURE__ */ getDefaultExportFromCjs(classnamesExports);
   var createUpdateEffect = function(hook) {
     return function(effect, deps) {
       var isMounted = React__default.useRef(false);
@@ -5778,7 +5822,7 @@ body.dark ._btn-refresh_14tde_29 {
     var e2 = new Error(message2);
     return e2.name = "SuppressedError", e2.error = error, e2.suppressed = suppressed, e2;
   };
-  var isFunction = function(value) {
+  var isFunction$1 = function(value) {
     return typeof value === "function";
   };
   var isString = function(value) {
@@ -5806,7 +5850,7 @@ body.dark ._btn-refresh_14tde_29 {
   }
   const useUpdateEffect = createUpdateEffect(React__default.useEffect);
   var useAutoRunPlugin = function(fetchInstance, _a2) {
-    var manual = _a2.manual, _b2 = _a2.ready, ready = _b2 === void 0 ? true : _b2, _c = _a2.defaultParams, defaultParams = _c === void 0 ? [] : _c, _d = _a2.refreshDeps, refreshDeps = _d === void 0 ? [] : _d, refreshDepsAction = _a2.refreshDepsAction;
+    var manual = _a2.manual, _b2 = _a2.ready, ready = _b2 === void 0 ? true : _b2, _c2 = _a2.defaultParams, defaultParams = _c2 === void 0 ? [] : _c2, _d = _a2.refreshDeps, refreshDeps = _d === void 0 ? [] : _d, refreshDepsAction = _a2.refreshDepsAction;
     var hasAutoRun = React__default.useRef(false);
     hasAutoRun.current = false;
     useUpdateEffect(function() {
@@ -5932,7 +5976,7 @@ body.dark ._btn-refresh_14tde_29 {
     };
   };
   var useCachePlugin = function(fetchInstance, _a2) {
-    var cacheKey2 = _a2.cacheKey, _b2 = _a2.cacheTime, cacheTime = _b2 === void 0 ? 5 * 60 * 1e3 : _b2, _c = _a2.staleTime, staleTime = _c === void 0 ? 0 : _c, customSetCache = _a2.setCache, customGetCache = _a2.getCache;
+    var cacheKey2 = _a2.cacheKey, _b2 = _a2.cacheTime, cacheTime = _b2 === void 0 ? 5 * 60 * 1e3 : _b2, _c2 = _a2.staleTime, staleTime = _c2 === void 0 ? 0 : _c2, customSetCache = _a2.setCache, customGetCache = _a2.getCache;
     var unSubscribeRef = React__default.useRef();
     var currentPromiseRef = React__default.useRef();
     var _setCache = function(key2, cachedData) {
@@ -6160,7 +6204,7 @@ body.dark ._btn-refresh_14tde_29 {
     window.addEventListener("visibilitychange", revalidate$1, false);
   }
   var usePollingPlugin = function(fetchInstance, _a2) {
-    var pollingInterval = _a2.pollingInterval, _b2 = _a2.pollingWhenHidden, pollingWhenHidden = _b2 === void 0 ? true : _b2, _c = _a2.pollingErrorRetryCount, pollingErrorRetryCount = _c === void 0 ? -1 : _c;
+    var pollingInterval = _a2.pollingInterval, _b2 = _a2.pollingWhenHidden, pollingWhenHidden = _b2 === void 0 ? true : _b2, _c2 = _a2.pollingErrorRetryCount, pollingErrorRetryCount = _c2 === void 0 ? -1 : _c2;
     var timerRef = React__default.useRef();
     var unsubscribeRef = React__default.useRef();
     var countRef = React__default.useRef(0);
@@ -6421,7 +6465,7 @@ body.dark ._btn-refresh_14tde_29 {
         return Object.assign.apply(Object, __spreadArray([{}], __read(r2), false));
       };
       Fetch2.prototype.runAsync = function() {
-        var _a2, _b2, _c, _d, _e, _f, _g, _h, _j, _k;
+        var _a2, _b2, _c2, _d, _e, _f, _g, _h, _j, _k;
         var params = [];
         for (var _i = 0; _i < arguments.length; _i++) {
           params[_i] = arguments[_i];
@@ -6466,7 +6510,7 @@ body.dark ._btn-refresh_14tde_29 {
                   error: void 0,
                   loading: false
                 });
-                (_d = (_c = this.options).onSuccess) === null || _d === void 0 ? void 0 : _d.call(_c, res, params);
+                (_d = (_c2 = this.options).onSuccess) === null || _d === void 0 ? void 0 : _d.call(_c2, res, params);
                 this.runPluginHandler("onSuccess", res, params);
                 (_f = (_e = this.options).onFinally) === null || _f === void 0 ? void 0 : _f.call(_e, params, res, void 0);
                 if (currentCount === this.count) {
@@ -6525,7 +6569,7 @@ body.dark ._btn-refresh_14tde_29 {
         return this.runAsync.apply(this, __spreadArray([], __read(this.state.params || []), false));
       };
       Fetch2.prototype.mutate = function(data2) {
-        var targetData = isFunction(data2) ? data2(this.state.data) : data2;
+        var targetData = isFunction$1(data2) ? data2(this.state.data) : data2;
         this.runPluginHandler("onMutate", targetData);
         this.setState({
           data: targetData
@@ -6645,7 +6689,7 @@ body.dark ._btn-refresh_14tde_29 {
       return defaultElement;
     }
     var targetElement;
-    if (isFunction(target)) {
+    if (isFunction$1(target)) {
       targetElement = target();
     } else if ("current" in target) {
       targetElement = target.current;
@@ -6736,7 +6780,7 @@ body.dark ._btn-refresh_14tde_29 {
   }
   const useHover = function(target, options) {
     var _a2 = options || {}, onEnter = _a2.onEnter, onLeave = _a2.onLeave, onChange = _a2.onChange;
-    var _b2 = __read(useBoolean(false), 2), state = _b2[0], _c = _b2[1], setTrue = _c.setTrue, setFalse = _c.setFalse;
+    var _b2 = __read(useBoolean(false), 2), state = _b2[0], _c2 = _b2[1], setTrue = _c2.setTrue, setFalse = _c2.setFalse;
     useEventListener("mouseenter", function() {
       onEnter === null || onEnter === void 0 ? void 0 : onEnter();
       setTrue();
@@ -6934,7 +6978,7 @@ body.dark ._btn-refresh_14tde_29 {
     return genLen === genArr.length ? keyFilter : false;
   }
   function genKeyFormatter(keyFilter, exactMatch) {
-    if (isFunction(keyFilter)) {
+    if (isFunction$1(keyFilter)) {
       return keyFilter;
     }
     if (isValidKeyType(keyFilter)) {
@@ -6955,7 +6999,7 @@ body.dark ._btn-refresh_14tde_29 {
   }
   var defaultEvents = ["keydown"];
   function useKeyPress(keyFilter, eventHandler, option) {
-    var _a2 = option || {}, _b2 = _a2.events, events2 = _b2 === void 0 ? defaultEvents : _b2, target = _a2.target, _c = _a2.exactMatch, exactMatch = _c === void 0 ? false : _c, _d = _a2.useCapture, useCapture = _d === void 0 ? false : _d;
+    var _a2 = option || {}, _b2 = _a2.events, events2 = _b2 === void 0 ? defaultEvents : _b2, target = _a2.target, _c2 = _a2.exactMatch, exactMatch = _c2 === void 0 ? false : _c2, _d = _a2.useCapture, useCapture = _d === void 0 ? false : _d;
     var eventHandlerRef = useLatest(eventHandler);
     var keyFilterRef = useLatest(keyFilter);
     useDeepCompareEffectWithTarget$1(function() {
@@ -7242,6 +7286,2884 @@ body.dark ._btn-refresh_14tde_29 {
       }
     });
   };
+  const toHttps = (url) => (url || "").replace(/^http:\/\//, "https://");
+  function parseDuration(d2) {
+    if (!d2)
+      return 0;
+    const units = [1, 60, 360];
+    const splited = d2.split(":").map((s2) => Number(s2)).reverse();
+    const total = splited.reduce((total2, cur, index) => {
+      return total2 + cur * units[index];
+    }, 0);
+    return total;
+  }
+  function formatDuration(d2) {
+    d2 || (d2 = 0);
+    return dayjs.duration(d2 || 0, "seconds").format(d2 >= 3600 ? "HH:mm:ss" : "mm:ss");
+  }
+  function formatCount(count) {
+    if (!count)
+      return "";
+    if (count <= 9999) {
+      return count.toString();
+    }
+    count /= 1e4;
+    if (count <= 9999) {
+      let _c2 = count.toFixed(1);
+      _c2 = _c2.replace(/\.0$/, "");
+      return `${_c2}万`;
+    }
+    count /= 1e4;
+    if (count <= 9999) {
+      let _c2 = count.toFixed(1);
+      _c2 = _c2.replace(/\.0$/, "");
+      return `${_c2}亿`;
+    }
+  }
+  function parseCount(str) {
+    if (!str)
+      return void 0;
+    if (str === "-")
+      return 0;
+    if (/^\d+$/.test(str))
+      return Number(str);
+    if (/^\d+(\.\d+?)?万$/.test(str))
+      return Number(str.slice(0, -1)) * 1e4;
+    if (/^\d+(\.\d+?)?亿$/.test(str))
+      return Number(str.slice(0, -1)) * 1e8;
+  }
+  const currentYear = dayjs().format("YYYY");
+  function formatTimeStamp(unixTs, includeTime = false) {
+    if (!unixTs)
+      return "";
+    const t2 = dayjs.unix(unixTs);
+    const extraFormat = includeTime ? " HH:mm" : "";
+    if (t2.format("YYYY") === currentYear) {
+      return t2.format("M-D" + extraFormat);
+    } else {
+      return t2.format("YY-M-D" + extraFormat);
+    }
+  }
+  const VideoStateMap = {
+    "1": "橙色通过",
+    "0": "开放浏览",
+    "-1": "待审",
+    "-2": "被打回",
+    "-3": "网警锁定",
+    "-4": "被锁定",
+    "-5": "管理员锁定",
+    "-6": "修复待审",
+    "-7": "暂缓审核",
+    "-8": "补档待审",
+    "-9": "等待转码",
+    "-10": "延迟审核",
+    "-11": "视频源待修",
+    "-12": "转储失败",
+    "-13": "允许评论待审",
+    "-14": "临时回收站",
+    "-15": "分发中",
+    "-16": "转码失败",
+    "-20": "创建未提交",
+    "-30": "创建已提交",
+    "-40": "定时发布",
+    "-100": "用户删除"
+  };
+  function getVideoInvalidReason(state) {
+    if (typeof state === "undefined")
+      return;
+    if (state >= 0)
+      return;
+    return VideoStateMap[state];
+  }
+  function proxySet(initialValues) {
+    const set = proxy({
+      data: Array.from(new Set(initialValues)),
+      has(value) {
+        return this.data.indexOf(value) !== -1;
+      },
+      add(value) {
+        let hasProxy = false;
+        if (typeof value === "object" && value !== null) {
+          hasProxy = this.data.indexOf(proxy(value)) !== -1;
+        }
+        if (this.data.indexOf(value) === -1 && !hasProxy) {
+          this.data.push(value);
+        }
+        return this;
+      },
+      delete(value) {
+        const index = this.data.indexOf(value);
+        if (index === -1) {
+          return false;
+        }
+        this.data.splice(index, 1);
+        return true;
+      },
+      clear() {
+        this.data.splice(0);
+      },
+      get size() {
+        return this.data.length;
+      },
+      forEach(cb) {
+        this.data.forEach((value) => {
+          cb(value, value, this);
+        });
+      },
+      get [Symbol.toStringTag]() {
+        return "Set";
+      },
+      toJSON() {
+        return new Set(this.data);
+      },
+      [Symbol.iterator]() {
+        return this.data[Symbol.iterator]();
+      },
+      values() {
+        return this.data.values();
+      },
+      keys() {
+        return this.data.values();
+      },
+      entries() {
+        return new Set(this.data).entries();
+      }
+    });
+    Object.defineProperties(set, {
+      data: {
+        enumerable: false
+      },
+      size: {
+        enumerable: false
+      },
+      toJSON: {
+        enumerable: false
+      }
+    });
+    Object.seal(set);
+    return set;
+  }
+  function proxyMap(entries) {
+    const map = proxy({
+      data: Array.from(entries || []),
+      has(key2) {
+        return this.data.some((p2) => p2[0] === key2);
+      },
+      set(key2, value) {
+        const record = this.data.find((p2) => p2[0] === key2);
+        if (record) {
+          record[1] = value;
+        } else {
+          this.data.push([key2, value]);
+        }
+        return this;
+      },
+      get(key2) {
+        var _a2;
+        return (_a2 = this.data.find((p2) => p2[0] === key2)) == null ? void 0 : _a2[1];
+      },
+      delete(key2) {
+        const index = this.data.findIndex((p2) => p2[0] === key2);
+        if (index === -1) {
+          return false;
+        }
+        this.data.splice(index, 1);
+        return true;
+      },
+      clear() {
+        this.data.splice(0);
+      },
+      get size() {
+        return this.data.length;
+      },
+      toJSON() {
+        return new Map(this.data);
+      },
+      forEach(cb) {
+        this.data.forEach((p2) => {
+          cb(p2[1], p2[0], this);
+        });
+      },
+      keys() {
+        return this.data.map((p2) => p2[0]).values();
+      },
+      values() {
+        return this.data.map((p2) => p2[1]).values();
+      },
+      entries() {
+        return new Map(this.data).entries();
+      },
+      get [Symbol.toStringTag]() {
+        return "Map";
+      },
+      [Symbol.iterator]() {
+        return this.entries();
+      }
+    });
+    Object.defineProperties(map, {
+      data: {
+        enumerable: false
+      },
+      size: {
+        enumerable: false
+      },
+      toJSON: {
+        enumerable: false
+      }
+    });
+    Object.seal(map);
+    return map;
+  }
+  class QuickLRU extends Map {
+    constructor(options = {}) {
+      super();
+      __privateAdd(this, _emitEvictions);
+      __privateAdd(this, _deleteIfExpired);
+      __privateAdd(this, _getOrDeleteIfExpired);
+      __privateAdd(this, _getItemValue);
+      __privateAdd(this, _peek);
+      __privateAdd(this, _set);
+      __privateAdd(this, _moveToRecent);
+      __privateAdd(this, _entriesAscending);
+      __privateAdd(this, _size, 0);
+      __privateAdd(this, _cache, /* @__PURE__ */ new Map());
+      __privateAdd(this, _oldCache, /* @__PURE__ */ new Map());
+      __privateAdd(this, _maxSize, void 0);
+      __privateAdd(this, _maxAge, void 0);
+      __privateAdd(this, _onEviction, void 0);
+      if (!(options.maxSize && options.maxSize > 0)) {
+        throw new TypeError("`maxSize` must be a number greater than 0");
+      }
+      if (typeof options.maxAge === "number" && options.maxAge === 0) {
+        throw new TypeError("`maxAge` must be a number greater than 0");
+      }
+      __privateSet(this, _maxSize, options.maxSize);
+      __privateSet(this, _maxAge, options.maxAge || Number.POSITIVE_INFINITY);
+      __privateSet(this, _onEviction, options.onEviction);
+    }
+    // For tests.
+    get __oldCache() {
+      return __privateGet(this, _oldCache);
+    }
+    get(key2) {
+      if (__privateGet(this, _cache).has(key2)) {
+        const item = __privateGet(this, _cache).get(key2);
+        return __privateMethod(this, _getItemValue, getItemValue_fn).call(this, key2, item);
+      }
+      if (__privateGet(this, _oldCache).has(key2)) {
+        const item = __privateGet(this, _oldCache).get(key2);
+        if (__privateMethod(this, _deleteIfExpired, deleteIfExpired_fn).call(this, key2, item) === false) {
+          __privateMethod(this, _moveToRecent, moveToRecent_fn).call(this, key2, item);
+          return item.value;
+        }
+      }
+    }
+    set(key2, value, {
+      maxAge = __privateGet(this, _maxAge)
+    } = {}) {
+      const expiry = typeof maxAge === "number" && maxAge !== Number.POSITIVE_INFINITY ? Date.now() + maxAge : void 0;
+      if (__privateGet(this, _cache).has(key2)) {
+        __privateGet(this, _cache).set(key2, {
+          value,
+          expiry
+        });
+      } else {
+        __privateMethod(this, _set, set_fn).call(this, key2, {
+          value,
+          expiry
+        });
+      }
+      return this;
+    }
+    has(key2) {
+      if (__privateGet(this, _cache).has(key2)) {
+        return !__privateMethod(this, _deleteIfExpired, deleteIfExpired_fn).call(this, key2, __privateGet(this, _cache).get(key2));
+      }
+      if (__privateGet(this, _oldCache).has(key2)) {
+        return !__privateMethod(this, _deleteIfExpired, deleteIfExpired_fn).call(this, key2, __privateGet(this, _oldCache).get(key2));
+      }
+      return false;
+    }
+    peek(key2) {
+      if (__privateGet(this, _cache).has(key2)) {
+        return __privateMethod(this, _peek, peek_fn).call(this, key2, __privateGet(this, _cache));
+      }
+      if (__privateGet(this, _oldCache).has(key2)) {
+        return __privateMethod(this, _peek, peek_fn).call(this, key2, __privateGet(this, _oldCache));
+      }
+    }
+    delete(key2) {
+      const deleted = __privateGet(this, _cache).delete(key2);
+      if (deleted) {
+        __privateWrapper(this, _size)._--;
+      }
+      return __privateGet(this, _oldCache).delete(key2) || deleted;
+    }
+    clear() {
+      __privateGet(this, _cache).clear();
+      __privateGet(this, _oldCache).clear();
+      __privateSet(this, _size, 0);
+    }
+    resize(newSize) {
+      if (!(newSize && newSize > 0)) {
+        throw new TypeError("`maxSize` must be a number greater than 0");
+      }
+      const items = [...__privateMethod(this, _entriesAscending, entriesAscending_fn).call(this)];
+      const removeCount = items.length - newSize;
+      if (removeCount < 0) {
+        __privateSet(this, _cache, new Map(items));
+        __privateSet(this, _oldCache, /* @__PURE__ */ new Map());
+        __privateSet(this, _size, items.length);
+      } else {
+        if (removeCount > 0) {
+          __privateMethod(this, _emitEvictions, emitEvictions_fn).call(this, items.slice(0, removeCount));
+        }
+        __privateSet(this, _oldCache, new Map(items.slice(removeCount)));
+        __privateSet(this, _cache, /* @__PURE__ */ new Map());
+        __privateSet(this, _size, 0);
+      }
+      __privateSet(this, _maxSize, newSize);
+    }
+    *keys() {
+      for (const [key2] of this) {
+        yield key2;
+      }
+    }
+    *values() {
+      for (const [, value] of this) {
+        yield value;
+      }
+    }
+    *[Symbol.iterator]() {
+      for (const item of __privateGet(this, _cache)) {
+        const [key2, value] = item;
+        const deleted = __privateMethod(this, _deleteIfExpired, deleteIfExpired_fn).call(this, key2, value);
+        if (deleted === false) {
+          yield [key2, value.value];
+        }
+      }
+      for (const item of __privateGet(this, _oldCache)) {
+        const [key2, value] = item;
+        if (!__privateGet(this, _cache).has(key2)) {
+          const deleted = __privateMethod(this, _deleteIfExpired, deleteIfExpired_fn).call(this, key2, value);
+          if (deleted === false) {
+            yield [key2, value.value];
+          }
+        }
+      }
+    }
+    *entriesDescending() {
+      let items = [...__privateGet(this, _cache)];
+      for (let i2 = items.length - 1; i2 >= 0; --i2) {
+        const item = items[i2];
+        const [key2, value] = item;
+        const deleted = __privateMethod(this, _deleteIfExpired, deleteIfExpired_fn).call(this, key2, value);
+        if (deleted === false) {
+          yield [key2, value.value];
+        }
+      }
+      items = [...__privateGet(this, _oldCache)];
+      for (let i2 = items.length - 1; i2 >= 0; --i2) {
+        const item = items[i2];
+        const [key2, value] = item;
+        if (!__privateGet(this, _cache).has(key2)) {
+          const deleted = __privateMethod(this, _deleteIfExpired, deleteIfExpired_fn).call(this, key2, value);
+          if (deleted === false) {
+            yield [key2, value.value];
+          }
+        }
+      }
+    }
+    *entriesAscending() {
+      for (const [key2, value] of __privateMethod(this, _entriesAscending, entriesAscending_fn).call(this)) {
+        yield [key2, value.value];
+      }
+    }
+    get size() {
+      if (!__privateGet(this, _size)) {
+        return __privateGet(this, _oldCache).size;
+      }
+      let oldCacheSize = 0;
+      for (const key2 of __privateGet(this, _oldCache).keys()) {
+        if (!__privateGet(this, _cache).has(key2)) {
+          oldCacheSize++;
+        }
+      }
+      return Math.min(__privateGet(this, _size) + oldCacheSize, __privateGet(this, _maxSize));
+    }
+    get maxSize() {
+      return __privateGet(this, _maxSize);
+    }
+    entries() {
+      return this.entriesAscending();
+    }
+    forEach(callbackFunction, thisArgument = this) {
+      for (const [key2, value] of this.entriesAscending()) {
+        callbackFunction.call(thisArgument, value, key2, this);
+      }
+    }
+    get [Symbol.toStringTag]() {
+      return JSON.stringify([...this.entriesAscending()]);
+    }
+  }
+  _size = new WeakMap();
+  _cache = new WeakMap();
+  _oldCache = new WeakMap();
+  _maxSize = new WeakMap();
+  _maxAge = new WeakMap();
+  _onEviction = new WeakMap();
+  _emitEvictions = new WeakSet();
+  emitEvictions_fn = function(cache2) {
+    if (typeof __privateGet(this, _onEviction) !== "function") {
+      return;
+    }
+    for (const [key2, item] of cache2) {
+      __privateGet(this, _onEviction).call(this, key2, item.value);
+    }
+  };
+  _deleteIfExpired = new WeakSet();
+  deleteIfExpired_fn = function(key2, item) {
+    if (typeof item.expiry === "number" && item.expiry <= Date.now()) {
+      if (typeof __privateGet(this, _onEviction) === "function") {
+        __privateGet(this, _onEviction).call(this, key2, item.value);
+      }
+      return this.delete(key2);
+    }
+    return false;
+  };
+  _getOrDeleteIfExpired = new WeakSet();
+  getOrDeleteIfExpired_fn = function(key2, item) {
+    const deleted = __privateMethod(this, _deleteIfExpired, deleteIfExpired_fn).call(this, key2, item);
+    if (deleted === false) {
+      return item.value;
+    }
+  };
+  _getItemValue = new WeakSet();
+  getItemValue_fn = function(key2, item) {
+    return item.expiry ? __privateMethod(this, _getOrDeleteIfExpired, getOrDeleteIfExpired_fn).call(this, key2, item) : item.value;
+  };
+  _peek = new WeakSet();
+  peek_fn = function(key2, cache2) {
+    const item = cache2.get(key2);
+    return __privateMethod(this, _getItemValue, getItemValue_fn).call(this, key2, item);
+  };
+  _set = new WeakSet();
+  set_fn = function(key2, value) {
+    __privateGet(this, _cache).set(key2, value);
+    __privateWrapper(this, _size)._++;
+    if (__privateGet(this, _size) >= __privateGet(this, _maxSize)) {
+      __privateSet(this, _size, 0);
+      __privateMethod(this, _emitEvictions, emitEvictions_fn).call(this, __privateGet(this, _oldCache));
+      __privateSet(this, _oldCache, __privateGet(this, _cache));
+      __privateSet(this, _cache, /* @__PURE__ */ new Map());
+    }
+  };
+  _moveToRecent = new WeakSet();
+  moveToRecent_fn = function(key2, item) {
+    __privateGet(this, _oldCache).delete(key2);
+    __privateMethod(this, _set, set_fn).call(this, key2, item);
+  };
+  _entriesAscending = new WeakSet();
+  entriesAscending_fn = function* () {
+    for (const item of __privateGet(this, _oldCache)) {
+      const [key2, value] = item;
+      if (!__privateGet(this, _cache).has(key2)) {
+        const deleted = __privateMethod(this, _deleteIfExpired, deleteIfExpired_fn).call(this, key2, value);
+        if (deleted === false) {
+          yield item;
+        }
+      }
+    }
+    for (const item of __privateGet(this, _cache)) {
+      const [key2, value] = item;
+      const deleted = __privateMethod(this, _deleteIfExpired, deleteIfExpired_fn).call(this, key2, value);
+      if (deleted === false) {
+        yield item;
+      }
+    }
+  };
+  async function videoshot(bvid) {
+    const res = await request.get("/x/player/videoshot", {
+      params: {
+        bvid,
+        index: "1"
+      }
+    });
+    const json = res.data;
+    return json.data;
+  }
+  const cache$1 = new QuickLRU({
+    maxSize: 1e4
+  });
+  async function getVideoData(bvid) {
+    if (cache$1.has(bvid)) {
+      return cache$1.get(bvid);
+    }
+    const videoshotData = await videoshot(bvid);
+    const dmData = [];
+    cache$1.set(bvid, {
+      videoshotData,
+      dmData
+    });
+    return {
+      videoshotData,
+      dmData
+    };
+  }
+  function watchLaterFactory(action) {
+    return async function watchLaterOp(avid) {
+      const form = new URLSearchParams({
+        aid: avid,
+        csrf: getCsrfToken()
+      });
+      const res = await request.post("/x/v2/history/toview/" + action, form);
+      const json = res.data;
+      const success = isWebApiSuccess(json);
+      if (!success) {
+        toast((json == null ? void 0 : json.message) || "出错了");
+      }
+      return success;
+    };
+  }
+  const watchLaterAdd = watchLaterFactory("add");
+  const watchLaterDel = watchLaterFactory("del");
+  const dislikeFactory = (type) => {
+    const pathname2 = {
+      dislike: "/x/feed/dislike",
+      cancel: "/x/feed/dislike/cancel"
+    }[type];
+    return async function(item, reasonId) {
+      const res = await gmrequest.get(HOST_APP + pathname2, {
+        params: {
+          goto: item.goto,
+          id: item.param,
+          // mid: item.mid,
+          // rid: item.tid,
+          // tag_id: item.tag?.tag_id,
+          reason_id: reasonId,
+          // other stuffs
+          build: "1",
+          mobi_app: "android",
+          idx: (Date.now() / 1e3).toFixed(0)
+        }
+      });
+      const json = res.data;
+      const success = isWebApiSuccess(json);
+      return success;
+    };
+  };
+  const dislike = dislikeFactory("dislike");
+  const cancelDislike = dislikeFactory("cancel");
+  const dislikedIds = proxyMap();
+  function useDislikedIds() {
+    return useSnapshot(dislikedIds);
+  }
+  function useDislikedReason(id) {
+    const map = useDislikedIds();
+    if (!id)
+      return void 0;
+    return map.get(id);
+  }
+  function delDislikeId(id) {
+    dislikedIds.delete(id);
+  }
+  var _ref$b = {
+    name: "iqoq9n",
+    styles: "margin-top:20px"
+  };
+  var _ref2$9 = {
+    name: "1crg5pf",
+    styles: "display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between"
+  };
+  var _ref3$8 = {
+    name: "125di4i",
+    styles: "margin-left:5px;font-size:40%"
+  };
+  function ModalDislike({
+    show,
+    onHide: onHide2,
+    item
+  }) {
+    const [isRequesting, setIsRequesting] = React__default.useState(false);
+    const onDislike = useMemoizedFn(async (reason) => {
+      if (!item)
+        return;
+      let success = false;
+      let err;
+      try {
+        setIsRequesting(true);
+        success = await dislike(item, reason.id);
+      } catch (e2) {
+        err = e2;
+      } finally {
+        setIsRequesting(false);
+      }
+      if (err) {
+        console.error(err.stack || err);
+        return toastRequestFail();
+      }
+      success ? AntdMessage.success("已标记不想看") : AntdMessage.error(OPERATION_FAIL_MSG);
+      if (success) {
+        dislikedIds.set(item.param, {
+          ...reason
+        });
+        onHide2();
+      }
+    });
+    const reasons = React__default.useMemo(() => {
+      var _a2;
+      return ((_a2 = item == null ? void 0 : item.three_point) == null ? void 0 : _a2.dislike_reasons) || [];
+    }, [item]);
+    const modalBodyRef = React__default.useRef(null);
+    const keyPressEnabled = () => !!show && !!item;
+    const KEYS = ["1", "2", "3", "4", "5", "6"];
+    useKeyPress(KEYS, (e2) => {
+      var _a2;
+      if (!keyPressEnabled())
+        return;
+      if (!KEYS.includes(e2.key))
+        return;
+      const index = Number(e2.key) - 1;
+      setActiveIndex(index);
+      const btn = (_a2 = modalBodyRef.current) == null ? void 0 : _a2.querySelectorAll(".reason")[index];
+      btn == null ? void 0 : btn.click();
+    });
+    const [activeIndex, setActiveIndex] = React__default.useState(reasons.length - 1);
+    useUpdateLayoutEffect(() => {
+      setActiveIndex(reasons.length - 1);
+    }, [reasons]);
+    const increaseIndex = (by) => {
+      return () => {
+        if (!keyPressEnabled())
+          return;
+        const newIndex = activeIndex + by;
+        if (newIndex < 0 || newIndex > reasons.length - 1)
+          return;
+        setActiveIndex(newIndex);
+      };
+    };
+    useKeyPress("leftarrow", increaseIndex(-1), {
+      exactMatch: true
+    });
+    useKeyPress("rightarrow", increaseIndex(1), {
+      exactMatch: true
+    });
+    useKeyPress("uparrow", increaseIndex(-2), {
+      exactMatch: true
+    });
+    useKeyPress("downarrow", increaseIndex(2), {
+      exactMatch: true
+    });
+    useKeyPress("enter", (e2) => {
+      var _a2;
+      if (!keyPressEnabled())
+        return;
+      if (activeIndex < 0 || activeIndex > reasons.length - 1)
+        return;
+      e2.preventDefault();
+      e2.stopImmediatePropagation();
+      const btn = (_a2 = modalBodyRef.current) == null ? void 0 : _a2.querySelector(".reason.active");
+      btn == null ? void 0 : btn.click();
+    }, {
+      exactMatch: true
+    });
+    const activeReasonName = React__default.useMemo(() => {
+      var _a2;
+      return ((_a2 = reasons[activeIndex]) == null ? void 0 : _a2.name) || "";
+    }, [reasons, activeIndex]);
+    return /* @__PURE__ */ jsxs(BaseModal, {
+      show,
+      onHide: onHide2,
+      hideWhenMaskOnClick: true,
+      hideWhenEsc: true,
+      width: 500,
+      children: [/* @__PURE__ */ jsxs("div", {
+        className: BaseModalClass.modalHeader,
+        children: [/* @__PURE__ */ jsxs("div", {
+          className: BaseModalClass.modalTitle,
+          children: ["我不想看", /* @__PURE__ */ jsx("span", {
+            css: _ref3$8,
+            children: "(选择后将减少相似内容推荐)"
+          })]
+        }), /* @__PURE__ */ jsx("div", {
+          className: "space",
+          style: {
+            flex: 1
+          }
+        }), /* @__PURE__ */ jsx(ModalClose, {
+          onClick: onHide2
+        })]
+      }), /* @__PURE__ */ jsxs("div", {
+        className: BaseModalClass.modalBody,
+        ref: modalBodyRef,
+        children: [/* @__PURE__ */ jsx("div", {
+          className: "reason-list",
+          css: _ref2$9,
+          children: reasons.map((reason, index) => {
+            const active = index === activeIndex;
+            return /* @__PURE__ */ jsxs("button", {
+              className: cx("reason", {
+                active
+              }),
+              css: [_css.reason, active && _css.reasonActive, "", ""],
+              "data-id": reason.id,
+              onClick: () => {
+                setActiveIndex(index);
+                onDislike(reason);
+              },
+              disabled: isRequesting,
+              children: [/* @__PURE__ */ jsx("span", {
+                className: "reason-no",
+                css: /* @__PURE__ */ css("position:absolute;left:6px;width:20px;height:20px;border-radius:50%;top:", (32 - 20) / 2, "px;display:flex;align-items:center;justify-content:center;background-color:", colorPrimaryValue, ";color:#fff;", ""),
+                children: index + 1
+              }), reason.name]
+            }, reason.id);
+          })
+        }), /* @__PURE__ */ jsxs("div", {
+          className: "tips-container",
+          css: _ref$b,
+          children: [/* @__PURE__ */ jsxs("div", {
+            className: "tips",
+            css: _css.tips,
+            children: [/* @__PURE__ */ jsx(IconPark, {
+              name: "Info",
+              size: 15,
+              style: {
+                marginRight: 5
+              }
+            }), "使用删除键打开弹窗, 数字键选择, Esc 关闭"]
+          }), activeReasonName && /* @__PURE__ */ jsxs("div", {
+            className: "tips",
+            css: _css.tips,
+            children: [/* @__PURE__ */ jsx(IconPark, {
+              name: "Info",
+              size: 15,
+              style: {
+                marginRight: 5
+              }
+            }), "已选择「", activeReasonName, "」, 回车键提交"]
+          })]
+        })]
+      })]
+    });
+  }
+  const _css = {
+    reason: {
+      name: "lu8kba",
+      styles: "color:inherit;width:48%;text-align:center;line-height:20px;position:relative;border-radius:4px;border:2px solid #eee;* :where(body.dark) &{border-color:#333;}padding-top:5px;padding-bottom:5px;margin-top:5px;margin-bottom:5px"
+    },
+    reasonActive: /* @__PURE__ */ css("&.active{border-color:", colorPrimaryValue, ";}", ""),
+    tips: {
+      name: "s5xdrg",
+      styles: "display:flex;align-items:center"
+    }
+  };
+  const currentProps = {
+    show: false,
+    onHide,
+    item: null
+  };
+  const modalDislikeVisibleState = proxy({
+    value: currentProps.show
+  });
+  const useModalDislikeVisible = function() {
+    return useSnapshot(modalDislikeVisibleState).value;
+  };
+  function onHide() {
+    setTimeout(() => {
+      updateProps({
+        show: false,
+        item: null
+      });
+    });
+  }
+  function updateProps(newProps) {
+    Object.assign(currentProps, newProps);
+    modalDislikeVisibleState.value = currentProps.show;
+    getRoot().render(/* @__PURE__ */ jsx(ModalDislike, {
+      ...currentProps,
+      onHide
+    }));
+  }
+  let _root;
+  function getRoot() {
+    _root || (_root = (() => {
+      const container = document.createElement("div");
+      container.classList.add("show-dislike-container", APP_NAME_ROOT_CLASSNAME);
+      document.body.appendChild(container);
+      return createRoot(container);
+    })());
+    return _root;
+  }
+  function showModalDislike(item) {
+    if ((item == null ? void 0 : item.param) && dislikedIds.has(item.param))
+      return;
+    updateProps({
+      show: true,
+      item
+    });
+  }
+  const flexVerticalCenterStyle = {
+    name: "s5xdrg",
+    styles: "display:flex;align-items:center"
+  };
+  const flexCenterStyle = /* @__PURE__ */ css(flexVerticalCenterStyle, " justify-content:center;", "");
+  const antdBtnTextStyle = {
+    name: "1h1dezd",
+    styles: "display:inline-block;margin-top:2px"
+  };
+  function proxyWithLocalStorage(initialVaue2, storageKey) {
+    const allowedKeys = Object.keys(initialVaue2);
+    const savedValue = lodash.pick(JSON.parse(localStorage.getItem(storageKey) || "{}"), allowedKeys);
+    const p2 = proxy({
+      ...initialVaue2,
+      ...savedValue
+    });
+    subscribe$3(p2, () => {
+      const val = snapshot(p2);
+      localStorage.setItem(storageKey, JSON.stringify(val));
+    });
+    return p2;
+  }
+  function FlagSettingItem({
+    configKey,
+    label,
+    extraAction,
+    tooltip,
+    ...otherProps
+  }) {
+    const snap = useSettingsSnapshot();
+    const checked = !!snap[configKey];
+    const onChange = React__default.useCallback((e2) => {
+      const val = e2.target.checked;
+      updateSettings({
+        [configKey]: val
+      });
+      extraAction == null ? void 0 : extraAction(val);
+    }, []);
+    let inner = /* @__PURE__ */ jsx("span", {
+      style: {
+        userSelect: "none"
+      },
+      children: label || configKey
+    });
+    if (tooltip)
+      inner = /* @__PURE__ */ jsx(antd.Tooltip, {
+        title: tooltip,
+        overlayStyle: {
+          width: "max-content",
+          maxWidth: "50vw"
+        },
+        children: inner
+      });
+    return /* @__PURE__ */ jsx(antd.Checkbox, {
+      ...otherProps,
+      checked,
+      onChange,
+      children: inner
+    });
+  }
+  function HelpInfo({
+    children,
+    iconProps,
+    tooltipProps
+  }) {
+    return /* @__PURE__ */ jsx(Fragment, {
+      children: children && /* @__PURE__ */ jsx(AntdTooltip, {
+        ...tooltipProps,
+        title: children,
+        children: /* @__PURE__ */ jsx(IconPark, {
+          name: "Info",
+          size: 18,
+          ...iconProps,
+          style: {
+            cursor: "pointer",
+            marginLeft: "4px",
+            ...iconProps == null ? void 0 : iconProps.style
+          }
+        })
+      })
+    });
+  }
+  var ETabType = /* @__PURE__ */ ((ETabType2) => {
+    ETabType2["RecommendApp"] = "recommend-app";
+    ETabType2["RecommendPc"] = "recommend-pc";
+    ETabType2["KeepFollowOnly"] = "keep-follow-only";
+    ETabType2["DynamicFeed"] = "dynamic-feed";
+    ETabType2["Watchlater"] = "watchlater";
+    ETabType2["Fav"] = "fav";
+    ETabType2["PopularGeneral"] = "popular-general";
+    ETabType2["PopularWeekly"] = "popular-weekly";
+    return ETabType2;
+  })(ETabType || {});
+  const TabConfig = {
+    [
+      "recommend-app"
+      /* RecommendApp */
+    ]: {
+      icon: "Iphone",
+      label: "推荐",
+      desc: "使用 Bilibili App 端推荐 API",
+      anonymousUsage: true
+    },
+    [
+      "recommend-pc"
+      /* RecommendPc */
+    ]: {
+      icon: "Computer",
+      label: "推荐",
+      desc: "使用新版首页顶部推荐 API",
+      anonymousUsage: true
+    },
+    [
+      "keep-follow-only"
+      /* KeepFollowOnly */
+    ]: {
+      icon: "Concern",
+      label: "已关注",
+      desc: "推荐中只保留「已关注」,会很慢"
+    },
+    [
+      "dynamic-feed"
+      /* DynamicFeed */
+    ]: {
+      icon: "Tumblr",
+      iconProps: {
+        size: 16
+      },
+      label: "动态",
+      desc: "视频投稿动态",
+      swr: true,
+      anonymousUsage: true
+    },
+    [
+      "watchlater"
+      /* Watchlater */
+    ]: {
+      icon: "FileCabinet",
+      iconProps: {
+        size: 15
+      },
+      label: "稍后再看",
+      desc: "你添加的稍后再看; 默认随机乱序, 可在设置中关闭乱序",
+      swr: true
+    },
+    [
+      "fav"
+      /* Fav */
+    ]: {
+      icon: "Star",
+      iconProps: {
+        size: 15
+      },
+      label: "收藏",
+      desc: "你添加的收藏; 默认随机乱序, 可在设置中关闭乱序"
+    },
+    [
+      "popular-general"
+      /* PopularGeneral */
+    ]: {
+      icon: "Fire",
+      iconProps: {
+        size: 16
+      },
+      label: "综合热门",
+      desc: "各个领域中新奇好玩的优质内容都在这里~",
+      swr: true,
+      anonymousUsage: true
+    },
+    [
+      "popular-weekly"
+      /* PopularWeekly */
+    ]: {
+      icon: "TrendTwo",
+      iconProps: {
+        size: 15
+      },
+      label: "每周必看",
+      desc: "每周五晚 18:00 更新",
+      anonymousUsage: true
+    }
+  };
+  function TabIcon({
+    tabKey,
+    ...restProps
+  }) {
+    const {
+      icon,
+      iconProps
+    } = TabConfig[tabKey];
+    return /* @__PURE__ */ jsx(IconPark, {
+      ...{
+        size: 18,
+        ...iconProps,
+        ...restProps
+      },
+      name: icon
+    });
+  }
+  const TabKeys = Object.values(ETabType);
+  function toastNeedLogin() {
+    return toast("你需要登录B站后使用该功能! 如已完成登录, 请刷新网页重试~");
+  }
+  const VIDEO_SOURCE_TAB_STORAGE_KEY = `${APP_NAME}-video-source-tab`;
+  const videoSourceTabState = proxyWithLocalStorage({
+    value: ETabType.RecommendApp
+  }, VIDEO_SOURCE_TAB_STORAGE_KEY);
+  function useCurrentShowingTabKeys() {
+    const {
+      hidingTabKeys
+    } = useSettingsSnapshot();
+    return React__default.useMemo(() => TabKeys.filter((key2) => !hidingTabKeys.includes(key2)), [hidingTabKeys]);
+  }
+  function sortTabKeys(customTabKeysOrder) {
+    return TabKeys.slice().sort((a2, b2) => {
+      let aIndex = customTabKeysOrder.indexOf(a2);
+      let bIndex = customTabKeysOrder.indexOf(b2);
+      if (aIndex === -1)
+        aIndex = TabKeys.indexOf(a2);
+      if (bIndex === -1)
+        bIndex = TabKeys.indexOf(b2);
+      return aIndex - bIndex;
+    });
+  }
+  function useSortedTabKeys() {
+    const {
+      customTabKeysOrder
+    } = useSettingsSnapshot();
+    return React__default.useMemo(() => sortTabKeys(customTabKeysOrder), [customTabKeysOrder]);
+  }
+  function useCurrentTabConfigList() {
+    const {
+      hidingTabKeys,
+      customTabKeysOrder
+    } = useSettingsSnapshot();
+    const logined = useHasLogined();
+    return React__default.useMemo(() => {
+      let tabkeys = sortTabKeys(customTabKeysOrder);
+      tabkeys = tabkeys.filter((key2) => !hidingTabKeys.includes(key2) || !logined && key2 === ETabType.RecommendApp);
+      return tabkeys.map((k2) => ({
+        key: k2,
+        ...TabConfig[k2]
+      }));
+    }, [hidingTabKeys, customTabKeysOrder, logined]);
+  }
+  function _getCurrentSourceTab(videoSourceTab, logined) {
+    if (!TabKeys.includes(videoSourceTab))
+      return ETabType.RecommendApp;
+    if (!logined) {
+      if (!TabConfig[videoSourceTab].anonymousUsage) {
+        return ETabType.RecommendApp;
+      }
+    }
+    return videoSourceTab;
+  }
+  function useCurrentSourceTab() {
+    return _getCurrentSourceTab(useSnapshot(videoSourceTabState).value, useHasLogined());
+  }
+  function getCurrentSourceTab() {
+    return _getCurrentSourceTab(videoSourceTabState.value, getHasLogined());
+  }
+  const iconCss = {
+    name: "1inoxbd",
+    styles: "margin-right:4px;margin-top:-1px"
+  };
+  const radioBtnCss = {
+    name: "1dwyqh0",
+    styles: "height:26px;line-height:unset;&:has(:focus-visible){outline:none;outline-offset:unset;}>.ant-radio-button+span{height:100%;}"
+  };
+  const radioBtnStandardCss = {
+    name: "s0vnfv",
+    styles: "height:32px"
+  };
+  var _ref$a = {
+    name: "shwixj",
+    styles: "display:flex;align-items:center;height:22px"
+  };
+  var _ref2$8 = {
+    name: "1k4kcw8",
+    styles: "display:flex;align-items:center;line-height:unset;height:100%"
+  };
+  function VideoSourceTab({
+    onRefresh
+  }) {
+    const logined = useHasLogined();
+    const tab2 = useCurrentSourceTab();
+    const {
+      styleUseStandardVideoSourceTab
+    } = useSettingsSnapshot();
+    const currentTabConfigList = useCurrentTabConfigList();
+    return /* @__PURE__ */ jsxs("div", {
+      css: flexVerticalCenterStyle,
+      children: [/* @__PURE__ */ jsx(antd.Radio.Group, {
+        optionType: "button",
+        buttonStyle: "solid",
+        size: "middle",
+        value: tab2,
+        style: {
+          overflow: "hidden"
+        },
+        onFocus: (e2) => {
+          const target = e2.target;
+          target.blur();
+        },
+        onChange: (e2) => {
+          const newValue = e2.target.value;
+          if (!logined) {
+            if (!TabConfig[newValue].anonymousUsage) {
+              if (!checkLoginStatus()) {
+                return toastNeedLogin();
+              }
+            }
+          }
+          videoSourceTabState.value = newValue;
+          setTimeout(() => {
+            onRefresh(true, {
+              watchlaterKeepOrder: true
+            });
+          });
+        },
+        children: currentTabConfigList.map(({
+          key: key2,
+          label,
+          icon,
+          iconProps
+        }) => /* @__PURE__ */ jsx(antd.Radio.Button, {
+          css: [radioBtnCss, styleUseStandardVideoSourceTab && radioBtnStandardCss, "", ""],
+          className: "video-source-tab",
+          tabIndex: -1,
+          value: key2,
+          children: /* @__PURE__ */ jsxs("span", {
+            css: _ref2$8,
+            children: [/* @__PURE__ */ jsx(TabIcon, {
+              tabKey: key2,
+              css: iconCss
+            }), label]
+          })
+        }, key2))
+      }), /* @__PURE__ */ jsx(HelpInfo, {
+        iconProps: {
+          name: "Tips",
+          size: 16,
+          style: {
+            marginLeft: 6
+          }
+        },
+        children: /* @__PURE__ */ jsx(Fragment, {
+          children: currentTabConfigList.map(({
+            key: key2,
+            label,
+            icon,
+            iconProps,
+            desc
+          }) => /* @__PURE__ */ jsxs("div", {
+            css: _ref$a,
+            children: [/* @__PURE__ */ jsx(TabIcon, {
+              tabKey: key2,
+              css: iconCss
+            }), label, ": ", desc]
+          }, key2))
+        })
+      })]
+    });
+  }
+  function useMittOn(emitter2, type, handler) {
+    const fn = useMemoizedFn(handler);
+    React__default.useEffect(() => {
+      emitter2.on(type, fn);
+      return () => {
+        emitter2.off(type, fn);
+      };
+    }, [emitter2]);
+  }
+  function useRefInit(init) {
+    const ref = React__default.useRef(null);
+    ref.current ?? (ref.current = init());
+    return ref;
+  }
+  var src = { exports: {} };
+  var worker = function mapOnWorker(arr, fn, workers) {
+    return new Promise(function(resolve, reject) {
+      var completed = 0;
+      var started = 0;
+      var running = 0;
+      var results = new Array(arr.length).fill(void 0);
+      var rejected = false;
+      var workerIsUnsing = /* @__PURE__ */ new WeakMap();
+      var getWorker = function(index) {
+        for (var i2 = 0; i2 < workers.length; i2++) {
+          var worker2 = workers[i2];
+          if (workerIsUnsing.get(worker2)) {
+            continue;
+          } else {
+            workerIsUnsing.set(worker2, index);
+            return worker2;
+          }
+        }
+      };
+      function start(index) {
+        var cur = arr[index];
+        var worker2 = getWorker(index);
+        Promise.resolve(fn.call(cur, cur, index, arr, worker2)).then(function(result) {
+          workerIsUnsing.delete(worker2);
+          running--;
+          results[index] = result;
+          completed++;
+          replenish();
+        }).catch(function(err) {
+          rejected = true;
+          reject(err);
+        });
+      }
+      function replenish() {
+        if (rejected)
+          return;
+        if (completed >= arr.length) {
+          return resolve(results);
+        }
+        while (running < workers.length && started < arr.length) {
+          start(started);
+          started++;
+          running++;
+        }
+      }
+      replenish();
+    });
+  };
+  src.exports = function pmap(arr, fn, concurrency) {
+    concurrency = concurrency || Infinity;
+    if (typeof concurrency !== "number") {
+      throw new TypeError(String(concurrency) + " is not a number");
+    }
+    return new Promise(function(resolve, reject) {
+      var completed = 0;
+      var started = 0;
+      var running = 0;
+      var results = new Array(arr.length).fill(void 0);
+      var rejected = false;
+      function start(index) {
+        var cur = arr[index];
+        Promise.resolve(fn.call(cur, cur, index, arr)).then(function(result) {
+          running--;
+          completed++;
+          results[index] = result;
+          replenish();
+        }).catch(function(err) {
+          rejected = true;
+          reject(err);
+        });
+      }
+      function replenish() {
+        if (rejected)
+          return;
+        if (completed >= arr.length) {
+          return resolve(results);
+        }
+        while (running < concurrency && started < arr.length) {
+          start(started);
+          running++;
+          started++;
+        }
+      }
+      replenish();
+    });
+  };
+  var pmapWorker = worker;
+  src.exports.pmapWorker = pmapWorker;
+  var srcExports = src.exports;
+  const pmap2 = /* @__PURE__ */ getDefaultExportFromCjs(srcExports);
+  class QueueStrategy {
+    constructor(ps = 20) {
+      // full-list = returnQueue + bufferQueue + more
+      __publicField(this, "returnQueue", []);
+      __publicField(this, "bufferQueue", []);
+      __publicField(this, "ps");
+      this.ps = ps;
+    }
+    sliceFromQueue() {
+      if (this.bufferQueue.length) {
+        const sliced = this.bufferQueue.slice(0, this.ps);
+        this.bufferQueue = this.bufferQueue.slice(this.ps);
+        return this.doReturnItems(sliced);
+      }
+    }
+    // add to returnQueue
+    doReturnItems(items) {
+      this.returnQueue = this.returnQueue.concat(items || []);
+      return items;
+    }
+    // restore from returnQueue
+    restore() {
+      this.bufferQueue = [...this.returnQueue, ...this.bufferQueue];
+      this.returnQueue = [];
+    }
+  }
+  function formatFavFolderUrl(id) {
+    const uid = getUid();
+    return `https://space.bilibili.com/${uid}/favlist?fid=${id}`;
+  }
+  const _FavRecService = class _FavRecService {
+    constructor() {
+      __publicField(this, "useShuffle");
+      __publicField(this, "addSeparator");
+      __publicField(this, "total", 0);
+      __publicField(this, "allFolderServices", []);
+      // before exclude
+      __publicField(this, "folderServices", []);
+      // after exclude
+      // full-list = qs.returnQueue + qs.bufferQueue + folderServices.more
+      __publicField(this, "qs", new QueueStrategy(_FavRecService.PAGE_SIZE));
+      __publicField(this, "foldersLoaded", false);
+      this.useShuffle = settings.shuffleForFav;
+      this.addSeparator = settings.addSeparatorForFav;
+    }
+    get folderHasMore() {
+      return this.folderServices.some((s2) => s2.hasMore);
+    }
+    get hasMore() {
+      return this.qs.bufferQueue.length > 0 || this.folderHasMore;
+    }
+    get usageInfo() {
+      if (!this.foldersLoaded)
+        return;
+      return /* @__PURE__ */ jsx(FavUsageInfo, {
+        allFavFolderServices: this.allFolderServices
+      });
+    }
+    async loadMore() {
+      if (!this.foldersLoaded)
+        await this.getAllFolders();
+      if (!this.hasMore)
+        return;
+      if (!this.useShuffle) {
+        if (this.qs.bufferQueue.length) {
+          return this.qs.sliceFromQueue();
+        }
+        const service = this.folderServices.find((s2) => s2.hasMore);
+        if (!service)
+          return;
+        const items = await service.loadMore();
+        return this.qs.doReturnItems(service.page === 1 ? [this.addSeparator && {
+          api: EApiType.separator,
+          uniqId: `fav-folder-${service.entry.id}`,
+          content: /* @__PURE__ */ jsxs(Fragment, {
+            children: ["收藏夹:", " ", /* @__PURE__ */ jsx("a", {
+              target: "_blank",
+              href: formatFavFolderUrl(service.entry.id),
+              children: service.entry.title
+            })]
+          })
+        }, ...items || []].filter(Boolean) : items);
+      }
+      if (this.qs.bufferQueue.length < _FavRecService.PAGE_SIZE) {
+        while (this.folderHasMore && this.qs.bufferQueue.length < _FavRecService.PAGE_SIZE) {
+          const restServices = this.folderServices.filter((s2) => s2.hasMore);
+          const count = 4;
+          const batch = 2;
+          const pickedServices = lodash.shuffle(restServices).slice(0, count);
+          const fetched = (await pmap2(pickedServices, async (s2) => await s2.loadMore() || [], batch)).flat();
+          this.qs.bufferQueue = [...this.qs.bufferQueue, ...fetched];
+        }
+        this.qs.bufferQueue = lodash.shuffle(this.qs.bufferQueue);
+      }
+      return this.qs.sliceFromQueue();
+    }
+    async getAllFolders() {
+      const folders = await apiFavFolderListAll();
+      this.foldersLoaded = true;
+      this.allFolderServices = folders.map((f2) => new FavFolderService(f2));
+      this.folderServices = this.allFolderServices.filter((s2) => !settings.excludeFavFolderIds.includes(s2.entry.id.toString()));
+      this.total = this.folderServices.reduce((count, f2) => count + f2.entry.media_count, 0);
+    }
+  };
+  __publicField(_FavRecService, "PAGE_SIZE", 20);
+  let FavRecService = _FavRecService;
+  async function apiFavFolderListAll() {
+    const res = await request.get("/x/v3/fav/folder/created/list-all", {
+      params: {
+        up_mid: getUid()
+      }
+    });
+    const json = res.data;
+    const folders = json.data.list;
+    return folders;
+  }
+  class FavFolderService {
+    constructor(entry) {
+      __publicField(this, "entry");
+      __publicField(this, "hasMore");
+      __publicField(this, "info");
+      __publicField(this, "page", 0);
+      this.entry = entry;
+      this.hasMore = entry.media_count > 0;
+    }
+    // pages loaded
+    async loadMore() {
+      if (!this.hasMore)
+        return;
+      const res = await request.get("/x/v3/fav/resource/list", {
+        params: {
+          media_id: this.entry.id,
+          pn: this.page + 1,
+          // start from 1
+          ps: 20,
+          keyword: "",
+          order: "mtime",
+          // mtime(最近收藏)  view(最多播放) pubtime(最新投稿)
+          type: "0",
+          // unkown
+          tid: "0",
+          // 分区
+          platform: "web"
+        }
+      });
+      const json = res.data;
+      if (!isWebApiSuccess(json)) {
+        toast(json.message || REQUEST_FAIL_MSG);
+        return;
+      }
+      this.page++;
+      this.hasMore = json.data.has_more;
+      this.info = json.data.info;
+      let items = json.data.medias || [];
+      items = items.filter((item) => {
+        if (item.title === "已失效视频")
+          return false;
+        return true;
+      });
+      return items.map((item) => {
+        var _a2;
+        return {
+          ...item,
+          folder: this.info,
+          api: EApiType.fav,
+          uniqId: `fav-${(_a2 = this.info) == null ? void 0 : _a2.id}-${item.bvid}`
+        };
+      });
+    }
+  }
+  var _ref$9 = {
+    name: "7xidhj",
+    styles: "cursor:pointer;font-size:12px"
+  };
+  function FavUsageInfo({
+    allFavFolderServices
+  }) {
+    const {
+      excludeFavFolderIds,
+      shuffleForFav
+    } = useSettingsSnapshot();
+    const onRefresh = useOnRefreshContext();
+    const [excludeFavFolderIdsChanged, setExcludeFavFolderIdsChanged] = React__default.useState(false);
+    const handleChange = useMemoizedFn((newTargetKeys, direction, moveKeys) => {
+      setExcludeFavFolderIdsChanged(true);
+      updateSettings({
+        excludeFavFolderIds: newTargetKeys
+      });
+    });
+    const foldersCount = React__default.useMemo(() => allFavFolderServices.filter((x2) => !excludeFavFolderIds.includes(x2.entry.id.toString())).length, [allFavFolderServices, excludeFavFolderIds]);
+    const videosCount = React__default.useMemo(() => {
+      return allFavFolderServices.filter((s2) => !excludeFavFolderIds.includes(s2.entry.id.toString())).reduce((count, s2) => count + s2.entry.media_count, 0);
+    }, [allFavFolderServices, excludeFavFolderIds]);
+    const onPopupOpenChange = useMemoizedFn((open) => {
+      if (open) {
+        setExcludeFavFolderIdsChanged(false);
+      } else {
+        if (excludeFavFolderIdsChanged) {
+          onRefresh == null ? void 0 : onRefresh();
+        }
+      }
+    });
+    return /* @__PURE__ */ jsxs(antd.Space, {
+      children: [/* @__PURE__ */ jsx(antd.Popover, {
+        trigger: "click",
+        placement: "bottom",
+        onOpenChange: onPopupOpenChange,
+        getPopupContainer: (el) => el.parentElement || document.body,
+        content: /* @__PURE__ */ jsx(Fragment, {
+          children: /* @__PURE__ */ jsx(antd.Transfer, {
+            dataSource: allFavFolderServices,
+            rowKey: (row2) => row2.entry.id.toString(),
+            titles: ["收藏夹", "忽略"],
+            targetKeys: excludeFavFolderIds,
+            onChange: handleChange,
+            render: (item) => item.entry.title,
+            oneWay: true,
+            style: {
+              marginBottom: 10
+            }
+          })
+        }),
+        children: /* @__PURE__ */ jsxs(antd.Tag, {
+          color: "success",
+          css: _ref$9,
+          children: ["收藏夹(", foldersCount, ") 收藏(", videosCount, ")"]
+        })
+      }), /* @__PURE__ */ jsx(antd.Switch, {
+        checkedChildren: "随机顺序",
+        unCheckedChildren: "默认顺序",
+        checked: shuffleForFav,
+        onChange: async (checked) => {
+          updateSettings({
+            shuffleForFav: checked
+          });
+          await delay(100);
+          onRefresh == null ? void 0 : onRefresh();
+        }
+      })]
+    });
+  }
+  const _PcRecService = class _PcRecService {
+    constructor() {
+      __publicField(this, "page", 0);
+      __publicField(this, "hasMore", true);
+    }
+    loadMore() {
+      return this.getRecommendTimes(2);
+    }
+    async getRecommend(signal = void 0) {
+      var _a2, _b2;
+      const curpage = ++this.page;
+      const res = await request.get("/x/web-interface/wbi/index/top/rcmd", {
+        signal,
+        params: {
+          fresh_type: 3,
+          version: 1,
+          ps: _PcRecService.PAGE_SIZE,
+          // >14 errors
+          fresh_idx: curpage,
+          fresh_idx_1h: curpage,
+          homepage_ver: 1
+        }
+      });
+      const json = res.data;
+      if (!isWebApiSuccess(json)) {
+        if (json.code === -62011 && json.message === "暂时没有更多内容了") {
+          this.hasMore = false;
+          return [];
+        }
+      }
+      if (!((_a2 = json.data) == null ? void 0 : _a2.item)) {
+        toast(json.message || "API 请求没有返回结果");
+      }
+      const items = ((_b2 = json.data) == null ? void 0 : _b2.item) || [];
+      return items;
+    }
+    async getRecommendTimes(times, signal = void 0) {
+      let list = [];
+      const parallel = async () => {
+        list = (await Promise.all(new Array(times).fill(0).map(() => this.getRecommend(signal)))).flat();
+      };
+      await parallel();
+      list = lodash.uniqBy(list, (item) => item.id);
+      list.forEach((item) => {
+        var _a2, _b2;
+        if (((_a2 = item.rcmd_reason) == null ? void 0 : _a2.reason_type) === 1) {
+          (_b2 = item.rcmd_reason).content || (_b2.content = "已关注");
+        }
+      });
+      return list.map((item) => {
+        return {
+          ...item,
+          uniqId: item.id + "-" + crypto.randomUUID(),
+          api: "pc"
+        };
+      });
+    }
+  };
+  __publicField(_PcRecService, "PAGE_SIZE", 14);
+  let PcRecService = _PcRecService;
+  async function modifyRelations(upMid, act) {
+    const uid = getUid();
+    const csrf = getCsrfToken();
+    const params = new URLSearchParams({
+      fid: upMid,
+      act: String(act),
+      re_src: "11",
+      gaia_source: "web_main",
+      spmid: "333.999.0.0",
+      extend_content: JSON.stringify({
+        entity: "user",
+        entity_id: uid,
+        fp: d()
+      }),
+      csrf
+    });
+    const res = await request.post("/x/relation/modify", params);
+    const json = res.data;
+    const success = isWebApiSuccess(json);
+    if (!success) {
+      toast(json.message || "未知错误");
+    }
+    return success;
+  }
+  function d() {
+    let t2;
+    let e2;
+    const i2 = (
+      // @ts-ignore
+      (null === (t2 = window.reportObserver) || void 0 === t2 || null === (e2 = t2.cache) || void 0 === e2 ? void 0 : e2.fpriskMsg) || {}
+    );
+    let n2 = "empty";
+    return i2 && (n2 = i2.webdriver + "" + i2.screenResolution + "" + i2.platform + "" + i2.hardwareConcurrency + "" + i2.deviceMemory + "" + i2.colorDepth + "" + i2.indexedDb + "" + i2.language + "" + i2.openDatabase + "" + i2.touchSupport + "" + i2.userAgent), decodeURIComponent(n2);
+  }
+  const debug$6 = baseDebug.extend("service:user:relations:blacklist");
+  const blacklistAdd = blacklistActionFactory("follow");
+  const blacklistRemove = blacklistActionFactory("remove");
+  const UserBlacklistService = {
+    add: blacklistAdd,
+    remove: blacklistRemove
+  };
+  const STORAGE_KEY = `${APP_NAME}-blacklist-mids`;
+  const initialVaue = (localStorage.getItem(STORAGE_KEY) || "").split(",");
+  const blacklistIds = proxySet(initialVaue);
+  subscribe$3(blacklistIds, (val) => {
+    localStorage.setItem(STORAGE_KEY, Array.from(snapshot(blacklistIds)).join(","));
+  });
+  function useInBlacklist(upMid) {
+    const set = useSnapshot(blacklistIds);
+    return upMid && set.has(upMid);
+  }
+  function blacklistActionFactory(action) {
+    const act = action === "follow" ? 5 : 6;
+    return async function blacklistAction(upMid) {
+      const success = await modifyRelations(upMid, act);
+      if (success) {
+        if (action === "follow") {
+          blacklistIds.add(upMid);
+        } else if (action === "remove") {
+          blacklistIds.delete(upMid);
+        }
+      }
+      return success;
+    };
+  }
+  async function getUserBlacklist() {
+    const ps = 20;
+    const getPage = async (pn) => {
+      const res = await request.get("/x/relation/blacks", {
+        params: {
+          re_version: 0,
+          ps,
+          pn
+        }
+      });
+      const json = res.data;
+      if (!isWebApiSuccess(json))
+        return;
+      const total2 = json.data.total;
+      const mids2 = json.data.list.map((x2) => x2.mid);
+      return {
+        total: total2,
+        mids: mids2
+      };
+    };
+    const ret = await getPage(1);
+    if (!ret)
+      return;
+    const {
+      total,
+      mids = []
+    } = ret;
+    let blackMids = mids;
+    if (total) {
+      const maxPn = Math.ceil(total / ps);
+      for (let pn = 2; pn <= maxPn; pn++) {
+        const {
+          mids: mids2 = []
+        } = await getPage(pn) || {};
+        blackMids = blackMids.concat(mids2);
+      }
+    }
+    return blackMids;
+  }
+  (async () => {
+    if (!IN_BILIBILI_HOMEPAGE)
+      return;
+    await whenIdle();
+    const ids2 = await getUserBlacklist();
+    if (ids2) {
+      blacklistIds.clear();
+      ids2.forEach((x2) => {
+        blacklistIds.add(x2.toString());
+      });
+    }
+    debug$6("user blocklist fetched: %o", ids2);
+    return ids2;
+  })();
+  class PopularGeneralService {
+    constructor() {
+      __publicField(this, "hasMore", true);
+      __publicField(this, "page", 0);
+      // pages loaded
+      // shuffle: boolean
+      __publicField(this, "anonymous");
+      this.anonymous = settings.anonymousForPopularGeneral;
+    }
+    async loadMore() {
+      if (!this.hasMore)
+        return;
+      const res = await request.get("/x/web-interface/popular", {
+        params: {
+          ps: 20,
+          pn: this.page + 1
+        },
+        withCredentials: !this.anonymous
+      });
+      const json = res.data;
+      if (!isWebApiSuccess(json)) {
+        return toast(json.message || REQUEST_FAIL_MSG), void 0;
+      }
+      this.page++;
+      this.hasMore = !json.data.no_more;
+      let items = (json.data.list || []).map((item) => {
+        return {
+          ...item,
+          api: EApiType.popularGeneral,
+          uniqId: item.bvid
+        };
+      });
+      items = items.filter((item) => !blacklistIds.has(item.owner.mid.toString()));
+      return items;
+    }
+    get usageInfo() {
+      return /* @__PURE__ */ jsx(PopularGeneralUsageInfo, {});
+    }
+  }
+  function PopularGeneralUsageInfo() {
+    const {
+      anonymousForPopularGeneral
+    } = useSettingsSnapshot();
+    const onRefresh = useOnRefreshContext();
+    return /* @__PURE__ */ jsx(antd.Space, {
+      children: /* @__PURE__ */ jsx(antd.Switch, {
+        checkedChildren: "匿名访问",
+        unCheckedChildren: "登录访问",
+        checked: anonymousForPopularGeneral,
+        onChange: async (val) => {
+          updateSettings({
+            anonymousForPopularGeneral: val
+          });
+          await delay(100);
+          onRefresh == null ? void 0 : onRefresh();
+        }
+      })
+    });
+  }
+  let episodes = [];
+  let cacheKey = "";
+  function genCacheKey() {
+    const now = dayjs();
+    return [now.format("YYYYMMDD"), now.hour() < 18 ? "lt-18" : "gte-18"].join("_");
+  }
+  async function getEpisodeList() {
+    const useCache = episodes.length && cacheKey && cacheKey === genCacheKey();
+    if (useCache)
+      return episodes;
+    const res = await request.get("/x/web-interface/popular/series/list");
+    const json = res.data;
+    const list = json.data.list;
+    episodes = list;
+    cacheKey = genCacheKey();
+    return episodes;
+  }
+  const _PopularWeeklyService = class _PopularWeeklyService {
+    constructor() {
+      __publicField(this, "episodesLoaded", false);
+      __publicField(this, "episodes", []);
+      __publicField(this, "id");
+      __publicField(this, "useShuffle");
+      // full-list = returnedItems + bufferQueue + more
+      __publicField(this, "qs", new QueueStrategy(_PopularWeeklyService.PAGE_SIZE));
+      this.id = _PopularWeeklyService.id++;
+      this.useShuffle = settings.shuffleForPopularWeekly;
+    }
+    get hasMore() {
+      if (!this.episodesLoaded)
+        return true;
+      return !!this.qs.bufferQueue.length || !!this.episodes.length;
+    }
+    async loadMore() {
+      if (!this.episodesLoaded) {
+        this.episodes = await getEpisodeList();
+        this.episodesLoaded = true;
+        if (this.useShuffle)
+          this.episodes = lodash.shuffle(this.episodes);
+      }
+      if (!this.hasMore)
+        return;
+      if (!this.useShuffle) {
+        if (this.qs.bufferQueue.length)
+          return this.qs.sliceFromQueue();
+        const ep = this.episodes[0];
+        const epNum = ep.number;
+        const items = await fetchWeeklyItems(epNum);
+        this.qs.bufferQueue.push({
+          api: EApiType.separator,
+          uniqId: `popular-weekly-${epNum}`,
+          content: /* @__PURE__ */ jsx("a", {
+            target: "_blank",
+            href: `https://www.bilibili.com/v/popular/weekly?num=${epNum}`,
+            children: ep.name
+          })
+        }, ...items);
+        this.episodes = this.episodes.slice(1);
+        return this.qs.sliceFromQueue();
+      }
+      const prefetchPage = 5;
+      while (this.qs.bufferQueue.length < _PopularWeeklyService.PAGE_SIZE * prefetchPage && this.episodes.length) {
+        this.episodes = lodash.shuffle(this.episodes);
+        const episodes2 = this.episodes.slice(0, prefetchPage);
+        this.episodes = this.episodes.slice(prefetchPage);
+        const fetched = await pmap2(episodes2.map((x2) => x2.number), (episodeNum) => fetchWeeklyItems(episodeNum), 2);
+        this.qs.bufferQueue = lodash.shuffle([...this.qs.bufferQueue, ...fetched.flat()]);
+      }
+      return this.qs.sliceFromQueue();
+    }
+    get usageInfo() {
+      return /* @__PURE__ */ jsx(PopularWeeklyUsageInfo, {});
+    }
+  };
+  __publicField(_PopularWeeklyService, "id", 0);
+  __publicField(_PopularWeeklyService, "PAGE_SIZE", 20);
+  let PopularWeeklyService = _PopularWeeklyService;
+  const cache = {};
+  async function fetchWeeklyItems(episodeNum) {
+    var _a2;
+    if (!((_a2 = cache[episodeNum]) == null ? void 0 : _a2.length)) {
+      const res = await request.get("/x/web-interface/popular/series/one", {
+        params: {
+          number: episodeNum
+        }
+      });
+      const json = res.data;
+      const items2 = (json.data.list || []).map((item) => {
+        return {
+          ...item,
+          api: EApiType.popularWeekly,
+          uniqId: item.bvid
+        };
+      });
+      cache[episodeNum] = items2;
+    }
+    let items = cache[episodeNum];
+    items = items.filter((x2) => !blacklistIds.has(x2.owner.mid.toString()));
+    return items;
+  }
+  function PopularWeeklyUsageInfo() {
+    const {
+      shuffleForPopularWeekly
+    } = useSettingsSnapshot();
+    const onRefresh = useOnRefreshContext();
+    return /* @__PURE__ */ jsx(antd.Space, {
+      children: /* @__PURE__ */ jsx(antd.Switch, {
+        style: {
+          marginLeft: "10px"
+        },
+        checked: shuffleForPopularWeekly,
+        onChange: async (val) => {
+          updateSettings({
+            shuffleForPopularWeekly: val
+          });
+          await delay(100);
+          onRefresh == null ? void 0 : onRefresh();
+        },
+        checkedChildren: "随机顺序",
+        unCheckedChildren: "默认顺序"
+      })
+    });
+  }
+  const watchLaterState = proxy({
+    updatedAt: 0,
+    bvidSet: proxySet()
+  });
+  function useWatchLaterState(bvid) {
+    return useSnapshot(watchLaterState).bvidSet.has(bvid);
+  }
+  if (getHasLogined()) {
+    setTimeout(() => {
+      new WatchLaterRecService().loadMore();
+    });
+  }
+  const _WatchLaterRecService = class _WatchLaterRecService {
+    constructor(keepOrder) {
+      __publicField(this, "qs", new QueueStrategy(_WatchLaterRecService.PAGE_SIZE));
+      __publicField(this, "useShuffle");
+      __publicField(this, "addSeparator");
+      __publicField(this, "loaded", false);
+      __publicField(this, "count", 0);
+      __publicField(this, "keepOrder");
+      this.keepOrder = keepOrder ?? false;
+      this.useShuffle = settings.shuffleForWatchLater;
+      this.addSeparator = settings.addSeparatorForWatchLater;
+    }
+    async fetch() {
+      const res = await request.get("/x/v2/history/toview/web");
+      const json = res.data;
+      const items = json.data.list.map((item) => {
+        return {
+          ...item,
+          api: EApiType.watchlater,
+          uniqId: `watchlater-${item.bvid}`
+        };
+      });
+      if (Date.now() > watchLaterState.updatedAt) {
+        watchLaterState.updatedAt = Date.now();
+        watchLaterState.bvidSet = proxySet(items.map((i2) => i2.bvid));
+      }
+      const gate = dayjs().subtract(2, "days").unix();
+      const firstNotTodayAddedIndex = items.findIndex((item) => item.add_at < gate);
+      let itemsWithSeparator = items;
+      if (firstNotTodayAddedIndex !== -1) {
+        const recent = items.slice(0, firstNotTodayAddedIndex);
+        let earlier = items.slice(firstNotTodayAddedIndex);
+        if (this.keepOrder && _WatchLaterRecService.LAST_BVID_ARR.length) {
+          earlier = earlier.map((item) => ({
+            item,
+            // if not found, -1, front-most
+            index: _WatchLaterRecService.LAST_BVID_ARR.findIndex((bvid) => item.bvid === bvid)
+          })).sort((a2, b2) => a2.index - b2.index).map((x2) => x2.item);
+        } else if (this.useShuffle) {
+          earlier = lodash.shuffle(earlier);
+        }
+        itemsWithSeparator = [!!recent.length && this.addSeparator && {
+          api: EApiType.separator,
+          uniqId: "watchlater-recent",
+          content: "近期"
+        }, ...recent, !!earlier.length && this.addSeparator && {
+          api: EApiType.separator,
+          uniqId: "watchlater-earlier",
+          content: "更早"
+        }, ...earlier].filter(Boolean);
+      }
+      this.count = json.data.count;
+      _WatchLaterRecService.LAST_BVID_ARR = itemsWithSeparator.map((item) => item.api === EApiType.watchlater && item.bvid).filter(Boolean);
+      return itemsWithSeparator;
+    }
+    get usageInfo() {
+      if (!this.loaded)
+        return;
+      const {
+        count
+      } = this;
+      return /* @__PURE__ */ jsx(WatchLaterUsageInfo, {
+        count
+      });
+    }
+    get hasMore() {
+      if (!this.loaded)
+        return true;
+      return !!this.qs.bufferQueue.length;
+    }
+    async loadMore() {
+      if (!this.hasMore)
+        return;
+      if (!this.loaded) {
+        const items = await this.fetch();
+        this.qs.bufferQueue.push(...items);
+        this.loaded = true;
+      }
+      return this.qs.sliceFromQueue();
+    }
+  };
+  __publicField(_WatchLaterRecService, "PAGE_SIZE", 20);
+  __publicField(_WatchLaterRecService, "LAST_BVID_ARR", []);
+  let WatchLaterRecService = _WatchLaterRecService;
+  function WatchLaterUsageInfo({
+    count
+  }) {
+    const color = count <= 90 ? "success" : count < 100 ? "warning" : "error";
+    const title = `${color !== "success" ? "快满了~ " : ""}已使用 ${count} / 100`;
+    const {
+      shuffleForWatchLater
+    } = useSettingsSnapshot();
+    const onRefresh = useOnRefreshContext();
+    return /* @__PURE__ */ jsxs(antd.Space, {
+      children: [/* @__PURE__ */ jsxs(antd.Tag, {
+        color,
+        style: {
+          marginRight: 0,
+          marginTop: 1,
+          cursor: "pointer"
+        },
+        title,
+        onClick: () => {
+          toast(`稍后再看: ${title}`);
+        },
+        children: [count, " / 100"]
+      }), /* @__PURE__ */ jsx(antd.Switch, {
+        checkedChildren: "随机顺序",
+        unCheckedChildren: "添加顺序",
+        checked: shuffleForWatchLater,
+        onChange: async (checked) => {
+          updateSettings({
+            shuffleForWatchLater: checked
+          });
+          await delay(100);
+          onRefresh == null ? void 0 : onRefresh();
+        }
+      })]
+    });
+  }
+  const OnRefreshContext = React__default.createContext(void 0);
+  function useOnRefreshContext() {
+    return React__default.useContext(OnRefreshContext);
+  }
+  const serviceFactories = {
+    [ETabType.DynamicFeed]: () => new DynamicFeedRecService(dynamicFeedFilterStore.upMid, dynamicFeedFilterStore.searchText),
+    [ETabType.Watchlater]: (options) => new WatchLaterRecService(options == null ? void 0 : options.watchlaterKeepOrder),
+    [ETabType.Fav]: () => new FavRecService(),
+    [ETabType.PopularGeneral]: () => new PopularGeneralService(),
+    [ETabType.PopularWeekly]: () => new PopularWeeklyService()
+  };
+  function getIService(serviceMap, tab2) {
+    return serviceMap[tab2];
+  }
+  function useRefresh({
+    debug: debug2,
+    // tab,
+    recreateService,
+    fetcher,
+    preAction,
+    postAction,
+    // RecGrid 定制
+    onScrollToTop,
+    setUpperRefreshing
+  }) {
+    const tab2 = getCurrentSourceTab();
+    const itemsCache = useRefInit(() => ({}));
+    const itemsHasCache = useRefInit(() => ({}));
+    const [hasMore, setHasMore] = React__default.useState(true);
+    const [items, setItems] = React__default.useState([]);
+    React__default.useEffect(() => {
+      try {
+        ;
+        unsafeWindow[`${APP_KEY_PREFIX}_gridItems`] = items;
+      } catch (e2) {
+      }
+    }, [items]);
+    const [serviceMap, setServiceMap] = React__default.useState(() => {
+      return Object.fromEntries(Object.entries(serviceFactories).map(([key2, factory]) => [key2, factory(void 0)]));
+    });
+    const [pcRecService, setPcRecService] = React__default.useState(() => new PcRecService());
+    const [refreshing, setRefreshing] = React__default.useState(false);
+    const [refreshedAt, setRefreshedAt, getRefreshedAt] = useGetState(() => Date.now());
+    const [refreshFor, setRefreshFor] = React__default.useState(tab2);
+    const [refreshAbortController, setRefreshAbortController] = React__default.useState(() => new AbortController());
+    const [swr, setSwr] = React__default.useState(false);
+    const [error, setError] = React__default.useState(void 0);
+    const refresh = useMemoizedFn(async (reuse = false, options) => {
+      const start = performance.now();
+      if (refreshing) {
+        if (tab2 === refreshFor) {
+          if (tab2 === ETabType.DynamicFeed && serviceMap[ETabType.DynamicFeed].searchText !== dynamicFeedFilterStore.searchText) {
+            debug2("refresh(): [start] [refreshing] sametab(%s) but conditions change, abort existing", tab2);
+            refreshAbortController.abort();
+          } else {
+            debug2("refresh(): [start] [refreshing] prevent same tab(%s) refresh()", tab2);
+            return;
+          }
+        } else {
+          debug2("refresh(): [start] [refreshing] switchTab %s -> %s, abort existing", refreshFor, tab2);
+          refreshAbortController.abort();
+        }
+      } else {
+        debug2("refresh(): [start] tab = %s", tab2);
+      }
+      await (onScrollToTop == null ? void 0 : onScrollToTop());
+      const updateRefreshing = (val) => {
+        setRefreshing(val);
+        setUpperRefreshing == null ? void 0 : setUpperRefreshing(val);
+      };
+      updateRefreshing(true);
+      setRefreshedAt(Date.now());
+      setRefreshFor(tab2);
+      setItems([]);
+      setError(void 0);
+      setHasMore(true);
+      await (preAction == null ? void 0 : preAction());
+      let _items = [];
+      let err;
+      const doFetch = async () => {
+        try {
+          _items = await fetcher(fetcherOptions);
+        } catch (e2) {
+          err = e2;
+        }
+      };
+      const shouldReuse = reuse && !!itemsHasCache.current[tab2];
+      const swr2 = shouldReuse && (!!TabConfig[tab2].swr || tab2 === ETabType.Fav && !serviceMap[ETabType.Fav].useShuffle && !settings.shuffleForFav || tab2 === ETabType.PopularWeekly && !serviceMap[ETabType.PopularWeekly].useShuffle && !settings.shuffleForPopularWeekly);
+      setSwr(shouldReuse);
+      let useGridCache = true;
+      if ((tab2 === ETabType.Fav || tab2 === ETabType.PopularWeekly) && !swr2) {
+        useGridCache = false;
+      }
+      const _pcRecService = recreateService ? new PcRecService() : pcRecService;
+      if (recreateService) {
+        setPcRecService(_pcRecService);
+      }
+      const newServiceMap = {
+        ...serviceMap
+      };
+      const recreateFor = (tab22) => {
+        newServiceMap[tab22] = serviceFactories[tab22](options);
+        setServiceMap(newServiceMap);
+      };
+      if (tab2 === ETabType.DynamicFeed) {
+        recreateFor(tab2);
+      }
+      if (tab2 === ETabType.Watchlater) {
+        recreateFor(tab2);
+      }
+      if (tab2 === ETabType.Fav) {
+        if (shouldReuse) {
+          if (swr2) {
+            recreateFor(tab2);
+          } else {
+            serviceMap[tab2].qs.restore();
+          }
+        } else {
+          recreateFor(tab2);
+        }
+      }
+      if (tab2 === ETabType.PopularGeneral) {
+        recreateFor(tab2);
+      }
+      if (tab2 === ETabType.PopularWeekly) {
+        if (shouldReuse) {
+          if (swr2) {
+            recreateFor(tab2);
+          } else {
+            serviceMap[tab2].qs.restore();
+          }
+        } else {
+          recreateFor(tab2);
+        }
+      }
+      const _abortController = new AbortController();
+      const _signal = _abortController.signal;
+      setRefreshAbortController(_abortController);
+      const fetcherOptions = {
+        tab: tab2,
+        abortSignal: _signal,
+        serviceMap: newServiceMap,
+        pcRecService: _pcRecService
+      };
+      debug2("refresh(): shouldReuse=%s swr=%s useGridCache=%s", shouldReuse, swr2, useGridCache);
+      if (shouldReuse) {
+        if (swr2) {
+          _items = itemsCache.current[tab2] || [];
+          setItems(_items);
+          await doFetch();
+        } else if (!useGridCache) {
+          itemsCache.current[tab2] = [];
+          await doFetch();
+        } else {
+          _items = itemsCache.current[tab2] || [];
+        }
+      } else {
+        itemsCache.current[tab2] = [];
+        await doFetch();
+      }
+      if (_signal.aborted) {
+        debug2("refresh(): [legacy] skip setItems/err for aborted, legacy tab = %s", tab2);
+        return;
+      }
+      if (err) {
+        updateRefreshing(false);
+        console.error(err);
+        setError(err);
+        return;
+      }
+      if (_items.length) {
+        itemsHasCache.current[tab2] = true;
+        if (TabConfig[tab2].swr || tab2 === ETabType.Fav || tab2 === ETabType.PopularWeekly) {
+          itemsCache.current[tab2] = _items.slice(0, 30);
+        } else {
+          itemsCache.current[tab2] = _items;
+        }
+      }
+      await whenIdle({
+        timeout: 400
+      });
+      if (_signal.aborted) {
+        debug2("refresh(): [legacy] skip setItems-postAction etc for aborted, legacy tab = %s", tab2);
+        return;
+      }
+      setItems(_items);
+      const service = getIService(newServiceMap, tab2);
+      if (service)
+        setHasMore(service.hasMore);
+      await nextTick();
+      await (postAction == null ? void 0 : postAction());
+      const cost = performance.now() - start;
+      debug2("refresh(): [success] cost %s ms", cost.toFixed(0));
+      updateRefreshing(false);
+    });
+    return {
+      items,
+      itemsCache,
+      setItems,
+      error,
+      refreshedAt,
+      setRefreshedAt,
+      getRefreshedAt,
+      refreshing,
+      setRefreshing,
+      refreshFor,
+      setRefreshFor,
+      refreshAbortController,
+      setRefreshAbortController,
+      hasMore,
+      setHasMore,
+      swr,
+      setSwr,
+      pcRecService,
+      serviceMap,
+      setPcRecService,
+      setServiceMap,
+      refresh
+    };
+  }
+  async function getRecentUpdateUpList() {
+    const res = await request.get("/x/polymer/web-dynamic/v1/portal");
+    const json = res.data;
+    const list = (json == null ? void 0 : json.data.up_list) || [];
+    return list;
+  }
+  /**
+   * natural-orderby v3.0.2
+   *
+   * Copyright (c) Olaf Ennen
+   *
+   * This source code is licensed under the MIT license found in the
+   * LICENSE.md file in the root directory of this source tree.
+   *
+   * @license MIT
+   */
+  var compareNumbers = function compareNumbers2(numberA, numberB) {
+    if (numberA < numberB) {
+      return -1;
+    }
+    if (numberA > numberB) {
+      return 1;
+    }
+    return 0;
+  };
+  var compareUnicode = function compareUnicode2(stringA, stringB) {
+    var result = stringA.localeCompare(stringB);
+    return result ? result / Math.abs(result) : 0;
+  };
+  var RE_NUMBERS = /(^0x[\da-fA-F]+$|^([+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?(?!\.\d+)(?=\D|\s|$))|\d+)/g;
+  var RE_LEADING_OR_TRAILING_WHITESPACES = /^\s+|\s+$/g;
+  var RE_WHITESPACES = /\s+/g;
+  var RE_INT_OR_FLOAT = /^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?$/;
+  var RE_DATE = /(^([\w ]+,?[\w ]+)?[\w ]+,?[\w ]+\d+:\d+(:\d+)?[\w ]?|^\d{1,4}[/-]\d{1,4}[/-]\d{1,4}|^\w+, \w+ \d+, \d{4})/;
+  var RE_LEADING_ZERO = /^0+[1-9]{1}[0-9]*$/;
+  var RE_UNICODE_CHARACTERS = /[^\x00-\x80]/;
+  var stringCompare = function stringCompare2(stringA, stringB) {
+    if (stringA < stringB) {
+      return -1;
+    }
+    if (stringA > stringB) {
+      return 1;
+    }
+    return 0;
+  };
+  var compareChunks = function compareChunks2(chunksA, chunksB) {
+    var lengthA = chunksA.length;
+    var lengthB = chunksB.length;
+    var size = Math.min(lengthA, lengthB);
+    for (var i2 = 0; i2 < size; i2++) {
+      var chunkA = chunksA[i2];
+      var chunkB = chunksB[i2];
+      if (chunkA.normalizedString !== chunkB.normalizedString) {
+        if (chunkA.normalizedString === "" !== (chunkB.normalizedString === "")) {
+          return chunkA.normalizedString === "" ? -1 : 1;
+        }
+        if (chunkA.parsedNumber !== void 0 && chunkB.parsedNumber !== void 0) {
+          var result = compareNumbers(chunkA.parsedNumber, chunkB.parsedNumber);
+          if (result === 0) {
+            return stringCompare(chunkA.normalizedString, chunkB.normalizedString);
+          }
+          return result;
+        } else if (chunkA.parsedNumber !== void 0 || chunkB.parsedNumber !== void 0) {
+          return chunkA.parsedNumber !== void 0 ? -1 : 1;
+        } else if (RE_UNICODE_CHARACTERS.test(chunkA.normalizedString + chunkB.normalizedString)) {
+          return compareUnicode(chunkA.normalizedString, chunkB.normalizedString);
+        } else {
+          return stringCompare(chunkA.normalizedString, chunkB.normalizedString);
+        }
+      }
+    }
+    if (lengthA > size || lengthB > size) {
+      return lengthA <= size ? -1 : 1;
+    }
+    return 0;
+  };
+  var compareOtherTypes = function compareOtherTypes2(valueA, valueB) {
+    if (!valueA.chunks ? valueB.chunks : !valueB.chunks) {
+      return !valueA.chunks ? 1 : -1;
+    }
+    if (valueA.isNaN ? !valueB.isNaN : valueB.isNaN) {
+      return valueA.isNaN ? -1 : 1;
+    }
+    if (valueA.isSymbol ? !valueB.isSymbol : valueB.isSymbol) {
+      return valueA.isSymbol ? -1 : 1;
+    }
+    if (valueA.isObject ? !valueB.isObject : valueB.isObject) {
+      return valueA.isObject ? -1 : 1;
+    }
+    if (valueA.isArray ? !valueB.isArray : valueB.isArray) {
+      return valueA.isArray ? -1 : 1;
+    }
+    if (valueA.isFunction ? !valueB.isFunction : valueB.isFunction) {
+      return valueA.isFunction ? -1 : 1;
+    }
+    if (valueA.isNull ? !valueB.isNull : valueB.isNull) {
+      return valueA.isNull ? -1 : 1;
+    }
+    return 0;
+  };
+  var compareValues = function compareValues2(valueA, valueB) {
+    if (valueA.value === valueB.value) {
+      return 0;
+    }
+    if (valueA.parsedNumber !== void 0 && valueB.parsedNumber !== void 0) {
+      return compareNumbers(valueA.parsedNumber, valueB.parsedNumber);
+    }
+    if (valueA.chunks && valueB.chunks) {
+      return compareChunks(valueA.chunks, valueB.chunks);
+    }
+    return compareOtherTypes(valueA, valueB);
+  };
+  var normalizeAlphaChunk = function normalizeAlphaChunk2(chunk) {
+    return chunk.replace(RE_WHITESPACES, " ").replace(RE_LEADING_OR_TRAILING_WHITESPACES, "");
+  };
+  var parseNumber = function parseNumber2(value) {
+    if (value.length !== 0) {
+      var parsedNumber = Number(value);
+      if (!Number.isNaN(parsedNumber)) {
+        return parsedNumber;
+      }
+    }
+    return void 0;
+  };
+  var normalizeNumericChunk = function normalizeNumericChunk2(chunk, index, chunks) {
+    if (RE_INT_OR_FLOAT.test(chunk)) {
+      if (!RE_LEADING_ZERO.test(chunk) || index === 0 || chunks[index - 1] !== ".") {
+        return parseNumber(chunk) || 0;
+      }
+    }
+    return void 0;
+  };
+  var createChunkMap = function createChunkMap2(chunk, index, chunks) {
+    return {
+      parsedNumber: normalizeNumericChunk(chunk, index, chunks),
+      normalizedString: normalizeAlphaChunk(chunk)
+    };
+  };
+  var createChunks = function createChunks2(value) {
+    return value.replace(RE_NUMBERS, "\0$1\0").replace(/\0$/, "").replace(/^\0/, "").split("\0");
+  };
+  var createChunkMaps = function createChunkMaps2(value) {
+    var chunksMaps = createChunks(value).map(createChunkMap);
+    return chunksMaps;
+  };
+  var isFunction = function isFunction2(value) {
+    return typeof value === "function";
+  };
+  var isNaN$1 = function isNaN2(value) {
+    return Number.isNaN(value) || value instanceof Number && Number.isNaN(value.valueOf());
+  };
+  var isNull = function isNull2(value) {
+    return value === null;
+  };
+  var isObject = function isObject2(value) {
+    return value !== null && typeof value === "object" && !Array.isArray(value) && !(value instanceof Number) && !(value instanceof String) && !(value instanceof Boolean) && !(value instanceof Date);
+  };
+  var isSymbol = function isSymbol2(value) {
+    return typeof value === "symbol";
+  };
+  var isUndefined = function isUndefined2(value) {
+    return value === void 0;
+  };
+  var parseDate = function parseDate2(value) {
+    try {
+      var parsedDate = Date.parse(value);
+      if (!Number.isNaN(parsedDate)) {
+        if (RE_DATE.test(value)) {
+          return parsedDate;
+        }
+      }
+      return void 0;
+    } catch (_unused) {
+      return void 0;
+    }
+  };
+  var numberify = function numberify2(value) {
+    var parsedNumber = parseNumber(value);
+    if (parsedNumber !== void 0) {
+      return parsedNumber;
+    }
+    return parseDate(value);
+  };
+  var stringify = function stringify2(value) {
+    if (typeof value === "boolean" || value instanceof Boolean) {
+      return Number(value).toString();
+    }
+    if (typeof value === "number" || value instanceof Number) {
+      return value.toString();
+    }
+    if (value instanceof Date) {
+      return value.getTime().toString();
+    }
+    if (typeof value === "string" || value instanceof String) {
+      return value.toLowerCase().replace(RE_LEADING_OR_TRAILING_WHITESPACES, "");
+    }
+    return "";
+  };
+  var getMappedValueRecord = function getMappedValueRecord2(value) {
+    if (typeof value === "string" || value instanceof String || (typeof value === "number" || value instanceof Number) && !isNaN$1(value) || typeof value === "boolean" || value instanceof Boolean || value instanceof Date) {
+      var stringValue = stringify(value);
+      var parsedNumber = numberify(stringValue);
+      var chunks = createChunkMaps(parsedNumber ? "" + parsedNumber : stringValue);
+      return {
+        parsedNumber,
+        chunks,
+        value
+      };
+    }
+    return {
+      isArray: Array.isArray(value),
+      isFunction: isFunction(value),
+      isNaN: isNaN$1(value),
+      isNull: isNull(value),
+      isObject: isObject(value),
+      isSymbol: isSymbol(value),
+      isUndefined: isUndefined(value),
+      value
+    };
+  };
+  var compareMultiple = function compareMultiple2(recordA, recordB, orders) {
+    var indexA = recordA.index, valuesA = recordA.values;
+    var indexB = recordB.index, valuesB = recordB.values;
+    var length2 = valuesA.length;
+    var ordersLength = orders.length;
+    for (var i2 = 0; i2 < length2; i2++) {
+      var order = i2 < ordersLength ? orders[i2] : null;
+      if (order && typeof order === "function") {
+        var result = order(valuesA[i2].value, valuesB[i2].value);
+        if (result) {
+          return result;
+        }
+      } else {
+        var _result = compareValues(valuesA[i2], valuesB[i2]);
+        if (_result) {
+          return _result * (order === "desc" ? -1 : 1);
+        }
+      }
+    }
+    return indexA - indexB;
+  };
+  var createIdentifierFn = function createIdentifierFn2(identifier2) {
+    if (typeof identifier2 === "function") {
+      return identifier2;
+    }
+    return function(value) {
+      if (Array.isArray(value)) {
+        var index = Number(identifier2);
+        if (Number.isInteger(index)) {
+          return value[index];
+        }
+      } else if (value && typeof value === "object") {
+        var result = Object.getOwnPropertyDescriptor(value, identifier2);
+        return result == null ? void 0 : result.value;
+      }
+      return value;
+    };
+  };
+  var getElementByIndex = function getElementByIndex2(collection, index) {
+    return collection[index];
+  };
+  var getValueByIdentifier = function getValueByIdentifier2(value, getValue) {
+    return getValue(value);
+  };
+  var baseOrderBy = function baseOrderBy2(collection, identifiers, orders) {
+    var identifierFns = identifiers.length ? identifiers.map(createIdentifierFn) : [function(value) {
+      return value;
+    }];
+    var mappedCollection = collection.map(function(element, index) {
+      var values = identifierFns.map(function(identifier2) {
+        return getValueByIdentifier(element, identifier2);
+      }).map(getMappedValueRecord);
+      return {
+        index,
+        values
+      };
+    });
+    mappedCollection.sort(function(recordA, recordB) {
+      return compareMultiple(recordA, recordB, orders);
+    });
+    return mappedCollection.map(function(element) {
+      return getElementByIndex(collection, element.index);
+    });
+  };
+  var getIdentifiers = function getIdentifiers2(identifiers) {
+    if (!identifiers) {
+      return [];
+    }
+    var identifierList = !Array.isArray(identifiers) ? [identifiers] : [].concat(identifiers);
+    if (identifierList.some(function(identifier2) {
+      return typeof identifier2 !== "string" && typeof identifier2 !== "number" && typeof identifier2 !== "function";
+    })) {
+      return [];
+    }
+    return identifierList;
+  };
+  var getOrders = function getOrders2(orders) {
+    if (!orders) {
+      return [];
+    }
+    var orderList = !Array.isArray(orders) ? [orders] : [].concat(orders);
+    if (orderList.some(function(order) {
+      return order !== "asc" && order !== "desc" && typeof order !== "function";
+    })) {
+      return [];
+    }
+    return orderList;
+  };
+  function orderBy(collection, identifiers, orders) {
+    if (!collection || !Array.isArray(collection)) {
+      return [];
+    }
+    var validatedIdentifiers = getIdentifiers(identifiers);
+    var validatedOrders = getOrders(orders);
+    return baseOrderBy(collection, validatedIdentifiers, validatedOrders);
+  }
+  class DynamicFeedRecService {
+    constructor(upMid, searchText) {
+      __publicField(this, "offset", "");
+      __publicField(this, "page", 0);
+      // pages loaded
+      __publicField(this, "hasMore", true);
+      __publicField(this, "upMid");
+      __publicField(this, "searchText");
+      this.upMid = upMid;
+      this.searchText = searchText;
+    }
+    async loadMore(signal = void 0) {
+      if (!this.hasMore) {
+        return;
+      }
+      const params = {
+        timezone_offset: "-480",
+        type: "video",
+        features: "itemOpusStyle",
+        page: this.page + 1
+        // ++this.page, starts from 1
+      };
+      if (this.offset) {
+        params.offset = this.offset;
+      }
+      if (this.upMid) {
+        params.host_mid = this.upMid;
+      }
+      const res = await request.get("/x/polymer/web-dynamic/v1/feed/all", {
+        signal,
+        params
+      });
+      const json = res.data;
+      if (!isWebApiSuccess(json)) {
+        toast(json.message || REQUEST_FAIL_MSG);
+        if (json.message === "账号未登录") {
+          this.hasMore = false;
+        }
+        return;
+      }
+      this.page++;
+      this.hasMore = json.data.has_more;
+      this.offset = json.data.offset;
+      const arr = json.data.items;
+      const items = arr.filter((it) => it.type === "DYNAMIC_TYPE_AV").filter((it) => {
+        var _a2, _b2, _c2, _d;
+        if (!this.searchText)
+          return true;
+        const title = ((_d = (_c2 = (_b2 = (_a2 = it == null ? void 0 : it.modules) == null ? void 0 : _a2.module_dynamic) == null ? void 0 : _b2.major) == null ? void 0 : _c2.archive) == null ? void 0 : _d.title) || "";
+        return title.includes(this.searchText);
+      }).map((item) => {
+        return {
+          ...item,
+          api: EApiType.dynamic,
+          uniqId: item.id_str || crypto.randomUUID()
+        };
+      });
+      return items;
+    }
+    get usageInfo() {
+      return /* @__PURE__ */ jsx(DynamicFeedUsageInfo, {});
+    }
+  }
+  __publicField(DynamicFeedRecService, "PAGE_SIZE", 15);
+  let upMidInitial = void 0;
+  let upNameInitial = void 0;
+  const searchParams = new URLSearchParams(location.search);
+  if (searchParams.get("dyn-mid")) {
+    upMidInitial = Number(searchParams.get("dyn-mid"));
+    upNameInitial = searchParams.get("dyn-name") ?? searchParams.get("dyn-mid") ?? void 0;
+  }
+  const dynamicFeedFilterStore = proxy({
+    upMid: upMidInitial,
+    upName: upNameInitial,
+    searchText: void 0,
+    upList: [],
+    upListUpdatedAt: 0,
+    get hasSelectedUp() {
+      return !!(this.upName && this.upMid);
+    }
+  });
+  setTimeout(() => {
+    if (!IN_BILIBILI_HOMEPAGE)
+      return;
+    if (!dynamicFeedFilterStore.upList.length) {
+      requestIdleCallback(() => {
+        updateUpList();
+      });
+    }
+  }, ms$1("5s"));
+  async function updateUpList(force = false) {
+    const cacheHit = !force && dynamicFeedFilterStore.upList.length && dynamicFeedFilterStore.upListUpdatedAt && dynamicFeedFilterStore.upListUpdatedAt - Date.now() < ms$1("5min");
+    if (cacheHit)
+      return;
+    const list = await getRecentUpdateUpList();
+    dynamicFeedFilterStore.upList = list;
+    dynamicFeedFilterStore.upListUpdatedAt = Date.now();
+  }
+  function dynamicFeedFilterSelectUp(payload) {
+    Object.assign(dynamicFeedFilterStore, payload);
+    if (payload.upMid) {
+      const item = dynamicFeedFilterStore.upList.find((x2) => x2.mid === payload.upMid);
+      if (item)
+        item.has_update = false;
+    }
+  }
+  var _ref$8 = {
+    name: "17hu30x",
+    styles: ".ant-btn{display:inline-flex;align-items:center;justify-content:center;}"
+  };
+  var _ref3$7 = {
+    name: "1mkc8b8",
+    styles: "display:block;max-width:130px;text-overflow:ellipsis;white-space:nowrap;overflow:hidden"
+  };
+  function DynamicFeedUsageInfo() {
+    const onRefresh = useOnRefreshContext();
+    const {
+      hasSelectedUp,
+      upName,
+      upMid,
+      searchText,
+      upList
+    } = useSnapshot(dynamicFeedFilterStore);
+    useMount$1(() => {
+      updateUpList();
+    });
+    const onSelect = useMemoizedFn(async (payload) => {
+      dynamicFeedFilterSelectUp(payload);
+      await delay(100);
+      onRefresh == null ? void 0 : onRefresh();
+    });
+    const onClear = useMemoizedFn(() => {
+      onSelect({
+        upMid: void 0,
+        upName: void 0,
+        searchText: void 0
+      });
+    });
+    const menuItems = React__default.useMemo(() => {
+      const itemAll = {
+        key: "all",
+        icon: /* @__PURE__ */ jsx(antd.Avatar, {
+          size: "small",
+          children: "全"
+        }),
+        label: "全部",
+        onClick: onClear
+      };
+      function mapName(name) {
+        return name.toLowerCase().replace(/^([a-z])/, "999999$1");
+      }
+      const upListSorted = orderBy(upList, [(item) => item.has_update ? 1 : 0, (it) => it.uname], ["desc", (_a2, _b2) => {
+        let [a2, b2] = [_a2, _b2];
+        [a2, b2] = [a2, b2].map(mapName);
+        return a2.localeCompare(b2, "zh-CN");
+      }]);
+      const items = upListSorted.map((up) => {
+        let avatar = /* @__PURE__ */ jsx(antd.Avatar, {
+          size: "small",
+          src: up.face
+        });
+        if (up.has_update) {
+          avatar = /* @__PURE__ */ jsx(antd.Badge, {
+            dot: true,
+            children: avatar
+          });
+        }
+        return {
+          key: up.mid,
+          icon: avatar,
+          // label: up.uname,
+          label: /* @__PURE__ */ jsx("span", {
+            title: up.uname,
+            css: _ref3$7,
+            children: up.uname
+          }),
+          onClick() {
+            onSelect({
+              upMid: up.mid,
+              upName: up.uname,
+              searchText: void 0
+            });
+          }
+        };
+      });
+      return [itemAll, ...items];
+    }, [upList, upList.map((x2) => !!x2.has_update)]);
+    return /* @__PURE__ */ jsx(Fragment, {
+      children: /* @__PURE__ */ jsxs(antd.Space, {
+        children: [/* @__PURE__ */ jsx(antd.Dropdown, {
+          placement: "bottomLeft",
+          menu: {
+            items: menuItems,
+            style: {
+              maxHeight: "70vh",
+              overflowY: "scroll"
+            }
+          },
+          children: /* @__PURE__ */ jsx(antd.Button, {
+            children: upName ? `UP: ${upName}` : "全部"
+          })
+        }), hasSelectedUp && /* @__PURE__ */ jsxs(antd.Button, {
+          onClick: onClear,
+          css: [flexCenterStyle, "", ""],
+          children: [/* @__PURE__ */ jsx(IconPark, {
+            name: "Return",
+            size: 14,
+            style: {
+              marginRight: 5
+            }
+          }), /* @__PURE__ */ jsx("span", {
+            css: antdBtnTextStyle,
+            children: "清除"
+          })]
+        }), hasSelectedUp && /* @__PURE__ */ jsx(antd.Input.Search, {
+          css: _ref$8,
+          placeholder: "按标题过滤",
+          type: "search",
+          autoCorrect: "off",
+          autoCapitalize: "off",
+          name: `searchText_${upMid}`,
+          autoComplete: "on",
+          allowClear: true,
+          onSearch: async (val) => {
+            dynamicFeedFilterStore.searchText = val || void 0;
+            await delay(100);
+            onRefresh == null ? void 0 : onRefresh();
+          }
+        })]
+      })
+    });
+  }
+  const UserFavService = {
+    removeFav,
+    addFav,
+    getVideoFavState
+  };
+  async function removeFav(folderId, resource) {
+    const form = new URLSearchParams({
+      resources: resource,
+      media_id: folderId.toString(),
+      platform: "web",
+      csrf: getCsrfToken()
+    });
+    const res = await request.post("/x/v3/fav/resource/batch-del", form);
+    const json = res.data;
+    const success = isWebApiSuccess(json);
+    if (!success) {
+      toast(json.message || OPERATION_FAIL_MSG);
+    }
+    return success;
+  }
+  async function getVideoFavState(avid) {
+    if (!getHasLogined())
+      return;
+    const res = await request.get("/x/v3/fav/folder/created/list-all", {
+      params: {
+        up_mid: getUid(),
+        type: 2,
+        rid: avid
+      }
+    });
+    const json = res.data;
+    const favFolders = json.data.list.filter((folder) => folder.fav_state > 0);
+    const favFolderNames = favFolders.map((f2) => f2.title);
+    const favFolderUrls = favFolders.map((f2) => formatFavFolderUrl(f2.id));
+    return {
+      favFolders,
+      favFolderNames,
+      favFolderUrls
+    };
+  }
+  async function favDeal({
+    avid,
+    add_media_ids = "",
+    del_media_ids = ""
+  }) {
+    const form = new URLSearchParams({
+      rid: avid.toString(),
+      type: "2",
+      add_media_ids,
+      del_media_ids,
+      platform: "web",
+      eab_x: "2",
+      ramval: "0",
+      ga: "1",
+      gaia_source: "web_normal",
+      csrf: getCsrfToken()
+    });
+    const res = await request.post("/x/v3/fav/resource/deal", form);
+    const json = res.data;
+    const success = isWebApiSuccess(json);
+    if (!success) {
+      toast((json == null ? void 0 : json.message) || "fav deal api fail");
+    }
+    return success;
+  }
+  let defaultFavFolderId = 0;
+  let defaultFavFolderName = "";
+  async function addFav(avid) {
+    if (!defaultFavFolderId || !defaultFavFolderName) {
+      const folders = await apiFavFolderListAll();
+      defaultFavFolderId = folders[0].id;
+      defaultFavFolderName = folders[0].title;
+    }
+    return await favDeal({
+      avid,
+      add_media_ids: defaultFavFolderId.toString()
+    });
+  }
+  const follow = followActionFactory("follow");
+  const unfollow = followActionFactory("unfollow");
+  const UserfollowService = {
+    follow,
+    unfollow
+  };
+  function followActionFactory(action) {
+    const act = action === "follow" ? 1 : 2;
+    return async function followAction(upMid) {
+      const success = await modifyRelations(upMid, act);
+      return success;
+    };
+  }
   function mitt(n2) {
     return { all: n2 = n2 || /* @__PURE__ */ new Map(), on: function(t2, e2) {
       var i2 = n2.get(t2);
@@ -7258,20 +10180,2401 @@ body.dark ._btn-refresh_14tde_29 {
       });
     } };
   }
+  const biliVideoCard = "_bili-video-card_1ox5o_1";
+  const previewCardWrapper = "_preview-card-wrapper_1ox5o_8";
+  const previewCardInner = "_preview-card-inner_1ox5o_21";
+  const btnDislike = "_btn-dislike_1ox5o_26";
+  const btnDislikeIcon = "_btn-dislike-icon_1ox5o_41";
+  const btnDislikeTip = "_btn-dislike-tip_1ox5o_48";
+  const watchLater = "_watch-later_1ox5o_64";
+  const watchLaterIcon = "_watch-later-icon_1ox5o_79";
+  const watchLaterTip = "_watch-later-tip_1ox5o_86";
+  const badge = "_badge_1ox5o_102";
+  const recommendReason = "_recommend-reason_1ox5o_112";
+  const bangumiDesc = "_bangumi-desc_1ox5o_128";
+  const dislikedWrapper = "_disliked-wrapper_1ox5o_132";
+  const dislikeContentCover = "_dislike-content-cover_1ox5o_146";
+  const dislikeContentCoverInner = "_dislike-content-cover-inner_1ox5o_152";
+  const dislikeIcon = "_dislike-icon_1ox5o_163";
+  const dislikeReason = "_dislike-reason_1ox5o_166";
+  const dislikeDesc = "_dislike-desc_1ox5o_170";
+  const dislikeContentAction = "_dislike-content-action_1ox5o_174";
+  const skeletonActive = "_skeleton-active_1ox5o_206";
+  const antSkeletonLoading = "_ant-skeleton-loading_1ox5o_1";
+  const styles$2 = {
+    biliVideoCard,
+    previewCardWrapper,
+    previewCardInner,
+    btnDislike,
+    btnDislikeIcon,
+    btnDislikeTip,
+    watchLater,
+    watchLaterIcon,
+    watchLaterTip,
+    badge,
+    recommendReason,
+    bangumiDesc,
+    dislikedWrapper,
+    dislikeContentCover,
+    dislikeContentCoverInner,
+    dislikeIcon,
+    dislikeReason,
+    dislikeDesc,
+    dislikeContentAction,
+    skeletonActive,
+    antSkeletonLoading
+  };
+  function fallbackWhenNan(...args) {
+    for (const num of args) {
+      if (isNaN(num))
+        continue;
+      return num;
+    }
+    return 0;
+  }
+  function PreviewImage({
+    className,
+    videoDuration,
+    pvideo,
+    mouseEnterRelativeX,
+    previewAnimationProgress
+  }) {
+    const ref = React__default.useRef(null);
+    const cursorState = useMouse(ref);
+    const [size, setSize] = React__default.useState(() => ({
+      width: 0,
+      height: 0
+    }));
+    useMount$1(() => {
+      var _a2;
+      const rect = (_a2 = ref.current) == null ? void 0 : _a2.getBoundingClientRect();
+      if (!rect)
+        return;
+      setSize({
+        width: rect.width,
+        height: rect.height
+      });
+    });
+    let progress = 0;
+    if (typeof previewAnimationProgress === "number") {
+      progress = previewAnimationProgress;
+    } else {
+      const relativeX = fallbackWhenNan(cursorState.elementX, mouseEnterRelativeX || 0);
+      if (size.width && relativeX && !isNaN(relativeX)) {
+        progress = relativeX / size.width;
+        if (progress < 0)
+          progress = 0;
+        if (progress > 1)
+          progress = 1;
+      }
+    }
+    const innerProps = {
+      videoDuration,
+      pvideo,
+      elWidth: size.width,
+      elHeight: size.height,
+      progress
+    };
+    return /* @__PURE__ */ jsx("div", {
+      ref,
+      className: cx(styles$2.previewCardWrapper, className),
+      children: !!(pvideo && size.width && size.height && progress) && /* @__PURE__ */ jsx(PreviewImageInner, {
+        ...innerProps
+      })
+    });
+  }
+  function PreviewImageInner({
+    videoDuration,
+    pvideo,
+    elWidth,
+    elHeight,
+    progress
+  }) {
+    var _a2;
+    const t2 = Math.floor((videoDuration || 0) * progress);
+    let index = React__default.useMemo(() => {
+      const arr = (pvideo == null ? void 0 : pvideo.index) || [];
+      let index2 = findIndex(arr, t2);
+      if (index2 !== -1) {
+        return index2;
+      }
+      if (t2 > arr[arr.length - 1]) {
+        index2 = Math.floor(arr.length * progress) - 1;
+        if (index2 < 0)
+          index2 = 0;
+        return index2;
+      }
+      return 0;
+    }, [pvideo, t2]);
+    const {
+      img_x_len: colCount,
+      img_y_len: rowCount,
+      img_x_size: w2,
+      img_y_size: h2
+    } = pvideo;
+    const countPerPreview = rowCount * colCount;
+    index = index + 1;
+    const snapshotIndex = Math.floor(index / countPerPreview);
+    const indexInSnapshot = index - snapshotIndex * countPerPreview;
+    const snapshotUrl = ((_a2 = pvideo.image) == null ? void 0 : _a2[snapshotIndex]) || "";
+    const indexRow = Math.floor(indexInSnapshot / colCount) + 1;
+    const indexCol = indexInSnapshot - (indexRow - 1) * colCount;
+    const newImgWidth = elWidth * colCount;
+    const newImgHeight = elHeight * rowCount;
+    const startY = (indexRow - 1) * elHeight;
+    const startX = (indexCol - 1) * elWidth;
+    return /* @__PURE__ */ jsx("div", {
+      className: styles$2.previewCardInner,
+      style: {
+        backgroundColor: "black",
+        // 防止加载过程中闪屏
+        backgroundImage: `url(${snapshotUrl})`,
+        backgroundPosition: `-${startX}px -${startY}px`,
+        backgroundSize: `${newImgWidth}px ${newImgHeight}px`
+      },
+      children: /* @__PURE__ */ jsx(SimplePregressBar, {
+        progress
+      })
+    });
+  }
+  function SimplePregressBar({
+    progress
+  }) {
+    return /* @__PURE__ */ jsx("div", {
+      className: "track",
+      style: {
+        position: "absolute",
+        bottom: 0,
+        left: 0,
+        backgroundColor: "#eee",
+        width: "100%",
+        height: 2
+      },
+      children: /* @__PURE__ */ jsx("div", {
+        className: "bar",
+        style: {
+          backgroundColor: colorPrimaryValue,
+          height: "100%",
+          width: `${progress * 100}%`
+        }
+      })
+    });
+  }
+  function findIndex(arr, target) {
+    let l2 = 0;
+    let r2 = arr.length - 1;
+    let possible = -1;
+    while (l2 <= r2) {
+      const mid = Math.floor((l2 + r2) / 2);
+      const mv = arr[mid];
+      if (target === mv) {
+        return mid;
+      }
+      if (mv < target) {
+        l2 = mid + 1;
+        possible = mid;
+      } else {
+        r2 = mid - 1;
+      }
+    }
+    if (possible === -1)
+      return -1;
+    const v2 = arr[possible];
+    const v1 = arr[possible + 1] ?? 0;
+    if (v2 < target && target < v1) {
+      return possible;
+    } else {
+      return -1;
+    }
+  }
+  const AppRecIconSvgNameMap = {
+    play: "#widget-video-play-count",
+    // or #widget-play-count
+    danmaku: "#widget-video-danmaku",
+    like: "#widget-agree",
+    bangumiFollow: "#widget-followed",
+    favorite: "#widget-favorite",
+    coin: "#widget-coin"
+  };
+  const AppRecIconMap = {
+    1: "play",
+    2: "like",
+    // 没出现过, 猜的
+    3: "danmaku",
+    4: "bangumiFollow",
+    // 追番
+    20: "like"
+    // 动态点赞
+  };
+  const AppRecIconScaleMap = {
+    bangumiFollow: 1.3,
+    favorite: 0.9
+  };
+  function getField(id) {
+    return AppRecIconMap[id] || AppRecIconMap[1];
+  }
+  const borderRadiusIdentifier = "--video-card-border-radius";
+  const borderRadiusValue = `var(${borderRadiusIdentifier})`;
+  const borderRadiusStyle = {
+    borderRadius: borderRadiusValue
+  };
+  const STAT_NUMBER_FALLBACK = "0";
+  const PLAYER_SCREEN_MODE = "player-screen-mode";
+  var PlayerScreenMode = /* @__PURE__ */ ((PlayerScreenMode2) => {
+    PlayerScreenMode2["Normal"] = "normal";
+    PlayerScreenMode2["Wide"] = "wide";
+    PlayerScreenMode2["WebFullscreen"] = "web";
+    PlayerScreenMode2["Fullscreen"] = "full";
+    return PlayerScreenMode2;
+  })(PlayerScreenMode || {});
+  var XOR_CODE = 23442827791579n;
+  var MASK_CODE = 2251799813685247n;
+  var MAX_AID = 1n << 51n;
+  var BASE = 58n;
+  var data = "FcwAPNKTMug3GV5Lj7EJnHpWsx4tb8haYeviqBz6rkCy12mUSDQX9RdoZf";
+  function av2bv(aid2) {
+    const bytes = ["B", "V", "1", "0", "0", "0", "0", "0", "0", "0", "0", "0"];
+    let bvIndex = bytes.length - 1;
+    let tmp = (MAX_AID | BigInt(aid2)) ^ XOR_CODE;
+    while (tmp > 0) {
+      bytes[bvIndex] = data[Number(tmp % BigInt(BASE))];
+      tmp = tmp / BASE;
+      bvIndex -= 1;
+    }
+    [bytes[3], bytes[9]] = [bytes[9], bytes[3]];
+    [bytes[4], bytes[7]] = [bytes[7], bytes[4]];
+    return bytes.join("");
+  }
+  function bv2av(bvid) {
+    const bvidArr = Array.from(bvid);
+    [bvidArr[3], bvidArr[9]] = [bvidArr[9], bvidArr[3]];
+    [bvidArr[4], bvidArr[7]] = [bvidArr[7], bvidArr[4]];
+    bvidArr.splice(0, 3);
+    const tmp = bvidArr.reduce((pre, bvidChar) => pre * BASE + BigInt(data.indexOf(bvidChar)), 0n);
+    return Number(tmp & MASK_CODE ^ XOR_CODE);
+  }
+  var BvCode = { av2bv, bv2av };
+  function lookinto(item, opts) {
+    if (item.api === "pc")
+      return opts.pc(item);
+    if (item.api === "app")
+      return opts.app(item);
+    if (item.api === "dynamic")
+      return opts.dynamic(item);
+    if (item.api === "watchlater")
+      return opts.watchlater(item);
+    if (item.api === "fav")
+      return opts.fav(item);
+    if (item.api === "popular-general")
+      return opts["popular-general"](item);
+    if (item.api === "popular-weekly")
+      return opts["popular-weekly"](item);
+    throw new Error(`unknown api type`);
+  }
+  function normalizeCardData(item) {
+    const ret = lookinto(item, {
+      "pc": apiPcAdapter,
+      "app": apiAppAdapter,
+      "dynamic": apiDynamicAdapter,
+      "watchlater": apiWatchLaterAdapter,
+      "fav": apiFavAdapter,
+      "popular-general": apiPopularGeneralAdapter,
+      "popular-weekly": apiPopularWeeklyAdapter
+    });
+    if (ret.authorFace)
+      ret.authorFace = toHttps(ret.authorFace);
+    ret.cover = toHttps(ret.cover);
+    return ret;
+  }
+  function apiAppAdapter(item) {
+    return item.device === "android" ? apiAndroidAppAdapter(item) : apiIpadAppAdapter(item);
+  }
+  function apiAndroidAppAdapter(item) {
+    var _a2, _b2, _c2;
+    const extractCountFor = (target) => {
+      const {
+        cover_left_icon_1,
+        cover_left_text_1,
+        cover_left_icon_2,
+        cover_left_text_2
+      } = item;
+      if (cover_left_icon_1 && AppRecIconMap[cover_left_icon_1] === target) {
+        return parseCount(cover_left_text_1);
+      }
+      if (cover_left_icon_2 && AppRecIconMap[cover_left_icon_2] === target) {
+        return parseCount(cover_left_text_2);
+      }
+    };
+    const avid = item.param;
+    const bvid = BvCode.av2bv(Number(item.param));
+    const href = (() => {
+      var _a3;
+      if (item.uri.startsWith("http://") || item.uri.startsWith("https://")) {
+        return item.uri;
+      }
+      if (item.goto === "av") {
+        return `/video/${bvid}/`;
+      }
+      if (item.goto === "bangumi") {
+        console.warn(`[${APP_NAME}]: bangumi uri should not starts with 'bilibili://': %s`, item.uri);
+        return item.uri;
+      }
+      if (item.goto === "picture") {
+        const id = (_a3 = /^bilibili:\/\/article\/(\d+)$/.exec(item.uri)) == null ? void 0 : _a3[1];
+        if (id)
+          return `/read/cv${id}`;
+        return item.uri;
+      }
+      return item.uri;
+    })();
+    return {
+      // video
+      avid,
+      bvid,
+      goto: item.goto,
+      href,
+      title: item.title,
+      cover: item.cover,
+      pubts: void 0,
+      pubdateDisplay: void 0,
+      duration: ((_a2 = item.player_args) == null ? void 0 : _a2.duration) || 0,
+      durationStr: formatDuration((_b2 = item.player_args) == null ? void 0 : _b2.duration),
+      recommendReason: item.rcmd_reason,
+      // stat
+      play: extractCountFor("play"),
+      like: void 0,
+      coin: void 0,
+      danmaku: extractCountFor("danmaku"),
+      favorite: void 0,
+      bangumiFollow: extractCountFor("bangumiFollow"),
+      // e.g 2023-09-17
+      // cover_left_1_content_description: "156点赞"
+      // cover_left_icon_1: 20
+      // cover_left_text_1: "156"
+      statItems: [item.cover_left_text_1 && {
+        field: getField(item.cover_left_icon_1),
+        value: item.cover_left_text_1
+      }, item.cover_left_text_2 && {
+        field: getField(item.cover_left_icon_2),
+        value: item.cover_left_text_2
+      }].filter(Boolean),
+      // author
+      authorName: item.args.up_name,
+      authorFace: void 0,
+      authorMid: String(item.args.up_id),
+      appBadge: item.badge,
+      appBadgeDesc: ((_c2 = item.desc_button) == null ? void 0 : _c2.text) || item.desc || ""
+    };
+  }
+  function apiIpadAppAdapter(item) {
+    var _a2, _b2;
+    const extractCountFor = (target) => {
+      const {
+        cover_left_text_1,
+        cover_left_text_2,
+        cover_left_text_3
+      } = item;
+      const arr = [cover_left_text_1, cover_left_text_2, cover_left_text_3].filter(Boolean);
+      if (target === "play") {
+        const text = arr.find((text2) => /观看|播放$/.test(text2));
+        if (!text)
+          return;
+        const rest = text.replace(/观看|播放$/, "");
+        return parseCount(rest);
+      }
+      if (target === "danmaku") {
+        const text = arr.find((text2) => /弹幕$/.test(text2));
+        if (!text)
+          return;
+        const rest = text.replace(/弹幕$/, "");
+        return parseCount(rest);
+      }
+      if (target === "bangumiFollow") {
+        const text = arr.find((text2) => /追[剧番]$/.test(text2));
+        if (!text)
+          return;
+        const rest = text.replace(/追[剧番]$/, "");
+        return parseCount(rest);
+      }
+    };
+    const avid = item.param;
+    const bvid = item.bvid || BvCode.av2bv(Number(item.param));
+    const href = (() => {
+      var _a3;
+      if (item.uri.startsWith("http://") || item.uri.startsWith("https://")) {
+        return item.uri;
+      }
+      if (item.goto === "av") {
+        return `/video/${bvid}/`;
+      }
+      if (item.goto === "bangumi") {
+        console.warn(`[${APP_NAME}]: bangumi uri should not starts with 'bilibili://': %s`, item.uri);
+        return item.uri;
+      }
+      if (item.goto === "picture") {
+        const id = (_a3 = /^bilibili:\/\/article\/(\d+)$/.exec(item.uri)) == null ? void 0 : _a3[1];
+        if (id)
+          return `/read/cv${id}`;
+        return item.uri;
+      }
+      return item.uri;
+    })();
+    const play = extractCountFor("play");
+    const like = void 0;
+    const coin = void 0;
+    const danmaku = extractCountFor("danmaku");
+    const favorite = void 0;
+    const bangumiFollow = extractCountFor("bangumiFollow");
+    const statItems = [{
+      field: "play",
+      value: formatCount(play) || STAT_NUMBER_FALLBACK
+    }, typeof danmaku === "number" ? {
+      field: "danmaku",
+      value: formatCount(danmaku) || STAT_NUMBER_FALLBACK
+    } : {
+      field: "bangumiFollow",
+      value: formatCount(bangumiFollow) || STAT_NUMBER_FALLBACK
+    }];
+    return {
+      // video
+      avid,
+      bvid,
+      goto: item.goto,
+      href,
+      title: item.title,
+      desc: item.desc,
+      cover: item.cover,
+      pubts: void 0,
+      pubdateDisplay: void 0,
+      duration: ((_a2 = item.player_args) == null ? void 0 : _a2.duration) || 0,
+      durationStr: formatDuration((_b2 = item.player_args) == null ? void 0 : _b2.duration),
+      recommendReason: item.bottom_rcmd_reason || item.top_rcmd_reason,
+      // TODO: top_rcmd_reason
+      // stat
+      play,
+      like,
+      coin,
+      danmaku,
+      favorite,
+      bangumiFollow,
+      statItems,
+      // author
+      authorName: item.args.up_name,
+      authorFace: item.avatar.cover,
+      authorMid: String(item.args.up_id || ""),
+      appBadge: item.cover_badge,
+      appBadgeDesc: item.desc
+    };
+  }
+  function apiPcAdapter(item) {
+    var _a2;
+    return {
+      // video
+      avid: String(item.id),
+      bvid: item.bvid,
+      goto: item.goto,
+      href: item.goto === "av" ? `/video/${item.bvid}/` : item.uri,
+      title: item.title,
+      cover: item.pic,
+      pubts: item.pubdate,
+      pubdateDisplay: formatTimeStamp(item.pubdate),
+      duration: item.duration,
+      durationStr: formatDuration(item.duration),
+      recommendReason: (_a2 = item.rcmd_reason) == null ? void 0 : _a2.content,
+      // stat
+      play: item.stat.view,
+      like: item.stat.like,
+      coin: void 0,
+      danmaku: item.stat.danmaku,
+      favorite: void 0,
+      statItems: [{
+        field: "play",
+        value: formatCount(item.stat.view) || STAT_NUMBER_FALLBACK
+      }, {
+        field: "like",
+        value: formatCount(item.stat.like) || STAT_NUMBER_FALLBACK
+      }],
+      // author
+      authorName: item.owner.name,
+      authorFace: item.owner.face,
+      authorMid: String(item.owner.mid)
+    };
+  }
+  function apiDynamicAdapter(item) {
+    const v2 = item.modules.module_dynamic.major.archive;
+    const author = item.modules.module_author;
+    const oneDayAgo = dayjs().subtract(2, "days").unix();
+    const pubdateDisplay = (() => {
+      const ts = author.pub_ts;
+      if (ts > oneDayAgo) {
+        return author.pub_time;
+      } else {
+        return formatTimeStamp(ts);
+      }
+    })();
+    return {
+      // video
+      avid: v2.aid,
+      bvid: v2.bvid,
+      goto: "av",
+      href: `/video/${v2.bvid}/`,
+      title: v2.title,
+      cover: v2.cover,
+      pubts: author.pub_ts,
+      pubdateDisplay,
+      duration: parseDuration(v2.duration_text) || 0,
+      durationStr: v2.duration_text,
+      recommendReason: v2.badge.text,
+      // stat
+      play: parseCount(v2.stat.play),
+      danmaku: parseCount(v2.stat.danmaku),
+      like: void 0,
+      coin: void 0,
+      favorite: void 0,
+      // author
+      authorName: author.name,
+      authorFace: author.face,
+      authorMid: author.mid.toString()
+    };
+  }
+  function apiWatchLaterAdapter(item) {
+    const invalidReason = getVideoInvalidReason(item.state);
+    const title = `${item.viewed ? "【已观看】· " : ""}${item.title}`;
+    const titleRender = invalidReason ? /* @__PURE__ */ jsx(AntdTooltip, {
+      title: /* @__PURE__ */ jsxs(Fragment, {
+        children: ["视频已失效, 原因: ", invalidReason]
+      }),
+      align: {
+        offset: [0, -5]
+      },
+      placement: "topLeft",
+      children: /* @__PURE__ */ jsxs("del", {
+        children: [item.viewed ? "【已观看】· " : "", item.title, "`"]
+      })
+    }) : void 0;
+    return {
+      // video
+      avid: String(item.aid),
+      bvid: item.bvid,
+      goto: "av",
+      href: item.uri,
+      title,
+      titleRender,
+      cover: item.pic,
+      pubts: item.pubdate,
+      pubdateDisplay: formatTimeStamp(item.pubdate),
+      pubdateDisplayTitle: `${formatTimeStamp(item.pubdate, true)} 发布, ${formatTimeStamp(item.add_at, true)} 添加稍后再看`,
+      duration: item.duration,
+      durationStr: formatDuration(item.duration),
+      recommendReason: `${formatTimeStamp(item.add_at)} · 稍后再看`,
+      invalidReason,
+      // stat
+      play: item.stat.view,
+      like: item.stat.like,
+      coin: void 0,
+      danmaku: item.stat.danmaku,
+      favorite: void 0,
+      statItems: [
+        {
+          field: "play",
+          value: formatCount(item.stat.view) || STAT_NUMBER_FALLBACK
+        },
+        {
+          field: "like",
+          value: formatCount(item.stat.like) || STAT_NUMBER_FALLBACK
+        },
+        // { field: 'coin', value: formatCount(item.stat.coin) || STAT_NUMBER_FALLBACK },
+        {
+          field: "favorite",
+          value: formatCount(item.stat.favorite) || STAT_NUMBER_FALLBACK
+        }
+      ],
+      // author
+      authorName: item.owner.name,
+      authorFace: item.owner.face,
+      authorMid: String(item.owner.mid)
+    };
+  }
+  function apiFavAdapter(item) {
+    return {
+      // video
+      avid: String(item.id),
+      bvid: item.bvid,
+      goto: "av",
+      href: `/video/${item.bvid}/`,
+      title: `【${item.folder.title}】· ${item.title}`,
+      titleRender: /* @__PURE__ */ jsxs(Fragment, {
+        children: ["【", /* @__PURE__ */ jsx(IconPark, {
+          name: "Star",
+          size: 16,
+          theme: "two-tone",
+          fill: ["currentColor", colorPrimaryValue],
+          style: {
+            display: "inline-block",
+            verticalAlign: "middle",
+            marginLeft: 10,
+            marginRight: 4,
+            marginTop: -4
+          }
+        }), item.folder.title, "】· ", item.title]
+      }),
+      cover: item.cover,
+      pubts: item.pubtime,
+      pubdateDisplay: formatTimeStamp(item.pubtime),
+      duration: item.duration,
+      durationStr: formatDuration(item.duration),
+      recommendReason: `${formatTimeStamp(item.fav_time)} · 收藏`,
+      // stat
+      play: item.cnt_info.play,
+      like: void 0,
+      coin: void 0,
+      danmaku: item.cnt_info.danmaku,
+      favorite: item.cnt_info.collect,
+      statItems: [{
+        field: "play",
+        value: formatCount(item.cnt_info.play) || STAT_NUMBER_FALLBACK
+      }, {
+        field: "danmaku",
+        value: formatCount(item.cnt_info.danmaku) || STAT_NUMBER_FALLBACK
+      }, {
+        field: "favorite",
+        value: formatCount(item.cnt_info.collect) || STAT_NUMBER_FALLBACK
+      }],
+      // author
+      authorName: item.upper.name,
+      authorFace: item.upper.face,
+      authorMid: String(item.upper.mid)
+    };
+  }
+  function apiPopularGeneralAdapter(item) {
+    var _a2;
+    return {
+      // video
+      avid: String(item.aid),
+      bvid: item.bvid,
+      goto: "av",
+      href: `/video/${item.bvid}/`,
+      title: item.title,
+      cover: item.pic,
+      pubts: item.pubdate,
+      pubdateDisplay: formatTimeStamp(item.pubdate),
+      duration: item.duration,
+      durationStr: formatDuration(item.duration),
+      recommendReason: (_a2 = item.rcmd_reason) == null ? void 0 : _a2.content,
+      // stat
+      play: item.stat.view,
+      like: item.stat.like,
+      coin: void 0,
+      danmaku: item.stat.danmaku,
+      favorite: void 0,
+      statItems: [{
+        field: "play",
+        value: formatCount(item.stat.view) || STAT_NUMBER_FALLBACK
+      }, {
+        field: "like",
+        value: formatCount(item.stat.like) || STAT_NUMBER_FALLBACK
+      }, {
+        field: "danmaku",
+        value: formatCount(item.stat.danmaku) || STAT_NUMBER_FALLBACK
+      }],
+      // author
+      authorName: item.owner.name,
+      authorFace: item.owner.face,
+      authorMid: String(item.owner.mid)
+    };
+  }
+  function apiPopularWeeklyAdapter(item) {
+    return {
+      // video
+      avid: String(item.aid),
+      bvid: item.bvid,
+      goto: "av",
+      href: `/video/${item.bvid}/`,
+      title: item.title,
+      cover: item.pic,
+      pubts: item.pubdate,
+      pubdateDisplay: formatTimeStamp(item.pubdate),
+      duration: item.duration,
+      durationStr: formatDuration(item.duration),
+      recommendReason: item.rcmd_reason,
+      // stat
+      play: item.stat.view,
+      like: item.stat.like,
+      coin: void 0,
+      danmaku: item.stat.danmaku,
+      favorite: void 0,
+      statItems: [{
+        field: "play",
+        value: formatCount(item.stat.view) || STAT_NUMBER_FALLBACK
+      }, {
+        field: "like",
+        value: formatCount(item.stat.like) || STAT_NUMBER_FALLBACK
+      }, {
+        field: "danmaku",
+        value: formatCount(item.stat.danmaku) || STAT_NUMBER_FALLBACK
+      }],
+      // author
+      authorName: item.owner.name,
+      authorFace: item.owner.face,
+      authorMid: String(item.owner.mid)
+    };
+  }
+  function usePreviewAnimation({
+    bvid,
+    title,
+    autoPreviewWhenHover,
+    active,
+    tryFetchVideoData,
+    videoPreviewWrapperRef
+  }) {
+    const DEBUG_ANIMATION = false;
+    const [previewAnimationProgress, setPreviewAnimationProgress] = useRafState(void 0);
+    const [mouseMoved, setMouseMoved] = React__default.useState(false);
+    const isHovering = React__default.useRef(false);
+    const startByHover = React__default.useRef(false);
+    useEventListener("mouseenter", (e2) => {
+      isHovering.current = true;
+      if (autoPreviewWhenHover && !idRef.current) {
+        onStartPreviewAnimation(true);
+      }
+    }, {
+      target: videoPreviewWrapperRef
+    });
+    useEventListener("mouseleave", (e2) => {
+      isHovering.current = false;
+    }, {
+      target: videoPreviewWrapperRef
+    });
+    useEventListener("mousemove", (e2) => {
+      setMouseMoved(true);
+      if (!autoPreviewWhenHover) {
+        stopAnimation();
+      }
+    }, {
+      target: videoPreviewWrapperRef
+    });
+    const unmounted = useUnmountedRef$1();
+    const idRef = React__default.useRef(void 0);
+    const shouldStopAnimation = useMemoizedFn(() => {
+      if (unmounted.current)
+        return true;
+      if (autoPreviewWhenHover) {
+        if (startByHover.current) {
+          if (!isHovering.current)
+            return true;
+        } else {
+          if (!active)
+            return true;
+        }
+      } else {
+        if (!active)
+          return true;
+        if (mouseMoved)
+          return true;
+      }
+      return false;
+    });
+    const stopAnimation = useMemoizedFn((isClear = false) => {
+      if (!isClear && DEBUG_ANIMATION) {
+        console.log(`[${APP_NAME}]: [animation] stopAnimation: %o`, {
+          autoPreviewWhenHover,
+          unmounted: unmounted.current,
+          isHovering: isHovering.current,
+          active,
+          mouseMoved
+        });
+      }
+      if (idRef.current)
+        cancelAnimationFrame(idRef.current);
+      idRef.current = void 0;
+      setPreviewAnimationProgress(void 0);
+      setAnimationPaused(false);
+    });
+    const [animationPaused, setAnimationPaused, getAnimationPaused] = useGetState(false);
+    const resumeAnimationInner = React__default.useRef();
+    const onHotkeyPreviewAnimation = useMemoizedFn(() => {
+      var _a2;
+      if (!idRef.current) {
+        onStartPreviewAnimation();
+        return;
+      }
+      setAnimationPaused((val) => !val);
+      if (animationPaused) {
+        (_a2 = resumeAnimationInner.current) == null ? void 0 : _a2.call(resumeAnimationInner, previewAnimationProgress || 0);
+      }
+    });
+    const getProgress = useMemoizedFn(() => {
+      return previewAnimationProgress || 0;
+    });
+    const onStartPreviewAnimation = useMemoizedFn((_startByHover = false) => {
+      startByHover.current = _startByHover;
+      setMouseMoved(false);
+      setAnimationPaused(false);
+      tryFetchVideoData();
+      stopAnimation(true);
+      setPreviewAnimationProgress((val) => typeof val === "undefined" ? 0 : val);
+      const runDuration = 8e3;
+      const updateProgressInterval = () => typeof settings.autoPreviewUpdateInterval === "number" ? settings.autoPreviewUpdateInterval : 400;
+      let start = performance.now();
+      let lastUpdateAt = 0;
+      resumeAnimationInner.current = () => {
+        start = performance.now() - getProgress() * runDuration;
+      };
+      function frame(t2) {
+        if (shouldStopAnimation()) {
+          stopAnimation();
+          return;
+        }
+        const update = () => {
+          const elapsed = performance.now() - start;
+          const p2 = Math.min(elapsed % runDuration / runDuration, 1);
+          setPreviewAnimationProgress(p2);
+        };
+        if (!getAnimationPaused()) {
+          if (updateProgressInterval()) {
+            if (!lastUpdateAt || performance.now() - lastUpdateAt >= updateProgressInterval()) {
+              lastUpdateAt = performance.now();
+              update();
+            }
+          } else {
+            update();
+          }
+        }
+        idRef.current = requestAnimationFrame(frame);
+      }
+      idRef.current = requestAnimationFrame(frame);
+    });
+    return {
+      onHotkeyPreviewAnimation,
+      onStartPreviewAnimation,
+      previewAnimationProgress
+    };
+  }
+  const debug$5 = baseDebug.extend("components:VideoCard");
+  function copyContent(content) {
+    GM.setClipboard(content);
+    AntdMessage.success(`已复制: ${content}`);
+  }
+  const defaultEmitter = mitt();
+  const VideoCard = React__default.memo(function VideoCard2({ style, className, item, loading, active, onRemoveCurrent, onMoveToFirst, onRefresh, emitter: emitter2, ...restProps }) {
+    loading = loading ?? !item;
+    const dislikedReason = useDislikedReason((item == null ? void 0 : item.api) === "app" && item.param);
+    const cardData = React__default.useMemo(() => item && normalizeCardData(item), [item]);
+    const blacklisted = useInBlacklist(cardData == null ? void 0 : cardData.authorMid);
+    return /* @__PURE__ */ jsx("div", { style, className: cx("bili-video-card", styles$2.biliVideoCard, className), ...restProps, children: loading ? /* @__PURE__ */ jsx(SkeletonCard, { loading }) : item && cardData && (dislikedReason ? /* @__PURE__ */ jsx(DislikedCard, { item, emitter: emitter2, dislikedReason }) : blacklisted ? /* @__PURE__ */ jsx(BlacklistCard, { cardData }) : /* @__PURE__ */ jsx(VideoCardInner, { item, cardData, active, emitter: emitter2, onRemoveCurrent, onMoveToFirst, onRefresh })) });
+  });
+  var _ref8$1 = { name: "16dof6j", styles: "flex:1;margin-left:10px" };
+  var _ref9$1 = { name: "1po2nvr", styles: "width:32px;height:32px;border-radius:50%" };
+  const SkeletonCard = React__default.memo(function SkeletonCard2({ loading }) {
+    const { styleFancy } = useSettingsSnapshot();
+    return /* @__PURE__ */ jsxs("div", { className: cx("bili-video-card__skeleton", { hide: !loading, [styles$2.skeletonActive]: loading }), children: [/* @__PURE__ */ jsx("div", { className: "bili-video-card__skeleton--cover", style: borderRadiusStyle }), !styleFancy && /* @__PURE__ */ jsx("div", { className: "bili-video-card__skeleton--info", children: /* @__PURE__ */ jsxs("div", { className: "bili-video-card__skeleton--right", children: [/* @__PURE__ */ jsx("p", { className: "bili-video-card__skeleton--text" }), /* @__PURE__ */ jsx("p", { className: "bili-video-card__skeleton--text short" }), /* @__PURE__ */ jsx("p", { className: "bili-video-card__skeleton--light" })] }) }), styleFancy && /* @__PURE__ */ jsxs("div", { className: "bili-video-card__skeleton--info", children: [/* @__PURE__ */ jsx("div", { className: "bili-video-card__skeleton--avatar", css: _ref9$1 }), /* @__PURE__ */ jsxs("div", { className: "bili-video-card__skeleton--right", css: _ref8$1, children: [/* @__PURE__ */ jsx("p", { className: "bili-video-card__skeleton--text" }), /* @__PURE__ */ jsx("p", { className: "bili-video-card__skeleton--text short" }), /* @__PURE__ */ jsx("p", { className: "bili-video-card__skeleton--light" }), /* @__PURE__ */ jsx("p", { className: "bili-video-card__skeleton--text tiny" })] })] })] });
+  });
+  const DislikedCard = React__default.memo(function DislikedCard2({ dislikedReason, item, emitter: emitter2 = defaultEmitter }) {
+    const onCancelDislike = useMemoizedFn(async () => {
+      if (!(dislikedReason == null ? void 0 : dislikedReason.id))
+        return;
+      let success = false;
+      let err;
+      try {
+        success = await cancelDislike(item, dislikedReason.id);
+      } catch (e2) {
+        err = e2;
+      }
+      if (err) {
+        console.error(err.stack || err);
+        return toastRequestFail();
+      }
+      success ? AntdMessage.success("已撤销") : AntdMessage.error(OPERATION_FAIL_MSG);
+      if (success) {
+        delDislikeId(item.param);
+      }
+    });
+    useMittOn(emitter2, "cancel-dislike", onCancelDislike);
+    return /* @__PURE__ */ jsxs("div", { className: cx(styles$2.dislikedWrapper), children: [/* @__PURE__ */ jsx("div", { className: styles$2.dislikeContentCover, children: /* @__PURE__ */ jsxs("div", { className: styles$2.dislikeContentCoverInner, children: [/* @__PURE__ */ jsx(IconPark, { name: "DistraughtFace", size: 32, className: styles$2.dislikeIcon }), /* @__PURE__ */ jsx("div", { className: styles$2.dislikeReason, children: dislikedReason == null ? void 0 : dislikedReason.name }), /* @__PURE__ */ jsx("div", { className: styles$2.dislikeDesc, children: (dislikedReason == null ? void 0 : dislikedReason.toast) || "将减少此类内容推荐" })] }) }), /* @__PURE__ */ jsx("div", { className: styles$2.dislikeContentAction, children: /* @__PURE__ */ jsxs("button", { onClick: onCancelDislike, children: [/* @__PURE__ */ jsx(IconPark, { name: "Return", size: "16", style: { marginRight: 4, marginTop: -2 } }), "撤销"] }) })] });
+  });
+  const BlacklistCard = React__default.memo(function BlacklistCard2({ cardData }) {
+    const { authorMid, authorFace, authorName } = cardData;
+    const onCancel = useMemoizedFn(async () => {
+      if (!authorMid)
+        return;
+      const success = await UserBlacklistService.remove(authorMid);
+      if (success)
+        AntdMessage.success(`已移出黑名单: ${authorName}`);
+    });
+    return /* @__PURE__ */ jsxs("div", { className: cx(styles$2.dislikedWrapper), children: [/* @__PURE__ */ jsx("div", { className: styles$2.dislikeContentCover, children: /* @__PURE__ */ jsxs("div", { className: styles$2.dislikeContentCoverInner, children: [/* @__PURE__ */ jsx(IconPark, { name: "PeopleDelete", size: 32, className: styles$2.dislikeIcon }), /* @__PURE__ */ jsx("div", { className: styles$2.dislikeReason, children: "已拉黑" }), /* @__PURE__ */ jsxs("div", { className: styles$2.dislikeDesc, children: ["UP: ", authorName] })] }) }), /* @__PURE__ */ jsx("div", { className: styles$2.dislikeContentAction, children: /* @__PURE__ */ jsxs("button", { onClick: onCancel, children: [/* @__PURE__ */ jsx(IconPark, { name: "Return", size: "16", style: { marginRight: 4, marginTop: -2 } }), "撤销"] }) })] });
+  });
+  var _ref$7 = { name: "putlsr", styles: "margin-top:4px;padding-left:0;max-width:100%" };
+  var _ref2$7 = { name: "s5xdrg", styles: "display:flex;align-items:center" };
+  var _ref3$6 = { name: "zmsypw", styles: "margin-top:4px;color:var(--text3);font-size:var(--subtitle-font-size)" };
+  var _ref4$4 = { name: "1ic5zs4", styles: "display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-overflow:ellipsis;word-break:break-all;line-break:anywhere;color:var(--text1);font-size:var(--title-font-size);line-height:var(--title-line-height)" };
+  var _ref5$4 = { name: "t6djnl", styles: "flex:1;margin-left:10px;overflow:hidden" };
+  var _ref6$2 = { name: "1t32qz5", styles: "display:flex;margin-top:15px" };
+  var _ref7$1 = { name: "11ginrh", styles: "background-color:unset;position:static" };
+  const VideoCardInner = React__default.memo(function VideoCardInner2({ item, cardData, active = false, onRemoveCurrent, onMoveToFirst, onRefresh, emitter: emitter2 = defaultEmitter }) {
+    var _a2, _b2;
+    item.api === "pc";
+    const isApp = item.api === "app";
+    item.api === "dynamic";
+    item.api === "watchlater";
+    item.api === "fav";
+    const { styleFancy, coverUseAvif } = useSettingsSnapshot();
+    let {
+      // video
+      avid,
+      bvid,
+      goto,
+      href,
+      title,
+      titleRender,
+      desc,
+      cover,
+      pubdateDisplay,
+      pubdateDisplayTitle,
+      duration: duration2,
+      durationStr,
+      recommendReason: recommendReason2,
+      invalidReason,
+      // stat
+      play,
+      like,
+      coin,
+      danmaku,
+      favorite,
+      bangumiFollow,
+      statItems,
+      // author
+      authorName,
+      authorFace,
+      authorMid,
+      // adpater specific
+      appBadge,
+      appBadgeDesc
+    } = cardData;
+    const isNormalVideo = goto === "av";
+    if (!["av", "bangumi", "picture"].includes(goto)) {
+      console.warn(`[${APP_NAME}]: none (av,bangumi,picture) goto type %s`, goto, item);
+    }
+    const [videoData, setVideoData] = React__default.useState(null);
+    const isFetchingVideoData = React__default.useRef(false);
+    const tryFetchVideoData = useMemoizedFn(async () => {
+      if (videoData)
+        return;
+      if (isFetchingVideoData.current)
+        return;
+      try {
+        isFetchingVideoData.current = true;
+        setVideoData(await getVideoData(bvid));
+      } finally {
+        isFetchingVideoData.current = false;
+      }
+    });
+    const videoPreviewWrapperRef = React__default.useRef(null);
+    const [mouseEnterRelativeX, setMouseEnterRelativeX] = React__default.useState(void 0);
+    useEventListener("mouseenter", (e2) => {
+      var _a3;
+      const rect = (_a3 = videoPreviewWrapperRef.current) == null ? void 0 : _a3.getBoundingClientRect();
+      if (!rect)
+        return;
+      const { x: x2 } = rect;
+      const relativeX = e2.pageX - window.pageXOffset - x2;
+      setMouseEnterRelativeX(relativeX);
+    }, { target: videoPreviewWrapperRef });
+    const isHovering = useHover(videoPreviewWrapperRef);
+    const { autoPreviewWhenHover } = useSettingsSnapshot();
+    const { onStartPreviewAnimation, onHotkeyPreviewAnimation, previewAnimationProgress } = usePreviewAnimation({ bvid, title, autoPreviewWhenHover, active, tryFetchVideoData, videoPreviewWrapperRef });
+    useUpdateEffect(() => {
+      if (!active)
+        return;
+      try {
+        ;
+        unsafeWindow[`${APP_KEY_PREFIX}_activeItem`] = item;
+      } catch (e2) {
+        console.warn("set unsafeWindow activeItem error");
+        console.warn(e2.stack || e2);
+      }
+      if (settings.autoPreviewWhenKeyboardSelect) {
+        onStartPreviewAnimation();
+      }
+    }, [active]);
+    const watchLaterRef = React__default.useRef(null);
+    const isWatchLaterHovering = useHover(watchLaterRef);
+    const watchLaterAdded = useWatchLaterState(bvid);
+    const watchLaterAddedPrevious = usePrevious$1(watchLaterAdd);
+    const { accessKey } = useSettingsSnapshot();
+    const authed = Boolean(accessKey);
+    React__default.useEffect(() => {
+      if (isHovering)
+        tryFetchVideoData();
+    }, [isHovering]);
+    const hasWatchLaterEntry = item.api !== "app" || item.api === "app" && item.goto === "av";
+    const requestingWatchLaterApi = React__default.useRef(false);
+    const onToggleWatchLater = useMemoizedFn(async (e2, usingAction) => {
+      e2 == null ? void 0 : e2.preventDefault();
+      e2 == null ? void 0 : e2.stopPropagation();
+      usingAction ?? (usingAction = watchLaterAdded ? watchLaterDel : watchLaterAdd);
+      if (usingAction !== watchLaterAdd && usingAction !== watchLaterDel) {
+        throw new Error("unexpected usingAction provided");
+      }
+      if (requestingWatchLaterApi.current)
+        return { success: false };
+      requestingWatchLaterApi.current = true;
+      let success = false;
+      try {
+        success = await usingAction(avid);
+      } finally {
+        requestingWatchLaterApi.current = false;
+      }
+      const targetState = usingAction === watchLaterAdd ? true : false;
+      if (success) {
+        if (targetState) {
+          watchLaterState.bvidSet.add(bvid);
+        } else {
+          watchLaterState.bvidSet.delete(bvid);
+        }
+        if (item.api === "watchlater") {
+          if (!targetState) {
+            await delay(100);
+            onRemoveCurrent == null ? void 0 : onRemoveCurrent(item, cardData);
+          }
+        } else {
+          AntdMessage.success(`已${targetState ? "添加" : "移除"}稍后再看`);
+        }
+      }
+      return { success, targetState };
+    });
+    const btnDislikeRef = React__default.useRef(null);
+    const isBtnDislikeHovering = useHover(btnDislikeRef);
+    const onTriggerDislike = useMemoizedFn((e2) => {
+      e2 == null ? void 0 : e2.preventDefault();
+      e2 == null ? void 0 : e2.stopPropagation();
+      if (!hasDislikeEntry) {
+        if (item.api !== "app") {
+          return AntdMessage.error("当前视频不支持提交「我不想看」");
+        }
+        if (!authed) {
+          return AntdMessage.error("请先获取 access_key");
+        }
+        return;
+      }
+      showModalDislike(item);
+    });
+    const playStr = React__default.useMemo(() => formatCount(play), [play]);
+    React__default.useMemo(() => formatCount(like), [like]);
+    const danmakuStr = React__default.useMemo(() => formatCount(danmaku), [danmaku]);
+    React__default.useMemo(() => formatCount(favorite), [favorite]);
+    const makeStatItem = ({ text, iconSvgName, iconSvgScale }) => {
+      return /* @__PURE__ */ jsxs("span", { className: "bili-video-card__stats--item", children: [/* @__PURE__ */ jsx("svg", { className: "bili-video-card__stats--icon", style: { transform: iconSvgScale ? `scale(${iconSvgScale})` : void 0 }, children: /* @__PURE__ */ jsx("use", { href: iconSvgName }) }), /* @__PURE__ */ jsx("span", { className: "bili-video-card__stats--text", style: { lineHeight: "calc(var(--icon-size) + 1px)" }, children: text })] });
+    };
+    const [favFolderNames, setFavFolderNames] = React__default.useState(void 0);
+    const [favFolderUrls, setFavFolderUrls] = React__default.useState(void 0);
+    const updateFavFolderNames = useMemoizedFn(async () => {
+      if (item.api !== "watchlater")
+        return;
+      const result = await UserFavService.getVideoFavState(avid);
+      if (result) {
+        const { favFolderNames: favFolderNames2, favFolderUrls: favFolderUrls2 } = result;
+        setFavFolderNames(favFolderNames2);
+        setFavFolderUrls(favFolderUrls2);
+      }
+    });
+    const onOpen = useMemoizedFn(() => {
+      window.open(href, "_blank");
+    });
+    const onOpenInPopup = useMemoizedFn(() => {
+      var _a3;
+      let popupWidth = 1e3;
+      let popupHeight = Math.ceil(popupWidth / 16 * 9);
+      if (item.api === EApiType.app && ((_a3 = item.uri) == null ? void 0 : _a3.startsWith("bilibili://"))) {
+        const searchParams2 = new URL(item.uri).searchParams;
+        const playerWidth = Number(searchParams2.get("player_width") || 0);
+        const playerHeight = Number(searchParams2.get("player_height") || 0);
+        if (playerWidth && playerHeight && !isNaN(playerWidth) && !isNaN(playerHeight)) {
+          if (playerWidth < playerHeight) {
+            popupWidth = 720;
+            popupHeight = Math.floor(popupWidth / 9 * 16);
+          }
+        }
+      }
+      const left = (window.innerWidth - popupWidth) / 2;
+      const top = (window.innerHeight - popupHeight) / 2 - 50;
+      const features = ["popup=true", `width=${popupWidth}`, `height=${popupHeight}`, `left=${left}`, `top=${top}`].join(",");
+      const u2 = new URL(href, location.href);
+      u2.searchParams.append(PLAYER_SCREEN_MODE, PlayerScreenMode.WebFullscreen);
+      const newHref = u2.href;
+      debug$5("openInPopup: features -> %s", features);
+      window.open(newHref, "_blank", features);
+    });
+    const handleVideoLinkClick = useMemoizedFn((e2) => {
+      var _a3;
+      if (settings.openVideoInPopupWhenClick) {
+        e2.preventDefault();
+        onOpenInPopup();
+        return;
+      }
+      if (settings.openVideoAutoFullscreen) {
+        e2.preventDefault();
+        const u2 = new URL(href, location.href);
+        u2.searchParams.set(PLAYER_SCREEN_MODE, PlayerScreenMode.Fullscreen);
+        const newHref = u2.href;
+        (_a3 = window.open(newHref, "_blank")) == null ? void 0 : _a3.focus();
+        return;
+      }
+    });
+    const onOpenInBackground = useMemoizedFn(() => {
+      const fullHref = new URL(href, location.href).href;
+      GM.openInTab(fullHref, { active: false, insert: true });
+    });
+    useMittOn(emitter2, "open", onOpen);
+    useMittOn(emitter2, "toggle-watch-later", () => onToggleWatchLater());
+    useMittOn(emitter2, "trigger-dislike", () => onTriggerDislike());
+    useMittOn(emitter2, "start-preview-animation", onStartPreviewAnimation);
+    useMittOn(emitter2, "hotkey-preview-animation", onHotkeyPreviewAnimation);
+    const hasDislikeEntry = isApp && authed && !!((_b2 = (_a2 = item.three_point) == null ? void 0 : _a2.dislike_reasons) == null ? void 0 : _b2.length);
+    const onCopyLink = useMemoizedFn(() => {
+      let content = href;
+      if (href.startsWith("/")) {
+        content = new URL(href, location.href).href;
+      }
+      copyContent(content);
+    });
+    const onOpenInIINA = useMemoizedFn(() => {
+      let usingHref = href;
+      if (item.api === "watchlater")
+        usingHref = `/video/${item.bvid}`;
+      const fullHref = new URL(usingHref, location.href).href;
+      const iinaUrl = `iina://open?url=${encodeURIComponent(fullHref)}`;
+      window.open(iinaUrl, "_self");
+    });
+    const tab2 = useCurrentSourceTab();
+    const hasBlacklistEntry = tab2 === ETabType.RecommendApp || tab2 === ETabType.RecommendPc || tab2 === ETabType.PopularGeneral || tab2 === ETabType.PopularWeekly;
+    const onBlacklistUp = useMemoizedFn(async () => {
+      if (!authorMid)
+        return AntdMessage.error("UP mid 为空!");
+      const success = await UserBlacklistService.add(authorMid);
+      if (success) {
+        AntdMessage.success(`已加入黑名单: ${authorName}`);
+      }
+    });
+    const hasUnfollowEntry = item.api === "dynamic" || (item.api === "app" || item.api === "pc") && recommendReason2 === "已关注";
+    const onUnfollowUp = useMemoizedFn(async () => {
+      if (!authorMid)
+        return;
+      const success = await UserfollowService.unfollow(authorMid);
+      if (success) {
+        AntdMessage.success("已取消关注");
+      }
+    });
+    const hasDynamicFeedFilterSelectUpEntry = isNormalVideo && !!authorMid && !!authorName && !!onRefresh;
+    const onDynamicFeedFilterSelectUp = useMemoizedFn(async () => {
+      if (!authorMid || !authorName)
+        return;
+      dynamicFeedFilterSelectUp({ upMid: Number(authorMid), upName: authorName, searchText: void 0 });
+      videoSourceTabState.value = ETabType.DynamicFeed;
+      await delay(100);
+      await (onRefresh == null ? void 0 : onRefresh());
+    });
+    const contextMenus = React__default.useMemo(() => {
+      const watchLaterLabel = watchLaterAdded ? "移除稍后再看" : "稍后再看";
+      return [{ key: "open-link", label: "打开", icon: /* @__PURE__ */ jsx(IconPark, { name: "EfferentFour", size: 15 }), onClick: onOpen }, { key: "open-link-in-popup", label: "小窗打开", icon: /* @__PURE__ */ jsx(IconPark, { name: "EfferentFour", size: 15 }), onClick: onOpenInPopup }, { key: "open-link-in-background", label: "后台打开", icon: /* @__PURE__ */ jsx(IconPark, { name: "Split", size: 15 }), onClick: onOpenInBackground }, { type: "divider" }, { key: "copy-link", label: "复制视频链接", icon: /* @__PURE__ */ jsx(IconPark, { name: "Copy", size: 15 }), onClick: onCopyLink }, { key: "copy-bvid", label: "复制 BVID", icon: /* @__PURE__ */ jsx(IconPark, { name: "Copy", size: 15 }), onClick() {
+        copyContent(bvid);
+      } }, { type: "divider" }, hasDislikeEntry && { key: "dislike", label: "我不想看", icon: /* @__PURE__ */ jsx(IconPark, { name: "DislikeTwo", size: 15 }), onClick() {
+        onTriggerDislike();
+      } }, hasDynamicFeedFilterSelectUpEntry && { key: "dymamic-feed-filter-select-up", label: "查看 UP 的动态", icon: /* @__PURE__ */ jsx(IconPark, { name: "PeopleSearch", size: 15 }), onClick: onDynamicFeedFilterSelectUp }, hasUnfollowEntry && { key: "unfollow-up", label: "取消关注", icon: /* @__PURE__ */ jsx(IconPark, { name: "PeopleMinus", size: 15 }), onClick: onUnfollowUp }, hasBlacklistEntry && { key: "blacklist-up", label: "将 UP 加入黑名单", icon: /* @__PURE__ */ jsx(IconPark, { name: "PeopleDelete", size: 15 }), onClick: onBlacklistUp }, item.api === "watchlater" && { key: "add-fav", icon: /* @__PURE__ */ jsx(IconPark, { name: "Star", size: 15, ...(favFolderNames == null ? void 0 : favFolderNames.length) ? { theme: "two-tone", fill: ["currentColor", colorPrimaryValue] } : void 0 }), label: (favFolderNames == null ? void 0 : favFolderNames.length) ? `已收藏 ${favFolderNames.map((n2) => `「${n2}」`).join("")}` : "快速收藏", async onClick() {
+        const hasFaved = Boolean(favFolderNames == null ? void 0 : favFolderNames.length);
+        if (hasFaved) {
+          favFolderUrls == null ? void 0 : favFolderUrls.forEach((u2) => {
+            window.open(u2, "_blank");
+          });
+        } else {
+          const success = await UserFavService.addFav(avid);
+          if (success) {
+            AntdMessage.success(`已加入收藏夹「${defaultFavFolderName}」`);
+          }
+        }
+      } }, hasWatchLaterEntry && { key: "watchlater", label: watchLaterLabel, icon: /* @__PURE__ */ jsx(IconPark, { name: watchLaterAdded ? "Delete" : "FileCabinet", size: 15 }), onClick() {
+        onToggleWatchLater();
+      } }, item.api === "watchlater" && watchLaterAdded && { key: "watchlater-readd", label: "重新添加稍候再看 (移到最前)", icon: /* @__PURE__ */ jsx(IconPark, { name: "AddTwo", size: 15 }), async onClick() {
+        const { success } = await onToggleWatchLater(void 0, watchLaterAdd);
+        if (!success)
+          return;
+        onMoveToFirst == null ? void 0 : onMoveToFirst(item, cardData);
+      } }, ...item.api === "fav" ? [{ type: "divider" }, { key: "open-fav-folder", label: "浏览收藏夹", icon: /* @__PURE__ */ jsx(IconPark, { name: "EfferentFour", size: 15 }), onClick() {
+        const { id } = item.folder;
+        const url = formatFavFolderUrl(id);
+        window.open(url, "_blank");
+      } }, { key: "remove-fav", label: "移除收藏", icon: /* @__PURE__ */ jsx(IconPark, { name: "Delete", size: 15 }), async onClick() {
+        if (item.api !== "fav")
+          return;
+        const success = await UserFavService.removeFav(item.folder.id, `${item.id}:${item.type}`);
+        if (success) {
+          onRemoveCurrent == null ? void 0 : onRemoveCurrent(item, cardData);
+        }
+      } }] : [], ...isMac ? [{ type: "divider" }, { key: "open-in-iina", label: "在 IINA 中打开", icon: /* @__PURE__ */ jsx(IconPark, { name: "PlayTwo", size: 15 }), onClick: onOpenInIINA }] : []].filter(Boolean);
+    }, [item, hasWatchLaterEntry, watchLaterAdded, hasDislikeEntry, hasUnfollowEntry, hasBlacklistEntry, hasDynamicFeedFilterSelectUpEntry, favFolderNames, favFolderUrls]);
+    const onContextMenuOpenChange = useMemoizedFn((open) => {
+      if (!open)
+        return;
+      updateFavFolderNames();
+    });
+    const authorHref = authorMid ? `https://space.bilibili.com/${authorMid}` : href;
+    desc || (desc = `${authorName}${pubdateDisplay ? ` · ${pubdateDisplay}` : ""}`);
+    const descTitle = authorName && pubdateDisplayTitle ? `${authorName} · ${pubdateDisplayTitle}` : desc;
+    return /* @__PURE__ */ jsxs("div", { "data-bvid": bvid || "", className: "bili-video-card__wrap __scale-wrap", css: _ref7$1, children: [/* @__PURE__ */ jsx(antd.Dropdown, { menu: { items: contextMenus }, trigger: ["contextMenu"], onOpenChange: onContextMenuOpenChange, children: /* @__PURE__ */ jsx("a", { href, target: "_blank", onClick: handleVideoLinkClick, children: /* @__PURE__ */ jsxs("div", { className: "bili-video-card__image __scale-player-wrap", ref: videoPreviewWrapperRef, style: { ...borderRadiusStyle, aspectRatio: "16 / 9" }, children: [/* @__PURE__ */ jsxs("div", { className: "bili-video-card__image--wrap", style: { borderRadius: "inherit" }, children: [/* @__PURE__ */ jsxs("picture", { className: "v-img bili-video-card__cover", style: { borderRadius: "inherit", overflow: "hidden" }, children: [!isSafari && coverUseAvif && /* @__PURE__ */ jsx("source", { srcSet: `${cover}@672w_378h_1c_!web-home-common-cover.avif`, type: "image/avif" }), /* @__PURE__ */ jsx("source", { srcSet: `${cover}@672w_378h_1c_!web-home-common-cover.webp`, type: "image/webp" }), /* @__PURE__ */ jsx("img", { src: `${cover}@672w_378h_1c_!web-home-common-cover`, loading: "lazy", alt: isFirefox ? "" : title })] }), (isHovering || typeof previewAnimationProgress === "number") && /* @__PURE__ */ jsx(PreviewImage, { videoDuration: duration2, pvideo: videoData == null ? void 0 : videoData.videoshotData, mouseEnterRelativeX, previewAnimationProgress }), hasWatchLaterEntry && /* @__PURE__ */ jsxs("div", { className: `${styles$2.watchLater}`, style: { display: isHovering || active ? "flex" : "none" }, ref: watchLaterRef, onClick: onToggleWatchLater, children: [watchLaterAdded ? /* @__PURE__ */ jsx("svg", { className: styles$2.watchLaterIcon, viewBox: "0 0 200 200", children: /* @__PURE__ */ jsx(framerMotion.motion.path, { d: "M25,100 l48,48 a 8.5,8.5 0 0 0 10,0 l90,-90", strokeWidth: "20", stroke: "currentColor", fill: "transparent", strokeLinecap: "round", ...!watchLaterAddedPrevious ? { initial: { pathLength: 0 }, animate: { pathLength: 1 } } : void 0 }) }) : /* @__PURE__ */ jsx("svg", { className: styles$2.watchLaterIcon, children: /* @__PURE__ */ jsx("use", { href: "#widget-watch-later" }) }), /* @__PURE__ */ jsx("span", { className: styles$2.watchLaterTip, style: { display: isWatchLaterHovering ? "block" : "none" }, children: watchLaterAdded ? "移除稍后再看" : "稍后再看" })] }), hasDislikeEntry && /* @__PURE__ */ jsxs("div", { ref: btnDislikeRef, className: styles$2.btnDislike, onClick: onTriggerDislike, style: { display: isHovering ? "flex" : "none" }, children: [/* @__PURE__ */ jsx("svg", { className: styles$2.btnDislikeIcon, children: /* @__PURE__ */ jsx("use", { href: "#widget-close" }) }), /* @__PURE__ */ jsx("span", { className: styles$2.btnDislikeTip, style: { display: isBtnDislikeHovering ? "block" : "none" }, children: "我不想看" })] })] }), /* @__PURE__ */ jsx("div", { className: "bili-video-card__mask", style: { borderRadius: "inherit", overflow: "hidden" }, children: /* @__PURE__ */ jsxs("div", { className: "bili-video-card__stats", children: [/* @__PURE__ */ jsx("div", { className: "bili-video-card__stats--left", children: (statItems == null ? void 0 : statItems.length) ? /* @__PURE__ */ jsx(Fragment, { children: statItems.map(({ field, value }) => /* @__PURE__ */ jsx(React__default.Fragment, { children: makeStatItem({ text: value, iconSvgName: AppRecIconSvgNameMap[field], iconSvgScale: AppRecIconScaleMap[field] }) }, field)) }) : /* @__PURE__ */ jsxs(Fragment, { children: [makeStatItem({ text: playStr || STAT_NUMBER_FALLBACK, iconSvgName: AppRecIconSvgNameMap.play }), makeStatItem({ text: danmakuStr || STAT_NUMBER_FALLBACK, iconSvgName: AppRecIconSvgNameMap.danmaku })] }) }), /* @__PURE__ */ jsx("span", { className: "bili-video-card__stats__duration", children: isNormalVideo && durationStr })] }) })] }) }) }), !styleFancy && /* @__PURE__ */ jsx("div", { className: "bili-video-card__info __scale-disable", children: /* @__PURE__ */ jsxs("div", { className: "bili-video-card__info--right", children: [/* @__PURE__ */ jsx("a", { href, target: "_blank", "data-mod": "partition_recommend", "data-idx": "content", "data-ext": "click", onClick: handleVideoLinkClick, children: /* @__PURE__ */ jsx("h3", { className: "bili-video-card__info--tit", title, children: titleRender ?? title }) }), /* @__PURE__ */ jsx("p", { className: "bili-video-card__info--bottom", children: isNormalVideo ? /* @__PURE__ */ jsxs("a", { className: "bili-video-card__info--owner", href: authorHref, target: "_blank", title: descTitle, children: [recommendReason2 ? /* @__PURE__ */ jsx("span", { className: styles$2.recommendReason, children: recommendReason2 }) : /* @__PURE__ */ jsx("svg", { className: "bili-video-card__info--owner__up", children: /* @__PURE__ */ jsx("use", { href: "#widget-up" }) }), /* @__PURE__ */ jsx("span", { className: "bili-video-card__info--author", children: desc })] }) : appBadge || appBadgeDesc ? /* @__PURE__ */ jsxs("a", { className: "bili-video-card__info--owner", href, target: "_blank", children: [/* @__PURE__ */ jsx("span", { className: styles$2.badge, children: appBadge || "" }), /* @__PURE__ */ jsx("span", { className: styles$2.bangumiDesc, children: appBadgeDesc || "" })] }) : null })] }) }), styleFancy && /* @__PURE__ */ jsxs("div", { css: _ref6$2, children: [/* @__PURE__ */ jsx("a", { href: authorHref, target: "_blank", onClick: handleVideoLinkClick, children: authorFace ? /* @__PURE__ */ jsx(antd.Avatar, { src: authorFace }) : /* @__PURE__ */ jsx(antd.Avatar, { children: (authorName == null ? void 0 : authorName[0]) || (appBadgeDesc == null ? void 0 : appBadgeDesc[0]) || "" }) }), /* @__PURE__ */ jsxs("div", { css: _ref5$4, children: [/* @__PURE__ */ jsx("a", { href, target: "_blank", children: /* @__PURE__ */ jsx("h3", { title, css: _ref4$4, children: titleRender ?? title }) }), /* @__PURE__ */ jsx("div", { css: _ref3$6, children: isNormalVideo ? /* @__PURE__ */ jsxs(Fragment, { children: [/* @__PURE__ */ jsx("div", { css: _ref2$7, children: /* @__PURE__ */ jsx("a", { className: "bili-video-card__info--owner", href: authorHref, target: "_blank", title: descTitle, children: /* @__PURE__ */ jsx("span", { className: "bili-video-card__info--author", children: desc }) }) }), !!recommendReason2 && /* @__PURE__ */ jsx("div", { className: styles$2.recommendReason, css: _ref$7, children: recommendReason2 })] }) : appBadge || appBadgeDesc ? /* @__PURE__ */ jsxs("a", { className: "bili-video-card__info--owner", href, target: "_blank", children: [!!appBadge && /* @__PURE__ */ jsx("span", { className: styles$2.badge, children: appBadge }), !!appBadgeDesc && /* @__PURE__ */ jsx("span", { className: styles$2.bangumiDesc, children: appBadgeDesc })] }) : null })] })] })] });
+  });
+  const videoGrid = "_video-grid_wfxpc_7";
+  const videoGridNewHomepage = "_video-grid-new-homepage_wfxpc_17";
+  const limitTwoLines = "_limit-two-lines_wfxpc_20";
+  const videoGridInternalTesting = "_video-grid-internal-testing_wfxpc_52";
+  const videoGridContainer = "_video-grid-container_wfxpc_88";
+  const videoGridFancy = "_video-grid-fancy_wfxpc_93";
+  const narrowMode$1 = "_narrow-mode_wfxpc_134";
+  function useShortcut({
+    enabled,
+    refresh,
+    minIndex = 0,
+    maxIndex,
+    containerRef,
+    getScrollerRect,
+    changeScrollY,
+    videoCardEmitters
+  }) {
+    const [activeIndex, setActiveIndex] = React__default.useState(void 0);
+    const isEnabled = useMemoizedFn(() => {
+      if (!enabled)
+        return false;
+      if (shouldDisableShortcut())
+        return false;
+      return true;
+    });
+    const activeIndexIsValid = useMemoizedFn(() => {
+      var _a2;
+      if (typeof activeIndex !== "number")
+        return false;
+      if (!containerRef.current)
+        return false;
+      const scrollerRect = getScrollerRect();
+      const rect = (_a2 = containerRef.current.querySelector(`.${CardClassNames.card}.${CardClassNames.cardActive}`)) == null ? void 0 : _a2.getBoundingClientRect();
+      if (!scrollerRect || !rect)
+        return false;
+      if (rect.top - scrollerRect.top < -(scrollerRect.height + rect.height)) {
+        return false;
+      }
+      if (rect.top - scrollerRect.top > scrollerRect.height * 2 + rect.height) {
+        return false;
+      }
+      return true;
+    });
+    function getStep(direction) {
+      const card = getCardAt(activeIndex);
+      const activeLeft = card.getBoundingClientRect().left;
+      const isLeftSame = (left) => Math.abs(activeLeft - left) < 1;
+      {
+        const col = getColumnCount(containerRef.current);
+        const step2 = direction === "down" ? col : -col;
+        const newCard = getCardAt(activeIndex + step2);
+        if (newCard) {
+          const left = newCard.getBoundingClientRect().left;
+          if (isLeftSame(left)) {
+            return step2;
+          }
+        }
+      }
+      let step = 0;
+      let cur = card;
+      const next2 = () => direction === "down" ? cur.nextElementSibling : cur.previousElementSibling;
+      while (next2()) {
+        cur = next2();
+        if (!cur.classList.contains(CardClassNames.card))
+          continue;
+        direction === "down" ? step++ : step--;
+        const left = cur.getBoundingClientRect().left;
+        if (isLeftSame(left)) {
+          return step;
+        }
+      }
+      return 0;
+    }
+    const addActiveIndex = (step) => (e2) => {
+      if (!isEnabled())
+        return;
+      e2 == null ? void 0 : e2.preventDefault();
+      let newActiveIndex;
+      if (activeIndexIsValid()) {
+        const _step = typeof step === "number" ? step : getStep(step);
+        newActiveIndex = activeIndex + _step;
+      } else {
+        newActiveIndex = getInitialIndex();
+      }
+      if (newActiveIndex < minIndex) {
+        makeVisible(minIndex);
+        return;
+      }
+      if (newActiveIndex > maxIndex) {
+        makeVisible(maxIndex);
+        return;
+      }
+      setActiveIndex(newActiveIndex);
+      makeVisible(newActiveIndex);
+    };
+    useKeyPress("leftarrow", addActiveIndex(-1), {
+      exactMatch: true
+    });
+    useKeyPress("rightarrow", addActiveIndex(1), {
+      exactMatch: true
+    });
+    useKeyPress("tab", addActiveIndex(1), {
+      exactMatch: true
+    });
+    useKeyPress("shift.tab", addActiveIndex(-1), {
+      exactMatch: true
+    });
+    useKeyPress("uparrow", addActiveIndex("up"), {
+      exactMatch: true
+    });
+    useKeyPress("downarrow", addActiveIndex("down"), {
+      exactMatch: true
+    });
+    const clearActiveIndex = () => {
+      if (!isEnabled())
+        return;
+      setActiveIndex(void 0);
+    };
+    const getActiveEmitter = () => {
+      if (!isEnabled() || typeof activeIndex !== "number")
+        return;
+      return videoCardEmitters[activeIndex];
+    };
+    useKeyPress("esc", clearActiveIndex);
+    useKeyPress("enter", () => {
+      var _a2;
+      if (!isEnabled() || typeof activeIndex !== "number")
+        return;
+      (_a2 = getActiveEmitter()) == null ? void 0 : _a2.emit("open");
+    });
+    useKeyPress("backspace", () => {
+      var _a2;
+      if (!isEnabled() || typeof activeIndex !== "number")
+        return;
+      (_a2 = getActiveEmitter()) == null ? void 0 : _a2.emit("trigger-dislike");
+    });
+    useKeyPress(["s", "w"], () => {
+      var _a2;
+      if (!isEnabled() || typeof activeIndex !== "number")
+        return;
+      (_a2 = getActiveEmitter()) == null ? void 0 : _a2.emit("toggle-watch-later");
+    }, {
+      exactMatch: true
+    });
+    useKeyPress(["period", "p"], () => {
+      var _a2;
+      if (!isEnabled() || typeof activeIndex !== "number")
+        return;
+      (_a2 = getActiveEmitter()) == null ? void 0 : _a2.emit("hotkey-preview-animation");
+    }, {
+      exactMatch: true
+    });
+    function getInitialIndex() {
+      const scrollerRect = getScrollerRect();
+      if (!scrollerRect)
+        return 0;
+      const cards = getCards();
+      for (let i2 = 0; i2 < cards.length; i2++) {
+        const card = cards[i2];
+        const rect = card.getBoundingClientRect();
+        if (rect.top >= scrollerRect.top) {
+          return i2;
+        }
+      }
+      return 0;
+    }
+    const CARDS_SELECTOR = `.${CardClassNames.card}`;
+    function getCards() {
+      var _a2;
+      return [...((_a2 = containerRef.current) == null ? void 0 : _a2.querySelectorAll(CARDS_SELECTOR)) || []];
+    }
+    function getCardAt(index) {
+      return getCards()[index];
+    }
+    function makeVisible(index) {
+      var _a2;
+      const card = getCardAt(index);
+      (_a2 = card == null ? void 0 : card.scrollIntoViewIfNeeded) == null ? void 0 : _a2.call(card, false);
+      const scrollerRect = getScrollerRect();
+      const rect = card.getBoundingClientRect();
+      if (!scrollerRect || !rect)
+        return;
+      if (rect.top <= scrollerRect.top) {
+        const offset = -(scrollerRect.top - rect.top + 10);
+        changeScrollY == null ? void 0 : changeScrollY({
+          offset
+        });
+        return;
+      }
+      if (scrollerRect.bottom - rect.bottom < 10) {
+        const offset = 10 - (scrollerRect.bottom - rect.bottom);
+        changeScrollY == null ? void 0 : changeScrollY({
+          offset
+        });
+        return;
+      }
+    }
+    return {
+      activeIndex,
+      clearActiveIndex
+    };
+  }
+  const countCache1 = /* @__PURE__ */ new Map();
+  const countCache2 = /* @__PURE__ */ new Map();
+  function getColumnCount(container, mayHaveNarrowMode = true) {
+    if (mayHaveNarrowMode && settings.useNarrowMode)
+      return 2;
+    const countCache = settings.styleFancy ? countCache1 : countCache2;
+    let count = countCache.get(Math.trunc(window.innerWidth));
+    if (count) {
+      return count;
+    }
+    container || (container = document.querySelector(`.${videoGrid}`));
+    if (!container)
+      return 0;
+    const style = window.getComputedStyle(container);
+    if (style.display !== "grid")
+      return 0;
+    count = style.gridTemplateColumns.split(" ").length;
+    countCache.set(window.innerWidth, count);
+    return count;
+  }
+  function anyFilterEnabled(tab2) {
+    return tab2 === "keep-follow-only" || settings.filterEnabled && (settings.filterMinDurationEnabled || settings.filterMinPlayCountEnabled || settings.filterOutGotoTypePicture);
+  }
+  function filterRecItems(items, tab2) {
+    if (!anyFilterEnabled(tab2)) {
+      return items;
+    }
+    return items.filter((item) => {
+      if (item.api === EApiType.separator)
+        return true;
+      const {
+        play,
+        duration: duration2,
+        recommendReason: recommendReason2,
+        goto
+      } = normalizeCardData(item);
+      const isFollowed = recommendReason2 === "已关注" || (recommendReason2 == null ? void 0 : recommendReason2.includes("关注"));
+      if (tab2 === "keep-follow-only") {
+        if (!isFollowed)
+          return false;
+      }
+      const isVideo = goto === "av";
+      const isPicture = goto === "picture";
+      if (isVideo)
+        return filterVideo();
+      if (isPicture)
+        return filterPicture();
+      return true;
+      function filterVideo() {
+        if (isFollowed && !settings.enableFilterForFollowedVideo)
+          return true;
+        if (settings.filterMinPlayCountEnabled && settings.filterMinPlayCount && typeof play === "number" && play < settings.filterMinPlayCount) {
+          return false;
+        }
+        if (settings.filterMinDurationEnabled && settings.filterMinDuration && duration2 && duration2 < settings.filterMinDuration) {
+          return false;
+        }
+        return true;
+      }
+      function filterPicture() {
+        if (settings.filterOutGotoTypePicture) {
+          if (isFollowed && !settings.enableFilterForFollowedPicture) {
+            return true;
+          }
+          return false;
+        } else {
+          return true;
+        }
+      }
+    });
+  }
+  var promise_retry = { exports: {} };
+  var promise_timeout = { exports: {} };
+  function checkAbortController() {
+    if (typeof AbortController === "undefined" || typeof AbortSignal === "undefined") {
+      console.error("[promise.timeout] need global AbortController & AbortSingal");
+    }
+  }
+  function ptimeout$1(fn, timeout) {
+    return function() {
+      var ctx = this;
+      var args = [].slice.call(arguments);
+      checkAbortController();
+      var controller = new AbortController();
+      args.push(controller.signal);
+      return new Promise(function(resolve, reject) {
+        var timer = setTimeout(function() {
+          var e2 = new TimeoutError$2(timeout);
+          reject(e2);
+          controller.abort();
+        }, timeout);
+        Promise.resolve(fn.apply(ctx, args)).then(
+          // resolve
+          function(result) {
+            clearTimeout(timer);
+            resolve(result);
+          },
+          // reject
+          function(err) {
+            clearTimeout(timer);
+            reject(err);
+          }
+        );
+      });
+    };
+  }
   let TimeoutError$2 = class TimeoutError extends Error {
+    constructor(timeout) {
+      super();
+      this.timeout = timeout;
+      this.message = `timeout of ${timeout}ms exceed`;
+      Error.captureStackTrace(this, TimeoutError);
+    }
+  };
+  promise_timeout.exports = ptimeout$1;
+  promise_timeout.exports.TimeoutError = TimeoutError$2;
+  var promise_timeoutExports = promise_timeout.exports;
+  const ptimeout = promise_timeoutExports;
+  const TimeoutError$1 = ptimeout.TimeoutError;
+  promise_retry.exports = function pretry(fn, options) {
+    const originalFn = fn;
+    options = options || {};
+    const times = options.times || 5;
+    const _timeout = options.timeout;
+    if (_timeout) {
+      fn = ptimeout(fn, _timeout);
+    }
+    const onerror = options.onerror;
+    return async function() {
+      const ctx = this;
+      const args = [].slice.call(arguments);
+      const errors = new Array(times);
+      for (let i2 = 0; i2 < times; i2++) {
+        let result;
+        let err;
+        try {
+          result = await fn.apply(ctx, args);
+        } catch (e2) {
+          err = e2;
+        }
+        if (!err) {
+          return result;
+        }
+        if (err instanceof TypeError) {
+          throw err;
+        }
+        if (err instanceof AbortError$1) {
+          throw err.originalError;
+        }
+        errors[i2] = err;
+        if (onerror) {
+          onerror(err, i2);
+        }
+        continue;
+      }
+      throw new RetryError({
+        times,
+        timeout: _timeout,
+        fn: originalFn,
+        errors
+        // 错误列表
+      });
+    };
+  };
+  class RetryError extends Error {
+    constructor(options) {
+      super();
+      this.times = options.times;
+      this.timeout = options.timeout;
+      this.fn = options.fn;
+      this.errors = options.errors;
+      this.name = "RetryError";
+      this.message = `tried function ${this.fn.name || "<anonymous>"} ${this.times} times`;
+      if (this.timeout) {
+        this.message += ` with timeout = ${this.timeout}ms`;
+      }
+      Error.captureStackTrace(this, this.constructor);
+    }
+  }
+  let AbortError$1 = class AbortError extends Error {
+    constructor(message2) {
+      super();
+      if (message2 instanceof Error) {
+        this.originalError = message2;
+        ({
+          message: message2
+        } = message2);
+      } else {
+        this.originalError = new Error(message2);
+        this.originalError.stack = this.stack;
+      }
+      this.name = "AbortError";
+      this.message = message2;
+    }
+  };
+  var RetryError_1 = promise_retry.exports.RetryError = RetryError;
+  promise_retry.exports.TimeoutError = TimeoutError$1;
+  var promise_retryExports = promise_retry.exports;
+  const pretry2 = /* @__PURE__ */ getDefaultExportFromCjs(promise_retryExports);
+  class RecReqError extends Error {
+    constructor(json) {
+      super();
+      __publicField(this, "json");
+      Error.captureStackTrace(this, RecReqError);
+      this.json = json;
+      this.message = json.message || JSON.stringify(json);
+    }
+  }
+  async function getRecommend(device) {
+    var _a2;
+    let platformParams = {};
+    if (device === EAppApiDevice.android) {
+      platformParams = {
+        mobi_app: "android"
+      };
+    }
+    if (device === EAppApiDevice.ipad) {
+      platformParams = {
+        // has avatar, date, etc
+        // see BewlyBewly usage
+        mobi_app: "iphone",
+        device: "pad"
+      };
+    }
+    const res = await gmrequest.get(HOST_APP + "/x/v2/feed/index", {
+      responseType: "json",
+      params: {
+        build: "1",
+        ...platformParams,
+        idx: (Date.now() / 1e3).toFixed(0) + "0" + Math.trunc(Math.random() * 1e3).toString().padStart(3, "0")
+      }
+    });
+    const json = res.data;
+    if (!json.data) {
+      if (json.code === -663) {
+        throw new RecReqError(json);
+      }
+      toast(`${APP_NAME}: 未知错误, 请联系开发者
+
+  code=${json.code} message=${json.message || ""}`, 5e3);
+      return [];
+    }
+    const items = ((_a2 = json == null ? void 0 : json.data) == null ? void 0 : _a2.items) || [];
+    return items;
+  }
+  const tryfn = pretry2(getRecommend, {
+    times: 5,
+    timeout: 2e3,
+    onerror(err, index) {
+      console.info("[%s] tryGetRecommend onerror: index=%s", APP_NAME, index, err);
+    }
+  });
+  async function tryGetRecommend(device) {
+    try {
+      return await tryfn(device);
+    } catch (e2) {
+      if (e2 instanceof RetryError_1) {
+        console.error(e2.errors);
+        const msg = [`请求出错, 已重试${e2.times}次:`, ...e2.errors.map((innerError, index) => `  ${index + 1}) ${innerError.message}`), "", "请重新获取 access_key 后重试~"].join("\n");
+        toast(msg, 5e3);
+      }
+      throw e2;
+    }
+  }
+  class AppRecService {
+    constructor() {
+      __publicField(this, "hasMore", true);
+    }
+    loadMore() {
+      return this.getRecommendTimes(2);
+    }
+    // 一次10个不够, 多来几次
+    async getRecommendTimes(times) {
+      let list = [];
+      let device = settings.appApiDecice;
+      if (device !== EAppApiDevice.ipad && device !== EAppApiDevice.android) {
+        device = EAppApiDevice.ipad;
+      }
+      const parallel = async () => {
+        list = (await Promise.all(new Array(times).fill(0).map(() => tryGetRecommend(device)))).flat();
+      };
+      await parallel();
+      list = list.filter((item) => {
+        var _a2, _b2;
+        if ((_a2 = item.card_goto) == null ? void 0 : _a2.includes("ad"))
+          return false;
+        if ((_b2 = item.goto) == null ? void 0 : _b2.includes("ad"))
+          return false;
+        if (item.ad_info)
+          return false;
+        if (item.card_goto === "banner")
+          return false;
+        return true;
+      });
+      list = lodash.uniqBy(list, (item) => item.param);
+      return list.map((item) => {
+        return {
+          ...item,
+          api: "app",
+          device,
+          // android | ipad
+          uniqId: item.param + "-" + crypto.randomUUID()
+        };
+      });
+    }
+  }
+  __publicField(AppRecService, "PAGE_SIZE", 10);
+  const debug$4 = baseDebug.extend("service");
+  const recItemUniqer = (item) => item.api === EApiType.separator ? item.uniqId : lookinto(item, {
+    "pc": (item2) => item2.bvid,
+    "app": (item2) => item2.param,
+    "dynamic": (item2) => item2.modules.module_dynamic.major.archive.bvid,
+    "watchlater": (item2) => item2.bvid,
+    "fav": (item2) => item2.bvid,
+    "popular-general": (item2) => item2.bvid,
+    "popular-weekly": (item2) => item2.bvid
+  });
+  function uniqConcat(existing, newItems) {
+    const ids2 = existing.map(recItemUniqer);
+    newItems = lodash.uniqBy(newItems, recItemUniqer);
+    return existing.concat(newItems.filter((item) => {
+      return !ids2.includes(recItemUniqer(item));
+    }));
+  }
+  const usePcApi = (tab2) => tab2 === ETabType.KeepFollowOnly || tab2 === ETabType.RecommendPc;
+  async function getMinCount(count, fetcherOptions, filterMultiplier = 5) {
+    const {
+      tab: tab2,
+      abortSignal,
+      pcRecService,
+      serviceMap
+    } = fetcherOptions;
+    const appRecService = new AppRecService();
+    let items = [];
+    let hasMore = true;
+    const addMore = async (restCount) => {
+      let cur = [];
+      const service = getIService(serviceMap, tab2);
+      if (service) {
+        cur = await service.loadMore(abortSignal) || [];
+        hasMore = service.hasMore;
+        items = items.concat(cur);
+        items = lodash.uniqBy(items, recItemUniqer);
+        return;
+      }
+      let times;
+      if (tab2 === ETabType.KeepFollowOnly) {
+        times = 8;
+        debug$4("getMinCount: addMore(restCount = %s) times=%s", restCount, times);
+      } else {
+        const pagesize = usePcApi(tab2) ? PcRecService.PAGE_SIZE : AppRecService.PAGE_SIZE;
+        const multipler = anyFilterEnabled(tab2) ? filterMultiplier : 1.2;
+        times = Math.ceil(restCount * multipler / pagesize);
+        debug$4("getMinCount: addMore(restCount = %s) multipler=%s pagesize=%s times=%s", restCount, multipler, pagesize, times);
+      }
+      if (usePcApi(tab2)) {
+        cur = await pcRecService.getRecommendTimes(times, abortSignal);
+        hasMore = pcRecService.hasMore;
+      } else {
+        cur = await appRecService.getRecommendTimes(times);
+        hasMore = appRecService.hasMore;
+      }
+      cur = filterRecItems(cur, tab2);
+      items = items.concat(cur);
+      items = lodash.uniqBy(items, recItemUniqer);
+    };
+    await addMore(count);
+    while (true) {
+      if (abortSignal == null ? void 0 : abortSignal.aborted) {
+        debug$4("getMinCount: break for abortSignal");
+        break;
+      }
+      if (!hasMore) {
+        debug$4("getMinCount: break for tab=%s hasMore=false", tab2);
+        break;
+      }
+      const len = items.filter((x2) => x2.api !== EApiType.separator).length;
+      if (len >= count)
+        break;
+      await addMore(count - items.length);
+    }
+    return items;
+  }
+  async function refreshForHome(fetcherOptions) {
+    let items = await getMinCount(getColumnCount(void 0, false) * 2, fetcherOptions, 5);
+    if (fetcherOptions.tab === ETabType.Watchlater) {
+      items = items.slice(0, 20);
+    }
+    return items;
+  }
+  async function refreshForGrid(fetcherOptions) {
+    let minCount = getColumnCount() * 3 + 1;
+    if (fetcherOptions.tab === ETabType.DynamicFeed && fetcherOptions.serviceMap[ETabType.DynamicFeed].searchText) {
+      minCount = 1;
+    }
+    return getMinCount(minCount, fetcherOptions, 5);
+  }
+  async function getRecommendTimes(times, tab2, pcRecService) {
+    let items = usePcApi(tab2) ? await pcRecService.getRecommendTimes(times) : await new AppRecService().getRecommendTimes(times);
+    items = filterRecItems(items, tab2);
+    return items;
+  }
+  var observerMap = /* @__PURE__ */ new Map();
+  var RootIds = /* @__PURE__ */ new WeakMap();
+  var rootId = 0;
+  var unsupportedValue = void 0;
+  function getRootId(root2) {
+    if (!root2)
+      return "0";
+    if (RootIds.has(root2))
+      return RootIds.get(root2);
+    rootId += 1;
+    RootIds.set(root2, rootId.toString());
+    return RootIds.get(root2);
+  }
+  function optionsToId(options) {
+    return Object.keys(options).sort().filter(
+      (key2) => options[key2] !== void 0
+    ).map((key2) => {
+      return `${key2}_${key2 === "root" ? getRootId(options.root) : options[key2]}`;
+    }).toString();
+  }
+  function createObserver(options) {
+    const id = optionsToId(options);
+    let instance = observerMap.get(id);
+    if (!instance) {
+      const elements = /* @__PURE__ */ new Map();
+      let thresholds;
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          var _a2;
+          const inView = entry.isIntersecting && thresholds.some((threshold) => entry.intersectionRatio >= threshold);
+          if (options.trackVisibility && typeof entry.isVisible === "undefined") {
+            entry.isVisible = inView;
+          }
+          (_a2 = elements.get(entry.target)) == null ? void 0 : _a2.forEach((callback) => {
+            callback(inView, entry);
+          });
+        });
+      }, options);
+      thresholds = observer.thresholds || (Array.isArray(options.threshold) ? options.threshold : [options.threshold || 0]);
+      instance = {
+        id,
+        observer,
+        elements
+      };
+      observerMap.set(id, instance);
+    }
+    return instance;
+  }
+  function observe(element, callback, options = {}, fallbackInView = unsupportedValue) {
+    if (typeof window.IntersectionObserver === "undefined" && fallbackInView !== void 0) {
+      const bounds = element.getBoundingClientRect();
+      callback(fallbackInView, {
+        isIntersecting: fallbackInView,
+        target: element,
+        intersectionRatio: typeof options.threshold === "number" ? options.threshold : 0,
+        time: 0,
+        boundingClientRect: bounds,
+        intersectionRect: bounds,
+        rootBounds: bounds
+      });
+      return () => {
+      };
+    }
+    const { id, observer, elements } = createObserver(options);
+    const callbacks = elements.get(element) || [];
+    if (!elements.has(element)) {
+      elements.set(element, callbacks);
+    }
+    callbacks.push(callback);
+    observer.observe(element);
+    return function unobserve() {
+      callbacks.splice(callbacks.indexOf(callback), 1);
+      if (callbacks.length === 0) {
+        elements.delete(element);
+        observer.unobserve(element);
+      }
+      if (elements.size === 0) {
+        observer.disconnect();
+        observerMap.delete(id);
+      }
+    };
+  }
+  function useInView({
+    threshold,
+    delay: delay2,
+    trackVisibility,
+    rootMargin,
+    root: root2,
+    triggerOnce,
+    skip,
+    initialInView,
+    fallbackInView,
+    onChange
+  } = {}) {
+    var _a2;
+    const [ref, setRef] = React__default__namespace.useState(null);
+    const callback = React__default__namespace.useRef();
+    const [state, setState] = React__default__namespace.useState({
+      inView: !!initialInView,
+      entry: void 0
+    });
+    callback.current = onChange;
+    React__default__namespace.useEffect(
+      () => {
+        if (skip || !ref)
+          return;
+        let unobserve;
+        unobserve = observe(
+          ref,
+          (inView, entry) => {
+            setState({
+              inView,
+              entry
+            });
+            if (callback.current)
+              callback.current(inView, entry);
+            if (entry.isIntersecting && triggerOnce && unobserve) {
+              unobserve();
+              unobserve = void 0;
+            }
+          },
+          {
+            root: root2,
+            rootMargin,
+            threshold,
+            // @ts-ignore
+            trackVisibility,
+            // @ts-ignore
+            delay: delay2
+          },
+          fallbackInView
+        );
+        return () => {
+          if (unobserve) {
+            unobserve();
+          }
+        };
+      },
+      // We break the rule here, because we aren't including the actual `threshold` variable
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      [
+        // If the threshold is an array, convert it to a string, so it won't change between renders.
+        Array.isArray(threshold) ? threshold.toString() : threshold,
+        ref,
+        root2,
+        rootMargin,
+        triggerOnce,
+        skip,
+        trackVisibility,
+        fallbackInView,
+        delay2
+      ]
+    );
+    const entryTarget = (_a2 = state.entry) == null ? void 0 : _a2.target;
+    const previousEntryTarget = React__default__namespace.useRef();
+    if (!ref && entryTarget && !triggerOnce && !skip && previousEntryTarget.current !== entryTarget) {
+      previousEntryTarget.current = entryTarget;
+      setState({
+        inView: !!initialInView,
+        entry: void 0
+      });
+    }
+    const result = [setRef, state.inView, state.entry];
+    result.ref = result[0];
+    result.inView = result[1];
+    result.entry = result[2];
+    return result;
+  }
+  const debug$3 = baseDebug.extend("components:RecGrid");
+  const CardClassNames = {
+    card: styled.generateClassName`
+    border: 2px solid transparent;
+
+    /* global class under .card */
+    .bili-video-card__info {
+      padding-left: 2px;
+      padding-bottom: 1px;
+      margin-top: calc(var(--info-margin-top) - 1px);
+    }
+  `,
+    cardActive: styled.generateClassName`
+    border-color: ${colorPrimaryValue};
+    border-radius: ${borderRadiusValue};
+    overflow: hidden;
+    /* try here https://box-shadow.dev/ */
+    box-shadow: 0px 0px 9px 4px ${colorPrimaryValue};
+  `
+  };
+  var _ref$6 = {
+    name: "198pn9m",
+    styles: "grid-column:1/-1;.ant-divider-inner-text a{color:var(--ant-color-link);&:hover{color:var(--ant-color-primary);}}"
+  };
+  var _ref2$6 = {
+    name: "33payq",
+    styles: "font-size:20px;padding:20px;text-align:center"
+  };
+  var _ref3$5 = {
+    name: "1hce7io",
+    styles: "padding:30px 0;display:flex;align-items:center;justify-content:center;font-size:120%"
+  };
+  const RecGrid = React__default.forwardRef(function RecGrid2({
+    infiteScrollUseWindow,
+    shortcutEnabled,
+    onScrollToTop,
+    className,
+    scrollerRef,
+    setRefreshing: setUpperRefreshing,
+    setExtraInfo
+  }, ref) {
+    const {
+      useNarrowMode,
+      styleFancy
+    } = useSettingsSnapshot();
+    const tab2 = useCurrentSourceTab();
+    const [loadCompleteCount, setLoadCompleteCount] = React__default.useState(0);
+    const preAction = useMemoizedFn(() => {
+      clearActiveIndex();
+      updateExtraInfo(tab2);
+    });
+    const postAction = useMemoizedFn(() => {
+      clearActiveIndex();
+      setLoadCompleteCount(1);
+      updateExtraInfo(tab2);
+      queueMicrotask(checkShouldLoadMore);
+    });
+    const updateExtraInfo = useMemoizedFn((tab22) => {
+      var _a2;
+      const info = ((_a2 = getIService(serviceMap, tab22)) == null ? void 0 : _a2.usageInfo) ?? null;
+      setExtraInfo == null ? void 0 : setExtraInfo(info);
+    });
+    const {
+      refresh,
+      items,
+      setItems,
+      error: refreshError,
+      refreshing,
+      refreshedAt,
+      getRefreshedAt,
+      swr,
+      hasMore,
+      setHasMore,
+      refreshAbortController,
+      pcRecService,
+      serviceMap
+    } = useRefresh({
+      tab: tab2,
+      debug: debug$3,
+      fetcher: refreshForGrid,
+      recreateService: true,
+      preAction,
+      postAction,
+      onScrollToTop,
+      setUpperRefreshing
+    });
+    useMount$1(refresh);
+    React__default.useImperativeHandle(ref, () => ({
+      refresh
+    }), []);
+    const goOutAt = React__default.useRef();
+    useEventListener("visibilitychange", (e2) => {
+      const visible = document.visibilityState === "visible";
+      if (!visible) {
+        goOutAt.current = Date.now();
+        return;
+      }
+      if (refreshing)
+        return;
+      if (loadMoreRequesting.current[refreshedAt])
+        return;
+      if (tab2 === ETabType.Watchlater && goOutAt.current && Date.now() - goOutAt.current > ms$1("1h")) {
+        refresh(true, {
+          watchlaterKeepOrder: true
+        });
+      }
+    }, {
+      target: document
+    });
+    const loadMoreRequesting = React__default.useRef({});
+    const loadMore = useMemoizedFn(async () => {
+      if (!hasMore)
+        return;
+      if (refreshing)
+        return;
+      const refreshAtWhenStart = refreshedAt;
+      if (loadMoreRequesting.current[refreshAtWhenStart])
+        return;
+      loadMoreRequesting.current = {
+        [refreshAtWhenStart]: true
+      };
+      let newItems = items;
+      let newHasMore = true;
+      try {
+        const service = getIService(serviceMap, tab2);
+        if (service) {
+          const more = await service.loadMore(refreshAbortController.signal) || [];
+          newItems = uniqConcat(newItems, more);
+          newHasMore = service.hasMore;
+        } else {
+          while (!(newItems.length > items.length)) {
+            const times = tab2 === ETabType.KeepFollowOnly ? 5 : 2;
+            const more = await getRecommendTimes(times, tab2, pcRecService);
+            newItems = uniqConcat(newItems, more);
+          }
+        }
+      } catch (e2) {
+        loadMoreRequesting.current[refreshAtWhenStart] = false;
+        throw e2;
+      }
+      if (refreshAtWhenStart !== getRefreshedAt()) {
+        debug$3("loadMore: skip update for mismatch refreshedAt, %s != %s", refreshAtWhenStart, getRefreshedAt());
+        return;
+      }
+      debug$3("loadMore: seq(%s) len %s -> %s", loadCompleteCount + 1, items.length, newItems.length);
+      setHasMore(newHasMore);
+      setItems(newItems);
+      setLoadCompleteCount((c2) => c2 + 1);
+      loadMoreRequesting.current[refreshAtWhenStart] = false;
+      checkShouldLoadMore();
+    });
+    const checkShouldLoadMore = useMemoizedFn(async () => {
+      const ms2 = isSafari ? 100 : 50;
+      await delay(ms2);
+      debug$3("checkShouldLoadMore(): footerInView = %s", footerInViewRef.current);
+      if (footerInViewRef.current) {
+        loadMore();
+      }
+    });
+    const usingItems = items;
+    const containerRef = React__default.useRef(null);
+    const getScrollerRect = useMemoizedFn(() => {
+      var _a2;
+      if (infiteScrollUseWindow) {
+        const yStart = getHeaderHeight() + 50;
+        return new DOMRect(0, yStart, window.innerWidth, window.innerHeight - yStart);
+      } else {
+        return (_a2 = scrollerRef == null ? void 0 : scrollerRef.current) == null ? void 0 : _a2.getBoundingClientRect();
+      }
+    });
+    const modalDislikeVisible = useModalDislikeVisible();
+    const usingVideoItems = React__default.useMemo(() => {
+      return items.filter((x2) => x2.api !== EApiType.separator);
+    }, [usingItems]);
+    const videoCardEmittersMap = React__default.useMemo(() => /* @__PURE__ */ new Map(), [refreshedAt]);
+    const videoCardEmitters = React__default.useMemo(() => {
+      return usingVideoItems.map(({
+        uniqId: cacheKey2
+      }) => {
+        return videoCardEmittersMap.get(cacheKey2) || (() => {
+          const instance = mitt();
+          videoCardEmittersMap.set(cacheKey2, instance);
+          return instance;
+        })();
+      });
+    }, [usingVideoItems]);
+    const {
+      activeIndex,
+      clearActiveIndex
+    } = useShortcut({
+      enabled: shortcutEnabled && !modalDislikeVisible,
+      refresh,
+      maxIndex: usingVideoItems.length - 1,
+      containerRef,
+      getScrollerRect,
+      videoCardEmitters,
+      changeScrollY: infiteScrollUseWindow ? function({
+        offset,
+        absolute
+      }) {
+        const scroller = document.documentElement;
+        if (typeof offset === "number") {
+          scroller.scrollTop += offset;
+          return;
+        }
+        if (typeof absolute === "number") {
+          scroller.scrollTop = absolute;
+          return;
+        }
+      } : void 0
+    });
+    const isInternalTesting = getIsInternalTesting();
+    const handleRemoveCard = useMemoizedFn((item, data2) => {
+      setItems((items2) => {
+        const index = items2.findIndex((x2) => x2.uniqId === item.uniqId);
+        if (index === -1)
+          return items2;
+        const newItems = items2.slice();
+        newItems.splice(index, 1);
+        AntdMessage.success(`已移除: ${data2.title}`, 4);
+        if (tab2 === ETabType.Watchlater) {
+          serviceMap[tab2].count--;
+          updateExtraInfo(tab2);
+        }
+        if (tab2 === ETabType.Fav) {
+          serviceMap[tab2].total--;
+          updateExtraInfo(tab2);
+        }
+        return newItems;
+      });
+    });
+    const handleMoveCardToFirst = useMemoizedFn((item, data2) => {
+      setItems((items2) => {
+        const currentItem = items2.find((x2) => x2.uniqId === item.uniqId);
+        if (!currentItem)
+          return items2;
+        const index = items2.indexOf(currentItem);
+        const newItems = items2.slice();
+        newItems.splice(index, 1);
+        const newIndex = newItems.findIndex((x2) => x2.api !== EApiType.separator);
+        newItems.splice(newIndex, 0, currentItem);
+        return newItems;
+      });
+    });
+    const {
+      ref: footerRef,
+      inView: __footerInView
+    } = useInView({
+      root: infiteScrollUseWindow ? null : (scrollerRef == null ? void 0 : scrollerRef.current) || null,
+      rootMargin: `0px 0px ${window.innerHeight}px 0px`,
+      onChange(inView) {
+        if (inView) {
+          debug$3("footerInView change to visible", inView);
+          loadMore();
+        }
+      }
+    });
+    const footerInViewRef = useLatest(__footerInView);
+    const footer = /* @__PURE__ */ jsx("div", {
+      ref: footerRef,
+      css: _ref3$5,
+      children: !refreshing && /* @__PURE__ */ jsx(Fragment, {
+        children: hasMore ? /* @__PURE__ */ jsxs(Fragment, {
+          children: [/* @__PURE__ */ jsx(IconPark, {
+            name: "Loading",
+            fill: colorPrimaryValue,
+            spin: true,
+            size: 40,
+            style: {
+              marginRight: 10
+            }
+          }), "加载中~"]
+        }) : "没有更多了~"
+      })
+    });
+    const gridClassName = cx(
+      `${APP_NAME}-video-grid`,
+      // for customize css
+      videoGrid,
+      styleFancy ? videoGridFancy : isInternalTesting ? videoGridInternalTesting : videoGridNewHomepage,
+      // default
+      useNarrowMode && narrowMode$1,
+      // 居中
+      className
+    );
+    if (refreshError) {
+      console.error(refreshError.stack || refreshError);
+      return /* @__PURE__ */ jsx("div", {
+        css: _ref2$6,
+        children: /* @__PURE__ */ jsx("p", {
+          children: "出错了, 请刷新重试!"
+        })
+      });
+    }
+    const showSkeleton = refreshing && !swr;
+    if (showSkeleton) {
+      return /* @__PURE__ */ jsx("div", {
+        className: videoGridContainer,
+        children: /* @__PURE__ */ jsx("div", {
+          className: gridClassName,
+          children: new Array(28).fill(void 0).map((_, index) => {
+            return /* @__PURE__ */ jsx(VideoCard, {
+              loading: true,
+              className: CardClassNames.card
+            }, index);
+          })
+        })
+      });
+    }
+    const renderItem = (item) => {
+      if (item.api === EApiType.separator) {
+        return /* @__PURE__ */ jsx(antd.Divider, {
+          css: _ref$6,
+          orientation: "left",
+          children: item.content
+        }, item.uniqId);
+      } else {
+        const index = usingVideoItems.findIndex((x2) => x2.uniqId === item.uniqId);
+        const active = index === activeIndex;
+        return /* @__PURE__ */ jsx(VideoCard, {
+          className: cx(CardClassNames.card, {
+            [CardClassNames.cardActive]: active
+          }),
+          item,
+          active,
+          onRemoveCurrent: handleRemoveCard,
+          onMoveToFirst: handleMoveCardToFirst,
+          onRefresh: refresh,
+          emitter: videoCardEmitters[index]
+        }, item.uniqId);
+      }
+    };
+    return /* @__PURE__ */ jsxs("div", {
+      style: {
+        minHeight: "100%"
+      },
+      className: videoGridContainer,
+      children: [/* @__PURE__ */ jsx("div", {
+        ref: containerRef,
+        className: gridClassName,
+        children: usingItems.map((item) => renderItem(item))
+      }), footer]
+    });
+  });
+  function useSticky() {
+    const stickyRef = React__default.useRef(null);
+    const [sticky, setSticky] = React__default.useState(false);
+    React__default.useEffect(() => {
+      function observe2() {
+        if (!stickyRef.current)
+          return;
+        const refPageOffset = Math.trunc(stickyRef.current.getBoundingClientRect().top * 10) / 10;
+        const stickyOffset = parseInt(getComputedStyle(stickyRef.current).top);
+        const stickyActive = refPageOffset <= stickyOffset;
+        setSticky(stickyActive);
+      }
+      observe2();
+      document.addEventListener("scroll", observe2);
+      window.addEventListener("resize", observe2);
+      window.addEventListener("orientationchange", observe2);
+      return () => {
+        document.removeEventListener("scroll", observe2);
+        window.removeEventListener("resize", observe2);
+        window.removeEventListener("orientationchange", observe2);
+      };
+    }, [sticky]);
+    return [stickyRef, sticky];
+  }
+  class TimeoutError2 extends Error {
     constructor(message2) {
       super(message2);
       this.name = "TimeoutError";
     }
-  };
-  let AbortError$1 = class AbortError extends Error {
+  }
+  class AbortError2 extends Error {
     constructor(message2) {
       super();
       this.name = "AbortError";
       this.message = message2;
     }
-  };
-  const getDOMException = (errorMessage) => globalThis.DOMException === void 0 ? new AbortError$1(errorMessage) : new DOMException(errorMessage);
+  }
+  const getDOMException = (errorMessage) => globalThis.DOMException === void 0 ? new AbortError2(errorMessage) : new DOMException(errorMessage);
   const getAbortedReason = (signal) => {
     const reason = signal.reason === void 0 ? getDOMException("This operation was aborted.") : signal.reason;
     return reason instanceof Error ? reason : getDOMException(reason);
@@ -7306,7 +12609,7 @@ body.dark ._btn-refresh_14tde_29 {
         promise.then(resolve, reject);
         return;
       }
-      const timeoutError = new TimeoutError$2();
+      const timeoutError = new TimeoutError2();
       timer = customTimers.setTimeout.call(void 0, () => {
         if (fallback) {
           try {
@@ -7346,8 +12649,8 @@ body.dark ._btn-refresh_14tde_29 {
     return cancelablePromise;
   }
   const normalizeEmitter = (emitter2) => {
-    const addListener = emitter2.on || emitter2.addListener || emitter2.addEventListener;
-    const removeListener = emitter2.off || emitter2.removeListener || emitter2.removeEventListener;
+    const addListener = emitter2.addEventListener || emitter2.on || emitter2.addListener;
+    const removeListener = emitter2.removeEventListener || emitter2.off || emitter2.removeListener;
     if (!addListener || !removeListener) {
       throw new TypeError("Emitter is not compatible");
     }
@@ -8303,11 +13606,11 @@ body.dark ._btn-refresh_14tde_29 {
   function whenQrCodeModalHide() {
     return pEvent(emitter, "hide");
   }
-  var _ref$b = {
+  var _ref$5 = {
     name: "1dbae5v",
     styles: "font-size:13px;margin-bottom:20px"
   };
-  var _ref2$a = {
+  var _ref2$5 = {
     name: "1ryaosi",
     styles: "font-size:14px;display:flex;align-items:center;justify-content:center;min-height:25px;margin-bottom:5px"
   };
@@ -8315,15 +13618,15 @@ body.dark ._btn-refresh_14tde_29 {
     name: "1f2tjv5",
     styles: "margin-top:20px;margin-bottom:40px"
   };
-  var _ref4$2 = {
+  var _ref4$3 = {
     name: "82zbxv",
     styles: "text-align:center;padding-top:15px"
   };
-  var _ref5$2 = {
+  var _ref5$3 = {
     name: "16s5rj8",
     styles: "width:280px"
   };
-  var _ref6$2 = {
+  var _ref6$1 = {
     name: "9vstlm",
     styles: "backdrop-filter:blur(10px)"
   };
@@ -8340,8 +13643,8 @@ body.dark ._btn-refresh_14tde_29 {
       onHide: onHide2,
       hideWhenMaskOnClick: false,
       hideWhenEsc: false,
-      cssModalMask: _ref6$2,
-      cssModal: _ref5$2,
+      cssModalMask: _ref6$1,
+      cssModal: _ref5$3,
       children: [/* @__PURE__ */ jsxs("div", {
         className: BaseModalClass.modalHeader,
         children: [/* @__PURE__ */ jsx("div", {
@@ -8358,12 +13661,12 @@ body.dark ._btn-refresh_14tde_29 {
         className: BaseModalClass.modalBody,
         children: /* @__PURE__ */ jsxs("div", {
           className: "wrapper",
-          css: _ref4$2,
+          css: _ref4$3,
           children: [/* @__PURE__ */ jsxs("div", {
             className: "qr-wrapper",
             css: _ref3$4,
             children: [/* @__PURE__ */ jsx("div", {
-              css: _ref2$a,
+              css: _ref2$5,
               children: message2 || ""
             }), qrcode ? /* @__PURE__ */ jsx(QRCodeSVG, {
               value: qrcode,
@@ -8374,7 +13677,7 @@ body.dark ._btn-refresh_14tde_29 {
             })]
           }), /* @__PURE__ */ jsxs("div", {
             className: "footnote",
-            css: _ref$b,
+            css: _ref$5,
             children: ["打开「哔哩哔哩」或「bilibili」APP ", /* @__PURE__ */ jsx("br", {}), "扫码获取 access_key"]
           })]
         })
@@ -8487,4801 +13790,6 @@ body.dark ._btn-refresh_14tde_29 {
     settings.accessKeyExpireAt = 0;
     toast("已删除 access_key");
   }
-  const toHttps = (url) => (url || "").replace(/^http:\/\//, "https://");
-  function parseDuration(d2) {
-    if (!d2)
-      return 0;
-    const units = [1, 60, 360];
-    const splited = d2.split(":").map((s2) => Number(s2)).reverse();
-    const total = splited.reduce((total2, cur, index) => {
-      return total2 + cur * units[index];
-    }, 0);
-    return total;
-  }
-  function formatDuration(d2) {
-    d2 || (d2 = 0);
-    return dayjs.duration(d2 || 0, "seconds").format(d2 >= 3600 ? "HH:mm:ss" : "mm:ss");
-  }
-  function formatCount(count) {
-    if (!count)
-      return "";
-    if (count <= 9999) {
-      return count.toString();
-    }
-    count /= 1e4;
-    if (count <= 9999) {
-      let _c = count.toFixed(1);
-      _c = _c.replace(/\.0$/, "");
-      return `${_c}万`;
-    }
-    count /= 1e4;
-    if (count <= 9999) {
-      let _c = count.toFixed(1);
-      _c = _c.replace(/\.0$/, "");
-      return `${_c}亿`;
-    }
-  }
-  function parseCount(str) {
-    if (!str)
-      return void 0;
-    if (str === "-")
-      return 0;
-    if (/^\d+$/.test(str))
-      return Number(str);
-    if (/^\d+(\.\d+?)?万$/.test(str))
-      return Number(str.slice(0, -1)) * 1e4;
-    if (/^\d+(\.\d+?)?亿$/.test(str))
-      return Number(str.slice(0, -1)) * 1e8;
-  }
-  const currentYear = dayjs().format("YYYY");
-  function formatTimeStamp(unixTs, includeTime = false) {
-    if (!unixTs)
-      return "";
-    const t2 = dayjs.unix(unixTs);
-    const extraFormat = includeTime ? " HH:mm" : "";
-    if (t2.format("YYYY") === currentYear) {
-      return t2.format("M-D" + extraFormat);
-    } else {
-      return t2.format("YY-M-D" + extraFormat);
-    }
-  }
-  const VideoStateMap = {
-    "1": "橙色通过",
-    "0": "开放浏览",
-    "-1": "待审",
-    "-2": "被打回",
-    "-3": "网警锁定",
-    "-4": "被锁定",
-    "-5": "管理员锁定",
-    "-6": "修复待审",
-    "-7": "暂缓审核",
-    "-8": "补档待审",
-    "-9": "等待转码",
-    "-10": "延迟审核",
-    "-11": "视频源待修",
-    "-12": "转储失败",
-    "-13": "允许评论待审",
-    "-14": "临时回收站",
-    "-15": "分发中",
-    "-16": "转码失败",
-    "-20": "创建未提交",
-    "-30": "创建已提交",
-    "-40": "定时发布",
-    "-100": "用户删除"
-  };
-  function getVideoInvalidReason(state) {
-    if (typeof state === "undefined")
-      return;
-    if (state >= 0)
-      return;
-    return VideoStateMap[state];
-  }
-  function proxySet(initialValues) {
-    const set = proxy({
-      data: Array.from(new Set(initialValues)),
-      has(value) {
-        return this.data.indexOf(value) !== -1;
-      },
-      add(value) {
-        let hasProxy = false;
-        if (typeof value === "object" && value !== null) {
-          hasProxy = this.data.indexOf(proxy(value)) !== -1;
-        }
-        if (this.data.indexOf(value) === -1 && !hasProxy) {
-          this.data.push(value);
-        }
-        return this;
-      },
-      delete(value) {
-        const index = this.data.indexOf(value);
-        if (index === -1) {
-          return false;
-        }
-        this.data.splice(index, 1);
-        return true;
-      },
-      clear() {
-        this.data.splice(0);
-      },
-      get size() {
-        return this.data.length;
-      },
-      forEach(cb) {
-        this.data.forEach((value) => {
-          cb(value, value, this);
-        });
-      },
-      get [Symbol.toStringTag]() {
-        return "Set";
-      },
-      toJSON() {
-        return new Set(this.data);
-      },
-      [Symbol.iterator]() {
-        return this.data[Symbol.iterator]();
-      },
-      values() {
-        return this.data.values();
-      },
-      keys() {
-        return this.data.values();
-      },
-      entries() {
-        return new Set(this.data).entries();
-      }
-    });
-    Object.defineProperties(set, {
-      data: {
-        enumerable: false
-      },
-      size: {
-        enumerable: false
-      },
-      toJSON: {
-        enumerable: false
-      }
-    });
-    Object.seal(set);
-    return set;
-  }
-  function proxyMap(entries) {
-    const map = proxy({
-      data: Array.from(entries || []),
-      has(key2) {
-        return this.data.some((p2) => p2[0] === key2);
-      },
-      set(key2, value) {
-        const record = this.data.find((p2) => p2[0] === key2);
-        if (record) {
-          record[1] = value;
-        } else {
-          this.data.push([key2, value]);
-        }
-        return this;
-      },
-      get(key2) {
-        var _a2;
-        return (_a2 = this.data.find((p2) => p2[0] === key2)) == null ? void 0 : _a2[1];
-      },
-      delete(key2) {
-        const index = this.data.findIndex((p2) => p2[0] === key2);
-        if (index === -1) {
-          return false;
-        }
-        this.data.splice(index, 1);
-        return true;
-      },
-      clear() {
-        this.data.splice(0);
-      },
-      get size() {
-        return this.data.length;
-      },
-      toJSON() {
-        return new Map(this.data);
-      },
-      forEach(cb) {
-        this.data.forEach((p2) => {
-          cb(p2[1], p2[0], this);
-        });
-      },
-      keys() {
-        return this.data.map((p2) => p2[0]).values();
-      },
-      values() {
-        return this.data.map((p2) => p2[1]).values();
-      },
-      entries() {
-        return new Map(this.data).entries();
-      },
-      get [Symbol.toStringTag]() {
-        return "Map";
-      },
-      [Symbol.iterator]() {
-        return this.entries();
-      }
-    });
-    Object.defineProperties(map, {
-      data: {
-        enumerable: false
-      },
-      size: {
-        enumerable: false
-      },
-      toJSON: {
-        enumerable: false
-      }
-    });
-    Object.seal(map);
-    return map;
-  }
-  class QuickLRU extends Map {
-    constructor(options = {}) {
-      super();
-      __privateAdd(this, _emitEvictions);
-      __privateAdd(this, _deleteIfExpired);
-      __privateAdd(this, _getOrDeleteIfExpired);
-      __privateAdd(this, _getItemValue);
-      __privateAdd(this, _peek);
-      __privateAdd(this, _set);
-      __privateAdd(this, _moveToRecent);
-      __privateAdd(this, _entriesAscending);
-      __privateAdd(this, _size, 0);
-      __privateAdd(this, _cache, /* @__PURE__ */ new Map());
-      __privateAdd(this, _oldCache, /* @__PURE__ */ new Map());
-      __privateAdd(this, _maxSize, void 0);
-      __privateAdd(this, _maxAge, void 0);
-      __privateAdd(this, _onEviction, void 0);
-      if (!(options.maxSize && options.maxSize > 0)) {
-        throw new TypeError("`maxSize` must be a number greater than 0");
-      }
-      if (typeof options.maxAge === "number" && options.maxAge === 0) {
-        throw new TypeError("`maxAge` must be a number greater than 0");
-      }
-      __privateSet(this, _maxSize, options.maxSize);
-      __privateSet(this, _maxAge, options.maxAge || Number.POSITIVE_INFINITY);
-      __privateSet(this, _onEviction, options.onEviction);
-    }
-    // For tests.
-    get __oldCache() {
-      return __privateGet(this, _oldCache);
-    }
-    get(key2) {
-      if (__privateGet(this, _cache).has(key2)) {
-        const item = __privateGet(this, _cache).get(key2);
-        return __privateMethod(this, _getItemValue, getItemValue_fn).call(this, key2, item);
-      }
-      if (__privateGet(this, _oldCache).has(key2)) {
-        const item = __privateGet(this, _oldCache).get(key2);
-        if (__privateMethod(this, _deleteIfExpired, deleteIfExpired_fn).call(this, key2, item) === false) {
-          __privateMethod(this, _moveToRecent, moveToRecent_fn).call(this, key2, item);
-          return item.value;
-        }
-      }
-    }
-    set(key2, value, {
-      maxAge = __privateGet(this, _maxAge)
-    } = {}) {
-      const expiry = typeof maxAge === "number" && maxAge !== Number.POSITIVE_INFINITY ? Date.now() + maxAge : void 0;
-      if (__privateGet(this, _cache).has(key2)) {
-        __privateGet(this, _cache).set(key2, {
-          value,
-          expiry
-        });
-      } else {
-        __privateMethod(this, _set, set_fn).call(this, key2, {
-          value,
-          expiry
-        });
-      }
-      return this;
-    }
-    has(key2) {
-      if (__privateGet(this, _cache).has(key2)) {
-        return !__privateMethod(this, _deleteIfExpired, deleteIfExpired_fn).call(this, key2, __privateGet(this, _cache).get(key2));
-      }
-      if (__privateGet(this, _oldCache).has(key2)) {
-        return !__privateMethod(this, _deleteIfExpired, deleteIfExpired_fn).call(this, key2, __privateGet(this, _oldCache).get(key2));
-      }
-      return false;
-    }
-    peek(key2) {
-      if (__privateGet(this, _cache).has(key2)) {
-        return __privateMethod(this, _peek, peek_fn).call(this, key2, __privateGet(this, _cache));
-      }
-      if (__privateGet(this, _oldCache).has(key2)) {
-        return __privateMethod(this, _peek, peek_fn).call(this, key2, __privateGet(this, _oldCache));
-      }
-    }
-    delete(key2) {
-      const deleted = __privateGet(this, _cache).delete(key2);
-      if (deleted) {
-        __privateWrapper(this, _size)._--;
-      }
-      return __privateGet(this, _oldCache).delete(key2) || deleted;
-    }
-    clear() {
-      __privateGet(this, _cache).clear();
-      __privateGet(this, _oldCache).clear();
-      __privateSet(this, _size, 0);
-    }
-    resize(newSize) {
-      if (!(newSize && newSize > 0)) {
-        throw new TypeError("`maxSize` must be a number greater than 0");
-      }
-      const items = [...__privateMethod(this, _entriesAscending, entriesAscending_fn).call(this)];
-      const removeCount = items.length - newSize;
-      if (removeCount < 0) {
-        __privateSet(this, _cache, new Map(items));
-        __privateSet(this, _oldCache, /* @__PURE__ */ new Map());
-        __privateSet(this, _size, items.length);
-      } else {
-        if (removeCount > 0) {
-          __privateMethod(this, _emitEvictions, emitEvictions_fn).call(this, items.slice(0, removeCount));
-        }
-        __privateSet(this, _oldCache, new Map(items.slice(removeCount)));
-        __privateSet(this, _cache, /* @__PURE__ */ new Map());
-        __privateSet(this, _size, 0);
-      }
-      __privateSet(this, _maxSize, newSize);
-    }
-    *keys() {
-      for (const [key2] of this) {
-        yield key2;
-      }
-    }
-    *values() {
-      for (const [, value] of this) {
-        yield value;
-      }
-    }
-    *[Symbol.iterator]() {
-      for (const item of __privateGet(this, _cache)) {
-        const [key2, value] = item;
-        const deleted = __privateMethod(this, _deleteIfExpired, deleteIfExpired_fn).call(this, key2, value);
-        if (deleted === false) {
-          yield [key2, value.value];
-        }
-      }
-      for (const item of __privateGet(this, _oldCache)) {
-        const [key2, value] = item;
-        if (!__privateGet(this, _cache).has(key2)) {
-          const deleted = __privateMethod(this, _deleteIfExpired, deleteIfExpired_fn).call(this, key2, value);
-          if (deleted === false) {
-            yield [key2, value.value];
-          }
-        }
-      }
-    }
-    *entriesDescending() {
-      let items = [...__privateGet(this, _cache)];
-      for (let i2 = items.length - 1; i2 >= 0; --i2) {
-        const item = items[i2];
-        const [key2, value] = item;
-        const deleted = __privateMethod(this, _deleteIfExpired, deleteIfExpired_fn).call(this, key2, value);
-        if (deleted === false) {
-          yield [key2, value.value];
-        }
-      }
-      items = [...__privateGet(this, _oldCache)];
-      for (let i2 = items.length - 1; i2 >= 0; --i2) {
-        const item = items[i2];
-        const [key2, value] = item;
-        if (!__privateGet(this, _cache).has(key2)) {
-          const deleted = __privateMethod(this, _deleteIfExpired, deleteIfExpired_fn).call(this, key2, value);
-          if (deleted === false) {
-            yield [key2, value.value];
-          }
-        }
-      }
-    }
-    *entriesAscending() {
-      for (const [key2, value] of __privateMethod(this, _entriesAscending, entriesAscending_fn).call(this)) {
-        yield [key2, value.value];
-      }
-    }
-    get size() {
-      if (!__privateGet(this, _size)) {
-        return __privateGet(this, _oldCache).size;
-      }
-      let oldCacheSize = 0;
-      for (const key2 of __privateGet(this, _oldCache).keys()) {
-        if (!__privateGet(this, _cache).has(key2)) {
-          oldCacheSize++;
-        }
-      }
-      return Math.min(__privateGet(this, _size) + oldCacheSize, __privateGet(this, _maxSize));
-    }
-    get maxSize() {
-      return __privateGet(this, _maxSize);
-    }
-    entries() {
-      return this.entriesAscending();
-    }
-    forEach(callbackFunction, thisArgument = this) {
-      for (const [key2, value] of this.entriesAscending()) {
-        callbackFunction.call(thisArgument, value, key2, this);
-      }
-    }
-    get [Symbol.toStringTag]() {
-      return JSON.stringify([...this.entriesAscending()]);
-    }
-  }
-  _size = new WeakMap();
-  _cache = new WeakMap();
-  _oldCache = new WeakMap();
-  _maxSize = new WeakMap();
-  _maxAge = new WeakMap();
-  _onEviction = new WeakMap();
-  _emitEvictions = new WeakSet();
-  emitEvictions_fn = function(cache2) {
-    if (typeof __privateGet(this, _onEviction) !== "function") {
-      return;
-    }
-    for (const [key2, item] of cache2) {
-      __privateGet(this, _onEviction).call(this, key2, item.value);
-    }
-  };
-  _deleteIfExpired = new WeakSet();
-  deleteIfExpired_fn = function(key2, item) {
-    if (typeof item.expiry === "number" && item.expiry <= Date.now()) {
-      if (typeof __privateGet(this, _onEviction) === "function") {
-        __privateGet(this, _onEviction).call(this, key2, item.value);
-      }
-      return this.delete(key2);
-    }
-    return false;
-  };
-  _getOrDeleteIfExpired = new WeakSet();
-  getOrDeleteIfExpired_fn = function(key2, item) {
-    const deleted = __privateMethod(this, _deleteIfExpired, deleteIfExpired_fn).call(this, key2, item);
-    if (deleted === false) {
-      return item.value;
-    }
-  };
-  _getItemValue = new WeakSet();
-  getItemValue_fn = function(key2, item) {
-    return item.expiry ? __privateMethod(this, _getOrDeleteIfExpired, getOrDeleteIfExpired_fn).call(this, key2, item) : item.value;
-  };
-  _peek = new WeakSet();
-  peek_fn = function(key2, cache2) {
-    const item = cache2.get(key2);
-    return __privateMethod(this, _getItemValue, getItemValue_fn).call(this, key2, item);
-  };
-  _set = new WeakSet();
-  set_fn = function(key2, value) {
-    __privateGet(this, _cache).set(key2, value);
-    __privateWrapper(this, _size)._++;
-    if (__privateGet(this, _size) >= __privateGet(this, _maxSize)) {
-      __privateSet(this, _size, 0);
-      __privateMethod(this, _emitEvictions, emitEvictions_fn).call(this, __privateGet(this, _oldCache));
-      __privateSet(this, _oldCache, __privateGet(this, _cache));
-      __privateSet(this, _cache, /* @__PURE__ */ new Map());
-    }
-  };
-  _moveToRecent = new WeakSet();
-  moveToRecent_fn = function(key2, item) {
-    __privateGet(this, _oldCache).delete(key2);
-    __privateMethod(this, _set, set_fn).call(this, key2, item);
-  };
-  _entriesAscending = new WeakSet();
-  entriesAscending_fn = function* () {
-    for (const item of __privateGet(this, _oldCache)) {
-      const [key2, value] = item;
-      if (!__privateGet(this, _cache).has(key2)) {
-        const deleted = __privateMethod(this, _deleteIfExpired, deleteIfExpired_fn).call(this, key2, value);
-        if (deleted === false) {
-          yield item;
-        }
-      }
-    }
-    for (const item of __privateGet(this, _cache)) {
-      const [key2, value] = item;
-      const deleted = __privateMethod(this, _deleteIfExpired, deleteIfExpired_fn).call(this, key2, value);
-      if (deleted === false) {
-        yield item;
-      }
-    }
-  };
-  async function videoshot(bvid) {
-    const res = await request.get("/x/player/videoshot", {
-      params: {
-        bvid,
-        index: "1"
-      }
-    });
-    const json = res.data;
-    return json.data;
-  }
-  const cache$1 = new QuickLRU({
-    maxSize: 1e4
-  });
-  async function getVideoData(bvid) {
-    if (cache$1.has(bvid)) {
-      return cache$1.get(bvid);
-    }
-    const videoshotData = await videoshot(bvid);
-    const dmData = [];
-    cache$1.set(bvid, {
-      videoshotData,
-      dmData
-    });
-    return {
-      videoshotData,
-      dmData
-    };
-  }
-  function watchLaterFactory(action) {
-    return async function watchLaterOp(avid) {
-      const form = new URLSearchParams({
-        aid: avid,
-        csrf: getCsrfToken()
-      });
-      const res = await request.post("/x/v2/history/toview/" + action, form);
-      const json = res.data;
-      const success = isWebApiSuccess(json);
-      if (!success) {
-        toast((json == null ? void 0 : json.message) || "出错了");
-      }
-      return success;
-    };
-  }
-  const watchLaterAdd = watchLaterFactory("add");
-  const watchLaterDel = watchLaterFactory("del");
-  const dislikeFactory = (type) => {
-    const pathname2 = {
-      dislike: "/x/feed/dislike",
-      cancel: "/x/feed/dislike/cancel"
-    }[type];
-    return async function(item, reasonId) {
-      const res = await gmrequest.get(HOST_APP + pathname2, {
-        params: {
-          goto: item.goto,
-          id: item.param,
-          // mid: item.mid,
-          // rid: item.tid,
-          // tag_id: item.tag?.tag_id,
-          reason_id: reasonId,
-          // other stuffs
-          build: "1",
-          mobi_app: "android",
-          idx: (Date.now() / 1e3).toFixed(0)
-        }
-      });
-      const json = res.data;
-      const success = isWebApiSuccess(json);
-      return success;
-    };
-  };
-  const dislike = dislikeFactory("dislike");
-  const cancelDislike = dislikeFactory("cancel");
-  const dislikedIds = proxyMap();
-  function useDislikedIds() {
-    return useSnapshot(dislikedIds);
-  }
-  function useDislikedReason(id) {
-    const map = useDislikedIds();
-    if (!id)
-      return void 0;
-    return map.get(id);
-  }
-  function delDislikeId(id) {
-    dislikedIds.delete(id);
-  }
-  var _ref$a = {
-    name: "iqoq9n",
-    styles: "margin-top:20px"
-  };
-  var _ref2$9 = {
-    name: "1crg5pf",
-    styles: "display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between"
-  };
-  var _ref3$3 = {
-    name: "125di4i",
-    styles: "margin-left:5px;font-size:40%"
-  };
-  function ModalDislike({
-    show,
-    onHide: onHide2,
-    item
-  }) {
-    const [isRequesting, setIsRequesting] = React__default.useState(false);
-    const onDislike = useMemoizedFn(async (reason) => {
-      if (!item)
-        return;
-      let success = false;
-      let err;
-      try {
-        setIsRequesting(true);
-        success = await dislike(item, reason.id);
-      } catch (e2) {
-        err = e2;
-      } finally {
-        setIsRequesting(false);
-      }
-      if (err) {
-        console.error(err.stack || err);
-        return toastRequestFail();
-      }
-      success ? AntdMessage.success("已标记不想看") : AntdMessage.error(OPERATION_FAIL_MSG);
-      if (success) {
-        dislikedIds.set(item.param, {
-          ...reason
-        });
-        onHide2();
-      }
-    });
-    const reasons = React__default.useMemo(() => {
-      var _a2;
-      return ((_a2 = item == null ? void 0 : item.three_point) == null ? void 0 : _a2.dislike_reasons) || [];
-    }, [item]);
-    const modalBodyRef = React__default.useRef(null);
-    const keyPressEnabled = () => !!show && !!item;
-    const KEYS = ["1", "2", "3", "4", "5", "6"];
-    useKeyPress(KEYS, (e2) => {
-      var _a2;
-      if (!keyPressEnabled())
-        return;
-      if (!KEYS.includes(e2.key))
-        return;
-      const index = Number(e2.key) - 1;
-      setActiveIndex(index);
-      const btn = (_a2 = modalBodyRef.current) == null ? void 0 : _a2.querySelectorAll(".reason")[index];
-      btn == null ? void 0 : btn.click();
-    });
-    const [activeIndex, setActiveIndex] = React__default.useState(reasons.length - 1);
-    useUpdateLayoutEffect(() => {
-      setActiveIndex(reasons.length - 1);
-    }, [reasons]);
-    const increaseIndex = (by) => {
-      return () => {
-        if (!keyPressEnabled())
-          return;
-        const newIndex = activeIndex + by;
-        if (newIndex < 0 || newIndex > reasons.length - 1)
-          return;
-        setActiveIndex(newIndex);
-      };
-    };
-    useKeyPress("leftarrow", increaseIndex(-1), {
-      exactMatch: true
-    });
-    useKeyPress("rightarrow", increaseIndex(1), {
-      exactMatch: true
-    });
-    useKeyPress("uparrow", increaseIndex(-2), {
-      exactMatch: true
-    });
-    useKeyPress("downarrow", increaseIndex(2), {
-      exactMatch: true
-    });
-    useKeyPress("enter", (e2) => {
-      var _a2;
-      if (!keyPressEnabled())
-        return;
-      if (activeIndex < 0 || activeIndex > reasons.length - 1)
-        return;
-      e2.preventDefault();
-      e2.stopImmediatePropagation();
-      const btn = (_a2 = modalBodyRef.current) == null ? void 0 : _a2.querySelector(".reason.active");
-      btn == null ? void 0 : btn.click();
-    }, {
-      exactMatch: true
-    });
-    const activeReasonName = React__default.useMemo(() => {
-      var _a2;
-      return ((_a2 = reasons[activeIndex]) == null ? void 0 : _a2.name) || "";
-    }, [reasons, activeIndex]);
-    return /* @__PURE__ */ jsxs(BaseModal, {
-      show,
-      onHide: onHide2,
-      hideWhenMaskOnClick: true,
-      hideWhenEsc: true,
-      width: 500,
-      children: [/* @__PURE__ */ jsxs("div", {
-        className: BaseModalClass.modalHeader,
-        children: [/* @__PURE__ */ jsxs("div", {
-          className: BaseModalClass.modalTitle,
-          children: ["我不想看", /* @__PURE__ */ jsx("span", {
-            css: _ref3$3,
-            children: "(选择后将减少相似内容推荐)"
-          })]
-        }), /* @__PURE__ */ jsx("div", {
-          className: "space",
-          style: {
-            flex: 1
-          }
-        }), /* @__PURE__ */ jsx(ModalClose, {
-          onClick: onHide2
-        })]
-      }), /* @__PURE__ */ jsxs("div", {
-        className: BaseModalClass.modalBody,
-        ref: modalBodyRef,
-        children: [/* @__PURE__ */ jsx("div", {
-          className: "reason-list",
-          css: _ref2$9,
-          children: reasons.map((reason, index) => {
-            const active = index === activeIndex;
-            return /* @__PURE__ */ jsxs("button", {
-              className: cx("reason", {
-                active
-              }),
-              css: [_css.reason, active && _css.reasonActive, "", ""],
-              "data-id": reason.id,
-              onClick: () => {
-                setActiveIndex(index);
-                onDislike(reason);
-              },
-              disabled: isRequesting,
-              children: [/* @__PURE__ */ jsx("span", {
-                className: "reason-no",
-                css: /* @__PURE__ */ css("position:absolute;left:6px;width:20px;height:20px;border-radius:50%;top:", (32 - 20) / 2, "px;display:flex;align-items:center;justify-content:center;background-color:", colorPrimaryValue, ";color:#fff;", ""),
-                children: index + 1
-              }), reason.name]
-            }, reason.id);
-          })
-        }), /* @__PURE__ */ jsxs("div", {
-          className: "tips-container",
-          css: _ref$a,
-          children: [/* @__PURE__ */ jsxs("div", {
-            className: "tips",
-            css: _css.tips,
-            children: [/* @__PURE__ */ jsx(IconPark, {
-              name: "Info",
-              size: 15,
-              style: {
-                marginRight: 5
-              }
-            }), "使用删除键打开弹窗, 数字键选择, Esc 关闭"]
-          }), activeReasonName && /* @__PURE__ */ jsxs("div", {
-            className: "tips",
-            css: _css.tips,
-            children: [/* @__PURE__ */ jsx(IconPark, {
-              name: "Info",
-              size: 15,
-              style: {
-                marginRight: 5
-              }
-            }), "已选择「", activeReasonName, "」, 回车键提交"]
-          })]
-        })]
-      })]
-    });
-  }
-  const _css = {
-    reason: {
-      name: "lu8kba",
-      styles: "color:inherit;width:48%;text-align:center;line-height:20px;position:relative;border-radius:4px;border:2px solid #eee;* :where(body.dark) &{border-color:#333;}padding-top:5px;padding-bottom:5px;margin-top:5px;margin-bottom:5px"
-    },
-    reasonActive: /* @__PURE__ */ css("&.active{border-color:", colorPrimaryValue, ";}", ""),
-    tips: {
-      name: "s5xdrg",
-      styles: "display:flex;align-items:center"
-    }
-  };
-  const currentProps = {
-    show: false,
-    onHide,
-    item: null
-  };
-  const modalDislikeVisibleState = proxy({
-    value: currentProps.show
-  });
-  const useModalDislikeVisible = function() {
-    return useSnapshot(modalDislikeVisibleState).value;
-  };
-  function onHide() {
-    setTimeout(() => {
-      updateProps({
-        show: false,
-        item: null
-      });
-    });
-  }
-  function updateProps(newProps) {
-    Object.assign(currentProps, newProps);
-    modalDislikeVisibleState.value = currentProps.show;
-    getRoot().render(/* @__PURE__ */ jsx(ModalDislike, {
-      ...currentProps,
-      onHide
-    }));
-  }
-  let _root;
-  function getRoot() {
-    _root || (_root = (() => {
-      const container = document.createElement("div");
-      container.classList.add("show-dislike-container", APP_NAME_ROOT_CLASSNAME);
-      document.body.appendChild(container);
-      return createRoot(container);
-    })());
-    return _root;
-  }
-  function showModalDislike(item) {
-    if ((item == null ? void 0 : item.param) && dislikedIds.has(item.param))
-      return;
-    updateProps({
-      show: true,
-      item
-    });
-  }
-  function proxyWithLocalStorage(initialVaue2, storageKey) {
-    const allowedKeys = Object.keys(initialVaue2);
-    const savedValue = lodash.pick(JSON.parse(localStorage.getItem(storageKey) || "{}"), allowedKeys);
-    const p2 = proxy({
-      ...initialVaue2,
-      ...savedValue
-    });
-    subscribe$3(p2, () => {
-      const val = snapshot(p2);
-      localStorage.setItem(storageKey, JSON.stringify(val));
-    });
-    return p2;
-  }
-  function FlagSettingItem({
-    configKey,
-    label,
-    extraAction,
-    tooltip,
-    ...otherProps
-  }) {
-    const snap = useSettingsSnapshot();
-    const checked = !!snap[configKey];
-    const onChange = React__default.useCallback((e2) => {
-      const val = e2.target.checked;
-      updateSettings({
-        [configKey]: val
-      });
-      extraAction == null ? void 0 : extraAction(val);
-    }, []);
-    let inner = /* @__PURE__ */ jsx("span", {
-      style: {
-        userSelect: "none"
-      },
-      children: label || configKey
-    });
-    if (tooltip)
-      inner = /* @__PURE__ */ jsx(antd.Tooltip, {
-        title: tooltip,
-        overlayStyle: {
-          width: "max-content",
-          maxWidth: "50vw"
-        },
-        children: inner
-      });
-    return /* @__PURE__ */ jsx(antd.Checkbox, {
-      ...otherProps,
-      checked,
-      onChange,
-      children: inner
-    });
-  }
-  function HelpInfo({
-    tooltip,
-    iconProps,
-    tooltipProps
-  }) {
-    return /* @__PURE__ */ jsx(Fragment, {
-      children: tooltip && /* @__PURE__ */ jsx(AntdTooltip, {
-        ...tooltipProps,
-        title: tooltip,
-        children: /* @__PURE__ */ jsx(IconPark, {
-          name: "Info",
-          size: 18,
-          ...iconProps,
-          style: {
-            cursor: "pointer",
-            marginLeft: "4px",
-            ...iconProps == null ? void 0 : iconProps.style
-          }
-        })
-      })
-    });
-  }
-  const TabConfig = [{
-    key: "recommend-app",
-    icon: "Iphone",
-    label: "推荐",
-    desc: "使用 Bilibili App 端推荐 API"
-  }, {
-    key: "recommend-pc",
-    icon: "Computer",
-    label: "推荐",
-    desc: "使用新版首页顶部推荐 API"
-  }, {
-    key: "keep-follow-only",
-    icon: "Concern",
-    label: "已关注",
-    desc: "推荐中只保留「已关注」,会很慢"
-  }, {
-    key: "dynamic-feed",
-    icon: "Tumblr",
-    iconProps: {
-      size: 16
-    },
-    label: "动态",
-    desc: "视频投稿动态",
-    swr: true
-  }, {
-    key: "watchlater",
-    icon: "FileCabinet",
-    iconProps: {
-      size: 15
-    },
-    label: "稍后再看",
-    desc: "你添加的稍后再看; 默认随机乱序, 可在设置中关闭乱序",
-    swr: true
-  }, {
-    key: "fav",
-    icon: "Star",
-    iconProps: {
-      size: 15
-    },
-    label: "收藏",
-    desc: "你添加的收藏; 默认随机乱序, 可在设置中关闭乱序"
-  }, {
-    key: "popular-general",
-    icon: "Fire",
-    iconProps: {
-      size: 16
-    },
-    label: "综合热门",
-    desc: "各个领域中新奇好玩的优质内容都在这里~",
-    swr: true
-  }, {
-    key: "popular-weekly",
-    icon: "TrendTwo",
-    iconProps: {
-      size: 15
-    },
-    label: "每周必看",
-    desc: "每周五晚 18:00 更新"
-  }];
-  const TabConfigMap = TabConfig.reduce((val, configItem) => {
-    return {
-      ...val,
-      [configItem.key]: configItem
-    };
-  }, {});
-  const TabKeys = TabConfig.map((x2) => x2.key);
-  function toastNeedLogin() {
-    return toast("你需要登录B站后使用该功能! 如已完成登录, 请刷新网页重试~");
-  }
-  const VIDEO_SOURCE_TAB_STORAGE_KEY = `${APP_NAME}-video-source-tab`;
-  const videoSourceTabState = proxyWithLocalStorage({
-    value: "recommend-app"
-  }, VIDEO_SOURCE_TAB_STORAGE_KEY);
-  function useCurrentShowingTabKeys() {
-    const {
-      hidingTabKeys
-    } = useSettingsSnapshot();
-    return React__default.useMemo(() => TabKeys.filter((key2) => !hidingTabKeys.includes(key2)), [hidingTabKeys]);
-  }
-  function sortTabKeys(customTabKeysOrder) {
-    return TabKeys.slice().sort((a2, b2) => {
-      let aIndex = customTabKeysOrder.indexOf(a2);
-      let bIndex = customTabKeysOrder.indexOf(b2);
-      if (aIndex === -1)
-        aIndex = TabKeys.indexOf(a2);
-      if (bIndex === -1)
-        bIndex = TabKeys.indexOf(b2);
-      return aIndex - bIndex;
-    });
-  }
-  function useSortedTabKeys() {
-    const {
-      customTabKeysOrder
-    } = useSettingsSnapshot();
-    return React__default.useMemo(() => sortTabKeys(customTabKeysOrder), [customTabKeysOrder]);
-  }
-  function useCurrentTabConfig() {
-    const {
-      hidingTabKeys,
-      customTabKeysOrder
-    } = useSettingsSnapshot();
-    const logined = useHasLogined();
-    return React__default.useMemo(() => {
-      let tabkeys = sortTabKeys(customTabKeysOrder);
-      tabkeys = tabkeys.filter((key2) => !hidingTabKeys.includes(key2) || !logined && key2 === "recommend-app");
-      return tabkeys.map((k2) => TabConfigMap[k2]);
-    }, [hidingTabKeys, customTabKeysOrder, logined]);
-  }
-  function _getCurrentSourceTab(videoSourceTab, logined) {
-    if (!TabKeys.includes(videoSourceTab))
-      return "recommend-app";
-    if (!logined) {
-      if (videoSourceTab === "recommend-app" || videoSourceTab === "recommend-pc") {
-        return videoSourceTab;
-      } else {
-        return "recommend-app";
-      }
-    }
-    return videoSourceTab;
-  }
-  function useCurrentSourceTab() {
-    return _getCurrentSourceTab(useSnapshot(videoSourceTabState).value, useHasLogined());
-  }
-  function getCurrentSourceTab() {
-    return _getCurrentSourceTab(videoSourceTabState.value, getHasLogined());
-  }
-  const iconCss = {
-    name: "1inoxbd",
-    styles: "margin-right:4px;margin-top:-1px"
-  };
-  const radioBtnCss = {
-    name: "1dwyqh0",
-    styles: "height:26px;line-height:unset;&:has(:focus-visible){outline:none;outline-offset:unset;}>.ant-radio-button+span{height:100%;}"
-  };
-  const radioBtnStandardCss = {
-    name: "s0vnfv",
-    styles: "height:32px"
-  };
-  var _ref$9 = {
-    name: "shwixj",
-    styles: "display:flex;align-items:center;height:22px"
-  };
-  var _ref2$8 = {
-    name: "1k4kcw8",
-    styles: "display:flex;align-items:center;line-height:unset;height:100%"
-  };
-  function VideoSourceTab({
-    onRefresh
-  }) {
-    const logined = useHasLogined();
-    const tab2 = useCurrentSourceTab();
-    const {
-      styleUseStandardVideoSourceTab
-    } = useSettingsSnapshot();
-    const currentTabConfig = useCurrentTabConfig();
-    return /* @__PURE__ */ jsxs(Fragment, {
-      children: [/* @__PURE__ */ jsx(antd.Radio.Group, {
-        optionType: "button",
-        buttonStyle: "solid",
-        size: "middle",
-        value: tab2,
-        style: {
-          overflow: "hidden"
-        },
-        onFocus: (e2) => {
-          const target = e2.target;
-          target.blur();
-        },
-        onChange: (e2) => {
-          const newValue = e2.target.value;
-          if (newValue !== "recommend-app" && newValue !== "recommend-pc" && !logined) {
-            if (!checkLoginStatus()) {
-              return toastNeedLogin();
-            }
-          }
-          videoSourceTabState.value = newValue;
-          setTimeout(() => {
-            onRefresh(true, {
-              watchlaterKeepOrder: true
-            });
-          });
-        },
-        children: currentTabConfig.map(({
-          key: key2,
-          label,
-          icon,
-          iconProps
-        }) => /* @__PURE__ */ jsx(antd.Radio.Button, {
-          css: [radioBtnCss, styleUseStandardVideoSourceTab && radioBtnStandardCss, "", ""],
-          className: "video-source-tab",
-          tabIndex: -1,
-          value: key2,
-          children: /* @__PURE__ */ jsxs("span", {
-            css: _ref2$8,
-            children: [/* @__PURE__ */ jsx(IconPark, {
-              name: icon,
-              ...iconProps,
-              size: (iconProps == null ? void 0 : iconProps.size) || 18,
-              css: iconCss
-            }), label]
-          })
-        }, key2))
-      }), /* @__PURE__ */ jsx(HelpInfo, {
-        iconProps: {
-          name: "Tips",
-          size: 16,
-          style: {
-            marginLeft: 6
-          }
-        },
-        tooltip: /* @__PURE__ */ jsx(Fragment, {
-          children: currentTabConfig.map(({
-            key: key2,
-            label,
-            icon,
-            iconProps,
-            desc
-          }) => /* @__PURE__ */ jsxs("div", {
-            css: _ref$9,
-            children: [/* @__PURE__ */ jsx(IconPark, {
-              name: icon,
-              ...iconProps,
-              size: (iconProps == null ? void 0 : iconProps.size) || 18,
-              css: iconCss
-            }), label, ": ", desc]
-          }, key2))
-        })
-      })]
-    });
-  }
-  function useMittOn(emitter2, type, handler) {
-    const fn = useMemoizedFn(handler);
-    React__default.useEffect(() => {
-      emitter2.on(type, fn);
-      return () => {
-        emitter2.off(type, fn);
-      };
-    }, [emitter2]);
-  }
-  const flexCenterStyle = {
-    name: "1wnowod",
-    styles: "display:flex;align-items:center;justify-content:center"
-  };
-  const antdBtnTextStyle = {
-    name: "1h1dezd",
-    styles: "display:inline-block;margin-top:2px"
-  };
-  function useRefInit(init) {
-    const ref = React__default.useRef(null);
-    ref.current ?? (ref.current = init());
-    return ref;
-  }
-  var src = { exports: {} };
-  var worker = function mapOnWorker(arr, fn, workers) {
-    return new Promise(function(resolve, reject) {
-      var completed = 0;
-      var started = 0;
-      var running = 0;
-      var results = new Array(arr.length).fill(void 0);
-      var rejected = false;
-      var workerIsUnsing = /* @__PURE__ */ new WeakMap();
-      var getWorker = function(index) {
-        for (var i2 = 0; i2 < workers.length; i2++) {
-          var worker2 = workers[i2];
-          if (workerIsUnsing.get(worker2)) {
-            continue;
-          } else {
-            workerIsUnsing.set(worker2, index);
-            return worker2;
-          }
-        }
-      };
-      function start(index) {
-        var cur = arr[index];
-        var worker2 = getWorker(index);
-        Promise.resolve(fn.call(cur, cur, index, arr, worker2)).then(function(result) {
-          workerIsUnsing.delete(worker2);
-          running--;
-          results[index] = result;
-          completed++;
-          replenish();
-        }).catch(function(err) {
-          rejected = true;
-          reject(err);
-        });
-      }
-      function replenish() {
-        if (rejected)
-          return;
-        if (completed >= arr.length) {
-          return resolve(results);
-        }
-        while (running < workers.length && started < arr.length) {
-          start(started);
-          started++;
-          running++;
-        }
-      }
-      replenish();
-    });
-  };
-  src.exports = function pmap(arr, fn, concurrency) {
-    concurrency = concurrency || Infinity;
-    if (typeof concurrency !== "number") {
-      throw new TypeError(String(concurrency) + " is not a number");
-    }
-    return new Promise(function(resolve, reject) {
-      var completed = 0;
-      var started = 0;
-      var running = 0;
-      var results = new Array(arr.length).fill(void 0);
-      var rejected = false;
-      function start(index) {
-        var cur = arr[index];
-        Promise.resolve(fn.call(cur, cur, index, arr)).then(function(result) {
-          running--;
-          completed++;
-          results[index] = result;
-          replenish();
-        }).catch(function(err) {
-          rejected = true;
-          reject(err);
-        });
-      }
-      function replenish() {
-        if (rejected)
-          return;
-        if (completed >= arr.length) {
-          return resolve(results);
-        }
-        while (running < concurrency && started < arr.length) {
-          start(started);
-          running++;
-          started++;
-        }
-      }
-      replenish();
-    });
-  };
-  var pmapWorker = worker;
-  src.exports.pmapWorker = pmapWorker;
-  var srcExports = src.exports;
-  const pmap2 = /* @__PURE__ */ getDefaultExportFromCjs(srcExports);
-  class QueueStrategy {
-    constructor(ps = 20) {
-      // full-list = returnQueue + bufferQueue + more
-      __publicField(this, "returnQueue", []);
-      __publicField(this, "bufferQueue", []);
-      __publicField(this, "ps");
-      this.ps = ps;
-    }
-    sliceFromQueue() {
-      if (this.bufferQueue.length) {
-        const sliced = this.bufferQueue.slice(0, this.ps);
-        this.bufferQueue = this.bufferQueue.slice(this.ps);
-        return this.doReturnItems(sliced);
-      }
-    }
-    // add to returnQueue
-    doReturnItems(items) {
-      this.returnQueue = this.returnQueue.concat(items || []);
-      return items;
-    }
-    // restore from returnQueue
-    restore() {
-      this.bufferQueue = [...this.returnQueue, ...this.bufferQueue];
-      this.returnQueue = [];
-    }
-  }
-  function formatFavFolderUrl(id) {
-    const uid = getUid();
-    return `https://space.bilibili.com/${uid}/favlist?fid=${id}`;
-  }
-  const _FavRecService = class _FavRecService {
-    constructor() {
-      __publicField(this, "useShuffle");
-      __publicField(this, "addSeparator");
-      __publicField(this, "total", 0);
-      __publicField(this, "allFolderServices", []);
-      // before exclude
-      __publicField(this, "folderServices", []);
-      // after exclude
-      // full-list = qs.returnQueue + qs.bufferQueue + folderServices.more
-      __publicField(this, "qs", new QueueStrategy(_FavRecService.PAGE_SIZE));
-      __publicField(this, "foldersLoaded", false);
-      this.useShuffle = settings.shuffleForFav;
-      this.addSeparator = settings.addSeparatorForFav;
-    }
-    get folderHasMore() {
-      return this.folderServices.some((s2) => s2.hasMore);
-    }
-    get hasMore() {
-      return this.qs.bufferQueue.length > 0 || this.folderHasMore;
-    }
-    get usageInfo() {
-      if (!this.foldersLoaded)
-        return;
-      return /* @__PURE__ */ jsx(FavUsageInfo, {
-        allFavFolderServices: this.allFolderServices
-      });
-    }
-    async loadMore() {
-      if (!this.foldersLoaded)
-        await this.getAllFolders();
-      if (!this.hasMore)
-        return;
-      if (!this.useShuffle) {
-        if (this.qs.bufferQueue.length) {
-          return this.qs.sliceFromQueue();
-        }
-        const service = this.folderServices.find((s2) => s2.hasMore);
-        if (!service)
-          return;
-        const items = await service.loadMore();
-        return this.qs.doReturnItems(service.page === 1 ? [this.addSeparator && {
-          api: ApiType.separator,
-          uniqId: `fav-folder-${service.entry.id}`,
-          content: /* @__PURE__ */ jsxs(Fragment, {
-            children: ["收藏夹:", " ", /* @__PURE__ */ jsx("a", {
-              target: "_blank",
-              href: formatFavFolderUrl(service.entry.id),
-              children: service.entry.title
-            })]
-          })
-        }, ...items || []].filter(Boolean) : items);
-      }
-      if (this.qs.bufferQueue.length < _FavRecService.PAGE_SIZE) {
-        while (this.folderHasMore && this.qs.bufferQueue.length < 100) {
-          const restServices = this.folderServices.filter((s2) => s2.hasMore);
-          const pickedServices = lodash.shuffle(restServices).slice(0, 5);
-          const fetched = (await pmap2(pickedServices, async (s2) => await s2.loadMore() || [], 2)).flat();
-          this.qs.bufferQueue = [...this.qs.bufferQueue, ...fetched];
-        }
-        this.qs.bufferQueue = lodash.shuffle(this.qs.bufferQueue);
-      }
-      return this.qs.sliceFromQueue();
-    }
-    async getAllFolders() {
-      const folders = await apiFavFolderListAll();
-      this.foldersLoaded = true;
-      this.allFolderServices = folders.map((f2) => new FavFolderService(f2));
-      this.folderServices = this.allFolderServices.filter((s2) => !settings.excludeFavFolderIds.includes(s2.entry.id.toString()));
-      this.total = this.folderServices.reduce((count, f2) => count + f2.entry.media_count, 0);
-    }
-  };
-  __publicField(_FavRecService, "PAGE_SIZE", 20);
-  let FavRecService = _FavRecService;
-  async function apiFavFolderListAll() {
-    const res = await request.get("/x/v3/fav/folder/created/list-all", {
-      params: {
-        up_mid: getUid()
-      }
-    });
-    const json = res.data;
-    const folders = json.data.list;
-    return folders;
-  }
-  class FavFolderService {
-    constructor(entry) {
-      __publicField(this, "entry");
-      __publicField(this, "hasMore");
-      __publicField(this, "info");
-      __publicField(this, "page", 0);
-      this.entry = entry;
-      this.hasMore = entry.media_count > 0;
-    }
-    // pages loaded
-    async loadMore() {
-      if (!this.hasMore)
-        return;
-      const res = await request.get("/x/v3/fav/resource/list", {
-        params: {
-          media_id: this.entry.id,
-          pn: this.page + 1,
-          // start from 1
-          ps: 20,
-          keyword: "",
-          order: "mtime",
-          // mtime(最近收藏)  view(最多播放) pubtime(最新投稿)
-          type: "0",
-          // unkown
-          tid: "0",
-          // 分区
-          platform: "web"
-        }
-      });
-      const json = res.data;
-      if (!isWebApiSuccess(json)) {
-        toast(json.message || REQUEST_FAIL_MSG);
-        return;
-      }
-      this.page++;
-      this.hasMore = json.data.has_more;
-      this.info = json.data.info;
-      let items = json.data.medias;
-      items = items.filter((item) => {
-        if (item.title === "已失效视频")
-          return false;
-        return true;
-      });
-      return items.map((item) => {
-        var _a2;
-        return {
-          ...item,
-          folder: this.info,
-          api: ApiType.fav,
-          uniqId: `fav-${(_a2 = this.info) == null ? void 0 : _a2.id}-${item.bvid}`
-        };
-      });
-    }
-  }
-  var _ref$8 = {
-    name: "1uu99zq",
-    styles: "margin-left:15px;cursor:pointer;font-size:12px"
-  };
-  function FavUsageInfo({
-    allFavFolderServices
-  }) {
-    const {
-      excludeFavFolderIds,
-      shuffleForFav
-    } = useSettingsSnapshot();
-    const onRefresh = useOnRefreshContext();
-    const [excludeFavFolderIdsChanged, setExcludeFavFolderIdsChanged] = React__default.useState(false);
-    const handleChange = useMemoizedFn((newTargetKeys, direction, moveKeys) => {
-      setExcludeFavFolderIdsChanged(true);
-      updateSettings({
-        excludeFavFolderIds: newTargetKeys
-      });
-    });
-    const foldersCount = React__default.useMemo(() => allFavFolderServices.filter((x2) => !excludeFavFolderIds.includes(x2.entry.id.toString())).length, [allFavFolderServices, excludeFavFolderIds]);
-    const videosCount = React__default.useMemo(() => {
-      return allFavFolderServices.filter((s2) => !excludeFavFolderIds.includes(s2.entry.id.toString())).reduce((count, s2) => count + s2.entry.media_count, 0);
-    }, [allFavFolderServices, excludeFavFolderIds]);
-    const onPopupOpenChange = useMemoizedFn((open) => {
-      if (open) {
-        setExcludeFavFolderIdsChanged(false);
-      } else {
-        if (excludeFavFolderIdsChanged) {
-          onRefresh == null ? void 0 : onRefresh();
-        }
-      }
-    });
-    return /* @__PURE__ */ jsxs(Fragment, {
-      children: [/* @__PURE__ */ jsx(antd.Popover, {
-        trigger: "click",
-        placement: "bottom",
-        onOpenChange: onPopupOpenChange,
-        getPopupContainer: (el) => el.parentElement || document.body,
-        content: /* @__PURE__ */ jsx(Fragment, {
-          children: /* @__PURE__ */ jsx(antd.Transfer, {
-            dataSource: allFavFolderServices,
-            rowKey: (row2) => row2.entry.id.toString(),
-            titles: ["收藏夹", "忽略"],
-            targetKeys: excludeFavFolderIds,
-            onChange: handleChange,
-            render: (item) => item.entry.title,
-            oneWay: true,
-            style: {
-              marginBottom: 10
-            }
-          })
-        }),
-        children: /* @__PURE__ */ jsxs(antd.Tag, {
-          color: "success",
-          css: _ref$8,
-          children: ["收藏夹(", foldersCount, ") 收藏(", videosCount, ")"]
-        })
-      }), /* @__PURE__ */ jsx(antd.Switch, {
-        style: {
-          marginLeft: 15
-        },
-        checkedChildren: "随机顺序",
-        unCheckedChildren: "默认顺序",
-        checked: shuffleForFav,
-        onChange: async (checked) => {
-          updateSettings({
-            shuffleForFav: checked
-          });
-          await delay(100);
-          onRefresh == null ? void 0 : onRefresh();
-        }
-      })]
-    });
-  }
-  const _PcRecService = class _PcRecService {
-    constructor() {
-      __publicField(this, "page", 0);
-      __publicField(this, "hasMore", true);
-    }
-    loadMore() {
-      return this.getRecommendTimes(2);
-    }
-    async getRecommend(signal = void 0) {
-      var _a2, _b2;
-      const curpage = ++this.page;
-      const res = await request.get("/x/web-interface/wbi/index/top/rcmd", {
-        signal,
-        params: {
-          fresh_type: 3,
-          version: 1,
-          ps: _PcRecService.PAGE_SIZE,
-          // >14 errors
-          fresh_idx: curpage,
-          fresh_idx_1h: curpage,
-          homepage_ver: 1
-        }
-      });
-      const json = res.data;
-      if (!((_a2 = json.data) == null ? void 0 : _a2.item)) {
-        toast(json.message || "API 请求没有返回结果");
-      }
-      const items = ((_b2 = json.data) == null ? void 0 : _b2.item) || [];
-      return items;
-    }
-    async getRecommendTimes(times, signal = void 0) {
-      let list = [];
-      const parallel = async () => {
-        list = (await Promise.all(new Array(times).fill(0).map(() => this.getRecommend(signal)))).flat();
-      };
-      await parallel();
-      list = lodash.uniqBy(list, (item) => item.id);
-      list.forEach((item) => {
-        var _a2, _b2;
-        if (((_a2 = item.rcmd_reason) == null ? void 0 : _a2.reason_type) === 1) {
-          (_b2 = item.rcmd_reason).content || (_b2.content = "已关注");
-        }
-      });
-      return list.map((item) => {
-        return {
-          ...item,
-          uniqId: item.id + "-" + crypto.randomUUID(),
-          api: "pc"
-        };
-      });
-    }
-  };
-  __publicField(_PcRecService, "PAGE_SIZE", 14);
-  let PcRecService = _PcRecService;
-  async function modifyRelations(upMid, act) {
-    const uid = getUid();
-    const csrf = getCsrfToken();
-    const params = new URLSearchParams({
-      fid: upMid,
-      act: String(act),
-      re_src: "11",
-      gaia_source: "web_main",
-      spmid: "333.999.0.0",
-      extend_content: JSON.stringify({
-        entity: "user",
-        entity_id: uid,
-        fp: d()
-      }),
-      csrf
-    });
-    const res = await request.post("/x/relation/modify", params);
-    const json = res.data;
-    const success = isWebApiSuccess(json);
-    if (!success) {
-      toast(json.message || "未知错误");
-    }
-    return success;
-  }
-  function d() {
-    let t2;
-    let e2;
-    const i2 = (
-      // @ts-ignore
-      (null === (t2 = window.reportObserver) || void 0 === t2 || null === (e2 = t2.cache) || void 0 === e2 ? void 0 : e2.fpriskMsg) || {}
-    );
-    let n2 = "empty";
-    return i2 && (n2 = i2.webdriver + "" + i2.screenResolution + "" + i2.platform + "" + i2.hardwareConcurrency + "" + i2.deviceMemory + "" + i2.colorDepth + "" + i2.indexedDb + "" + i2.language + "" + i2.openDatabase + "" + i2.touchSupport + "" + i2.userAgent), decodeURIComponent(n2);
-  }
-  const debug$6 = baseDebug.extend("service:user:relations:blacklist");
-  const blacklistAdd = blacklistActionFactory("follow");
-  const blacklistRemove = blacklistActionFactory("remove");
-  const UserBlacklistService = {
-    add: blacklistAdd,
-    remove: blacklistRemove
-  };
-  const STORAGE_KEY = `${APP_NAME}-blacklist-mids`;
-  const initialVaue = (localStorage.getItem(STORAGE_KEY) || "").split(",");
-  const blacklistIds = proxySet(initialVaue);
-  subscribe$3(blacklistIds, (val) => {
-    localStorage.setItem(STORAGE_KEY, Array.from(snapshot(blacklistIds)).join(","));
-  });
-  function useInBlacklist(upMid) {
-    const set = useSnapshot(blacklistIds);
-    return upMid && set.has(upMid);
-  }
-  function blacklistActionFactory(action) {
-    const act = action === "follow" ? 5 : 6;
-    return async function blacklistAction(upMid) {
-      const success = await modifyRelations(upMid, act);
-      if (success) {
-        if (action === "follow") {
-          blacklistIds.add(upMid);
-        } else if (action === "remove") {
-          blacklistIds.delete(upMid);
-        }
-      }
-      return success;
-    };
-  }
-  async function getUserBlacklist() {
-    const ps = 20;
-    const getPage = async (pn) => {
-      const res = await request.get("/x/relation/blacks", {
-        params: {
-          re_version: 0,
-          ps,
-          pn
-        }
-      });
-      const json = res.data;
-      if (!isWebApiSuccess(json))
-        return;
-      const total2 = json.data.total;
-      const mids2 = json.data.list.map((x2) => x2.mid);
-      return {
-        total: total2,
-        mids: mids2
-      };
-    };
-    const ret = await getPage(1);
-    if (!ret)
-      return;
-    const {
-      total,
-      mids = []
-    } = ret;
-    let blackMids = mids;
-    if (total) {
-      const maxPn = Math.ceil(total / ps);
-      for (let pn = 2; pn <= maxPn; pn++) {
-        const {
-          mids: mids2 = []
-        } = await getPage(pn) || {};
-        blackMids = blackMids.concat(mids2);
-      }
-    }
-    return blackMids;
-  }
-  (async () => {
-    if (!IN_BILIBILI_HOMEPAGE)
-      return;
-    await whenIdle();
-    const ids2 = await getUserBlacklist();
-    if (ids2) {
-      blacklistIds.clear();
-      ids2.forEach((x2) => {
-        blacklistIds.add(x2.toString());
-      });
-    }
-    debug$6("user blocklist fetched: %o", ids2);
-    return ids2;
-  })();
-  class PopularGeneralService {
-    constructor() {
-      __publicField(this, "hasMore", true);
-      __publicField(this, "page", 0);
-      // pages loaded
-      // shuffle: boolean
-      __publicField(this, "anonymous");
-      this.anonymous = settings.anonymousForPopularGeneral;
-    }
-    async loadMore() {
-      if (!this.hasMore)
-        return;
-      const res = await request.get("/x/web-interface/popular", {
-        params: {
-          ps: 20,
-          pn: this.page + 1
-        },
-        withCredentials: !this.anonymous
-      });
-      const json = res.data;
-      if (!isWebApiSuccess(json)) {
-        return toast(json.message || REQUEST_FAIL_MSG), void 0;
-      }
-      this.page++;
-      this.hasMore = !json.data.no_more;
-      let items = (json.data.list || []).map((item) => {
-        return {
-          ...item,
-          api: ApiType.popularGeneral,
-          uniqId: item.bvid
-        };
-      });
-      items = items.filter((item) => !blacklistIds.has(item.owner.mid.toString()));
-      return items;
-    }
-    get usageInfo() {
-      return /* @__PURE__ */ jsx(PopularGeneralUsageInfo, {});
-    }
-  }
-  function PopularGeneralUsageInfo() {
-    const {
-      anonymousForPopularGeneral
-    } = useSettingsSnapshot();
-    const onRefresh = useOnRefreshContext();
-    return /* @__PURE__ */ jsx(Fragment, {
-      children: /* @__PURE__ */ jsx(antd.Switch, {
-        style: {
-          margin: "0 10px"
-        },
-        checked: anonymousForPopularGeneral,
-        onChange: async (val) => {
-          updateSettings({
-            anonymousForPopularGeneral: val
-          });
-          await delay(100);
-          onRefresh == null ? void 0 : onRefresh();
-        },
-        checkedChildren: "匿名访问",
-        unCheckedChildren: "登录访问"
-      })
-    });
-  }
-  let episodes = [];
-  let cacheKey = "";
-  function genCacheKey() {
-    const now = dayjs();
-    return [now.format("YYYYMMDD"), now.hour() < 18 ? "lt-18" : "gte-18"].join("_");
-  }
-  async function getEpisodeList() {
-    const useCache = episodes.length && cacheKey && cacheKey === genCacheKey();
-    if (useCache)
-      return episodes;
-    const res = await request.get("/x/web-interface/popular/series/list");
-    const json = res.data;
-    const list = json.data.list;
-    episodes = list;
-    cacheKey = genCacheKey();
-    return episodes;
-  }
-  const _PopularWeeklyService = class _PopularWeeklyService {
-    constructor() {
-      __publicField(this, "episodesLoaded", false);
-      __publicField(this, "episodes", []);
-      __publicField(this, "id");
-      __publicField(this, "useShuffle");
-      // full-list = returnedItems + bufferQueue + more
-      __publicField(this, "qs", new QueueStrategy(_PopularWeeklyService.PAGE_SIZE));
-      this.id = _PopularWeeklyService.id++;
-      this.useShuffle = settings.shuffleForPopularWeekly;
-    }
-    get hasMore() {
-      if (!this.episodesLoaded)
-        return true;
-      return !!this.qs.bufferQueue.length || !!this.episodes.length;
-    }
-    async loadMore() {
-      if (!this.episodesLoaded) {
-        this.episodes = await getEpisodeList();
-        this.episodesLoaded = true;
-        if (this.useShuffle)
-          this.episodes = lodash.shuffle(this.episodes);
-      }
-      if (!this.hasMore)
-        return;
-      if (!this.useShuffle) {
-        if (this.qs.bufferQueue.length)
-          return this.qs.sliceFromQueue();
-        const ep = this.episodes[0];
-        const epNum = ep.number;
-        const items = await fetchWeeklyItems(epNum);
-        this.qs.bufferQueue.push({
-          api: ApiType.separator,
-          uniqId: `popular-weekly-${epNum}`,
-          content: /* @__PURE__ */ jsx("a", {
-            target: "_blank",
-            href: `https://www.bilibili.com/v/popular/weekly?num=${epNum}`,
-            children: ep.name
-          })
-        }, ...items);
-        this.episodes = this.episodes.slice(1);
-        return this.qs.sliceFromQueue();
-      }
-      const prefetchPage = 5;
-      while (this.qs.bufferQueue.length < _PopularWeeklyService.PAGE_SIZE * prefetchPage && this.episodes.length) {
-        this.episodes = lodash.shuffle(this.episodes);
-        const episodes2 = this.episodes.slice(0, prefetchPage);
-        this.episodes = this.episodes.slice(prefetchPage);
-        const fetched = await pmap2(episodes2.map((x2) => x2.number), (episodeNum) => fetchWeeklyItems(episodeNum), 2);
-        this.qs.bufferQueue = lodash.shuffle([...this.qs.bufferQueue, ...fetched.flat()]);
-      }
-      return this.qs.sliceFromQueue();
-    }
-    get usageInfo() {
-      return /* @__PURE__ */ jsx(PopularWeeklyUsageInfo, {});
-    }
-  };
-  __publicField(_PopularWeeklyService, "id", 0);
-  __publicField(_PopularWeeklyService, "PAGE_SIZE", 20);
-  let PopularWeeklyService = _PopularWeeklyService;
-  const cache = {};
-  async function fetchWeeklyItems(episodeNum) {
-    var _a2;
-    if (!((_a2 = cache[episodeNum]) == null ? void 0 : _a2.length)) {
-      const res = await request.get("/x/web-interface/popular/series/one", {
-        params: {
-          number: episodeNum
-        }
-      });
-      const json = res.data;
-      const items2 = (json.data.list || []).map((item) => {
-        return {
-          ...item,
-          api: ApiType.popularWeekly,
-          uniqId: item.bvid
-        };
-      });
-      cache[episodeNum] = items2;
-    }
-    let items = cache[episodeNum];
-    items = items.filter((x2) => !blacklistIds.has(x2.owner.mid.toString()));
-    return items;
-  }
-  function PopularWeeklyUsageInfo() {
-    const {
-      shuffleForPopularWeekly
-    } = useSettingsSnapshot();
-    const onRefresh = useOnRefreshContext();
-    return /* @__PURE__ */ jsx(Fragment, {
-      children: /* @__PURE__ */ jsx(antd.Switch, {
-        style: {
-          marginLeft: "10px"
-        },
-        checked: shuffleForPopularWeekly,
-        onChange: async (val) => {
-          updateSettings({
-            shuffleForPopularWeekly: val
-          });
-          await delay(100);
-          onRefresh == null ? void 0 : onRefresh();
-        },
-        checkedChildren: "随机顺序",
-        unCheckedChildren: "默认顺序"
-      })
-    });
-  }
-  const watchLaterState = proxy({
-    updatedAt: 0,
-    bvidSet: proxySet()
-  });
-  function useWatchLaterState(bvid) {
-    return useSnapshot(watchLaterState).bvidSet.has(bvid);
-  }
-  if (getHasLogined()) {
-    setTimeout(() => {
-      new WatchLaterRecService().loadMore();
-    });
-  }
-  const _WatchLaterRecService = class _WatchLaterRecService {
-    constructor(keepOrder) {
-      __publicField(this, "qs", new QueueStrategy(_WatchLaterRecService.PAGE_SIZE));
-      __publicField(this, "useShuffle");
-      __publicField(this, "addSeparator");
-      __publicField(this, "loaded", false);
-      __publicField(this, "count", 0);
-      __publicField(this, "keepOrder");
-      this.keepOrder = keepOrder ?? false;
-      this.useShuffle = settings.shuffleForWatchLater;
-      this.addSeparator = settings.addSeparatorForWatchLater;
-    }
-    async fetch() {
-      const res = await request.get("/x/v2/history/toview/web");
-      const json = res.data;
-      const items = json.data.list.map((item) => {
-        return {
-          ...item,
-          api: ApiType.watchlater,
-          uniqId: `watchlater-${item.bvid}`
-        };
-      });
-      if (Date.now() > watchLaterState.updatedAt) {
-        watchLaterState.updatedAt = Date.now();
-        watchLaterState.bvidSet = proxySet(items.map((i2) => i2.bvid));
-      }
-      const gate = dayjs().subtract(2, "days").unix();
-      const firstNotTodayAddedIndex = items.findIndex((item) => item.add_at < gate);
-      let itemsWithSeparator = items;
-      if (firstNotTodayAddedIndex !== -1) {
-        const recent = items.slice(0, firstNotTodayAddedIndex);
-        let earlier = items.slice(firstNotTodayAddedIndex);
-        if (this.keepOrder && _WatchLaterRecService.LAST_BVID_ARR.length) {
-          earlier = earlier.map((item) => ({
-            item,
-            // if not found, -1, front-most
-            index: _WatchLaterRecService.LAST_BVID_ARR.findIndex((bvid) => item.bvid === bvid)
-          })).sort((a2, b2) => a2.index - b2.index).map((x2) => x2.item);
-        } else if (this.useShuffle) {
-          earlier = lodash.shuffle(earlier);
-        }
-        itemsWithSeparator = [!!recent.length && this.addSeparator && {
-          api: ApiType.separator,
-          uniqId: "watchlater-recent",
-          content: "近期"
-        }, ...recent, !!earlier.length && this.addSeparator && {
-          api: ApiType.separator,
-          uniqId: "watchlater-earlier",
-          content: "更早"
-        }, ...earlier].filter(Boolean);
-      }
-      this.count = json.data.count;
-      _WatchLaterRecService.LAST_BVID_ARR = itemsWithSeparator.map((item) => item.api === ApiType.watchlater && item.bvid).filter(Boolean);
-      return itemsWithSeparator;
-    }
-    get usageInfo() {
-      if (!this.loaded)
-        return;
-      const {
-        count
-      } = this;
-      return /* @__PURE__ */ jsx(WatchLaterUsageInfo, {
-        count
-      });
-    }
-    get hasMore() {
-      if (!this.loaded)
-        return true;
-      return !!this.qs.bufferQueue.length;
-    }
-    async loadMore() {
-      if (!this.hasMore)
-        return;
-      if (!this.loaded) {
-        const items = await this.fetch();
-        this.qs.bufferQueue.push(...items);
-        this.loaded = true;
-      }
-      return this.qs.sliceFromQueue();
-    }
-  };
-  __publicField(_WatchLaterRecService, "PAGE_SIZE", 20);
-  __publicField(_WatchLaterRecService, "LAST_BVID_ARR", []);
-  let WatchLaterRecService = _WatchLaterRecService;
-  function WatchLaterUsageInfo({
-    count
-  }) {
-    const color = count <= 90 ? "success" : count < 100 ? "warning" : "error";
-    const title = `${color !== "success" ? "快满了~ " : ""}已使用 ${count} / 100`;
-    const {
-      shuffleForWatchLater
-    } = useSettingsSnapshot();
-    const onRefresh = useOnRefreshContext();
-    return /* @__PURE__ */ jsxs(Fragment, {
-      children: [/* @__PURE__ */ jsxs(antd.Tag, {
-        color,
-        style: {
-          marginLeft: 20,
-          marginRight: 0,
-          marginTop: 1,
-          cursor: "pointer"
-        },
-        title,
-        onClick: () => {
-          toast(`稍后再看: ${title}`);
-        },
-        children: [count, " / 100"]
-      }), /* @__PURE__ */ jsx(antd.Switch, {
-        style: {
-          marginLeft: 15
-        },
-        checkedChildren: "随机顺序",
-        unCheckedChildren: "添加顺序",
-        checked: shuffleForWatchLater,
-        onChange: async (checked) => {
-          updateSettings({
-            shuffleForWatchLater: checked
-          });
-          await delay(100);
-          onRefresh == null ? void 0 : onRefresh();
-        }
-      })]
-    });
-  }
-  const OnRefreshContext = React__default.createContext(void 0);
-  function useOnRefreshContext() {
-    return React__default.useContext(OnRefreshContext);
-  }
-  const serviceFactories = {
-    "dynamic-feed": () => new DynamicFeedRecService(dynamicFeedFilterStore.upMid),
-    "watchlater": (options) => new WatchLaterRecService(options == null ? void 0 : options.watchlaterKeepOrder),
-    "fav": () => new FavRecService(),
-    "popular-general": () => new PopularGeneralService(),
-    "popular-weekly": () => new PopularWeeklyService()
-  };
-  function getIService(serviceMap, tab2) {
-    return serviceMap[tab2];
-  }
-  function useRefresh({
-    debug: debug2,
-    // tab,
-    recreateService,
-    fetcher,
-    preAction,
-    postAction,
-    // RecGrid 定制
-    onScrollToTop,
-    setUpperRefreshing
-  }) {
-    const tab2 = getCurrentSourceTab();
-    const itemsCache = useRefInit(() => ({}));
-    const itemsHasCache = useRefInit(() => ({}));
-    const [hasMore, setHasMore] = React__default.useState(true);
-    const [items, setItems] = React__default.useState([]);
-    React__default.useEffect(() => {
-      try {
-        ;
-        unsafeWindow[`${APP_KEY_PREFIX}_gridItems`] = items;
-      } catch (e2) {
-      }
-    }, [items]);
-    const [serviceMap, setServiceMap] = React__default.useState(() => {
-      return Object.fromEntries(Object.entries(serviceFactories).map(([key2, factory]) => [key2, factory(void 0)]));
-    });
-    const [pcRecService, setPcRecService] = React__default.useState(() => new PcRecService());
-    const [refreshing, setRefreshing] = React__default.useState(false);
-    const [refreshedAt, setRefreshedAt, getRefreshedAt] = useGetState(() => Date.now());
-    const [refreshFor, setRefreshFor] = React__default.useState(tab2);
-    const [refreshAbortController, setRefreshAbortController] = React__default.useState(() => new AbortController());
-    const [swr, setSwr] = React__default.useState(false);
-    const [error, setError] = React__default.useState(void 0);
-    const refresh = useMemoizedFn(async (reuse = false, options) => {
-      const start = performance.now();
-      if (refreshing) {
-        if (tab2 === refreshFor) {
-          debug2("refresh(): [start] [refreshing] prevent same tab(%s) refresh()", tab2);
-          return;
-        } else {
-          debug2("refresh(): [start] [refreshing] switchTab %s -> %s, abort existing", refreshFor, tab2);
-          refreshAbortController.abort();
-        }
-      } else {
-        debug2("refresh(): [start] tab = %s", tab2);
-      }
-      await (onScrollToTop == null ? void 0 : onScrollToTop());
-      const updateRefreshing = (val) => {
-        setRefreshing(val);
-        setUpperRefreshing == null ? void 0 : setUpperRefreshing(val);
-      };
-      updateRefreshing(true);
-      setRefreshedAt(Date.now());
-      setRefreshFor(tab2);
-      setItems([]);
-      setError(void 0);
-      setHasMore(true);
-      await (preAction == null ? void 0 : preAction());
-      let _items = [];
-      let err;
-      const doFetch = async () => {
-        try {
-          _items = await fetcher(fetcherOptions);
-        } catch (e2) {
-          err = e2;
-        }
-      };
-      const shouldReuse = reuse && !!itemsHasCache.current[tab2];
-      const swr2 = shouldReuse && (!!TabConfigMap[tab2].swr || tab2 === "fav" && !serviceMap.fav.useShuffle && !settings.shuffleForFav || tab2 === "popular-weekly" && !serviceMap["popular-weekly"].useShuffle && !settings.shuffleForPopularWeekly);
-      setSwr(shouldReuse);
-      let useGridCache = true;
-      if ((tab2 === "fav" || tab2 === "popular-weekly") && !swr2) {
-        useGridCache = false;
-      }
-      const _pcRecService = recreateService ? new PcRecService() : pcRecService;
-      if (recreateService) {
-        setPcRecService(_pcRecService);
-      }
-      const newServiceMap = {
-        ...serviceMap
-      };
-      const recreateFor = (tab22) => {
-        newServiceMap[tab22] = serviceFactories[tab22](options);
-        setServiceMap(newServiceMap);
-      };
-      if (tab2 === "dynamic-feed") {
-        recreateFor(tab2);
-      }
-      if (tab2 === "watchlater") {
-        recreateFor(tab2);
-      }
-      if (tab2 === "fav") {
-        if (shouldReuse) {
-          if (swr2) {
-            recreateFor(tab2);
-          } else {
-            serviceMap.fav.qs.restore();
-          }
-        } else {
-          recreateFor(tab2);
-        }
-      }
-      if (tab2 === "popular-general") {
-        recreateFor(tab2);
-      }
-      if (tab2 === "popular-weekly") {
-        if (shouldReuse) {
-          if (swr2) {
-            recreateFor(tab2);
-          } else {
-            serviceMap["popular-weekly"].qs.restore();
-          }
-        } else {
-          recreateFor(tab2);
-        }
-      }
-      const _abortController = new AbortController();
-      const _signal = _abortController.signal;
-      setRefreshAbortController(_abortController);
-      const fetcherOptions = {
-        tab: tab2,
-        abortSignal: _signal,
-        serviceMap: newServiceMap,
-        pcRecService: _pcRecService
-      };
-      debug2("refresh(): shouldReuse=%s swr=%s useGridCache=%s", shouldReuse, swr2, useGridCache);
-      if (shouldReuse) {
-        if (swr2) {
-          _items = itemsCache.current[tab2] || [];
-          setItems(_items);
-          await doFetch();
-        } else if (!useGridCache) {
-          itemsCache.current[tab2] = [];
-          await doFetch();
-        } else {
-          _items = itemsCache.current[tab2] || [];
-        }
-      } else {
-        itemsCache.current[tab2] = [];
-        await doFetch();
-      }
-      if (_signal.aborted) {
-        debug2("refresh(): [legacy] skip setItems/err for aborted, legacy tab = %s", tab2);
-        return;
-      }
-      if (err) {
-        updateRefreshing(false);
-        console.error(err);
-        setError(err);
-        return;
-      }
-      if (_items.length) {
-        itemsHasCache.current[tab2] = true;
-        if (TabConfigMap[tab2].swr || tab2 === "fav" || tab2 === "popular-weekly") {
-          itemsCache.current[tab2] = _items.slice(0, 30);
-        } else {
-          itemsCache.current[tab2] = _items;
-        }
-      }
-      await whenIdle({
-        timeout: 400
-      });
-      if (_signal.aborted) {
-        debug2("refresh(): [legacy] skip setItems-postAction etc for aborted, legacy tab = %s", tab2);
-        return;
-      }
-      setItems(_items);
-      const service = getIService(newServiceMap, tab2);
-      if (service)
-        setHasMore(service.hasMore);
-      await nextTick();
-      await (postAction == null ? void 0 : postAction());
-      const cost = performance.now() - start;
-      debug2("refresh(): [success] cost %s ms", cost.toFixed(0));
-      updateRefreshing(false);
-    });
-    return {
-      items,
-      itemsCache,
-      setItems,
-      error,
-      refreshedAt,
-      setRefreshedAt,
-      getRefreshedAt,
-      refreshing,
-      setRefreshing,
-      refreshFor,
-      setRefreshFor,
-      refreshAbortController,
-      setRefreshAbortController,
-      hasMore,
-      setHasMore,
-      swr,
-      setSwr,
-      pcRecService,
-      serviceMap,
-      setPcRecService,
-      setServiceMap,
-      refresh
-    };
-  }
-  async function getRecentUpdateUpList() {
-    const res = await request.get("/x/polymer/web-dynamic/v1/portal");
-    const json = res.data;
-    const list = (json == null ? void 0 : json.data.up_list) || [];
-    return list;
-  }
-  class DynamicFeedRecService {
-    constructor(upMid) {
-      __publicField(this, "offset", "");
-      __publicField(this, "page", 0);
-      // pages loaded
-      __publicField(this, "hasMore", true);
-      __publicField(this, "upMid");
-      this.upMid = upMid;
-    }
-    async loadMore(signal = void 0) {
-      if (!this.hasMore) {
-        return;
-      }
-      const params = {
-        timezone_offset: "-480",
-        type: "video",
-        features: "itemOpusStyle",
-        page: this.page + 1
-        // ++this.page, starts from 1
-      };
-      if (this.offset) {
-        params.offset = this.offset;
-      }
-      if (this.upMid) {
-        params.host_mid = this.upMid;
-      }
-      const res = await request.get("/x/polymer/web-dynamic/v1/feed/all", {
-        signal,
-        params
-      });
-      const json = res.data;
-      if (!isWebApiSuccess(json)) {
-        toast(json.message || REQUEST_FAIL_MSG);
-        return;
-      }
-      this.page++;
-      this.hasMore = json.data.has_more;
-      this.offset = json.data.offset;
-      const arr = json.data.items;
-      const items = arr.filter((x2) => x2.type === "DYNAMIC_TYPE_AV").map((item) => {
-        return {
-          ...item,
-          api: ApiType.dynamic,
-          uniqId: item.id_str || crypto.randomUUID()
-        };
-      });
-      return items;
-    }
-    get usageInfo() {
-      return /* @__PURE__ */ jsx(DynamicFeedUsageInfo, {});
-    }
-  }
-  __publicField(DynamicFeedRecService, "PAGE_SIZE", 15);
-  const hash = location.hash;
-  let upMidInitial = void 0;
-  let upNameInitial = void 0;
-  if (hash.includes("?")) {
-    const queryInHash = location.hash.slice(location.hash.indexOf("?"));
-    const searchParams = new URLSearchParams(queryInHash);
-    if (searchParams.get("dyn-mid")) {
-      upMidInitial = Number(searchParams.get("dyn-mid"));
-      upNameInitial = searchParams.get("dyn-mid") ?? void 0;
-    }
-  }
-  const dynamicFeedFilterStore = proxy({
-    upMid: upMidInitial,
-    upName: upNameInitial,
-    upList: [],
-    upListUpdatedAt: 0
-  });
-  setTimeout(() => {
-    if (!IN_BILIBILI_HOMEPAGE)
-      return;
-    if (!dynamicFeedFilterStore.upList.length) {
-      requestIdleCallback(() => {
-        updateUpList();
-      });
-    }
-  }, ms$1("5s"));
-  async function updateUpList(force = false) {
-    const cacheHit = !force && dynamicFeedFilterStore.upList.length && dynamicFeedFilterStore.upListUpdatedAt && dynamicFeedFilterStore.upListUpdatedAt - Date.now() < ms$1("5min");
-    if (cacheHit)
-      return;
-    const list = await getRecentUpdateUpList();
-    dynamicFeedFilterStore.upList = list;
-    dynamicFeedFilterStore.upListUpdatedAt = Date.now();
-  }
-  function dynamicFeedFilterSelectUp(payload) {
-    Object.assign(dynamicFeedFilterStore, payload);
-    if (payload.upMid) {
-      const item = dynamicFeedFilterStore.upList.find((x2) => x2.mid === payload.upMid);
-      if (item)
-        item.has_update = false;
-    }
-  }
-  var _ref$7 = {
-    name: "dhit8z",
-    styles: "margin-left:15px"
-  };
-  var _ref2$7 = {
-    name: "1mkc8b8",
-    styles: "display:block;max-width:130px;text-overflow:ellipsis;white-space:nowrap;overflow:hidden"
-  };
-  function DynamicFeedUsageInfo() {
-    const onRefresh = useOnRefreshContext();
-    const {
-      upName,
-      upList
-    } = useSnapshot(dynamicFeedFilterStore);
-    useMount$1(() => {
-      updateUpList();
-    });
-    const onSelect = useMemoizedFn(async (payload) => {
-      dynamicFeedFilterSelectUp(payload);
-      await delay(100);
-      onRefresh == null ? void 0 : onRefresh();
-    });
-    const onClear = useMemoizedFn(() => {
-      onSelect({
-        upMid: void 0,
-        upName: void 0
-      });
-    });
-    const menuItems = React__default.useMemo(() => {
-      const itemAll = {
-        key: "all",
-        icon: /* @__PURE__ */ jsx(antd.Avatar, {
-          size: "small",
-          children: "全"
-        }),
-        label: "全部",
-        onClick: onClear
-      };
-      const items = upList.map((up) => {
-        let avatar = /* @__PURE__ */ jsx(antd.Avatar, {
-          size: "small",
-          src: up.face
-        });
-        if (up.has_update) {
-          avatar = /* @__PURE__ */ jsx(antd.Badge, {
-            dot: true,
-            children: avatar
-          });
-        }
-        return {
-          key: up.mid,
-          icon: avatar,
-          // label: up.uname,
-          label: /* @__PURE__ */ jsx("span", {
-            title: up.uname,
-            css: _ref2$7,
-            children: up.uname
-          }),
-          onClick() {
-            onSelect({
-              upMid: up.mid,
-              upName: up.uname
-            });
-          }
-        };
-      });
-      return [itemAll, ...items];
-    }, [upList, upList.map((x2) => !!x2.has_update)]);
-    return /* @__PURE__ */ jsx("div", {
-      css: _ref$7,
-      children: /* @__PURE__ */ jsxs(antd.Space, {
-        children: [/* @__PURE__ */ jsx(antd.Dropdown, {
-          placement: "bottomLeft",
-          menu: {
-            items: menuItems,
-            style: {
-              maxHeight: "50vh",
-              overflowY: "scroll"
-            }
-          },
-          children: /* @__PURE__ */ jsx(antd.Button, {
-            children: upName ? `UP: ${upName}` : "全部"
-          })
-        }), !!upName && /* @__PURE__ */ jsxs(antd.Button, {
-          onClick: onClear,
-          css: [flexCenterStyle, "", ""],
-          children: [/* @__PURE__ */ jsx(IconPark, {
-            name: "Return",
-            size: 14,
-            style: {
-              marginRight: 5
-            }
-          }), /* @__PURE__ */ jsx("span", {
-            css: antdBtnTextStyle,
-            children: "清除"
-          })]
-        })]
-      })
-    });
-  }
-  const UserFavService = {
-    removeFav,
-    addFav,
-    getVideoFavState
-  };
-  async function removeFav(folderId, resource) {
-    const form = new URLSearchParams({
-      resources: resource,
-      media_id: folderId.toString(),
-      platform: "web",
-      csrf: getCsrfToken()
-    });
-    const res = await request.post("/x/v3/fav/resource/batch-del", form);
-    const json = res.data;
-    const success = isWebApiSuccess(json);
-    if (!success) {
-      toast(json.message || OPERATION_FAIL_MSG);
-    }
-    return success;
-  }
-  async function getVideoFavState(avid) {
-    if (!getHasLogined())
-      return;
-    const res = await request.get("/x/v3/fav/folder/created/list-all", {
-      params: {
-        up_mid: getUid(),
-        type: 2,
-        rid: avid
-      }
-    });
-    const json = res.data;
-    const favFolders = json.data.list.filter((folder) => folder.fav_state > 0);
-    const favFolderNames = favFolders.map((f2) => f2.title);
-    const favFolderUrls = favFolders.map((f2) => formatFavFolderUrl(f2.id));
-    return {
-      favFolders,
-      favFolderNames,
-      favFolderUrls
-    };
-  }
-  async function favDeal({
-    avid,
-    add_media_ids = "",
-    del_media_ids = ""
-  }) {
-    const form = new URLSearchParams({
-      rid: avid.toString(),
-      type: "2",
-      add_media_ids,
-      del_media_ids,
-      platform: "web",
-      eab_x: "2",
-      ramval: "0",
-      ga: "1",
-      gaia_source: "web_normal",
-      csrf: getCsrfToken()
-    });
-    const res = await request.post("/x/v3/fav/resource/deal", form);
-    const json = res.data;
-    const success = isWebApiSuccess(json);
-    if (!success) {
-      toast((json == null ? void 0 : json.message) || "fav deal api fail");
-    }
-    return success;
-  }
-  let defaultFavFolderId = 0;
-  let defaultFavFolderName = "";
-  async function addFav(avid) {
-    if (!defaultFavFolderId || !defaultFavFolderName) {
-      const folders = await apiFavFolderListAll();
-      defaultFavFolderId = folders[0].id;
-      defaultFavFolderName = folders[0].title;
-    }
-    return await favDeal({
-      avid,
-      add_media_ids: defaultFavFolderId.toString()
-    });
-  }
-  const follow = followActionFactory("follow");
-  const unfollow = followActionFactory("unfollow");
-  const UserfollowService = {
-    follow,
-    unfollow
-  };
-  function followActionFactory(action) {
-    const act = action === "follow" ? 1 : 2;
-    return async function followAction(upMid) {
-      const success = await modifyRelations(upMid, act);
-      return success;
-    };
-  }
-  const biliVideoCard = "_bili-video-card_1ox5o_1";
-  const previewCardWrapper = "_preview-card-wrapper_1ox5o_8";
-  const previewCardInner = "_preview-card-inner_1ox5o_21";
-  const btnDislike = "_btn-dislike_1ox5o_26";
-  const btnDislikeIcon = "_btn-dislike-icon_1ox5o_41";
-  const btnDislikeTip = "_btn-dislike-tip_1ox5o_48";
-  const watchLater = "_watch-later_1ox5o_64";
-  const watchLaterIcon = "_watch-later-icon_1ox5o_79";
-  const watchLaterTip = "_watch-later-tip_1ox5o_86";
-  const badge = "_badge_1ox5o_102";
-  const recommendReason = "_recommend-reason_1ox5o_112";
-  const bangumiDesc = "_bangumi-desc_1ox5o_128";
-  const dislikedWrapper = "_disliked-wrapper_1ox5o_132";
-  const dislikeContentCover = "_dislike-content-cover_1ox5o_146";
-  const dislikeContentCoverInner = "_dislike-content-cover-inner_1ox5o_152";
-  const dislikeIcon = "_dislike-icon_1ox5o_163";
-  const dislikeReason = "_dislike-reason_1ox5o_166";
-  const dislikeDesc = "_dislike-desc_1ox5o_170";
-  const dislikeContentAction = "_dislike-content-action_1ox5o_174";
-  const skeletonActive = "_skeleton-active_1ox5o_206";
-  const antSkeletonLoading = "_ant-skeleton-loading_1ox5o_1";
-  const styles$2 = {
-    biliVideoCard,
-    previewCardWrapper,
-    previewCardInner,
-    btnDislike,
-    btnDislikeIcon,
-    btnDislikeTip,
-    watchLater,
-    watchLaterIcon,
-    watchLaterTip,
-    badge,
-    recommendReason,
-    bangumiDesc,
-    dislikedWrapper,
-    dislikeContentCover,
-    dislikeContentCoverInner,
-    dislikeIcon,
-    dislikeReason,
-    dislikeDesc,
-    dislikeContentAction,
-    skeletonActive,
-    antSkeletonLoading
-  };
-  function fallbackWhenNan(...args) {
-    for (const num of args) {
-      if (isNaN(num))
-        continue;
-      return num;
-    }
-    return 0;
-  }
-  function PreviewImage({
-    className,
-    videoDuration,
-    pvideo,
-    mouseEnterRelativeX,
-    previewAnimationProgress
-  }) {
-    const ref = React__default.useRef(null);
-    const cursorState = useMouse(ref);
-    const [size, setSize] = React__default.useState(() => ({
-      width: 0,
-      height: 0
-    }));
-    useMount$1(() => {
-      var _a2;
-      const rect = (_a2 = ref.current) == null ? void 0 : _a2.getBoundingClientRect();
-      if (!rect)
-        return;
-      setSize({
-        width: rect.width,
-        height: rect.height
-      });
-    });
-    let progress = 0;
-    if (typeof previewAnimationProgress === "number") {
-      progress = previewAnimationProgress;
-    } else {
-      const relativeX = fallbackWhenNan(cursorState.elementX, mouseEnterRelativeX || 0);
-      if (size.width && relativeX && !isNaN(relativeX)) {
-        progress = relativeX / size.width;
-        if (progress < 0)
-          progress = 0;
-        if (progress > 1)
-          progress = 1;
-      }
-    }
-    const innerProps = {
-      videoDuration,
-      pvideo,
-      elWidth: size.width,
-      elHeight: size.height,
-      progress
-    };
-    return /* @__PURE__ */ jsx("div", {
-      ref,
-      className: cx(styles$2.previewCardWrapper, className),
-      children: !!(pvideo && size.width && size.height && progress) && /* @__PURE__ */ jsx(PreviewImageInner, {
-        ...innerProps
-      })
-    });
-  }
-  function PreviewImageInner({
-    videoDuration,
-    pvideo,
-    elWidth,
-    elHeight,
-    progress
-  }) {
-    var _a2;
-    const t2 = Math.floor((videoDuration || 0) * progress);
-    let index = React__default.useMemo(() => {
-      const arr = (pvideo == null ? void 0 : pvideo.index) || [];
-      let index2 = findIndex(arr, t2);
-      if (index2 !== -1) {
-        return index2;
-      }
-      if (t2 > arr[arr.length - 1]) {
-        index2 = Math.floor(arr.length * progress) - 1;
-        if (index2 < 0)
-          index2 = 0;
-        return index2;
-      }
-      return 0;
-    }, [pvideo, t2]);
-    const {
-      img_x_len: colCount,
-      img_y_len: rowCount,
-      img_x_size: w2,
-      img_y_size: h2
-    } = pvideo;
-    const countPerPreview = rowCount * colCount;
-    index = index + 1;
-    const snapshotIndex = Math.floor(index / countPerPreview);
-    const indexInSnapshot = index - snapshotIndex * countPerPreview;
-    const snapshotUrl = ((_a2 = pvideo.image) == null ? void 0 : _a2[snapshotIndex]) || "";
-    const indexRow = Math.floor(indexInSnapshot / colCount) + 1;
-    const indexCol = indexInSnapshot - (indexRow - 1) * colCount;
-    const newImgWidth = elWidth * colCount;
-    const newImgHeight = elHeight * rowCount;
-    const startY = (indexRow - 1) * elHeight;
-    const startX = (indexCol - 1) * elWidth;
-    return /* @__PURE__ */ jsx("div", {
-      className: styles$2.previewCardInner,
-      style: {
-        backgroundColor: "black",
-        // 防止加载过程中闪屏
-        backgroundImage: `url(${snapshotUrl})`,
-        backgroundPosition: `-${startX}px -${startY}px`,
-        backgroundSize: `${newImgWidth}px ${newImgHeight}px`
-      },
-      children: /* @__PURE__ */ jsx(SimplePregressBar, {
-        progress
-      })
-    });
-  }
-  function SimplePregressBar({
-    progress
-  }) {
-    return /* @__PURE__ */ jsx("div", {
-      className: "track",
-      style: {
-        position: "absolute",
-        bottom: 0,
-        left: 0,
-        backgroundColor: "#eee",
-        width: "100%",
-        height: 2
-      },
-      children: /* @__PURE__ */ jsx("div", {
-        className: "bar",
-        style: {
-          backgroundColor: colorPrimaryValue,
-          height: "100%",
-          width: `${progress * 100}%`
-        }
-      })
-    });
-  }
-  function findIndex(arr, target) {
-    let l2 = 0;
-    let r2 = arr.length - 1;
-    let possible = -1;
-    while (l2 <= r2) {
-      const mid = Math.floor((l2 + r2) / 2);
-      const mv = arr[mid];
-      if (target === mv) {
-        return mid;
-      }
-      if (mv < target) {
-        l2 = mid + 1;
-        possible = mid;
-      } else {
-        r2 = mid - 1;
-      }
-    }
-    if (possible === -1)
-      return -1;
-    const v2 = arr[possible];
-    const v1 = arr[possible + 1] ?? 0;
-    if (v2 < target && target < v1) {
-      return possible;
-    } else {
-      return -1;
-    }
-  }
-  const AppRecIconSvgNameMap = {
-    play: "#widget-video-play-count",
-    // or #widget-play-count
-    danmaku: "#widget-video-danmaku",
-    like: "#widget-agree",
-    bangumiFollow: "#widget-followed",
-    favorite: "#widget-favorite",
-    coin: "#widget-coin"
-  };
-  const AppRecIconMap = {
-    1: "play",
-    2: "like",
-    // 没出现过, 猜的
-    3: "danmaku",
-    4: "bangumiFollow",
-    // 追番
-    20: "like"
-    // 动态点赞
-  };
-  const AppRecIconScaleMap = {
-    bangumiFollow: 1.3,
-    favorite: 0.9
-  };
-  function getField(id) {
-    return AppRecIconMap[id] || AppRecIconMap[1];
-  }
-  const borderRadiusIdentifier = "--video-card-border-radius";
-  const borderRadiusValue = `var(${borderRadiusIdentifier})`;
-  const borderRadiusStyle = {
-    borderRadius: borderRadiusValue
-  };
-  const STAT_NUMBER_FALLBACK = "0";
-  const PLAYER_SCREEN_MODE = "player-screen-mode";
-  var PlayerScreenMode = /* @__PURE__ */ ((PlayerScreenMode2) => {
-    PlayerScreenMode2["Normal"] = "normal";
-    PlayerScreenMode2["Wide"] = "wide";
-    PlayerScreenMode2["WebFullscreen"] = "web";
-    PlayerScreenMode2["Fullscreen"] = "full";
-    return PlayerScreenMode2;
-  })(PlayerScreenMode || {});
-  var XOR_CODE = 23442827791579n;
-  var MASK_CODE = 2251799813685247n;
-  var MAX_AID = 1n << 51n;
-  var BASE = 58n;
-  var data = "FcwAPNKTMug3GV5Lj7EJnHpWsx4tb8haYeviqBz6rkCy12mUSDQX9RdoZf";
-  function av2bv(aid2) {
-    const bytes = ["B", "V", "1", "0", "0", "0", "0", "0", "0", "0", "0", "0"];
-    let bvIndex = bytes.length - 1;
-    let tmp = (MAX_AID | BigInt(aid2)) ^ XOR_CODE;
-    while (tmp > 0) {
-      bytes[bvIndex] = data[Number(tmp % BigInt(BASE))];
-      tmp = tmp / BASE;
-      bvIndex -= 1;
-    }
-    [bytes[3], bytes[9]] = [bytes[9], bytes[3]];
-    [bytes[4], bytes[7]] = [bytes[7], bytes[4]];
-    return bytes.join("");
-  }
-  function bv2av(bvid) {
-    const bvidArr = Array.from(bvid);
-    [bvidArr[3], bvidArr[9]] = [bvidArr[9], bvidArr[3]];
-    [bvidArr[4], bvidArr[7]] = [bvidArr[7], bvidArr[4]];
-    bvidArr.splice(0, 3);
-    const tmp = bvidArr.reduce((pre, bvidChar) => pre * BASE + BigInt(data.indexOf(bvidChar)), 0n);
-    return Number(tmp & MASK_CODE ^ XOR_CODE);
-  }
-  var BvCode = { av2bv, bv2av };
-  function lookinto(item, opts) {
-    if (item.api === "pc")
-      return opts.pc(item);
-    if (item.api === "app")
-      return opts.app(item);
-    if (item.api === "dynamic")
-      return opts.dynamic(item);
-    if (item.api === "watchlater")
-      return opts.watchlater(item);
-    if (item.api === "fav")
-      return opts.fav(item);
-    if (item.api === "popular-general")
-      return opts["popular-general"](item);
-    if (item.api === "popular-weekly")
-      return opts["popular-weekly"](item);
-    throw new Error(`unknown api type`);
-  }
-  function normalizeCardData(item) {
-    const ret = lookinto(item, {
-      "pc": apiPcAdapter,
-      "app": apiAppAdapter,
-      "dynamic": apiDynamicAdapter,
-      "watchlater": apiWatchLaterAdapter,
-      "fav": apiFavAdapter,
-      "popular-general": apiPopularGeneralAdapter,
-      "popular-weekly": apiPopularWeeklyAdapter
-    });
-    if (ret.authorFace)
-      ret.authorFace = toHttps(ret.authorFace);
-    ret.cover = toHttps(ret.cover);
-    return ret;
-  }
-  function apiAppAdapter(item) {
-    return item.device === "android" ? apiAndroidAppAdapter(item) : apiIpadAppAdapter(item);
-  }
-  function apiAndroidAppAdapter(item) {
-    var _a2, _b2, _c;
-    const extractCountFor = (target) => {
-      const {
-        cover_left_icon_1,
-        cover_left_text_1,
-        cover_left_icon_2,
-        cover_left_text_2
-      } = item;
-      if (cover_left_icon_1 && AppRecIconMap[cover_left_icon_1] === target) {
-        return parseCount(cover_left_text_1);
-      }
-      if (cover_left_icon_2 && AppRecIconMap[cover_left_icon_2] === target) {
-        return parseCount(cover_left_text_2);
-      }
-    };
-    const avid = item.param;
-    const bvid = BvCode.av2bv(Number(item.param));
-    const href = (() => {
-      var _a3;
-      if (item.uri.startsWith("http://") || item.uri.startsWith("https://")) {
-        return item.uri;
-      }
-      if (item.goto === "av") {
-        return `/video/${bvid}/`;
-      }
-      if (item.goto === "bangumi") {
-        console.warn(`[${APP_NAME}]: bangumi uri should not starts with 'bilibili://': %s`, item.uri);
-        return item.uri;
-      }
-      if (item.goto === "picture") {
-        const id = (_a3 = /^bilibili:\/\/article\/(\d+)$/.exec(item.uri)) == null ? void 0 : _a3[1];
-        if (id)
-          return `/read/cv${id}`;
-        return item.uri;
-      }
-      return item.uri;
-    })();
-    return {
-      // video
-      avid,
-      bvid,
-      goto: item.goto,
-      href,
-      title: item.title,
-      cover: item.cover,
-      pubts: void 0,
-      pubdateDisplay: void 0,
-      duration: ((_a2 = item.player_args) == null ? void 0 : _a2.duration) || 0,
-      durationStr: formatDuration((_b2 = item.player_args) == null ? void 0 : _b2.duration),
-      recommendReason: item.rcmd_reason,
-      // stat
-      play: extractCountFor("play"),
-      like: void 0,
-      coin: void 0,
-      danmaku: extractCountFor("danmaku"),
-      favorite: void 0,
-      bangumiFollow: extractCountFor("bangumiFollow"),
-      // e.g 2023-09-17
-      // cover_left_1_content_description: "156点赞"
-      // cover_left_icon_1: 20
-      // cover_left_text_1: "156"
-      statItems: [item.cover_left_text_1 && {
-        field: getField(item.cover_left_icon_1),
-        value: item.cover_left_text_1
-      }, item.cover_left_text_2 && {
-        field: getField(item.cover_left_icon_2),
-        value: item.cover_left_text_2
-      }].filter(Boolean),
-      // author
-      authorName: item.args.up_name,
-      authorFace: void 0,
-      authorMid: String(item.args.up_id),
-      appBadge: item.badge,
-      appBadgeDesc: ((_c = item.desc_button) == null ? void 0 : _c.text) || item.desc || ""
-    };
-  }
-  function apiIpadAppAdapter(item) {
-    var _a2, _b2;
-    const extractCountFor = (target) => {
-      const {
-        cover_left_text_1,
-        cover_left_text_2,
-        cover_left_text_3
-      } = item;
-      const arr = [cover_left_text_1, cover_left_text_2, cover_left_text_3].filter(Boolean);
-      if (target === "play") {
-        const text = arr.find((text2) => /观看|播放$/.test(text2));
-        if (!text)
-          return;
-        const rest = text.replace(/观看|播放$/, "");
-        return parseCount(rest);
-      }
-      if (target === "danmaku") {
-        const text = arr.find((text2) => /弹幕$/.test(text2));
-        if (!text)
-          return;
-        const rest = text.replace(/弹幕$/, "");
-        return parseCount(rest);
-      }
-      if (target === "bangumiFollow") {
-        const text = arr.find((text2) => /追[剧番]$/.test(text2));
-        if (!text)
-          return;
-        const rest = text.replace(/追[剧番]$/, "");
-        return parseCount(rest);
-      }
-    };
-    const avid = item.param;
-    const bvid = item.bvid || BvCode.av2bv(Number(item.param));
-    const href = (() => {
-      var _a3;
-      if (item.uri.startsWith("http://") || item.uri.startsWith("https://")) {
-        return item.uri;
-      }
-      if (item.goto === "av") {
-        return `/video/${bvid}/`;
-      }
-      if (item.goto === "bangumi") {
-        console.warn(`[${APP_NAME}]: bangumi uri should not starts with 'bilibili://': %s`, item.uri);
-        return item.uri;
-      }
-      if (item.goto === "picture") {
-        const id = (_a3 = /^bilibili:\/\/article\/(\d+)$/.exec(item.uri)) == null ? void 0 : _a3[1];
-        if (id)
-          return `/read/cv${id}`;
-        return item.uri;
-      }
-      return item.uri;
-    })();
-    const play = extractCountFor("play");
-    const like = void 0;
-    const coin = void 0;
-    const danmaku = extractCountFor("danmaku");
-    const favorite = void 0;
-    const bangumiFollow = extractCountFor("bangumiFollow");
-    const statItems = [{
-      field: "play",
-      value: formatCount(play) || STAT_NUMBER_FALLBACK
-    }, typeof danmaku === "number" ? {
-      field: "danmaku",
-      value: formatCount(danmaku) || STAT_NUMBER_FALLBACK
-    } : {
-      field: "bangumiFollow",
-      value: formatCount(bangumiFollow) || STAT_NUMBER_FALLBACK
-    }];
-    return {
-      // video
-      avid,
-      bvid,
-      goto: item.goto,
-      href,
-      title: item.title,
-      desc: item.desc,
-      cover: item.cover,
-      pubts: void 0,
-      pubdateDisplay: void 0,
-      duration: ((_a2 = item.player_args) == null ? void 0 : _a2.duration) || 0,
-      durationStr: formatDuration((_b2 = item.player_args) == null ? void 0 : _b2.duration),
-      recommendReason: item.bottom_rcmd_reason || item.top_rcmd_reason,
-      // TODO: top_rcmd_reason
-      // stat
-      play,
-      like,
-      coin,
-      danmaku,
-      favorite,
-      bangumiFollow,
-      statItems,
-      // author
-      authorName: item.args.up_name,
-      authorFace: item.avatar.cover,
-      authorMid: String(item.args.up_id || ""),
-      appBadge: item.cover_badge,
-      appBadgeDesc: item.desc
-    };
-  }
-  function apiPcAdapter(item) {
-    var _a2;
-    return {
-      // video
-      avid: String(item.id),
-      bvid: item.bvid,
-      goto: item.goto,
-      href: item.goto === "av" ? `/video/${item.bvid}/` : item.uri,
-      title: item.title,
-      cover: item.pic,
-      pubts: item.pubdate,
-      pubdateDisplay: formatTimeStamp(item.pubdate),
-      duration: item.duration,
-      durationStr: formatDuration(item.duration),
-      recommendReason: (_a2 = item.rcmd_reason) == null ? void 0 : _a2.content,
-      // stat
-      play: item.stat.view,
-      like: item.stat.like,
-      coin: void 0,
-      danmaku: item.stat.danmaku,
-      favorite: void 0,
-      statItems: [{
-        field: "play",
-        value: formatCount(item.stat.view) || STAT_NUMBER_FALLBACK
-      }, {
-        field: "like",
-        value: formatCount(item.stat.like) || STAT_NUMBER_FALLBACK
-      }],
-      // author
-      authorName: item.owner.name,
-      authorFace: item.owner.face,
-      authorMid: String(item.owner.mid)
-    };
-  }
-  function apiDynamicAdapter(item) {
-    const v2 = item.modules.module_dynamic.major.archive;
-    const author = item.modules.module_author;
-    const oneDayAgo = dayjs().subtract(2, "days").unix();
-    const pubdateDisplay = (() => {
-      const ts = author.pub_ts;
-      if (ts > oneDayAgo) {
-        return author.pub_time;
-      } else {
-        return formatTimeStamp(ts);
-      }
-    })();
-    return {
-      // video
-      avid: v2.aid,
-      bvid: v2.bvid,
-      goto: "av",
-      href: `/video/${v2.bvid}/`,
-      title: v2.title,
-      cover: v2.cover,
-      pubts: author.pub_ts,
-      pubdateDisplay,
-      duration: parseDuration(v2.duration_text) || 0,
-      durationStr: v2.duration_text,
-      recommendReason: v2.badge.text,
-      // stat
-      play: parseCount(v2.stat.play),
-      danmaku: parseCount(v2.stat.danmaku),
-      like: void 0,
-      coin: void 0,
-      favorite: void 0,
-      // author
-      authorName: author.name,
-      authorFace: author.face,
-      authorMid: author.mid.toString()
-    };
-  }
-  function apiWatchLaterAdapter(item) {
-    const invalidReason = getVideoInvalidReason(item.state);
-    const title = `${item.viewed ? "【已观看】· " : ""}${item.title}`;
-    const titleRender = invalidReason ? /* @__PURE__ */ jsx(AntdTooltip, {
-      title: /* @__PURE__ */ jsxs(Fragment, {
-        children: ["视频已失效, 原因: ", invalidReason]
-      }),
-      align: {
-        offset: [0, -5]
-      },
-      placement: "topLeft",
-      children: /* @__PURE__ */ jsxs("del", {
-        children: [item.viewed ? "【已观看】· " : "", item.title, "`"]
-      })
-    }) : void 0;
-    return {
-      // video
-      avid: String(item.aid),
-      bvid: item.bvid,
-      goto: "av",
-      href: item.uri,
-      title,
-      titleRender,
-      cover: item.pic,
-      pubts: item.pubdate,
-      pubdateDisplay: formatTimeStamp(item.pubdate),
-      pubdateDisplayTitle: `${formatTimeStamp(item.pubdate, true)} 发布, ${formatTimeStamp(item.add_at, true)} 添加稍后再看`,
-      duration: item.duration,
-      durationStr: formatDuration(item.duration),
-      recommendReason: `${formatTimeStamp(item.add_at)} · 稍后再看`,
-      invalidReason,
-      // stat
-      play: item.stat.view,
-      like: item.stat.like,
-      coin: void 0,
-      danmaku: item.stat.danmaku,
-      favorite: void 0,
-      statItems: [
-        {
-          field: "play",
-          value: formatCount(item.stat.view) || STAT_NUMBER_FALLBACK
-        },
-        {
-          field: "like",
-          value: formatCount(item.stat.like) || STAT_NUMBER_FALLBACK
-        },
-        // { field: 'coin', value: formatCount(item.stat.coin) || STAT_NUMBER_FALLBACK },
-        {
-          field: "favorite",
-          value: formatCount(item.stat.favorite) || STAT_NUMBER_FALLBACK
-        }
-      ],
-      // author
-      authorName: item.owner.name,
-      authorFace: item.owner.face,
-      authorMid: String(item.owner.mid)
-    };
-  }
-  function apiFavAdapter(item) {
-    return {
-      // video
-      avid: String(item.id),
-      bvid: item.bvid,
-      goto: "av",
-      href: `/video/${item.bvid}/`,
-      title: `【${item.folder.title}】· ${item.title}`,
-      titleRender: /* @__PURE__ */ jsxs(Fragment, {
-        children: ["【", /* @__PURE__ */ jsx(IconPark, {
-          name: "Star",
-          size: 16,
-          theme: "two-tone",
-          fill: ["currentColor", colorPrimaryValue],
-          style: {
-            display: "inline-block",
-            verticalAlign: "middle",
-            marginLeft: 10,
-            marginRight: 4,
-            marginTop: -4
-          }
-        }), item.folder.title, "】· ", item.title]
-      }),
-      cover: item.cover,
-      pubts: item.pubtime,
-      pubdateDisplay: formatTimeStamp(item.pubtime),
-      duration: item.duration,
-      durationStr: formatDuration(item.duration),
-      recommendReason: `${formatTimeStamp(item.fav_time)} · 收藏`,
-      // stat
-      play: item.cnt_info.play,
-      like: void 0,
-      coin: void 0,
-      danmaku: item.cnt_info.danmaku,
-      favorite: item.cnt_info.collect,
-      statItems: [{
-        field: "play",
-        value: formatCount(item.cnt_info.play) || STAT_NUMBER_FALLBACK
-      }, {
-        field: "danmaku",
-        value: formatCount(item.cnt_info.danmaku) || STAT_NUMBER_FALLBACK
-      }, {
-        field: "favorite",
-        value: formatCount(item.cnt_info.collect) || STAT_NUMBER_FALLBACK
-      }],
-      // author
-      authorName: item.upper.name,
-      authorFace: item.upper.face,
-      authorMid: String(item.upper.mid)
-    };
-  }
-  function apiPopularGeneralAdapter(item) {
-    var _a2;
-    return {
-      // video
-      avid: String(item.aid),
-      bvid: item.bvid,
-      goto: "av",
-      href: `/video/${item.bvid}/`,
-      title: item.title,
-      cover: item.pic,
-      pubts: item.pubdate,
-      pubdateDisplay: formatTimeStamp(item.pubdate),
-      duration: item.duration,
-      durationStr: formatDuration(item.duration),
-      recommendReason: (_a2 = item.rcmd_reason) == null ? void 0 : _a2.content,
-      // stat
-      play: item.stat.view,
-      like: item.stat.like,
-      coin: void 0,
-      danmaku: item.stat.danmaku,
-      favorite: void 0,
-      statItems: [{
-        field: "play",
-        value: formatCount(item.stat.view) || STAT_NUMBER_FALLBACK
-      }, {
-        field: "like",
-        value: formatCount(item.stat.like) || STAT_NUMBER_FALLBACK
-      }, {
-        field: "danmaku",
-        value: formatCount(item.stat.danmaku) || STAT_NUMBER_FALLBACK
-      }],
-      // author
-      authorName: item.owner.name,
-      authorFace: item.owner.face,
-      authorMid: String(item.owner.mid)
-    };
-  }
-  function apiPopularWeeklyAdapter(item) {
-    return {
-      // video
-      avid: String(item.aid),
-      bvid: item.bvid,
-      goto: "av",
-      href: `/video/${item.bvid}/`,
-      title: item.title,
-      cover: item.pic,
-      pubts: item.pubdate,
-      pubdateDisplay: formatTimeStamp(item.pubdate),
-      duration: item.duration,
-      durationStr: formatDuration(item.duration),
-      recommendReason: item.rcmd_reason,
-      // stat
-      play: item.stat.view,
-      like: item.stat.like,
-      coin: void 0,
-      danmaku: item.stat.danmaku,
-      favorite: void 0,
-      statItems: [{
-        field: "play",
-        value: formatCount(item.stat.view) || STAT_NUMBER_FALLBACK
-      }, {
-        field: "like",
-        value: formatCount(item.stat.like) || STAT_NUMBER_FALLBACK
-      }, {
-        field: "danmaku",
-        value: formatCount(item.stat.danmaku) || STAT_NUMBER_FALLBACK
-      }],
-      // author
-      authorName: item.owner.name,
-      authorFace: item.owner.face,
-      authorMid: String(item.owner.mid)
-    };
-  }
-  function usePreviewAnimation({
-    bvid,
-    title,
-    autoPreviewWhenHover,
-    active,
-    tryFetchVideoData,
-    videoPreviewWrapperRef
-  }) {
-    const DEBUG_ANIMATION = false;
-    const [previewAnimationProgress, setPreviewAnimationProgress] = useRafState(void 0);
-    const [mouseMoved, setMouseMoved] = React__default.useState(false);
-    const isHovering = React__default.useRef(false);
-    const startByHover = React__default.useRef(false);
-    useEventListener("mouseenter", (e2) => {
-      isHovering.current = true;
-      if (autoPreviewWhenHover && !idRef.current) {
-        onStartPreviewAnimation(true);
-      }
-    }, {
-      target: videoPreviewWrapperRef
-    });
-    useEventListener("mouseleave", (e2) => {
-      isHovering.current = false;
-    }, {
-      target: videoPreviewWrapperRef
-    });
-    useEventListener("mousemove", (e2) => {
-      setMouseMoved(true);
-      if (!autoPreviewWhenHover) {
-        stopAnimation();
-      }
-    }, {
-      target: videoPreviewWrapperRef
-    });
-    const unmounted = useUnmountedRef$1();
-    const idRef = React__default.useRef(void 0);
-    const shouldStopAnimation = useMemoizedFn(() => {
-      if (unmounted.current)
-        return true;
-      if (autoPreviewWhenHover) {
-        if (startByHover.current) {
-          if (!isHovering.current)
-            return true;
-        } else {
-          if (!active)
-            return true;
-        }
-      } else {
-        if (!active)
-          return true;
-        if (mouseMoved)
-          return true;
-      }
-      return false;
-    });
-    const stopAnimation = useMemoizedFn((isClear = false) => {
-      if (!isClear && DEBUG_ANIMATION) {
-        console.log(`[${APP_NAME}]: [animation] stopAnimation: %o`, {
-          autoPreviewWhenHover,
-          unmounted: unmounted.current,
-          isHovering: isHovering.current,
-          active,
-          mouseMoved
-        });
-      }
-      if (idRef.current)
-        cancelAnimationFrame(idRef.current);
-      idRef.current = void 0;
-      setPreviewAnimationProgress(void 0);
-      setAnimationPaused(false);
-    });
-    const [animationPaused, setAnimationPaused, getAnimationPaused] = useGetState(false);
-    const resumeAnimationInner = React__default.useRef();
-    const onHotkeyPreviewAnimation = useMemoizedFn(() => {
-      var _a2;
-      if (!idRef.current) {
-        onStartPreviewAnimation();
-        return;
-      }
-      setAnimationPaused((val) => !val);
-      if (animationPaused) {
-        (_a2 = resumeAnimationInner.current) == null ? void 0 : _a2.call(resumeAnimationInner, previewAnimationProgress || 0);
-      }
-    });
-    const getProgress = useMemoizedFn(() => {
-      return previewAnimationProgress || 0;
-    });
-    const onStartPreviewAnimation = useMemoizedFn((_startByHover = false) => {
-      startByHover.current = _startByHover;
-      setMouseMoved(false);
-      setAnimationPaused(false);
-      tryFetchVideoData();
-      stopAnimation(true);
-      setPreviewAnimationProgress((val) => typeof val === "undefined" ? 0 : val);
-      const runDuration = 8e3;
-      const updateProgressInterval = () => typeof settings.autoPreviewUpdateInterval === "number" ? settings.autoPreviewUpdateInterval : 400;
-      let start = performance.now();
-      let lastUpdateAt = 0;
-      resumeAnimationInner.current = () => {
-        start = performance.now() - getProgress() * runDuration;
-      };
-      function frame(t2) {
-        if (shouldStopAnimation()) {
-          stopAnimation();
-          return;
-        }
-        const update = () => {
-          const elapsed = performance.now() - start;
-          const p2 = Math.min(elapsed % runDuration / runDuration, 1);
-          setPreviewAnimationProgress(p2);
-        };
-        if (!getAnimationPaused()) {
-          if (updateProgressInterval()) {
-            if (!lastUpdateAt || performance.now() - lastUpdateAt >= updateProgressInterval()) {
-              lastUpdateAt = performance.now();
-              update();
-            }
-          } else {
-            update();
-          }
-        }
-        idRef.current = requestAnimationFrame(frame);
-      }
-      idRef.current = requestAnimationFrame(frame);
-    });
-    return {
-      onHotkeyPreviewAnimation,
-      onStartPreviewAnimation,
-      previewAnimationProgress
-    };
-  }
-  const debug$5 = baseDebug.extend("components:VideoCard");
-  function copyContent(content) {
-    GM.setClipboard(content);
-    AntdMessage.success(`已复制: ${content}`);
-  }
-  const defaultEmitter = mitt();
-  const VideoCard = React__default.memo(function VideoCard2({ style, className, item, loading, active, onRemoveCurrent, onMoveToFirst, onRefresh, emitter: emitter2, ...restProps }) {
-    loading = loading ?? !item;
-    const dislikedReason = useDislikedReason((item == null ? void 0 : item.api) === "app" && item.param);
-    const cardData = React__default.useMemo(() => item && normalizeCardData(item), [item]);
-    const blacklisted = useInBlacklist(cardData == null ? void 0 : cardData.authorMid);
-    return /* @__PURE__ */ jsx("div", { style, className: cx("bili-video-card", styles$2.biliVideoCard, className), ...restProps, children: loading ? /* @__PURE__ */ jsx(SkeletonCard, { loading }) : item && cardData && (dislikedReason ? /* @__PURE__ */ jsx(DislikedCard, { item, emitter: emitter2, dislikedReason }) : blacklisted ? /* @__PURE__ */ jsx(BlacklistCard, { cardData }) : /* @__PURE__ */ jsx(VideoCardInner, { item, cardData, active, emitter: emitter2, onRemoveCurrent, onMoveToFirst, onRefresh })) });
-  });
-  var _ref8$1 = { name: "16dof6j", styles: "flex:1;margin-left:10px" };
-  var _ref9$1 = { name: "1po2nvr", styles: "width:32px;height:32px;border-radius:50%" };
-  const SkeletonCard = React__default.memo(function SkeletonCard2({ loading }) {
-    const { styleFancy } = useSettingsSnapshot();
-    return /* @__PURE__ */ jsxs("div", { className: cx("bili-video-card__skeleton", { hide: !loading, [styles$2.skeletonActive]: loading }), children: [/* @__PURE__ */ jsx("div", { className: "bili-video-card__skeleton--cover", style: borderRadiusStyle }), !styleFancy && /* @__PURE__ */ jsx("div", { className: "bili-video-card__skeleton--info", children: /* @__PURE__ */ jsxs("div", { className: "bili-video-card__skeleton--right", children: [/* @__PURE__ */ jsx("p", { className: "bili-video-card__skeleton--text" }), /* @__PURE__ */ jsx("p", { className: "bili-video-card__skeleton--text short" }), /* @__PURE__ */ jsx("p", { className: "bili-video-card__skeleton--light" })] }) }), styleFancy && /* @__PURE__ */ jsxs("div", { className: "bili-video-card__skeleton--info", children: [/* @__PURE__ */ jsx("div", { className: "bili-video-card__skeleton--avatar", css: _ref9$1 }), /* @__PURE__ */ jsxs("div", { className: "bili-video-card__skeleton--right", css: _ref8$1, children: [/* @__PURE__ */ jsx("p", { className: "bili-video-card__skeleton--text" }), /* @__PURE__ */ jsx("p", { className: "bili-video-card__skeleton--text short" }), /* @__PURE__ */ jsx("p", { className: "bili-video-card__skeleton--light" }), /* @__PURE__ */ jsx("p", { className: "bili-video-card__skeleton--text tiny" })] })] })] });
-  });
-  const DislikedCard = React__default.memo(function DislikedCard2({ dislikedReason, item, emitter: emitter2 = defaultEmitter }) {
-    const onCancelDislike = useMemoizedFn(async () => {
-      if (!(dislikedReason == null ? void 0 : dislikedReason.id))
-        return;
-      let success = false;
-      let err;
-      try {
-        success = await cancelDislike(item, dislikedReason.id);
-      } catch (e2) {
-        err = e2;
-      }
-      if (err) {
-        console.error(err.stack || err);
-        return toastRequestFail();
-      }
-      success ? AntdMessage.success("已撤销") : AntdMessage.error(OPERATION_FAIL_MSG);
-      if (success) {
-        delDislikeId(item.param);
-      }
-    });
-    useMittOn(emitter2, "cancel-dislike", onCancelDislike);
-    return /* @__PURE__ */ jsxs("div", { className: cx(styles$2.dislikedWrapper), children: [/* @__PURE__ */ jsx("div", { className: styles$2.dislikeContentCover, children: /* @__PURE__ */ jsxs("div", { className: styles$2.dislikeContentCoverInner, children: [/* @__PURE__ */ jsx(IconPark, { name: "DistraughtFace", size: 32, className: styles$2.dislikeIcon }), /* @__PURE__ */ jsx("div", { className: styles$2.dislikeReason, children: dislikedReason == null ? void 0 : dislikedReason.name }), /* @__PURE__ */ jsx("div", { className: styles$2.dislikeDesc, children: (dislikedReason == null ? void 0 : dislikedReason.toast) || "将减少此类内容推荐" })] }) }), /* @__PURE__ */ jsx("div", { className: styles$2.dislikeContentAction, children: /* @__PURE__ */ jsxs("button", { onClick: onCancelDislike, children: [/* @__PURE__ */ jsx(IconPark, { name: "Return", size: "16", style: { marginRight: 4, marginTop: -2 } }), "撤销"] }) })] });
-  });
-  const BlacklistCard = React__default.memo(function BlacklistCard2({ cardData }) {
-    const { authorMid, authorFace, authorName } = cardData;
-    const onCancel = useMemoizedFn(async () => {
-      if (!authorMid)
-        return;
-      const success = await UserBlacklistService.remove(authorMid);
-      if (success)
-        AntdMessage.success(`已移出黑名单: ${authorName}`);
-    });
-    return /* @__PURE__ */ jsxs("div", { className: cx(styles$2.dislikedWrapper), children: [/* @__PURE__ */ jsx("div", { className: styles$2.dislikeContentCover, children: /* @__PURE__ */ jsxs("div", { className: styles$2.dislikeContentCoverInner, children: [/* @__PURE__ */ jsx(IconPark, { name: "PeopleDelete", size: 32, className: styles$2.dislikeIcon }), /* @__PURE__ */ jsx("div", { className: styles$2.dislikeReason, children: "已拉黑" }), /* @__PURE__ */ jsxs("div", { className: styles$2.dislikeDesc, children: ["UP: ", authorName] })] }) }), /* @__PURE__ */ jsx("div", { className: styles$2.dislikeContentAction, children: /* @__PURE__ */ jsxs("button", { onClick: onCancel, children: [/* @__PURE__ */ jsx(IconPark, { name: "Return", size: "16", style: { marginRight: 4, marginTop: -2 } }), "撤销"] }) })] });
-  });
-  var _ref$6 = { name: "putlsr", styles: "margin-top:4px;padding-left:0;max-width:100%" };
-  var _ref2$6 = { name: "s5xdrg", styles: "display:flex;align-items:center" };
-  var _ref3$2 = { name: "zmsypw", styles: "margin-top:4px;color:var(--text3);font-size:var(--subtitle-font-size)" };
-  var _ref4$1 = { name: "1ic5zs4", styles: "display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-overflow:ellipsis;word-break:break-all;line-break:anywhere;color:var(--text1);font-size:var(--title-font-size);line-height:var(--title-line-height)" };
-  var _ref5$1 = { name: "t6djnl", styles: "flex:1;margin-left:10px;overflow:hidden" };
-  var _ref6$1 = { name: "1t32qz5", styles: "display:flex;margin-top:15px" };
-  var _ref7$1 = { name: "11ginrh", styles: "background-color:unset;position:static" };
-  const VideoCardInner = React__default.memo(function VideoCardInner2({ item, cardData, active = false, onRemoveCurrent, onMoveToFirst, onRefresh, emitter: emitter2 = defaultEmitter }) {
-    var _a2, _b2;
-    item.api === "pc";
-    const isApp = item.api === "app";
-    item.api === "dynamic";
-    item.api === "watchlater";
-    item.api === "fav";
-    const { styleFancy } = useSettingsSnapshot();
-    let {
-      // video
-      avid,
-      bvid,
-      goto,
-      href,
-      title,
-      titleRender,
-      desc,
-      cover,
-      pubdateDisplay,
-      pubdateDisplayTitle,
-      duration: duration2,
-      durationStr,
-      recommendReason: recommendReason2,
-      invalidReason,
-      // stat
-      play,
-      like,
-      coin,
-      danmaku,
-      favorite,
-      bangumiFollow,
-      statItems,
-      // author
-      authorName,
-      authorFace,
-      authorMid,
-      // adpater specific
-      appBadge,
-      appBadgeDesc
-    } = cardData;
-    const isNormalVideo = goto === "av";
-    if (!["av", "bangumi", "picture"].includes(goto)) {
-      console.warn(`[${APP_NAME}]: none (av,bangumi,picture) goto type %s`, goto, item);
-    }
-    const [videoData, setVideoData] = React__default.useState(null);
-    const isFetchingVideoData = React__default.useRef(false);
-    const tryFetchVideoData = useMemoizedFn(async () => {
-      if (videoData)
-        return;
-      if (isFetchingVideoData.current)
-        return;
-      try {
-        isFetchingVideoData.current = true;
-        setVideoData(await getVideoData(bvid));
-      } finally {
-        isFetchingVideoData.current = false;
-      }
-    });
-    const videoPreviewWrapperRef = React__default.useRef(null);
-    const [mouseEnterRelativeX, setMouseEnterRelativeX] = React__default.useState(void 0);
-    useEventListener("mouseenter", (e2) => {
-      var _a3;
-      const rect = (_a3 = videoPreviewWrapperRef.current) == null ? void 0 : _a3.getBoundingClientRect();
-      if (!rect)
-        return;
-      const { x: x2 } = rect;
-      const relativeX = e2.pageX - window.pageXOffset - x2;
-      setMouseEnterRelativeX(relativeX);
-    }, { target: videoPreviewWrapperRef });
-    const isHovering = useHover(videoPreviewWrapperRef);
-    const { autoPreviewWhenHover } = useSettingsSnapshot();
-    const { onStartPreviewAnimation, onHotkeyPreviewAnimation, previewAnimationProgress } = usePreviewAnimation({ bvid, title, autoPreviewWhenHover, active, tryFetchVideoData, videoPreviewWrapperRef });
-    useUpdateEffect(() => {
-      if (!active)
-        return;
-      try {
-        ;
-        unsafeWindow[`${APP_KEY_PREFIX}_activeItem`] = item;
-      } catch (e2) {
-        console.warn("set unsafeWindow activeItem error");
-        console.warn(e2.stack || e2);
-      }
-      if (settings.autoPreviewWhenKeyboardSelect) {
-        onStartPreviewAnimation();
-      }
-    }, [active]);
-    const watchLaterRef = React__default.useRef(null);
-    const isWatchLaterHovering = useHover(watchLaterRef);
-    const watchLaterAdded = useWatchLaterState(bvid);
-    const watchLaterAddedPrevious = usePrevious$1(watchLaterAdd);
-    const { accessKey } = useSettingsSnapshot();
-    const authed = Boolean(accessKey);
-    React__default.useEffect(() => {
-      if (isHovering)
-        tryFetchVideoData();
-    }, [isHovering]);
-    const hasWatchLaterEntry = item.api !== "app" || item.api === "app" && item.goto === "av";
-    const requestingWatchLaterApi = React__default.useRef(false);
-    const onToggleWatchLater = useMemoizedFn(async (e2, usingAction) => {
-      e2 == null ? void 0 : e2.preventDefault();
-      e2 == null ? void 0 : e2.stopPropagation();
-      usingAction ?? (usingAction = watchLaterAdded ? watchLaterDel : watchLaterAdd);
-      if (usingAction !== watchLaterAdd && usingAction !== watchLaterDel) {
-        throw new Error("unexpected usingAction provided");
-      }
-      if (requestingWatchLaterApi.current)
-        return { success: false };
-      requestingWatchLaterApi.current = true;
-      let success = false;
-      try {
-        success = await usingAction(avid);
-      } finally {
-        requestingWatchLaterApi.current = false;
-      }
-      const targetState = usingAction === watchLaterAdd ? true : false;
-      if (success) {
-        if (targetState) {
-          watchLaterState.bvidSet.add(bvid);
-        } else {
-          watchLaterState.bvidSet.delete(bvid);
-        }
-        if (item.api === "watchlater") {
-          if (!targetState) {
-            await delay(100);
-            onRemoveCurrent == null ? void 0 : onRemoveCurrent(item, cardData);
-          }
-        } else {
-          AntdMessage.success(`已${targetState ? "添加" : "移除"}稍后再看`);
-        }
-      }
-      return { success, targetState };
-    });
-    const btnDislikeRef = React__default.useRef(null);
-    const isBtnDislikeHovering = useHover(btnDislikeRef);
-    const onTriggerDislike = useMemoizedFn((e2) => {
-      e2 == null ? void 0 : e2.preventDefault();
-      e2 == null ? void 0 : e2.stopPropagation();
-      if (!hasDislikeEntry) {
-        if (item.api !== "app") {
-          return AntdMessage.error("当前视频不支持提交「我不想看」");
-        }
-        if (!authed) {
-          return AntdMessage.error("请先获取 access_key");
-        }
-        return;
-      }
-      showModalDislike(item);
-    });
-    const playStr = React__default.useMemo(() => formatCount(play), [play]);
-    React__default.useMemo(() => formatCount(like), [like]);
-    const danmakuStr = React__default.useMemo(() => formatCount(danmaku), [danmaku]);
-    React__default.useMemo(() => formatCount(favorite), [favorite]);
-    const makeStatItem = ({ text, iconSvgName, iconSvgScale }) => {
-      return /* @__PURE__ */ jsxs("span", { className: "bili-video-card__stats--item", children: [/* @__PURE__ */ jsx("svg", { className: "bili-video-card__stats--icon", style: { transform: iconSvgScale ? `scale(${iconSvgScale})` : void 0 }, children: /* @__PURE__ */ jsx("use", { href: iconSvgName }) }), /* @__PURE__ */ jsx("span", { className: "bili-video-card__stats--text", style: { lineHeight: "calc(var(--icon-size) + 1px)" }, children: text })] });
-    };
-    const [favFolderNames, setFavFolderNames] = React__default.useState(void 0);
-    const [favFolderUrls, setFavFolderUrls] = React__default.useState(void 0);
-    const updateFavFolderNames = useMemoizedFn(async () => {
-      if (item.api !== "watchlater")
-        return;
-      const result = await UserFavService.getVideoFavState(avid);
-      if (result) {
-        const { favFolderNames: favFolderNames2, favFolderUrls: favFolderUrls2 } = result;
-        setFavFolderNames(favFolderNames2);
-        setFavFolderUrls(favFolderUrls2);
-      }
-    });
-    const onOpen = useMemoizedFn(() => {
-      window.open(href, "_blank");
-    });
-    const onOpenInPopup = useMemoizedFn(() => {
-      var _a3;
-      let popupWidth = 1e3;
-      let popupHeight = Math.ceil(popupWidth / 16 * 9);
-      if (item.api === ApiType.app && ((_a3 = item.uri) == null ? void 0 : _a3.startsWith("bilibili://"))) {
-        const searchParams = new URL(item.uri).searchParams;
-        const playerWidth = Number(searchParams.get("player_width") || 0);
-        const playerHeight = Number(searchParams.get("player_height") || 0);
-        if (playerWidth && playerHeight && !isNaN(playerWidth) && !isNaN(playerHeight)) {
-          if (playerWidth < playerHeight) {
-            popupWidth = 720;
-            popupHeight = Math.floor(popupWidth / 9 * 16);
-          }
-        }
-      }
-      const left = (window.innerWidth - popupWidth) / 2;
-      const top = (window.innerHeight - popupHeight) / 2 - 50;
-      const features = ["popup=true", `width=${popupWidth}`, `height=${popupHeight}`, `left=${left}`, `top=${top}`].join(",");
-      const u2 = new URL(href, location.href);
-      u2.searchParams.append(PLAYER_SCREEN_MODE, PlayerScreenMode.WebFullscreen);
-      const newHref = u2.href;
-      debug$5("openInPopup: features -> %s", features);
-      window.open(newHref, "_blank", features);
-    });
-    const handleVideoLinkClick = useMemoizedFn((e2) => {
-      if (settings.openVideoInPopupWhenClick) {
-        e2.preventDefault();
-        onOpenInPopup();
-        return;
-      }
-      if (settings.openVideoAutoFullscreen) {
-        e2.preventDefault();
-        const u2 = new URL(href, location.href);
-        u2.searchParams.set(PLAYER_SCREEN_MODE, PlayerScreenMode.Fullscreen);
-        const newHref = u2.href;
-        window.open(newHref, "_blank");
-        return;
-      }
-    });
-    const onOpenInBackground = useMemoizedFn(() => {
-      const fullHref = new URL(href, location.href).href;
-      GM.openInTab(fullHref, { active: false, insert: true });
-    });
-    useMittOn(emitter2, "open", onOpen);
-    useMittOn(emitter2, "toggle-watch-later", () => onToggleWatchLater());
-    useMittOn(emitter2, "trigger-dislike", () => onTriggerDislike());
-    useMittOn(emitter2, "start-preview-animation", onStartPreviewAnimation);
-    useMittOn(emitter2, "hotkey-preview-animation", onHotkeyPreviewAnimation);
-    const hasDislikeEntry = isApp && authed && !!((_b2 = (_a2 = item.three_point) == null ? void 0 : _a2.dislike_reasons) == null ? void 0 : _b2.length);
-    const onCopyLink = useMemoizedFn(() => {
-      let content = href;
-      if (href.startsWith("/")) {
-        content = new URL(href, location.href).href;
-      }
-      copyContent(content);
-    });
-    const onOpenInIINA = useMemoizedFn(() => {
-      let usingHref = href;
-      if (item.api === "watchlater")
-        usingHref = `/video/${item.bvid}`;
-      const fullHref = new URL(usingHref, location.href).href;
-      const iinaUrl = `iina://open?url=${encodeURIComponent(fullHref)}`;
-      window.open(iinaUrl, "_self");
-    });
-    const tab2 = useCurrentSourceTab();
-    const hasBlacklistEntry = tab2 === "recommend-app" || tab2 === "recommend-pc" || tab2 === "popular-general" || tab2 === "popular-weekly";
-    const onBlacklistUp = useMemoizedFn(async () => {
-      if (!authorMid)
-        return AntdMessage.error("UP mid 为空!");
-      const success = await UserBlacklistService.add(authorMid);
-      if (success) {
-        AntdMessage.success(`已加入黑名单: ${authorName}`);
-      }
-    });
-    const hasUnfollowEntry = item.api === "dynamic" || (item.api === "app" || item.api === "pc") && recommendReason2 === "已关注";
-    const onUnfollowUp = useMemoizedFn(async () => {
-      if (!authorMid)
-        return;
-      const success = await UserfollowService.unfollow(authorMid);
-      if (success) {
-        AntdMessage.success("已取消关注");
-      }
-    });
-    const hasDynamicFeedFilterSelectUpEntry = isNormalVideo && !!authorMid && !!authorName && !!onRefresh;
-    const onDynamicFeedFilterSelectUp = useMemoizedFn(async () => {
-      if (!authorMid || !authorName)
-        return;
-      dynamicFeedFilterSelectUp({ upMid: Number(authorMid), upName: authorName });
-      videoSourceTabState.value = "dynamic-feed";
-      await delay(100);
-      await (onRefresh == null ? void 0 : onRefresh());
-    });
-    const contextMenus = React__default.useMemo(() => {
-      const watchLaterLabel = watchLaterAdded ? "移除稍后再看" : "稍后再看";
-      return [{ key: "open-link", label: "打开", icon: /* @__PURE__ */ jsx(IconPark, { name: "EfferentFour", size: 15 }), onClick: onOpen }, { key: "open-link-in-popup", label: "小窗打开", icon: /* @__PURE__ */ jsx(IconPark, { name: "EfferentFour", size: 15 }), onClick: onOpenInPopup }, { key: "open-link-in-background", label: "后台打开", icon: /* @__PURE__ */ jsx(IconPark, { name: "Split", size: 15 }), onClick: onOpenInBackground }, { type: "divider" }, { key: "copy-link", label: "复制视频链接", icon: /* @__PURE__ */ jsx(IconPark, { name: "Copy", size: 15 }), onClick: onCopyLink }, { key: "copy-bvid", label: "复制 BVID", icon: /* @__PURE__ */ jsx(IconPark, { name: "Copy", size: 15 }), onClick() {
-        copyContent(bvid);
-      } }, { type: "divider" }, hasDislikeEntry && { key: "dislike", label: "我不想看", icon: /* @__PURE__ */ jsx(IconPark, { name: "DislikeTwo", size: 15 }), onClick() {
-        onTriggerDislike();
-      } }, hasDynamicFeedFilterSelectUpEntry && { key: "dymamic-feed-filter-select-up", label: "查看 UP 的动态", icon: /* @__PURE__ */ jsx(IconPark, { name: "PeopleSearch", size: 15 }), onClick: onDynamicFeedFilterSelectUp }, hasUnfollowEntry && { key: "unfollow-up", label: "取消关注", icon: /* @__PURE__ */ jsx(IconPark, { name: "PeopleMinus", size: 15 }), onClick: onUnfollowUp }, hasBlacklistEntry && { key: "blacklist-up", label: "将 UP 加入黑名单", icon: /* @__PURE__ */ jsx(IconPark, { name: "PeopleDelete", size: 15 }), onClick: onBlacklistUp }, item.api === "watchlater" && { key: "add-fav", icon: /* @__PURE__ */ jsx(IconPark, { name: "Star", size: 15, ...(favFolderNames == null ? void 0 : favFolderNames.length) ? { theme: "two-tone", fill: ["currentColor", colorPrimaryValue] } : void 0 }), label: (favFolderNames == null ? void 0 : favFolderNames.length) ? `已收藏 ${favFolderNames.map((n2) => `「${n2}」`).join("")}` : "快速收藏", async onClick() {
-        const hasFaved = Boolean(favFolderNames == null ? void 0 : favFolderNames.length);
-        if (hasFaved) {
-          favFolderUrls == null ? void 0 : favFolderUrls.forEach((u2) => {
-            window.open(u2, "_blank");
-          });
-        } else {
-          const success = await UserFavService.addFav(avid);
-          if (success) {
-            AntdMessage.success(`已加入收藏夹「${defaultFavFolderName}」`);
-          }
-        }
-      } }, hasWatchLaterEntry && { key: "watchlater", label: watchLaterLabel, icon: /* @__PURE__ */ jsx(IconPark, { name: watchLaterAdded ? "Delete" : "FileCabinet", size: 15 }), onClick() {
-        onToggleWatchLater();
-      } }, item.api === "watchlater" && watchLaterAdded && { key: "watchlater-readd", label: "重新添加稍候再看 (移到最前)", icon: /* @__PURE__ */ jsx(IconPark, { name: "AddTwo", size: 15 }), async onClick() {
-        const { success } = await onToggleWatchLater(void 0, watchLaterAdd);
-        if (!success)
-          return;
-        onMoveToFirst == null ? void 0 : onMoveToFirst(item, cardData);
-      } }, ...item.api === "fav" ? [{ type: "divider" }, { key: "open-fav-folder", label: "浏览收藏夹", icon: /* @__PURE__ */ jsx(IconPark, { name: "EfferentFour", size: 15 }), onClick() {
-        const { id } = item.folder;
-        const url = formatFavFolderUrl(id);
-        window.open(url, "_blank");
-      } }, { key: "remove-fav", label: "移除收藏", icon: /* @__PURE__ */ jsx(IconPark, { name: "Delete", size: 15 }), async onClick() {
-        if (item.api !== "fav")
-          return;
-        const success = await UserFavService.removeFav(item.folder.id, `${item.id}:${item.type}`);
-        if (success) {
-          onRemoveCurrent == null ? void 0 : onRemoveCurrent(item, cardData);
-        }
-      } }] : [], ...isMac ? [{ type: "divider" }, { key: "open-in-iina", label: "在 IINA 中打开", icon: /* @__PURE__ */ jsx(IconPark, { name: "PlayTwo", size: 15 }), onClick: onOpenInIINA }] : []].filter(Boolean);
-    }, [item, hasWatchLaterEntry, watchLaterAdded, hasDislikeEntry, hasUnfollowEntry, hasBlacklistEntry, hasDynamicFeedFilterSelectUpEntry, favFolderNames, favFolderUrls]);
-    const onContextMenuOpenChange = useMemoizedFn((open) => {
-      if (!open)
-        return;
-      updateFavFolderNames();
-    });
-    const authorHref = authorMid ? `https://space.bilibili.com/${authorMid}` : href;
-    desc || (desc = `${authorName}${pubdateDisplay ? ` · ${pubdateDisplay}` : ""}`);
-    const descTitle = authorName && pubdateDisplayTitle ? `${authorName} · ${pubdateDisplayTitle}` : desc;
-    return /* @__PURE__ */ jsxs("div", { "data-bvid": bvid || "", className: "bili-video-card__wrap __scale-wrap", css: _ref7$1, children: [/* @__PURE__ */ jsx(antd.Dropdown, { menu: { items: contextMenus }, trigger: ["contextMenu"], onOpenChange: onContextMenuOpenChange, children: /* @__PURE__ */ jsx("a", { href, target: "_blank", onClick: handleVideoLinkClick, children: /* @__PURE__ */ jsxs("div", { className: "bili-video-card__image __scale-player-wrap", ref: videoPreviewWrapperRef, style: { ...borderRadiusStyle, aspectRatio: "16 / 9" }, children: [/* @__PURE__ */ jsxs("div", { className: "bili-video-card__image--wrap", style: { borderRadius: "inherit" }, children: [/* @__PURE__ */ jsxs("picture", { className: "v-img bili-video-card__cover", style: { borderRadius: "inherit", overflow: "hidden" }, children: [!isSafari && /* @__PURE__ */ jsx("source", { srcSet: `${cover}@672w_378h_1c_!web-home-common-cover.avif`, type: "image/avif" }), /* @__PURE__ */ jsx("source", { srcSet: `${cover}@672w_378h_1c_!web-home-common-cover.webp`, type: "image/webp" }), /* @__PURE__ */ jsx("img", { src: `${cover}@672w_378h_1c_!web-home-common-cover`, loading: "eager" })] }), (isHovering || typeof previewAnimationProgress === "number") && /* @__PURE__ */ jsx(PreviewImage, { videoDuration: duration2, pvideo: videoData == null ? void 0 : videoData.videoshotData, mouseEnterRelativeX, previewAnimationProgress }), hasWatchLaterEntry && /* @__PURE__ */ jsxs("div", { className: `${styles$2.watchLater}`, style: { display: isHovering || active ? "flex" : "none" }, ref: watchLaterRef, onClick: onToggleWatchLater, children: [watchLaterAdded ? /* @__PURE__ */ jsx("svg", { className: styles$2.watchLaterIcon, viewBox: "0 0 200 200", children: /* @__PURE__ */ jsx(framerMotion.motion.path, { d: "M25,100 l48,48 a 8.5,8.5 0 0 0 10,0 l90,-90", strokeWidth: "20", stroke: "currentColor", fill: "transparent", strokeLinecap: "round", ...!watchLaterAddedPrevious ? { initial: { pathLength: 0 }, animate: { pathLength: 1 } } : void 0 }) }) : /* @__PURE__ */ jsx("svg", { className: styles$2.watchLaterIcon, children: /* @__PURE__ */ jsx("use", { href: "#widget-watch-later" }) }), /* @__PURE__ */ jsx("span", { className: styles$2.watchLaterTip, style: { display: isWatchLaterHovering ? "block" : "none" }, children: watchLaterAdded ? "移除稍后再看" : "稍后再看" })] }), hasDislikeEntry && /* @__PURE__ */ jsxs("div", { ref: btnDislikeRef, className: styles$2.btnDislike, onClick: onTriggerDislike, style: { display: isHovering ? "flex" : "none" }, children: [/* @__PURE__ */ jsx("svg", { className: styles$2.btnDislikeIcon, children: /* @__PURE__ */ jsx("use", { href: "#widget-close" }) }), /* @__PURE__ */ jsx("span", { className: styles$2.btnDislikeTip, style: { display: isBtnDislikeHovering ? "block" : "none" }, children: "我不想看" })] })] }), /* @__PURE__ */ jsx("div", { className: "bili-video-card__mask", style: { borderRadius: "inherit", overflow: "hidden" }, children: /* @__PURE__ */ jsxs("div", { className: "bili-video-card__stats", children: [/* @__PURE__ */ jsx("div", { className: "bili-video-card__stats--left", children: (statItems == null ? void 0 : statItems.length) ? /* @__PURE__ */ jsx(Fragment, { children: statItems.map(({ field, value }) => /* @__PURE__ */ jsx(React__default.Fragment, { children: makeStatItem({ text: value, iconSvgName: AppRecIconSvgNameMap[field], iconSvgScale: AppRecIconScaleMap[field] }) }, field)) }) : /* @__PURE__ */ jsxs(Fragment, { children: [makeStatItem({ text: playStr || STAT_NUMBER_FALLBACK, iconSvgName: AppRecIconSvgNameMap.play }), makeStatItem({ text: danmakuStr || STAT_NUMBER_FALLBACK, iconSvgName: AppRecIconSvgNameMap.danmaku })] }) }), /* @__PURE__ */ jsx("span", { className: "bili-video-card__stats__duration", children: isNormalVideo && durationStr })] }) })] }) }) }), !styleFancy && /* @__PURE__ */ jsx("div", { className: "bili-video-card__info __scale-disable", children: /* @__PURE__ */ jsxs("div", { className: "bili-video-card__info--right", children: [/* @__PURE__ */ jsx("a", { href, target: "_blank", "data-mod": "partition_recommend", "data-idx": "content", "data-ext": "click", onClick: handleVideoLinkClick, children: /* @__PURE__ */ jsx("h3", { className: "bili-video-card__info--tit", title, children: titleRender ?? title }) }), /* @__PURE__ */ jsx("p", { className: "bili-video-card__info--bottom", children: isNormalVideo ? /* @__PURE__ */ jsxs("a", { className: "bili-video-card__info--owner", href: authorHref, target: "_blank", title: descTitle, children: [recommendReason2 ? /* @__PURE__ */ jsx("span", { className: styles$2.recommendReason, children: recommendReason2 }) : /* @__PURE__ */ jsx("svg", { className: "bili-video-card__info--owner__up", children: /* @__PURE__ */ jsx("use", { href: "#widget-up" }) }), /* @__PURE__ */ jsx("span", { className: "bili-video-card__info--author", children: desc })] }) : appBadge || appBadgeDesc ? /* @__PURE__ */ jsxs("a", { className: "bili-video-card__info--owner", href, target: "_blank", children: [/* @__PURE__ */ jsx("span", { className: styles$2.badge, children: appBadge || "" }), /* @__PURE__ */ jsx("span", { className: styles$2.bangumiDesc, children: appBadgeDesc || "" })] }) : null })] }) }), styleFancy && /* @__PURE__ */ jsxs("div", { css: _ref6$1, children: [/* @__PURE__ */ jsx("a", { href: authorHref, target: "_blank", onClick: handleVideoLinkClick, children: authorFace ? /* @__PURE__ */ jsx(antd.Avatar, { src: authorFace }) : /* @__PURE__ */ jsx(antd.Avatar, { children: (authorName == null ? void 0 : authorName[0]) || (appBadgeDesc == null ? void 0 : appBadgeDesc[0]) || "" }) }), /* @__PURE__ */ jsxs("div", { css: _ref5$1, children: [/* @__PURE__ */ jsx("a", { href, target: "_blank", children: /* @__PURE__ */ jsx("h3", { title, css: _ref4$1, children: titleRender ?? title }) }), /* @__PURE__ */ jsx("div", { css: _ref3$2, children: isNormalVideo ? /* @__PURE__ */ jsxs(Fragment, { children: [/* @__PURE__ */ jsx("div", { css: _ref2$6, children: /* @__PURE__ */ jsx("a", { className: "bili-video-card__info--owner", href: authorHref, target: "_blank", title: descTitle, children: /* @__PURE__ */ jsx("span", { className: "bili-video-card__info--author", children: desc }) }) }), !!recommendReason2 && /* @__PURE__ */ jsx("div", { className: styles$2.recommendReason, css: _ref$6, children: recommendReason2 })] }) : appBadge || appBadgeDesc ? /* @__PURE__ */ jsxs("a", { className: "bili-video-card__info--owner", href, target: "_blank", children: [!!appBadge && /* @__PURE__ */ jsx("span", { className: styles$2.badge, children: appBadge }), !!appBadgeDesc && /* @__PURE__ */ jsx("span", { className: styles$2.bangumiDesc, children: appBadgeDesc })] }) : null })] })] })] });
-  });
-  const videoGrid = "_video-grid_wfxpc_7";
-  const videoGridNewHomepage = "_video-grid-new-homepage_wfxpc_17";
-  const limitTwoLines = "_limit-two-lines_wfxpc_20";
-  const videoGridInternalTesting = "_video-grid-internal-testing_wfxpc_52";
-  const videoGridContainer = "_video-grid-container_wfxpc_88";
-  const videoGridFancy = "_video-grid-fancy_wfxpc_93";
-  const narrowMode$1 = "_narrow-mode_wfxpc_134";
-  function useShortcut({
-    enabled,
-    refresh,
-    minIndex = 0,
-    maxIndex,
-    containerRef,
-    getScrollerRect,
-    changeScrollY,
-    videoCardEmitters
-  }) {
-    const [activeIndex, setActiveIndex] = React__default.useState(void 0);
-    const isEnabled = useMemoizedFn(() => {
-      if (!enabled)
-        return false;
-      if (shouldDisableShortcut())
-        return false;
-      return true;
-    });
-    const activeIndexIsValid = useMemoizedFn(() => {
-      var _a2;
-      if (typeof activeIndex !== "number")
-        return false;
-      if (!containerRef.current)
-        return false;
-      const scrollerRect = getScrollerRect();
-      const rect = (_a2 = containerRef.current.querySelector(`.${CardClassNames.card}.${CardClassNames.cardActive}`)) == null ? void 0 : _a2.getBoundingClientRect();
-      if (!scrollerRect || !rect)
-        return false;
-      if (rect.top - scrollerRect.top < -(scrollerRect.height + rect.height)) {
-        return false;
-      }
-      if (rect.top - scrollerRect.top > scrollerRect.height * 2 + rect.height) {
-        return false;
-      }
-      return true;
-    });
-    function getStep(direction) {
-      const card = getCardAt(activeIndex);
-      const activeLeft = card.getBoundingClientRect().left;
-      const isLeftSame = (left) => Math.abs(activeLeft - left) < 1;
-      {
-        const col = getColumnCount(containerRef.current);
-        const step2 = direction === "down" ? col : -col;
-        const newCard = getCardAt(activeIndex + step2);
-        if (newCard) {
-          const left = newCard.getBoundingClientRect().left;
-          if (isLeftSame(left)) {
-            return step2;
-          }
-        }
-      }
-      let step = 0;
-      let cur = card;
-      const next2 = () => direction === "down" ? cur.nextElementSibling : cur.previousElementSibling;
-      while (next2()) {
-        cur = next2();
-        if (!cur.classList.contains(CardClassNames.card))
-          continue;
-        direction === "down" ? step++ : step--;
-        const left = cur.getBoundingClientRect().left;
-        if (isLeftSame(left)) {
-          return step;
-        }
-      }
-      return 0;
-    }
-    const addActiveIndex = (step) => (e2) => {
-      if (!isEnabled())
-        return;
-      e2 == null ? void 0 : e2.preventDefault();
-      let newActiveIndex;
-      if (activeIndexIsValid()) {
-        const _step = typeof step === "number" ? step : getStep(step);
-        newActiveIndex = activeIndex + _step;
-      } else {
-        newActiveIndex = getInitialIndex();
-      }
-      if (newActiveIndex < minIndex) {
-        makeVisible(minIndex);
-        return;
-      }
-      if (newActiveIndex > maxIndex) {
-        makeVisible(maxIndex);
-        return;
-      }
-      setActiveIndex(newActiveIndex);
-      makeVisible(newActiveIndex);
-    };
-    useKeyPress("leftarrow", addActiveIndex(-1), {
-      exactMatch: true
-    });
-    useKeyPress("rightarrow", addActiveIndex(1), {
-      exactMatch: true
-    });
-    useKeyPress("tab", addActiveIndex(1), {
-      exactMatch: true
-    });
-    useKeyPress("shift.tab", addActiveIndex(-1), {
-      exactMatch: true
-    });
-    useKeyPress("uparrow", addActiveIndex("up"), {
-      exactMatch: true
-    });
-    useKeyPress("downarrow", addActiveIndex("down"), {
-      exactMatch: true
-    });
-    const clearActiveIndex = () => {
-      if (!isEnabled())
-        return;
-      setActiveIndex(void 0);
-    };
-    const getActiveEmitter = () => {
-      if (!isEnabled() || typeof activeIndex !== "number")
-        return;
-      return videoCardEmitters[activeIndex];
-    };
-    useKeyPress("esc", clearActiveIndex);
-    useKeyPress("enter", () => {
-      var _a2;
-      if (!isEnabled() || typeof activeIndex !== "number")
-        return;
-      (_a2 = getActiveEmitter()) == null ? void 0 : _a2.emit("open");
-    });
-    useKeyPress("backspace", () => {
-      var _a2;
-      if (!isEnabled() || typeof activeIndex !== "number")
-        return;
-      (_a2 = getActiveEmitter()) == null ? void 0 : _a2.emit("trigger-dislike");
-    });
-    useKeyPress(["s", "w"], () => {
-      var _a2;
-      if (!isEnabled() || typeof activeIndex !== "number")
-        return;
-      (_a2 = getActiveEmitter()) == null ? void 0 : _a2.emit("toggle-watch-later");
-    }, {
-      exactMatch: true
-    });
-    useKeyPress(["period", "p"], () => {
-      var _a2;
-      if (!isEnabled() || typeof activeIndex !== "number")
-        return;
-      (_a2 = getActiveEmitter()) == null ? void 0 : _a2.emit("hotkey-preview-animation");
-    }, {
-      exactMatch: true
-    });
-    function getInitialIndex() {
-      const scrollerRect = getScrollerRect();
-      if (!scrollerRect)
-        return 0;
-      const cards = getCards();
-      for (let i2 = 0; i2 < cards.length; i2++) {
-        const card = cards[i2];
-        const rect = card.getBoundingClientRect();
-        if (rect.top >= scrollerRect.top) {
-          return i2;
-        }
-      }
-      return 0;
-    }
-    const CARDS_SELECTOR = `.${CardClassNames.card}`;
-    function getCards() {
-      var _a2;
-      return [...((_a2 = containerRef.current) == null ? void 0 : _a2.querySelectorAll(CARDS_SELECTOR)) || []];
-    }
-    function getCardAt(index) {
-      return getCards()[index];
-    }
-    function makeVisible(index) {
-      var _a2;
-      const card = getCardAt(index);
-      (_a2 = card == null ? void 0 : card.scrollIntoViewIfNeeded) == null ? void 0 : _a2.call(card, false);
-      const scrollerRect = getScrollerRect();
-      const rect = card.getBoundingClientRect();
-      if (!scrollerRect || !rect)
-        return;
-      if (rect.top <= scrollerRect.top) {
-        const offset = -(scrollerRect.top - rect.top + 10);
-        changeScrollY == null ? void 0 : changeScrollY({
-          offset
-        });
-        return;
-      }
-      if (scrollerRect.bottom - rect.bottom < 10) {
-        const offset = 10 - (scrollerRect.bottom - rect.bottom);
-        changeScrollY == null ? void 0 : changeScrollY({
-          offset
-        });
-        return;
-      }
-    }
-    return {
-      activeIndex,
-      clearActiveIndex
-    };
-  }
-  const countCache1 = /* @__PURE__ */ new Map();
-  const countCache2 = /* @__PURE__ */ new Map();
-  function getColumnCount(container, mayHaveNarrowMode = true) {
-    if (mayHaveNarrowMode && settings.useNarrowMode)
-      return 2;
-    const countCache = settings.styleFancy ? countCache1 : countCache2;
-    let count = countCache.get(Math.trunc(window.innerWidth));
-    if (count) {
-      return count;
-    }
-    container || (container = document.querySelector(`.${videoGrid}`));
-    if (!container)
-      return 0;
-    const style = window.getComputedStyle(container);
-    if (style.display !== "grid")
-      return 0;
-    count = style.gridTemplateColumns.split(" ").length;
-    countCache.set(window.innerWidth, count);
-    return count;
-  }
-  function anyFilterEnabled(tab2) {
-    return tab2 === "keep-follow-only" || settings.filterEnabled && (settings.filterMinDurationEnabled || settings.filterMinPlayCountEnabled || settings.filterOutGotoTypePicture);
-  }
-  function filterRecItems(items, tab2) {
-    if (!anyFilterEnabled(tab2)) {
-      return items;
-    }
-    return items.filter((item) => {
-      if (item.api === ApiType.separator)
-        return true;
-      const {
-        play,
-        duration: duration2,
-        recommendReason: recommendReason2,
-        goto
-      } = normalizeCardData(item);
-      const isFollowed = recommendReason2 === "已关注" || (recommendReason2 == null ? void 0 : recommendReason2.includes("关注"));
-      if (tab2 === "keep-follow-only") {
-        if (!isFollowed)
-          return false;
-      }
-      const isVideo = goto === "av";
-      const isPicture = goto === "picture";
-      if (isVideo)
-        return filterVideo();
-      if (isPicture)
-        return filterPicture();
-      return true;
-      function filterVideo() {
-        if (isFollowed && !settings.enableFilterForFollowedVideo)
-          return true;
-        if (settings.filterMinPlayCountEnabled && settings.filterMinPlayCount && typeof play === "number" && play < settings.filterMinPlayCount) {
-          return false;
-        }
-        if (settings.filterMinDurationEnabled && settings.filterMinDuration && duration2 && duration2 < settings.filterMinDuration) {
-          return false;
-        }
-        return true;
-      }
-      function filterPicture() {
-        if (settings.filterOutGotoTypePicture) {
-          if (isFollowed && !settings.enableFilterForFollowedPicture) {
-            return true;
-          }
-          return false;
-        } else {
-          return true;
-        }
-      }
-    });
-  }
-  var promise_retry = { exports: {} };
-  var promise_timeout = { exports: {} };
-  function checkAbortController() {
-    if (typeof AbortController === "undefined" || typeof AbortSignal === "undefined") {
-      console.error("[promise.timeout] need global AbortController & AbortSingal");
-    }
-  }
-  function ptimeout$1(fn, timeout) {
-    return function() {
-      var ctx = this;
-      var args = [].slice.call(arguments);
-      checkAbortController();
-      var controller = new AbortController();
-      args.push(controller.signal);
-      return new Promise(function(resolve, reject) {
-        var timer = setTimeout(function() {
-          var e2 = new TimeoutError$1(timeout);
-          reject(e2);
-          controller.abort();
-        }, timeout);
-        Promise.resolve(fn.apply(ctx, args)).then(
-          // resolve
-          function(result) {
-            clearTimeout(timer);
-            resolve(result);
-          },
-          // reject
-          function(err) {
-            clearTimeout(timer);
-            reject(err);
-          }
-        );
-      });
-    };
-  }
-  let TimeoutError$1 = class TimeoutError2 extends Error {
-    constructor(timeout) {
-      super();
-      this.timeout = timeout;
-      this.message = `timeout of ${timeout}ms exceed`;
-      Error.captureStackTrace(this, TimeoutError2);
-    }
-  };
-  promise_timeout.exports = ptimeout$1;
-  promise_timeout.exports.TimeoutError = TimeoutError$1;
-  var promise_timeoutExports = promise_timeout.exports;
-  const ptimeout = promise_timeoutExports;
-  const TimeoutError3 = ptimeout.TimeoutError;
-  promise_retry.exports = function pretry(fn, options) {
-    const originalFn = fn;
-    options = options || {};
-    const times = options.times || 5;
-    const _timeout = options.timeout;
-    if (_timeout) {
-      fn = ptimeout(fn, _timeout);
-    }
-    const onerror = options.onerror;
-    return async function() {
-      const ctx = this;
-      const args = [].slice.call(arguments);
-      const errors = new Array(times);
-      for (let i2 = 0; i2 < times; i2++) {
-        let result;
-        let err;
-        try {
-          result = await fn.apply(ctx, args);
-        } catch (e2) {
-          err = e2;
-        }
-        if (!err) {
-          return result;
-        }
-        if (err instanceof TypeError) {
-          throw err;
-        }
-        if (err instanceof AbortError2) {
-          throw err.originalError;
-        }
-        errors[i2] = err;
-        if (onerror) {
-          onerror(err, i2);
-        }
-        continue;
-      }
-      throw new RetryError({
-        times,
-        timeout: _timeout,
-        fn: originalFn,
-        errors
-        // 错误列表
-      });
-    };
-  };
-  class RetryError extends Error {
-    constructor(options) {
-      super();
-      this.times = options.times;
-      this.timeout = options.timeout;
-      this.fn = options.fn;
-      this.errors = options.errors;
-      this.name = "RetryError";
-      this.message = `tried function ${this.fn.name || "<anonymous>"} ${this.times} times`;
-      if (this.timeout) {
-        this.message += ` with timeout = ${this.timeout}ms`;
-      }
-      Error.captureStackTrace(this, this.constructor);
-    }
-  }
-  class AbortError2 extends Error {
-    constructor(message2) {
-      super();
-      if (message2 instanceof Error) {
-        this.originalError = message2;
-        ({
-          message: message2
-        } = message2);
-      } else {
-        this.originalError = new Error(message2);
-        this.originalError.stack = this.stack;
-      }
-      this.name = "AbortError";
-      this.message = message2;
-    }
-  }
-  var RetryError_1 = promise_retry.exports.RetryError = RetryError;
-  promise_retry.exports.TimeoutError = TimeoutError3;
-  var promise_retryExports = promise_retry.exports;
-  const pretry2 = /* @__PURE__ */ getDefaultExportFromCjs(promise_retryExports);
-  class RecReqError extends Error {
-    constructor(json) {
-      super();
-      __publicField(this, "json");
-      Error.captureStackTrace(this, RecReqError);
-      this.json = json;
-      this.message = json.message || JSON.stringify(json);
-    }
-  }
-  async function getRecommend(device) {
-    var _a2;
-    let platformParams = {};
-    if (device === AppApiDevice.android) {
-      platformParams = {
-        mobi_app: "android"
-      };
-    }
-    if (device === AppApiDevice.ipad) {
-      platformParams = {
-        // has avatar, date, etc
-        // see BewlyBewly usage
-        mobi_app: "iphone",
-        device: "pad"
-      };
-    }
-    const res = await gmrequest.get(HOST_APP + "/x/v2/feed/index", {
-      responseType: "json",
-      params: {
-        build: "1",
-        ...platformParams,
-        idx: (Date.now() / 1e3).toFixed(0) + "0" + Math.trunc(Math.random() * 1e3).toString().padStart(3, "0")
-      }
-    });
-    const json = res.data;
-    if (!json.data) {
-      if (json.code === -663) {
-        throw new RecReqError(json);
-      }
-      toast(`${APP_NAME}: 未知错误, 请联系开发者
-
-  code=${json.code} message=${json.message || ""}`, 5e3);
-      return [];
-    }
-    const items = ((_a2 = json == null ? void 0 : json.data) == null ? void 0 : _a2.items) || [];
-    return items;
-  }
-  const tryfn = pretry2(getRecommend, {
-    times: 5,
-    timeout: 2e3,
-    onerror(err, index) {
-      console.info("[%s] tryGetRecommend onerror: index=%s", APP_NAME, index, err);
-    }
-  });
-  async function tryGetRecommend(device) {
-    try {
-      return await tryfn(device);
-    } catch (e2) {
-      if (e2 instanceof RetryError_1) {
-        console.error(e2.errors);
-        const msg = [`请求出错, 已重试${e2.times}次:`, ...e2.errors.map((innerError, index) => `  ${index + 1}) ${innerError.message}`), "", "请重新获取 access_key 后重试~"].join("\n");
-        toast(msg, 5e3);
-      }
-      throw e2;
-    }
-  }
-  class AppRecService {
-    constructor() {
-      __publicField(this, "hasMore", true);
-    }
-    loadMore() {
-      return this.getRecommendTimes(2);
-    }
-    // 一次10个不够, 多来几次
-    async getRecommendTimes(times) {
-      let list = [];
-      let device = settings.appApiDecice;
-      if (device !== AppApiDevice.ipad && device !== AppApiDevice.android) {
-        device = AppApiDevice.ipad;
-      }
-      const parallel = async () => {
-        list = (await Promise.all(new Array(times).fill(0).map(() => tryGetRecommend(device)))).flat();
-      };
-      await parallel();
-      list = list.filter((item) => {
-        var _a2, _b2;
-        if ((_a2 = item.card_goto) == null ? void 0 : _a2.includes("ad"))
-          return false;
-        if ((_b2 = item.goto) == null ? void 0 : _b2.includes("ad"))
-          return false;
-        if (item.ad_info)
-          return false;
-        if (item.card_goto === "banner")
-          return false;
-        return true;
-      });
-      list = lodash.uniqBy(list, (item) => item.param);
-      return list.map((item) => {
-        return {
-          ...item,
-          api: "app",
-          device,
-          // android | ipad
-          uniqId: item.param + "-" + crypto.randomUUID()
-        };
-      });
-    }
-  }
-  __publicField(AppRecService, "PAGE_SIZE", 10);
-  const debug$4 = baseDebug.extend("service");
-  const recItemUniqer = (item) => item.api === ApiType.separator ? item.uniqId : lookinto(item, {
-    "pc": (item2) => item2.bvid,
-    "app": (item2) => item2.param,
-    "dynamic": (item2) => item2.modules.module_dynamic.major.archive.bvid,
-    "watchlater": (item2) => item2.bvid,
-    "fav": (item2) => item2.bvid,
-    "popular-general": (item2) => item2.bvid,
-    "popular-weekly": (item2) => item2.bvid
-  });
-  function uniqConcat(existing, newItems) {
-    const ids2 = existing.map(recItemUniqer);
-    newItems = lodash.uniqBy(newItems, recItemUniqer);
-    return existing.concat(newItems.filter((item) => {
-      return !ids2.includes(recItemUniqer(item));
-    }));
-  }
-  const usePcApi = (tab2) => tab2 === "keep-follow-only" || tab2 === "recommend-pc";
-  async function getMinCount(count, fetcherOptions, filterMultiplier = 5) {
-    const {
-      tab: tab2,
-      abortSignal,
-      pcRecService,
-      serviceMap
-    } = fetcherOptions;
-    const appRecService = new AppRecService();
-    let items = [];
-    let hasMore = true;
-    const addMore = async (restCount) => {
-      let cur = [];
-      const service = getIService(serviceMap, tab2);
-      if (service) {
-        cur = await service.loadMore(abortSignal) || [];
-        hasMore = service.hasMore;
-        items = items.concat(cur);
-        items = lodash.uniqBy(items, recItemUniqer);
-        return;
-      }
-      let times;
-      if (tab2 === "keep-follow-only") {
-        times = 8;
-        debug$4("getMinCount: addMore(restCount = %s) times=%s", restCount, times);
-      } else {
-        const pagesize = usePcApi(tab2) ? PcRecService.PAGE_SIZE : AppRecService.PAGE_SIZE;
-        const multipler = anyFilterEnabled(tab2) ? filterMultiplier : 1.2;
-        times = Math.ceil(restCount * multipler / pagesize);
-        debug$4("getMinCount: addMore(restCount = %s) multipler=%s pagesize=%s times=%s", restCount, multipler, pagesize, times);
-      }
-      cur = usePcApi(tab2) ? await pcRecService.getRecommendTimes(times, abortSignal) : await appRecService.getRecommendTimes(times);
-      cur = filterRecItems(cur, tab2);
-      items = items.concat(cur);
-      items = lodash.uniqBy(items, recItemUniqer);
-    };
-    await addMore(count);
-    while (true) {
-      if (abortSignal == null ? void 0 : abortSignal.aborted) {
-        debug$4("getMinCount: break for abortSignal");
-        break;
-      }
-      if (!hasMore) {
-        debug$4("getMinCount: break for tab=%s hasMore=false", tab2);
-        break;
-      }
-      const len = items.filter((x2) => x2.api !== ApiType.separator).length;
-      if (len >= count)
-        break;
-      await addMore(count - items.length);
-    }
-    return items;
-  }
-  async function refreshForHome(fetcherOptions) {
-    let items = await getMinCount(getColumnCount(void 0, false) * 2, fetcherOptions, 5);
-    if (fetcherOptions.tab === "watchlater") {
-      items = items.slice(0, 20);
-    }
-    return items;
-  }
-  async function refreshForGrid(fetcherOptions) {
-    return getMinCount(getColumnCount() * 3 + 1, fetcherOptions, 5);
-  }
-  async function getRecommendTimes(times, tab2, pcRecService) {
-    let items = usePcApi(tab2) ? await pcRecService.getRecommendTimes(times) : await new AppRecService().getRecommendTimes(times);
-    items = filterRecItems(items, tab2);
-    return items;
-  }
-  var observerMap = /* @__PURE__ */ new Map();
-  var RootIds = /* @__PURE__ */ new WeakMap();
-  var rootId = 0;
-  var unsupportedValue = void 0;
-  function getRootId(root2) {
-    if (!root2)
-      return "0";
-    if (RootIds.has(root2))
-      return RootIds.get(root2);
-    rootId += 1;
-    RootIds.set(root2, rootId.toString());
-    return RootIds.get(root2);
-  }
-  function optionsToId(options) {
-    return Object.keys(options).sort().filter(
-      (key2) => options[key2] !== void 0
-    ).map((key2) => {
-      return `${key2}_${key2 === "root" ? getRootId(options.root) : options[key2]}`;
-    }).toString();
-  }
-  function createObserver(options) {
-    let id = optionsToId(options);
-    let instance = observerMap.get(id);
-    if (!instance) {
-      const elements = /* @__PURE__ */ new Map();
-      let thresholds;
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          var _a2;
-          const inView = entry.isIntersecting && thresholds.some((threshold) => entry.intersectionRatio >= threshold);
-          if (options.trackVisibility && typeof entry.isVisible === "undefined") {
-            entry.isVisible = inView;
-          }
-          (_a2 = elements.get(entry.target)) == null ? void 0 : _a2.forEach((callback) => {
-            callback(inView, entry);
-          });
-        });
-      }, options);
-      thresholds = observer.thresholds || (Array.isArray(options.threshold) ? options.threshold : [options.threshold || 0]);
-      instance = {
-        id,
-        observer,
-        elements
-      };
-      observerMap.set(id, instance);
-    }
-    return instance;
-  }
-  function observe(element, callback, options = {}, fallbackInView = unsupportedValue) {
-    if (typeof window.IntersectionObserver === "undefined" && fallbackInView !== void 0) {
-      const bounds = element.getBoundingClientRect();
-      callback(fallbackInView, {
-        isIntersecting: fallbackInView,
-        target: element,
-        intersectionRatio: typeof options.threshold === "number" ? options.threshold : 0,
-        time: 0,
-        boundingClientRect: bounds,
-        intersectionRect: bounds,
-        rootBounds: bounds
-      });
-      return () => {
-      };
-    }
-    const { id, observer, elements } = createObserver(options);
-    let callbacks = elements.get(element) || [];
-    if (!elements.has(element)) {
-      elements.set(element, callbacks);
-    }
-    callbacks.push(callback);
-    observer.observe(element);
-    return function unobserve() {
-      callbacks.splice(callbacks.indexOf(callback), 1);
-      if (callbacks.length === 0) {
-        elements.delete(element);
-        observer.unobserve(element);
-      }
-      if (elements.size === 0) {
-        observer.disconnect();
-        observerMap.delete(id);
-      }
-    };
-  }
-  function useInView({
-    threshold,
-    delay: delay2,
-    trackVisibility,
-    rootMargin,
-    root: root2,
-    triggerOnce,
-    skip,
-    initialInView,
-    fallbackInView,
-    onChange
-  } = {}) {
-    var _a2;
-    const [ref, setRef] = React__default__namespace.useState(null);
-    const callback = React__default__namespace.useRef();
-    const [state, setState] = React__default__namespace.useState({
-      inView: !!initialInView,
-      entry: void 0
-    });
-    callback.current = onChange;
-    React__default__namespace.useEffect(
-      () => {
-        if (skip || !ref)
-          return;
-        let unobserve;
-        unobserve = observe(
-          ref,
-          (inView, entry) => {
-            setState({
-              inView,
-              entry
-            });
-            if (callback.current)
-              callback.current(inView, entry);
-            if (entry.isIntersecting && triggerOnce && unobserve) {
-              unobserve();
-              unobserve = void 0;
-            }
-          },
-          {
-            root: root2,
-            rootMargin,
-            threshold,
-            // @ts-ignore
-            trackVisibility,
-            // @ts-ignore
-            delay: delay2
-          },
-          fallbackInView
-        );
-        return () => {
-          if (unobserve) {
-            unobserve();
-          }
-        };
-      },
-      // We break the rule here, because we aren't including the actual `threshold` variable
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      [
-        // If the threshold is an array, convert it to a string, so it won't change between renders.
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        Array.isArray(threshold) ? threshold.toString() : threshold,
-        ref,
-        root2,
-        rootMargin,
-        triggerOnce,
-        skip,
-        trackVisibility,
-        fallbackInView,
-        delay2
-      ]
-    );
-    const entryTarget = (_a2 = state.entry) == null ? void 0 : _a2.target;
-    const previousEntryTarget = React__default__namespace.useRef();
-    if (!ref && entryTarget && !triggerOnce && !skip && previousEntryTarget.current !== entryTarget) {
-      previousEntryTarget.current = entryTarget;
-      setState({
-        inView: !!initialInView,
-        entry: void 0
-      });
-    }
-    const result = [setRef, state.inView, state.entry];
-    result.ref = result[0];
-    result.inView = result[1];
-    result.entry = result[2];
-    return result;
-  }
-  const debug$3 = baseDebug.extend("components:RecGrid");
-  const CardClassNames = {
-    card: /* @__PURE__ */ css$1({
-      name: "pqxyg1",
-      styles: "border:2px solid transparent;.bili-video-card__info{padding-left:2px;padding-bottom:1px;margin-top:calc(var(--info-margin-top) - 1px);}"
-    }),
-    cardActive: /* @__PURE__ */ css$1("border-color:", colorPrimaryValue, ";border-radius:", borderRadiusValue, ";overflow:hidden;box-shadow:0px 0px 9px 4px ", colorPrimaryValue, ";", "")
-  };
-  var _ref$5 = {
-    name: "198pn9m",
-    styles: "grid-column:1/-1;.ant-divider-inner-text a{color:var(--ant-color-link);&:hover{color:var(--ant-color-primary);}}"
-  };
-  var _ref2$5 = {
-    name: "1hce7io",
-    styles: "padding:30px 0;display:flex;align-items:center;justify-content:center;font-size:120%"
-  };
-  const RecGrid = React__default.forwardRef(function RecGrid2({
-    infiteScrollUseWindow,
-    shortcutEnabled,
-    onScrollToTop,
-    className,
-    scrollerRef,
-    setRefreshing: setUpperRefreshing,
-    setExtraInfo
-  }, ref) {
-    const {
-      useNarrowMode,
-      styleFancy
-    } = useSettingsSnapshot();
-    const tab2 = useCurrentSourceTab();
-    const [loadCompleteCount, setLoadCompleteCount] = React__default.useState(0);
-    const preAction = useMemoizedFn(() => {
-      clearActiveIndex();
-      updateExtraInfo(tab2);
-    });
-    const postAction = useMemoizedFn(() => {
-      clearActiveIndex();
-      setLoadCompleteCount(1);
-      updateExtraInfo(tab2);
-      queueMicrotask(checkShouldLoadMore);
-    });
-    const updateExtraInfo = useMemoizedFn((tab22) => {
-      var _a2;
-      const info = ((_a2 = getIService(serviceMap, tab22)) == null ? void 0 : _a2.usageInfo) ?? null;
-      setExtraInfo == null ? void 0 : setExtraInfo(info);
-    });
-    const {
-      refresh,
-      items,
-      setItems,
-      error: refreshError,
-      refreshing,
-      refreshedAt,
-      getRefreshedAt,
-      swr,
-      hasMore,
-      setHasMore,
-      refreshAbortController,
-      pcRecService,
-      serviceMap
-    } = useRefresh({
-      tab: tab2,
-      debug: debug$3,
-      fetcher: refreshForGrid,
-      recreateService: true,
-      preAction,
-      postAction,
-      onScrollToTop,
-      setUpperRefreshing
-    });
-    useMount$1(refresh);
-    React__default.useImperativeHandle(ref, () => ({
-      refresh
-    }), []);
-    const goOutAt = React__default.useRef();
-    useEventListener("visibilitychange", (e2) => {
-      const visible = document.visibilityState === "visible";
-      if (!visible) {
-        goOutAt.current = Date.now();
-        return;
-      }
-      if (refreshing)
-        return;
-      if (loadMoreRequesting.current[refreshedAt])
-        return;
-      if (tab2 === "watchlater" && goOutAt.current && Date.now() - goOutAt.current > ms$1("1h")) {
-        refresh(true, {
-          watchlaterKeepOrder: true
-        });
-      }
-    }, {
-      target: document
-    });
-    const loadMoreRequesting = React__default.useRef({});
-    const loadMore = useMemoizedFn(async () => {
-      if (!hasMore)
-        return;
-      if (refreshing)
-        return;
-      const refreshAtWhenStart = refreshedAt;
-      if (loadMoreRequesting.current[refreshAtWhenStart])
-        return;
-      loadMoreRequesting.current = {
-        [refreshAtWhenStart]: true
-      };
-      let newItems = items;
-      let newHasMore = true;
-      try {
-        const service = getIService(serviceMap, tab2);
-        if (service) {
-          const more = await service.loadMore(refreshAbortController.signal) || [];
-          newItems = uniqConcat(newItems, more);
-          newHasMore = service.hasMore;
-        } else {
-          while (!(newItems.length > items.length)) {
-            const times = tab2 === "keep-follow-only" ? 5 : 2;
-            const more = await getRecommendTimes(times, tab2, pcRecService);
-            newItems = uniqConcat(newItems, more);
-          }
-        }
-      } catch (e2) {
-        loadMoreRequesting.current[refreshAtWhenStart] = false;
-        throw e2;
-      }
-      if (refreshAtWhenStart !== getRefreshedAt()) {
-        debug$3("loadMore: skip update for mismatch refreshedAt, %s != %s", refreshAtWhenStart, getRefreshedAt());
-        return;
-      }
-      debug$3("loadMore: seq(%s) len %s -> %s", loadCompleteCount + 1, items.length, newItems.length);
-      setHasMore(newHasMore);
-      setItems(newItems);
-      setLoadCompleteCount((c2) => c2 + 1);
-      loadMoreRequesting.current[refreshAtWhenStart] = false;
-      checkShouldLoadMore();
-    });
-    const checkShouldLoadMore = useMemoizedFn(async () => {
-      const ms2 = isSafari ? 100 : 50;
-      await delay(ms2);
-      debug$3("checkShouldLoadMore(): footerInView = %s", footerInViewRef.current);
-      if (footerInViewRef.current) {
-        loadMore();
-      }
-    });
-    const containerRef = React__default.useRef(null);
-    const getScrollerRect = useMemoizedFn(() => {
-      var _a2;
-      if (infiteScrollUseWindow) {
-        const yStart = getHeaderHeight() + 50;
-        return new DOMRect(0, yStart, window.innerWidth, window.innerHeight - yStart);
-      } else {
-        return (_a2 = scrollerRef == null ? void 0 : scrollerRef.current) == null ? void 0 : _a2.getBoundingClientRect();
-      }
-    });
-    const modalDislikeVisible = useModalDislikeVisible();
-    const videoItems = React__default.useMemo(() => {
-      return items.filter((x2) => x2.api !== ApiType.separator);
-    }, [items]);
-    const videoCardEmittersMap = React__default.useMemo(() => /* @__PURE__ */ new Map(), [refreshedAt]);
-    const videoCardEmitters = React__default.useMemo(() => {
-      return videoItems.map(({
-        uniqId: cacheKey2
-      }) => {
-        return videoCardEmittersMap.get(cacheKey2) || (() => {
-          const instance = mitt();
-          videoCardEmittersMap.set(cacheKey2, instance);
-          return instance;
-        })();
-      });
-    }, [videoItems]);
-    const {
-      activeIndex,
-      clearActiveIndex
-    } = useShortcut({
-      enabled: shortcutEnabled && !modalDislikeVisible,
-      refresh,
-      maxIndex: videoItems.length - 1,
-      containerRef,
-      getScrollerRect,
-      videoCardEmitters,
-      changeScrollY: infiteScrollUseWindow ? function({
-        offset,
-        absolute
-      }) {
-        const scroller = document.documentElement;
-        if (typeof offset === "number") {
-          scroller.scrollTop += offset;
-          return;
-        }
-        if (typeof absolute === "number") {
-          scroller.scrollTop = absolute;
-          return;
-        }
-      } : void 0
-    });
-    const isInternalTesting = getIsInternalTesting();
-    const handleRemoveCard = useMemoizedFn((item, data2) => {
-      setItems((items2) => {
-        const index = items2.findIndex((x2) => x2.uniqId === item.uniqId);
-        if (index === -1)
-          return items2;
-        const newItems = items2.slice();
-        newItems.splice(index, 1);
-        AntdMessage.success(`已移除: ${data2.title}`, 4);
-        if (tab2 === "watchlater") {
-          serviceMap.watchlater.count--;
-          updateExtraInfo(tab2);
-        }
-        if (tab2 === "fav") {
-          serviceMap.fav.total--;
-          updateExtraInfo(tab2);
-        }
-        return newItems;
-      });
-    });
-    const handleMoveCardToFirst = useMemoizedFn((item, data2) => {
-      setItems((items2) => {
-        const currentItem = items2.find((x2) => x2.uniqId === item.uniqId);
-        if (!currentItem)
-          return items2;
-        const index = items2.indexOf(currentItem);
-        const newItems = items2.slice();
-        newItems.splice(index, 1);
-        const newIndex = newItems.findIndex((x2) => x2.api !== ApiType.separator);
-        newItems.splice(newIndex, 0, currentItem);
-        return newItems;
-      });
-    });
-    const {
-      ref: footerRef,
-      inView: __footerInView
-    } = useInView({
-      root: infiteScrollUseWindow ? null : (scrollerRef == null ? void 0 : scrollerRef.current) || null,
-      rootMargin: `0px 0px ${window.innerHeight}px 0px`,
-      onChange(inView) {
-        if (inView) {
-          debug$3("footerInView change to visible", inView);
-          loadMore();
-        }
-      }
-    });
-    const footerInViewRef = useLatest(__footerInView);
-    const footer = /* @__PURE__ */ jsx("div", {
-      ref: footerRef,
-      css: _ref2$5,
-      children: !refreshing && /* @__PURE__ */ jsx(Fragment, {
-        children: hasMore ? /* @__PURE__ */ jsxs(Fragment, {
-          children: [/* @__PURE__ */ jsx(IconPark, {
-            name: "Loading",
-            fill: colorPrimaryValue,
-            spin: true,
-            size: 40,
-            style: {
-              marginRight: 10
-            }
-          }), "加载中~"]
-        }) : "没有更多了~"
-      })
-    });
-    const gridClassName = cx(
-      `${APP_NAME}-video-grid`,
-      // for customize css
-      videoGrid,
-      styleFancy ? videoGridFancy : isInternalTesting ? videoGridInternalTesting : videoGridNewHomepage,
-      // default
-      useNarrowMode && narrowMode$1,
-      // 居中
-      className
-    );
-    const showSkeleton = !items.length || refreshError || refreshing && !swr;
-    if (showSkeleton) {
-      return /* @__PURE__ */ jsx("div", {
-        className: videoGridContainer,
-        children: /* @__PURE__ */ jsx("div", {
-          className: gridClassName,
-          children: new Array(28).fill(void 0).map((_, index) => {
-            return /* @__PURE__ */ jsx(VideoCard, {
-              loading: true,
-              className: CardClassNames.card
-            }, index);
-          })
-        })
-      });
-    }
-    return /* @__PURE__ */ jsxs("div", {
-      style: {
-        minHeight: "100%"
-      },
-      className: videoGridContainer,
-      children: [/* @__PURE__ */ jsx("div", {
-        ref: containerRef,
-        className: gridClassName,
-        children: items.map((item) => {
-          if (item.api === ApiType.separator) {
-            return /* @__PURE__ */ jsx(antd.Divider, {
-              css: _ref$5,
-              orientation: "left",
-              children: item.content
-            }, item.uniqId);
-          } else {
-            const index = videoItems.findIndex((x2) => x2.uniqId === item.uniqId);
-            const active = index === activeIndex;
-            return /* @__PURE__ */ jsx(VideoCard, {
-              className: cx(CardClassNames.card, {
-                [CardClassNames.cardActive]: active
-              }),
-              item,
-              active,
-              onRemoveCurrent: handleRemoveCard,
-              onMoveToFirst: handleMoveCardToFirst,
-              onRefresh: refresh,
-              emitter: videoCardEmitters[index]
-            }, item.uniqId);
-          }
-        })
-      }), footer]
-    });
-  });
   const btnAccessKeyHelpLink = /* @__PURE__ */ jsx(antd.Button, {
     target: "_blank",
     href: "https://github.com/indefined/UserScripts/tree/master/bilibiliHome#%E6%8E%88%E6%9D%83%E8%AF%B4%E6%98%8E",
@@ -13585,12 +14093,12 @@ body.dark ._btn-refresh_14tde_29 {
       }
     },
     Transition: {
-      toString(_ref13) {
+      toString(_ref12) {
         let {
           property,
           duration: duration2,
           easing
-        } = _ref13;
+        } = _ref12;
         return property + " " + duration2 + "ms " + easing;
       }
     }
@@ -13605,22 +14113,22 @@ body.dark ._btn-refresh_14tde_29 {
   const hiddenStyles = {
     display: "none"
   };
-  function HiddenText(_ref13) {
+  function HiddenText(_ref12) {
     let {
       id,
       value
-    } = _ref13;
+    } = _ref12;
     return React__default.createElement("div", {
       id,
       style: hiddenStyles
     }, value);
   }
-  function LiveRegion(_ref13) {
+  function LiveRegion(_ref12) {
     let {
       id,
       announcement,
       ariaLiveType = "assertive"
-    } = _ref13;
+    } = _ref12;
     const visuallyHidden = {
       position: "fixed",
       width: 1,
@@ -13670,11 +14178,11 @@ body.dark ._btn-refresh_14tde_29 {
       listeners2.add(listener);
       return () => listeners2.delete(listener);
     }, [listeners2]);
-    const dispatch = React__default.useCallback((_ref13) => {
+    const dispatch = React__default.useCallback((_ref12) => {
       let {
         type,
         event
-      } = _ref13;
+      } = _ref12;
       listeners2.forEach((listener) => {
         var _listener$type;
         return (_listener$type = listener[type]) == null ? void 0 : _listener$type.call(listener, event);
@@ -13686,10 +14194,10 @@ body.dark ._btn-refresh_14tde_29 {
     draggable: "\n    To pick up a draggable item, press the space bar.\n    While dragging, use the arrow keys to move the item.\n    Press space again to drop the item in its new position, or press escape to cancel.\n  "
   };
   const defaultAnnouncements = {
-    onDragStart(_ref13) {
+    onDragStart(_ref12) {
       let {
         active
-      } = _ref13;
+      } = _ref12;
       return "Picked up draggable item " + active.id + ".";
     },
     onDragOver(_ref22) {
@@ -13719,13 +14227,13 @@ body.dark ._btn-refresh_14tde_29 {
       return "Dragging was cancelled. Draggable item " + active.id + " was dropped.";
     }
   };
-  function Accessibility(_ref13) {
+  function Accessibility(_ref12) {
     let {
       announcements = defaultAnnouncements,
       container,
       hiddenTextDescribedById,
       screenReaderInstructions = defaultScreenReaderInstructions
-    } = _ref13;
+    } = _ref12;
     const {
       announce,
       announcement
@@ -13839,12 +14347,12 @@ body.dark ._btn-refresh_14tde_29 {
   function distanceBetween(p1, p2) {
     return Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2));
   }
-  function sortCollisionsAsc(_ref13, _ref22) {
+  function sortCollisionsAsc(_ref12, _ref22) {
     let {
       data: {
         value: a2
       }
-    } = _ref13;
+    } = _ref12;
     let {
       data: {
         value: b2
@@ -13884,12 +14392,12 @@ body.dark ._btn-refresh_14tde_29 {
       y: top + rect.height * 0.5
     };
   }
-  const closestCenter = (_ref13) => {
+  const closestCenter = (_ref12) => {
     let {
       collisionRect,
       droppableRects,
       droppableContainers
-    } = _ref13;
+    } = _ref12;
     const centerRect = centerOfRectangle(collisionRect, collisionRect.left, collisionRect.top);
     const collisions = [];
     for (const droppableContainer of droppableContainers) {
@@ -13926,12 +14434,12 @@ body.dark ._btn-refresh_14tde_29 {
     }
     return 0;
   }
-  const rectIntersection = (_ref13) => {
+  const rectIntersection = (_ref12) => {
     let {
       collisionRect,
       droppableRects,
       droppableContainers
-    } = _ref13;
+    } = _ref12;
     const collisions = [];
     for (const droppableContainer of droppableContainers) {
       const {
@@ -14214,13 +14722,13 @@ body.dark ._btn-refresh_14tde_29 {
     x: 0.2,
     y: 0.2
   };
-  function getScrollDirectionAndSpeed(scrollContainer, scrollContainerRect, _ref13, acceleration, thresholdPercentage) {
+  function getScrollDirectionAndSpeed(scrollContainer, scrollContainerRect, _ref12, acceleration, thresholdPercentage) {
     let {
       top,
       left,
       right,
       bottom
-    } = _ref13;
+    } = _ref12;
     if (acceleration === void 0) {
       acceleration = 10;
     }
@@ -14439,10 +14947,10 @@ body.dark ._btn-refresh_14tde_29 {
     cancel: [KeyboardCode.Esc],
     end: [KeyboardCode.Space, KeyboardCode.Enter]
   };
-  const defaultKeyboardCoordinateGetter = (event, _ref13) => {
+  const defaultKeyboardCoordinateGetter = (event, _ref12) => {
     let {
       currentCoordinates
-    } = _ref13;
+    } = _ref12;
     switch (event.code) {
       case KeyboardCode.Right:
         return {
@@ -14648,11 +15156,11 @@ body.dark ._btn-refresh_14tde_29 {
   }
   KeyboardSensor.activators = [{
     eventName: "onKeyDown",
-    handler: (event, _ref13, _ref22) => {
+    handler: (event, _ref12, _ref22) => {
       let {
         keyboardCodes = defaultKeyboardCodes,
         onActivation
-      } = _ref13;
+      } = _ref12;
       let {
         active
       } = _ref22;
@@ -14863,10 +15371,10 @@ body.dark ._btn-refresh_14tde_29 {
   }
   PointerSensor.activators = [{
     eventName: "onPointerDown",
-    handler: (_ref13, _ref22) => {
+    handler: (_ref12, _ref22) => {
       let {
         nativeEvent: event
-      } = _ref13;
+      } = _ref12;
       let {
         onActivation
       } = _ref22;
@@ -14898,10 +15406,10 @@ body.dark ._btn-refresh_14tde_29 {
   }
   MouseSensor.activators = [{
     eventName: "onMouseDown",
-    handler: (_ref13, _ref22) => {
+    handler: (_ref12, _ref22) => {
       let {
         nativeEvent: event
-      } = _ref13;
+      } = _ref12;
       let {
         onActivation
       } = _ref22;
@@ -14940,10 +15448,10 @@ body.dark ._btn-refresh_14tde_29 {
   }
   TouchSensor.activators = [{
     eventName: "onTouchStart",
-    handler: (_ref13, _ref22) => {
+    handler: (_ref12, _ref22) => {
       let {
         nativeEvent: event
-      } = _ref13;
+      } = _ref12;
       let {
         onActivation
       } = _ref22;
@@ -14969,7 +15477,7 @@ body.dark ._btn-refresh_14tde_29 {
     TraversalOrder2[TraversalOrder2["TreeOrder"] = 0] = "TreeOrder";
     TraversalOrder2[TraversalOrder2["ReversedTreeOrder"] = 1] = "ReversedTreeOrder";
   })(TraversalOrder || (TraversalOrder = {}));
-  function useAutoScroller(_ref13) {
+  function useAutoScroller(_ref12) {
     let {
       acceleration,
       activator = AutoScrollActivator.Pointer,
@@ -14983,7 +15491,7 @@ body.dark ._btn-refresh_14tde_29 {
       scrollableAncestorRects,
       delta,
       threshold
-    } = _ref13;
+    } = _ref12;
     const scrollIntent = useScrollIntent({
       delta,
       disabled: !enabled
@@ -15126,11 +15634,11 @@ body.dark ._btn-refresh_14tde_29 {
     const draggableNode = id !== null ? draggableNodes.get(id) : void 0;
     const node2 = draggableNode ? draggableNode.node.current : null;
     return useLazyMemo((cachedNode) => {
-      var _ref13;
+      var _ref12;
       if (id === null) {
         return null;
       }
-      return (_ref13 = node2 != null ? node2 : cachedNode) != null ? _ref13 : null;
+      return (_ref12 = node2 != null ? node2 : cachedNode) != null ? _ref12 : null;
     }, [node2, id]);
   }
   function useCombineActivators(sensors, getSyntheticHandler) {
@@ -15156,12 +15664,12 @@ body.dark ._btn-refresh_14tde_29 {
     MeasuringFrequency2["Optimized"] = "optimized";
   })(MeasuringFrequency || (MeasuringFrequency = {}));
   const defaultValue = /* @__PURE__ */ new Map();
-  function useDroppableMeasuring(containers, _ref13) {
+  function useDroppableMeasuring(containers, _ref12) {
     let {
       dragging,
       dependencies,
       config
-    } = _ref13;
+    } = _ref12;
     const [queue, setQueue] = React__default.useState(null);
     const {
       frequency,
@@ -15276,11 +15784,11 @@ body.dark ._btn-refresh_14tde_29 {
   function useInitialRect(node2, measure) {
     return useInitialValue(node2, measure);
   }
-  function useMutationObserver(_ref13) {
+  function useMutationObserver(_ref12) {
     let {
       callback,
       disabled
-    } = _ref13;
+    } = _ref12;
     const handleMutations = useEvent(callback);
     const mutationObserver = React__default.useMemo(() => {
       if (disabled || typeof window === "undefined" || typeof window.MutationObserver === "undefined") {
@@ -15296,11 +15804,11 @@ body.dark ._btn-refresh_14tde_29 {
     }, [mutationObserver]);
     return mutationObserver;
   }
-  function useResizeObserver(_ref13) {
+  function useResizeObserver(_ref12) {
     let {
       callback,
       disabled
-    } = _ref13;
+    } = _ref12;
     const handleResize = useEvent(callback);
     const resizeObserver = React__default.useMemo(
       () => {
@@ -15367,8 +15875,8 @@ body.dark ._btn-refresh_14tde_29 {
         return null;
       }
       if (element.isConnected === false) {
-        var _ref13;
-        return (_ref13 = currentRect != null ? currentRect : fallbackRect) != null ? _ref13 : null;
+        var _ref12;
+        return (_ref12 = currentRect != null ? currentRect : fallbackRect) != null ? _ref12 : null;
       }
       const newRect = measure(element);
       if (JSON.stringify(currentRect) === JSON.stringify(newRect)) {
@@ -15478,10 +15986,10 @@ body.dark ._btn-refresh_14tde_29 {
         if (!canUseDOM) {
           return;
         }
-        const teardownFns = sensors.map((_ref13) => {
+        const teardownFns = sensors.map((_ref12) => {
           let {
             sensor
-          } = _ref13;
+          } = _ref12;
           return sensor.setup == null ? void 0 : sensor.setup();
         });
         return () => {
@@ -15502,11 +16010,11 @@ body.dark ._btn-refresh_14tde_29 {
   }
   function useSyntheticListeners(listeners2, id) {
     return React__default.useMemo(() => {
-      return listeners2.reduce((acc, _ref13) => {
+      return listeners2.reduce((acc, _ref12) => {
         let {
           eventName,
           handler
-        } = _ref13;
+        } = _ref12;
         acc[eventName] = (event) => {
           handler(event, id);
         };
@@ -15557,10 +16065,10 @@ body.dark ._btn-refresh_14tde_29 {
     const firstChild = node2.children[0];
     return isHTMLElement(firstChild) ? firstChild : node2;
   }
-  function useDragOverlayMeasuring(_ref13) {
+  function useDragOverlayMeasuring(_ref12) {
     let {
       measure
-    } = _ref13;
+    } = _ref12;
     const [rect, setRect] = React__default.useState(null);
     const handleResize = React__default.useCallback((entries) => {
       for (const {
@@ -15629,10 +16137,10 @@ body.dark ._btn-refresh_14tde_29 {
       return Array.from(this.values());
     }
     getEnabled() {
-      return this.toArray().filter((_ref13) => {
+      return this.toArray().filter((_ref12) => {
         let {
           disabled
-        } = _ref13;
+        } = _ref12;
         return !disabled;
       });
     }
@@ -15806,10 +16314,10 @@ body.dark ._btn-refresh_14tde_29 {
       }
     }
   }
-  function RestoreFocus(_ref13) {
+  function RestoreFocus(_ref12) {
     let {
       disabled
-    } = _ref13;
+    } = _ref12;
     const {
       active,
       activatorEvent,
@@ -15855,11 +16363,11 @@ body.dark ._btn-refresh_14tde_29 {
     }, [activatorEvent, disabled, draggableNodes, previousActiveId, previousActivatorEvent]);
     return null;
   }
-  function applyModifiers(modifiers, _ref13) {
+  function applyModifiers(modifiers, _ref12) {
     let {
       transform,
       ...args
-    } = _ref13;
+    } = _ref12;
     return modifiers != null && modifiers.length ? modifiers.reduce((accumulator, modifier) => {
       return modifier({
         transform: accumulator,
@@ -15887,13 +16395,13 @@ body.dark ._btn-refresh_14tde_29 {
       [config == null ? void 0 : config.draggable, config == null ? void 0 : config.droppable, config == null ? void 0 : config.dragOverlay]
     );
   }
-  function useLayoutShiftScrollCompensation(_ref13) {
+  function useLayoutShiftScrollCompensation(_ref12) {
     let {
       activeNode,
       measure,
       initialRect,
       config = true
-    } = _ref13;
+    } = _ref12;
     const initialized = React__default.useRef(false);
     const {
       x: x2,
@@ -15946,7 +16454,7 @@ body.dark ._btn-refresh_14tde_29 {
     Status2[Status2["Initializing"] = 1] = "Initializing";
     Status2[Status2["Initialized"] = 2] = "Initialized";
   })(Status || (Status = {}));
-  const DndContext = /* @__PURE__ */ React__default.memo(function DndContext2(_ref13) {
+  const DndContext = /* @__PURE__ */ React__default.memo(function DndContext2(_ref12) {
     var _sensorContext$curren, _dragOverlay$nodeRef$, _dragOverlay$rect, _over$rect;
     let {
       id,
@@ -15958,7 +16466,7 @@ body.dark ._btn-refresh_14tde_29 {
       measuring,
       modifiers,
       ...props
-    } = _ref13;
+    } = _ref12;
     const store2 = React__default.useReducer(reducer, void 0, getInitialState);
     const [state, dispatch] = store2;
     const [dispatchMonitorEvent, registerMonitorListener] = useDndMonitorProvider();
@@ -16407,13 +16915,13 @@ body.dark ._btn-refresh_14tde_29 {
   const NullContext = /* @__PURE__ */ React__default.createContext(null);
   const defaultRole = "button";
   const ID_PREFIX$1 = "Droppable";
-  function useDraggable(_ref13) {
+  function useDraggable(_ref12) {
     let {
       id,
       data: data2,
       disabled = false,
       attributes
-    } = _ref13;
+    } = _ref12;
     const key2 = useUniqueId(ID_PREFIX$1);
     const {
       activators,
@@ -16483,13 +16991,13 @@ body.dark ._btn-refresh_14tde_29 {
   const defaultResizeObserverConfig = {
     timeout: 25
   };
-  function useDroppable(_ref13) {
+  function useDroppable(_ref12) {
     let {
       data: data2,
       disabled = false,
       id,
       resizeObserverConfig
-    } = _ref13;
+    } = _ref12;
     const key2 = useUniqueId(ID_PREFIX$1$1);
     const {
       active,
@@ -16613,21 +17121,21 @@ body.dark ._btn-refresh_14tde_29 {
     }
     return value;
   }
-  const restrictToParentElement = (_ref13) => {
+  const restrictToParentElement = (_ref12) => {
     let {
       containerNodeRect,
       draggingNodeRect,
       transform
-    } = _ref13;
+    } = _ref12;
     if (!draggingNodeRect || !containerNodeRect) {
       return transform;
     }
     return restrictToBoundingRect(transform, draggingNodeRect, containerNodeRect);
   };
-  const restrictToVerticalAxis = (_ref13) => {
+  const restrictToVerticalAxis = (_ref12) => {
     let {
       transform
-    } = _ref13;
+    } = _ref12;
     return {
       ...transform,
       x: 0
@@ -16673,13 +17181,13 @@ body.dark ._btn-refresh_14tde_29 {
     }
     return disabled;
   }
-  const rectSortingStrategy = (_ref13) => {
+  const rectSortingStrategy = (_ref12) => {
     let {
       rects,
       activeIndex,
       overIndex,
       index
-    } = _ref13;
+    } = _ref12;
     const newRects = arrayMove(rects, overIndex, activeIndex);
     const oldRect = rects[index];
     const newRect = newRects[index];
@@ -16697,7 +17205,7 @@ body.dark ._btn-refresh_14tde_29 {
     scaleX: 1,
     scaleY: 1
   };
-  const verticalListSortingStrategy = (_ref13) => {
+  const verticalListSortingStrategy = (_ref12) => {
     var _rects$activeIndex;
     let {
       activeIndex,
@@ -16705,7 +17213,7 @@ body.dark ._btn-refresh_14tde_29 {
       index,
       rects,
       overIndex
-    } = _ref13;
+    } = _ref12;
     const activeNodeRect = (_rects$activeIndex = rects[activeIndex]) != null ? _rects$activeIndex : fallbackActiveRect;
     if (!activeNodeRect) {
       return null;
@@ -16769,14 +17277,14 @@ body.dark ._btn-refresh_14tde_29 {
       droppable: false
     }
   });
-  function SortableContext(_ref13) {
+  function SortableContext(_ref12) {
     let {
       children,
       id,
       items: userDefinedItems,
       strategy = rectSortingStrategy,
       disabled: disabledProp = false
-    } = _ref13;
+    } = _ref12;
     const {
       active,
       dragOverlay,
@@ -16821,13 +17329,13 @@ body.dark ._btn-refresh_14tde_29 {
       value: contextValue
     }, children);
   }
-  const defaultNewIndexGetter = (_ref13) => {
+  const defaultNewIndexGetter = (_ref12) => {
     let {
       id,
       items,
       activeIndex,
       overIndex
-    } = _ref13;
+    } = _ref12;
     return arrayMove(items, activeIndex, overIndex).indexOf(id);
   };
   const defaultAnimateLayoutChanges = (_ref22) => {
@@ -16866,13 +17374,13 @@ body.dark ._btn-refresh_14tde_29 {
   const defaultAttributes = {
     roleDescription: "sortable"
   };
-  function useDerivedTransform(_ref13) {
+  function useDerivedTransform(_ref12) {
     let {
       disabled,
       index,
       node: node2,
       rect
-    } = _ref13;
+    } = _ref12;
     const [derivedTransform, setDerivedtransform] = React__default.useState(null);
     const previousIndex = React__default.useRef(index);
     useIsomorphicLayoutEffect(() => {
@@ -16904,7 +17412,7 @@ body.dark ._btn-refresh_14tde_29 {
     }, [derivedTransform]);
     return derivedTransform;
   }
-  function useSortable(_ref13) {
+  function useSortable(_ref12) {
     let {
       animateLayoutChanges = defaultAnimateLayoutChanges,
       attributes: userDefinedAttributes,
@@ -16915,7 +17423,7 @@ body.dark ._btn-refresh_14tde_29 {
       strategy: localStrategy,
       resizeObserverConfig,
       transition = defaultTransition
-    } = _ref13;
+    } = _ref12;
     const {
       items,
       containerId,
@@ -17148,7 +17656,7 @@ body.dark ._btn-refresh_14tde_29 {
           children: [/* @__PURE__ */ jsxs("div", {
             css: _ref2$4,
             children: [name, /* @__PURE__ */ jsx(HelpInfo, {
-              tooltip,
+              children: tooltip,
               tooltipProps: {
                 color: "rgba(0, 0, 0, 0.85)"
               },
@@ -17241,7 +17749,7 @@ body.dark ._btn-refresh_14tde_29 {
   }
   const tab = "basic";
   const modalSettingsStore = proxy({ tab });
-  var _ref12 = { name: "1a2afmv", styles: "margin-left:10px" };
+  var _ref11 = { name: "1a2afmv", styles: "margin-left:10px" };
   function ModalSettings({ show, onHide: onHide2 }) {
     const { filterEnabled, filterMinPlayCount, filterMinPlayCountEnabled, filterMinDuration, filterMinDurationEnabled, filterOutGotoTypePicture } = useSettingsSnapshot();
     useHotkeyForConfig(["shift.p"], "autoPreviewWhenKeyboardSelect", "键盘选中后自动开始预览");
@@ -17249,57 +17757,53 @@ body.dark ._btn-refresh_14tde_29 {
     useHotkeyForConfig(["shift.c"], "useNarrowMode", "居中模式");
     useHotkeyForConfig(["shift.y"], "styleFancy", "Fancy Style");
     const { tab: tab2 } = useSnapshot(modalSettingsStore);
-    return /* @__PURE__ */ jsxs(BaseModal, { ...{ show, onHide: onHide2, hideWhenMaskOnClick: true, hideWhenEsc: true, styleModal: { width: 900, maxHeight: "unset" } }, children: [/* @__PURE__ */ jsxs("div", { className: BaseModalClass.modalHeader, children: [/* @__PURE__ */ jsxs("div", { className: BaseModalClass.modalTitle, children: [/* @__PURE__ */ jsx(IconPark, { name: "Config", className: styles$1.configIcon }), "设置项"] }), /* @__PURE__ */ jsx("div", { className: "space", style: { flex: 1 } }), /* @__PURE__ */ jsx(ModalClose, { onClick: onHide2 })] }), /* @__PURE__ */ jsx("main", { className: BaseModalClass.modalBody, style: { overflow: "hidden" }, children: /* @__PURE__ */ jsx(antd.Tabs, { tabPosition: "left", size: "middle", className: styles$1.settingTabs, activeKey: tab2, onChange: (tab3) => modalSettingsStore.tab = tab3, items: [{ label: "常规设置", key: "basic", children: /* @__PURE__ */ jsx(TabPaneBasic, {}) }, { label: "内容过滤", key: "filter", children: /* @__PURE__ */ jsx("div", { className: styles$1.tabPane, children: /* @__PURE__ */ jsxs("div", { className: styles$1.settingsGroup, children: [/* @__PURE__ */ jsxs("div", { className: styles$1.settingsGroupTitle, children: ["内容过滤", /* @__PURE__ */ jsx(HelpInfo, { iconProps: { name: "Tips" }, tooltip: /* @__PURE__ */ jsxs(Fragment, { children: ["启用过滤会大幅降低加载速度, 谨慎开启! ", /* @__PURE__ */ jsx("br", {}), "仅推荐类 Tab 生效"] }) }), /* @__PURE__ */ jsx(antd.Switch, { css: _ref12, checked: filterEnabled, onChange: (val) => {
+    return /* @__PURE__ */ jsxs(BaseModal, { ...{ show, onHide: onHide2, hideWhenMaskOnClick: true, hideWhenEsc: true, styleModal: { width: 900, maxHeight: "unset" } }, children: [/* @__PURE__ */ jsxs("div", { className: BaseModalClass.modalHeader, children: [/* @__PURE__ */ jsxs("div", { className: BaseModalClass.modalTitle, children: [/* @__PURE__ */ jsx(IconPark, { name: "Config", className: styles$1.configIcon }), "设置项"] }), /* @__PURE__ */ jsx("div", { className: "space", style: { flex: 1 } }), /* @__PURE__ */ jsx(ModalClose, { onClick: onHide2 })] }), /* @__PURE__ */ jsx("main", { className: BaseModalClass.modalBody, style: { overflow: "hidden" }, children: /* @__PURE__ */ jsx(antd.Tabs, { tabPosition: "left", size: "middle", className: styles$1.settingTabs, activeKey: tab2, onChange: (tab3) => modalSettingsStore.tab = tab3, items: [{ label: "常规设置", key: "basic", children: /* @__PURE__ */ jsx(TabPaneBasic, {}) }, { label: "内容过滤", key: "filter", children: /* @__PURE__ */ jsx("div", { className: styles$1.tabPane, children: /* @__PURE__ */ jsxs("div", { className: styles$1.settingsGroup, children: [/* @__PURE__ */ jsxs("div", { className: styles$1.settingsGroupTitle, children: ["内容过滤", /* @__PURE__ */ jsxs(HelpInfo, { iconProps: { name: "Tips" }, children: ["启用过滤会大幅降低加载速度, 谨慎开启! ", /* @__PURE__ */ jsx("br", {}), "仅推荐类 Tab 生效"] }), /* @__PURE__ */ jsx(antd.Switch, { css: _ref11, checked: filterEnabled, onChange: (val) => {
       updateSettings({ filterEnabled: val });
     } })] }), /* @__PURE__ */ jsxs("div", { className: cx(styles$1.settingsGroupContent), children: [/* @__PURE__ */ jsx("div", { className: styles$1.settingsGroupSubTitle, children: "视频" }), /* @__PURE__ */ jsxs("div", { className: styles$1.row, children: [/* @__PURE__ */ jsx(FlagSettingItem, { disabled: !filterEnabled, configKey: "filterMinPlayCountEnabled", label: "按播放量过滤", tooltip: /* @__PURE__ */ jsx(Fragment, { children: "不显示播放量很少的视频" }) }), /* @__PURE__ */ jsx(antd.InputNumber, { size: "small", min: 1, step: 1e3, value: filterMinPlayCount, onChange: (val) => val && updateSettings({ filterMinPlayCount: val }), disabled: !filterEnabled || !filterMinPlayCountEnabled })] }), /* @__PURE__ */ jsxs("div", { className: styles$1.row, style: { marginTop: 3 }, children: [/* @__PURE__ */ jsx(FlagSettingItem, { configKey: "filterMinDurationEnabled", label: "按视频时长过滤", tooltip: /* @__PURE__ */ jsx(Fragment, { children: "不显示短视频" }), disabled: !filterEnabled }), /* @__PURE__ */ jsx(antd.InputNumber, { style: { width: 150 }, size: "small", min: 1, step: 10, addonAfter: "单位:秒", value: filterMinDuration, onChange: (val) => val && updateSettings({ filterMinDuration: val }), disabled: !filterEnabled || !filterMinDurationEnabled })] }), /* @__PURE__ */ jsx(FlagSettingItem, { className: styles$1.row, style: { marginTop: 3 }, configKey: "enableFilterForFollowedVideo", label: "对「已关注」的视频启用过滤", tooltip: /* @__PURE__ */ jsx(Fragment, { children: "默认不过滤「已关注」" }), disabled: !filterEnabled }), /* @__PURE__ */ jsx("div", { className: styles$1.settingsGroupSubTitle, children: "图文" }), /* @__PURE__ */ jsx(FlagSettingItem, { className: styles$1.row, configKey: "filterOutGotoTypePicture", label: "启用图文(动态 & 专栏)过滤", tooltip: /* @__PURE__ */ jsx(Fragment, { children: "过滤掉图文推荐" }), disabled: !filterEnabled }), /* @__PURE__ */ jsx(FlagSettingItem, { className: styles$1.row, disabled: !filterEnabled || !filterOutGotoTypePicture, configKey: "enableFilterForFollowedPicture", label: "对「已关注」的图文启用过滤", tooltip: /* @__PURE__ */ jsx(Fragment, { children: "默认不过滤「已关注」" }) })] })] }) }) }, { label: "外观设置", key: "ui", children: /* @__PURE__ */ jsx("div", { className: styles$1.tabPane, children: /* @__PURE__ */ jsxs("div", { className: styles$1.settingsGroup, children: [/* @__PURE__ */ jsx("div", { className: styles$1.settingsGroupTitle, style: { marginBottom: 15 }, children: "样式自定义" }), /* @__PURE__ */ jsxs("div", { className: cx(styles$1.settingsGroupContent), children: [/* @__PURE__ */ jsx("div", { className: styles$1.row, children: /* @__PURE__ */ jsx(FlagSettingItem, { configKey: "styleFancy", label: "Fancy Style", tooltip: /* @__PURE__ */ jsxs(Fragment, { children: ["增加卡片大小, 增大卡片间距", /* @__PURE__ */ jsx("br", {}), "视频卡片会显示头像", /* @__PURE__ */ jsx("br", {}), "切换设置快捷键: ", /* @__PURE__ */ jsx(antd.Tag, { color: "green", children: "shift+y" })] }) }) }), /* @__PURE__ */ jsx("div", { className: styles$1.row, style: { marginTop: 5 }, children: /* @__PURE__ */ jsx(FlagSettingItem, { configKey: "styleUseStandardVideoSourceTab", label: "推荐源切换 Tab 按钮: 使用标准高度", tooltip: "默认紧凑高度" }) }), /* @__PURE__ */ jsx("div", { className: styles$1.row, style: { marginTop: 5 }, children: /* @__PURE__ */ jsx(FlagSettingItem, { configKey: "styleUseStickyTabbarInPureRecommend", label: "纯推荐模式: stick tab bar", tooltip: /* @__PURE__ */ jsxs(Fragment, { children: ["默认勾选: Tab 栏会吸附在顶栏下方", /* @__PURE__ */ jsx("br", {}), "取消选中: Tab 栏会随页面一起滚动"] }) }) })] })] }) }) }, { label: "主题选择", key: "theme-select", children: /* @__PURE__ */ jsx("div", { className: styles$1.tabPane, children: /* @__PURE__ */ jsxs("div", { className: styles$1.settingsGroup, children: [/* @__PURE__ */ jsx("div", { className: styles$1.settingsGroupTitle, style: { marginBottom: 15 }, children: "主题选择" }), /* @__PURE__ */ jsx("div", { className: cx(styles$1.settingsGroupContent), children: /* @__PURE__ */ jsx(ThemesSelect, {}) })] }) }) }, { label: "Tab 设置", key: "video-source-tab-config", children: /* @__PURE__ */ jsx(TabPaneVideoSourceTabConfig, {}) }, { label: "高级设置", key: "advance", children: /* @__PURE__ */ jsx(TabPaneAdvance, {}) }] }) })] });
   }
-  var _ref10 = { name: "15c7vdh", styles: "position:relative;top:4px;cursor:pointer" };
-  var _ref11 = { name: "velg6b", styles: "margin-left:8px;margin-right:4px;font-size:14px;position:relative;top:4px" };
+  var _ref9 = { name: "15c7vdh", styles: "position:relative;top:4px;cursor:pointer" };
+  var _ref10 = { name: "velg6b", styles: "margin-left:8px;margin-right:4px;font-size:14px;position:relative;top:4px" };
   function TabPaneBasic() {
-    return /* @__PURE__ */ jsxs("div", { className: styles$1.tabPane, children: [/* @__PURE__ */ jsxs("div", { className: styles$1.settingsGroup, children: [/* @__PURE__ */ jsxs("div", { className: styles$1.settingsGroupTitle, children: ["access_key", /* @__PURE__ */ jsx(HelpInfo, { iconProps: { name: "Help", size: 18, style: { marginTop: 6, marginLeft: 5 } }, tooltip: /* @__PURE__ */ jsxs(Fragment, { children: ["用于「推荐」Tab", /* @__PURE__ */ jsx("br", {}), "用于 获取推荐 / 提交不喜欢等操作"] }) })] }), /* @__PURE__ */ jsx("div", { className: cx(styles$1.settingsGroupContent), children: /* @__PURE__ */ jsx("div", { className: styles$1.row, style: { marginTop: 5 }, children: /* @__PURE__ */ jsx(AccessKeyManage, {}) }) })] }), /* @__PURE__ */ jsxs("div", { className: styles$1.settingsGroup, children: [/* @__PURE__ */ jsx("div", { className: styles$1.settingsGroupTitle, children: "开关" }), /* @__PURE__ */ jsxs("div", { className: cx(styles$1.settingsGroupContent, styles$1.row), children: [/* @__PURE__ */ jsx(FlagSettingItem, { configKey: "pureRecommend", label: "纯推荐模式", tooltip: /* @__PURE__ */ jsxs(Fragment, { children: ["首页只保留推荐", /* @__PURE__ */ jsx("br", {}), "P.S 需要刷新网页~"] }), className: styles$1.check, extraAction: toastAndReload }), /* @__PURE__ */ jsx(FlagSettingItem, { configKey: "useNarrowMode", label: "居中模式", tooltip: /* @__PURE__ */ jsxs(Fragment, { children: ["居中两列", /* @__PURE__ */ jsx("br", {}), "切换设置快捷键: ", /* @__PURE__ */ jsx(antd.Tag, { color: "green", children: "shift+c" })] }), className: styles$1.check }), /* @__PURE__ */ jsx(FlagSettingItem, { configKey: "showModalFeedOnLoad", label: "自动「查看更多」", tooltip: "打开首页时自动打开「查看更多」弹窗", className: styles$1.check, extraAction: (val) => {
+    return /* @__PURE__ */ jsxs("div", { className: styles$1.tabPane, children: [/* @__PURE__ */ jsxs("div", { className: styles$1.settingsGroup, children: [/* @__PURE__ */ jsxs("div", { className: styles$1.settingsGroupTitle, children: ["access_key", /* @__PURE__ */ jsxs(HelpInfo, { iconProps: { name: "Help", size: 18, style: { marginTop: 6, marginLeft: 5 } }, children: ["用于「推荐」Tab", /* @__PURE__ */ jsx("br", {}), "用于 获取推荐 / 提交不喜欢等操作"] })] }), /* @__PURE__ */ jsx("div", { className: cx(styles$1.settingsGroupContent), children: /* @__PURE__ */ jsx("div", { className: styles$1.row, style: { marginTop: 5 }, children: /* @__PURE__ */ jsx(AccessKeyManage, {}) }) })] }), /* @__PURE__ */ jsxs("div", { className: styles$1.settingsGroup, children: [/* @__PURE__ */ jsx("div", { className: styles$1.settingsGroupTitle, children: "开关" }), /* @__PURE__ */ jsxs("div", { className: cx(styles$1.settingsGroupContent, styles$1.row), children: [/* @__PURE__ */ jsx(FlagSettingItem, { configKey: "pureRecommend", label: "纯推荐模式", tooltip: /* @__PURE__ */ jsxs(Fragment, { children: ["首页只保留推荐", /* @__PURE__ */ jsx("br", {}), "P.S 需要刷新网页~"] }), className: styles$1.check, extraAction: toastAndReload }), /* @__PURE__ */ jsx(FlagSettingItem, { configKey: "useNarrowMode", label: "居中模式", tooltip: /* @__PURE__ */ jsxs(Fragment, { children: ["居中两列", /* @__PURE__ */ jsx("br", {}), "切换设置快捷键: ", /* @__PURE__ */ jsx(antd.Tag, { color: "green", children: "shift+c" })] }), className: styles$1.check }), /* @__PURE__ */ jsx(FlagSettingItem, { configKey: "showModalFeedOnLoad", label: "自动「查看更多」", tooltip: "打开首页时自动打开「查看更多」弹窗", className: styles$1.check, extraAction: (val) => {
       if (val) {
         AntdMessage.success("已开启自动「查看更多」: 下次打开首页时将自动打开「查看更多」弹窗");
       }
-    } }), /* @__PURE__ */ jsx(FlagSettingItem, { configKey: "showModalFeedEntry", label: "「查看更多」按钮", tooltip: "是否展示「查看更多」按钮", className: styles$1.check })] })] }), /* @__PURE__ */ jsxs("div", { className: styles$1.settingsGroup, children: [/* @__PURE__ */ jsx("div", { className: styles$1.settingsGroupTitle, children: "视频链接" }), /* @__PURE__ */ jsxs("div", { className: cx(styles$1.settingsGroupContent, styles$1.row), children: [/* @__PURE__ */ jsx(FlagSettingItem, { configKey: "openVideoInPopupWhenClick", label: "默认「小窗打开」", tooltip: "点击视频链接默认行为改为「小窗打开」并自动网页全屏", className: styles$1.check }), /* @__PURE__ */ jsx(FlagSettingItem, { configKey: "openVideoAutoFullscreen", label: "打开视频后自动全屏", tooltip: "点击视频链接新窗口打开视频后「自动全屏」", className: styles$1.check })] })] }), /* @__PURE__ */ jsxs("div", { className: styles$1.settingsGroup, children: [/* @__PURE__ */ jsx("div", { className: styles$1.settingsGroupTitle, children: "预览" }), /* @__PURE__ */ jsxs("div", { className: cx(styles$1.settingsGroupContent, styles$1.row), children: [/* @__PURE__ */ jsx(FlagSettingItem, { configKey: "autoPreviewWhenKeyboardSelect", label: "键盘选中后自动开始预览", className: styles$1.check, tooltip: /* @__PURE__ */ jsxs(Fragment, { children: ["手动预览快捷键: ", /* @__PURE__ */ jsx(antd.Tag, { color: "green", children: "." }), " or ", /* @__PURE__ */ jsx(antd.Tag, { color: "green", children: "p" }), /* @__PURE__ */ jsx("br", {}), "切换设置快捷键: ", /* @__PURE__ */ jsx(antd.Tag, { color: "green", children: "shift+p" })] }) }), /* @__PURE__ */ jsx(FlagSettingItem, { configKey: "autoPreviewWhenHover", label: "鼠标悬浮后自动开始预览", className: styles$1.check, tooltip: /* @__PURE__ */ jsxs(Fragment, { children: ["鼠标悬浮后自动开始预览, 预览不再跟随鼠标位置 ", /* @__PURE__ */ jsx("br", {}), "切换设置快捷键: ", /* @__PURE__ */ jsx(antd.Tag, { color: "green", children: "shift+m" })] }) })] })] }), /* @__PURE__ */ jsxs("div", { className: styles$1.settingsGroup, children: [/* @__PURE__ */ jsxs("div", { className: styles$1.settingsGroupTitle, children: ["帮助", /* @__PURE__ */ jsxs("span", { css: _ref11, children: ["(当前版本: v", "0.20.4", ")"] }), /* @__PURE__ */ jsx(IconPark, { name: "Copy", size: 16, onClick: () => {
-      const content = `v${"0.20.4"}`;
+    } }), /* @__PURE__ */ jsx(FlagSettingItem, { configKey: "showModalFeedEntry", label: "「查看更多」按钮", tooltip: "是否展示「查看更多」按钮", className: styles$1.check })] })] }), /* @__PURE__ */ jsxs("div", { className: styles$1.settingsGroup, children: [/* @__PURE__ */ jsx("div", { className: styles$1.settingsGroupTitle, children: "视频链接" }), /* @__PURE__ */ jsxs("div", { className: cx(styles$1.settingsGroupContent, styles$1.row), children: [/* @__PURE__ */ jsx(FlagSettingItem, { configKey: "openVideoInPopupWhenClick", label: "默认「小窗打开」", tooltip: "点击视频链接默认行为改为「小窗打开」并自动网页全屏", className: styles$1.check }), /* @__PURE__ */ jsx(FlagSettingItem, { configKey: "openVideoAutoFullscreen", label: "打开视频后自动全屏", tooltip: "点击视频链接新窗口打开视频后「自动全屏」", className: styles$1.check })] })] }), /* @__PURE__ */ jsxs("div", { className: styles$1.settingsGroup, children: [/* @__PURE__ */ jsx("div", { className: styles$1.settingsGroupTitle, children: "预览" }), /* @__PURE__ */ jsxs("div", { className: cx(styles$1.settingsGroupContent, styles$1.row), children: [/* @__PURE__ */ jsx(FlagSettingItem, { configKey: "autoPreviewWhenKeyboardSelect", label: "键盘选中后自动开始预览", className: styles$1.check, tooltip: /* @__PURE__ */ jsxs(Fragment, { children: ["手动预览快捷键: ", /* @__PURE__ */ jsx(antd.Tag, { color: "green", children: "." }), " or ", /* @__PURE__ */ jsx(antd.Tag, { color: "green", children: "p" }), /* @__PURE__ */ jsx("br", {}), "切换设置快捷键: ", /* @__PURE__ */ jsx(antd.Tag, { color: "green", children: "shift+p" })] }) }), /* @__PURE__ */ jsx(FlagSettingItem, { configKey: "autoPreviewWhenHover", label: "鼠标悬浮后自动开始预览", className: styles$1.check, tooltip: /* @__PURE__ */ jsxs(Fragment, { children: ["鼠标悬浮后自动开始预览, 预览不再跟随鼠标位置 ", /* @__PURE__ */ jsx("br", {}), "切换设置快捷键: ", /* @__PURE__ */ jsx(antd.Tag, { color: "green", children: "shift+m" })] }) })] })] }), /* @__PURE__ */ jsxs("div", { className: styles$1.settingsGroup, children: [/* @__PURE__ */ jsxs("div", { className: styles$1.settingsGroupTitle, children: ["帮助", /* @__PURE__ */ jsxs("span", { css: _ref10, children: ["(当前版本: v", "0.20.5", ")"] }), /* @__PURE__ */ jsx(IconPark, { name: "Copy", size: 16, onClick: () => {
+      const content = `v${"0.20.5"}`;
       GM.setClipboard(content);
       AntdMessage.success(`已复制当前版本: ${content}`);
-    }, css: _ref10 })] }), /* @__PURE__ */ jsx("div", { className: cx(styles$1.settingsGroupContent), children: /* @__PURE__ */ jsx("div", { className: styles$1.row, children: /* @__PURE__ */ jsxs(antd.Space, { size: "small", children: [/* @__PURE__ */ jsx(antd.Button, { href: "https://github.com/magicdawn/bilibili-app-recommend", target: "_blank", children: "GitHub 主页" }), /* @__PURE__ */ jsx(antd.Button, { href: "https://greasyfork.org/zh-CN/scripts/443530-bilibili-app-recommend", target: "_blank", children: "GreasyFork 主页" }), /* @__PURE__ */ jsx(antd.Button, { href: "https://github.com/magicdawn/bilibili-app-recommend#%E5%BF%AB%E6%8D%B7%E9%94%AE%E8%AF%B4%E6%98%8E", target: "_blank", children: "查看可用的快捷键" }), /* @__PURE__ */ jsx(antd.Button, { href: "https://github.com/magicdawn/bilibili-app-recommend/blob/main/CHANGELOG.md", target: "_blank", children: "更新日志" }), /* @__PURE__ */ jsx(antd.Button, { href: "https://afdian.net/a/magicdawn", target: "_blank", children: "用 ❤️ 发电" })] }) }) })] })] });
+    }, css: _ref9 })] }), /* @__PURE__ */ jsx("div", { className: cx(styles$1.settingsGroupContent), children: /* @__PURE__ */ jsx("div", { className: styles$1.row, children: /* @__PURE__ */ jsxs(antd.Space, { size: "small", children: [/* @__PURE__ */ jsx(antd.Button, { href: "https://github.com/magicdawn/bilibili-app-recommend", target: "_blank", children: "GitHub 主页" }), /* @__PURE__ */ jsx(antd.Button, { href: "https://greasyfork.org/zh-CN/scripts/443530-bilibili-app-recommend", target: "_blank", children: "GreasyFork 主页" }), /* @__PURE__ */ jsx(antd.Button, { href: "https://github.com/magicdawn/bilibili-app-recommend#%E5%BF%AB%E6%8D%B7%E9%94%AE%E8%AF%B4%E6%98%8E", target: "_blank", children: "查看可用的快捷键" }), /* @__PURE__ */ jsx(antd.Button, { href: "https://github.com/magicdawn/bilibili-app-recommend/blob/main/CHANGELOG.md", target: "_blank", children: "更新日志" }), /* @__PURE__ */ jsx(antd.Button, { href: "https://afdian.net/a/magicdawn", target: "_blank", children: "用 ❤️ 发电" })] }) }) })] })] });
   }
   function TabPaneAdvance() {
     const { autoPreviewUpdateInterval, appApiDecice } = useSettingsSnapshot();
-    return /* @__PURE__ */ jsx("div", { className: styles$1.tabPane, children: /* @__PURE__ */ jsxs("div", { className: styles$1.settingsGroup, children: [/* @__PURE__ */ jsx("div", { className: styles$1.settingsGroupTitle, children: "设置项" }), /* @__PURE__ */ jsx("div", { className: cx(styles$1.settingsGroupContent), children: /* @__PURE__ */ jsx("div", { className: styles$1.row, children: /* @__PURE__ */ jsx(antd.Popconfirm, { title: "确定", description: "确定恢复默认设置? 该操作不可逆!", onConfirm: onResetSettings, children: /* @__PURE__ */ jsx(antd.Button, { danger: true, type: "primary", children: "恢复默认设置" }) }) }) }), /* @__PURE__ */ jsx("div", { className: styles$1.settingsGroupTitle, style: { marginTop: 15 }, children: "备份/恢复" }), /* @__PURE__ */ jsxs("div", { className: cx(styles$1.settingsGroupContent), children: [/* @__PURE__ */ jsxs("div", { className: styles$1.row, children: [/* @__PURE__ */ jsx(FlagSettingItem, { configKey: "backupSettingsToArticleDraft", label: "备份设置到专栏草稿箱中", tooltip: `专栏 - 草稿箱 - ${APP_NAME}` }), /* @__PURE__ */ jsxs("a", { style: { marginLeft: 15, display: "inline-flex", alignItems: "center" }, href: "https://member.bilibili.com/platform/upload/text/draft", target: "_blank", children: [/* @__PURE__ */ jsx(IconPark, { name: "EfferentFour", size: 16, style: { marginRight: 4 } }), "去草稿箱浏览"] })] }), /* @__PURE__ */ jsx("div", { className: styles$1.row, style: { marginTop: 5 }, children: /* @__PURE__ */ jsx(antd.Popconfirm, { title: "确定", description: "将覆盖本地设置? 该操作不可逆!", onConfirm: onRestoreSettings, children: /* @__PURE__ */ jsx(antd.Button, { danger: true, type: "primary", children: "从专栏草稿箱中恢复" }) }) })] }), /* @__PURE__ */ jsx("div", { className: styles$1.settingsGroupTitle, style: { marginTop: 15 }, children: "预览" }), /* @__PURE__ */ jsxs("div", { style: { width: "100%", display: "flex", alignItems: "center" }, children: ["自动预览更新间隔", /* @__PURE__ */ jsx(antd.Slider, { style: { flex: 1, margin: "0 15px" }, min: 0, max: 1e3, keyboard: true, onChange: (val) => settings.autoPreviewUpdateInterval = val, value: autoPreviewUpdateInterval }), /* @__PURE__ */ jsxs("span", { style: { width: "65px" }, children: ["(", autoPreviewUpdateInterval, "ms)"] })] }), /* @__PURE__ */ jsx("div", { className: styles$1.settingsGroupTitle, style: { marginTop: 15 }, children: "App 推荐" }), /* @__PURE__ */ jsxs("div", { style: { width: "100%", display: "flex", alignItems: "center" }, children: ["App API 设备类型", /* @__PURE__ */ jsx(HelpInfo, { iconProps: { name: "Tips", style: { marginLeft: 5, marginRight: 10 } }, tooltip: /* @__PURE__ */ jsxs(Fragment, { children: ["默认 ipad, 视频有 头像/日期 等信息", /* @__PURE__ */ jsx("br", {}), "可选 android, 有图文类型的推荐"] }) }), /* @__PURE__ */ jsx(antd.Radio.Group, { optionType: "button", buttonStyle: "solid", size: "small", options: [AppApiDevice.ipad, AppApiDevice.android], value: appApiDecice, onChange: (e2) => updateSettings({ appApiDecice: e2.target.value }) })] })] }) });
+    return /* @__PURE__ */ jsx("div", { className: styles$1.tabPane, children: /* @__PURE__ */ jsxs("div", { className: styles$1.settingsGroup, children: [/* @__PURE__ */ jsx("div", { className: styles$1.settingsGroupTitle, children: "设置项" }), /* @__PURE__ */ jsx("div", { className: cx(styles$1.settingsGroupContent), children: /* @__PURE__ */ jsx("div", { className: styles$1.row, children: /* @__PURE__ */ jsx(antd.Popconfirm, { title: "确定", description: "确定恢复默认设置? 该操作不可逆!", onConfirm: onResetSettings, children: /* @__PURE__ */ jsx(antd.Button, { danger: true, type: "primary", children: "恢复默认设置" }) }) }) }), /* @__PURE__ */ jsx("div", { className: styles$1.settingsGroupTitle, style: { marginTop: 15 }, children: "备份/恢复" }), /* @__PURE__ */ jsxs("div", { className: cx(styles$1.settingsGroupContent), children: [/* @__PURE__ */ jsxs("div", { className: styles$1.row, children: [/* @__PURE__ */ jsx(FlagSettingItem, { configKey: "backupSettingsToArticleDraft", label: "备份设置到专栏草稿箱中", tooltip: `专栏 - 草稿箱 - ${APP_NAME}` }), /* @__PURE__ */ jsxs("a", { style: { marginLeft: 15, display: "inline-flex", alignItems: "center" }, href: "https://member.bilibili.com/platform/upload/text/draft", target: "_blank", children: [/* @__PURE__ */ jsx(IconPark, { name: "EfferentFour", size: 16, style: { marginRight: 4 } }), "去草稿箱浏览"] })] }), /* @__PURE__ */ jsx("div", { className: styles$1.row, style: { marginTop: 5 }, children: /* @__PURE__ */ jsx(antd.Popconfirm, { title: "确定", description: "将覆盖本地设置? 该操作不可逆!", onConfirm: onRestoreSettings, children: /* @__PURE__ */ jsx(antd.Button, { danger: true, type: "primary", children: "从专栏草稿箱中恢复" }) }) })] }), /* @__PURE__ */ jsx("div", { className: styles$1.settingsGroupTitle, style: { marginTop: 15 }, children: "预览" }), /* @__PURE__ */ jsxs("div", { style: { width: "100%", display: "flex", alignItems: "center" }, children: ["自动预览更新间隔", /* @__PURE__ */ jsx(antd.Slider, { style: { flex: 1, margin: "0 15px" }, min: 0, max: 1e3, keyboard: true, onChange: (val) => settings.autoPreviewUpdateInterval = val, value: autoPreviewUpdateInterval }), /* @__PURE__ */ jsxs("span", { style: { width: "65px" }, children: ["(", autoPreviewUpdateInterval, "ms)"] })] }), /* @__PURE__ */ jsx("div", { className: styles$1.settingsGroupTitle, style: { marginTop: 15 }, children: "视频卡片" }), /* @__PURE__ */ jsx("div", { style: { width: "100%", display: "flex", alignItems: "center" }, children: /* @__PURE__ */ jsx(FlagSettingItem, { configKey: "coverUseAvif", label: "使用 avif", tooltip: /* @__PURE__ */ jsx(Fragment, { children: "视频封面是否使用 avif 格式图片" }) }) })] }) });
   }
-  var _ref5 = { name: "1hzl8wy", styles: "margin-left:20px!important" };
-  var _ref6 = { name: "ypff5m", styles: "min-width:100px" };
-  var _ref7 = { name: "1hzl8wy", styles: "margin-left:20px!important" };
-  var _ref8 = { name: "ypff5m", styles: "min-width:100px" };
-  var _ref9 = { name: "rsr636", styles: "display:grid;grid-template-columns:300px 1fr;column-gap:20px" };
+  var _ref5$2 = { name: "1hzl8wy", styles: "margin-left:20px!important" };
+  var _ref6 = { name: "1hzl8wy", styles: "margin-left:20px!important" };
+  var _ref7 = { name: "1fttcpj", styles: "display:flex;flex-direction:column" };
+  var _ref8 = { name: "1js6ety", styles: "display:grid;grid-template-columns:250px 1fr;column-gap:50px" };
   function TabPaneVideoSourceTabConfig() {
-    return /* @__PURE__ */ jsx("div", { className: styles$1.tabPane, children: /* @__PURE__ */ jsxs("div", { css: _ref9, children: [/* @__PURE__ */ jsxs("div", { className: styles$1.settingsGroup, children: [/* @__PURE__ */ jsxs("div", { className: styles$1.settingsGroupTitle, children: ["Tab 设置", /* @__PURE__ */ jsx(HelpInfo, { iconProps: { name: "Tips", style: { marginLeft: 5, marginRight: 20 } }, tooltip: /* @__PURE__ */ jsx(Fragment, { children: "勾选显示, 拖动排序" }) }), /* @__PURE__ */ jsx(antd.Popconfirm, { title: "确定", description: "确定不是手欠点着玩? 再点一次确定吧~", onConfirm: () => {
+    const { appApiDecice } = useSettingsSnapshot();
+    const sortedTabKeys = useSortedTabKeys();
+    return /* @__PURE__ */ jsx("div", { className: styles$1.tabPane, children: /* @__PURE__ */ jsxs("div", { css: _ref8, children: [/* @__PURE__ */ jsxs("div", { className: styles$1.settingsGroup, children: [/* @__PURE__ */ jsxs("div", { className: styles$1.settingsGroupTitle, children: ["Tab 设置", /* @__PURE__ */ jsx(HelpInfo, { iconProps: { name: "Tips", style: { marginLeft: 5, marginRight: 20 } }, children: "勾选显示, 拖动排序" }), /* @__PURE__ */ jsx(antd.Col, { flex: 1 }), /* @__PURE__ */ jsx(antd.Popconfirm, { title: "确定", description: "确定不是手欠点着玩? 再点一次确定吧~", onConfirm: () => {
       updateSettings({ hidingTabKeys: [], customTabKeysOrder: [] });
-    }, children: /* @__PURE__ */ jsx(antd.Button, { children: "重置" }) })] }), /* @__PURE__ */ jsx(VideoSourceTabOrder, {})] }), /* @__PURE__ */ jsxs("div", { className: styles$1.settingsGroup, children: [/* @__PURE__ */ jsx("div", { className: styles$1.settingsGroupTitle, children: "更多设置" }), /* @__PURE__ */ jsxs("div", { className: cx(styles$1.settingsGroupContent), children: [/* @__PURE__ */ jsxs("div", { className: styles$1.row, children: [/* @__PURE__ */ jsx("span", { css: _ref8, children: "「稍后再看」" }), /* @__PURE__ */ jsx(FlagSettingItem, { configKey: "shuffleForWatchLater", label: "随机顺序", tooltip: "不包括近期添加的「稍后再看」" }), /* @__PURE__ */ jsx(FlagSettingItem, { configKey: "addSeparatorForWatchLater", label: "添加分割线", tooltip: "添加「近期」「更早」分割线", css: _ref7 })] }), /* @__PURE__ */ jsxs("div", { className: styles$1.row, children: [/* @__PURE__ */ jsx("span", { css: _ref6, children: "「收藏」" }), /* @__PURE__ */ jsx(FlagSettingItem, { configKey: "shuffleForFav", label: "随机顺序", tooltip: "随机收藏" }), /* @__PURE__ */ jsx(FlagSettingItem, { configKey: "addSeparatorForFav", label: "添加分割线", tooltip: "顺序显示时, 按收藏夹添加分割线", css: _ref5 })] })] })] })] }) });
+    }, children: /* @__PURE__ */ jsx(antd.Button, { children: "重置" }) })] }), /* @__PURE__ */ jsx(VideoSourceTabOrder, {})] }), /* @__PURE__ */ jsxs("div", { className: styles$1.settingsGroup, children: [/* @__PURE__ */ jsx("div", { className: styles$1.settingsGroupTitle, children: "更多设置" }), /* @__PURE__ */ jsxs("div", { className: cx(styles$1.settingsGroupContent), css: _ref7, children: [/* @__PURE__ */ jsxs("div", { css: /* @__PURE__ */ css("order:", sortedTabKeys.indexOf("watchlater") + 1, ";", ""), children: [/* @__PURE__ */ jsxs("div", { className: styles$1.settingsGroupSubTitle, children: [/* @__PURE__ */ jsx(TabIcon, { tabKey: ETabType.Watchlater, mr: 5, mt: -1 }), "稍后再看"] }), /* @__PURE__ */ jsxs("div", { className: styles$1.row, children: [/* @__PURE__ */ jsx(FlagSettingItem, { configKey: "shuffleForWatchLater", label: "随机顺序", tooltip: "不包括近期添加的「稍后再看」" }), /* @__PURE__ */ jsx(FlagSettingItem, { configKey: "addSeparatorForWatchLater", label: "添加分割线", tooltip: "添加「近期」「更早」分割线", css: _ref6 })] })] }), /* @__PURE__ */ jsxs("div", { css: /* @__PURE__ */ css("order:", sortedTabKeys.indexOf("fav") + 1, ";", ""), children: [/* @__PURE__ */ jsxs("div", { className: styles$1.settingsGroupSubTitle, children: [/* @__PURE__ */ jsx(TabIcon, { tabKey: ETabType.Fav, mr: 5, mt: -2 }), "收藏"] }), /* @__PURE__ */ jsxs("div", { className: styles$1.row, children: [/* @__PURE__ */ jsx(FlagSettingItem, { configKey: "shuffleForFav", label: "随机顺序", tooltip: "随机收藏" }), /* @__PURE__ */ jsx(FlagSettingItem, { configKey: "addSeparatorForFav", label: "添加分割线", tooltip: "顺序显示时, 按收藏夹添加分割线", css: _ref5$2 })] })] }), /* @__PURE__ */ jsxs("div", { css: /* @__PURE__ */ css("order:", sortedTabKeys.indexOf("recommend-app") + 1, ";", ""), children: [/* @__PURE__ */ jsxs("div", { className: styles$1.settingsGroupSubTitle, children: [/* @__PURE__ */ jsx(TabIcon, { tabKey: ETabType.RecommendApp, mr: 5 }), "App 推荐"] }), /* @__PURE__ */ jsxs("div", { style: { width: "100%", display: "flex", alignItems: "center" }, children: ["App API 设备类型", /* @__PURE__ */ jsxs(HelpInfo, { iconProps: { name: "Tips", style: { marginLeft: 5, marginRight: 10 } }, children: ["默认 ipad, 视频有 头像/日期 等信息", /* @__PURE__ */ jsx("br", {}), "可选 android, 有图文类型的推荐"] }), /* @__PURE__ */ jsx(antd.Radio.Group, { optionType: "button", buttonStyle: "solid", size: "small", options: [EAppApiDevice.ipad, EAppApiDevice.android], value: appApiDecice, onChange: (e2) => updateSettings({ appApiDecice: e2.target.value }) })] })] })] })] })] }) });
   }
-  var _ref4 = { name: "b1rfuh", styles: "display:block;line-height:unset" };
-  function VideoSourceTabOrder() {
+  var _ref4$2 = { name: "b1rfuh", styles: "display:block;line-height:unset" };
+  function VideoSourceTabOrder({ className, style }) {
     const currentShowingTabKeys = useCurrentShowingTabKeys();
     const sortedTabKeys = useSortedTabKeys();
     const sensors = useSensors(useSensor(PointerSensor));
     const handleDragEnd = useMemoizedFn((e2) => {
       const { over, active } = e2;
-      if (!(over == null ? void 0 : over.id))
-        return;
-      if (over.id === active.id)
+      if (!(over == null ? void 0 : over.id) || over.id === active.id)
         return;
       const oldIndex = sortedTabKeys.indexOf(active.id.toString());
       const newIndex = sortedTabKeys.indexOf(over.id.toString());
-      const item = sortedTabKeys[oldIndex];
-      const newSortedKeys = sortedTabKeys.slice();
-      newSortedKeys.splice(oldIndex, 1);
-      newSortedKeys.splice(newIndex, 0, item);
-      updateSettings({ customTabKeysOrder: newSortedKeys });
+      const newList = arrayMove(sortedTabKeys, oldIndex, newIndex);
+      updateSettings({ customTabKeysOrder: newList });
     });
-    return /* @__PURE__ */ jsx("div", { children: /* @__PURE__ */ jsx(antd.Checkbox.Group, { css: _ref4, value: currentShowingTabKeys, onChange: (newVal) => {
+    return /* @__PURE__ */ jsx("div", { ...{ className, style }, children: /* @__PURE__ */ jsx(antd.Checkbox.Group, { css: _ref4$2, value: currentShowingTabKeys, onChange: (newVal) => {
       if (!newVal.length) {
         return AntdMessage.error("至少选择一项!");
       }
@@ -17307,38 +17811,14 @@ body.dark ._btn-refresh_14tde_29 {
     }, children: /* @__PURE__ */ jsx(DndContext, { sensors, collisionDetection: closestCenter, onDragEnd: handleDragEnd, modifiers: [restrictToVerticalAxis, restrictToParentElement], children: /* @__PURE__ */ jsx(SortableContext, { items: sortedTabKeys, strategy: verticalListSortingStrategy, children: sortedTabKeys.map((key2) => /* @__PURE__ */ jsx(VideoSourceTabSortableItem, { id: key2 }, key2)) }) }) }) });
   }
   var _ref$3 = { name: "82a6rk", styles: "flex:1" };
-  var _ref2$3 = { name: "fhwcsu", styles: "margin:0 5px 0 10px" };
-  var _ref3$1 = { name: "8irbms", styles: "display:inline-flex;align-items:center" };
+  var _ref2$3 = { name: "oa9msk", styles: ".ant-checkbox+span{user-select:none;display:inline-flex;align-items:center;}" };
+  var _ref3$3 = { name: "8irbms", styles: "display:inline-flex;align-items:center" };
   function VideoSourceTabSortableItem({ id }) {
     const { attributes, listeners: listeners2, setNodeRef, transform, transition, setActivatorNodeRef } = useSortable({ id });
     const style = { transform: CSS.Transform.toString(transform), transition };
-    const { label, desc, icon, iconProps } = TabConfigMap[id];
+    const { label, desc, icon, iconProps } = TabConfig[id];
     const dark = useIsDarkMode();
-    return /* @__PURE__ */ jsxs("div", { ref: setNodeRef, style, ...attributes, css: /* @__PURE__ */ css("display:flex;align-items:center;justify-content:flex-start;height:35px;padding-left:20px;border:1px solid ", !dark ? "#ddd" : "#444", ";border-radius:6px;margin-top:6px;", ""), children: [/* @__PURE__ */ jsx(antd.Checkbox, { value: id }), /* @__PURE__ */ jsxs(AntdTooltip, { title: desc, css: _ref3$1, children: [/* @__PURE__ */ jsx(IconPark, { name: icon, ...iconProps, size: (iconProps == null ? void 0 : iconProps.size) || 18, css: _ref2$3 }), label] }), /* @__PURE__ */ jsx("div", { css: _ref$3 }), /* @__PURE__ */ jsx("div", { ...listeners2, ref: setActivatorNodeRef, css: /* @__PURE__ */ css("cursor:grab;font-size:0;padding:5px;margin-right:10px;border-radius:5px;&:hover{background-color:", !dark ? "#eee" : "#999", ";}", ""), children: /* @__PURE__ */ jsx(IconPark, { name: "Drag", size: 18 }) })] }, id);
-  }
-  function useSticky() {
-    const stickyRef = React__default.useRef(null);
-    const [sticky, setSticky] = React__default.useState(false);
-    React__default.useEffect(() => {
-      function observe2() {
-        if (!stickyRef.current)
-          return;
-        const refPageOffset = Math.trunc(stickyRef.current.getBoundingClientRect().top * 10) / 10;
-        const stickyOffset = parseInt(getComputedStyle(stickyRef.current).top);
-        const stickyActive = refPageOffset <= stickyOffset;
-        setSticky(stickyActive);
-      }
-      observe2();
-      document.addEventListener("scroll", observe2);
-      window.addEventListener("resize", observe2);
-      window.addEventListener("orientationchange", observe2);
-      return () => {
-        document.removeEventListener("scroll", observe2);
-        window.removeEventListener("resize", observe2);
-        window.removeEventListener("orientationchange", observe2);
-      };
-    }, [sticky]);
-    return [stickyRef, sticky];
+    return /* @__PURE__ */ jsxs("div", { ref: setNodeRef, style, ...attributes, css: /* @__PURE__ */ css("display:flex;align-items:center;justify-content:flex-start;height:35px;padding-left:10px;padding-right:6px;border:1px solid ", !dark ? "#ddd" : "#444", ";border-radius:6px;margin-top:8px;", ""), children: [/* @__PURE__ */ jsx(AntdTooltip, { align: { offset: [0, -6] }, title: desc, css: _ref3$3, children: /* @__PURE__ */ jsxs(antd.Checkbox, { value: id, css: _ref2$3, children: [/* @__PURE__ */ jsx(TabIcon, { tabKey: id, mr: 5 }), label] }) }), /* @__PURE__ */ jsx("div", { css: _ref$3 }), /* @__PURE__ */ jsx("div", { ...listeners2, ref: setActivatorNodeRef, css: /* @__PURE__ */ css("cursor:grab;font-size:0;padding:3px 5px;border-radius:5px;&:hover{background-color:", !dark ? "#eee" : "#999", ";}", ""), children: /* @__PURE__ */ jsx(IconPark, { name: "Drag", size: 18 }) })] }, id);
   }
   const RefreshButton = React__default.forwardRef(function({
     onRefresh,
@@ -17375,7 +17855,7 @@ body.dark ._btn-refresh_14tde_29 {
       shuffleForWatchLater,
       shuffleForPopularWeekly
     } = useSettingsSnapshot();
-    const text = tab2 === "dynamic-feed" || tab2 === "watchlater" && !shuffleForWatchLater || tab2 === "fav" && !shuffleForFav || tab2 === "popular-general" || tab2 === "popular-weekly" && !shuffleForPopularWeekly ? "刷新" : "换一换";
+    const text = tab2 === ETabType.DynamicFeed || tab2 === ETabType.Watchlater && !shuffleForWatchLater || tab2 === ETabType.Fav && !shuffleForFav || tab2 === ETabType.PopularGeneral || tab2 === ETabType.PopularWeekly && !shuffleForPopularWeekly ? "刷新" : "换一换";
     const [scope, animate] = framerMotion.useAnimate();
     const onClick = useMemoizedFn((e2) => {
       animate(scope.current, {
@@ -17417,7 +17897,7 @@ body.dark ._btn-refresh_14tde_29 {
     name: "1dvos8d",
     styles: "width:13px;height:13px;transform:rotateZ(180deg)"
   };
-  var _ref3 = {
+  var _ref3$2 = {
     name: "28jp32",
     styles: "padding:0;width:31px;height:31px;border-radius:50%;body.dark &{color:#eee!important;border-color:transparent!important;background-color:#333!important;&:hover{background-color:#555!important;}}"
   };
@@ -17430,7 +17910,7 @@ body.dark ._btn-refresh_14tde_29 {
     const btn = /* @__PURE__ */ jsx("button", {
       onClick: buttonsExpandedActions.toggle,
       className: "primary-btn",
-      css: _ref3,
+      css: _ref3$2,
       children: /* @__PURE__ */ jsx("svg", {
         css: [_ref2$2, buttonsExpanded && _ref$2, "", ""],
         children: /* @__PURE__ */ jsx("use", {
@@ -17461,6 +17941,18 @@ body.dark ._btn-refresh_14tde_29 {
   var _ref2$1 = {
     name: "1q4vxyr",
     styles: "margin-left:8px"
+  };
+  var _ref3$1 = {
+    name: "za0kxg",
+    styles: "display:flex;align-items:center;flex-shrink:0"
+  };
+  var _ref4$1 = {
+    name: "1q3pkqi",
+    styles: "flex-shrink:1;display:flex;align-content:center;flex-wrap:wrap;row-gap:4px;column-gap:15px"
+  };
+  var _ref5$1 = {
+    name: "15gpyv7",
+    styles: "display:flex;align-items:center;justify-content:space-between;column-gap:20px"
   };
   const ModalFeed = React__default.memo(function ModalFeed2({
     show,
@@ -17516,24 +18008,28 @@ body.dark ._btn-refresh_14tde_29 {
         value: onRefresh,
         children: [/* @__PURE__ */ jsxs("div", {
           className: cx(BaseModalClass.modalHeader, styles.modalHeader),
-          children: [/* @__PURE__ */ jsx(VideoSourceTab, {
-            onRefresh
-          }), extraInfo, /* @__PURE__ */ jsx("div", {
-            className: "space",
-            style: {
-              flex: 1
-            }
-          }), useNarrowMode ? null : useFullScreen ? /* @__PURE__ */ jsx(ModalFeedConfigChecks, {}) : /* @__PURE__ */ jsx(CollapseBtn, {
-            initialOpen: true,
-            children: /* @__PURE__ */ jsx(ModalFeedConfigChecks, {})
-          }), /* @__PURE__ */ jsx(RefreshButton, {
-            css: _ref2$1,
-            refreshing,
-            onRefresh,
-            className: styles.btnRefresh,
-            refreshHotkeyEnabled: show
-          }), /* @__PURE__ */ jsx(ModalClose, {
-            onClick: onHide2
+          css: _ref5$1,
+          children: [/* @__PURE__ */ jsxs("div", {
+            className: "left",
+            css: _ref4$1,
+            children: [/* @__PURE__ */ jsx(VideoSourceTab, {
+              onRefresh
+            }), extraInfo]
+          }), /* @__PURE__ */ jsxs("div", {
+            className: "right",
+            css: _ref3$1,
+            children: [useNarrowMode ? null : useFullScreen ? /* @__PURE__ */ jsx(ModalFeedConfigChecks, {}) : /* @__PURE__ */ jsx(CollapseBtn, {
+              initialOpen: true,
+              children: /* @__PURE__ */ jsx(ModalFeedConfigChecks, {})
+            }), /* @__PURE__ */ jsx(RefreshButton, {
+              css: _ref2$1,
+              refreshing,
+              onRefresh,
+              className: styles.btnRefresh,
+              refreshHotkeyEnabled: show
+            }), /* @__PURE__ */ jsx(ModalClose, {
+              onClick: onHide2
+            })]
           })]
         }), /* @__PURE__ */ jsx("div", {
           className: cx(BaseModalClass.modalBody, styles.modalBody),
@@ -17608,8 +18104,20 @@ body.dark ._btn-refresh_14tde_29 {
     styles: "width:12px;height:12px;margin-left:2px"
   };
   var _ref2 = {
-    name: "166xca0",
-    styles: "margin-bottom:0;height:50px"
+    name: "ozd7xs",
+    styles: "flex-shrink:0"
+  };
+  var _ref3 = {
+    name: "1tgm8b3",
+    styles: "flex-shrink:1;flex-wrap:wrap;row-gap:4px;column-gap:15px"
+  };
+  var _ref4 = {
+    name: "mttdwy",
+    styles: "margin-bottom:0;padding:8px 0;height:auto;column-gap:20px"
+  };
+  var _ref5 = {
+    name: "roea7p",
+    styles: "height:100%;display:flex;flex-direction:row;align-items:center"
   };
   const RecHeader = React__default.forwardRef(function RecHeader2({
     onRefresh,
@@ -17656,15 +18164,17 @@ body.dark ._btn-refresh_14tde_29 {
     }));
     const headerHeight = useHeaderHeight();
     const isInternalTesting = getIsInternalTesting();
+    const S_leftright = _ref5;
     return /* @__PURE__ */ jsx(Fragment, {
       children: /* @__PURE__ */ jsxs(OnRefreshContext.Provider, {
         value: onRefresh,
         children: [/* @__PURE__ */ jsxs("div", {
           ref: stickyRef,
           className: "area-header",
-          css: [_ref2, pureRecommend && styleUseStickyTabbarInPureRecommend && /* @__PURE__ */ css("position:sticky;top:", headerHeight - 1, "px;z-index:1000;", ""), pureRecommend && styleUseStickyTabbarInPureRecommend && sticky && /* @__PURE__ */ css("background-color:var(--", styleFancy ? "bg2" : "bg1", "_float);box-shadow:0 2px 4px rgb(0 0 0 / 8%);", ""), "", ""],
+          css: [_ref4, pureRecommend && styleUseStickyTabbarInPureRecommend && /* @__PURE__ */ css("position:sticky;top:", headerHeight - 1, "px;z-index:1000;", ""), pureRecommend && styleUseStickyTabbarInPureRecommend && sticky && /* @__PURE__ */ css("background-color:var(--", styleFancy ? "bg2" : "bg1", "_float);box-shadow:0 2px 4px rgb(0 0 0 / 8%);", ""), "", ""],
           children: [/* @__PURE__ */ jsxs("div", {
-            className: "left",
+            "data-class-name": "left",
+            css: [S_leftright, _ref3, "", ""],
             children: [!pureRecommend && !isInternalTesting && /* @__PURE__ */ jsx("svg", {
               className: "icon",
               children: /* @__PURE__ */ jsx("use", {
@@ -17674,7 +18184,8 @@ body.dark ._btn-refresh_14tde_29 {
               onRefresh
             }), leftSlot]
           }), /* @__PURE__ */ jsx("div", {
-            className: "right",
+            "data-class-name": "right",
+            css: [S_leftright, _ref2, "", ""],
             children: /* @__PURE__ */ jsxs(antd.Space, {
               size: "small",
               children: [rightSlot, !accessKey && /* @__PURE__ */ jsx(AccessKeyManage, {
@@ -17788,7 +18299,7 @@ body.dark ._btn-refresh_14tde_29 {
           marginBottom: isInternalTesting ? 30 : 0
         },
         children: showSkeleton ? skeletonPlaceholders.map((id) => /* @__PURE__ */ jsx(VideoCard, {}, id)) : items.map((item) => {
-          return item.api === ApiType.separator ? null : /* @__PURE__ */ jsx(VideoCard, {
+          return item.api === EApiType.separator ? null : /* @__PURE__ */ jsx(VideoCard, {
             item
           }, item.uniqId);
         })
@@ -17812,6 +18323,7 @@ body.dark ._btn-refresh_14tde_29 {
   async function initHomepage() {
     tryToRemove(".adblock-tips");
     tryAction("html.gray", (el) => el.classList.remove("gray"));
+    tryToRemove(".vip-login-tip");
     if (hasBewlyBewly()) {
       console.warn(`${APP_NAME}: quit for using bewly-design`);
       return;
