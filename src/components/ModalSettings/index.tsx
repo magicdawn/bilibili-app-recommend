@@ -29,7 +29,6 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { css } from '@emotion/react'
 import { useKeyPress, useMemoizedFn } from 'ahooks'
 import {
   Button,
@@ -46,8 +45,6 @@ import {
 } from 'antd'
 import delay from 'delay'
 import { pick } from 'lodash'
-import type { CSSProperties } from 'react'
-import { proxy, useSnapshot } from 'valtio'
 import styles from './index.module.scss'
 import { set_HAS_RESTORED_SETTINGS } from './index.shared'
 import { ThemesSelect } from './theme'

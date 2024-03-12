@@ -1,5 +1,4 @@
 import { once } from 'lodash'
-import { useMemo } from 'react'
 import UAParser from 'ua-parser-js'
 import { proxy, useSnapshot } from 'valtio'
 

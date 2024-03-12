@@ -14,7 +14,7 @@ import { settings } from '$modules/settings'
 import { nextTick, whenIdle } from '$utility'
 import { useGetState, useMemoizedFn } from 'ahooks'
 import type { Debugger } from 'debug'
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext } from 'react'
 
 export type OnRefreshOptions = { watchlaterKeepOrder?: boolean }
 export type OnRefresh = (reuse?: boolean, options?: OnRefreshOptions) => void | Promise<void>

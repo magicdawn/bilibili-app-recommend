@@ -20,14 +20,11 @@ import { getRecommendTimes, refreshForGrid, uniqConcat } from '$modules/recommen
 import { useSettingsSnapshot } from '$modules/settings'
 import { getIsInternalTesting, isSafari } from '$platform'
 import { AntdMessage } from '$utility'
-import { css } from '@emotion/react'
 import { useEventListener, useLatest, useMemoizedFn, useMount } from 'ahooks'
 import { Divider } from 'antd'
 import delay from 'delay'
 import mitt from 'mitt'
 import ms from 'ms'
-import type { ReactNode, RefObject } from 'react'
-import { forwardRef, useImperativeHandle, useMemo, useRef, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
 import {
   narrowMode,

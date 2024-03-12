@@ -3,6 +3,7 @@ import reactSwc from '@vitejs/plugin-react-swc'
 import { execSync } from 'child_process'
 import postcssMediaMinmax from 'postcss-media-minmax'
 import { visualizer } from 'rollup-plugin-visualizer'
+import AutoImport from 'unplugin-auto-import/vite'
 import { defineConfig } from 'vite'
 import importer from 'vite-plugin-importer'
 import monkey, { cdn } from 'vite-plugin-monkey'
@@ -89,6 +90,44 @@ export default defineConfig(({ command }) => ({
 
   plugins: [
     tsconfigPaths(),
+
+    AutoImport({
+      dts: 'src/auto-imports.d.ts',
+      // targets to transform
+      include: [
+        /\.[tj]sx?$/, // .ts, .tsx, .js, .jsx
+      ],
+      imports: [
+        'react',
+        'ahooks',
+        {
+          from: 'react',
+          imports: ['Fragment'],
+        },
+        {
+          from: 'react',
+          imports: ['ComponentProps', 'CSSProperties', 'ReactNode', 'RefObject'],
+          type: true,
+        },
+        {
+          from: 'react-dom/client',
+          imports: ['createRoot'],
+        },
+        {
+          from: 'react-dom/client',
+          imports: ['Root'],
+          type: true,
+        },
+        {
+          from: 'valtio',
+          imports: ['useSnapshot', 'proxy'],
+        },
+        {
+          from: '@emotion/react',
+          imports: ['css'],
+        },
+      ],
+    }),
 
     /**
      * babel-plugin-import

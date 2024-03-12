@@ -1,5 +1,3 @@
-import { css } from '@emotion/react'
-
 export const flexVerticalCenterStyle = css`
   display: flex;
   align-items: center;

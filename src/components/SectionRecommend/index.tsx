@@ -12,7 +12,6 @@ import { cx } from '$libs'
 import { refreshForHome } from '$modules/recommend'
 import { getIsInternalTesting } from '$platform'
 import { useMount } from 'ahooks'
-import { useMemo } from 'react'
 import { RecHeader } from '../RecHeader'
 import { VideoCard } from '../VideoCard'
 

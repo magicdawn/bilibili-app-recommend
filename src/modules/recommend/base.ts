@@ -1,5 +1,4 @@
 import type { RecItemExtraType } from '$define'
-import type { ReactNode } from 'react'
 
 export interface IService {
   hasMore: boolean

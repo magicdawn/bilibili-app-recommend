@@ -3,8 +3,6 @@ import type { BooleanSettingsKey } from '$modules/settings'
 import { updateSettings, useSettingsSnapshot } from '$modules/settings'
 import { Checkbox, Tooltip } from 'antd'
 import type { CheckboxChangeEvent } from 'antd/es/checkbox'
-import type { ComponentProps, ReactNode } from 'react'
-import { useCallback } from 'react'
 import type { SetOptional } from 'type-fest'
 import { AntdTooltip } from './AntdApp'
 

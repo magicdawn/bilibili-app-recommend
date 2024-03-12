@@ -5,10 +5,6 @@ import type { RecHeaderRef } from '$components/RecHeader'
 import { RecHeader } from '$components/RecHeader'
 import { useHeaderState } from '$components/RecHeader/index.shared'
 import { useSettingsSnapshot } from '$modules/settings'
-import { css } from '@emotion/react'
-import { useMemoizedFn } from 'ahooks'
-import type { ReactNode } from 'react'
-import { useRef, useState } from 'react'
 
 const narrowStyle = {
   grid: css`

@@ -1,5 +1,4 @@
 import { type Icon } from '@icon-park/react/es/runtime'
-import { type ComponentProps } from 'react'
 
 import {
   AddTwo,

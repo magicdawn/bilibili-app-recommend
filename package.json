@@ -60,6 +60,7 @@
     "typed-scss-modules": "^8.0.0",
     "typescript": "^5.4.2",
     "typescript-eslint": "^7.1.1",
+    "unplugin-auto-import": "^0.17.5",
     "vite": "^5.1.5",
     "vite-plugin-importer": "^0.2.5",
     "vite-plugin-inspect": "^0.8.3",

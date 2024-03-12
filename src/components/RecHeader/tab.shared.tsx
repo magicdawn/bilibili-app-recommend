@@ -1,7 +1,6 @@
 import { IconPark, type IconName } from '$icon-park'
 import { toast } from '$utility/toast'
 import { type Icon } from '@icon-park/react/es/runtime'
-import type { ComponentProps } from 'react'
 
 export enum ETabType {
   RecommendApp = 'recommend-app',

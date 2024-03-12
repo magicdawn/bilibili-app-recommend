@@ -1,4 +1,3 @@
-import type { ReactNode } from 'react'
 import type { android } from './app-recommend.android'
 import type { ipad } from './app-recommend.ipad'
 import type { DmJson } from './dm'

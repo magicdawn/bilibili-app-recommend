@@ -5,7 +5,6 @@ import { UseApp } from '$utility/antd-static'
 import { Global, css as _css, css } from '@emotion/react'
 import { ConfigProvider, Tooltip, theme } from 'antd'
 import zhCN from 'antd/locale/zh_CN'
-import type { ComponentProps, ReactNode } from 'react'
 import {
   colorPrimaryIdentifier,
   colorPrimaryValue,

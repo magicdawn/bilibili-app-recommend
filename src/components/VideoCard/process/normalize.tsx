@@ -25,7 +25,6 @@ import {
 } from '$utility/video'
 import { BvCode } from '@mgdn/bvid'
 import dayjs from 'dayjs'
-import type { ReactNode } from 'react'
 import type { AppRecIconField } from '../app-rec-icon'
 import { AppRecIconMap, getField } from '../app-rec-icon'
 import { STAT_NUMBER_FALLBACK } from '../index.shared'
