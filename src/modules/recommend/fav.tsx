@@ -194,9 +194,17 @@ export function FavUsageInfo({
 }: {
   allFavFolderServices: FavFolderService[]
 }) {
-  const { excludeFavFolderIds, shuffleForFav } = useSettingsSnapshot()
+  const { excludeFavFolderIds, shuffleForFav, addSeparatorForFav } = useSettingsSnapshot()
   const onRefresh = useOnRefreshContext()
   const [excludeFavFolderIdsChanged, setExcludeFavFolderIdsChanged] = useState(false)
+
+  // 分割线设置切换, 即时生效
+  useUpdateEffect(() => {
+    void (async () => {
+      await delay(100)
+      onRefresh?.()
+    })()
+  }, [shuffleForFav, addSeparatorForFav])
 
   const handleChange = useMemoizedFn(
     (newTargetKeys: string[], direction: TransferDirection, moveKeys: string[]) => {
@@ -270,10 +278,8 @@ export function FavUsageInfo({
         checkedChildren='随机顺序'
         unCheckedChildren='默认顺序'
         checked={shuffleForFav}
-        onChange={async (checked) => {
+        onChange={(checked) => {
           updateSettings({ shuffleForFav: checked })
-          await delay(100)
-          onRefresh?.()
         }}
       />
     </Space>

@@ -157,8 +157,16 @@ function WatchLaterUsageInfo({ count }: { count: number }) {
     count <= 90 ? 'success' : count < 100 ? 'warning' : 'error'
   const title = `${color !== 'success' ? '快满了~ ' : ''}已使用 ${count} / 100`
 
-  const { shuffleForWatchLater } = useSettingsSnapshot()
+  const { shuffleForWatchLater, addSeparatorForWatchLater } = useSettingsSnapshot()
   const onRefresh = useOnRefreshContext()
+
+  // 切换 添加分割线 设置, 即时生效
+  useUpdateEffect(() => {
+    void (async () => {
+      await delay(100)
+      onRefresh?.()
+    })()
+  }, [shuffleForWatchLater, addSeparatorForWatchLater])
 
   return (
     <Space>
@@ -181,10 +189,8 @@ function WatchLaterUsageInfo({ count }: { count: number }) {
         checkedChildren='随机顺序'
         unCheckedChildren='添加顺序'
         checked={shuffleForWatchLater}
-        onChange={async (checked) => {
+        onChange={(checked) => {
           updateSettings({ shuffleForWatchLater: checked })
-          await delay(100)
-          onRefresh?.()
         }}
       />
     </Space>
