@@ -11,7 +11,6 @@ import { EApiType } from '$define/index.shared'
 import { cx } from '$libs'
 import { refreshForHome } from '$modules/recommend'
 import { getIsInternalTesting } from '$platform'
-import { useMount } from 'ahooks'
 import { RecHeader } from '../RecHeader'
 import { VideoCard } from '../VideoCard'
 

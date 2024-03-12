@@ -1,7 +1,6 @@
 import type { VideoCardEmitter } from '$components/VideoCard'
 import { settings } from '$modules/settings'
 import { shouldDisableShortcut } from '$utility/dom'
-import { useKeyPress, useMemoizedFn } from 'ahooks'
 import { videoGrid } from '../video-grid.module.scss'
 import { CardClassNames } from './index'
 

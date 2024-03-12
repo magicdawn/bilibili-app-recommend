@@ -99,7 +99,7 @@ export default defineConfig(({ command }) => ({
       ],
       imports: [
         'react',
-        'ahooks',
+        // 'ahooks',
         {
           from: 'react',
           imports: ['Fragment'],
@@ -108,6 +108,10 @@ export default defineConfig(({ command }) => ({
           from: 'react',
           imports: ['ComponentProps', 'CSSProperties', 'ReactNode', 'RefObject'],
           type: true,
+        },
+        {
+          from: 'ahooks',
+          imports: ['useMemoizedFn', 'useKeyPress', 'useMount', 'useUpdateEffect'],
         },
         {
           from: 'react-dom/client',

@@ -20,7 +20,7 @@ import { getRecommendTimes, refreshForGrid, uniqConcat } from '$modules/recommen
 import { useSettingsSnapshot } from '$modules/settings'
 import { getIsInternalTesting, isSafari } from '$platform'
 import { AntdMessage } from '$utility'
-import { useEventListener, useLatest, useMemoizedFn, useMount } from 'ahooks'
+import { useEventListener, useLatest } from 'ahooks'
 import { Divider } from 'antd'
 import delay from 'delay'
 import mitt from 'mitt'

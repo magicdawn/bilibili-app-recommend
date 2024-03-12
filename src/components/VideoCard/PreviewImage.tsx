@@ -1,7 +1,7 @@
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import type { PvideoData } from '$define'
 import { cx } from '$libs'
-import { useMount, useMouse } from 'ahooks'
+import { useMouse } from 'ahooks'
 import styles from './index.module.scss'
 
 interface IProps {

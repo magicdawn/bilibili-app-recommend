@@ -12,7 +12,7 @@ import { PopularWeeklyService } from '$modules/recommend/popular-weekly'
 import { WatchLaterRecService } from '$modules/recommend/watchlater'
 import { settings } from '$modules/settings'
 import { nextTick, whenIdle } from '$utility'
-import { useGetState, useMemoizedFn } from 'ahooks'
+import { useGetState } from 'ahooks'
 import type { Debugger } from 'debug'
 import { createContext } from 'react'
 
