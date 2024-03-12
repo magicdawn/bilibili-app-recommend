@@ -11,12 +11,12 @@ import { cx } from '$libs'
 import type { BooleanSettingsKey } from '$modules/settings'
 import {
   allowedSettingsKeys,
+  articleDraft,
   resetSettings,
   settings,
   updateSettings,
   useSettingsSnapshot,
 } from '$modules/settings'
-import { getData } from '$modules/user/article-draft'
 import { useIsDarkMode } from '$platform'
 import { AntdMessage, shouldDisableShortcut } from '$utility'
 import type { DragEndEvent } from '@dnd-kit/core'
@@ -60,7 +60,7 @@ function onResetSettings() {
 }
 
 async function onRestoreSettings() {
-  const remoteSettings = await getData()
+  const remoteSettings = await articleDraft.getData()
   const pickedSettings = pick(remoteSettings || {}, allowedSettingsKeys)
 
   const len = Object.keys(pickedSettings).length

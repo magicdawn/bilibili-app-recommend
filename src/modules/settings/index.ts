@@ -2,7 +2,7 @@ import { APP_NAME, IN_BILIBILI_HOMEPAGE, baseDebug } from '$common'
 import { HAS_RESTORED_SETTINGS } from '$components/ModalSettings/index.shared'
 import type { ETabType } from '$components/RecHeader/tab.shared'
 import { EAppApiDevice } from '$define/index.shared'
-import { setData } from '$modules/user/article-draft'
+import { BilibiliArticleDraft } from '$modules/user/article-draft'
 import { toast } from '$utility/toast'
 import { omit, pick, throttle } from 'lodash'
 import ms from 'ms'
@@ -136,10 +136,6 @@ export const initialSettings = {
    */
   hidingTabKeys: [] as ETabType[],
   customTabKeysOrder: [] as ETabType[],
-
-  /**
-   *
-   */
 }
 
 export type Settings = typeof initialSettings
@@ -175,7 +171,8 @@ export async function load() {
   })
 }
 
-const setDataThrottled = throttle(setData, ms('5s'))
+export const articleDraft = new BilibiliArticleDraft(APP_NAME)
+const setDataThrottled = throttle(articleDraft.setData, ms('5s'))
 
 export async function save() {
   const newVal = snapshot(settings)
