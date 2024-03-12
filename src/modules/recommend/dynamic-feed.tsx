@@ -8,6 +8,7 @@ import { getRecentUpdateUpList } from '$modules/dynamic'
 import type { DynamicPortalUp } from '$modules/dynamic/portal'
 import { isWebApiSuccess, request } from '$request'
 import { toast } from '$utility'
+import { fastOrderBy } from '$utility/order-by'
 import type { ArrayItem } from '$utility/type'
 import { css } from '@emotion/react'
 import { useMemoizedFn, useMount } from 'ahooks'
@@ -15,7 +16,6 @@ import type { MenuProps } from 'antd'
 import { Avatar, Badge, Button, Dropdown, Input, Space } from 'antd'
 import delay from 'delay'
 import ms from 'ms'
-import { orderBy } from 'natural-orderby'
 import type { ReactNode } from 'react'
 import { useMemo } from 'react'
 import { proxy, useSnapshot } from 'valtio'
@@ -191,18 +191,24 @@ export function DynamicFeedUsageInfo() {
 
     // lodash.orderBy order参数只支持 asc | desc
     // see https://github.com/lodash/lodash/pull/3764
-    const upListSorted = orderBy(
+
+    const _s = performance.now()
+    const upListSorted = fastOrderBy(
       upList,
-      [(item) => (item.has_update ? 1 : 0), (it) => it.uname],
+      [(it) => (it.has_update ? 1 : 0), 'uname'],
       [
         'desc',
-        (_a, _b) => {
-          let [a, b] = [_a, _b] as string[]
+        (a: string, b: string) => {
           ;[a, b] = [a, b].map(mapName)
           return a.localeCompare(b, 'zh-CN')
         },
       ],
     )
+
+    // if (upList.length) {
+    // const _cost = performance.now() - _s
+    // console.log('sorted cost %s ms', _cost.toFixed(2))
+    // }
 
     const items: MenuItemType[] = upListSorted.map((up) => {
       let avatar: ReactNode = <Avatar size={'small'} src={up.face} />
@@ -254,7 +260,7 @@ export function DynamicFeedUsageInfo() {
           placement='bottomLeft'
           menu={{
             items: menuItems,
-            style: { maxHeight: '70vh', overflowY: 'scroll' },
+            style: { maxHeight: '60vh', overflowY: 'scroll' },
           }}
         >
           <Button>{upName ? `UP: ${upName}` : '全部'}</Button>

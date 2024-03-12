@@ -85,6 +85,7 @@
     "dayjs": "1.11.10",
     "debug": "^4.3.4",
     "delay": "^6.0.0",
+    "fast-sort": "^3.4.0",
     "framer-motion": "^11.0.8",
     "lodash": "^4.17.21",
     "lodash-es": "^4.17.21",

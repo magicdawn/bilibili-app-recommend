@@ -133,7 +133,7 @@ export default defineConfig(({ command }) => ({
 
     // https://github.com/lisonge/vite-plugin-monkey
     monkey({
-      entry: 'src/main.tsx',
+      entry: './src/index.ts',
       userscript: {
         name: packageName,
         version: scriptVersion,
