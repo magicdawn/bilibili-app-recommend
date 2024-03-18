@@ -421,7 +421,13 @@ function TabPaneBasic() {
           <FlagSettingItem
             configKey={'openVideoAutoFullscreen'}
             label='打开视频后自动全屏'
-            tooltip='点击视频链接新窗口打开视频后「自动全屏」'
+            tooltip={
+              <>
+                点击视频链接新窗口打开视频后「自动全屏」
+                <br />
+                注: 由于浏览器限制, 需要任意鼠标点击或键盘按键才能自动全屏
+              </>
+            }
             className={styles.check}
           />
         </div>
