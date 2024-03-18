@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bilibili-app-recommend
 // @namespace    https://magicdawn.fun
-// @version      0.20.5
+// @version      0.20.6
 // @author       magicdawn
 // @description  为 B 站首页添加像 App 一样的推荐
 // @license      MIT
@@ -21,11 +21,11 @@
 // @require      https://registry.npmmirror.com/react/18.2.0/files/umd/react.production.min.js
 // @require      https://registry.npmmirror.com/react-dom/18.2.0/files/umd/react-dom.production.min.js
 // @require      https://registry.npmmirror.com/ua-parser-js/1.0.37/files/dist/ua-parser.min.js
-// @require      https://registry.npmmirror.com/framer-motion/11.0.8/files/dist/framer-motion.js
+// @require      https://registry.npmmirror.com/framer-motion/11.0.14/files/dist/framer-motion.js
 // @require      https://registry.npmmirror.com/lodash/4.17.21/files/lodash.min.js
 // @require      https://registry.npmmirror.com/dayjs/1.11.10/files/dayjs.min.js
 // @require      https://registry.npmmirror.com/dayjs/1.11.10/files/plugin/duration.js
-// @require      https://registry.npmmirror.com/antd/5.15.2/files/dist/antd-with-locales.min.js
+// @require      https://registry.npmmirror.com/antd/5.15.3/files/dist/antd-with-locales.min.js
 // @connect      app.bilibili.com
 // @connect      passport.bilibili.com
 // @grant        GM.getValue
@@ -1615,10 +1615,10 @@ body.dark ._btn-refresh_14tde_29 {
     return c2(e2), o2;
   };
   var define_import_meta_env_default$1 = { BASE_URL: "/", MODE: "production", DEV: false, PROD: true, SSR: false };
-  const isObject$1 = (x2) => typeof x2 === "object" && x2 !== null;
+  const isObject = (x2) => typeof x2 === "object" && x2 !== null;
   const proxyStateMap = /* @__PURE__ */ new WeakMap();
   const refSet = /* @__PURE__ */ new WeakSet();
-  const buildProxyFunction = (objectIs = Object.is, newProxy = (target, handler) => new Proxy(target, handler), canProxy = (x2) => isObject$1(x2) && !refSet.has(x2) && (Array.isArray(x2) || !(Symbol.iterator in x2)) && !(x2 instanceof WeakMap) && !(x2 instanceof WeakSet) && !(x2 instanceof Error) && !(x2 instanceof Number) && !(x2 instanceof Date) && !(x2 instanceof String) && !(x2 instanceof RegExp) && !(x2 instanceof ArrayBuffer), defaultHandlePromise = (promise) => {
+  const buildProxyFunction = (objectIs = Object.is, newProxy = (target, handler) => new Proxy(target, handler), canProxy = (x2) => isObject(x2) && !refSet.has(x2) && (Array.isArray(x2) || !(Symbol.iterator in x2)) && !(x2 instanceof WeakMap) && !(x2 instanceof WeakSet) && !(x2 instanceof Error) && !(x2 instanceof Number) && !(x2 instanceof Date) && !(x2 instanceof String) && !(x2 instanceof RegExp) && !(x2 instanceof ArrayBuffer), defaultHandlePromise = (promise) => {
     switch (promise.status) {
       case "fulfilled":
         return promise.value;
@@ -1670,7 +1670,7 @@ body.dark ._btn-refresh_14tde_29 {
     });
     return Object.preventExtensions(snap);
   }, proxyCache = /* @__PURE__ */ new WeakMap(), versionHolder = [1, 1], proxyFunction = (initialObject) => {
-    if (!isObject$1(initialObject)) {
+    if (!isObject(initialObject)) {
       throw new Error("object required");
     }
     const found = proxyCache.get(initialObject);
@@ -1765,7 +1765,7 @@ body.dark ._btn-refresh_14tde_29 {
           return true;
         }
         removePropListener(prop);
-        if (isObject$1(value)) {
+        if (isObject(value)) {
           value = y$1(value) || value;
         }
         let nextValue = value;
@@ -2437,7 +2437,7 @@ body.dark ._btn-refresh_14tde_29 {
       output += callback(children[i2], i2, children, callback) || "";
     return output;
   }
-  function stringify$1(element, index, children, callback) {
+  function stringify(element, index, children, callback) {
     switch (element.type) {
       case LAYER:
         if (element.children.length)
@@ -2752,7 +2752,7 @@ body.dark ._btn-refresh_14tde_29 {
     var omnipresentPlugins = [compat, removeLabel];
     {
       var currentSheet;
-      var finalizingPlugins = [stringify$1, rulesheet(function(rule) {
+      var finalizingPlugins = [stringify, rulesheet(function(rule) {
         currentSheet.insert(rule);
       })];
       var serializer = middleware(omnipresentPlugins.concat(stylisPlugins, finalizingPlugins));
@@ -3225,8 +3225,8 @@ body.dark ._btn-refresh_14tde_29 {
     newProps[typePropName] = type;
     return newProps;
   };
-  var Insertion = function Insertion2(_ref12) {
-    var cache2 = _ref12.cache, serialized = _ref12.serialized, isStringTag = _ref12.isStringTag;
+  var Insertion = function Insertion2(_ref4) {
+    var cache2 = _ref4.cache, serialized = _ref4.serialized, isStringTag = _ref4.isStringTag;
     registerStyles(cache2, serialized, isStringTag);
     useInsertionEffectAlwaysWithSyncFallback(function() {
       return insertStyles(cache2, serialized, isStringTag);
@@ -3965,75 +3965,89 @@ body.dark ._btn-refresh_14tde_29 {
       ...payload
     });
     const json = (await request.post("/x/article/creative/draft/addupdate", form)).data;
-    const aid2 = (_b2 = (_a2 = json == null ? void 0 : json.data) == null ? void 0 : _a2.aid) == null ? void 0 : _b2.toString();
+    const aid = (_b2 = (_a2 = json == null ? void 0 : json.data) == null ? void 0 : _a2.aid) == null ? void 0 : _b2.toString();
     const success = isWebApiSuccess(json);
     if (!success) {
       toast(json.message || "addupdate error");
     }
     return {
       success,
-      aid: aid2
+      aid
     };
   }
-  async function draftView(aid2) {
+  async function draftView(aid) {
     var _a2;
     const json = (await request.get("/x/article/creative/draft/view", {
       params: {
-        aid: aid2
+        aid
       }
     })).data;
     return ((_a2 = json == null ? void 0 : json.data) == null ? void 0 : _a2.content) || "";
   }
-  async function getData() {
-    const allDrafts = await listAll();
-    const draft = allDrafts.find((d2) => d2.title === APP_NAME);
-    if (!draft) {
-      await addupdate({
-        title: APP_NAME
-      });
-      return;
-    }
-    const content = await draftView(draft.id);
-    const parser = new DOMParser();
-    const parsed = parser.parseFromString(content, "text/html");
-    const text = (parsed.body.textContent || "").trim();
-    if (!text)
-      return;
-    try {
-      return JSON.parse(text);
-    } catch (e2) {
-      return;
-    }
-  }
-  let aid = "";
-  async function setData(data2) {
-    if (!aid) {
-      const allDrafts = await listAll();
-      const draft = allDrafts.find((d2) => d2.title === APP_NAME);
-      if (!draft) {
+  class BilibiliArticleDraft {
+    constructor(title) {
+      __publicField(this, "title");
+      __publicField(this, "getData", async () => {
         const {
-          success: success2,
-          aid: newDraftAid
+          title
+        } = this;
+        const allDrafts = await listAll();
+        const draft = allDrafts.find((d2) => d2.title === title);
+        if (!draft) {
+          await addupdate({
+            title
+          });
+          return;
+        }
+        const content = await draftView(draft.id);
+        const parser = new DOMParser();
+        const parsed = parser.parseFromString(content, "text/html");
+        const text = (parsed.body.textContent || "").trim();
+        if (!text)
+          return;
+        try {
+          return JSON.parse(text);
+        } catch (e2) {
+          return;
+        }
+      });
+      // cache aid for setData
+      // a refresh is needed after manual delete article draft by bilibili dashboard
+      __publicField(this, "_aid");
+      __publicField(this, "setData", async (data2) => {
+        const {
+          title
+        } = this;
+        if (!this._aid) {
+          const allDrafts = await listAll();
+          const draft = allDrafts.find((d2) => d2.title === title);
+          if (!draft) {
+            const {
+              success: success2,
+              aid: newDraftAid
+            } = await addupdate({
+              title
+            });
+            if (!success2)
+              return false;
+            this._aid = newDraftAid;
+          } else {
+            this._aid = draft.id.toString();
+          }
+        }
+        const dataStr = JSON.stringify(data2);
+        const {
+          success
         } = await addupdate({
-          title: APP_NAME
+          aid: this._aid,
+          title,
+          content: `<p>${dataStr}</p>`,
+          words: dataStr.length.toString()
         });
-        if (!success2)
-          return false;
-        aid = newDraftAid;
-      } else {
-        aid = draft.id.toString();
-      }
+        return success;
+      });
+      this.title = title;
     }
-    const dataStr = JSON.stringify(data2);
-    const {
-      success
-    } = await addupdate({
-      aid,
-      title: APP_NAME,
-      content: `<p>${dataStr}</p>`,
-      words: dataStr.length.toString()
-    });
-    return success;
   }
   const debug$8 = baseDebug.extend("settings");
   const initialSettings = {
@@ -4139,9 +4153,6 @@ body.dark ._btn-refresh_14tde_29 {
      */
     hidingTabKeys: [],
     customTabKeysOrder: []
-    /**
-     *
-     */
   };
   const settings = proxy({
     ...initialSettings
@@ -4161,7 +4172,8 @@ body.dark ._btn-refresh_14tde_29 {
       save();
     });
   }
-  const setDataThrottled = lodash.throttle(setData, ms$1("5s"));
+  const articleDraft = new BilibiliArticleDraft(APP_NAME);
+  const setDataThrottled = lodash.throttle(articleDraft.setData, ms$1("5s"));
   async function save() {
     const newVal = snapshot(settings);
     await GM.setValue(key, newVal);
@@ -4373,15 +4385,15 @@ body.dark ._btn-refresh_14tde_29 {
       children: [renderAppComponent && /* @__PURE__ */ jsx(UseApp, {}), injectGlobalStyle && /* @__PURE__ */ jsx(GlobalStyle, {}), children]
     });
   }
-  var _ref$c = {
+  var _ref = {
     name: "ykj9m0",
     styles: "body{background-color:var(--bg1);}"
   };
-  var _ref2$a = {
+  var _ref2 = {
     name: "bts51",
     styles: "body,.large-header,#i_cecream,.bili-header .bili-header__channel{background-color:var(--bg2);}"
   };
-  var _ref3$9 = {
+  var _ref3 = {
     name: "8xrafg",
     styles: "#i_cecream .bili-feed4-layout{display:none;}"
   };
@@ -4416,7 +4428,7 @@ body.dark ._btn-refresh_14tde_29 {
           }
         `
       }), pureRecommend && /* @__PURE__ */ jsx(Global, {
-        styles: [_ref3$9, styleFancy ? _ref2$a : _ref$c, "", ""]
+        styles: [_ref3, styleFancy ? _ref2 : _ref, "", ""]
       })]
     });
   }
@@ -5628,6 +5640,20 @@ body.dark ._btn-refresh_14tde_29 {
       }
     });
   }
+  const modalMask$1 = "_modal-mask_1wljt_1";
+  const modal$1 = "_modal_1wljt_1";
+  const modalHeader$1 = "_modal-header_1wljt_25";
+  const modalBody$1 = "_modal-body_1wljt_33";
+  const modalTitle = "_modal-title_1wljt_39";
+  const btnClose = "_btn-close_1wljt_47";
+  const BaseModalClass = {
+    modalMask: modalMask$1,
+    modal: modal$1,
+    modalHeader: modalHeader$1,
+    modalBody: modalBody$1,
+    modalTitle,
+    btnClose
+  };
   var createUpdateEffect = function(hook) {
     return function(effect, deps) {
       var isMounted = React__default.useRef(false);
@@ -5822,7 +5848,7 @@ body.dark ._btn-refresh_14tde_29 {
     var e2 = new Error(message2);
     return e2.name = "SuppressedError", e2.error = error, e2.suppressed = suppressed, e2;
   };
-  var isFunction$1 = function(value) {
+  var isFunction = function(value) {
     return typeof value === "function";
   };
   var isString = function(value) {
@@ -6569,7 +6595,7 @@ body.dark ._btn-refresh_14tde_29 {
         return this.runAsync.apply(this, __spreadArray([], __read(this.state.params || []), false));
       };
       Fetch2.prototype.mutate = function(data2) {
-        var targetData = isFunction$1(data2) ? data2(this.state.data) : data2;
+        var targetData = isFunction(data2) ? data2(this.state.data) : data2;
         this.runPluginHandler("onMutate", targetData);
         this.setState({
           data: targetData
@@ -6689,7 +6715,7 @@ body.dark ._btn-refresh_14tde_29 {
       return defaultElement;
     }
     var targetElement;
-    if (isFunction$1(target)) {
+    if (isFunction(target)) {
       targetElement = target();
     } else if ("current" in target) {
       targetElement = target.current;
@@ -6978,7 +7004,7 @@ body.dark ._btn-refresh_14tde_29 {
     return genLen === genArr.length ? keyFilter : false;
   }
   function genKeyFormatter(keyFilter, exactMatch) {
-    if (isFunction$1(keyFilter)) {
+    if (isFunction(keyFilter)) {
       return keyFilter;
     }
     if (isValidKeyType(keyFilter)) {
@@ -7151,20 +7177,6 @@ body.dark ._btn-refresh_14tde_29 {
   };
   const useUnmountedRef$1 = useUnmountedRef;
   const useUpdateLayoutEffect = createUpdateEffect(React__default.useLayoutEffect);
-  const modalMask$1 = "_modal-mask_1wljt_1";
-  const modal$1 = "_modal_1wljt_1";
-  const modalHeader$1 = "_modal-header_1wljt_25";
-  const modalBody$1 = "_modal-body_1wljt_33";
-  const modalTitle = "_modal-title_1wljt_39";
-  const btnClose = "_btn-close_1wljt_47";
-  const BaseModalClass = {
-    modalMask: modalMask$1,
-    modal: modal$1,
-    modalHeader: modalHeader$1,
-    modalBody: modalBody$1,
-    modalTitle,
-    btnClose
-  };
   let showedCount = 0;
   const modalShowCheck = () => {
     showedCount++;
@@ -7867,18 +7879,6 @@ body.dark ._btn-refresh_14tde_29 {
   function delDislikeId(id) {
     dislikedIds.delete(id);
   }
-  var _ref$b = {
-    name: "iqoq9n",
-    styles: "margin-top:20px"
-  };
-  var _ref2$9 = {
-    name: "1crg5pf",
-    styles: "display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between"
-  };
-  var _ref3$8 = {
-    name: "125di4i",
-    styles: "margin-left:5px;font-size:40%"
-  };
   function ModalDislike({
     show,
     onHide: onHide2,
@@ -7982,7 +7982,10 @@ body.dark ._btn-refresh_14tde_29 {
         children: [/* @__PURE__ */ jsxs("div", {
           className: BaseModalClass.modalTitle,
           children: ["我不想看", /* @__PURE__ */ jsx("span", {
-            css: _ref3$8,
+            css: css`
+              margin-left: 5px;
+              font-size: 40%;
+            `,
             children: "(选择后将减少相似内容推荐)"
           })]
         }), /* @__PURE__ */ jsx("div", {
@@ -7998,7 +8001,12 @@ body.dark ._btn-refresh_14tde_29 {
         ref: modalBodyRef,
         children: [/* @__PURE__ */ jsx("div", {
           className: "reason-list",
-          css: _ref2$9,
+          css: css`
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+          `,
           children: reasons.map((reason, index) => {
             const active = index === activeIndex;
             return /* @__PURE__ */ jsxs("button", {
@@ -8014,14 +8022,31 @@ body.dark ._btn-refresh_14tde_29 {
               disabled: isRequesting,
               children: [/* @__PURE__ */ jsx("span", {
                 className: "reason-no",
-                css: /* @__PURE__ */ css("position:absolute;left:6px;width:20px;height:20px;border-radius:50%;top:", (32 - 20) / 2, "px;display:flex;align-items:center;justify-content:center;background-color:", colorPrimaryValue, ";color:#fff;", ""),
+                css: css`
+                    position: absolute;
+                    left: 6px;
+
+                    width: 20px;
+                    height: 20px;
+                    border-radius: 50%;
+                    top: ${(32 - 20) / 2}px;
+
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+
+                    background-color: ${colorPrimaryValue};
+                    color: #fff;
+                  `,
                 children: index + 1
               }), reason.name]
             }, reason.id);
           })
         }), /* @__PURE__ */ jsxs("div", {
           className: "tips-container",
-          css: _ref$b,
+          css: css`
+            margin-top: 20px;
+          `,
           children: [/* @__PURE__ */ jsxs("div", {
             className: "tips",
             css: _css.tips,
@@ -8048,15 +8073,36 @@ body.dark ._btn-refresh_14tde_29 {
     });
   }
   const _css = {
-    reason: {
-      name: "lu8kba",
-      styles: "color:inherit;width:48%;text-align:center;line-height:20px;position:relative;border-radius:4px;border:2px solid #eee;* :where(body.dark) &{border-color:#333;}padding-top:5px;padding-bottom:5px;margin-top:5px;margin-bottom:5px"
-    },
-    reasonActive: /* @__PURE__ */ css("&.active{border-color:", colorPrimaryValue, ";}", ""),
-    tips: {
-      name: "s5xdrg",
-      styles: "display:flex;align-items:center"
+    reason: css`
+    color: inherit;
+    width: 48%;
+    text-align: center;
+    line-height: 20px;
+    position: relative;
+
+    border-radius: 4px;
+    border: 2px solid #eee;
+
+    /* https://github.com/emotion-js/emotion/issues/2836 */
+    * :where(body.dark) & {
+      border-color: #333;
     }
+
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+  `,
+    reasonActive: css`
+    /* to increase specificity */
+    &.active {
+      border-color: ${colorPrimaryValue};
+    }
+  `,
+    tips: css`
+    display: flex;
+    align-items: center;
+  `
   };
   const currentProps = {
     show: false,
@@ -8103,15 +8149,18 @@ body.dark ._btn-refresh_14tde_29 {
       item
     });
   }
-  const flexVerticalCenterStyle = {
-    name: "s5xdrg",
-    styles: "display:flex;align-items:center"
-  };
-  const flexCenterStyle = /* @__PURE__ */ css(flexVerticalCenterStyle, " justify-content:center;", "");
-  const antdBtnTextStyle = {
-    name: "1h1dezd",
-    styles: "display:inline-block;margin-top:2px"
-  };
+  const flexVerticalCenterStyle = css`
+  display: flex;
+  align-items: center;
+`;
+  const flexCenterStyle = css`
+  ${flexVerticalCenterStyle}
+  justify-content: center;
+`;
+  const antdBtnTextStyle = css`
+  display: inline-block;
+  margin-top: 2px;
+`;
   function proxyWithLocalStorage(initialVaue2, storageKey) {
     const allowedKeys = Object.keys(initialVaue2);
     const savedValue = lodash.pick(JSON.parse(localStorage.getItem(storageKey) || "{}"), allowedKeys);
@@ -8364,26 +8413,26 @@ body.dark ._btn-refresh_14tde_29 {
   function getCurrentSourceTab() {
     return _getCurrentSourceTab(videoSourceTabState.value, getHasLogined());
   }
-  const iconCss = {
-    name: "1inoxbd",
-    styles: "margin-right:4px;margin-top:-1px"
-  };
-  const radioBtnCss = {
-    name: "1dwyqh0",
-    styles: "height:26px;line-height:unset;&:has(:focus-visible){outline:none;outline-offset:unset;}>.ant-radio-button+span{height:100%;}"
-  };
-  const radioBtnStandardCss = {
-    name: "s0vnfv",
-    styles: "height:32px"
-  };
-  var _ref$a = {
-    name: "shwixj",
-    styles: "display:flex;align-items:center;height:22px"
-  };
-  var _ref2$8 = {
-    name: "1k4kcw8",
-    styles: "display:flex;align-items:center;line-height:unset;height:100%"
-  };
+  const iconCss = css`
+  margin-right: 4px;
+  margin-top: -1px;
+`;
+  const radioBtnCss = css`
+  height: 26px;
+  line-height: unset;
+
+  &:has(:focus-visible) {
+    outline: none;
+    outline-offset: unset;
+  }
+
+  > .ant-radio-button + span {
+    height: 100%;
+  }
+`;
+  const radioBtnStandardCss = css`
+  height: 32px;
+`;
   function VideoSourceTab({
     onRefresh
   }) {
@@ -8434,7 +8483,12 @@ body.dark ._btn-refresh_14tde_29 {
           tabIndex: -1,
           value: key2,
           children: /* @__PURE__ */ jsxs("span", {
-            css: _ref2$8,
+            css: css`
+                display: flex;
+                align-items: center;
+                line-height: unset;
+                height: 100%;
+              `,
             children: [/* @__PURE__ */ jsx(TabIcon, {
               tabKey: key2,
               css: iconCss
@@ -8457,7 +8511,11 @@ body.dark ._btn-refresh_14tde_29 {
             iconProps,
             desc
           }) => /* @__PURE__ */ jsxs("div", {
-            css: _ref$a,
+            css: css`
+                display: flex;
+                align-items: center;
+                height: 22px;
+              `,
             children: [/* @__PURE__ */ jsx(TabIcon, {
               tabKey: key2,
               css: iconCss
@@ -8742,19 +8800,22 @@ body.dark ._btn-refresh_14tde_29 {
       });
     }
   }
-  var _ref$9 = {
-    name: "7xidhj",
-    styles: "cursor:pointer;font-size:12px"
-  };
   function FavUsageInfo({
     allFavFolderServices
   }) {
     const {
       excludeFavFolderIds,
-      shuffleForFav
+      shuffleForFav,
+      addSeparatorForFav
     } = useSettingsSnapshot();
     const onRefresh = useOnRefreshContext();
     const [excludeFavFolderIdsChanged, setExcludeFavFolderIdsChanged] = React__default.useState(false);
+    useUpdateEffect(() => {
+      void (async () => {
+        await delay(100);
+        onRefresh == null ? void 0 : onRefresh();
+      })();
+    }, [shuffleForFav, addSeparatorForFav]);
     const handleChange = useMemoizedFn((newTargetKeys, direction, moveKeys) => {
       setExcludeFavFolderIdsChanged(true);
       updateSettings({
@@ -8796,19 +8857,20 @@ body.dark ._btn-refresh_14tde_29 {
         }),
         children: /* @__PURE__ */ jsxs(antd.Tag, {
           color: "success",
-          css: _ref$9,
+          css: css`
+            cursor: pointer;
+            font-size: 12px;
+          `,
           children: ["收藏夹(", foldersCount, ") 收藏(", videosCount, ")"]
         })
       }), /* @__PURE__ */ jsx(antd.Switch, {
         checkedChildren: "随机顺序",
         unCheckedChildren: "默认顺序",
         checked: shuffleForFav,
-        onChange: async (checked) => {
+        onChange: (checked) => {
           updateSettings({
             shuffleForFav: checked
           });
-          await delay(100);
-          onRefresh == null ? void 0 : onRefresh();
         }
       })]
     });
@@ -9198,6 +9260,7 @@ body.dark ._btn-refresh_14tde_29 {
       this.addSeparator = settings.addSeparatorForWatchLater;
     }
     async fetch() {
+      var _a2;
       const res = await request.get("/x/v2/history/toview/web");
       const json = res.data;
       const items = json.data.list.map((item) => {
@@ -9236,7 +9299,7 @@ body.dark ._btn-refresh_14tde_29 {
           content: "更早"
         }, ...earlier].filter(Boolean);
       }
-      this.count = json.data.count;
+      this.count = (((_a2 = json == null ? void 0 : json.data) == null ? void 0 : _a2.list) || []).length;
       _WatchLaterRecService.LAST_BVID_ARR = itemsWithSeparator.map((item) => item.api === EApiType.watchlater && item.bvid).filter(Boolean);
       return itemsWithSeparator;
     }
@@ -9272,14 +9335,21 @@ body.dark ._btn-refresh_14tde_29 {
   function WatchLaterUsageInfo({
     count
   }) {
-    const color = count <= 90 ? "success" : count < 100 ? "warning" : "error";
-    const title = `${color !== "success" ? "快满了~ " : ""}已使用 ${count} / 100`;
+    const color = "success";
+    const title = `共 ${count} 个视频`;
     const {
-      shuffleForWatchLater
+      shuffleForWatchLater,
+      addSeparatorForWatchLater
     } = useSettingsSnapshot();
     const onRefresh = useOnRefreshContext();
+    useUpdateEffect(() => {
+      void (async () => {
+        await delay(100);
+        onRefresh == null ? void 0 : onRefresh();
+      })();
+    }, [shuffleForWatchLater, addSeparatorForWatchLater]);
     return /* @__PURE__ */ jsxs(antd.Space, {
-      children: [/* @__PURE__ */ jsxs(antd.Tag, {
+      children: [/* @__PURE__ */ jsx(antd.Tag, {
         color,
         style: {
           marginRight: 0,
@@ -9290,17 +9360,15 @@ body.dark ._btn-refresh_14tde_29 {
         onClick: () => {
           toast(`稍后再看: ${title}`);
         },
-        children: [count, " / 100"]
+        children: count
       }), /* @__PURE__ */ jsx(antd.Switch, {
         checkedChildren: "随机顺序",
         unCheckedChildren: "添加顺序",
         checked: shuffleForWatchLater,
-        onChange: async (checked) => {
+        onChange: (checked) => {
           updateSettings({
             shuffleForWatchLater: checked
           });
-          await delay(100);
-          onRefresh == null ? void 0 : onRefresh();
         }
       })]
     });
@@ -9531,315 +9599,139 @@ body.dark ._btn-refresh_14tde_29 {
     const list = (json == null ? void 0 : json.data.up_list) || [];
     return list;
   }
-  /**
-   * natural-orderby v3.0.2
-   *
-   * Copyright (c) Olaf Ennen
-   *
-   * This source code is licensed under the MIT license found in the
-   * LICENSE.md file in the root directory of this source tree.
-   *
-   * @license MIT
-   */
-  var compareNumbers = function compareNumbers2(numberA, numberB) {
-    if (numberA < numberB) {
-      return -1;
-    }
-    if (numberA > numberB) {
-      return 1;
-    }
-    return 0;
-  };
-  var compareUnicode = function compareUnicode2(stringA, stringB) {
-    var result = stringA.localeCompare(stringB);
-    return result ? result / Math.abs(result) : 0;
-  };
-  var RE_NUMBERS = /(^0x[\da-fA-F]+$|^([+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?(?!\.\d+)(?=\D|\s|$))|\d+)/g;
-  var RE_LEADING_OR_TRAILING_WHITESPACES = /^\s+|\s+$/g;
-  var RE_WHITESPACES = /\s+/g;
-  var RE_INT_OR_FLOAT = /^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?$/;
-  var RE_DATE = /(^([\w ]+,?[\w ]+)?[\w ]+,?[\w ]+\d+:\d+(:\d+)?[\w ]?|^\d{1,4}[/-]\d{1,4}[/-]\d{1,4}|^\w+, \w+ \d+, \d{4})/;
-  var RE_LEADING_ZERO = /^0+[1-9]{1}[0-9]*$/;
-  var RE_UNICODE_CHARACTERS = /[^\x00-\x80]/;
-  var stringCompare = function stringCompare2(stringA, stringB) {
-    if (stringA < stringB) {
-      return -1;
-    }
-    if (stringA > stringB) {
-      return 1;
-    }
-    return 0;
-  };
-  var compareChunks = function compareChunks2(chunksA, chunksB) {
-    var lengthA = chunksA.length;
-    var lengthB = chunksB.length;
-    var size = Math.min(lengthA, lengthB);
-    for (var i2 = 0; i2 < size; i2++) {
-      var chunkA = chunksA[i2];
-      var chunkB = chunksB[i2];
-      if (chunkA.normalizedString !== chunkB.normalizedString) {
-        if (chunkA.normalizedString === "" !== (chunkB.normalizedString === "")) {
-          return chunkA.normalizedString === "" ? -1 : 1;
-        }
-        if (chunkA.parsedNumber !== void 0 && chunkB.parsedNumber !== void 0) {
-          var result = compareNumbers(chunkA.parsedNumber, chunkB.parsedNumber);
-          if (result === 0) {
-            return stringCompare(chunkA.normalizedString, chunkB.normalizedString);
-          }
-          return result;
-        } else if (chunkA.parsedNumber !== void 0 || chunkB.parsedNumber !== void 0) {
-          return chunkA.parsedNumber !== void 0 ? -1 : 1;
-        } else if (RE_UNICODE_CHARACTERS.test(chunkA.normalizedString + chunkB.normalizedString)) {
-          return compareUnicode(chunkA.normalizedString, chunkB.normalizedString);
-        } else {
-          return stringCompare(chunkA.normalizedString, chunkB.normalizedString);
-        }
-      }
-    }
-    if (lengthA > size || lengthB > size) {
-      return lengthA <= size ? -1 : 1;
-    }
-    return 0;
-  };
-  var compareOtherTypes = function compareOtherTypes2(valueA, valueB) {
-    if (!valueA.chunks ? valueB.chunks : !valueB.chunks) {
-      return !valueA.chunks ? 1 : -1;
-    }
-    if (valueA.isNaN ? !valueB.isNaN : valueB.isNaN) {
-      return valueA.isNaN ? -1 : 1;
-    }
-    if (valueA.isSymbol ? !valueB.isSymbol : valueB.isSymbol) {
-      return valueA.isSymbol ? -1 : 1;
-    }
-    if (valueA.isObject ? !valueB.isObject : valueB.isObject) {
-      return valueA.isObject ? -1 : 1;
-    }
-    if (valueA.isArray ? !valueB.isArray : valueB.isArray) {
-      return valueA.isArray ? -1 : 1;
-    }
-    if (valueA.isFunction ? !valueB.isFunction : valueB.isFunction) {
-      return valueA.isFunction ? -1 : 1;
-    }
-    if (valueA.isNull ? !valueB.isNull : valueB.isNull) {
-      return valueA.isNull ? -1 : 1;
-    }
-    return 0;
-  };
-  var compareValues = function compareValues2(valueA, valueB) {
-    if (valueA.value === valueB.value) {
-      return 0;
-    }
-    if (valueA.parsedNumber !== void 0 && valueB.parsedNumber !== void 0) {
-      return compareNumbers(valueA.parsedNumber, valueB.parsedNumber);
-    }
-    if (valueA.chunks && valueB.chunks) {
-      return compareChunks(valueA.chunks, valueB.chunks);
-    }
-    return compareOtherTypes(valueA, valueB);
-  };
-  var normalizeAlphaChunk = function normalizeAlphaChunk2(chunk) {
-    return chunk.replace(RE_WHITESPACES, " ").replace(RE_LEADING_OR_TRAILING_WHITESPACES, "");
-  };
-  var parseNumber = function parseNumber2(value) {
-    if (value.length !== 0) {
-      var parsedNumber = Number(value);
-      if (!Number.isNaN(parsedNumber)) {
-        return parsedNumber;
-      }
-    }
-    return void 0;
-  };
-  var normalizeNumericChunk = function normalizeNumericChunk2(chunk, index, chunks) {
-    if (RE_INT_OR_FLOAT.test(chunk)) {
-      if (!RE_LEADING_ZERO.test(chunk) || index === 0 || chunks[index - 1] !== ".") {
-        return parseNumber(chunk) || 0;
-      }
-    }
-    return void 0;
-  };
-  var createChunkMap = function createChunkMap2(chunk, index, chunks) {
-    return {
-      parsedNumber: normalizeNumericChunk(chunk, index, chunks),
-      normalizedString: normalizeAlphaChunk(chunk)
+  var castComparer = function(comparer) {
+    return function(a2, b2, order) {
+      return comparer(a2, b2, order) * order;
     };
   };
-  var createChunks = function createChunks2(value) {
-    return value.replace(RE_NUMBERS, "\0$1\0").replace(/\0$/, "").replace(/^\0/, "").split("\0");
+  var throwInvalidConfigErrorIfTrue = function(condition, context) {
+    if (condition)
+      throw Error("Invalid sort config: " + context);
   };
-  var createChunkMaps = function createChunkMaps2(value) {
-    var chunksMaps = createChunks(value).map(createChunkMap);
-    return chunksMaps;
+  var unpackObjectSorter = function(sortByObj) {
+    var _a2 = sortByObj || {}, asc = _a2.asc, desc = _a2.desc;
+    var order = asc ? 1 : -1;
+    var sortBy = asc || desc;
+    throwInvalidConfigErrorIfTrue(!sortBy, "Expected `asc` or `desc` property");
+    throwInvalidConfigErrorIfTrue(asc && desc, "Ambiguous object with `asc` and `desc` config properties");
+    var comparer = sortByObj.comparer && castComparer(sortByObj.comparer);
+    return { order, sortBy, comparer };
   };
-  var isFunction = function isFunction2(value) {
-    return typeof value === "function";
-  };
-  var isNaN$1 = function isNaN2(value) {
-    return Number.isNaN(value) || value instanceof Number && Number.isNaN(value.valueOf());
-  };
-  var isNull = function isNull2(value) {
-    return value === null;
-  };
-  var isObject = function isObject2(value) {
-    return value !== null && typeof value === "object" && !Array.isArray(value) && !(value instanceof Number) && !(value instanceof String) && !(value instanceof Boolean) && !(value instanceof Date);
-  };
-  var isSymbol = function isSymbol2(value) {
-    return typeof value === "symbol";
-  };
-  var isUndefined = function isUndefined2(value) {
-    return value === void 0;
-  };
-  var parseDate = function parseDate2(value) {
-    try {
-      var parsedDate = Date.parse(value);
-      if (!Number.isNaN(parsedDate)) {
-        if (RE_DATE.test(value)) {
-          return parsedDate;
-        }
-      }
-      return void 0;
-    } catch (_unused) {
-      return void 0;
-    }
-  };
-  var numberify = function numberify2(value) {
-    var parsedNumber = parseNumber(value);
-    if (parsedNumber !== void 0) {
-      return parsedNumber;
-    }
-    return parseDate(value);
-  };
-  var stringify = function stringify2(value) {
-    if (typeof value === "boolean" || value instanceof Boolean) {
-      return Number(value).toString();
-    }
-    if (typeof value === "number" || value instanceof Number) {
-      return value.toString();
-    }
-    if (value instanceof Date) {
-      return value.getTime().toString();
-    }
-    if (typeof value === "string" || value instanceof String) {
-      return value.toLowerCase().replace(RE_LEADING_OR_TRAILING_WHITESPACES, "");
-    }
-    return "";
-  };
-  var getMappedValueRecord = function getMappedValueRecord2(value) {
-    if (typeof value === "string" || value instanceof String || (typeof value === "number" || value instanceof Number) && !isNaN$1(value) || typeof value === "boolean" || value instanceof Boolean || value instanceof Date) {
-      var stringValue = stringify(value);
-      var parsedNumber = numberify(stringValue);
-      var chunks = createChunkMaps(parsedNumber ? "" + parsedNumber : stringValue);
-      return {
-        parsedNumber,
-        chunks,
-        value
-      };
-    }
-    return {
-      isArray: Array.isArray(value),
-      isFunction: isFunction(value),
-      isNaN: isNaN$1(value),
-      isNull: isNull(value),
-      isObject: isObject(value),
-      isSymbol: isSymbol(value),
-      isUndefined: isUndefined(value),
-      value
-    };
-  };
-  var compareMultiple = function compareMultiple2(recordA, recordB, orders) {
-    var indexA = recordA.index, valuesA = recordA.values;
-    var indexB = recordB.index, valuesB = recordB.values;
-    var length2 = valuesA.length;
-    var ordersLength = orders.length;
-    for (var i2 = 0; i2 < length2; i2++) {
-      var order = i2 < ordersLength ? orders[i2] : null;
-      if (order && typeof order === "function") {
-        var result = order(valuesA[i2].value, valuesB[i2].value);
-        if (result) {
-          return result;
-        }
+  var multiPropertySorterProvider = function(defaultComparer2) {
+    return function multiPropertySorter(sortBy, sortByArr, depth, order, comparer, a2, b2) {
+      var valA;
+      var valB;
+      if (typeof sortBy === "string") {
+        valA = a2[sortBy];
+        valB = b2[sortBy];
+      } else if (typeof sortBy === "function") {
+        valA = sortBy(a2);
+        valB = sortBy(b2);
       } else {
-        var _result = compareValues(valuesA[i2], valuesB[i2]);
-        if (_result) {
-          return _result * (order === "desc" ? -1 : 1);
-        }
+        var objectSorterConfig = unpackObjectSorter(sortBy);
+        return multiPropertySorter(objectSorterConfig.sortBy, sortByArr, depth, objectSorterConfig.order, objectSorterConfig.comparer || defaultComparer2, a2, b2);
       }
-    }
-    return indexA - indexB;
-  };
-  var createIdentifierFn = function createIdentifierFn2(identifier2) {
-    if (typeof identifier2 === "function") {
-      return identifier2;
-    }
-    return function(value) {
-      if (Array.isArray(value)) {
-        var index = Number(identifier2);
-        if (Number.isInteger(index)) {
-          return value[index];
-        }
-      } else if (value && typeof value === "object") {
-        var result = Object.getOwnPropertyDescriptor(value, identifier2);
-        return result == null ? void 0 : result.value;
+      var equality = comparer(valA, valB, order);
+      if ((equality === 0 || valA == null && valB == null) && sortByArr.length > depth) {
+        return multiPropertySorter(sortByArr[depth], sortByArr, depth + 1, order, comparer, a2, b2);
       }
-      return value;
+      return equality;
     };
   };
-  var getElementByIndex = function getElementByIndex2(collection, index) {
-    return collection[index];
+  function getSortStrategy(sortBy, comparer, order) {
+    if (sortBy === void 0 || sortBy === true) {
+      return function(a2, b2) {
+        return comparer(a2, b2, order);
+      };
+    }
+    if (typeof sortBy === "string") {
+      throwInvalidConfigErrorIfTrue(sortBy.includes("."), "String syntax not allowed for nested properties.");
+      return function(a2, b2) {
+        return comparer(a2[sortBy], b2[sortBy], order);
+      };
+    }
+    if (typeof sortBy === "function") {
+      return function(a2, b2) {
+        return comparer(sortBy(a2), sortBy(b2), order);
+      };
+    }
+    if (Array.isArray(sortBy)) {
+      var multiPropSorter_1 = multiPropertySorterProvider(comparer);
+      return function(a2, b2) {
+        return multiPropSorter_1(sortBy[0], sortBy, 1, order, comparer, a2, b2);
+      };
+    }
+    var objectSorterConfig = unpackObjectSorter(sortBy);
+    return getSortStrategy(objectSorterConfig.sortBy, objectSorterConfig.comparer || comparer, objectSorterConfig.order);
+  }
+  var sortArray = function(order, ctx, sortBy, comparer) {
+    var _a2;
+    if (!Array.isArray(ctx)) {
+      return ctx;
+    }
+    if (Array.isArray(sortBy) && sortBy.length < 2) {
+      _a2 = sortBy, sortBy = _a2[0];
+    }
+    return ctx.sort(getSortStrategy(sortBy, comparer, order));
   };
-  var getValueByIdentifier = function getValueByIdentifier2(value, getValue) {
-    return getValue(value);
-  };
-  var baseOrderBy = function baseOrderBy2(collection, identifiers, orders) {
-    var identifierFns = identifiers.length ? identifiers.map(createIdentifierFn) : [function(value) {
-      return value;
-    }];
-    var mappedCollection = collection.map(function(element, index) {
-      var values = identifierFns.map(function(identifier2) {
-        return getValueByIdentifier(element, identifier2);
-      }).map(getMappedValueRecord);
+  function createNewSortInstance(opts) {
+    var comparer = castComparer(opts.comparer);
+    return function(arrayToSort) {
+      var ctx = Array.isArray(arrayToSort) && !opts.inPlaceSorting ? arrayToSort.slice() : arrayToSort;
       return {
-        index,
-        values
+        asc: function(sortBy) {
+          return sortArray(1, ctx, sortBy, comparer);
+        },
+        desc: function(sortBy) {
+          return sortArray(-1, ctx, sortBy, comparer);
+        },
+        by: function(sortBy) {
+          return sortArray(1, ctx, sortBy, comparer);
+        }
+      };
+    };
+  }
+  var defaultComparer = function(a2, b2, order) {
+    if (a2 == null)
+      return order;
+    if (b2 == null)
+      return -order;
+    if (typeof a2 !== typeof b2) {
+      return typeof a2 < typeof b2 ? -1 : 1;
+    }
+    if (a2 < b2)
+      return -1;
+    if (a2 > b2)
+      return 1;
+    return 0;
+  };
+  var sort = createNewSortInstance({
+    comparer: defaultComparer
+  });
+  createNewSortInstance({
+    comparer: defaultComparer,
+    inPlaceSorting: true
+  });
+  function fastOrderBy(list, columns, orders) {
+    if (columns.length !== orders.length) {
+      throw new Error("columns & orders length not match");
+    }
+    const _by = columns.map((column2, index) => {
+      const order = orders[index];
+      if (order === "asc")
+        return {
+          asc: column2
+        };
+      else if (order === "desc")
+        return {
+          desc: column2
+        };
+      return {
+        asc: column2,
+        comparer: order
       };
     });
-    mappedCollection.sort(function(recordA, recordB) {
-      return compareMultiple(recordA, recordB, orders);
-    });
-    return mappedCollection.map(function(element) {
-      return getElementByIndex(collection, element.index);
-    });
-  };
-  var getIdentifiers = function getIdentifiers2(identifiers) {
-    if (!identifiers) {
-      return [];
-    }
-    var identifierList = !Array.isArray(identifiers) ? [identifiers] : [].concat(identifiers);
-    if (identifierList.some(function(identifier2) {
-      return typeof identifier2 !== "string" && typeof identifier2 !== "number" && typeof identifier2 !== "function";
-    })) {
-      return [];
-    }
-    return identifierList;
-  };
-  var getOrders = function getOrders2(orders) {
-    if (!orders) {
-      return [];
-    }
-    var orderList = !Array.isArray(orders) ? [orders] : [].concat(orders);
-    if (orderList.some(function(order) {
-      return order !== "asc" && order !== "desc" && typeof order !== "function";
-    })) {
-      return [];
-    }
-    return orderList;
-  };
-  function orderBy(collection, identifiers, orders) {
-    if (!collection || !Array.isArray(collection)) {
-      return [];
-    }
-    var validatedIdentifiers = getIdentifiers(identifiers);
-    var validatedOrders = getOrders(orders);
-    return baseOrderBy(collection, validatedIdentifiers, validatedOrders);
+    return sort(list).by(_by);
   }
   class DynamicFeedRecService {
     constructor(upMid, searchText) {
@@ -9947,14 +9839,6 @@ body.dark ._btn-refresh_14tde_29 {
         item.has_update = false;
     }
   }
-  var _ref$8 = {
-    name: "17hu30x",
-    styles: ".ant-btn{display:inline-flex;align-items:center;justify-content:center;}"
-  };
-  var _ref3$7 = {
-    name: "1mkc8b8",
-    styles: "display:block;max-width:130px;text-overflow:ellipsis;white-space:nowrap;overflow:hidden"
-  };
   function DynamicFeedUsageInfo() {
     const onRefresh = useOnRefreshContext();
     const {
@@ -9992,8 +9876,8 @@ body.dark ._btn-refresh_14tde_29 {
       function mapName(name) {
         return name.toLowerCase().replace(/^([a-z])/, "999999$1");
       }
-      const upListSorted = orderBy(upList, [(item) => item.has_update ? 1 : 0, (it) => it.uname], ["desc", (_a2, _b2) => {
-        let [a2, b2] = [_a2, _b2];
+      performance.now();
+      const upListSorted = fastOrderBy(upList, [(it) => it.has_update ? 1 : 0, "uname"], ["desc", (a2, b2) => {
         [a2, b2] = [a2, b2].map(mapName);
         return a2.localeCompare(b2, "zh-CN");
       }]);
@@ -10014,7 +9898,13 @@ body.dark ._btn-refresh_14tde_29 {
           // label: up.uname,
           label: /* @__PURE__ */ jsx("span", {
             title: up.uname,
-            css: _ref3$7,
+            css: css`
+              display: block;
+              max-width: 130px;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+              overflow: hidden;
+            `,
             children: up.uname
           }),
           onClick() {
@@ -10028,6 +9918,12 @@ body.dark ._btn-refresh_14tde_29 {
       });
       return [itemAll, ...items];
     }, [upList, upList.map((x2) => !!x2.has_update)]);
+    /* @__PURE__ */ jsx("div", {
+      css: css`
+        flex-basis: 100%;
+        height: 0;
+      `
+    });
     return /* @__PURE__ */ jsx(Fragment, {
       children: /* @__PURE__ */ jsxs(antd.Space, {
         children: [/* @__PURE__ */ jsx(antd.Dropdown, {
@@ -10035,7 +9931,7 @@ body.dark ._btn-refresh_14tde_29 {
           menu: {
             items: menuItems,
             style: {
-              maxHeight: "70vh",
+              maxHeight: "60vh",
               overflowY: "scroll"
             }
           },
@@ -10056,7 +9952,13 @@ body.dark ._btn-refresh_14tde_29 {
             children: "清除"
           })]
         }), hasSelectedUp && /* @__PURE__ */ jsx(antd.Input.Search, {
-          css: _ref$8,
+          css: css`
+              .ant-btn {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+              }
+            `,
           placeholder: "按标题过滤",
           type: "search",
           autoCorrect: "off",
@@ -10432,10 +10334,10 @@ body.dark ._btn-refresh_14tde_29 {
   var MAX_AID = 1n << 51n;
   var BASE = 58n;
   var data = "FcwAPNKTMug3GV5Lj7EJnHpWsx4tb8haYeviqBz6rkCy12mUSDQX9RdoZf";
-  function av2bv(aid2) {
+  function av2bv(aid) {
     const bytes = ["B", "V", "1", "0", "0", "0", "0", "0", "0", "0", "0", "0"];
     let bvIndex = bytes.length - 1;
-    let tmp = (MAX_AID | BigInt(aid2)) ^ XOR_CODE;
+    let tmp = (MAX_AID | BigInt(aid)) ^ XOR_CODE;
     while (tmp > 0) {
       bytes[bvIndex] = data[Number(tmp % BigInt(BASE))];
       tmp = tmp / BASE;
@@ -11056,20 +10958,104 @@ body.dark ._btn-refresh_14tde_29 {
     AntdMessage.success(`已复制: ${content}`);
   }
   const defaultEmitter = mitt();
-  const VideoCard = React__default.memo(function VideoCard2({ style, className, item, loading, active, onRemoveCurrent, onMoveToFirst, onRefresh, emitter: emitter2, ...restProps }) {
+  const VideoCard = React__default.memo(function VideoCard2({
+    style,
+    className,
+    item,
+    loading,
+    active,
+    onRemoveCurrent,
+    onMoveToFirst,
+    onRefresh,
+    emitter: emitter2,
+    ...restProps
+  }) {
     loading = loading ?? !item;
     const dislikedReason = useDislikedReason((item == null ? void 0 : item.api) === "app" && item.param);
     const cardData = React__default.useMemo(() => item && normalizeCardData(item), [item]);
     const blacklisted = useInBlacklist(cardData == null ? void 0 : cardData.authorMid);
-    return /* @__PURE__ */ jsx("div", { style, className: cx("bili-video-card", styles$2.biliVideoCard, className), ...restProps, children: loading ? /* @__PURE__ */ jsx(SkeletonCard, { loading }) : item && cardData && (dislikedReason ? /* @__PURE__ */ jsx(DislikedCard, { item, emitter: emitter2, dislikedReason }) : blacklisted ? /* @__PURE__ */ jsx(BlacklistCard, { cardData }) : /* @__PURE__ */ jsx(VideoCardInner, { item, cardData, active, emitter: emitter2, onRemoveCurrent, onMoveToFirst, onRefresh })) });
+    return /* @__PURE__ */ jsx("div", {
+      style,
+      className: cx("bili-video-card", styles$2.biliVideoCard, className),
+      ...restProps,
+      children: loading ? /* @__PURE__ */ jsx(SkeletonCard, {
+        loading
+      }) : item && cardData && (dislikedReason ? /* @__PURE__ */ jsx(DislikedCard, {
+        item,
+        emitter: emitter2,
+        dislikedReason
+      }) : blacklisted ? /* @__PURE__ */ jsx(BlacklistCard, {
+        cardData
+      }) : /* @__PURE__ */ jsx(VideoCardInner, {
+        item,
+        cardData,
+        active,
+        emitter: emitter2,
+        onRemoveCurrent,
+        onMoveToFirst,
+        onRefresh
+      }))
+    });
   });
-  var _ref8$1 = { name: "16dof6j", styles: "flex:1;margin-left:10px" };
-  var _ref9$1 = { name: "1po2nvr", styles: "width:32px;height:32px;border-radius:50%" };
-  const SkeletonCard = React__default.memo(function SkeletonCard2({ loading }) {
-    const { styleFancy } = useSettingsSnapshot();
-    return /* @__PURE__ */ jsxs("div", { className: cx("bili-video-card__skeleton", { hide: !loading, [styles$2.skeletonActive]: loading }), children: [/* @__PURE__ */ jsx("div", { className: "bili-video-card__skeleton--cover", style: borderRadiusStyle }), !styleFancy && /* @__PURE__ */ jsx("div", { className: "bili-video-card__skeleton--info", children: /* @__PURE__ */ jsxs("div", { className: "bili-video-card__skeleton--right", children: [/* @__PURE__ */ jsx("p", { className: "bili-video-card__skeleton--text" }), /* @__PURE__ */ jsx("p", { className: "bili-video-card__skeleton--text short" }), /* @__PURE__ */ jsx("p", { className: "bili-video-card__skeleton--light" })] }) }), styleFancy && /* @__PURE__ */ jsxs("div", { className: "bili-video-card__skeleton--info", children: [/* @__PURE__ */ jsx("div", { className: "bili-video-card__skeleton--avatar", css: _ref9$1 }), /* @__PURE__ */ jsxs("div", { className: "bili-video-card__skeleton--right", css: _ref8$1, children: [/* @__PURE__ */ jsx("p", { className: "bili-video-card__skeleton--text" }), /* @__PURE__ */ jsx("p", { className: "bili-video-card__skeleton--text short" }), /* @__PURE__ */ jsx("p", { className: "bili-video-card__skeleton--light" }), /* @__PURE__ */ jsx("p", { className: "bili-video-card__skeleton--text tiny" })] })] })] });
+  const SkeletonCard = React__default.memo(function SkeletonCard2({
+    loading
+  }) {
+    const {
+      styleFancy
+    } = useSettingsSnapshot();
+    return /* @__PURE__ */ jsxs("div", {
+      className: cx("bili-video-card__skeleton", {
+        hide: !loading,
+        [styles$2.skeletonActive]: loading
+      }),
+      children: [/* @__PURE__ */ jsx("div", {
+        className: "bili-video-card__skeleton--cover",
+        style: borderRadiusStyle
+      }), !styleFancy && /* @__PURE__ */ jsx("div", {
+        className: "bili-video-card__skeleton--info",
+        children: /* @__PURE__ */ jsxs("div", {
+          className: "bili-video-card__skeleton--right",
+          children: [/* @__PURE__ */ jsx("p", {
+            className: "bili-video-card__skeleton--text"
+          }), /* @__PURE__ */ jsx("p", {
+            className: "bili-video-card__skeleton--text short"
+          }), /* @__PURE__ */ jsx("p", {
+            className: "bili-video-card__skeleton--light"
+          })]
+        })
+      }), styleFancy && /* @__PURE__ */ jsxs("div", {
+        className: "bili-video-card__skeleton--info",
+        children: [/* @__PURE__ */ jsx("div", {
+          className: "bili-video-card__skeleton--avatar",
+          css: css`
+              width: 32px;
+              height: 32px;
+              border-radius: 50%;
+            `
+        }), /* @__PURE__ */ jsxs("div", {
+          className: "bili-video-card__skeleton--right",
+          css: css`
+              flex: 1;
+              margin-left: 10px;
+            `,
+          children: [/* @__PURE__ */ jsx("p", {
+            className: "bili-video-card__skeleton--text"
+          }), /* @__PURE__ */ jsx("p", {
+            className: "bili-video-card__skeleton--text short"
+          }), /* @__PURE__ */ jsx("p", {
+            className: "bili-video-card__skeleton--light"
+          }), /* @__PURE__ */ jsx("p", {
+            className: "bili-video-card__skeleton--text tiny"
+          })]
+        })]
+      })]
+    });
   });
-  const DislikedCard = React__default.memo(function DislikedCard2({ dislikedReason, item, emitter: emitter2 = defaultEmitter }) {
+  const DislikedCard = React__default.memo(function DislikedCard2({
+    dislikedReason,
+    item,
+    emitter: emitter2 = defaultEmitter
+  }) {
     const onCancelDislike = useMemoizedFn(async () => {
       if (!(dislikedReason == null ? void 0 : dislikedReason.id))
         return;
@@ -11090,10 +11076,48 @@ body.dark ._btn-refresh_14tde_29 {
       }
     });
     useMittOn(emitter2, "cancel-dislike", onCancelDislike);
-    return /* @__PURE__ */ jsxs("div", { className: cx(styles$2.dislikedWrapper), children: [/* @__PURE__ */ jsx("div", { className: styles$2.dislikeContentCover, children: /* @__PURE__ */ jsxs("div", { className: styles$2.dislikeContentCoverInner, children: [/* @__PURE__ */ jsx(IconPark, { name: "DistraughtFace", size: 32, className: styles$2.dislikeIcon }), /* @__PURE__ */ jsx("div", { className: styles$2.dislikeReason, children: dislikedReason == null ? void 0 : dislikedReason.name }), /* @__PURE__ */ jsx("div", { className: styles$2.dislikeDesc, children: (dislikedReason == null ? void 0 : dislikedReason.toast) || "将减少此类内容推荐" })] }) }), /* @__PURE__ */ jsx("div", { className: styles$2.dislikeContentAction, children: /* @__PURE__ */ jsxs("button", { onClick: onCancelDislike, children: [/* @__PURE__ */ jsx(IconPark, { name: "Return", size: "16", style: { marginRight: 4, marginTop: -2 } }), "撤销"] }) })] });
+    return /* @__PURE__ */ jsxs("div", {
+      className: cx(styles$2.dislikedWrapper),
+      children: [/* @__PURE__ */ jsx("div", {
+        className: styles$2.dislikeContentCover,
+        children: /* @__PURE__ */ jsxs("div", {
+          className: styles$2.dislikeContentCoverInner,
+          children: [/* @__PURE__ */ jsx(IconPark, {
+            name: "DistraughtFace",
+            size: 32,
+            className: styles$2.dislikeIcon
+          }), /* @__PURE__ */ jsx("div", {
+            className: styles$2.dislikeReason,
+            children: dislikedReason == null ? void 0 : dislikedReason.name
+          }), /* @__PURE__ */ jsx("div", {
+            className: styles$2.dislikeDesc,
+            children: (dislikedReason == null ? void 0 : dislikedReason.toast) || "将减少此类内容推荐"
+          })]
+        })
+      }), /* @__PURE__ */ jsx("div", {
+        className: styles$2.dislikeContentAction,
+        children: /* @__PURE__ */ jsxs("button", {
+          onClick: onCancelDislike,
+          children: [/* @__PURE__ */ jsx(IconPark, {
+            name: "Return",
+            size: "16",
+            style: {
+              marginRight: 4,
+              marginTop: -2
+            }
+          }), "撤销"]
+        })
+      })]
+    });
   });
-  const BlacklistCard = React__default.memo(function BlacklistCard2({ cardData }) {
-    const { authorMid, authorFace, authorName } = cardData;
+  const BlacklistCard = React__default.memo(function BlacklistCard2({
+    cardData
+  }) {
+    const {
+      authorMid,
+      authorFace,
+      authorName
+    } = cardData;
     const onCancel = useMemoizedFn(async () => {
       if (!authorMid)
         return;
@@ -11101,23 +11125,59 @@ body.dark ._btn-refresh_14tde_29 {
       if (success)
         AntdMessage.success(`已移出黑名单: ${authorName}`);
     });
-    return /* @__PURE__ */ jsxs("div", { className: cx(styles$2.dislikedWrapper), children: [/* @__PURE__ */ jsx("div", { className: styles$2.dislikeContentCover, children: /* @__PURE__ */ jsxs("div", { className: styles$2.dislikeContentCoverInner, children: [/* @__PURE__ */ jsx(IconPark, { name: "PeopleDelete", size: 32, className: styles$2.dislikeIcon }), /* @__PURE__ */ jsx("div", { className: styles$2.dislikeReason, children: "已拉黑" }), /* @__PURE__ */ jsxs("div", { className: styles$2.dislikeDesc, children: ["UP: ", authorName] })] }) }), /* @__PURE__ */ jsx("div", { className: styles$2.dislikeContentAction, children: /* @__PURE__ */ jsxs("button", { onClick: onCancel, children: [/* @__PURE__ */ jsx(IconPark, { name: "Return", size: "16", style: { marginRight: 4, marginTop: -2 } }), "撤销"] }) })] });
+    return /* @__PURE__ */ jsxs("div", {
+      className: cx(styles$2.dislikedWrapper),
+      children: [/* @__PURE__ */ jsx("div", {
+        className: styles$2.dislikeContentCover,
+        children: /* @__PURE__ */ jsxs("div", {
+          className: styles$2.dislikeContentCoverInner,
+          children: [/* @__PURE__ */ jsx(IconPark, {
+            name: "PeopleDelete",
+            size: 32,
+            className: styles$2.dislikeIcon
+          }), /* @__PURE__ */ jsx("div", {
+            className: styles$2.dislikeReason,
+            children: "已拉黑"
+          }), /* @__PURE__ */ jsxs("div", {
+            className: styles$2.dislikeDesc,
+            children: ["UP: ", authorName]
+          })]
+        })
+      }), /* @__PURE__ */ jsx("div", {
+        className: styles$2.dislikeContentAction,
+        children: /* @__PURE__ */ jsxs("button", {
+          onClick: onCancel,
+          children: [/* @__PURE__ */ jsx(IconPark, {
+            name: "Return",
+            size: "16",
+            style: {
+              marginRight: 4,
+              marginTop: -2
+            }
+          }), "撤销"]
+        })
+      })]
+    });
   });
-  var _ref$7 = { name: "putlsr", styles: "margin-top:4px;padding-left:0;max-width:100%" };
-  var _ref2$7 = { name: "s5xdrg", styles: "display:flex;align-items:center" };
-  var _ref3$6 = { name: "zmsypw", styles: "margin-top:4px;color:var(--text3);font-size:var(--subtitle-font-size)" };
-  var _ref4$4 = { name: "1ic5zs4", styles: "display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-overflow:ellipsis;word-break:break-all;line-break:anywhere;color:var(--text1);font-size:var(--title-font-size);line-height:var(--title-line-height)" };
-  var _ref5$4 = { name: "t6djnl", styles: "flex:1;margin-left:10px;overflow:hidden" };
-  var _ref6$2 = { name: "1t32qz5", styles: "display:flex;margin-top:15px" };
-  var _ref7$1 = { name: "11ginrh", styles: "background-color:unset;position:static" };
-  const VideoCardInner = React__default.memo(function VideoCardInner2({ item, cardData, active = false, onRemoveCurrent, onMoveToFirst, onRefresh, emitter: emitter2 = defaultEmitter }) {
+  const VideoCardInner = React__default.memo(function VideoCardInner2({
+    item,
+    cardData,
+    active = false,
+    onRemoveCurrent,
+    onMoveToFirst,
+    onRefresh,
+    emitter: emitter2 = defaultEmitter
+  }) {
     var _a2, _b2;
     item.api === "pc";
     const isApp = item.api === "app";
     item.api === "dynamic";
     item.api === "watchlater";
     item.api === "fav";
-    const { styleFancy, coverUseAvif } = useSettingsSnapshot();
+    const {
+      styleFancy,
+      coverUseAvif
+    } = useSettingsSnapshot();
     let {
       // video
       avid,
@@ -11175,13 +11235,30 @@ body.dark ._btn-refresh_14tde_29 {
       const rect = (_a3 = videoPreviewWrapperRef.current) == null ? void 0 : _a3.getBoundingClientRect();
       if (!rect)
         return;
-      const { x: x2 } = rect;
+      const {
+        x: x2
+      } = rect;
       const relativeX = e2.pageX - window.pageXOffset - x2;
       setMouseEnterRelativeX(relativeX);
-    }, { target: videoPreviewWrapperRef });
+    }, {
+      target: videoPreviewWrapperRef
+    });
     const isHovering = useHover(videoPreviewWrapperRef);
-    const { autoPreviewWhenHover } = useSettingsSnapshot();
-    const { onStartPreviewAnimation, onHotkeyPreviewAnimation, previewAnimationProgress } = usePreviewAnimation({ bvid, title, autoPreviewWhenHover, active, tryFetchVideoData, videoPreviewWrapperRef });
+    const {
+      autoPreviewWhenHover
+    } = useSettingsSnapshot();
+    const {
+      onStartPreviewAnimation,
+      onHotkeyPreviewAnimation,
+      previewAnimationProgress
+    } = usePreviewAnimation({
+      bvid,
+      title,
+      autoPreviewWhenHover,
+      active,
+      tryFetchVideoData,
+      videoPreviewWrapperRef
+    });
     useUpdateEffect(() => {
       if (!active)
         return;
@@ -11200,7 +11277,9 @@ body.dark ._btn-refresh_14tde_29 {
     const isWatchLaterHovering = useHover(watchLaterRef);
     const watchLaterAdded = useWatchLaterState(bvid);
     const watchLaterAddedPrevious = usePrevious$1(watchLaterAdd);
-    const { accessKey } = useSettingsSnapshot();
+    const {
+      accessKey
+    } = useSettingsSnapshot();
     const authed = Boolean(accessKey);
     React__default.useEffect(() => {
       if (isHovering)
@@ -11216,7 +11295,9 @@ body.dark ._btn-refresh_14tde_29 {
         throw new Error("unexpected usingAction provided");
       }
       if (requestingWatchLaterApi.current)
-        return { success: false };
+        return {
+          success: false
+        };
       requestingWatchLaterApi.current = true;
       let success = false;
       try {
@@ -11240,7 +11321,10 @@ body.dark ._btn-refresh_14tde_29 {
           AntdMessage.success(`已${targetState ? "添加" : "移除"}稍后再看`);
         }
       }
-      return { success, targetState };
+      return {
+        success,
+        targetState
+      };
     });
     const btnDislikeRef = React__default.useRef(null);
     const isBtnDislikeHovering = useHover(btnDislikeRef);
@@ -11262,8 +11346,29 @@ body.dark ._btn-refresh_14tde_29 {
     React__default.useMemo(() => formatCount(like), [like]);
     const danmakuStr = React__default.useMemo(() => formatCount(danmaku), [danmaku]);
     React__default.useMemo(() => formatCount(favorite), [favorite]);
-    const makeStatItem = ({ text, iconSvgName, iconSvgScale }) => {
-      return /* @__PURE__ */ jsxs("span", { className: "bili-video-card__stats--item", children: [/* @__PURE__ */ jsx("svg", { className: "bili-video-card__stats--icon", style: { transform: iconSvgScale ? `scale(${iconSvgScale})` : void 0 }, children: /* @__PURE__ */ jsx("use", { href: iconSvgName }) }), /* @__PURE__ */ jsx("span", { className: "bili-video-card__stats--text", style: { lineHeight: "calc(var(--icon-size) + 1px)" }, children: text })] });
+    const makeStatItem = ({
+      text,
+      iconSvgName,
+      iconSvgScale
+    }) => {
+      return /* @__PURE__ */ jsxs("span", {
+        className: "bili-video-card__stats--item",
+        children: [/* @__PURE__ */ jsx("svg", {
+          className: "bili-video-card__stats--icon",
+          style: {
+            transform: iconSvgScale ? `scale(${iconSvgScale})` : void 0
+          },
+          children: /* @__PURE__ */ jsx("use", {
+            href: iconSvgName
+          })
+        }), /* @__PURE__ */ jsx("span", {
+          className: "bili-video-card__stats--text",
+          style: {
+            lineHeight: "calc(var(--icon-size) + 1px)"
+          },
+          children: text
+        })]
+      });
     };
     const [favFolderNames, setFavFolderNames] = React__default.useState(void 0);
     const [favFolderUrls, setFavFolderUrls] = React__default.useState(void 0);
@@ -11272,7 +11377,10 @@ body.dark ._btn-refresh_14tde_29 {
         return;
       const result = await UserFavService.getVideoFavState(avid);
       if (result) {
-        const { favFolderNames: favFolderNames2, favFolderUrls: favFolderUrls2 } = result;
+        const {
+          favFolderNames: favFolderNames2,
+          favFolderUrls: favFolderUrls2
+        } = result;
         setFavFolderNames(favFolderNames2);
         setFavFolderUrls(favFolderUrls2);
       }
@@ -11322,7 +11430,10 @@ body.dark ._btn-refresh_14tde_29 {
     });
     const onOpenInBackground = useMemoizedFn(() => {
       const fullHref = new URL(href, location.href).href;
-      GM.openInTab(fullHref, { active: false, insert: true });
+      GM.openInTab(fullHref, {
+        active: false,
+        insert: true
+      });
     });
     useMittOn(emitter2, "open", onOpen);
     useMittOn(emitter2, "toggle-watch-later", () => onToggleWatchLater());
@@ -11368,48 +11479,188 @@ body.dark ._btn-refresh_14tde_29 {
     const onDynamicFeedFilterSelectUp = useMemoizedFn(async () => {
       if (!authorMid || !authorName)
         return;
-      dynamicFeedFilterSelectUp({ upMid: Number(authorMid), upName: authorName, searchText: void 0 });
+      dynamicFeedFilterSelectUp({
+        upMid: Number(authorMid),
+        upName: authorName,
+        searchText: void 0
+      });
       videoSourceTabState.value = ETabType.DynamicFeed;
       await delay(100);
       await (onRefresh == null ? void 0 : onRefresh());
     });
     const contextMenus = React__default.useMemo(() => {
       const watchLaterLabel = watchLaterAdded ? "移除稍后再看" : "稍后再看";
-      return [{ key: "open-link", label: "打开", icon: /* @__PURE__ */ jsx(IconPark, { name: "EfferentFour", size: 15 }), onClick: onOpen }, { key: "open-link-in-popup", label: "小窗打开", icon: /* @__PURE__ */ jsx(IconPark, { name: "EfferentFour", size: 15 }), onClick: onOpenInPopup }, { key: "open-link-in-background", label: "后台打开", icon: /* @__PURE__ */ jsx(IconPark, { name: "Split", size: 15 }), onClick: onOpenInBackground }, { type: "divider" }, { key: "copy-link", label: "复制视频链接", icon: /* @__PURE__ */ jsx(IconPark, { name: "Copy", size: 15 }), onClick: onCopyLink }, { key: "copy-bvid", label: "复制 BVID", icon: /* @__PURE__ */ jsx(IconPark, { name: "Copy", size: 15 }), onClick() {
-        copyContent(bvid);
-      } }, { type: "divider" }, hasDislikeEntry && { key: "dislike", label: "我不想看", icon: /* @__PURE__ */ jsx(IconPark, { name: "DislikeTwo", size: 15 }), onClick() {
-        onTriggerDislike();
-      } }, hasDynamicFeedFilterSelectUpEntry && { key: "dymamic-feed-filter-select-up", label: "查看 UP 的动态", icon: /* @__PURE__ */ jsx(IconPark, { name: "PeopleSearch", size: 15 }), onClick: onDynamicFeedFilterSelectUp }, hasUnfollowEntry && { key: "unfollow-up", label: "取消关注", icon: /* @__PURE__ */ jsx(IconPark, { name: "PeopleMinus", size: 15 }), onClick: onUnfollowUp }, hasBlacklistEntry && { key: "blacklist-up", label: "将 UP 加入黑名单", icon: /* @__PURE__ */ jsx(IconPark, { name: "PeopleDelete", size: 15 }), onClick: onBlacklistUp }, item.api === "watchlater" && { key: "add-fav", icon: /* @__PURE__ */ jsx(IconPark, { name: "Star", size: 15, ...(favFolderNames == null ? void 0 : favFolderNames.length) ? { theme: "two-tone", fill: ["currentColor", colorPrimaryValue] } : void 0 }), label: (favFolderNames == null ? void 0 : favFolderNames.length) ? `已收藏 ${favFolderNames.map((n2) => `「${n2}」`).join("")}` : "快速收藏", async onClick() {
-        const hasFaved = Boolean(favFolderNames == null ? void 0 : favFolderNames.length);
-        if (hasFaved) {
-          favFolderUrls == null ? void 0 : favFolderUrls.forEach((u2) => {
-            window.open(u2, "_blank");
-          });
-        } else {
-          const success = await UserFavService.addFav(avid);
-          if (success) {
-            AntdMessage.success(`已加入收藏夹「${defaultFavFolderName}」`);
+      return [{
+        key: "open-link",
+        label: "打开",
+        icon: /* @__PURE__ */ jsx(IconPark, {
+          name: "EfferentFour",
+          size: 15
+        }),
+        onClick: onOpen
+      }, {
+        key: "open-link-in-popup",
+        label: "小窗打开",
+        icon: /* @__PURE__ */ jsx(IconPark, {
+          name: "EfferentFour",
+          size: 15
+        }),
+        onClick: onOpenInPopup
+      }, {
+        key: "open-link-in-background",
+        label: "后台打开",
+        icon: /* @__PURE__ */ jsx(IconPark, {
+          name: "Split",
+          size: 15
+        }),
+        onClick: onOpenInBackground
+      }, {
+        type: "divider"
+      }, {
+        key: "copy-link",
+        label: "复制视频链接",
+        icon: /* @__PURE__ */ jsx(IconPark, {
+          name: "Copy",
+          size: 15
+        }),
+        onClick: onCopyLink
+      }, {
+        key: "copy-bvid",
+        label: "复制 BVID",
+        icon: /* @__PURE__ */ jsx(IconPark, {
+          name: "Copy",
+          size: 15
+        }),
+        onClick() {
+          copyContent(bvid);
+        }
+      }, {
+        type: "divider"
+      }, hasDislikeEntry && {
+        key: "dislike",
+        label: "我不想看",
+        icon: /* @__PURE__ */ jsx(IconPark, {
+          name: "DislikeTwo",
+          size: 15
+        }),
+        onClick() {
+          onTriggerDislike();
+        }
+      }, hasDynamicFeedFilterSelectUpEntry && {
+        key: "dymamic-feed-filter-select-up",
+        label: "查看 UP 的动态",
+        icon: /* @__PURE__ */ jsx(IconPark, {
+          name: "PeopleSearch",
+          size: 15
+        }),
+        onClick: onDynamicFeedFilterSelectUp
+      }, hasUnfollowEntry && {
+        key: "unfollow-up",
+        label: "取消关注",
+        icon: /* @__PURE__ */ jsx(IconPark, {
+          name: "PeopleMinus",
+          size: 15
+        }),
+        onClick: onUnfollowUp
+      }, hasBlacklistEntry && {
+        key: "blacklist-up",
+        label: "将 UP 加入黑名单",
+        icon: /* @__PURE__ */ jsx(IconPark, {
+          name: "PeopleDelete",
+          size: 15
+        }),
+        onClick: onBlacklistUp
+      }, item.api === "watchlater" && {
+        key: "add-fav",
+        icon: /* @__PURE__ */ jsx(IconPark, {
+          name: "Star",
+          size: 15,
+          ...(favFolderNames == null ? void 0 : favFolderNames.length) ? {
+            theme: "two-tone",
+            fill: ["currentColor", colorPrimaryValue]
+          } : void 0
+        }),
+        label: (favFolderNames == null ? void 0 : favFolderNames.length) ? `已收藏 ${favFolderNames.map((n2) => `「${n2}」`).join("")}` : "快速收藏",
+        async onClick() {
+          const hasFaved = Boolean(favFolderNames == null ? void 0 : favFolderNames.length);
+          if (hasFaved) {
+            favFolderUrls == null ? void 0 : favFolderUrls.forEach((u2) => {
+              window.open(u2, "_blank");
+            });
+          } else {
+            const success = await UserFavService.addFav(avid);
+            if (success) {
+              AntdMessage.success(`已加入收藏夹「${defaultFavFolderName}」`);
+            }
           }
         }
-      } }, hasWatchLaterEntry && { key: "watchlater", label: watchLaterLabel, icon: /* @__PURE__ */ jsx(IconPark, { name: watchLaterAdded ? "Delete" : "FileCabinet", size: 15 }), onClick() {
-        onToggleWatchLater();
-      } }, item.api === "watchlater" && watchLaterAdded && { key: "watchlater-readd", label: "重新添加稍候再看 (移到最前)", icon: /* @__PURE__ */ jsx(IconPark, { name: "AddTwo", size: 15 }), async onClick() {
-        const { success } = await onToggleWatchLater(void 0, watchLaterAdd);
-        if (!success)
-          return;
-        onMoveToFirst == null ? void 0 : onMoveToFirst(item, cardData);
-      } }, ...item.api === "fav" ? [{ type: "divider" }, { key: "open-fav-folder", label: "浏览收藏夹", icon: /* @__PURE__ */ jsx(IconPark, { name: "EfferentFour", size: 15 }), onClick() {
-        const { id } = item.folder;
-        const url = formatFavFolderUrl(id);
-        window.open(url, "_blank");
-      } }, { key: "remove-fav", label: "移除收藏", icon: /* @__PURE__ */ jsx(IconPark, { name: "Delete", size: 15 }), async onClick() {
-        if (item.api !== "fav")
-          return;
-        const success = await UserFavService.removeFav(item.folder.id, `${item.id}:${item.type}`);
-        if (success) {
-          onRemoveCurrent == null ? void 0 : onRemoveCurrent(item, cardData);
+      }, hasWatchLaterEntry && {
+        key: "watchlater",
+        label: watchLaterLabel,
+        icon: /* @__PURE__ */ jsx(IconPark, {
+          name: watchLaterAdded ? "Delete" : "FileCabinet",
+          size: 15
+        }),
+        onClick() {
+          onToggleWatchLater();
         }
-      } }] : [], ...isMac ? [{ type: "divider" }, { key: "open-in-iina", label: "在 IINA 中打开", icon: /* @__PURE__ */ jsx(IconPark, { name: "PlayTwo", size: 15 }), onClick: onOpenInIINA }] : []].filter(Boolean);
+      }, item.api === "watchlater" && watchLaterAdded && {
+        key: "watchlater-readd",
+        label: "重新添加稍候再看 (移到最前)",
+        icon: /* @__PURE__ */ jsx(IconPark, {
+          name: "AddTwo",
+          size: 15
+        }),
+        async onClick() {
+          const {
+            success
+          } = await onToggleWatchLater(void 0, watchLaterAdd);
+          if (!success)
+            return;
+          onMoveToFirst == null ? void 0 : onMoveToFirst(item, cardData);
+        }
+      }, ...item.api === "fav" ? [{
+        type: "divider"
+      }, {
+        key: "open-fav-folder",
+        label: "浏览收藏夹",
+        icon: /* @__PURE__ */ jsx(IconPark, {
+          name: "EfferentFour",
+          size: 15
+        }),
+        onClick() {
+          const {
+            id
+          } = item.folder;
+          const url = formatFavFolderUrl(id);
+          window.open(url, "_blank");
+        }
+      }, {
+        key: "remove-fav",
+        label: "移除收藏",
+        icon: /* @__PURE__ */ jsx(IconPark, {
+          name: "Delete",
+          size: 15
+        }),
+        async onClick() {
+          if (item.api !== "fav")
+            return;
+          const success = await UserFavService.removeFav(item.folder.id, `${item.id}:${item.type}`);
+          if (success) {
+            onRemoveCurrent == null ? void 0 : onRemoveCurrent(item, cardData);
+          }
+        }
+      }] : [], ...isMac ? [{
+        type: "divider"
+      }, {
+        key: "open-in-iina",
+        label: "在 IINA 中打开",
+        icon: /* @__PURE__ */ jsx(IconPark, {
+          name: "PlayTwo",
+          size: 15
+        }),
+        onClick: onOpenInIINA
+      }] : []].filter(Boolean);
     }, [item, hasWatchLaterEntry, watchLaterAdded, hasDislikeEntry, hasUnfollowEntry, hasBlacklistEntry, hasDynamicFeedFilterSelectUpEntry, favFolderNames, favFolderUrls]);
     const onContextMenuOpenChange = useMemoizedFn((open) => {
       if (!open)
@@ -11419,7 +11670,289 @@ body.dark ._btn-refresh_14tde_29 {
     const authorHref = authorMid ? `https://space.bilibili.com/${authorMid}` : href;
     desc || (desc = `${authorName}${pubdateDisplay ? ` · ${pubdateDisplay}` : ""}`);
     const descTitle = authorName && pubdateDisplayTitle ? `${authorName} · ${pubdateDisplayTitle}` : desc;
-    return /* @__PURE__ */ jsxs("div", { "data-bvid": bvid || "", className: "bili-video-card__wrap __scale-wrap", css: _ref7$1, children: [/* @__PURE__ */ jsx(antd.Dropdown, { menu: { items: contextMenus }, trigger: ["contextMenu"], onOpenChange: onContextMenuOpenChange, children: /* @__PURE__ */ jsx("a", { href, target: "_blank", onClick: handleVideoLinkClick, children: /* @__PURE__ */ jsxs("div", { className: "bili-video-card__image __scale-player-wrap", ref: videoPreviewWrapperRef, style: { ...borderRadiusStyle, aspectRatio: "16 / 9" }, children: [/* @__PURE__ */ jsxs("div", { className: "bili-video-card__image--wrap", style: { borderRadius: "inherit" }, children: [/* @__PURE__ */ jsxs("picture", { className: "v-img bili-video-card__cover", style: { borderRadius: "inherit", overflow: "hidden" }, children: [!isSafari && coverUseAvif && /* @__PURE__ */ jsx("source", { srcSet: `${cover}@672w_378h_1c_!web-home-common-cover.avif`, type: "image/avif" }), /* @__PURE__ */ jsx("source", { srcSet: `${cover}@672w_378h_1c_!web-home-common-cover.webp`, type: "image/webp" }), /* @__PURE__ */ jsx("img", { src: `${cover}@672w_378h_1c_!web-home-common-cover`, loading: "lazy", alt: isFirefox ? "" : title })] }), (isHovering || typeof previewAnimationProgress === "number") && /* @__PURE__ */ jsx(PreviewImage, { videoDuration: duration2, pvideo: videoData == null ? void 0 : videoData.videoshotData, mouseEnterRelativeX, previewAnimationProgress }), hasWatchLaterEntry && /* @__PURE__ */ jsxs("div", { className: `${styles$2.watchLater}`, style: { display: isHovering || active ? "flex" : "none" }, ref: watchLaterRef, onClick: onToggleWatchLater, children: [watchLaterAdded ? /* @__PURE__ */ jsx("svg", { className: styles$2.watchLaterIcon, viewBox: "0 0 200 200", children: /* @__PURE__ */ jsx(framerMotion.motion.path, { d: "M25,100 l48,48 a 8.5,8.5 0 0 0 10,0 l90,-90", strokeWidth: "20", stroke: "currentColor", fill: "transparent", strokeLinecap: "round", ...!watchLaterAddedPrevious ? { initial: { pathLength: 0 }, animate: { pathLength: 1 } } : void 0 }) }) : /* @__PURE__ */ jsx("svg", { className: styles$2.watchLaterIcon, children: /* @__PURE__ */ jsx("use", { href: "#widget-watch-later" }) }), /* @__PURE__ */ jsx("span", { className: styles$2.watchLaterTip, style: { display: isWatchLaterHovering ? "block" : "none" }, children: watchLaterAdded ? "移除稍后再看" : "稍后再看" })] }), hasDislikeEntry && /* @__PURE__ */ jsxs("div", { ref: btnDislikeRef, className: styles$2.btnDislike, onClick: onTriggerDislike, style: { display: isHovering ? "flex" : "none" }, children: [/* @__PURE__ */ jsx("svg", { className: styles$2.btnDislikeIcon, children: /* @__PURE__ */ jsx("use", { href: "#widget-close" }) }), /* @__PURE__ */ jsx("span", { className: styles$2.btnDislikeTip, style: { display: isBtnDislikeHovering ? "block" : "none" }, children: "我不想看" })] })] }), /* @__PURE__ */ jsx("div", { className: "bili-video-card__mask", style: { borderRadius: "inherit", overflow: "hidden" }, children: /* @__PURE__ */ jsxs("div", { className: "bili-video-card__stats", children: [/* @__PURE__ */ jsx("div", { className: "bili-video-card__stats--left", children: (statItems == null ? void 0 : statItems.length) ? /* @__PURE__ */ jsx(Fragment, { children: statItems.map(({ field, value }) => /* @__PURE__ */ jsx(React__default.Fragment, { children: makeStatItem({ text: value, iconSvgName: AppRecIconSvgNameMap[field], iconSvgScale: AppRecIconScaleMap[field] }) }, field)) }) : /* @__PURE__ */ jsxs(Fragment, { children: [makeStatItem({ text: playStr || STAT_NUMBER_FALLBACK, iconSvgName: AppRecIconSvgNameMap.play }), makeStatItem({ text: danmakuStr || STAT_NUMBER_FALLBACK, iconSvgName: AppRecIconSvgNameMap.danmaku })] }) }), /* @__PURE__ */ jsx("span", { className: "bili-video-card__stats__duration", children: isNormalVideo && durationStr })] }) })] }) }) }), !styleFancy && /* @__PURE__ */ jsx("div", { className: "bili-video-card__info __scale-disable", children: /* @__PURE__ */ jsxs("div", { className: "bili-video-card__info--right", children: [/* @__PURE__ */ jsx("a", { href, target: "_blank", "data-mod": "partition_recommend", "data-idx": "content", "data-ext": "click", onClick: handleVideoLinkClick, children: /* @__PURE__ */ jsx("h3", { className: "bili-video-card__info--tit", title, children: titleRender ?? title }) }), /* @__PURE__ */ jsx("p", { className: "bili-video-card__info--bottom", children: isNormalVideo ? /* @__PURE__ */ jsxs("a", { className: "bili-video-card__info--owner", href: authorHref, target: "_blank", title: descTitle, children: [recommendReason2 ? /* @__PURE__ */ jsx("span", { className: styles$2.recommendReason, children: recommendReason2 }) : /* @__PURE__ */ jsx("svg", { className: "bili-video-card__info--owner__up", children: /* @__PURE__ */ jsx("use", { href: "#widget-up" }) }), /* @__PURE__ */ jsx("span", { className: "bili-video-card__info--author", children: desc })] }) : appBadge || appBadgeDesc ? /* @__PURE__ */ jsxs("a", { className: "bili-video-card__info--owner", href, target: "_blank", children: [/* @__PURE__ */ jsx("span", { className: styles$2.badge, children: appBadge || "" }), /* @__PURE__ */ jsx("span", { className: styles$2.bangumiDesc, children: appBadgeDesc || "" })] }) : null })] }) }), styleFancy && /* @__PURE__ */ jsxs("div", { css: _ref6$2, children: [/* @__PURE__ */ jsx("a", { href: authorHref, target: "_blank", onClick: handleVideoLinkClick, children: authorFace ? /* @__PURE__ */ jsx(antd.Avatar, { src: authorFace }) : /* @__PURE__ */ jsx(antd.Avatar, { children: (authorName == null ? void 0 : authorName[0]) || (appBadgeDesc == null ? void 0 : appBadgeDesc[0]) || "" }) }), /* @__PURE__ */ jsxs("div", { css: _ref5$4, children: [/* @__PURE__ */ jsx("a", { href, target: "_blank", children: /* @__PURE__ */ jsx("h3", { title, css: _ref4$4, children: titleRender ?? title }) }), /* @__PURE__ */ jsx("div", { css: _ref3$6, children: isNormalVideo ? /* @__PURE__ */ jsxs(Fragment, { children: [/* @__PURE__ */ jsx("div", { css: _ref2$7, children: /* @__PURE__ */ jsx("a", { className: "bili-video-card__info--owner", href: authorHref, target: "_blank", title: descTitle, children: /* @__PURE__ */ jsx("span", { className: "bili-video-card__info--author", children: desc }) }) }), !!recommendReason2 && /* @__PURE__ */ jsx("div", { className: styles$2.recommendReason, css: _ref$7, children: recommendReason2 })] }) : appBadge || appBadgeDesc ? /* @__PURE__ */ jsxs("a", { className: "bili-video-card__info--owner", href, target: "_blank", children: [!!appBadge && /* @__PURE__ */ jsx("span", { className: styles$2.badge, children: appBadge }), !!appBadgeDesc && /* @__PURE__ */ jsx("span", { className: styles$2.bangumiDesc, children: appBadgeDesc })] }) : null })] })] })] });
+    return /* @__PURE__ */ jsxs("div", {
+      "data-bvid": bvid || "",
+      className: "bili-video-card__wrap __scale-wrap",
+      css: css`
+        background-color: unset;
+        position: static;
+      `,
+      children: [/* @__PURE__ */ jsx(antd.Dropdown, {
+        menu: {
+          items: contextMenus
+        },
+        trigger: ["contextMenu"],
+        onOpenChange: onContextMenuOpenChange,
+        children: /* @__PURE__ */ jsx("a", {
+          href,
+          target: "_blank",
+          onClick: handleVideoLinkClick,
+          children: /* @__PURE__ */ jsxs("div", {
+            className: "bili-video-card__image __scale-player-wrap",
+            ref: videoPreviewWrapperRef,
+            style: {
+              ...borderRadiusStyle,
+              aspectRatio: "16 / 9"
+            },
+            children: [/* @__PURE__ */ jsxs("div", {
+              className: "bili-video-card__image--wrap",
+              style: {
+                borderRadius: "inherit"
+              },
+              children: [/* @__PURE__ */ jsxs("picture", {
+                className: "v-img bili-video-card__cover",
+                style: {
+                  borderRadius: "inherit",
+                  overflow: "hidden"
+                },
+                children: [!isSafari && coverUseAvif && /* @__PURE__ */ jsx("source", {
+                  srcSet: `${cover}@672w_378h_1c_!web-home-common-cover.avif`,
+                  type: "image/avif"
+                }), /* @__PURE__ */ jsx("source", {
+                  srcSet: `${cover}@672w_378h_1c_!web-home-common-cover.webp`,
+                  type: "image/webp"
+                }), /* @__PURE__ */ jsx("img", {
+                  src: `${cover}@672w_378h_1c_!web-home-common-cover`,
+                  loading: "lazy",
+                  alt: isFirefox ? "" : title
+                })]
+              }), (isHovering || typeof previewAnimationProgress === "number") && /* @__PURE__ */ jsx(PreviewImage, {
+                videoDuration: duration2,
+                pvideo: videoData == null ? void 0 : videoData.videoshotData,
+                mouseEnterRelativeX,
+                previewAnimationProgress
+              }), hasWatchLaterEntry && /* @__PURE__ */ jsxs("div", {
+                className: `${styles$2.watchLater}`,
+                style: {
+                  display: isHovering || active ? "flex" : "none"
+                },
+                ref: watchLaterRef,
+                onClick: onToggleWatchLater,
+                children: [watchLaterAdded ? /* @__PURE__ */ jsx("svg", {
+                  className: styles$2.watchLaterIcon,
+                  viewBox: "0 0 200 200",
+                  children: /* @__PURE__ */ jsx(framerMotion.motion.path, {
+                    d: "M25,100 l48,48 a 8.5,8.5 0 0 0 10,0 l90,-90",
+                    strokeWidth: "20",
+                    stroke: "currentColor",
+                    fill: "transparent",
+                    strokeLinecap: "round",
+                    ...!watchLaterAddedPrevious ? {
+                      initial: {
+                        pathLength: 0
+                      },
+                      animate: {
+                        pathLength: 1
+                      }
+                    } : void 0
+                  })
+                }) : /* @__PURE__ */ jsx("svg", {
+                  className: styles$2.watchLaterIcon,
+                  children: /* @__PURE__ */ jsx("use", {
+                    href: "#widget-watch-later"
+                  })
+                }), /* @__PURE__ */ jsx("span", {
+                  className: styles$2.watchLaterTip,
+                  style: {
+                    display: isWatchLaterHovering ? "block" : "none"
+                  },
+                  children: watchLaterAdded ? "移除稍后再看" : "稍后再看"
+                })]
+              }), hasDislikeEntry && /* @__PURE__ */ jsxs("div", {
+                ref: btnDislikeRef,
+                className: styles$2.btnDislike,
+                onClick: onTriggerDislike,
+                style: {
+                  display: isHovering ? "flex" : "none"
+                },
+                children: [/* @__PURE__ */ jsx("svg", {
+                  className: styles$2.btnDislikeIcon,
+                  children: /* @__PURE__ */ jsx("use", {
+                    href: "#widget-close"
+                  })
+                }), /* @__PURE__ */ jsx("span", {
+                  className: styles$2.btnDislikeTip,
+                  style: {
+                    display: isBtnDislikeHovering ? "block" : "none"
+                  },
+                  children: "我不想看"
+                })]
+              })]
+            }), /* @__PURE__ */ jsx("div", {
+              className: "bili-video-card__mask",
+              style: {
+                borderRadius: "inherit",
+                overflow: "hidden"
+              },
+              children: /* @__PURE__ */ jsxs("div", {
+                className: "bili-video-card__stats",
+                children: [/* @__PURE__ */ jsx("div", {
+                  className: "bili-video-card__stats--left",
+                  children: (statItems == null ? void 0 : statItems.length) ? /* @__PURE__ */ jsx(Fragment, {
+                    children: statItems.map(({
+                      field,
+                      value
+                    }) => /* @__PURE__ */ jsx(React__default.Fragment, {
+                      children: makeStatItem({
+                        text: value,
+                        iconSvgName: AppRecIconSvgNameMap[field],
+                        iconSvgScale: AppRecIconScaleMap[field]
+                      })
+                    }, field))
+                  }) : /* @__PURE__ */ jsxs(Fragment, {
+                    children: [makeStatItem({
+                      text: playStr || STAT_NUMBER_FALLBACK,
+                      iconSvgName: AppRecIconSvgNameMap.play
+                    }), makeStatItem({
+                      text: danmakuStr || STAT_NUMBER_FALLBACK,
+                      iconSvgName: AppRecIconSvgNameMap.danmaku
+                    })]
+                  })
+                }), /* @__PURE__ */ jsx("span", {
+                  className: "bili-video-card__stats__duration",
+                  children: isNormalVideo && durationStr
+                })]
+              })
+            })]
+          })
+        })
+      }), !styleFancy && /* @__PURE__ */ jsx("div", {
+        className: "bili-video-card__info __scale-disable",
+        children: /* @__PURE__ */ jsxs("div", {
+          className: "bili-video-card__info--right",
+          children: [/* @__PURE__ */ jsx("a", {
+            href,
+            target: "_blank",
+            "data-mod": "partition_recommend",
+            "data-idx": "content",
+            "data-ext": "click",
+            onClick: handleVideoLinkClick,
+            children: /* @__PURE__ */ jsx("h3", {
+              className: "bili-video-card__info--tit",
+              title,
+              children: titleRender ?? title
+            })
+          }), /* @__PURE__ */ jsx("p", {
+            className: "bili-video-card__info--bottom",
+            children: isNormalVideo ? /* @__PURE__ */ jsxs("a", {
+              className: "bili-video-card__info--owner",
+              href: authorHref,
+              target: "_blank",
+              title: descTitle,
+              children: [recommendReason2 ? /* @__PURE__ */ jsx("span", {
+                className: styles$2.recommendReason,
+                children: recommendReason2
+              }) : /* @__PURE__ */ jsx("svg", {
+                className: "bili-video-card__info--owner__up",
+                children: /* @__PURE__ */ jsx("use", {
+                  href: "#widget-up"
+                })
+              }), /* @__PURE__ */ jsx("span", {
+                className: "bili-video-card__info--author",
+                children: desc
+              })]
+            }) : appBadge || appBadgeDesc ? /* @__PURE__ */ jsxs("a", {
+              className: "bili-video-card__info--owner",
+              href,
+              target: "_blank",
+              children: [/* @__PURE__ */ jsx("span", {
+                className: styles$2.badge,
+                children: appBadge || ""
+              }), /* @__PURE__ */ jsx("span", {
+                className: styles$2.bangumiDesc,
+                children: appBadgeDesc || ""
+              })]
+            }) : null
+          })]
+        })
+      }), styleFancy && /* @__PURE__ */ jsxs("div", {
+        css: css`
+            display: flex;
+            margin-top: 15px;
+          `,
+        children: [/* @__PURE__ */ jsx("a", {
+          href: authorHref,
+          target: "_blank",
+          onClick: handleVideoLinkClick,
+          children: authorFace ? /* @__PURE__ */ jsx(antd.Avatar, {
+            src: authorFace
+          }) : /* @__PURE__ */ jsx(antd.Avatar, {
+            children: (authorName == null ? void 0 : authorName[0]) || (appBadgeDesc == null ? void 0 : appBadgeDesc[0]) || ""
+          })
+        }), /* @__PURE__ */ jsxs("div", {
+          css: css`
+              flex: 1;
+              margin-left: 10px;
+              overflow: hidden;
+            `,
+          children: [/* @__PURE__ */ jsx("a", {
+            href,
+            target: "_blank",
+            children: /* @__PURE__ */ jsx("h3", {
+              title,
+              css: css`
+                  display: -webkit-box;
+                  -webkit-line-clamp: 2;
+                  -webkit-box-orient: vertical;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                  word-break: break-all;
+                  line-break: anywhere;
+
+                  color: var(--text1);
+                  font-size: var(--title-font-size);
+                  line-height: var(--title-line-height);
+                  /* min-height: 48px; */
+                `,
+              children: titleRender ?? title
+            })
+          }), /* @__PURE__ */ jsx("div", {
+            css: css`
+                margin-top: 4px;
+                color: var(--text3);
+                font-size: var(--subtitle-font-size);
+              `,
+            children: isNormalVideo ? /* @__PURE__ */ jsxs(Fragment, {
+              children: [/* @__PURE__ */ jsx("div", {
+                css: css`
+                      display: flex;
+                      align-items: center;
+                    `,
+                children: /* @__PURE__ */ jsx("a", {
+                  className: "bili-video-card__info--owner",
+                  href: authorHref,
+                  target: "_blank",
+                  title: descTitle,
+                  children: /* @__PURE__ */ jsx("span", {
+                    className: "bili-video-card__info--author",
+                    children: desc
+                  })
+                })
+              }), !!recommendReason2 && /* @__PURE__ */ jsx("div", {
+                className: styles$2.recommendReason,
+                css: css`
+                        margin-top: 4px;
+                        padding-left: 0;
+                        max-width: 100%;
+                      `,
+                children: recommendReason2
+              })]
+            }) : appBadge || appBadgeDesc ? /* @__PURE__ */ jsxs("a", {
+              className: "bili-video-card__info--owner",
+              href,
+              target: "_blank",
+              children: [!!appBadge && /* @__PURE__ */ jsx("span", {
+                className: styles$2.badge,
+                children: appBadge
+              }), !!appBadgeDesc && /* @__PURE__ */ jsx("span", {
+                className: styles$2.bangumiDesc,
+                children: appBadgeDesc
+              })]
+            }) : null
+          })]
+        })]
+      })]
+    });
   });
   const videoGrid = "_video-grid_wfxpc_7";
   const videoGridNewHomepage = "_video-grid-new-homepage_wfxpc_17";
@@ -12213,18 +12746,6 @@ body.dark ._btn-refresh_14tde_29 {
     box-shadow: 0px 0px 9px 4px ${colorPrimaryValue};
   `
   };
-  var _ref$6 = {
-    name: "198pn9m",
-    styles: "grid-column:1/-1;.ant-divider-inner-text a{color:var(--ant-color-link);&:hover{color:var(--ant-color-primary);}}"
-  };
-  var _ref2$6 = {
-    name: "33payq",
-    styles: "font-size:20px;padding:20px;text-align:center"
-  };
-  var _ref3$5 = {
-    name: "1hce7io",
-    styles: "padding:30px 0;display:flex;align-items:center;justify-content:center;font-size:120%"
-  };
   const RecGrid = React__default.forwardRef(function RecGrid2({
     infiteScrollUseWindow,
     shortcutEnabled,
@@ -12453,7 +12974,13 @@ body.dark ._btn-refresh_14tde_29 {
     const footerInViewRef = useLatest(__footerInView);
     const footer = /* @__PURE__ */ jsx("div", {
       ref: footerRef,
-      css: _ref3$5,
+      css: css`
+        padding: 30px 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 120%;
+      `,
       children: !refreshing && /* @__PURE__ */ jsx(Fragment, {
         children: hasMore ? /* @__PURE__ */ jsxs(Fragment, {
           children: [/* @__PURE__ */ jsx(IconPark, {
@@ -12481,7 +13008,11 @@ body.dark ._btn-refresh_14tde_29 {
     if (refreshError) {
       console.error(refreshError.stack || refreshError);
       return /* @__PURE__ */ jsx("div", {
-        css: _ref2$6,
+        css: css`
+          font-size: 20px;
+          padding: 20px;
+          text-align: center;
+        `,
         children: /* @__PURE__ */ jsx("p", {
           children: "出错了, 请刷新重试!"
         })
@@ -12505,7 +13036,16 @@ body.dark ._btn-refresh_14tde_29 {
     const renderItem = (item) => {
       if (item.api === EApiType.separator) {
         return /* @__PURE__ */ jsx(antd.Divider, {
-          css: _ref$6,
+          css: css`
+            grid-column: 1 / -1;
+
+            .ant-divider-inner-text a {
+              color: var(--ant-color-link);
+              &:hover {
+                color: var(--ant-color-primary);
+              }
+            }
+          `,
           orientation: "left",
           children: item.content
         }, item.uniqId);
@@ -13606,30 +14146,6 @@ body.dark ._btn-refresh_14tde_29 {
   function whenQrCodeModalHide() {
     return pEvent(emitter, "hide");
   }
-  var _ref$5 = {
-    name: "1dbae5v",
-    styles: "font-size:13px;margin-bottom:20px"
-  };
-  var _ref2$5 = {
-    name: "1ryaosi",
-    styles: "font-size:14px;display:flex;align-items:center;justify-content:center;min-height:25px;margin-bottom:5px"
-  };
-  var _ref3$4 = {
-    name: "1f2tjv5",
-    styles: "margin-top:20px;margin-bottom:40px"
-  };
-  var _ref4$3 = {
-    name: "82zbxv",
-    styles: "text-align:center;padding-top:15px"
-  };
-  var _ref5$3 = {
-    name: "16s5rj8",
-    styles: "width:280px"
-  };
-  var _ref6$1 = {
-    name: "9vstlm",
-    styles: "backdrop-filter:blur(10px)"
-  };
   function TvQrCodeAuth() {
     const {
       qrcode,
@@ -13643,8 +14159,12 @@ body.dark ._btn-refresh_14tde_29 {
       onHide: onHide2,
       hideWhenMaskOnClick: false,
       hideWhenEsc: false,
-      cssModalMask: _ref6$1,
-      cssModal: _ref5$3,
+      cssModalMask: css`
+        backdrop-filter: blur(10px);
+      `,
+      cssModal: css`
+        width: 280px;
+      `,
       children: [/* @__PURE__ */ jsxs("div", {
         className: BaseModalClass.modalHeader,
         children: [/* @__PURE__ */ jsx("div", {
@@ -13661,12 +14181,25 @@ body.dark ._btn-refresh_14tde_29 {
         className: BaseModalClass.modalBody,
         children: /* @__PURE__ */ jsxs("div", {
           className: "wrapper",
-          css: _ref4$3,
+          css: css`
+            text-align: center;
+            padding-top: 15px;
+          `,
           children: [/* @__PURE__ */ jsxs("div", {
             className: "qr-wrapper",
-            css: _ref3$4,
+            css: css`
+              margin-top: 20px;
+              margin-bottom: 40px;
+            `,
             children: [/* @__PURE__ */ jsx("div", {
-              css: _ref2$5,
+              css: css`
+                font-size: 14px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                min-height: 25px;
+                margin-bottom: 5px;
+              `,
               children: message2 || ""
             }), qrcode ? /* @__PURE__ */ jsx(QRCodeSVG, {
               value: qrcode,
@@ -13677,7 +14210,10 @@ body.dark ._btn-refresh_14tde_29 {
             })]
           }), /* @__PURE__ */ jsxs("div", {
             className: "footnote",
-            css: _ref$5,
+            css: css`
+              font-size: 13px;
+              margin-bottom: 20px;
+            `,
             children: ["打开「哔哩哔哩」或「bilibili」APP ", /* @__PURE__ */ jsx("br", {}), "扫码获取 access_key"]
           })]
         })
@@ -14093,12 +14629,12 @@ body.dark ._btn-refresh_14tde_29 {
       }
     },
     Transition: {
-      toString(_ref12) {
+      toString(_ref4) {
         let {
           property,
           duration: duration2,
           easing
-        } = _ref12;
+        } = _ref4;
         return property + " " + duration2 + "ms " + easing;
       }
     }
@@ -14113,22 +14649,22 @@ body.dark ._btn-refresh_14tde_29 {
   const hiddenStyles = {
     display: "none"
   };
-  function HiddenText(_ref12) {
+  function HiddenText(_ref4) {
     let {
       id,
       value
-    } = _ref12;
+    } = _ref4;
     return React__default.createElement("div", {
       id,
       style: hiddenStyles
     }, value);
   }
-  function LiveRegion(_ref12) {
+  function LiveRegion(_ref4) {
     let {
       id,
       announcement,
       ariaLiveType = "assertive"
-    } = _ref12;
+    } = _ref4;
     const visuallyHidden = {
       position: "fixed",
       width: 1,
@@ -14178,11 +14714,11 @@ body.dark ._btn-refresh_14tde_29 {
       listeners2.add(listener);
       return () => listeners2.delete(listener);
     }, [listeners2]);
-    const dispatch = React__default.useCallback((_ref12) => {
+    const dispatch = React__default.useCallback((_ref4) => {
       let {
         type,
         event
-      } = _ref12;
+      } = _ref4;
       listeners2.forEach((listener) => {
         var _listener$type;
         return (_listener$type = listener[type]) == null ? void 0 : _listener$type.call(listener, event);
@@ -14194,10 +14730,10 @@ body.dark ._btn-refresh_14tde_29 {
     draggable: "\n    To pick up a draggable item, press the space bar.\n    While dragging, use the arrow keys to move the item.\n    Press space again to drop the item in its new position, or press escape to cancel.\n  "
   };
   const defaultAnnouncements = {
-    onDragStart(_ref12) {
+    onDragStart(_ref4) {
       let {
         active
-      } = _ref12;
+      } = _ref4;
       return "Picked up draggable item " + active.id + ".";
     },
     onDragOver(_ref22) {
@@ -14220,20 +14756,20 @@ body.dark ._btn-refresh_14tde_29 {
       }
       return "Draggable item " + active.id + " was dropped.";
     },
-    onDragCancel(_ref42) {
+    onDragCancel(_ref4) {
       let {
         active
-      } = _ref42;
+      } = _ref4;
       return "Dragging was cancelled. Draggable item " + active.id + " was dropped.";
     }
   };
-  function Accessibility(_ref12) {
+  function Accessibility(_ref4) {
     let {
       announcements = defaultAnnouncements,
       container,
       hiddenTextDescribedById,
       screenReaderInstructions = defaultScreenReaderInstructions
-    } = _ref12;
+    } = _ref4;
     const {
       announce,
       announcement
@@ -14274,21 +14810,21 @@ body.dark ._btn-refresh_14tde_29 {
           over
         }));
       },
-      onDragEnd(_ref52) {
+      onDragEnd(_ref5) {
         let {
           active,
           over
-        } = _ref52;
+        } = _ref5;
         announce(announcements.onDragEnd({
           active,
           over
         }));
       },
-      onDragCancel(_ref62) {
+      onDragCancel(_ref6) {
         let {
           active,
           over
-        } = _ref62;
+        } = _ref6;
         announce(announcements.onDragCancel({
           active,
           over
@@ -14347,12 +14883,12 @@ body.dark ._btn-refresh_14tde_29 {
   function distanceBetween(p1, p2) {
     return Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2));
   }
-  function sortCollisionsAsc(_ref12, _ref22) {
+  function sortCollisionsAsc(_ref4, _ref22) {
     let {
       data: {
         value: a2
       }
-    } = _ref12;
+    } = _ref4;
     let {
       data: {
         value: b2
@@ -14360,7 +14896,7 @@ body.dark ._btn-refresh_14tde_29 {
     } = _ref22;
     return a2 - b2;
   }
-  function sortCollisionsDesc(_ref32, _ref42) {
+  function sortCollisionsDesc(_ref32, _ref4) {
     let {
       data: {
         value: a2
@@ -14370,7 +14906,7 @@ body.dark ._btn-refresh_14tde_29 {
       data: {
         value: b2
       }
-    } = _ref42;
+    } = _ref4;
     return b2 - a2;
   }
   function getFirstCollision(collisions, property) {
@@ -14392,12 +14928,12 @@ body.dark ._btn-refresh_14tde_29 {
       y: top + rect.height * 0.5
     };
   }
-  const closestCenter = (_ref12) => {
+  const closestCenter = (_ref4) => {
     let {
       collisionRect,
       droppableRects,
       droppableContainers
-    } = _ref12;
+    } = _ref4;
     const centerRect = centerOfRectangle(collisionRect, collisionRect.left, collisionRect.top);
     const collisions = [];
     for (const droppableContainer of droppableContainers) {
@@ -14434,12 +14970,12 @@ body.dark ._btn-refresh_14tde_29 {
     }
     return 0;
   }
-  const rectIntersection = (_ref12) => {
+  const rectIntersection = (_ref4) => {
     let {
       collisionRect,
       droppableRects,
       droppableContainers
-    } = _ref12;
+    } = _ref4;
     const collisions = [];
     for (const droppableContainer of droppableContainers) {
       const {
@@ -14722,13 +15258,13 @@ body.dark ._btn-refresh_14tde_29 {
     x: 0.2,
     y: 0.2
   };
-  function getScrollDirectionAndSpeed(scrollContainer, scrollContainerRect, _ref12, acceleration, thresholdPercentage) {
+  function getScrollDirectionAndSpeed(scrollContainer, scrollContainerRect, _ref4, acceleration, thresholdPercentage) {
     let {
       top,
       left,
       right,
       bottom
-    } = _ref12;
+    } = _ref4;
     if (acceleration === void 0) {
       acceleration = 10;
     }
@@ -14947,10 +15483,10 @@ body.dark ._btn-refresh_14tde_29 {
     cancel: [KeyboardCode.Esc],
     end: [KeyboardCode.Space, KeyboardCode.Enter]
   };
-  const defaultKeyboardCoordinateGetter = (event, _ref12) => {
+  const defaultKeyboardCoordinateGetter = (event, _ref4) => {
     let {
       currentCoordinates
-    } = _ref12;
+    } = _ref4;
     switch (event.code) {
       case KeyboardCode.Right:
         return {
@@ -15156,11 +15692,11 @@ body.dark ._btn-refresh_14tde_29 {
   }
   KeyboardSensor.activators = [{
     eventName: "onKeyDown",
-    handler: (event, _ref12, _ref22) => {
+    handler: (event, _ref4, _ref22) => {
       let {
         keyboardCodes = defaultKeyboardCodes,
         onActivation
-      } = _ref12;
+      } = _ref4;
       let {
         active
       } = _ref22;
@@ -15371,10 +15907,10 @@ body.dark ._btn-refresh_14tde_29 {
   }
   PointerSensor.activators = [{
     eventName: "onPointerDown",
-    handler: (_ref12, _ref22) => {
+    handler: (_ref4, _ref22) => {
       let {
         nativeEvent: event
-      } = _ref12;
+      } = _ref4;
       let {
         onActivation
       } = _ref22;
@@ -15406,10 +15942,10 @@ body.dark ._btn-refresh_14tde_29 {
   }
   MouseSensor.activators = [{
     eventName: "onMouseDown",
-    handler: (_ref12, _ref22) => {
+    handler: (_ref4, _ref22) => {
       let {
         nativeEvent: event
-      } = _ref12;
+      } = _ref4;
       let {
         onActivation
       } = _ref22;
@@ -15448,10 +15984,10 @@ body.dark ._btn-refresh_14tde_29 {
   }
   TouchSensor.activators = [{
     eventName: "onTouchStart",
-    handler: (_ref12, _ref22) => {
+    handler: (_ref4, _ref22) => {
       let {
         nativeEvent: event
-      } = _ref12;
+      } = _ref4;
       let {
         onActivation
       } = _ref22;
@@ -15477,7 +16013,7 @@ body.dark ._btn-refresh_14tde_29 {
     TraversalOrder2[TraversalOrder2["TreeOrder"] = 0] = "TreeOrder";
     TraversalOrder2[TraversalOrder2["ReversedTreeOrder"] = 1] = "ReversedTreeOrder";
   })(TraversalOrder || (TraversalOrder = {}));
-  function useAutoScroller(_ref12) {
+  function useAutoScroller(_ref4) {
     let {
       acceleration,
       activator = AutoScrollActivator.Pointer,
@@ -15491,7 +16027,7 @@ body.dark ._btn-refresh_14tde_29 {
       scrollableAncestorRects,
       delta,
       threshold
-    } = _ref12;
+    } = _ref4;
     const scrollIntent = useScrollIntent({
       delta,
       disabled: !enabled
@@ -15634,11 +16170,11 @@ body.dark ._btn-refresh_14tde_29 {
     const draggableNode = id !== null ? draggableNodes.get(id) : void 0;
     const node2 = draggableNode ? draggableNode.node.current : null;
     return useLazyMemo((cachedNode) => {
-      var _ref12;
+      var _ref4;
       if (id === null) {
         return null;
       }
-      return (_ref12 = node2 != null ? node2 : cachedNode) != null ? _ref12 : null;
+      return (_ref4 = node2 != null ? node2 : cachedNode) != null ? _ref4 : null;
     }, [node2, id]);
   }
   function useCombineActivators(sensors, getSyntheticHandler) {
@@ -15664,12 +16200,12 @@ body.dark ._btn-refresh_14tde_29 {
     MeasuringFrequency2["Optimized"] = "optimized";
   })(MeasuringFrequency || (MeasuringFrequency = {}));
   const defaultValue = /* @__PURE__ */ new Map();
-  function useDroppableMeasuring(containers, _ref12) {
+  function useDroppableMeasuring(containers, _ref4) {
     let {
       dragging,
       dependencies,
       config
-    } = _ref12;
+    } = _ref4;
     const [queue, setQueue] = React__default.useState(null);
     const {
       frequency,
@@ -15784,11 +16320,11 @@ body.dark ._btn-refresh_14tde_29 {
   function useInitialRect(node2, measure) {
     return useInitialValue(node2, measure);
   }
-  function useMutationObserver(_ref12) {
+  function useMutationObserver(_ref4) {
     let {
       callback,
       disabled
-    } = _ref12;
+    } = _ref4;
     const handleMutations = useEvent(callback);
     const mutationObserver = React__default.useMemo(() => {
       if (disabled || typeof window === "undefined" || typeof window.MutationObserver === "undefined") {
@@ -15804,11 +16340,11 @@ body.dark ._btn-refresh_14tde_29 {
     }, [mutationObserver]);
     return mutationObserver;
   }
-  function useResizeObserver(_ref12) {
+  function useResizeObserver(_ref4) {
     let {
       callback,
       disabled
-    } = _ref12;
+    } = _ref4;
     const handleResize = useEvent(callback);
     const resizeObserver = React__default.useMemo(
       () => {
@@ -15875,8 +16411,8 @@ body.dark ._btn-refresh_14tde_29 {
         return null;
       }
       if (element.isConnected === false) {
-        var _ref12;
-        return (_ref12 = currentRect != null ? currentRect : fallbackRect) != null ? _ref12 : null;
+        var _ref4;
+        return (_ref4 = currentRect != null ? currentRect : fallbackRect) != null ? _ref4 : null;
       }
       const newRect = measure(element);
       if (JSON.stringify(currentRect) === JSON.stringify(newRect)) {
@@ -15986,10 +16522,10 @@ body.dark ._btn-refresh_14tde_29 {
         if (!canUseDOM) {
           return;
         }
-        const teardownFns = sensors.map((_ref12) => {
+        const teardownFns = sensors.map((_ref4) => {
           let {
             sensor
-          } = _ref12;
+          } = _ref4;
           return sensor.setup == null ? void 0 : sensor.setup();
         });
         return () => {
@@ -16010,11 +16546,11 @@ body.dark ._btn-refresh_14tde_29 {
   }
   function useSyntheticListeners(listeners2, id) {
     return React__default.useMemo(() => {
-      return listeners2.reduce((acc, _ref12) => {
+      return listeners2.reduce((acc, _ref4) => {
         let {
           eventName,
           handler
-        } = _ref12;
+        } = _ref4;
         acc[eventName] = (event) => {
           handler(event, id);
         };
@@ -16065,10 +16601,10 @@ body.dark ._btn-refresh_14tde_29 {
     const firstChild = node2.children[0];
     return isHTMLElement(firstChild) ? firstChild : node2;
   }
-  function useDragOverlayMeasuring(_ref12) {
+  function useDragOverlayMeasuring(_ref4) {
     let {
       measure
-    } = _ref12;
+    } = _ref4;
     const [rect, setRect] = React__default.useState(null);
     const handleResize = React__default.useCallback((entries) => {
       for (const {
@@ -16137,10 +16673,10 @@ body.dark ._btn-refresh_14tde_29 {
       return Array.from(this.values());
     }
     getEnabled() {
-      return this.toArray().filter((_ref12) => {
+      return this.toArray().filter((_ref4) => {
         let {
           disabled
-        } = _ref12;
+        } = _ref4;
         return !disabled;
       });
     }
@@ -16314,10 +16850,10 @@ body.dark ._btn-refresh_14tde_29 {
       }
     }
   }
-  function RestoreFocus(_ref12) {
+  function RestoreFocus(_ref4) {
     let {
       disabled
-    } = _ref12;
+    } = _ref4;
     const {
       active,
       activatorEvent,
@@ -16363,11 +16899,11 @@ body.dark ._btn-refresh_14tde_29 {
     }, [activatorEvent, disabled, draggableNodes, previousActiveId, previousActivatorEvent]);
     return null;
   }
-  function applyModifiers(modifiers, _ref12) {
+  function applyModifiers(modifiers, _ref4) {
     let {
       transform,
       ...args
-    } = _ref12;
+    } = _ref4;
     return modifiers != null && modifiers.length ? modifiers.reduce((accumulator, modifier) => {
       return modifier({
         transform: accumulator,
@@ -16395,13 +16931,13 @@ body.dark ._btn-refresh_14tde_29 {
       [config == null ? void 0 : config.draggable, config == null ? void 0 : config.droppable, config == null ? void 0 : config.dragOverlay]
     );
   }
-  function useLayoutShiftScrollCompensation(_ref12) {
+  function useLayoutShiftScrollCompensation(_ref4) {
     let {
       activeNode,
       measure,
       initialRect,
       config = true
-    } = _ref12;
+    } = _ref4;
     const initialized = React__default.useRef(false);
     const {
       x: x2,
@@ -16454,7 +16990,7 @@ body.dark ._btn-refresh_14tde_29 {
     Status2[Status2["Initializing"] = 1] = "Initializing";
     Status2[Status2["Initialized"] = 2] = "Initialized";
   })(Status || (Status = {}));
-  const DndContext = /* @__PURE__ */ React__default.memo(function DndContext2(_ref12) {
+  const DndContext = /* @__PURE__ */ React__default.memo(function DndContext2(_ref4) {
     var _sensorContext$curren, _dragOverlay$nodeRef$, _dragOverlay$rect, _over$rect;
     let {
       id,
@@ -16466,7 +17002,7 @@ body.dark ._btn-refresh_14tde_29 {
       measuring,
       modifiers,
       ...props
-    } = _ref12;
+    } = _ref4;
     const store2 = React__default.useReducer(reducer, void 0, getInitialState);
     const [state, dispatch] = store2;
     const [dispatchMonitorEvent, registerMonitorListener] = useDndMonitorProvider();
@@ -16915,13 +17451,13 @@ body.dark ._btn-refresh_14tde_29 {
   const NullContext = /* @__PURE__ */ React__default.createContext(null);
   const defaultRole = "button";
   const ID_PREFIX$1 = "Droppable";
-  function useDraggable(_ref12) {
+  function useDraggable(_ref4) {
     let {
       id,
       data: data2,
       disabled = false,
       attributes
-    } = _ref12;
+    } = _ref4;
     const key2 = useUniqueId(ID_PREFIX$1);
     const {
       activators,
@@ -16991,13 +17527,13 @@ body.dark ._btn-refresh_14tde_29 {
   const defaultResizeObserverConfig = {
     timeout: 25
   };
-  function useDroppable(_ref12) {
+  function useDroppable(_ref4) {
     let {
       data: data2,
       disabled = false,
       id,
       resizeObserverConfig
-    } = _ref12;
+    } = _ref4;
     const key2 = useUniqueId(ID_PREFIX$1$1);
     const {
       active,
@@ -17121,21 +17657,21 @@ body.dark ._btn-refresh_14tde_29 {
     }
     return value;
   }
-  const restrictToParentElement = (_ref12) => {
+  const restrictToParentElement = (_ref4) => {
     let {
       containerNodeRect,
       draggingNodeRect,
       transform
-    } = _ref12;
+    } = _ref4;
     if (!draggingNodeRect || !containerNodeRect) {
       return transform;
     }
     return restrictToBoundingRect(transform, draggingNodeRect, containerNodeRect);
   };
-  const restrictToVerticalAxis = (_ref12) => {
+  const restrictToVerticalAxis = (_ref4) => {
     let {
       transform
-    } = _ref12;
+    } = _ref4;
     return {
       ...transform,
       x: 0
@@ -17181,13 +17717,13 @@ body.dark ._btn-refresh_14tde_29 {
     }
     return disabled;
   }
-  const rectSortingStrategy = (_ref12) => {
+  const rectSortingStrategy = (_ref4) => {
     let {
       rects,
       activeIndex,
       overIndex,
       index
-    } = _ref12;
+    } = _ref4;
     const newRects = arrayMove(rects, overIndex, activeIndex);
     const oldRect = rects[index];
     const newRect = newRects[index];
@@ -17205,7 +17741,7 @@ body.dark ._btn-refresh_14tde_29 {
     scaleX: 1,
     scaleY: 1
   };
-  const verticalListSortingStrategy = (_ref12) => {
+  const verticalListSortingStrategy = (_ref4) => {
     var _rects$activeIndex;
     let {
       activeIndex,
@@ -17213,7 +17749,7 @@ body.dark ._btn-refresh_14tde_29 {
       index,
       rects,
       overIndex
-    } = _ref12;
+    } = _ref4;
     const activeNodeRect = (_rects$activeIndex = rects[activeIndex]) != null ? _rects$activeIndex : fallbackActiveRect;
     if (!activeNodeRect) {
       return null;
@@ -17277,14 +17813,14 @@ body.dark ._btn-refresh_14tde_29 {
       droppable: false
     }
   });
-  function SortableContext(_ref12) {
+  function SortableContext(_ref4) {
     let {
       children,
       id,
       items: userDefinedItems,
       strategy = rectSortingStrategy,
       disabled: disabledProp = false
-    } = _ref12;
+    } = _ref4;
     const {
       active,
       dragOverlay,
@@ -17329,13 +17865,13 @@ body.dark ._btn-refresh_14tde_29 {
       value: contextValue
     }, children);
   }
-  const defaultNewIndexGetter = (_ref12) => {
+  const defaultNewIndexGetter = (_ref4) => {
     let {
       id,
       items,
       activeIndex,
       overIndex
-    } = _ref12;
+    } = _ref4;
     return arrayMove(items, activeIndex, overIndex).indexOf(id);
   };
   const defaultAnimateLayoutChanges = (_ref22) => {
@@ -17374,13 +17910,13 @@ body.dark ._btn-refresh_14tde_29 {
   const defaultAttributes = {
     roleDescription: "sortable"
   };
-  function useDerivedTransform(_ref12) {
+  function useDerivedTransform(_ref4) {
     let {
       disabled,
       index,
       node: node2,
       rect
-    } = _ref12;
+    } = _ref4;
     const [derivedTransform, setDerivedtransform] = React__default.useState(null);
     const previousIndex = React__default.useRef(index);
     useIsomorphicLayoutEffect(() => {
@@ -17412,7 +17948,7 @@ body.dark ._btn-refresh_14tde_29 {
     }, [derivedTransform]);
     return derivedTransform;
   }
-  function useSortable(_ref12) {
+  function useSortable(_ref4) {
     let {
       animateLayoutChanges = defaultAnimateLayoutChanges,
       attributes: userDefinedAttributes,
@@ -17423,7 +17959,7 @@ body.dark ._btn-refresh_14tde_29 {
       strategy: localStrategy,
       resizeObserverConfig,
       transition = defaultTransition
-    } = _ref12;
+    } = _ref4;
     const {
       items,
       containerId,
@@ -17629,14 +18165,6 @@ body.dark ._btn-refresh_14tde_29 {
     settingTabs,
     tabPane
   };
-  var _ref$4 = {
-    name: "1ba68ro",
-    styles: "min-width:60px;text-align:center;cursor:pointer"
-  };
-  var _ref2$4 = {
-    name: "1kk26el",
-    styles: "font-size:1.5em;display:flex;align-items:center;margin-top:10px"
-  };
   function ThemesSelect() {
     const activeId = useCurrentTheme().id;
     const {
@@ -17654,7 +18182,12 @@ body.dark ._btn-refresh_14tde_29 {
       }) => {
         return /* @__PURE__ */ jsxs(React__default.Fragment, {
           children: [/* @__PURE__ */ jsxs("div", {
-            css: _ref2$4,
+            css: css`
+                font-size: 1.5em;
+                display: flex;
+                align-items: center;
+                margin-top: 10px;
+              `,
             children: [name, /* @__PURE__ */ jsx(HelpInfo, {
               children: tooltip,
               tooltipProps: {
@@ -17678,10 +18211,26 @@ body.dark ._btn-refresh_14tde_29 {
               const outerSize = innerSize + 8;
               let previewWrapper = /* @__PURE__ */ jsx("div", {
                 className: "preview-wrapper",
-                css: [/* @__PURE__ */ css("aspect-ratio:1;width:", outerSize, "px;border:2px solid transparent;border-radius:50%;margin:0 auto;font-size:0;", ""), flexCenterStyle, isActive && /* @__PURE__ */ css("border-color:", t2.colorPrimary, ";", ""), "", ""],
+                css: [css`
+                        aspect-ratio: 1;
+                        width: ${outerSize}px;
+                        border: 2px solid transparent;
+                        border-radius: 50%;
+                        /* border-radius: 6px; */
+                        margin: 0 auto;
+                        font-size: 0;
+                      `, flexCenterStyle, isActive && css`
+                          border-color: ${t2.colorPrimary};
+                        `, "", ""],
                 children: /* @__PURE__ */ jsx("div", {
                   className: "preview",
-                  css: [/* @__PURE__ */ css("aspect-ratio:1;width:", innerSize, "px;background-color:", isCustom ? customColorHex : t2.colorPrimary, ";border-radius:50%;", ""), flexCenterStyle, "", ""],
+                  css: [css`
+                          aspect-ratio: 1;
+                          width: ${innerSize}px;
+                          background-color: ${isCustom ? customColorHex : t2.colorPrimary};
+                          border-radius: 50%;
+                          /* border-radius: 4px; */
+                        `, flexCenterStyle, "", ""],
                   children: isActive && /* @__PURE__ */ jsx(IconPark, {
                     name: "CheckSmall",
                     size: 18,
@@ -17704,7 +18253,11 @@ body.dark ._btn-refresh_14tde_29 {
                 });
               }
               return /* @__PURE__ */ jsxs("div", {
-                css: _ref$4,
+                css: css`
+                      min-width: 60px;
+                      text-align: center;
+                      cursor: pointer;
+                    `,
                 onClick: (e2) => {
                   updateSettings({
                     theme: t2.id
@@ -17728,14 +18281,16 @@ body.dark ._btn-refresh_14tde_29 {
     return toastAndReload();
   }
   async function onRestoreSettings() {
-    const remoteSettings = await getData();
+    const remoteSettings = await articleDraft.getData();
     const pickedSettings = lodash.pick(remoteSettings || {}, allowedSettingsKeys);
     const len = Object.keys(pickedSettings).length;
     if (!len) {
       return AntdMessage.error("备份不存在或没有有效的配置");
     }
     set_HAS_RESTORED_SETTINGS(true);
-    updateSettings({ ...pickedSettings });
+    updateSettings({
+      ...pickedSettings
+    });
     return toastAndReload();
   }
   function useHotkeyForConfig(hotkey, configKey, label) {
@@ -17745,80 +18300,865 @@ body.dark ._btn-refresh_14tde_29 {
       settings[configKey] = !settings[configKey];
       const isCancel = !settings[configKey];
       AntdMessage.success(`已${isCancel ? "禁用" : "启用"}「${label}」`);
-    }, { exactMatch: true });
+    }, {
+      exactMatch: true
+    });
   }
   const tab = "basic";
-  const modalSettingsStore = proxy({ tab });
-  var _ref11 = { name: "1a2afmv", styles: "margin-left:10px" };
-  function ModalSettings({ show, onHide: onHide2 }) {
-    const { filterEnabled, filterMinPlayCount, filterMinPlayCountEnabled, filterMinDuration, filterMinDurationEnabled, filterOutGotoTypePicture } = useSettingsSnapshot();
+  const modalSettingsStore = proxy({
+    tab
+  });
+  function ModalSettings({
+    show,
+    onHide: onHide2
+  }) {
+    const {
+      filterEnabled,
+      filterMinPlayCount,
+      filterMinPlayCountEnabled,
+      filterMinDuration,
+      filterMinDurationEnabled,
+      filterOutGotoTypePicture
+    } = useSettingsSnapshot();
     useHotkeyForConfig(["shift.p"], "autoPreviewWhenKeyboardSelect", "键盘选中后自动开始预览");
     useHotkeyForConfig(["shift.m"], "autoPreviewWhenHover", "鼠标悬浮后自动开始预览");
     useHotkeyForConfig(["shift.c"], "useNarrowMode", "居中模式");
     useHotkeyForConfig(["shift.y"], "styleFancy", "Fancy Style");
-    const { tab: tab2 } = useSnapshot(modalSettingsStore);
-    return /* @__PURE__ */ jsxs(BaseModal, { ...{ show, onHide: onHide2, hideWhenMaskOnClick: true, hideWhenEsc: true, styleModal: { width: 900, maxHeight: "unset" } }, children: [/* @__PURE__ */ jsxs("div", { className: BaseModalClass.modalHeader, children: [/* @__PURE__ */ jsxs("div", { className: BaseModalClass.modalTitle, children: [/* @__PURE__ */ jsx(IconPark, { name: "Config", className: styles$1.configIcon }), "设置项"] }), /* @__PURE__ */ jsx("div", { className: "space", style: { flex: 1 } }), /* @__PURE__ */ jsx(ModalClose, { onClick: onHide2 })] }), /* @__PURE__ */ jsx("main", { className: BaseModalClass.modalBody, style: { overflow: "hidden" }, children: /* @__PURE__ */ jsx(antd.Tabs, { tabPosition: "left", size: "middle", className: styles$1.settingTabs, activeKey: tab2, onChange: (tab3) => modalSettingsStore.tab = tab3, items: [{ label: "常规设置", key: "basic", children: /* @__PURE__ */ jsx(TabPaneBasic, {}) }, { label: "内容过滤", key: "filter", children: /* @__PURE__ */ jsx("div", { className: styles$1.tabPane, children: /* @__PURE__ */ jsxs("div", { className: styles$1.settingsGroup, children: [/* @__PURE__ */ jsxs("div", { className: styles$1.settingsGroupTitle, children: ["内容过滤", /* @__PURE__ */ jsxs(HelpInfo, { iconProps: { name: "Tips" }, children: ["启用过滤会大幅降低加载速度, 谨慎开启! ", /* @__PURE__ */ jsx("br", {}), "仅推荐类 Tab 生效"] }), /* @__PURE__ */ jsx(antd.Switch, { css: _ref11, checked: filterEnabled, onChange: (val) => {
-      updateSettings({ filterEnabled: val });
-    } })] }), /* @__PURE__ */ jsxs("div", { className: cx(styles$1.settingsGroupContent), children: [/* @__PURE__ */ jsx("div", { className: styles$1.settingsGroupSubTitle, children: "视频" }), /* @__PURE__ */ jsxs("div", { className: styles$1.row, children: [/* @__PURE__ */ jsx(FlagSettingItem, { disabled: !filterEnabled, configKey: "filterMinPlayCountEnabled", label: "按播放量过滤", tooltip: /* @__PURE__ */ jsx(Fragment, { children: "不显示播放量很少的视频" }) }), /* @__PURE__ */ jsx(antd.InputNumber, { size: "small", min: 1, step: 1e3, value: filterMinPlayCount, onChange: (val) => val && updateSettings({ filterMinPlayCount: val }), disabled: !filterEnabled || !filterMinPlayCountEnabled })] }), /* @__PURE__ */ jsxs("div", { className: styles$1.row, style: { marginTop: 3 }, children: [/* @__PURE__ */ jsx(FlagSettingItem, { configKey: "filterMinDurationEnabled", label: "按视频时长过滤", tooltip: /* @__PURE__ */ jsx(Fragment, { children: "不显示短视频" }), disabled: !filterEnabled }), /* @__PURE__ */ jsx(antd.InputNumber, { style: { width: 150 }, size: "small", min: 1, step: 10, addonAfter: "单位:秒", value: filterMinDuration, onChange: (val) => val && updateSettings({ filterMinDuration: val }), disabled: !filterEnabled || !filterMinDurationEnabled })] }), /* @__PURE__ */ jsx(FlagSettingItem, { className: styles$1.row, style: { marginTop: 3 }, configKey: "enableFilterForFollowedVideo", label: "对「已关注」的视频启用过滤", tooltip: /* @__PURE__ */ jsx(Fragment, { children: "默认不过滤「已关注」" }), disabled: !filterEnabled }), /* @__PURE__ */ jsx("div", { className: styles$1.settingsGroupSubTitle, children: "图文" }), /* @__PURE__ */ jsx(FlagSettingItem, { className: styles$1.row, configKey: "filterOutGotoTypePicture", label: "启用图文(动态 & 专栏)过滤", tooltip: /* @__PURE__ */ jsx(Fragment, { children: "过滤掉图文推荐" }), disabled: !filterEnabled }), /* @__PURE__ */ jsx(FlagSettingItem, { className: styles$1.row, disabled: !filterEnabled || !filterOutGotoTypePicture, configKey: "enableFilterForFollowedPicture", label: "对「已关注」的图文启用过滤", tooltip: /* @__PURE__ */ jsx(Fragment, { children: "默认不过滤「已关注」" }) })] })] }) }) }, { label: "外观设置", key: "ui", children: /* @__PURE__ */ jsx("div", { className: styles$1.tabPane, children: /* @__PURE__ */ jsxs("div", { className: styles$1.settingsGroup, children: [/* @__PURE__ */ jsx("div", { className: styles$1.settingsGroupTitle, style: { marginBottom: 15 }, children: "样式自定义" }), /* @__PURE__ */ jsxs("div", { className: cx(styles$1.settingsGroupContent), children: [/* @__PURE__ */ jsx("div", { className: styles$1.row, children: /* @__PURE__ */ jsx(FlagSettingItem, { configKey: "styleFancy", label: "Fancy Style", tooltip: /* @__PURE__ */ jsxs(Fragment, { children: ["增加卡片大小, 增大卡片间距", /* @__PURE__ */ jsx("br", {}), "视频卡片会显示头像", /* @__PURE__ */ jsx("br", {}), "切换设置快捷键: ", /* @__PURE__ */ jsx(antd.Tag, { color: "green", children: "shift+y" })] }) }) }), /* @__PURE__ */ jsx("div", { className: styles$1.row, style: { marginTop: 5 }, children: /* @__PURE__ */ jsx(FlagSettingItem, { configKey: "styleUseStandardVideoSourceTab", label: "推荐源切换 Tab 按钮: 使用标准高度", tooltip: "默认紧凑高度" }) }), /* @__PURE__ */ jsx("div", { className: styles$1.row, style: { marginTop: 5 }, children: /* @__PURE__ */ jsx(FlagSettingItem, { configKey: "styleUseStickyTabbarInPureRecommend", label: "纯推荐模式: stick tab bar", tooltip: /* @__PURE__ */ jsxs(Fragment, { children: ["默认勾选: Tab 栏会吸附在顶栏下方", /* @__PURE__ */ jsx("br", {}), "取消选中: Tab 栏会随页面一起滚动"] }) }) })] })] }) }) }, { label: "主题选择", key: "theme-select", children: /* @__PURE__ */ jsx("div", { className: styles$1.tabPane, children: /* @__PURE__ */ jsxs("div", { className: styles$1.settingsGroup, children: [/* @__PURE__ */ jsx("div", { className: styles$1.settingsGroupTitle, style: { marginBottom: 15 }, children: "主题选择" }), /* @__PURE__ */ jsx("div", { className: cx(styles$1.settingsGroupContent), children: /* @__PURE__ */ jsx(ThemesSelect, {}) })] }) }) }, { label: "Tab 设置", key: "video-source-tab-config", children: /* @__PURE__ */ jsx(TabPaneVideoSourceTabConfig, {}) }, { label: "高级设置", key: "advance", children: /* @__PURE__ */ jsx(TabPaneAdvance, {}) }] }) })] });
+    const {
+      tab: tab2
+    } = useSnapshot(modalSettingsStore);
+    return /* @__PURE__ */ jsxs(BaseModal, {
+      ...{
+        show,
+        onHide: onHide2,
+        hideWhenMaskOnClick: true,
+        hideWhenEsc: true,
+        styleModal: {
+          width: 900,
+          maxHeight: "unset"
+        }
+      },
+      children: [/* @__PURE__ */ jsxs("div", {
+        className: BaseModalClass.modalHeader,
+        children: [/* @__PURE__ */ jsxs("div", {
+          className: BaseModalClass.modalTitle,
+          children: [/* @__PURE__ */ jsx(IconPark, {
+            name: "Config",
+            className: styles$1.configIcon
+          }), "设置项"]
+        }), /* @__PURE__ */ jsx("div", {
+          className: "space",
+          style: {
+            flex: 1
+          }
+        }), /* @__PURE__ */ jsx(ModalClose, {
+          onClick: onHide2
+        })]
+      }), /* @__PURE__ */ jsx("main", {
+        className: BaseModalClass.modalBody,
+        style: {
+          overflow: "hidden"
+        },
+        children: /* @__PURE__ */ jsx(antd.Tabs, {
+          tabPosition: "left",
+          size: "middle",
+          className: styles$1.settingTabs,
+          activeKey: tab2,
+          onChange: (tab3) => modalSettingsStore.tab = tab3,
+          items: [{
+            label: "常规设置",
+            key: "basic",
+            children: /* @__PURE__ */ jsx(TabPaneBasic, {})
+          }, {
+            label: "内容过滤",
+            key: "filter",
+            children: /* @__PURE__ */ jsx("div", {
+              className: styles$1.tabPane,
+              children: /* @__PURE__ */ jsxs("div", {
+                className: styles$1.settingsGroup,
+                children: [/* @__PURE__ */ jsxs("div", {
+                  className: styles$1.settingsGroupTitle,
+                  children: ["内容过滤", /* @__PURE__ */ jsxs(HelpInfo, {
+                    iconProps: {
+                      name: "Tips"
+                    },
+                    children: ["启用过滤会大幅降低加载速度, 谨慎开启! ", /* @__PURE__ */ jsx("br", {}), "仅推荐类 Tab 生效"]
+                  }), /* @__PURE__ */ jsx(antd.Switch, {
+                    css: css`
+                          margin-left: 10px;
+                        `,
+                    checked: filterEnabled,
+                    onChange: (val) => {
+                      updateSettings({
+                        filterEnabled: val
+                      });
+                    }
+                  })]
+                }), /* @__PURE__ */ jsxs("div", {
+                  className: cx(styles$1.settingsGroupContent),
+                  children: [/* @__PURE__ */ jsx("div", {
+                    className: styles$1.settingsGroupSubTitle,
+                    children: "视频"
+                  }), /* @__PURE__ */ jsxs("div", {
+                    className: styles$1.row,
+                    children: [/* @__PURE__ */ jsx(FlagSettingItem, {
+                      disabled: !filterEnabled,
+                      configKey: "filterMinPlayCountEnabled",
+                      label: "按播放量过滤",
+                      tooltip: /* @__PURE__ */ jsx(Fragment, {
+                        children: "不显示播放量很少的视频"
+                      })
+                    }), /* @__PURE__ */ jsx(antd.InputNumber, {
+                      size: "small",
+                      min: 1,
+                      step: 1e3,
+                      value: filterMinPlayCount,
+                      onChange: (val) => val && updateSettings({
+                        filterMinPlayCount: val
+                      }),
+                      disabled: !filterEnabled || !filterMinPlayCountEnabled
+                    })]
+                  }), /* @__PURE__ */ jsxs("div", {
+                    className: styles$1.row,
+                    style: {
+                      marginTop: 3
+                    },
+                    children: [/* @__PURE__ */ jsx(FlagSettingItem, {
+                      configKey: "filterMinDurationEnabled",
+                      label: "按视频时长过滤",
+                      tooltip: /* @__PURE__ */ jsx(Fragment, {
+                        children: "不显示短视频"
+                      }),
+                      disabled: !filterEnabled
+                    }), /* @__PURE__ */ jsx(antd.InputNumber, {
+                      style: {
+                        width: 150
+                      },
+                      size: "small",
+                      min: 1,
+                      step: 10,
+                      addonAfter: "单位:秒",
+                      value: filterMinDuration,
+                      onChange: (val) => val && updateSettings({
+                        filterMinDuration: val
+                      }),
+                      disabled: !filterEnabled || !filterMinDurationEnabled
+                    })]
+                  }), /* @__PURE__ */ jsx(FlagSettingItem, {
+                    className: styles$1.row,
+                    style: {
+                      marginTop: 3
+                    },
+                    configKey: "enableFilterForFollowedVideo",
+                    label: "对「已关注」的视频启用过滤",
+                    tooltip: /* @__PURE__ */ jsx(Fragment, {
+                      children: "默认不过滤「已关注」"
+                    }),
+                    disabled: !filterEnabled
+                  }), /* @__PURE__ */ jsx("div", {
+                    className: styles$1.settingsGroupSubTitle,
+                    children: "图文"
+                  }), /* @__PURE__ */ jsx(FlagSettingItem, {
+                    className: styles$1.row,
+                    configKey: "filterOutGotoTypePicture",
+                    label: "启用图文(动态 & 专栏)过滤",
+                    tooltip: /* @__PURE__ */ jsx(Fragment, {
+                      children: "过滤掉图文推荐"
+                    }),
+                    disabled: !filterEnabled
+                  }), /* @__PURE__ */ jsx(FlagSettingItem, {
+                    className: styles$1.row,
+                    disabled: !filterEnabled || !filterOutGotoTypePicture,
+                    configKey: "enableFilterForFollowedPicture",
+                    label: "对「已关注」的图文启用过滤",
+                    tooltip: /* @__PURE__ */ jsx(Fragment, {
+                      children: "默认不过滤「已关注」"
+                    })
+                  })]
+                })]
+              })
+            })
+          }, {
+            label: "外观设置",
+            key: "ui",
+            children: /* @__PURE__ */ jsx("div", {
+              className: styles$1.tabPane,
+              children: /* @__PURE__ */ jsxs("div", {
+                className: styles$1.settingsGroup,
+                children: [/* @__PURE__ */ jsx("div", {
+                  className: styles$1.settingsGroupTitle,
+                  style: {
+                    marginBottom: 15
+                  },
+                  children: "样式自定义"
+                }), /* @__PURE__ */ jsxs("div", {
+                  className: cx(styles$1.settingsGroupContent),
+                  children: [/* @__PURE__ */ jsx("div", {
+                    className: styles$1.row,
+                    children: /* @__PURE__ */ jsx(FlagSettingItem, {
+                      configKey: "styleFancy",
+                      label: "Fancy Style",
+                      tooltip: /* @__PURE__ */ jsxs(Fragment, {
+                        children: ["增加卡片大小, 增大卡片间距", /* @__PURE__ */ jsx("br", {}), "视频卡片会显示头像", /* @__PURE__ */ jsx("br", {}), "切换设置快捷键: ", /* @__PURE__ */ jsx(antd.Tag, {
+                          color: "green",
+                          children: "shift+y"
+                        })]
+                      })
+                    })
+                  }), /* @__PURE__ */ jsx("div", {
+                    className: styles$1.row,
+                    style: {
+                      marginTop: 5
+                    },
+                    children: /* @__PURE__ */ jsx(FlagSettingItem, {
+                      configKey: "styleUseStandardVideoSourceTab",
+                      label: "推荐源切换 Tab 按钮: 使用标准高度",
+                      tooltip: "默认紧凑高度"
+                    })
+                  }), /* @__PURE__ */ jsx("div", {
+                    className: styles$1.row,
+                    style: {
+                      marginTop: 5
+                    },
+                    children: /* @__PURE__ */ jsx(FlagSettingItem, {
+                      configKey: "styleUseStickyTabbarInPureRecommend",
+                      label: "纯推荐模式: sticky tab bar",
+                      tooltip: /* @__PURE__ */ jsxs(Fragment, {
+                        children: ["默认勾选: Tab 栏会吸附在顶栏下方", /* @__PURE__ */ jsx("br", {}), "取消选中: Tab 栏会随页面一起滚动"]
+                      })
+                    })
+                  })]
+                })]
+              })
+            })
+          }, {
+            label: "主题选择",
+            key: "theme-select",
+            children: /* @__PURE__ */ jsx("div", {
+              className: styles$1.tabPane,
+              children: /* @__PURE__ */ jsxs("div", {
+                className: styles$1.settingsGroup,
+                children: [/* @__PURE__ */ jsx("div", {
+                  className: styles$1.settingsGroupTitle,
+                  style: {
+                    marginBottom: 15
+                  },
+                  children: "主题选择"
+                }), /* @__PURE__ */ jsx("div", {
+                  className: cx(styles$1.settingsGroupContent),
+                  children: /* @__PURE__ */ jsx(ThemesSelect, {})
+                })]
+              })
+            })
+          }, {
+            label: "Tab 设置",
+            key: "video-source-tab-config",
+            children: /* @__PURE__ */ jsx(TabPaneVideoSourceTabConfig, {})
+          }, {
+            label: "高级设置",
+            key: "advance",
+            children: /* @__PURE__ */ jsx(TabPaneAdvance, {})
+          }]
+        })
+      })]
+    });
   }
-  var _ref9 = { name: "15c7vdh", styles: "position:relative;top:4px;cursor:pointer" };
-  var _ref10 = { name: "velg6b", styles: "margin-left:8px;margin-right:4px;font-size:14px;position:relative;top:4px" };
   function TabPaneBasic() {
-    return /* @__PURE__ */ jsxs("div", { className: styles$1.tabPane, children: [/* @__PURE__ */ jsxs("div", { className: styles$1.settingsGroup, children: [/* @__PURE__ */ jsxs("div", { className: styles$1.settingsGroupTitle, children: ["access_key", /* @__PURE__ */ jsxs(HelpInfo, { iconProps: { name: "Help", size: 18, style: { marginTop: 6, marginLeft: 5 } }, children: ["用于「推荐」Tab", /* @__PURE__ */ jsx("br", {}), "用于 获取推荐 / 提交不喜欢等操作"] })] }), /* @__PURE__ */ jsx("div", { className: cx(styles$1.settingsGroupContent), children: /* @__PURE__ */ jsx("div", { className: styles$1.row, style: { marginTop: 5 }, children: /* @__PURE__ */ jsx(AccessKeyManage, {}) }) })] }), /* @__PURE__ */ jsxs("div", { className: styles$1.settingsGroup, children: [/* @__PURE__ */ jsx("div", { className: styles$1.settingsGroupTitle, children: "开关" }), /* @__PURE__ */ jsxs("div", { className: cx(styles$1.settingsGroupContent, styles$1.row), children: [/* @__PURE__ */ jsx(FlagSettingItem, { configKey: "pureRecommend", label: "纯推荐模式", tooltip: /* @__PURE__ */ jsxs(Fragment, { children: ["首页只保留推荐", /* @__PURE__ */ jsx("br", {}), "P.S 需要刷新网页~"] }), className: styles$1.check, extraAction: toastAndReload }), /* @__PURE__ */ jsx(FlagSettingItem, { configKey: "useNarrowMode", label: "居中模式", tooltip: /* @__PURE__ */ jsxs(Fragment, { children: ["居中两列", /* @__PURE__ */ jsx("br", {}), "切换设置快捷键: ", /* @__PURE__ */ jsx(antd.Tag, { color: "green", children: "shift+c" })] }), className: styles$1.check }), /* @__PURE__ */ jsx(FlagSettingItem, { configKey: "showModalFeedOnLoad", label: "自动「查看更多」", tooltip: "打开首页时自动打开「查看更多」弹窗", className: styles$1.check, extraAction: (val) => {
-      if (val) {
-        AntdMessage.success("已开启自动「查看更多」: 下次打开首页时将自动打开「查看更多」弹窗");
-      }
-    } }), /* @__PURE__ */ jsx(FlagSettingItem, { configKey: "showModalFeedEntry", label: "「查看更多」按钮", tooltip: "是否展示「查看更多」按钮", className: styles$1.check })] })] }), /* @__PURE__ */ jsxs("div", { className: styles$1.settingsGroup, children: [/* @__PURE__ */ jsx("div", { className: styles$1.settingsGroupTitle, children: "视频链接" }), /* @__PURE__ */ jsxs("div", { className: cx(styles$1.settingsGroupContent, styles$1.row), children: [/* @__PURE__ */ jsx(FlagSettingItem, { configKey: "openVideoInPopupWhenClick", label: "默认「小窗打开」", tooltip: "点击视频链接默认行为改为「小窗打开」并自动网页全屏", className: styles$1.check }), /* @__PURE__ */ jsx(FlagSettingItem, { configKey: "openVideoAutoFullscreen", label: "打开视频后自动全屏", tooltip: "点击视频链接新窗口打开视频后「自动全屏」", className: styles$1.check })] })] }), /* @__PURE__ */ jsxs("div", { className: styles$1.settingsGroup, children: [/* @__PURE__ */ jsx("div", { className: styles$1.settingsGroupTitle, children: "预览" }), /* @__PURE__ */ jsxs("div", { className: cx(styles$1.settingsGroupContent, styles$1.row), children: [/* @__PURE__ */ jsx(FlagSettingItem, { configKey: "autoPreviewWhenKeyboardSelect", label: "键盘选中后自动开始预览", className: styles$1.check, tooltip: /* @__PURE__ */ jsxs(Fragment, { children: ["手动预览快捷键: ", /* @__PURE__ */ jsx(antd.Tag, { color: "green", children: "." }), " or ", /* @__PURE__ */ jsx(antd.Tag, { color: "green", children: "p" }), /* @__PURE__ */ jsx("br", {}), "切换设置快捷键: ", /* @__PURE__ */ jsx(antd.Tag, { color: "green", children: "shift+p" })] }) }), /* @__PURE__ */ jsx(FlagSettingItem, { configKey: "autoPreviewWhenHover", label: "鼠标悬浮后自动开始预览", className: styles$1.check, tooltip: /* @__PURE__ */ jsxs(Fragment, { children: ["鼠标悬浮后自动开始预览, 预览不再跟随鼠标位置 ", /* @__PURE__ */ jsx("br", {}), "切换设置快捷键: ", /* @__PURE__ */ jsx(antd.Tag, { color: "green", children: "shift+m" })] }) })] })] }), /* @__PURE__ */ jsxs("div", { className: styles$1.settingsGroup, children: [/* @__PURE__ */ jsxs("div", { className: styles$1.settingsGroupTitle, children: ["帮助", /* @__PURE__ */ jsxs("span", { css: _ref10, children: ["(当前版本: v", "0.20.5", ")"] }), /* @__PURE__ */ jsx(IconPark, { name: "Copy", size: 16, onClick: () => {
-      const content = `v${"0.20.5"}`;
-      GM.setClipboard(content);
-      AntdMessage.success(`已复制当前版本: ${content}`);
-    }, css: _ref9 })] }), /* @__PURE__ */ jsx("div", { className: cx(styles$1.settingsGroupContent), children: /* @__PURE__ */ jsx("div", { className: styles$1.row, children: /* @__PURE__ */ jsxs(antd.Space, { size: "small", children: [/* @__PURE__ */ jsx(antd.Button, { href: "https://github.com/magicdawn/bilibili-app-recommend", target: "_blank", children: "GitHub 主页" }), /* @__PURE__ */ jsx(antd.Button, { href: "https://greasyfork.org/zh-CN/scripts/443530-bilibili-app-recommend", target: "_blank", children: "GreasyFork 主页" }), /* @__PURE__ */ jsx(antd.Button, { href: "https://github.com/magicdawn/bilibili-app-recommend#%E5%BF%AB%E6%8D%B7%E9%94%AE%E8%AF%B4%E6%98%8E", target: "_blank", children: "查看可用的快捷键" }), /* @__PURE__ */ jsx(antd.Button, { href: "https://github.com/magicdawn/bilibili-app-recommend/blob/main/CHANGELOG.md", target: "_blank", children: "更新日志" }), /* @__PURE__ */ jsx(antd.Button, { href: "https://afdian.net/a/magicdawn", target: "_blank", children: "用 ❤️ 发电" })] }) }) })] })] });
+    return /* @__PURE__ */ jsxs("div", {
+      className: styles$1.tabPane,
+      children: [/* @__PURE__ */ jsxs("div", {
+        className: styles$1.settingsGroup,
+        children: [/* @__PURE__ */ jsxs("div", {
+          className: styles$1.settingsGroupTitle,
+          children: ["access_key", /* @__PURE__ */ jsxs(HelpInfo, {
+            iconProps: {
+              name: "Help",
+              size: 18,
+              style: {
+                marginTop: 6,
+                marginLeft: 5
+              }
+            },
+            children: ["用于「推荐」Tab", /* @__PURE__ */ jsx("br", {}), "用于 获取推荐 / 提交不喜欢等操作"]
+          })]
+        }), /* @__PURE__ */ jsx("div", {
+          className: cx(styles$1.settingsGroupContent),
+          children: /* @__PURE__ */ jsx("div", {
+            className: styles$1.row,
+            style: {
+              marginTop: 5
+            },
+            children: /* @__PURE__ */ jsx(AccessKeyManage, {})
+          })
+        })]
+      }), /* @__PURE__ */ jsxs("div", {
+        className: styles$1.settingsGroup,
+        children: [/* @__PURE__ */ jsx("div", {
+          className: styles$1.settingsGroupTitle,
+          children: "开关"
+        }), /* @__PURE__ */ jsxs("div", {
+          className: cx(styles$1.settingsGroupContent, styles$1.row),
+          children: [/* @__PURE__ */ jsx(FlagSettingItem, {
+            configKey: "pureRecommend",
+            label: "纯推荐模式",
+            tooltip: /* @__PURE__ */ jsxs(Fragment, {
+              children: ["首页只保留推荐", /* @__PURE__ */ jsx("br", {}), "P.S 需要刷新网页~"]
+            }),
+            className: styles$1.check,
+            extraAction: toastAndReload
+          }), /* @__PURE__ */ jsx(FlagSettingItem, {
+            configKey: "useNarrowMode",
+            label: "居中模式",
+            tooltip: /* @__PURE__ */ jsxs(Fragment, {
+              children: ["居中两列", /* @__PURE__ */ jsx("br", {}), "切换设置快捷键: ", /* @__PURE__ */ jsx(antd.Tag, {
+                color: "green",
+                children: "shift+c"
+              })]
+            }),
+            className: styles$1.check
+          }), /* @__PURE__ */ jsx(FlagSettingItem, {
+            configKey: "showModalFeedOnLoad",
+            label: "自动「查看更多」",
+            tooltip: "打开首页时自动打开「查看更多」弹窗",
+            className: styles$1.check,
+            extraAction: (val) => {
+              if (val) {
+                AntdMessage.success("已开启自动「查看更多」: 下次打开首页时将自动打开「查看更多」弹窗");
+              }
+            }
+          }), /* @__PURE__ */ jsx(FlagSettingItem, {
+            configKey: "showModalFeedEntry",
+            label: "「查看更多」按钮",
+            tooltip: "是否展示「查看更多」按钮",
+            className: styles$1.check
+          })]
+        })]
+      }), /* @__PURE__ */ jsxs("div", {
+        className: styles$1.settingsGroup,
+        children: [/* @__PURE__ */ jsx("div", {
+          className: styles$1.settingsGroupTitle,
+          children: "视频链接"
+        }), /* @__PURE__ */ jsxs("div", {
+          className: cx(styles$1.settingsGroupContent, styles$1.row),
+          children: [/* @__PURE__ */ jsx(FlagSettingItem, {
+            configKey: "openVideoInPopupWhenClick",
+            label: "默认「小窗打开」",
+            tooltip: "点击视频链接默认行为改为「小窗打开」并自动网页全屏",
+            className: styles$1.check
+          }), /* @__PURE__ */ jsx(FlagSettingItem, {
+            configKey: "openVideoAutoFullscreen",
+            label: "打开视频后自动全屏",
+            tooltip: "点击视频链接新窗口打开视频后「自动全屏」",
+            className: styles$1.check
+          })]
+        })]
+      }), /* @__PURE__ */ jsxs("div", {
+        className: styles$1.settingsGroup,
+        children: [/* @__PURE__ */ jsx("div", {
+          className: styles$1.settingsGroupTitle,
+          children: "预览"
+        }), /* @__PURE__ */ jsxs("div", {
+          className: cx(styles$1.settingsGroupContent, styles$1.row),
+          children: [/* @__PURE__ */ jsx(FlagSettingItem, {
+            configKey: "autoPreviewWhenKeyboardSelect",
+            label: "键盘选中后自动开始预览",
+            className: styles$1.check,
+            tooltip: /* @__PURE__ */ jsxs(Fragment, {
+              children: ["手动预览快捷键: ", /* @__PURE__ */ jsx(antd.Tag, {
+                color: "green",
+                children: "."
+              }), " or ", /* @__PURE__ */ jsx(antd.Tag, {
+                color: "green",
+                children: "p"
+              }), /* @__PURE__ */ jsx("br", {}), "切换设置快捷键: ", /* @__PURE__ */ jsx(antd.Tag, {
+                color: "green",
+                children: "shift+p"
+              })]
+            })
+          }), /* @__PURE__ */ jsx(FlagSettingItem, {
+            configKey: "autoPreviewWhenHover",
+            label: "鼠标悬浮后自动开始预览",
+            className: styles$1.check,
+            tooltip: /* @__PURE__ */ jsxs(Fragment, {
+              children: ["鼠标悬浮后自动开始预览, 预览不再跟随鼠标位置 ", /* @__PURE__ */ jsx("br", {}), "切换设置快捷键: ", /* @__PURE__ */ jsx(antd.Tag, {
+                color: "green",
+                children: "shift+m"
+              })]
+            })
+          })]
+        })]
+      }), /* @__PURE__ */ jsxs("div", {
+        className: styles$1.settingsGroup,
+        children: [/* @__PURE__ */ jsxs("div", {
+          className: styles$1.settingsGroupTitle,
+          children: ["帮助", /* @__PURE__ */ jsxs("span", {
+            css: css`
+              margin-left: 8px;
+              margin-right: 4px;
+              font-size: 14px;
+              position: relative;
+              top: 4px;
+            `,
+            children: ["(当前版本: v", "0.20.6", ")"]
+          }), /* @__PURE__ */ jsx(IconPark, {
+            name: "Copy",
+            size: 16,
+            onClick: () => {
+              const content = `v${"0.20.6"}`;
+              GM.setClipboard(content);
+              AntdMessage.success(`已复制当前版本: ${content}`);
+            },
+            css: css`
+              position: relative;
+              top: 4px;
+              cursor: pointer;
+            `
+          })]
+        }), /* @__PURE__ */ jsx("div", {
+          className: cx(styles$1.settingsGroupContent),
+          children: /* @__PURE__ */ jsx("div", {
+            className: styles$1.row,
+            children: /* @__PURE__ */ jsxs(antd.Space, {
+              size: "small",
+              children: [/* @__PURE__ */ jsx(antd.Button, {
+                href: "https://github.com/magicdawn/bilibili-app-recommend",
+                target: "_blank",
+                children: "GitHub 主页"
+              }), /* @__PURE__ */ jsx(antd.Button, {
+                href: "https://greasyfork.org/zh-CN/scripts/443530-bilibili-app-recommend",
+                target: "_blank",
+                children: "GreasyFork 主页"
+              }), /* @__PURE__ */ jsx(antd.Button, {
+                href: "https://github.com/magicdawn/bilibili-app-recommend#%E5%BF%AB%E6%8D%B7%E9%94%AE%E8%AF%B4%E6%98%8E",
+                target: "_blank",
+                children: "查看可用的快捷键"
+              }), /* @__PURE__ */ jsx(antd.Button, {
+                href: "https://github.com/magicdawn/bilibili-app-recommend/blob/main/CHANGELOG.md",
+                target: "_blank",
+                children: "更新日志"
+              }), /* @__PURE__ */ jsx(antd.Button, {
+                href: "https://afdian.net/a/magicdawn",
+                target: "_blank",
+                children: "用 ❤️ 发电"
+              })]
+            })
+          })
+        })]
+      })]
+    });
   }
   function TabPaneAdvance() {
-    const { autoPreviewUpdateInterval, appApiDecice } = useSettingsSnapshot();
-    return /* @__PURE__ */ jsx("div", { className: styles$1.tabPane, children: /* @__PURE__ */ jsxs("div", { className: styles$1.settingsGroup, children: [/* @__PURE__ */ jsx("div", { className: styles$1.settingsGroupTitle, children: "设置项" }), /* @__PURE__ */ jsx("div", { className: cx(styles$1.settingsGroupContent), children: /* @__PURE__ */ jsx("div", { className: styles$1.row, children: /* @__PURE__ */ jsx(antd.Popconfirm, { title: "确定", description: "确定恢复默认设置? 该操作不可逆!", onConfirm: onResetSettings, children: /* @__PURE__ */ jsx(antd.Button, { danger: true, type: "primary", children: "恢复默认设置" }) }) }) }), /* @__PURE__ */ jsx("div", { className: styles$1.settingsGroupTitle, style: { marginTop: 15 }, children: "备份/恢复" }), /* @__PURE__ */ jsxs("div", { className: cx(styles$1.settingsGroupContent), children: [/* @__PURE__ */ jsxs("div", { className: styles$1.row, children: [/* @__PURE__ */ jsx(FlagSettingItem, { configKey: "backupSettingsToArticleDraft", label: "备份设置到专栏草稿箱中", tooltip: `专栏 - 草稿箱 - ${APP_NAME}` }), /* @__PURE__ */ jsxs("a", { style: { marginLeft: 15, display: "inline-flex", alignItems: "center" }, href: "https://member.bilibili.com/platform/upload/text/draft", target: "_blank", children: [/* @__PURE__ */ jsx(IconPark, { name: "EfferentFour", size: 16, style: { marginRight: 4 } }), "去草稿箱浏览"] })] }), /* @__PURE__ */ jsx("div", { className: styles$1.row, style: { marginTop: 5 }, children: /* @__PURE__ */ jsx(antd.Popconfirm, { title: "确定", description: "将覆盖本地设置? 该操作不可逆!", onConfirm: onRestoreSettings, children: /* @__PURE__ */ jsx(antd.Button, { danger: true, type: "primary", children: "从专栏草稿箱中恢复" }) }) })] }), /* @__PURE__ */ jsx("div", { className: styles$1.settingsGroupTitle, style: { marginTop: 15 }, children: "预览" }), /* @__PURE__ */ jsxs("div", { style: { width: "100%", display: "flex", alignItems: "center" }, children: ["自动预览更新间隔", /* @__PURE__ */ jsx(antd.Slider, { style: { flex: 1, margin: "0 15px" }, min: 0, max: 1e3, keyboard: true, onChange: (val) => settings.autoPreviewUpdateInterval = val, value: autoPreviewUpdateInterval }), /* @__PURE__ */ jsxs("span", { style: { width: "65px" }, children: ["(", autoPreviewUpdateInterval, "ms)"] })] }), /* @__PURE__ */ jsx("div", { className: styles$1.settingsGroupTitle, style: { marginTop: 15 }, children: "视频卡片" }), /* @__PURE__ */ jsx("div", { style: { width: "100%", display: "flex", alignItems: "center" }, children: /* @__PURE__ */ jsx(FlagSettingItem, { configKey: "coverUseAvif", label: "使用 avif", tooltip: /* @__PURE__ */ jsx(Fragment, { children: "视频封面是否使用 avif 格式图片" }) }) })] }) });
+    const {
+      autoPreviewUpdateInterval,
+      appApiDecice
+    } = useSettingsSnapshot();
+    return /* @__PURE__ */ jsx("div", {
+      className: styles$1.tabPane,
+      children: /* @__PURE__ */ jsxs("div", {
+        className: styles$1.settingsGroup,
+        children: [/* @__PURE__ */ jsx("div", {
+          className: styles$1.settingsGroupTitle,
+          children: "设置项"
+        }), /* @__PURE__ */ jsx("div", {
+          className: cx(styles$1.settingsGroupContent),
+          children: /* @__PURE__ */ jsx("div", {
+            className: styles$1.row,
+            children: /* @__PURE__ */ jsx(antd.Popconfirm, {
+              title: "确定",
+              description: "确定恢复默认设置? 该操作不可逆!",
+              onConfirm: onResetSettings,
+              children: /* @__PURE__ */ jsx(antd.Button, {
+                danger: true,
+                type: "primary",
+                children: "恢复默认设置"
+              })
+            })
+          })
+        }), /* @__PURE__ */ jsx("div", {
+          className: styles$1.settingsGroupTitle,
+          style: {
+            marginTop: 15
+          },
+          children: "备份/恢复"
+        }), /* @__PURE__ */ jsxs("div", {
+          className: cx(styles$1.settingsGroupContent),
+          children: [/* @__PURE__ */ jsxs("div", {
+            className: styles$1.row,
+            children: [/* @__PURE__ */ jsx(FlagSettingItem, {
+              configKey: "backupSettingsToArticleDraft",
+              label: "备份设置到专栏草稿箱中",
+              tooltip: `专栏 - 草稿箱 - ${APP_NAME}`
+            }), /* @__PURE__ */ jsxs("a", {
+              style: {
+                marginLeft: 15,
+                display: "inline-flex",
+                alignItems: "center"
+              },
+              href: "https://member.bilibili.com/platform/upload/text/draft",
+              target: "_blank",
+              children: [/* @__PURE__ */ jsx(IconPark, {
+                name: "EfferentFour",
+                size: 16,
+                style: {
+                  marginRight: 4
+                }
+              }), "去草稿箱浏览"]
+            })]
+          }), /* @__PURE__ */ jsx("div", {
+            className: styles$1.row,
+            style: {
+              marginTop: 5
+            },
+            children: /* @__PURE__ */ jsx(antd.Popconfirm, {
+              title: "确定",
+              description: "将覆盖本地设置? 该操作不可逆!",
+              onConfirm: onRestoreSettings,
+              children: /* @__PURE__ */ jsx(antd.Button, {
+                danger: true,
+                type: "primary",
+                children: "从专栏草稿箱中恢复"
+              })
+            })
+          })]
+        }), /* @__PURE__ */ jsx("div", {
+          className: styles$1.settingsGroupTitle,
+          style: {
+            marginTop: 15
+          },
+          children: "预览"
+        }), /* @__PURE__ */ jsxs("div", {
+          style: {
+            width: "100%",
+            display: "flex",
+            alignItems: "center"
+          },
+          children: ["自动预览更新间隔", /* @__PURE__ */ jsx(antd.Slider, {
+            style: {
+              flex: 1,
+              margin: "0 15px"
+            },
+            min: 0,
+            max: 1e3,
+            keyboard: true,
+            onChange: (val) => settings.autoPreviewUpdateInterval = val,
+            value: autoPreviewUpdateInterval
+          }), /* @__PURE__ */ jsxs("span", {
+            style: {
+              width: "65px"
+            },
+            children: ["(", autoPreviewUpdateInterval, "ms)"]
+          })]
+        }), /* @__PURE__ */ jsx("div", {
+          className: styles$1.settingsGroupTitle,
+          style: {
+            marginTop: 15
+          },
+          children: "视频卡片"
+        }), /* @__PURE__ */ jsx("div", {
+          style: {
+            width: "100%",
+            display: "flex",
+            alignItems: "center"
+          },
+          children: /* @__PURE__ */ jsx(FlagSettingItem, {
+            configKey: "coverUseAvif",
+            label: "使用 avif",
+            tooltip: /* @__PURE__ */ jsx(Fragment, {
+              children: "视频封面是否使用 avif 格式图片"
+            })
+          })
+        })]
+      })
+    });
   }
-  var _ref5$2 = { name: "1hzl8wy", styles: "margin-left:20px!important" };
-  var _ref6 = { name: "1hzl8wy", styles: "margin-left:20px!important" };
-  var _ref7 = { name: "1fttcpj", styles: "display:flex;flex-direction:column" };
-  var _ref8 = { name: "1js6ety", styles: "display:grid;grid-template-columns:250px 1fr;column-gap:50px" };
   function TabPaneVideoSourceTabConfig() {
-    const { appApiDecice } = useSettingsSnapshot();
+    const {
+      appApiDecice
+    } = useSettingsSnapshot();
     const sortedTabKeys = useSortedTabKeys();
-    return /* @__PURE__ */ jsx("div", { className: styles$1.tabPane, children: /* @__PURE__ */ jsxs("div", { css: _ref8, children: [/* @__PURE__ */ jsxs("div", { className: styles$1.settingsGroup, children: [/* @__PURE__ */ jsxs("div", { className: styles$1.settingsGroupTitle, children: ["Tab 设置", /* @__PURE__ */ jsx(HelpInfo, { iconProps: { name: "Tips", style: { marginLeft: 5, marginRight: 20 } }, children: "勾选显示, 拖动排序" }), /* @__PURE__ */ jsx(antd.Col, { flex: 1 }), /* @__PURE__ */ jsx(antd.Popconfirm, { title: "确定", description: "确定不是手欠点着玩? 再点一次确定吧~", onConfirm: () => {
-      updateSettings({ hidingTabKeys: [], customTabKeysOrder: [] });
-    }, children: /* @__PURE__ */ jsx(antd.Button, { children: "重置" }) })] }), /* @__PURE__ */ jsx(VideoSourceTabOrder, {})] }), /* @__PURE__ */ jsxs("div", { className: styles$1.settingsGroup, children: [/* @__PURE__ */ jsx("div", { className: styles$1.settingsGroupTitle, children: "更多设置" }), /* @__PURE__ */ jsxs("div", { className: cx(styles$1.settingsGroupContent), css: _ref7, children: [/* @__PURE__ */ jsxs("div", { css: /* @__PURE__ */ css("order:", sortedTabKeys.indexOf("watchlater") + 1, ";", ""), children: [/* @__PURE__ */ jsxs("div", { className: styles$1.settingsGroupSubTitle, children: [/* @__PURE__ */ jsx(TabIcon, { tabKey: ETabType.Watchlater, mr: 5, mt: -1 }), "稍后再看"] }), /* @__PURE__ */ jsxs("div", { className: styles$1.row, children: [/* @__PURE__ */ jsx(FlagSettingItem, { configKey: "shuffleForWatchLater", label: "随机顺序", tooltip: "不包括近期添加的「稍后再看」" }), /* @__PURE__ */ jsx(FlagSettingItem, { configKey: "addSeparatorForWatchLater", label: "添加分割线", tooltip: "添加「近期」「更早」分割线", css: _ref6 })] })] }), /* @__PURE__ */ jsxs("div", { css: /* @__PURE__ */ css("order:", sortedTabKeys.indexOf("fav") + 1, ";", ""), children: [/* @__PURE__ */ jsxs("div", { className: styles$1.settingsGroupSubTitle, children: [/* @__PURE__ */ jsx(TabIcon, { tabKey: ETabType.Fav, mr: 5, mt: -2 }), "收藏"] }), /* @__PURE__ */ jsxs("div", { className: styles$1.row, children: [/* @__PURE__ */ jsx(FlagSettingItem, { configKey: "shuffleForFav", label: "随机顺序", tooltip: "随机收藏" }), /* @__PURE__ */ jsx(FlagSettingItem, { configKey: "addSeparatorForFav", label: "添加分割线", tooltip: "顺序显示时, 按收藏夹添加分割线", css: _ref5$2 })] })] }), /* @__PURE__ */ jsxs("div", { css: /* @__PURE__ */ css("order:", sortedTabKeys.indexOf("recommend-app") + 1, ";", ""), children: [/* @__PURE__ */ jsxs("div", { className: styles$1.settingsGroupSubTitle, children: [/* @__PURE__ */ jsx(TabIcon, { tabKey: ETabType.RecommendApp, mr: 5 }), "App 推荐"] }), /* @__PURE__ */ jsxs("div", { style: { width: "100%", display: "flex", alignItems: "center" }, children: ["App API 设备类型", /* @__PURE__ */ jsxs(HelpInfo, { iconProps: { name: "Tips", style: { marginLeft: 5, marginRight: 10 } }, children: ["默认 ipad, 视频有 头像/日期 等信息", /* @__PURE__ */ jsx("br", {}), "可选 android, 有图文类型的推荐"] }), /* @__PURE__ */ jsx(antd.Radio.Group, { optionType: "button", buttonStyle: "solid", size: "small", options: [EAppApiDevice.ipad, EAppApiDevice.android], value: appApiDecice, onChange: (e2) => updateSettings({ appApiDecice: e2.target.value }) })] })] })] })] })] }) });
+    return /* @__PURE__ */ jsx("div", {
+      className: styles$1.tabPane,
+      children: /* @__PURE__ */ jsxs("div", {
+        css: css`
+          display: grid;
+          grid-template-columns: 250px 1fr;
+          column-gap: 50px;
+        `,
+        children: [/* @__PURE__ */ jsxs("div", {
+          className: styles$1.settingsGroup,
+          children: [/* @__PURE__ */ jsxs("div", {
+            className: styles$1.settingsGroupTitle,
+            children: ["Tab 设置", /* @__PURE__ */ jsx(HelpInfo, {
+              iconProps: {
+                name: "Tips",
+                style: {
+                  marginLeft: 5,
+                  marginRight: 20
+                }
+              },
+              children: "勾选显示, 拖动排序"
+            }), /* @__PURE__ */ jsx(antd.Col, {
+              flex: 1
+            }), /* @__PURE__ */ jsx(antd.Popconfirm, {
+              title: "确定",
+              description: "确定不是手欠点着玩? 再点一次确定吧~",
+              onConfirm: () => {
+                updateSettings({
+                  hidingTabKeys: [],
+                  customTabKeysOrder: []
+                });
+              },
+              children: /* @__PURE__ */ jsx(antd.Button, {
+                children: "重置"
+              })
+            })]
+          }), /* @__PURE__ */ jsx(VideoSourceTabOrder, {})]
+        }), /* @__PURE__ */ jsxs("div", {
+          className: styles$1.settingsGroup,
+          children: [/* @__PURE__ */ jsx("div", {
+            className: styles$1.settingsGroupTitle,
+            children: "更多设置"
+          }), /* @__PURE__ */ jsxs("div", {
+            className: cx(styles$1.settingsGroupContent),
+            css: css`
+              display: flex;
+              flex-direction: column;
+            `,
+            children: [/* @__PURE__ */ jsxs("div", {
+              css: css`
+                order: ${sortedTabKeys.indexOf("watchlater") + 1};
+              `,
+              children: [/* @__PURE__ */ jsxs("div", {
+                className: styles$1.settingsGroupSubTitle,
+                children: [/* @__PURE__ */ jsx(TabIcon, {
+                  tabKey: ETabType.Watchlater,
+                  mr: 5,
+                  mt: -1
+                }), "稍后再看"]
+              }), /* @__PURE__ */ jsxs("div", {
+                className: styles$1.row,
+                children: [/* @__PURE__ */ jsx(FlagSettingItem, {
+                  configKey: "shuffleForWatchLater",
+                  label: "随机顺序",
+                  tooltip: "不包括近期添加的「稍后再看」"
+                }), /* @__PURE__ */ jsx(FlagSettingItem, {
+                  configKey: "addSeparatorForWatchLater",
+                  label: "添加分割线",
+                  tooltip: "添加「近期」「更早」分割线",
+                  css: css`
+                    margin-left: 20px !important;
+                  `
+                })]
+              })]
+            }), /* @__PURE__ */ jsxs("div", {
+              css: css`
+                order: ${sortedTabKeys.indexOf("fav") + 1};
+              `,
+              children: [/* @__PURE__ */ jsxs("div", {
+                className: styles$1.settingsGroupSubTitle,
+                children: [/* @__PURE__ */ jsx(TabIcon, {
+                  tabKey: ETabType.Fav,
+                  mr: 5,
+                  mt: -2
+                }), "收藏"]
+              }), /* @__PURE__ */ jsxs("div", {
+                className: styles$1.row,
+                children: [/* @__PURE__ */ jsx(FlagSettingItem, {
+                  configKey: "shuffleForFav",
+                  label: "随机顺序",
+                  tooltip: "随机收藏"
+                }), /* @__PURE__ */ jsx(FlagSettingItem, {
+                  configKey: "addSeparatorForFav",
+                  label: "添加分割线",
+                  tooltip: "顺序显示时, 按收藏夹添加分割线",
+                  css: css`
+                    margin-left: 20px !important;
+                  `
+                })]
+              })]
+            }), /* @__PURE__ */ jsxs("div", {
+              css: css`
+                order: ${sortedTabKeys.indexOf("recommend-app") + 1};
+              `,
+              children: [/* @__PURE__ */ jsxs("div", {
+                className: styles$1.settingsGroupSubTitle,
+                children: [/* @__PURE__ */ jsx(TabIcon, {
+                  tabKey: ETabType.RecommendApp,
+                  mr: 5
+                }), "App 推荐"]
+              }), /* @__PURE__ */ jsxs("div", {
+                style: {
+                  width: "100%",
+                  display: "flex",
+                  alignItems: "center"
+                },
+                children: ["App API 设备类型", /* @__PURE__ */ jsxs(HelpInfo, {
+                  iconProps: {
+                    name: "Tips",
+                    style: {
+                      marginLeft: 5,
+                      marginRight: 10
+                    }
+                  },
+                  children: ["默认 ipad, 视频有 头像/日期 等信息", /* @__PURE__ */ jsx("br", {}), "可选 android, 有图文类型的推荐"]
+                }), /* @__PURE__ */ jsx(antd.Radio.Group, {
+                  optionType: "button",
+                  buttonStyle: "solid",
+                  size: "small",
+                  options: [EAppApiDevice.ipad, EAppApiDevice.android],
+                  value: appApiDecice,
+                  onChange: (e2) => updateSettings({
+                    appApiDecice: e2.target.value
+                  })
+                })]
+              })]
+            })]
+          })]
+        })]
+      })
+    });
   }
-  var _ref4$2 = { name: "b1rfuh", styles: "display:block;line-height:unset" };
-  function VideoSourceTabOrder({ className, style }) {
+  function VideoSourceTabOrder({
+    className,
+    style
+  }) {
     const currentShowingTabKeys = useCurrentShowingTabKeys();
     const sortedTabKeys = useSortedTabKeys();
     const sensors = useSensors(useSensor(PointerSensor));
     const handleDragEnd = useMemoizedFn((e2) => {
-      const { over, active } = e2;
+      const {
+        over,
+        active
+      } = e2;
       if (!(over == null ? void 0 : over.id) || over.id === active.id)
         return;
       const oldIndex = sortedTabKeys.indexOf(active.id.toString());
       const newIndex = sortedTabKeys.indexOf(over.id.toString());
       const newList = arrayMove(sortedTabKeys, oldIndex, newIndex);
-      updateSettings({ customTabKeysOrder: newList });
+      updateSettings({
+        customTabKeysOrder: newList
+      });
     });
-    return /* @__PURE__ */ jsx("div", { ...{ className, style }, children: /* @__PURE__ */ jsx(antd.Checkbox.Group, { css: _ref4$2, value: currentShowingTabKeys, onChange: (newVal) => {
-      if (!newVal.length) {
-        return AntdMessage.error("至少选择一项!");
-      }
-      updateSettings({ hidingTabKeys: TabKeys.filter((k2) => !newVal.includes(k2)) });
-    }, children: /* @__PURE__ */ jsx(DndContext, { sensors, collisionDetection: closestCenter, onDragEnd: handleDragEnd, modifiers: [restrictToVerticalAxis, restrictToParentElement], children: /* @__PURE__ */ jsx(SortableContext, { items: sortedTabKeys, strategy: verticalListSortingStrategy, children: sortedTabKeys.map((key2) => /* @__PURE__ */ jsx(VideoSourceTabSortableItem, { id: key2 }, key2)) }) }) }) });
+    return /* @__PURE__ */ jsx("div", {
+      ...{
+        className,
+        style
+      },
+      children: /* @__PURE__ */ jsx(antd.Checkbox.Group, {
+        css: css`
+          display: block;
+          line-height: unset;
+        `,
+        value: currentShowingTabKeys,
+        onChange: (newVal) => {
+          if (!newVal.length) {
+            return AntdMessage.error("至少选择一项!");
+          }
+          updateSettings({
+            hidingTabKeys: TabKeys.filter((k2) => !newVal.includes(k2))
+          });
+        },
+        children: /* @__PURE__ */ jsx(DndContext, {
+          sensors,
+          collisionDetection: closestCenter,
+          onDragEnd: handleDragEnd,
+          modifiers: [restrictToVerticalAxis, restrictToParentElement],
+          children: /* @__PURE__ */ jsx(SortableContext, {
+            items: sortedTabKeys,
+            strategy: verticalListSortingStrategy,
+            children: sortedTabKeys.map((key2) => /* @__PURE__ */ jsx(VideoSourceTabSortableItem, {
+              id: key2
+            }, key2))
+          })
+        })
+      })
+    });
   }
-  var _ref$3 = { name: "82a6rk", styles: "flex:1" };
-  var _ref2$3 = { name: "oa9msk", styles: ".ant-checkbox+span{user-select:none;display:inline-flex;align-items:center;}" };
-  var _ref3$3 = { name: "8irbms", styles: "display:inline-flex;align-items:center" };
-  function VideoSourceTabSortableItem({ id }) {
-    const { attributes, listeners: listeners2, setNodeRef, transform, transition, setActivatorNodeRef } = useSortable({ id });
-    const style = { transform: CSS.Transform.toString(transform), transition };
-    const { label, desc, icon, iconProps } = TabConfig[id];
+  function VideoSourceTabSortableItem({
+    id
+  }) {
+    const {
+      attributes,
+      listeners: listeners2,
+      setNodeRef,
+      transform,
+      transition,
+      setActivatorNodeRef
+    } = useSortable({
+      id
+    });
+    const style = {
+      transform: CSS.Transform.toString(transform),
+      transition
+    };
+    const {
+      label,
+      desc,
+      icon,
+      iconProps
+    } = TabConfig[id];
     const dark = useIsDarkMode();
-    return /* @__PURE__ */ jsxs("div", { ref: setNodeRef, style, ...attributes, css: /* @__PURE__ */ css("display:flex;align-items:center;justify-content:flex-start;height:35px;padding-left:10px;padding-right:6px;border:1px solid ", !dark ? "#ddd" : "#444", ";border-radius:6px;margin-top:8px;", ""), children: [/* @__PURE__ */ jsx(AntdTooltip, { align: { offset: [0, -6] }, title: desc, css: _ref3$3, children: /* @__PURE__ */ jsxs(antd.Checkbox, { value: id, css: _ref2$3, children: [/* @__PURE__ */ jsx(TabIcon, { tabKey: id, mr: 5 }), label] }) }), /* @__PURE__ */ jsx("div", { css: _ref$3 }), /* @__PURE__ */ jsx("div", { ...listeners2, ref: setActivatorNodeRef, css: /* @__PURE__ */ css("cursor:grab;font-size:0;padding:3px 5px;border-radius:5px;&:hover{background-color:", !dark ? "#eee" : "#999", ";}", ""), children: /* @__PURE__ */ jsx(IconPark, { name: "Drag", size: 18 }) })] }, id);
+    return /* @__PURE__ */ jsxs("div", {
+      ref: setNodeRef,
+      style,
+      ...attributes,
+      css: css`
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        height: 35px;
+
+        padding-left: 10px;
+        padding-right: 6px;
+        border: 1px solid ${!dark ? "#ddd" : "#444"};
+        border-radius: 6px;
+        margin-top: 8px;
+      `,
+      children: [/* @__PURE__ */ jsx(AntdTooltip, {
+        align: {
+          offset: [0, -6]
+        },
+        title: desc,
+        css: css`
+          display: inline-flex;
+          align-items: center;
+        `,
+        children: /* @__PURE__ */ jsxs(antd.Checkbox, {
+          value: id,
+          css: css`
+            .ant-checkbox + span {
+              user-select: none;
+              display: inline-flex;
+              align-items: center;
+            }
+          `,
+          children: [/* @__PURE__ */ jsx(TabIcon, {
+            tabKey: id,
+            mr: 5
+          }), label]
+        })
+      }), /* @__PURE__ */ jsx("div", {
+        css: css`
+          flex: 1;
+        `
+      }), /* @__PURE__ */ jsx("div", {
+        ...listeners2,
+        ref: setActivatorNodeRef,
+        css: css`
+          cursor: grab;
+          font-size: 0;
+          padding: 3px 5px;
+          border-radius: 5px;
+          &:hover {
+            background-color: ${!dark ? "#eee" : "#999"};
+          }
+        `,
+        children: /* @__PURE__ */ jsx(IconPark, {
+          name: "Drag",
+          size: 18
+        })
+      })]
+    }, id);
   }
   const RefreshButton = React__default.forwardRef(function({
     onRefresh,
@@ -17870,7 +19210,12 @@ body.dark ._btn-refresh_14tde_29 {
       disabled: refreshing,
       className,
       style,
-      css: /* @__PURE__ */ css(flexCenterStyle, " &.ant-btn:not(:disabled):focus-visible{outline:none;}", ""),
+      css: css`
+        ${flexCenterStyle}
+        &.ant-btn:not(:disabled):focus-visible {
+          outline: none;
+        }
+      `,
       ref: btn,
       onClick,
       children: [/* @__PURE__ */ jsx("svg", {
@@ -17889,18 +19234,6 @@ body.dark ._btn-refresh_14tde_29 {
       })]
     });
   });
-  var _ref$2 = {
-    name: "q1c343",
-    styles: "transform:rotateZ(0deg)"
-  };
-  var _ref2$2 = {
-    name: "1dvos8d",
-    styles: "width:13px;height:13px;transform:rotateZ(180deg)"
-  };
-  var _ref3$2 = {
-    name: "28jp32",
-    styles: "padding:0;width:31px;height:31px;border-radius:50%;body.dark &{color:#eee!important;border-color:transparent!important;background-color:#333!important;&:hover{background-color:#555!important;}}"
-  };
   const CollapseBtn = React__default.forwardRef(function CollapseBtn2({
     children,
     initialOpen = false
@@ -17910,9 +19243,29 @@ body.dark ._btn-refresh_14tde_29 {
     const btn = /* @__PURE__ */ jsx("button", {
       onClick: buttonsExpandedActions.toggle,
       className: "primary-btn",
-      css: _ref3$2,
+      css: css`
+        padding: 0;
+        width: 31px;
+        height: 31px;
+        border-radius: 50%;
+
+        body.dark & {
+          color: #eee !important;
+          border-color: transparent !important;
+          background-color: #333 !important;
+          &:hover {
+            background-color: #555 !important;
+          }
+        }
+      `,
       children: /* @__PURE__ */ jsx("svg", {
-        css: [_ref2$2, buttonsExpanded && _ref$2, "", ""],
+        css: [css`
+            width: 13px;
+            height: 13px;
+            transform: rotateZ(180deg);
+          `, buttonsExpanded && css`
+              transform: rotateZ(0deg);
+            `, "", ""],
         children: /* @__PURE__ */ jsx("use", {
           href: "#widget-arrow"
         })
@@ -17937,22 +19290,6 @@ body.dark ._btn-refresh_14tde_29 {
     modalHeader,
     modalBody,
     btnRefresh
-  };
-  var _ref2$1 = {
-    name: "1q4vxyr",
-    styles: "margin-left:8px"
-  };
-  var _ref3$1 = {
-    name: "za0kxg",
-    styles: "display:flex;align-items:center;flex-shrink:0"
-  };
-  var _ref4$1 = {
-    name: "1q3pkqi",
-    styles: "flex-shrink:1;display:flex;align-content:center;flex-wrap:wrap;row-gap:4px;column-gap:15px"
-  };
-  var _ref5$1 = {
-    name: "15gpyv7",
-    styles: "display:flex;align-items:center;justify-content:space-between;column-gap:20px"
   };
   const ModalFeed = React__default.memo(function ModalFeed2({
     show,
@@ -18008,21 +19345,39 @@ body.dark ._btn-refresh_14tde_29 {
         value: onRefresh,
         children: [/* @__PURE__ */ jsxs("div", {
           className: cx(BaseModalClass.modalHeader, styles.modalHeader),
-          css: _ref5$1,
+          css: css`
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            column-gap: 20px;
+          `,
           children: [/* @__PURE__ */ jsxs("div", {
             className: "left",
-            css: _ref4$1,
+            css: css`
+              flex-shrink: 1;
+              display: flex;
+              align-content: center;
+              flex-wrap: wrap;
+              row-gap: 4px;
+              column-gap: 15px;
+            `,
             children: [/* @__PURE__ */ jsx(VideoSourceTab, {
               onRefresh
             }), extraInfo]
           }), /* @__PURE__ */ jsxs("div", {
             className: "right",
-            css: _ref3$1,
+            css: css`
+              display: flex;
+              align-items: center;
+              flex-shrink: 0;
+            `,
             children: [useNarrowMode ? null : useFullScreen ? /* @__PURE__ */ jsx(ModalFeedConfigChecks, {}) : /* @__PURE__ */ jsx(CollapseBtn, {
               initialOpen: true,
               children: /* @__PURE__ */ jsx(ModalFeedConfigChecks, {})
             }), /* @__PURE__ */ jsx(RefreshButton, {
-              css: _ref2$1,
+              css: css`
+                margin-left: 8px;
+              `,
               refreshing,
               onRefresh,
               className: styles.btnRefresh,
@@ -18047,12 +19402,10 @@ body.dark ._btn-refresh_14tde_29 {
       })
     });
   });
-  var _ref$1 = {
-    name: "1qkltea",
-    styles: "margin-left:5px"
-  };
   function ModalFeedConfigChecks() {
-    const inModalFeedStyle = _ref$1;
+    const inModalFeedStyle = css`
+    margin-left: 5px;
+  `;
     return /* @__PURE__ */ jsxs(Fragment, {
       children: [/* @__PURE__ */ jsx(FlagSettingItem, {
         configKey: "showModalFeedOnLoad",
@@ -18093,31 +19446,19 @@ body.dark ._btn-refresh_14tde_29 {
   };
   const debug$2 = baseDebug.extend("RecHeader");
   const configStyles = {
-    btn: /* @__PURE__ */ css("padding:0;width:32px;height:32px;border-radius:50%;", flexCenterStyle, ";", ""),
-    icon: {
-      name: "1k4rqoq",
-      styles: "svg{width:14px;height:14px;}"
+    btn: css`
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    ${flexCenterStyle}
+  `,
+    icon: css`
+    svg {
+      width: 14px;
+      height: 14px;
     }
-  };
-  var _ref = {
-    name: "1fkic3w",
-    styles: "width:12px;height:12px;margin-left:2px"
-  };
-  var _ref2 = {
-    name: "ozd7xs",
-    styles: "flex-shrink:0"
-  };
-  var _ref3 = {
-    name: "1tgm8b3",
-    styles: "flex-shrink:1;flex-wrap:wrap;row-gap:4px;column-gap:15px"
-  };
-  var _ref4 = {
-    name: "mttdwy",
-    styles: "margin-bottom:0;padding:8px 0;height:auto;column-gap:20px"
-  };
-  var _ref5 = {
-    name: "roea7p",
-    styles: "height:100%;display:flex;flex-direction:row;align-items:center"
+  `
   };
   const RecHeader = React__default.forwardRef(function RecHeader2({
     onRefresh,
@@ -18164,17 +19505,42 @@ body.dark ._btn-refresh_14tde_29 {
     }));
     const headerHeight = useHeaderHeight();
     const isInternalTesting = getIsInternalTesting();
-    const S_leftright = _ref5;
+    const S_leftright = css`
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  `;
     return /* @__PURE__ */ jsx(Fragment, {
       children: /* @__PURE__ */ jsxs(OnRefreshContext.Provider, {
         value: onRefresh,
         children: [/* @__PURE__ */ jsxs("div", {
           ref: stickyRef,
           className: "area-header",
-          css: [_ref4, pureRecommend && styleUseStickyTabbarInPureRecommend && /* @__PURE__ */ css("position:sticky;top:", headerHeight - 1, "px;z-index:1000;", ""), pureRecommend && styleUseStickyTabbarInPureRecommend && sticky && /* @__PURE__ */ css("background-color:var(--", styleFancy ? "bg2" : "bg1", "_float);box-shadow:0 2px 4px rgb(0 0 0 / 8%);", ""), "", ""],
+          css: [css`
+              margin-bottom: 0;
+              padding: 8px 0;
+              height: auto;
+              column-gap: 20px; // gap between left & right
+            `, pureRecommend && styleUseStickyTabbarInPureRecommend && css`
+                position: sticky;
+                top: ${headerHeight - 1}px; // 有缝隙, 故 -1 px
+                z-index: 1000;
+              `, pureRecommend && styleUseStickyTabbarInPureRecommend && sticky && css`
+                background-color: var(--${styleFancy ? "bg2" : "bg1"}_float);
+                box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
+              `, "", ""],
           children: [/* @__PURE__ */ jsxs("div", {
             "data-class-name": "left",
-            css: [S_leftright, _ref3, "", ""],
+            css: [S_leftright, css`
+                /* as item */
+                flex-shrink: 1;
+
+                /* as container */
+                flex-wrap: wrap;
+                row-gap: 4px;
+                column-gap: 15px;
+              `, "", ""],
             children: [!pureRecommend && !isInternalTesting && /* @__PURE__ */ jsx("svg", {
               className: "icon",
               children: /* @__PURE__ */ jsx("use", {
@@ -18185,7 +19551,9 @@ body.dark ._btn-refresh_14tde_29 {
             }), leftSlot]
           }), /* @__PURE__ */ jsx("div", {
             "data-class-name": "right",
-            css: [S_leftright, _ref2, "", ""],
+            css: [S_leftright, css`
+                flex-shrink: 0;
+              `, "", ""],
             children: /* @__PURE__ */ jsxs(antd.Space, {
               size: "small",
               children: [rightSlot, !accessKey && /* @__PURE__ */ jsx(AccessKeyManage, {
@@ -18210,7 +19578,11 @@ body.dark ._btn-refresh_14tde_29 {
                   css: antdBtnTextStyle,
                   children: "查看更多"
                 }), /* @__PURE__ */ jsx("svg", {
-                  css: _ref,
+                  css: css`
+                      width: 12px;
+                      height: 12px;
+                      margin-left: 2px;
+                    `,
                   children: /* @__PURE__ */ jsx("use", {
                     href: "#widget-arrow"
                   })
@@ -18229,7 +19601,11 @@ body.dark ._btn-refresh_14tde_29 {
     });
   });
   const narrowStyle = {
-    grid: /* @__PURE__ */ css("width:", 360 * 2 + 20, "px;margin:0 auto;", "")
+    grid: css`
+    /* card=360 col-gap=16  */
+    width: ${360 * 2 + 20}px;
+    margin: 0 auto;
+  `
   };
   function PureRecommend() {
     const {

@@ -1,9 +1,27 @@
 # Changelog
 
+## v0.20.6
+
+- 稍后再看: B站稍后再看容量升级成1000, 这里移除原来你 100 的视觉限制
+
+details
+
+- f91a431 feat(watchlater): remove visual limits 100 of watchlater
+- 724826a chore: fix typo
+- 200fd6c deps: ncu
+- db32ee0 feat: refresh for fav & watchlater after related settings change
+- 7da2486 refactor: add BilibiliArticleDraft class
+- 3be4271 chore: update AutoImport config
+- 46b99ce feat: use AutoImport to reduce common imports
+- e562d33 chore: investigate orderBy
+- bdcdb5a chore: add demo img link in changelog
+
 ## v0.20.5
 
 - 动态支持搜索
 - 其他不值一提的变更
+
+![image](https://github.com/magicdawn/bilibili-app-recommend/assets/4067115/f506ddee-b59f-4918-a275-67d01f2e8fd0)
 
 ## v0.20.4
 
