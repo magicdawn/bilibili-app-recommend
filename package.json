@@ -47,7 +47,7 @@
     "esm-utils": "^4.2.1",
     "globals": "^14.0.0",
     "husky": "^8.0.3",
-    "knip": "^5.1.1",
+    "knip": "^5.1.2",
     "lint-staged": "^15.2.2",
     "open": "^10.1.0",
     "postcss-media-minmax": "^5.0.0",

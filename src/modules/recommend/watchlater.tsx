@@ -114,7 +114,7 @@ export class WatchLaterRecService implements IService {
     // this.items = items.slice(0, 10)
     // this.count = this.items.length
 
-    this.count = json.data.count
+    this.count = (json?.data?.list || []).length
 
     // save for next keepOrder=true
     WatchLaterRecService.LAST_BVID_ARR = itemsWithSeparator
@@ -153,9 +153,12 @@ export class WatchLaterRecService implements IService {
 }
 
 function WatchLaterUsageInfo({ count }: { count: number }) {
-  const color: ComponentProps<typeof Tag>['color'] =
-    count <= 90 ? 'success' : count < 100 ? 'warning' : 'error'
-  const title = `${color !== 'success' ? '快满了~ ' : ''}已使用 ${count} / 100`
+  // 2023.12: B站的稍后再看上限提升到1000了
+  // 所有这里就不管数量喽
+
+  type TagColor = ComponentProps<typeof Tag>['color']
+  const color: TagColor = 'success'
+  const title = `共 ${count} 个视频`
 
   const { shuffleForWatchLater, addSeparatorForWatchLater } = useSettingsSnapshot()
   const onRefresh = useOnRefreshContext()
@@ -182,7 +185,7 @@ function WatchLaterUsageInfo({ count }: { count: number }) {
           toast(`稍后再看: ${title}`)
         }}
       >
-        {count} / 100
+        {count}
       </Tag>
 
       <Switch
