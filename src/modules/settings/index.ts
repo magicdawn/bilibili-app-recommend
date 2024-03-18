@@ -19,7 +19,7 @@ export const initialSettings = {
 
   // 全屏模式
   // @history
-  //  - 2024-03-18 bili-feed4 以前的内测首页称为默认, 这里更名为全屏模式, 默认为 true
+  //  - 2024-03-18 bili-feed4 以前的内测首页现在是默认首页, 这里更名为全屏模式, 默认为 true
   pureRecommend: true,
 
   /**
