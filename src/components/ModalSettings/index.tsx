@@ -280,7 +280,7 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                       <div className={styles.row} style={{ marginTop: 5 }}>
                         <FlagSettingItem
                           configKey='styleUseStickyTabbarInPureRecommend'
-                          label='纯推荐模式: sticky tab bar'
+                          label='全屏模式: sticky tab bar'
                           tooltip={
                             <>
                               默认勾选: Tab 栏会吸附在顶栏下方
@@ -358,12 +358,14 @@ function TabPaneBasic() {
         <div className={cx(styles.settingsGroupContent, styles.row)}>
           <FlagSettingItem
             configKey='pureRecommend'
-            label='纯推荐模式'
+            label='全屏模式'
             tooltip={
               <>
-                首页只保留推荐
+                清空自带推荐内容, 只显示脚本推荐
                 <br />
                 P.S 需要刷新网页~
+                <br />
+                P.S 之前版本称 (纯推荐模式)
               </>
             }
             className={styles.check}

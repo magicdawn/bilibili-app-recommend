@@ -17,8 +17,10 @@ export const initialSettings = {
   // 窄屏模式
   useNarrowMode: false,
 
-  // 纯推荐模式
-  pureRecommend: false,
+  // 全屏模式
+  // @history
+  //  - 2024-03-18 bili-feed4 以前的内测首页称为默认, 这里更名为全屏模式, 默认为 true
+  pureRecommend: true,
 
   /**
    * app recommend
