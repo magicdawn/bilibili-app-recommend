@@ -8,7 +8,7 @@ import { createRoot } from 'react-dom/client'
 import { PureRecommend } from '../components/PureRecommend'
 import { SectionRecommend } from '../components/SectionRecommend'
 import { settings } from '../modules/settings'
-import { getIsInternalTesting, isSafari } from '../platform'
+import { isSafari } from '../platform'
 
 // in this entry, if no insert point found, render to document body
 const isHashEntry = (location.hash || '').startsWith(`#/${APP_NAME}/`)
@@ -48,10 +48,11 @@ export async function initHomepage() {
   }
 
   if (settings.pureRecommend) {
-    return initHomepagePureRecommend()
+    await initHomepagePureRecommend()
   } else {
-    return initHomepageSection()
+    await initHomepageSection()
   }
+  tryDetectBewlyBewly()
 }
 
 async function initHomepageSection() {
@@ -59,20 +60,12 @@ async function initHomepageSection() {
   const timeoutAt = Date.now() + timeout
 
   let insert: ((reactNode: HTMLElement) => void) | undefined
-
   while (Date.now() <= timeoutAt) {
-    if (document.querySelector('.bili-layout > section.bili-grid')) {
-      const previousElement = document.querySelector('.bili-layout > section.bili-grid')
-      insert = (reactNode) => previousElement?.insertAdjacentElement('afterend', reactNode)
-      break
-    }
-
-    if (getIsInternalTesting() && document.querySelector('.bili-feed4-layout')) {
+    if (document.querySelector('.bili-feed4-layout')) {
       insert = (reactNode) =>
         document.querySelector('.bili-feed4-layout')?.insertAdjacentElement('afterbegin', reactNode)
       break
     }
-
     await delay(200)
   }
 
@@ -96,59 +89,28 @@ async function initHomepageSection() {
 
   // header
   // https://github.com/magicdawn/bilibili-app-recommend/issues/30
-  // 内测模式 + SectionRecommend, 这个 header channel fixed 样式有问题
+  // SectionRecommend: 这个 header channel fixed 样式有问题
   // 尝试修复太复杂了, 这里直接移除. 其功能有替代: 滚动到首页顶部查看分区
-  if (getIsInternalTesting()) {
-    tryToRemove('.bili-feed4 .header-channel')
-  }
-
-  tryDetectBewlyBewly()
+  tryToRemove('.bili-feed4 .header-channel')
 }
 
 async function initHomepagePureRecommend() {
   // let bilibili default content run
   if (isSafari) await delay(500)
 
+  // main content
+  tryToRemove('#i_cecream .bili-feed4-layout')
+  tryToRemove('.bili-feed4 .header-channel')
+  // 右侧浮动按钮
+  tryToRemove('.palette-button-wrap')
+
   // antd 回到顶部
-  let renderBackTop = false
-
-  // 旧版 v1, 不做支持
-  // 新版 v2,
-  // 内测 v3,
-  // 内测 bili-feed4
-  if (getIsInternalTesting()) {
-    tryToRemove('#i_cecream .bili-feed4-layout') // main
-    tryToRemove('.bili-feed4 .header-channel')
-    // 右侧浮动按钮
-    tryToRemove('.palette-button-wrap')
-    renderBackTop = true
-  }
-
-  // 新版首页(v2)
-  else {
-    document.querySelector('.bili-layout')?.remove()
-    tryToRemove('.bili-footer') // build 版本, .bili-footer 还不存在, 后来出来的
-
-    // rm 分区按钮, 显示其他按钮
-    tryToRemove(
-      '.palette-button-wrap > .primary-btn',
-      (el) => el.innerText.includes('分区'),
-      2000,
-    ).then(() => {
-      document.querySelectorAll('.palette-button-wrap .primary-btn').forEach((el) => {
-        el.classList.remove('hidden')
-        if (el.classList.contains('top-btn')) el.classList.remove('top-btn')
-      })
-    })
-  }
-
-  const insertFn = (reactContainer: HTMLElement) => document.body.appendChild(reactContainer)
+  const renderBackTop = true
 
   const biliLayout = document.createElement('div')
-  biliLayout.classList.add(
-    getIsInternalTesting() ? 'bili-feed4-layout' : 'bili-layout',
-    'pure-recommend',
-  )
+  biliLayout.classList.add('bili-feed4-layout', 'pure-recommend')
+
+  const insertFn = (reactContainer: HTMLElement) => document.body.appendChild(reactContainer)
   insertFn(biliLayout)
 
   const reactContainer = document.createElement('section')
@@ -170,6 +132,4 @@ async function initHomepagePureRecommend() {
       )}
     </AntdApp>,
   )
-
-  tryDetectBewlyBewly()
 }

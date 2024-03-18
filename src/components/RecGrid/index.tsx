@@ -18,7 +18,7 @@ import { IconPark } from '$icon-park'
 import { cx, styled } from '$libs'
 import { getRecommendTimes, refreshForGrid, uniqConcat } from '$modules/recommend'
 import { useSettingsSnapshot } from '$modules/settings'
-import { getIsInternalTesting, isSafari } from '$platform'
+import { isSafari } from '$platform'
 import { AntdMessage } from '$utility'
 import { useEventListener, useLatest } from 'ahooks'
 import { Divider } from 'antd'
@@ -29,10 +29,9 @@ import { useInView } from 'react-intersection-observer'
 import {
   narrowMode,
   videoGrid,
+  videoGridBiliFeed4,
   videoGridContainer,
   videoGridFancy,
-  videoGridInternalTesting,
-  videoGridNewHomepage,
 } from '../video-grid.module.scss'
 import type { OnRefresh } from './useRefresh'
 import { getIService, useRefresh } from './useRefresh'
@@ -336,8 +335,6 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
       : undefined,
   })
 
-  const isInternalTesting = getIsInternalTesting()
-
   /**
    * card state change
    */
@@ -429,13 +426,9 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
   const gridClassName = cx(
     `${APP_NAME}-video-grid`, // for customize css
     videoGrid,
-
     styleFancy
       ? videoGridFancy // 大卡片
-      : isInternalTesting
-        ? videoGridInternalTesting // 内测
-        : videoGridNewHomepage, // default
-
+      : videoGridBiliFeed4,
     useNarrowMode && narrowMode, // 居中
     className,
   )

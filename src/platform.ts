@@ -1,15 +1,5 @@
-import { once } from 'lodash'
 import UAParser from 'ua-parser-js'
 import { proxy, useSnapshot } from 'valtio'
-
-/**
- * 是否是内测页面
- */
-
-// document.querySelector<HTMLButtonElement>('button.go-back')?.innerText.trim() === '退出内测'
-export const getIsInternalTesting = once(() => {
-  return !!document.querySelectorAll('.bili-feed4').length
-})
 
 /**
  * BILIBILI-Evolved dark mode

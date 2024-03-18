@@ -13,33 +13,12 @@
   grid-template-columns: repeat(var(--col), minmax(0, 1fr));
 }
 
-@mixin homepage-new-mixin($col) {
-  .video-grid-new-homepage {
-    --col: #{$col};
-    &.limit-two-lines > *:nth-of-type(1n + #{$col * 2 + 1}) {
-      display: none !important;
-    }
-  }
-}
-@media (width <= 1099.9px) {
-  @include homepage-new-mixin(4);
-}
-@media (1100px <= width <= 1700.9px) {
-  @include homepage-new-mixin(5);
-}
-@media (1701px <= width <= 2199.9px) {
-  @include homepage-new-mixin(6);
-}
-@media (width >= 2200px) {
-  @include homepage-new-mixin(7);
-}
-
 /**
- * 内测首页
+ * bili-feed4
  * 取自 .battle-feed-area .battle-feed-body
  */
 
-.video-grid-internal-testing {
+.video-grid-bili-feed4 {
   // grid-gap: 60px 20px; // original
   grid-gap: 20px 20px;
 
@@ -54,8 +33,8 @@
   }
 }
 
-@mixin homepage-internal-testing-mixin($col) {
-  .video-grid-internal-testing {
+@mixin homepage-bili-feed4-mixin($col) {
+  .video-grid-bili-feed4 {
     --col: #{$col};
     &.limit-one-line > *:nth-of-type(1n + #{$col + 1}) {
       display: none !important;
@@ -66,10 +45,10 @@
   }
 }
 @media (width < 1400px) {
-  @include homepage-internal-testing-mixin(4);
+  @include homepage-bili-feed4-mixin(4);
 }
 @media (width >= 1400px) {
-  @include homepage-internal-testing-mixin(5);
+  @include homepage-bili-feed4-mixin(5);
 }
 
 /**

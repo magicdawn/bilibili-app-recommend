@@ -1,16 +1,10 @@
 import { baseDebug } from '$common'
 import { useRefresh } from '$components/RecGrid/useRefresh'
 import { useCurrentSourceTab } from '$components/RecHeader/tab'
-import {
-  limitTwoLines,
-  videoGrid,
-  videoGridInternalTesting,
-  videoGridNewHomepage,
-} from '$components/video-grid.module.scss'
+import { limitTwoLines, videoGrid, videoGridBiliFeed4 } from '$components/video-grid.module.scss'
 import { EApiType } from '$define/index.shared'
 import { cx } from '$libs'
 import { refreshForHome } from '$modules/recommend'
-import { getIsInternalTesting } from '$platform'
 import { RecHeader } from '../RecHeader'
 import { VideoCard } from '../VideoCard'
 
@@ -21,8 +15,6 @@ export function SectionRecommend() {
     () => new Array(20).fill(0).map(() => crypto.randomUUID()),
     [],
   )
-
-  const isInternalTesting = getIsInternalTesting()
 
   const tab = useCurrentSourceTab()
   const {
@@ -45,12 +37,8 @@ export function SectionRecommend() {
     <section data-area='推荐'>
       <RecHeader refreshing={refreshing} onRefresh={refresh} />
       <div
-        className={cx(
-          videoGrid,
-          limitTwoLines,
-          isInternalTesting ? videoGridInternalTesting : videoGridNewHomepage,
-        )}
-        style={{ marginBottom: isInternalTesting ? 30 : 0 }}
+        className={cx(videoGrid, limitTwoLines, videoGridBiliFeed4)}
+        style={{ marginBottom: 30 }}
       >
         {showSkeleton
           ? skeletonPlaceholders.map((id) => <VideoCard key={id} />)

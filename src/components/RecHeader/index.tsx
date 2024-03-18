@@ -8,7 +8,6 @@ import { OnRefreshContext } from '$components/RecGrid/useRefresh'
 import { getHeaderHeight, useHeaderHeight } from '$header'
 import { IconPark } from '$icon-park'
 import { useSettingsSnapshot } from '$modules/settings'
-import { getIsInternalTesting } from '$platform'
 import { shouldDisableShortcut } from '$utility/dom'
 import { Button, Space } from 'antd'
 import { AccessKeyManage } from '../AccessKeyManage'
@@ -97,8 +96,6 @@ export const RecHeader = forwardRef<
 
   const headerHeight = useHeaderHeight()
 
-  const isInternalTesting = getIsInternalTesting()
-
   const S_leftright = css`
     height: 100%;
     display: flex;
@@ -150,13 +147,6 @@ export const RecHeader = forwardRef<
               `,
             ]}
           >
-            {/* section logo: 推荐 logo, 魔法棒 */}
-            {!pureRecommend && !isInternalTesting && (
-              <svg className='icon'>
-                <use href='#channel-cinephile'></use>
-              </svg>
-            )}
-
             <VideoSourceTab onRefresh={onRefresh} />
             {leftSlot}
           </div>
