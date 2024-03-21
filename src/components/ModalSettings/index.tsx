@@ -118,7 +118,7 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
   useHotkeyForConfig(['shift.p'], 'autoPreviewWhenKeyboardSelect', '键盘选中后自动开始预览')
   useHotkeyForConfig(['shift.m'], 'autoPreviewWhenHover', '鼠标悬浮后自动开始预览')
   useHotkeyForConfig(['shift.c'], 'useNarrowMode', '居中模式')
-  useHotkeyForConfig(['shift.y'], 'styleFancy', 'Fancy Style')
+  useHotkeyForConfig(['shift.y'], 'styleFancy', '新卡片样式')
 
   const { tab } = useSnapshot(modalSettingsStore)
 
@@ -258,7 +258,7 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                       <div className={styles.row}>
                         <FlagSettingItem
                           configKey='styleFancy'
-                          label='Fancy Style'
+                          label='新卡片样式'
                           tooltip={
                             <>
                               增加卡片大小, 增大卡片间距

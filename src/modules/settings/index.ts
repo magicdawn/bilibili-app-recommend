@@ -113,7 +113,7 @@ export const initialSettings = {
    */
 
   // 自用新样式
-  styleFancy: false,
+  styleFancy: true,
 
   // video-source-tab 高度, 默认 compact
   styleUseStandardVideoSourceTab: false,

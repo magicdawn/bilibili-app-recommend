@@ -4,6 +4,7 @@
 
 - 之前内测首页现在是默认首页, 去掉分区首页的支持 see [#71](https://github.com/magicdawn/bilibili-app-recommend/discussions/71)
 - rename 纯推荐模式 -> 全屏模式, 并默认启用
+- rename styleFancy -> 新卡片样式, 并默认启用
 
 details
 
