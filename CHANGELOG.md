@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.21.0
+
+- 之前内测首页现在是默认首页, 去掉分区首页的支持 see [#71](https://github.com/magicdawn/bilibili-app-recommend/discussions/71)
+- rename 纯推荐模式 -> 全屏模式, 并默认启用
+
+details
+
+- c0ad478 chore: figure out why can not auto fullscreen
+- dfa99e8 doc: update readme
+- af622dc chore: fix typo
+- cf0a890 feat: rename 纯推荐模式 -> 全屏模式, 并默认启用
+- 405cf26 feat: elminate internal-testing
+- 912affb chore: ignore auto-imports dts file
+
 ## v0.20.6
 
 - 稍后再看: B站稍后再看容量升级成1000, 这里移除原来 100 的视觉限制
