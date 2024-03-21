@@ -46,7 +46,7 @@
 
 ### B 站首页版本
 
-支持新版首页和内测首页. 旧版首页请看这里 https://github.com/indefined/UserScripts/tree/master/bilibiliHome
+支持当前最新首页(bili-feed4). 旧版首页请看这里 https://github.com/indefined/UserScripts/tree/master/bilibiliHome
 
 ### 支持的 浏览器 & 脚本管理器 环境
 
@@ -62,7 +62,7 @@
 
 ### 与 [BewlyBewly](https://github.com/hakadao/BewlyBewly) 的兼容性
 
-- 启用 Extension 后, 在 https://www.bilibili.com/ 页面上, 本脚本检测到该 Extension 会自动退出.
+- ❌ 不兼容, 检测到 BewlyBewly 后, 本脚本会自动退出.
 - 使用特殊的地址强制启用本脚本 https://www.bilibili.com/#/bilibili-app-recommend/
 
 ### 你可能不需要这个脚本 :)

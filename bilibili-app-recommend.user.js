@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bilibili-app-recommend
 // @namespace    https://magicdawn.fun
-// @version      0.20.6
+// @version      0.21.0
 // @author       magicdawn
 // @description  为 B 站首页添加像 App 一样的推荐
 // @license      MIT
@@ -21,7 +21,7 @@
 // @require      https://registry.npmmirror.com/react/18.2.0/files/umd/react.production.min.js
 // @require      https://registry.npmmirror.com/react-dom/18.2.0/files/umd/react-dom.production.min.js
 // @require      https://registry.npmmirror.com/ua-parser-js/1.0.37/files/dist/ua-parser.min.js
-// @require      https://registry.npmmirror.com/framer-motion/11.0.14/files/dist/framer-motion.js
+// @require      https://registry.npmmirror.com/framer-motion/11.0.18/files/dist/framer-motion.js
 // @require      https://registry.npmmirror.com/lodash/4.17.21/files/lodash.min.js
 // @require      https://registry.npmmirror.com/dayjs/1.11.10/files/dayjs.min.js
 // @require      https://registry.npmmirror.com/dayjs/1.11.10/files/plugin/duration.js
@@ -365,7 +365,7 @@ body.dark .bili-video-card__skeleton--avatar {
  * \u4F7F\u7528\u7684\u662F .video-card-body \u7684\u6837\u5F0F
  * \u5728B\u7AD9\u81EA\u5DF1\u7684\u9996\u9875\u4E2D, .bili-grid > 2200px \u662F\u5206 7 \u5217, .video-card-body > 2200px \u52066\u5217
  */
-._video-grid_wfxpc_7 {
+._video-grid_1hcyr_7 {
   --video-card-border-radius: 6px;
   display: grid;
   position: relative;
@@ -374,125 +374,93 @@ body.dark .bili-video-card__skeleton--avatar {
   grid-template-columns: repeat(var(--col), minmax(0, 1fr));
 }
 
-@media (max-width: 1099.9px) {
-  ._video-grid-new-homepage_wfxpc_17 {
-    --col: 4;
-  }
-  ._video-grid-new-homepage_wfxpc_17._limit-two-lines_wfxpc_20 > *:nth-of-type(1n + 9) {
-    display: none !important;
-  }
-}
-@media (min-width: 1100px) and (max-width: 1700.9px) {
-  ._video-grid-new-homepage_wfxpc_17 {
-    --col: 5;
-  }
-  ._video-grid-new-homepage_wfxpc_17._limit-two-lines_wfxpc_20 > *:nth-of-type(1n + 11) {
-    display: none !important;
-  }
-}
-@media (min-width: 1701px) and (max-width: 2199.9px) {
-  ._video-grid-new-homepage_wfxpc_17 {
-    --col: 6;
-  }
-  ._video-grid-new-homepage_wfxpc_17._limit-two-lines_wfxpc_20 > *:nth-of-type(1n + 13) {
-    display: none !important;
-  }
-}
-@media (min-width: 2200px) {
-  ._video-grid-new-homepage_wfxpc_17 {
-    --col: 7;
-  }
-  ._video-grid-new-homepage_wfxpc_17._limit-two-lines_wfxpc_20 > *:nth-of-type(1n + 15) {
-    display: none !important;
-  }
-}
 /**
- * \u5185\u6D4B\u9996\u9875
+ * bili-feed4
  * \u53D6\u81EA .battle-feed-area .battle-feed-body
  */
-._video-grid-internal-testing_wfxpc_52 {
+._video-grid-bili-feed4_1hcyr_20 {
   grid-gap: 20px 20px;
 }
-._video-grid-internal-testing_wfxpc_52 .ant-divider-horizontal.ant-divider-with-text {
+._video-grid-bili-feed4_1hcyr_20 .ant-divider-horizontal.ant-divider-with-text {
   margin-bottom: -15px;
   margin-top: -15px;
 }
-._video-grid-internal-testing_wfxpc_52 .ant-divider-horizontal.ant-divider-with-text:first-of-type {
+._video-grid-bili-feed4_1hcyr_20 .ant-divider-horizontal.ant-divider-with-text:first-of-type {
   margin-top: 0;
 }
 
 @media (max-width: 1399px) {
-  ._video-grid-internal-testing_wfxpc_52 {
+  ._video-grid-bili-feed4_1hcyr_20 {
     --col: 4;
   }
-  ._video-grid-internal-testing_wfxpc_52._limit-one-line_wfxpc_67 > *:nth-of-type(1n + 5) {
+  ._video-grid-bili-feed4_1hcyr_20._limit-one-line_1hcyr_35 > *:nth-of-type(1n + 5) {
     display: none !important;
   }
-  ._video-grid-internal-testing_wfxpc_52._limit-two-lines_wfxpc_20 > *:nth-of-type(1n + 9) {
+  ._video-grid-bili-feed4_1hcyr_20._limit-two-lines_1hcyr_38 > *:nth-of-type(1n + 9) {
     display: none !important;
   }
 }
 @media (min-width: 1400px) {
-  ._video-grid-internal-testing_wfxpc_52 {
+  ._video-grid-bili-feed4_1hcyr_20 {
     --col: 5;
   }
-  ._video-grid-internal-testing_wfxpc_52._limit-one-line_wfxpc_67 > *:nth-of-type(1n + 6) {
+  ._video-grid-bili-feed4_1hcyr_20._limit-one-line_1hcyr_35 > *:nth-of-type(1n + 6) {
     display: none !important;
   }
-  ._video-grid-internal-testing_wfxpc_52._limit-two-lines_wfxpc_20 > *:nth-of-type(1n + 11) {
+  ._video-grid-bili-feed4_1hcyr_20._limit-two-lines_1hcyr_38 > *:nth-of-type(1n + 11) {
     display: none !important;
   }
 }
 /**
  * youtube like
  */
-._video-grid-container_wfxpc_88 {
+._video-grid-container_1hcyr_56 {
   container-name: video-grid-container;
   container-type: inline-size;
 }
 
-._video-grid-fancy_wfxpc_93 {
+._video-grid-fancy_1hcyr_61 {
   --video-card-border-radius: 15px;
   --col: 2;
   column-gap: 20px;
   row-gap: 0;
   --row-gap: clamp(20px, 1.6vw, 40px);
 }
-._video-grid-fancy_wfxpc_93 .bili-video-card {
+._video-grid-fancy_1hcyr_61 .bili-video-card {
   margin-bottom: var(--row-gap);
 }
-._video-grid-fancy_wfxpc_93 .ant-divider-horizontal.ant-divider-with-text {
+._video-grid-fancy_1hcyr_61 .ant-divider-horizontal.ant-divider-with-text {
   margin-bottom: 5px;
   margin-top: calc(10px - var(--row-gap));
 }
-._video-grid-fancy_wfxpc_93 .ant-divider-horizontal.ant-divider-with-text:first-of-type {
+._video-grid-fancy_1hcyr_61 .ant-divider-horizontal.ant-divider-with-text:first-of-type {
   margin-top: 0;
 }
 
 @container video-grid-container (width >= 520px) {
-  ._video-grid_wfxpc_7._video-grid-fancy_wfxpc_93 {
+  ._video-grid_1hcyr_7._video-grid-fancy_1hcyr_61 {
     --col: 2;
   }
 }
 @container video-grid-container (width >= 790px) {
-  ._video-grid_wfxpc_7._video-grid-fancy_wfxpc_93 {
+  ._video-grid_1hcyr_7._video-grid-fancy_1hcyr_61 {
     --col: 3;
   }
 }
 @container video-grid-container (width >= 1060px) {
-  ._video-grid_wfxpc_7._video-grid-fancy_wfxpc_93 {
+  ._video-grid_1hcyr_7._video-grid-fancy_1hcyr_61 {
     --col: 4;
   }
 }
 @container video-grid-container (width >= 1330px) {
-  ._video-grid_wfxpc_7._video-grid-fancy_wfxpc_93 {
+  ._video-grid_1hcyr_7._video-grid-fancy_1hcyr_61 {
     --col: 5;
   }
 }
 /**
  * \u53CC\u5217\u6A21\u5F0F
  */
-._narrow-mode_wfxpc_134 {
+._narrow-mode_1hcyr_102 {
   --col: 2 !important;
 }._config-icon_1th8l_1 {
   line-height: 1;
@@ -2906,7 +2874,7 @@ body.dark ._btn-refresh_14tde_29 {
   var TYPE_STATICS = {};
   TYPE_STATICS[reactIs.ForwardRef] = FORWARD_REF_STATICS;
   TYPE_STATICS[reactIs.Memo] = MEMO_STATICS;
-  var isBrowser$2 = true;
+  var isBrowser$1 = true;
   function getRegisteredStyles(registered, registeredStyles, classNames) {
     var rawClassName = "";
     classNames.split(" ").forEach(function(className) {
@@ -2930,7 +2898,7 @@ body.dark ._btn-refresh_14tde_29 {
       // in node since emotion-server relies on whether a style is in
       // the registered cache to know whether a style is global or not
       // also, note that this check will be dead code eliminated in the browser
-      isBrowser$2 === false) && cache2.registered[className] === void 0
+      isBrowser$1 === false) && cache2.registered[className] === void 0
     ) {
       cache2.registered[className] = serialized.styles;
     }
@@ -4055,8 +4023,10 @@ body.dark ._btn-refresh_14tde_29 {
     accessKeyExpireAt: 0,
     // 窄屏模式
     useNarrowMode: false,
-    // 纯推荐模式
-    pureRecommend: false,
+    // 全屏模式
+    // @history
+    //  - 2024-03-18 bili-feed4 以前的内测首页现在是默认首页, 这里更名为全屏模式, 默认为 true
+    pureRecommend: true,
     /**
      * app recommend
      */
@@ -4134,7 +4104,7 @@ body.dark ._btn-refresh_14tde_29 {
      * 外观
      */
     // 自用新样式
-    styleFancy: false,
+    styleFancy: true,
     // video-source-tab 高度, 默认 compact
     styleUseStandardVideoSourceTab: false,
     // sticky tabbar
@@ -4202,9 +4172,6 @@ body.dark ._btn-refresh_14tde_29 {
   if (IN_BILIBILI_HOMEPAGE && settings.accessKey && settings.accessKeyExpireAt && Date.now() >= settings.accessKeyExpireAt) {
     toast("access_key 已过期, 请重新获取 !!!");
   }
-  const getIsInternalTesting = lodash.once(() => {
-    return !!document.querySelectorAll(".bili-feed4").length;
-  });
   const getIsDarkMode = () => document.body.classList.contains("dark") || document.body.classList.contains("bilibili-helper-dark-mode");
   const isDarkModeState = proxy({
     value: getIsDarkMode()
@@ -5950,7 +5917,6 @@ body.dark ._btn-refresh_14tde_29 {
       };
     }, []);
   };
-  const useUnmount$1 = useUnmount;
   var cache$2 = /* @__PURE__ */ new Map();
   var setCache = function(key2, cacheTime, cachedData) {
     var currentCache = cache$2.get(key2);
@@ -6040,7 +6006,7 @@ body.dark ._btn-refresh_14tde_29 {
         });
       });
     }, []);
-    useUnmount$1(function() {
+    useUnmount(function() {
       var _a3;
       (_a3 = unSubscribeRef.current) === null || _a3 === void 0 ? void 0 : _a3.call(unSubscribeRef);
     });
@@ -6203,9 +6169,8 @@ body.dark ._btn-refresh_14tde_29 {
   };
   const useLoadingDelayPlugin$1 = useLoadingDelayPlugin;
   var isBrowser = !!(typeof window !== "undefined" && window.document && window.document.createElement);
-  const isBrowser$1 = isBrowser;
   function isDocumentVisible() {
-    if (isBrowser$1) {
+    if (isBrowser) {
       return document.visibilityState !== "hidden";
     }
     return true;
@@ -6218,7 +6183,7 @@ body.dark ._btn-refresh_14tde_29 {
       listeners$1.splice(index, 1);
     };
   }
-  if (isBrowser$1) {
+  if (isBrowser) {
     var revalidate$1 = function() {
       if (!isDocumentVisible())
         return;
@@ -6298,7 +6263,7 @@ body.dark ._btn-refresh_14tde_29 {
     };
   }
   function isOnline() {
-    if (isBrowser$1 && typeof navigator.onLine !== "undefined") {
+    if (isBrowser && typeof navigator.onLine !== "undefined") {
       return navigator.onLine;
     }
     return true;
@@ -6313,7 +6278,7 @@ body.dark ._btn-refresh_14tde_29 {
       }
     };
   }
-  if (isBrowser$1) {
+  if (isBrowser) {
     var revalidate = function() {
       if (!isDocumentVisible() || !isOnline())
         return;
@@ -6343,7 +6308,7 @@ body.dark ._btn-refresh_14tde_29 {
         stopSubscribe();
       };
     }, [refreshOnWindowFocus, focusTimespan]);
-    useUnmount$1(function() {
+    useUnmount(function() {
       stopSubscribe();
     });
     return {};
@@ -6442,14 +6407,12 @@ body.dark ._btn-refresh_14tde_29 {
       fn === null || fn === void 0 ? void 0 : fn();
     }, []);
   };
-  const useMount$1 = useMount;
   var useUpdate = function() {
     var _a2 = __read(React__default.useState({}), 2), setState = _a2[1];
     return React__default.useCallback(function() {
       return setState({});
     }, []);
   };
-  const useUpdate$1 = useUpdate;
   var Fetch = (
     /** @class */
     function() {
@@ -6617,7 +6580,7 @@ body.dark ._btn-refresh_14tde_29 {
       manual
     }, rest);
     var serviceRef = useLatest(service);
-    var update = useUpdate$1();
+    var update = useUpdate();
     var fetchInstance = useCreation(function() {
       var initState2 = plugins.map(function(p2) {
         var _a3;
@@ -6629,13 +6592,13 @@ body.dark ._btn-refresh_14tde_29 {
     fetchInstance.pluginImpls = plugins.map(function(p2) {
       return p2(fetchInstance, fetchOptions);
     });
-    useMount$1(function() {
+    useMount(function() {
       if (!manual) {
         var params = fetchInstance.state.params || options.defaultParams || [];
         fetchInstance.run.apply(fetchInstance, __spreadArray([], __read(params), false));
       }
     });
-    useUnmount$1(function() {
+    useUnmount(function() {
       fetchInstance.cancel();
     });
     return {
@@ -6708,7 +6671,7 @@ body.dark ._btn-refresh_14tde_29 {
     return [state, actions];
   }
   function getTargetElement(target, defaultElement) {
-    if (!isBrowser$1) {
+    if (!isBrowser) {
       return void 0;
     }
     if (!target) {
@@ -6750,7 +6713,7 @@ body.dark ._btn-refresh_14tde_29 {
           unLoadRef.current = effect();
         }
       });
-      useUnmount$1(function() {
+      useUnmount(function() {
         var _a2;
         (_a2 = unLoadRef.current) === null || _a2 === void 0 ? void 0 : _a2.call(unLoadRef);
         hasInitRef.current = false;
@@ -6758,8 +6721,7 @@ body.dark ._btn-refresh_14tde_29 {
     };
     return useEffectWithTarget2;
   };
-  const createEffectWithTarget$1 = createEffectWithTarget;
-  var useEffectWithTarget = createEffectWithTarget$1(React__default.useEffect);
+  var useEffectWithTarget = createEffectWithTarget(React__default.useEffect);
   const useEffectWithTarget$1 = useEffectWithTarget;
   var depsEqual = function(aDeps, bDeps) {
     if (aDeps === void 0) {
@@ -6832,9 +6794,7 @@ body.dark ._btn-refresh_14tde_29 {
     }
     useEffectWithTarget$1(effect, [signalRef.current], target);
   };
-  const useDeepCompareEffectWithTarget$1 = useDeepCompareEffectWithTarget;
   var isAppleDevice = /(mac|iphone|ipod|ipad)/i.test(typeof navigator !== "undefined" ? navigator === null || navigator === void 0 ? void 0 : navigator.platform : "");
-  const isAppleDevice$1 = isAppleDevice;
   var aliasKeyCodeMap = {
     "0": 48,
     "1": 49,
@@ -6894,7 +6854,7 @@ body.dark ._btn-refresh_14tde_29 {
     z: 90,
     leftwindowkey: 91,
     rightwindowkey: 92,
-    meta: isAppleDevice$1 ? [91, 93] : [91, 92],
+    meta: isAppleDevice ? [91, 93] : [91, 92],
     selectkey: 93,
     numpad0: 96,
     numpad1: 97,
@@ -7028,7 +6988,7 @@ body.dark ._btn-refresh_14tde_29 {
     var _a2 = option || {}, _b2 = _a2.events, events2 = _b2 === void 0 ? defaultEvents : _b2, target = _a2.target, _c2 = _a2.exactMatch, exactMatch = _c2 === void 0 ? false : _c2, _d = _a2.useCapture, useCapture = _d === void 0 ? false : _d;
     var eventHandlerRef = useLatest(eventHandler);
     var keyFilterRef = useLatest(keyFilter);
-    useDeepCompareEffectWithTarget$1(function() {
+    useDeepCompareEffectWithTarget(function() {
       var e_2, _a3;
       var _b3;
       var el = getTargetElement(target, window);
@@ -7095,7 +7055,7 @@ body.dark ._btn-refresh_14tde_29 {
         setState(value);
       });
     }, []);
-    useUnmount$1(function() {
+    useUnmount(function() {
       cancelAnimationFrame(ref.current);
     });
     return [state, setRafState];
@@ -7175,7 +7135,6 @@ body.dark ._btn-refresh_14tde_29 {
     }, []);
     return unmountedRef;
   };
-  const useUnmountedRef$1 = useUnmountedRef;
   const useUpdateLayoutEffect = createUpdateEffect(React__default.useLayoutEffect);
   let showedCount = 0;
   const modalShowCheck = () => {
@@ -9848,7 +9807,7 @@ body.dark ._btn-refresh_14tde_29 {
       searchText,
       upList
     } = useSnapshot(dynamicFeedFilterStore);
-    useMount$1(() => {
+    useMount(() => {
       updateUpList();
     });
     const onSelect = useMemoizedFn(async (payload) => {
@@ -10147,7 +10106,7 @@ body.dark ._btn-refresh_14tde_29 {
       width: 0,
       height: 0
     }));
-    useMount$1(() => {
+    useMount(() => {
       var _a2;
       const rect = (_a2 = ref.current) == null ? void 0 : _a2.getBoundingClientRect();
       if (!rect)
@@ -10855,7 +10814,7 @@ body.dark ._btn-refresh_14tde_29 {
     }, {
       target: videoPreviewWrapperRef
     });
-    const unmounted = useUnmountedRef$1();
+    const unmounted = useUnmountedRef();
     const idRef = React__default.useRef(void 0);
     const shouldStopAnimation = useMemoizedFn(() => {
       if (unmounted.current)
@@ -11954,13 +11913,12 @@ body.dark ._btn-refresh_14tde_29 {
       })]
     });
   });
-  const videoGrid = "_video-grid_wfxpc_7";
-  const videoGridNewHomepage = "_video-grid-new-homepage_wfxpc_17";
-  const limitTwoLines = "_limit-two-lines_wfxpc_20";
-  const videoGridInternalTesting = "_video-grid-internal-testing_wfxpc_52";
-  const videoGridContainer = "_video-grid-container_wfxpc_88";
-  const videoGridFancy = "_video-grid-fancy_wfxpc_93";
-  const narrowMode$1 = "_narrow-mode_wfxpc_134";
+  const videoGrid = "_video-grid_1hcyr_7";
+  const videoGridBiliFeed4 = "_video-grid-bili-feed4_1hcyr_20";
+  const limitTwoLines = "_limit-two-lines_1hcyr_38";
+  const videoGridContainer = "_video-grid-container_1hcyr_56";
+  const videoGridFancy = "_video-grid-fancy_1hcyr_61";
+  const narrowMode$1 = "_narrow-mode_1hcyr_102";
   function useShortcut({
     enabled,
     refresh,
@@ -12800,7 +12758,7 @@ body.dark ._btn-refresh_14tde_29 {
       onScrollToTop,
       setUpperRefreshing
     });
-    useMount$1(refresh);
+    useMount(refresh);
     React__default.useImperativeHandle(ref, () => ({
       refresh
     }), []);
@@ -12925,7 +12883,6 @@ body.dark ._btn-refresh_14tde_29 {
         }
       } : void 0
     });
-    const isInternalTesting = getIsInternalTesting();
     const handleRemoveCard = useMemoizedFn((item, data2) => {
       setItems((items2) => {
         const index = items2.findIndex((x2) => x2.uniqId === item.uniqId);
@@ -12999,8 +12956,7 @@ body.dark ._btn-refresh_14tde_29 {
       `${APP_NAME}-video-grid`,
       // for customize css
       videoGrid,
-      styleFancy ? videoGridFancy : isInternalTesting ? videoGridInternalTesting : videoGridNewHomepage,
-      // default
+      styleFancy ? videoGridFancy : videoGridBiliFeed4,
       useNarrowMode && narrowMode$1,
       // 居中
       className
@@ -18323,7 +18279,7 @@ body.dark ._btn-refresh_14tde_29 {
     useHotkeyForConfig(["shift.p"], "autoPreviewWhenKeyboardSelect", "键盘选中后自动开始预览");
     useHotkeyForConfig(["shift.m"], "autoPreviewWhenHover", "鼠标悬浮后自动开始预览");
     useHotkeyForConfig(["shift.c"], "useNarrowMode", "居中模式");
-    useHotkeyForConfig(["shift.y"], "styleFancy", "Fancy Style");
+    useHotkeyForConfig(["shift.y"], "styleFancy", "新卡片样式");
     const {
       tab: tab2
     } = useSnapshot(modalSettingsStore);
@@ -18497,7 +18453,7 @@ body.dark ._btn-refresh_14tde_29 {
                     className: styles$1.row,
                     children: /* @__PURE__ */ jsx(FlagSettingItem, {
                       configKey: "styleFancy",
-                      label: "Fancy Style",
+                      label: "新卡片样式",
                       tooltip: /* @__PURE__ */ jsxs(Fragment, {
                         children: ["增加卡片大小, 增大卡片间距", /* @__PURE__ */ jsx("br", {}), "视频卡片会显示头像", /* @__PURE__ */ jsx("br", {}), "切换设置快捷键: ", /* @__PURE__ */ jsx(antd.Tag, {
                           color: "green",
@@ -18522,7 +18478,7 @@ body.dark ._btn-refresh_14tde_29 {
                     },
                     children: /* @__PURE__ */ jsx(FlagSettingItem, {
                       configKey: "styleUseStickyTabbarInPureRecommend",
-                      label: "纯推荐模式: sticky tab bar",
+                      label: "全屏模式: sticky tab bar",
                       tooltip: /* @__PURE__ */ jsxs(Fragment, {
                         children: ["默认勾选: Tab 栏会吸附在顶栏下方", /* @__PURE__ */ jsx("br", {}), "取消选中: Tab 栏会随页面一起滚动"]
                       })
@@ -18600,9 +18556,9 @@ body.dark ._btn-refresh_14tde_29 {
           className: cx(styles$1.settingsGroupContent, styles$1.row),
           children: [/* @__PURE__ */ jsx(FlagSettingItem, {
             configKey: "pureRecommend",
-            label: "纯推荐模式",
+            label: "全屏模式",
             tooltip: /* @__PURE__ */ jsxs(Fragment, {
-              children: ["首页只保留推荐", /* @__PURE__ */ jsx("br", {}), "P.S 需要刷新网页~"]
+              children: ["清空自带推荐内容, 只显示脚本推荐", /* @__PURE__ */ jsx("br", {}), "P.S 需要刷新网页~", /* @__PURE__ */ jsx("br", {}), "P.S 之前版本称 (纯推荐模式)"]
             }),
             className: styles$1.check,
             extraAction: toastAndReload
@@ -18648,7 +18604,9 @@ body.dark ._btn-refresh_14tde_29 {
           }), /* @__PURE__ */ jsx(FlagSettingItem, {
             configKey: "openVideoAutoFullscreen",
             label: "打开视频后自动全屏",
-            tooltip: "点击视频链接新窗口打开视频后「自动全屏」",
+            tooltip: /* @__PURE__ */ jsxs(Fragment, {
+              children: ["点击视频链接新窗口打开视频后「自动全屏」", /* @__PURE__ */ jsx("br", {}), "注: 由于浏览器限制, 需要任意鼠标点击或键盘按键才能自动全屏"]
+            }),
             className: styles$1.check
           })]
         })]
@@ -18699,12 +18657,12 @@ body.dark ._btn-refresh_14tde_29 {
               position: relative;
               top: 4px;
             `,
-            children: ["(当前版本: v", "0.20.6", ")"]
+            children: ["(当前版本: v", "0.21.0", ")"]
           }), /* @__PURE__ */ jsx(IconPark, {
             name: "Copy",
             size: 16,
             onClick: () => {
-              const content = `v${"0.20.6"}`;
+              const content = `v${"0.21.0"}`;
               GM.setClipboard(content);
               AntdMessage.success(`已复制当前版本: ${content}`);
             },
@@ -19504,7 +19462,6 @@ body.dark ._btn-refresh_14tde_29 {
       scroll
     }));
     const headerHeight = useHeaderHeight();
-    const isInternalTesting = getIsInternalTesting();
     const S_leftright = css`
     height: 100%;
     display: flex;
@@ -19541,12 +19498,7 @@ body.dark ._btn-refresh_14tde_29 {
                 row-gap: 4px;
                 column-gap: 15px;
               `, "", ""],
-            children: [!pureRecommend && !isInternalTesting && /* @__PURE__ */ jsx("svg", {
-              className: "icon",
-              children: /* @__PURE__ */ jsx("use", {
-                href: "#channel-cinephile"
-              })
-            }), /* @__PURE__ */ jsx(VideoSourceTab, {
+            children: [/* @__PURE__ */ jsx(VideoSourceTab, {
               onRefresh
             }), leftSlot]
           }), /* @__PURE__ */ jsx("div", {
@@ -19648,7 +19600,6 @@ body.dark ._btn-refresh_14tde_29 {
   const debug$1 = baseDebug.extend("components:SectionRecommend");
   function SectionRecommend() {
     const skeletonPlaceholders = React__default.useMemo(() => new Array(20).fill(0).map(() => crypto.randomUUID()), []);
-    const isInternalTesting = getIsInternalTesting();
     const tab2 = useCurrentSourceTab();
     const {
       refreshing,
@@ -19662,7 +19613,7 @@ body.dark ._btn-refresh_14tde_29 {
       fetcher: refreshForHome,
       recreateService: false
     });
-    useMount$1(refresh);
+    useMount(refresh);
     const showSkeleton = !items.length || refreshError || refreshing && !swr;
     return /* @__PURE__ */ jsxs("section", {
       "data-area": "推荐",
@@ -19670,9 +19621,9 @@ body.dark ._btn-refresh_14tde_29 {
         refreshing,
         onRefresh: refresh
       }), /* @__PURE__ */ jsx("div", {
-        className: cx(videoGrid, limitTwoLines, isInternalTesting ? videoGridInternalTesting : videoGridNewHomepage),
+        className: cx(videoGrid, limitTwoLines, videoGridBiliFeed4),
         style: {
-          marginBottom: isInternalTesting ? 30 : 0
+          marginBottom: 30
         },
         children: showSkeleton ? skeletonPlaceholders.map((id) => /* @__PURE__ */ jsx(VideoCard, {}, id)) : items.map((item) => {
           return item.api === EApiType.separator ? null : /* @__PURE__ */ jsx(VideoCard, {
@@ -19705,22 +19656,18 @@ body.dark ._btn-refresh_14tde_29 {
       return;
     }
     if (settings.pureRecommend) {
-      return initHomepagePureRecommend();
+      await initHomepagePureRecommend();
     } else {
-      return initHomepageSection();
+      await initHomepageSection();
     }
+    tryDetectBewlyBewly();
   }
   async function initHomepageSection() {
     const timeout = 10 * 1e3;
     const timeoutAt = Date.now() + timeout;
     let insert;
     while (Date.now() <= timeoutAt) {
-      if (document.querySelector(".bili-layout > section.bili-grid")) {
-        const previousElement = document.querySelector(".bili-layout > section.bili-grid");
-        insert = (reactNode) => previousElement == null ? void 0 : previousElement.insertAdjacentElement("afterend", reactNode);
-        break;
-      }
-      if (getIsInternalTesting() && document.querySelector(".bili-feed4-layout")) {
+      if (document.querySelector(".bili-feed4-layout")) {
         insert = (reactNode) => {
           var _a2;
           return (_a2 = document.querySelector(".bili-feed4-layout")) == null ? void 0 : _a2.insertAdjacentElement("afterbegin", reactNode);
@@ -19742,35 +19689,17 @@ body.dark ._btn-refresh_14tde_29 {
       renderAppComponent: true,
       children: /* @__PURE__ */ jsx(SectionRecommend, {})
     }));
-    if (getIsInternalTesting()) {
-      tryToRemove(".bili-feed4 .header-channel");
-    }
-    tryDetectBewlyBewly();
+    tryToRemove(".bili-feed4 .header-channel");
   }
   async function initHomepagePureRecommend() {
-    var _a2;
     if (isSafari)
       await delay(500);
-    let renderBackTop = false;
-    if (getIsInternalTesting()) {
-      tryToRemove("#i_cecream .bili-feed4-layout");
-      tryToRemove(".bili-feed4 .header-channel");
-      tryToRemove(".palette-button-wrap");
-      renderBackTop = true;
-    } else {
-      (_a2 = document.querySelector(".bili-layout")) == null ? void 0 : _a2.remove();
-      tryToRemove(".bili-footer");
-      tryToRemove(".palette-button-wrap > .primary-btn", (el) => el.innerText.includes("分区"), 2e3).then(() => {
-        document.querySelectorAll(".palette-button-wrap .primary-btn").forEach((el) => {
-          el.classList.remove("hidden");
-          if (el.classList.contains("top-btn"))
-            el.classList.remove("top-btn");
-        });
-      });
-    }
-    const insertFn = (reactContainer2) => document.body.appendChild(reactContainer2);
+    tryToRemove("#i_cecream .bili-feed4-layout");
+    tryToRemove(".bili-feed4 .header-channel");
+    tryToRemove(".palette-button-wrap");
     const biliLayout = document.createElement("div");
-    biliLayout.classList.add(getIsInternalTesting() ? "bili-feed4-layout" : "bili-layout", "pure-recommend");
+    biliLayout.classList.add("bili-feed4-layout", "pure-recommend");
+    const insertFn = (reactContainer2) => document.body.appendChild(reactContainer2);
     insertFn(biliLayout);
     const reactContainer = document.createElement("section");
     reactContainer.classList.add(APP_NAME_ROOT_CLASSNAME);
@@ -19779,14 +19708,13 @@ body.dark ._btn-refresh_14tde_29 {
     root.render(/* @__PURE__ */ jsxs(AntdApp, {
       injectGlobalStyle: true,
       renderAppComponent: true,
-      children: [/* @__PURE__ */ jsx(PureRecommend, {}), renderBackTop && /* @__PURE__ */ jsx(antd.FloatButton.BackTop, {
+      children: [/* @__PURE__ */ jsx(PureRecommend, {}), /* @__PURE__ */ jsx(antd.FloatButton.BackTop, {
         style: {
           // right
           insetInlineEnd: "var(--back-top-right, 24px)"
         }
       })]
     }));
-    tryDetectBewlyBewly();
   }
   const debug = baseDebug.extend("main:video-play-page");
   function initVideoPlayPage() {
