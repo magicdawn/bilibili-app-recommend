@@ -8,6 +8,9 @@ import type { IService } from './base'
  * 使用 web api 获取推荐
  */
 
+let _id = 0
+const uniqId = () => Date.now() + _id++
+
 export class PcRecService implements IService {
   static PAGE_SIZE = 14
 
@@ -22,20 +25,52 @@ export class PcRecService implements IService {
   async getRecommend(signal: AbortSignal | undefined = undefined) {
     const curpage = ++this.page // this has parallel call, can not ++ after success
 
+    let url: string
+    let params: Record<string, string | number>
+
+    // 分区首页
     // /x/web-interface/index/top/rcmd
     // /x/web-interface/wbi/index/top/rcmd
-    const res = await request.get('/x/web-interface/wbi/index/top/rcmd', {
-      signal,
-      params: {
-        fresh_type: 3,
+    /** fresh_type: 3,
         version: 1,
         ps: PcRecService.PAGE_SIZE, // >14 errors
         fresh_idx: curpage,
         fresh_idx_1h: curpage,
         homepage_ver: 1,
-      },
-    })
+     */
+    url = '/x/web-interface/wbi/index/top/rcmd'
+    params = {
+      fresh_type: 3,
+      version: 1,
+      ps: PcRecService.PAGE_SIZE, // >14 errors
+      fresh_idx: curpage,
+      fresh_idx_1h: curpage,
+      homepage_ver: 1,
+    }
 
+    // feed 推荐流首页
+    // /x/web-interface/wbi/index/top/feed/rcmd
+    // url = '/x/web-interface/wbi/index/top/feed/rcmd'
+    // params = {
+    //   web_location: 1430650,
+    //   fresh_type: 4,
+    //   feed_version: 'V_WATCHLATER_PIP_WINDOW',
+    //   fresh_idx_1h: curpage,
+    //   fresh_idx: curpage,
+    //   homepage_ver: 1,
+    //   ps: PcRecService.PAGE_SIZE,
+    //   uniq_id: uniqId(),
+    //   brush: 1,
+    //   fetch_row: 4,
+    //   y_num: 4,
+    //   last_y_num: 5,
+    //   // screen: '2048-667',
+    //   // seo_info: '',
+    //   // last_showlist:
+    //   //   'av_1251147478,av_1801357236,av_1002155115,av_1751950975,ad_n_5614,av_1402131443,av_n_1901089350,av_n_1851727201,av_n_1751712626,av_n_1251359542',
+    // }
+
+    const res = await request.get(url, { signal, params })
     const json = res.data as PcRecommendJson
 
     if (!isWebApiSuccess(json)) {

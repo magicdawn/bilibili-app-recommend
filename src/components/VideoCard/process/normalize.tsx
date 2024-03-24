@@ -16,7 +16,6 @@ import type { FavItemExtend } from '$define/fav'
 import { IconPark } from '$icon-park'
 import { toHttps } from '$utility'
 import {
-  formatCount,
   formatDuration,
   formatTimeStamp,
   getVideoInvalidReason,
@@ -27,9 +26,8 @@ import { BvCode } from '@mgdn/bvid'
 import dayjs from 'dayjs'
 import type { AppRecIconField } from '../app-rec-icon'
 import { AppRecIconMap, getField } from '../app-rec-icon'
-import { STAT_NUMBER_FALLBACK } from '../index.shared'
 
-export type StatItemType = { field: AppRecIconField; value: string }
+export type StatItemType = { field: AppRecIconField; value: number | string | undefined }
 
 export interface IVideoCardData {
   // video
@@ -47,16 +45,16 @@ export interface IVideoCardData {
   duration: number
   durationStr: string
   recommendReason?: string
-  invalidReason?: string // 已失效理由
 
   // stat
+  statItems: StatItemType[]
+  // for filter
   play?: number
   like?: number
   coin?: number
   danmaku?: number
   favorite?: number
   bangumiFollow?: number
-  statItems?: StatItemType[]
 
   // author
   authorName?: string
@@ -172,11 +170,11 @@ function apiAndroidAppAdapter(item: AndroidAppRecItemExtend): IVideoCardData {
 
     // stat
     play: extractCountFor('play'),
+    danmaku: extractCountFor('danmaku'),
+    bangumiFollow: extractCountFor('bangumiFollow'),
     like: undefined,
     coin: undefined,
-    danmaku: extractCountFor('danmaku'),
     favorite: undefined,
-    bangumiFollow: extractCountFor('bangumiFollow'),
 
     // e.g 2023-09-17
     // cover_left_1_content_description: "156点赞"
@@ -268,16 +266,10 @@ function apiIpadAppAdapter(item: IpadAppRecItemExtend): IVideoCardData {
   const favorite = undefined
   const bangumiFollow = extractCountFor('bangumiFollow')
   const statItems: StatItemType[] = [
-    { field: 'play', value: formatCount(play) || STAT_NUMBER_FALLBACK },
+    { field: 'play', value: play },
     typeof danmaku === 'number'
-      ? {
-          field: 'danmaku',
-          value: formatCount(danmaku) || STAT_NUMBER_FALLBACK,
-        }
-      : {
-          field: 'bangumiFollow',
-          value: formatCount(bangumiFollow) || STAT_NUMBER_FALLBACK,
-        },
+      ? { field: 'danmaku', value: danmaku }
+      : { field: 'bangumiFollow', value: bangumiFollow },
   ]
 
   return {
@@ -336,15 +328,9 @@ function apiPcAdapter(item: PcRecItemExtend): IVideoCardData {
     danmaku: item.stat.danmaku,
     favorite: undefined,
     statItems: [
-      {
-        field: 'play',
-        value: formatCount(item.stat.view) || STAT_NUMBER_FALLBACK,
-      },
-      {
-        field: 'like',
-        value: formatCount(item.stat.like) || STAT_NUMBER_FALLBACK,
-      },
-    ] as StatItemType[],
+      { field: 'play', value: item.stat.view },
+      { field: 'like', value: item.stat.like },
+    ] satisfies StatItemType[],
 
     // author
     authorName: item.owner.name,
@@ -382,11 +368,12 @@ function apiDynamicAdapter(item: DynamicFeedItemExtend): IVideoCardData {
     recommendReason: v.badge.text,
 
     // stat
+    statItems: [
+      { field: 'play', value: v.stat.play },
+      { field: 'danmaku', value: v.stat.danmaku },
+    ] satisfies StatItemType[],
     play: parseCount(v.stat.play),
     danmaku: parseCount(v.stat.danmaku),
-    like: undefined,
-    coin: undefined,
-    favorite: undefined,
 
     // author
     authorName: author.name,
@@ -429,20 +416,17 @@ function apiWatchLaterAdapter(item: WatchLaterItemExtend): IVideoCardData {
     duration: item.duration,
     durationStr: formatDuration(item.duration),
     recommendReason: `${formatTimeStamp(item.add_at)} · 稍后再看`,
-    invalidReason,
 
     // stat
+    statItems: [
+      { field: 'play', value: item.stat.view },
+      { field: 'like', value: item.stat.like },
+      // { field: 'coin', value: item.stat.coin },
+      { field: 'favorite', value: item.stat.favorite },
+    ] satisfies StatItemType[],
     play: item.stat.view,
     like: item.stat.like,
-    coin: undefined,
     danmaku: item.stat.danmaku,
-    favorite: undefined,
-    statItems: [
-      { field: 'play', value: formatCount(item.stat.view) || STAT_NUMBER_FALLBACK },
-      { field: 'like', value: formatCount(item.stat.like) || STAT_NUMBER_FALLBACK },
-      // { field: 'coin', value: formatCount(item.stat.coin) || STAT_NUMBER_FALLBACK },
-      { field: 'favorite', value: formatCount(item.stat.favorite) || STAT_NUMBER_FALLBACK },
-    ] as StatItemType[],
 
     // author
     authorName: item.owner.name,
@@ -487,15 +471,13 @@ function apiFavAdapter(item: FavItemExtend): IVideoCardData {
 
     // stat
     play: item.cnt_info.play,
-    like: undefined,
-    coin: undefined,
     danmaku: item.cnt_info.danmaku,
     favorite: item.cnt_info.collect,
     statItems: [
-      { field: 'play', value: formatCount(item.cnt_info.play) || STAT_NUMBER_FALLBACK },
-      { field: 'danmaku', value: formatCount(item.cnt_info.danmaku) || STAT_NUMBER_FALLBACK },
-      { field: 'favorite', value: formatCount(item.cnt_info.collect) || STAT_NUMBER_FALLBACK },
-    ] as StatItemType[],
+      { field: 'play', value: item.cnt_info.play },
+      { field: 'danmaku', value: item.cnt_info.danmaku },
+      { field: 'favorite', value: item.cnt_info.collect },
+    ] satisfies StatItemType[],
 
     // author
     authorName: item.upper.name,
@@ -526,10 +508,10 @@ function apiPopularGeneralAdapter(item: PopularGeneralItemExtend): IVideoCardDat
     danmaku: item.stat.danmaku,
     favorite: undefined,
     statItems: [
-      { field: 'play', value: formatCount(item.stat.view) || STAT_NUMBER_FALLBACK },
-      { field: 'like', value: formatCount(item.stat.like) || STAT_NUMBER_FALLBACK },
-      { field: 'danmaku', value: formatCount(item.stat.danmaku) || STAT_NUMBER_FALLBACK },
-    ] as StatItemType[],
+      { field: 'play', value: item.stat.view },
+      { field: 'like', value: item.stat.like },
+      { field: 'danmaku', value: item.stat.danmaku },
+    ] satisfies StatItemType[],
 
     // author
     authorName: item.owner.name,
@@ -556,14 +538,12 @@ function apiPopularWeeklyAdapter(item: PopularWeeklyItemExtend): IVideoCardData 
     // stat
     play: item.stat.view,
     like: item.stat.like,
-    coin: undefined,
     danmaku: item.stat.danmaku,
-    favorite: undefined,
     statItems: [
-      { field: 'play', value: formatCount(item.stat.view) || STAT_NUMBER_FALLBACK },
-      { field: 'like', value: formatCount(item.stat.like) || STAT_NUMBER_FALLBACK },
-      { field: 'danmaku', value: formatCount(item.stat.danmaku) || STAT_NUMBER_FALLBACK },
-    ] as StatItemType[],
+      { field: 'play', value: item.stat.view },
+      { field: 'like', value: item.stat.like },
+      { field: 'danmaku', value: item.stat.danmaku },
+    ] satisfies StatItemType[],
 
     // author
     authorName: item.owner.name,

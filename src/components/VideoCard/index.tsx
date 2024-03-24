@@ -40,7 +40,7 @@ import {
   STAT_NUMBER_FALLBACK,
   borderRadiusStyle,
 } from './index.shared'
-import type { IVideoCardData } from './process/normalize'
+import type { IVideoCardData, StatItemType } from './process/normalize'
 import { normalizeCardData } from './process/normalize'
 import { usePreviewAnimation } from './usePreviewAnimation'
 
@@ -305,15 +305,8 @@ const VideoCardInner = memo(function VideoCardInner({
     duration,
     durationStr,
     recommendReason,
-    invalidReason,
 
     // stat
-    play,
-    like,
-    coin,
-    danmaku,
-    favorite,
-    bangumiFollow,
     statItems,
 
     // author
@@ -494,21 +487,22 @@ const VideoCardInner = memo(function VideoCardInner({
     showModalDislike(item)
   })
 
-  const playStr = useMemo(() => formatCount(play), [play])
-  const likeStr = useMemo(() => formatCount(like), [like])
-  const danmakuStr = useMemo(() => formatCount(danmaku), [danmaku])
-  const _favoriteStr = useMemo(() => formatCount(favorite), [favorite])
-  const favoriteStr = isPc ? likeStr : _favoriteStr
-
   const makeStatItem = ({
     text,
     iconSvgName,
     iconSvgScale,
   }: {
-    text: string
+    text: StatItemType['value']
     iconSvgName: string
     iconSvgScale?: number
   }) => {
+    let _text: string
+    if (typeof text === 'number' || (text && /^\d+$/.test(text))) {
+      _text = formatCount(Number(text)) || STAT_NUMBER_FALLBACK
+    } else {
+      _text = text || ''
+    }
+
     return (
       <span className='bili-video-card__stats--item'>
         <svg
@@ -523,7 +517,7 @@ const VideoCardInner = memo(function VideoCardInner({
           className='bili-video-card__stats--text'
           style={{ lineHeight: 'calc(var(--icon-size) + 1px)' }}
         >
-          {text}
+          {_text}
         </span>
       </span>
     )
@@ -1019,32 +1013,15 @@ const VideoCardInner = memo(function VideoCardInner({
             >
               <div className='bili-video-card__stats'>
                 <div className='bili-video-card__stats--left'>
-                  {statItems?.length ? (
-                    <>
-                      {statItems.map(({ field, value }) => (
-                        <Fragment key={field}>
-                          {makeStatItem({
-                            text: value,
-                            iconSvgName: AppRecIconSvgNameMap[field],
-                            iconSvgScale: AppRecIconScaleMap[field],
-                          })}
-                        </Fragment>
-                      ))}
-                    </>
-                  ) : (
-                    <>
-                      {/* 播放 */}
+                  {statItems.map(({ field, value }) => (
+                    <Fragment key={field}>
                       {makeStatItem({
-                        text: playStr || STAT_NUMBER_FALLBACK,
-                        iconSvgName: AppRecIconSvgNameMap.play,
+                        text: value,
+                        iconSvgName: AppRecIconSvgNameMap[field],
+                        iconSvgScale: AppRecIconScaleMap[field],
                       })}
-                      {/* 弹幕 */}
-                      {makeStatItem({
-                        text: danmakuStr || STAT_NUMBER_FALLBACK,
-                        iconSvgName: AppRecIconSvgNameMap.danmaku,
-                      })}
-                    </>
-                  )}
+                    </Fragment>
+                  ))}
                 </div>
 
                 {/* 时长 */}
