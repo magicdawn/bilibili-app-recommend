@@ -261,8 +261,6 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                           label='新卡片样式'
                           tooltip={
                             <>
-                              增加卡片大小, 增大卡片间距
-                              <br />
                               视频卡片会显示头像
                               <br />
                               切换设置快捷键: <Tag color='green'>shift+y</Tag>

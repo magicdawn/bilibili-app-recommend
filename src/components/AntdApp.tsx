@@ -93,12 +93,14 @@ function GlobalStyle() {
       {pureRecommend && (
         <Global
           styles={[
+            // hide default content
             css`
               /* hide original main, in case not deleted */
               #i_cecream .bili-feed4-layout {
                 display: none;
               }
 
+              /* enlarge container width */
               #i_cecream,
               .bili-feed4 .bili-header,
               .bili-feed4 .bili-header .bili-header__bar {
@@ -112,6 +114,7 @@ function GlobalStyle() {
               }
             `,
 
+            // handle background-color
             styleFancy
               ? css`
                   body,

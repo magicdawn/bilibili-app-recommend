@@ -29,9 +29,8 @@ import { useInView } from 'react-intersection-observer'
 import {
   narrowMode,
   videoGrid,
-  videoGridBiliFeed4,
   videoGridContainer,
-  videoGridFancy,
+  videoGridCustom,
 } from '../video-grid.module.scss'
 import type { OnRefresh } from './useRefresh'
 import { getIService, useRefresh } from './useRefresh'
@@ -426,9 +425,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
   const gridClassName = cx(
     `${APP_NAME}-video-grid`, // for customize css
     videoGrid,
-    styleFancy
-      ? videoGridFancy // 大卡片
-      : videoGridBiliFeed4,
+    videoGridCustom,
     useNarrowMode && narrowMode, // 居中
     className,
   )
