@@ -5,6 +5,7 @@ import type { FavItemExtend } from '$define/fav'
 import type { FavFolderListAllItem, FavFolderListAllJson } from '$define/fav/folder-list-all'
 import type { FavFolderDetailInfo, ResourceListJSON } from '$define/fav/resource-list'
 import { EApiType } from '$define/index.shared'
+import { IconPark } from '$icon-park'
 import { settings, updateSettings, useSettingsSnapshot } from '$modules/settings'
 import { isWebApiSuccess, request } from '$request'
 import { getUid, toast } from '$utility'
@@ -18,6 +19,10 @@ import { QueueStrategy, type IService } from './base'
 export function formatFavFolderUrl(id: number) {
   const uid = getUid()
   return `https://space.bilibili.com/${uid}/favlist?fid=${id}`
+}
+
+export function formatFavPlaylistUrl(id: number) {
+  return `https://www.bilibili.com/list/ml${id}`
 }
 
 export class FavRecService implements IService {
@@ -66,25 +71,41 @@ export class FavRecService implements IService {
       const service = this.folderServices.find((s) => s.hasMore)
       if (!service) return
       const items = await service.loadMore()
-      return this.qs.doReturnItems(
-        service.page === 1
-          ? [
-              this.addSeparator && {
-                api: EApiType.separator as const,
-                uniqId: `fav-folder-${service.entry.id}`,
-                content: (
-                  <>
-                    收藏夹:{' '}
-                    <a target='_blank' href={formatFavFolderUrl(service.entry.id)}>
-                      {service.entry.title}
-                    </a>
-                  </>
-                ),
-              },
-              ...(items || []),
-            ].filter(Boolean)
-          : items,
-      )
+
+      const S = {
+        item: css`
+          display: inline-flex;
+          align-items: center;
+          font-size: 15px;
+
+          &:not(:first-child) {
+            margin-left: 30px;
+          }
+
+          .i-icon {
+            margin-right: 5px;
+          }
+        `,
+      }
+      const header = this.addSeparator &&
+        service.page === 1 &&
+        items?.length && {
+          api: EApiType.separator as const,
+          uniqId: `fav-folder-${service.entry.id}`,
+          content: (
+            <>
+              <a target='_blank' href={formatFavFolderUrl(service.entry.id)} css={S.item}>
+                <IconPark name='EfferentFour' size={18} />
+                {service.entry.title}
+              </a>
+              <a target='_blank' href={formatFavPlaylistUrl(service.entry.id)} css={S.item}>
+                <IconPark name='PlayTwo' size={18} />
+                播放全部
+              </a>
+            </>
+          ),
+        }
+      return this.qs.doReturnItems([header, ...(items || [])].filter(Boolean))
     }
 
     /**

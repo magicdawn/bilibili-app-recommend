@@ -471,10 +471,16 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
           css={css`
             grid-column: 1 / -1;
 
-            .ant-divider-inner-text a {
-              color: var(--ant-color-link);
-              &:hover {
-                color: var(--ant-color-primary);
+            .ant-divider-inner-text {
+              display: inline-flex;
+              align-items: center;
+              min-height: 30px;
+
+              a {
+                color: var(--ant-color-link);
+                &:hover {
+                  color: var(--ant-color-primary);
+                }
               }
             }
           `}
