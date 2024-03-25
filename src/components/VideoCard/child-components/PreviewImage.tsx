@@ -2,7 +2,29 @@ import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import type { PvideoData } from '$define'
 import { cx } from '$libs'
 import { useMouse } from 'ahooks'
-import styles from './index.module.scss'
+import { previewCardWrapper } from '../index.module.scss'
+
+const S = {
+  previewCardWrapper: css`
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+
+    // 配合进度条, 底部不需要圆角
+    border-top-left-radius: inherit;
+    border-top-right-radius: inherit;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  `,
+
+  previewCardInner: css`
+    width: 100%;
+    height: 100%;
+  `,
+}
 
 interface IProps {
   className?: string
@@ -63,7 +85,7 @@ export function PreviewImage({
   }
 
   return (
-    <div ref={ref} className={cx(styles.previewCardWrapper, className)}>
+    <div ref={ref} className={cx(previewCardWrapper, className)} css={S.previewCardWrapper}>
       {!!(pvideo && size.width && size.height && progress) && <PreviewImageInner {...innerProps} />}
     </div>
   )
@@ -139,7 +161,7 @@ function PreviewImageInner({
 
   return (
     <div
-      className={styles.previewCardInner}
+      css={S.previewCardInner}
       style={{
         backgroundColor: 'black', // 防止加载过程中闪屏
         backgroundImage: `url(${snapshotUrl})`,

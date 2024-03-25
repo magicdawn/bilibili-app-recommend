@@ -17,7 +17,7 @@ import { settings, useSettingsSnapshot } from '$modules/settings'
 import { UserFavService, defaultFavFolderName } from '$modules/user/fav'
 import { UserBlacklistService, useInBlacklist } from '$modules/user/relations/blacklist'
 import { UserfollowService } from '$modules/user/relations/follow'
-import { isFirefox, isMac, isSafari } from '$platform'
+import { isMac, isSafari } from '$platform'
 import { AntdMessage } from '$utility'
 import { toastRequestFail } from '$utility/toast'
 import { formatCount } from '$utility/video'
@@ -29,10 +29,11 @@ import { motion } from 'framer-motion'
 import type { Emitter } from 'mitt'
 import mitt from 'mitt'
 import type { MouseEvent, MouseEventHandler } from 'react'
-import { PreviewImage } from './PreviewImage'
 import { AppRecIconScaleMap, AppRecIconSvgNameMap } from './app-rec-icon'
 import type { VideoData } from './card.service'
 import { cancelDislike, getVideoData, watchLaterAdd, watchLaterDel } from './card.service'
+import { CoverImg } from './child-components/Cover'
+import { PreviewImage } from './child-components/PreviewImage'
 import styles from './index.module.scss'
 import {
   PLAYER_SCREEN_MODE,
@@ -909,28 +910,14 @@ const VideoCardInner = memo(function VideoCardInner({
             {/* __image--wrap 上有 padding-top: 56.25% = 9/16, 用于保持高度, 在 firefox 中有明显的文字位移 */}
             {/* picture: absolute, top:0, left: 0  */}
             {/* 故加上 aspect-ratio: 16/9 */}
+
             <div className='bili-video-card__image--wrap' style={{ borderRadius: 'inherit' }}>
-              <picture
+              <CoverImg
                 className='v-img bili-video-card__cover'
                 style={{ borderRadius: 'inherit', overflow: 'hidden' }}
-              >
-                {!isSafari && coverUseAvif && (
-                  <source
-                    srcSet={`${cover}@672w_378h_1c_!web-home-common-cover.avif`}
-                    type='image/avif'
-                  />
-                )}
-                <source
-                  srcSet={`${cover}@672w_378h_1c_!web-home-common-cover.webp`}
-                  type='image/webp'
-                />
-                <img
-                  src={`${cover}@672w_378h_1c_!web-home-common-cover`}
-                  loading='lazy'
-                  // in firefox, alt text is visible during loading
-                  alt={isFirefox ? '' : title}
-                />
-              </picture>
+                src={cover}
+                alt={title}
+              />
 
               {/* <div className='v-inline-player'></div> */}
 
@@ -1089,7 +1076,9 @@ const VideoCardInner = memo(function VideoCardInner({
         >
           <a href={authorHref} target='_blank' onClick={handleVideoLinkClick}>
             {authorFace ? (
-              <Avatar src={authorFace} />
+              <Avatar
+                src={`${authorFace}@96w_96h_1c_1s_!web-avatar${isSafari ? '.webp' : '.avif'}`}
+              />
             ) : (
               <Avatar>{authorName?.[0] || appBadgeDesc?.[0] || ''}</Avatar>
             )}
