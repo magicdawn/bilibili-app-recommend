@@ -289,7 +289,7 @@ const VideoCardInner = memo(function VideoCardInner({
   const isWatchlater = item.api === 'watchlater'
   const isFav = item.api === 'fav'
 
-  const { styleFancy, coverUseAvif } = useSettingsSnapshot()
+  const { styleFancy } = useSettingsSnapshot()
 
   let {
     // video

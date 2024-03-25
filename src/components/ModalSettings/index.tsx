@@ -598,17 +598,6 @@ function TabPaneAdvance() {
           />
           <span style={{ width: '65px' }}>({autoPreviewUpdateInterval}ms)</span>
         </div>
-
-        <div className={styles.settingsGroupTitle} style={{ marginTop: 15 }}>
-          视频卡片
-        </div>
-        <div style={{ width: '100%', display: 'flex', alignItems: 'center' }}>
-          <FlagSettingItem
-            configKey={'coverUseAvif'}
-            label='使用 avif'
-            tooltip={<>视频封面是否使用 avif 格式图片</>}
-          />
-        </div>
       </div>
     </div>
   )

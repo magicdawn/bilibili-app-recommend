@@ -7,15 +7,14 @@ type ImgProps = ComponentProps<'img'>
 
 type IProps = {
   src: string
-  coverUseAvif?: boolean
 } & Pick<ImgProps, 'alt' | 'style' | 'className'>
 
 export const CoverImg = memo(function (props: IProps) {
-  const { src, coverUseAvif, ...imgProps } = props
+  const { src, ...imgProps } = props
 
   const srcList = useMemo(() => {
     const _s = '@672w_378h_1c_!web-home-common-cover'
-    const suffixs = [!isSafari && coverUseAvif && `${_s}.avif`, `${_s}.webp`, _s].filter(Boolean)
+    const suffixs = [!isSafari && `${_s}.avif`, `${_s}.webp`, _s].filter(Boolean)
     return suffixs
       .map((suffix) => {
         return shuffle([0, 1, 2]).map((domainNum) => {
@@ -24,14 +23,14 @@ export const CoverImg = memo(function (props: IProps) {
         })
       })
       .flat()
-  }, [src, isSafari, coverUseAvif])
+  }, [src, isSafari])
 
   // in firefox, alt text is visible during loading
   const alt = isFirefox ? undefined : imgProps.alt
 
   const _pictureEl = (
     <picture {...imgProps}>
-      {!isSafari && coverUseAvif && (
+      {!isSafari && (
         <source srcSet={`${src}@672w_378h_1c_!web-home-common-cover.avif`} type='image/avif' />
       )}
       <source srcSet={`${src}@672w_378h_1c_!web-home-common-cover.webp`} type='image/webp' />
