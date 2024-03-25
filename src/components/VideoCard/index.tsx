@@ -238,7 +238,7 @@ const DislikedCard = memo(function DislikedCard({
 })
 
 const BlacklistCard = memo(function BlacklistCard({ cardData }: { cardData: IVideoCardData }) {
-  const { authorMid, authorFace, authorName } = cardData
+  const { authorMid, authorName } = cardData
 
   const onCancel = useMemoizedFn(async () => {
     if (!authorMid) return
