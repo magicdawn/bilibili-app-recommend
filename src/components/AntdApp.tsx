@@ -1,4 +1,5 @@
 import { APP_NAME_ROOT_CLASSNAME } from '$common'
+import { $headerWidth } from '$header'
 import { useSettingsSnapshot } from '$modules/settings'
 import { useIsDarkMode } from '$platform'
 import { UseApp } from '$utility/antd-static'
@@ -62,6 +63,8 @@ function GlobalStyle() {
   const { colorPrimary } = useCurrentTheme()
   const { styleFancy, pureRecommend } = useSettingsSnapshot()
 
+  const width = $headerWidth.use() ?? 90
+
   return (
     <>
       <Global
@@ -94,6 +97,18 @@ function GlobalStyle() {
               /* hide original main, in case not deleted */
               #i_cecream .bili-feed4-layout {
                 display: none;
+              }
+
+              #i_cecream,
+              .bili-feed4 .bili-header,
+              .bili-feed4 .bili-header .bili-header__bar {
+                max-width: unset;
+              }
+
+              .bili-feed4-layout,
+              .bili-feed4 .bili-header .bili-header__channel {
+                max-width: ${width}%;
+                padding: 0;
               }
             `,
 

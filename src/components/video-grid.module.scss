@@ -64,11 +64,12 @@
 // max(min(40px, 1.6vw), 20px);
 $row-gap: clamp(20px, 1.6vw, 40px);
 $col-gap: 20px;
-$card-min-width: 250px;
+// $card-min-width: 250px;
+$card-min-width: 320px;
 
 .video-grid-fancy {
   --video-card-border-radius: 15px;
-  --col: 2; // when width < $min-2
+  --col: 4;
 
   // gap
   column-gap: $col-gap;
@@ -91,8 +92,8 @@ $card-min-width: 250px;
   }
 }
 
-@for $i from 2 through 5 {
-  @container video-grid-container (width >= #{($card-min-width + $col-gap) * $i - $col-gap}) {
+@for $i from 4 through 10 {
+  @container video-grid-container (width >= #{$card-min-width * $i + $col-gap * ($i - 1)}) {
     // 使用 .video-grid 增加权重, fix dark-reader 兼容性
     // https://greasyfork.org/zh-CN/scripts/443530-bilibili-app-recommend/discussions/222126
     // dark-reader 会将 没有@container 修饰的 .vdieo-grid-fancy 再次添加, 导致 --col 覆盖为 2

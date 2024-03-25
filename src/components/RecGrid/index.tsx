@@ -13,7 +13,7 @@ import { borderRadiusValue } from '$components/VideoCard/index.shared'
 import type { IVideoCardData } from '$components/VideoCard/process/normalize'
 import { type RecItemExtraType, type RecItemType } from '$define'
 import { EApiType } from '$define/index.shared'
-import { getHeaderHeight } from '$header'
+import { $headerHeight } from '$header'
 import { IconPark } from '$icon-park'
 import { cx, styled } from '$libs'
 import { getRecommendTimes, refreshForGrid, uniqConcat } from '$modules/recommend'
@@ -281,7 +281,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
   const getScrollerRect = useMemoizedFn(() => {
     // use window
     if (infiteScrollUseWindow) {
-      const yStart = getHeaderHeight() + 50 // 50 RecHeader height
+      const yStart = $headerHeight.get() + 50 // 50 RecHeader height
       return new DOMRect(0, yStart, window.innerWidth, window.innerHeight - yStart)
     }
     // use in a scroller

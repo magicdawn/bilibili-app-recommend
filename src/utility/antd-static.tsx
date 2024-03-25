@@ -2,7 +2,7 @@
  * https://ant.design/components/app-cn
  */
 
-import { getHeaderHeight, useHeaderHeight } from '$header'
+import { $headerHeight } from '$header'
 import { App, message as _message, notification as _notification } from 'antd'
 import type {
   ConfigOptions as MessageConfigOptions,
@@ -17,12 +17,12 @@ let AntdNotification: NotificationInstance = _notification
 const messageConfig: MessageConfigOptions = {
   // duration: default 3, 单位秒
   maxCount: 5,
-  top: getHeaderHeight() + 5,
+  top: $headerHeight.get() + 5,
 }
 _message.config(messageConfig)
 
 export function UseApp() {
-  const h = useHeaderHeight()
+  const h = $headerHeight.use()
   return (
     <App component={false} message={{ ...messageConfig, top: h + 5 }}>
       <UseAppInner />

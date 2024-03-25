@@ -5,7 +5,7 @@ import { useSticky } from '$common/hooks/useSticky'
 import { ModalSettings } from '$components/ModalSettings'
 import type { OnRefresh } from '$components/RecGrid/useRefresh'
 import { OnRefreshContext } from '$components/RecGrid/useRefresh'
-import { getHeaderHeight, useHeaderHeight } from '$header'
+import { $headerHeight } from '$header'
 import { IconPark } from '$icon-park'
 import { useSettingsSnapshot } from '$modules/settings'
 import { shouldDisableShortcut } from '$utility/dom'
@@ -80,7 +80,7 @@ export const RecHeader = forwardRef<
     if (!container) return
 
     const rect = container.getBoundingClientRect()
-    const headerHeight = getHeaderHeight()
+    const headerHeight = $headerHeight.get()
     if (rect.top < headerHeight) {
       const relativeScrolltop = headerHeight - rect.top + 1
       debug(
@@ -94,7 +94,7 @@ export const RecHeader = forwardRef<
   })
   useImperativeHandle(ref, () => ({ scroll }))
 
-  const headerHeight = useHeaderHeight()
+  const headerHeight = $headerHeight.use()
 
   const S_leftright = css`
     height: 100%;

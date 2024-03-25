@@ -2,7 +2,8 @@
  * BILIBILI-Evolved header related
  */
 
-import { proxy, useSnapshot } from 'valtio'
+import { minmax } from '$utility/num'
+import { valtioFactory } from '$utility/valtio'
 
 const defaultHeader = () => document.querySelector('.bili-header__bar')
 
@@ -24,22 +25,29 @@ function calcHeaderHeight() {
   if (isNaN(height)) return 50
   return height
 }
+// prefix with $ 避免与普通变量冲突
+export const $headerHeight = valtioFactory(calcHeaderHeight())
 
-const headerHeightState = proxy({ value: calcHeaderHeight() })
+function calcHeaderWidth(): number | undefined {
+  const paddingDef = document.documentElement.style.getPropertyValue('--navbar-bounds-padding')
+  if (!paddingDef) return
 
-export function useHeaderHeight() {
-  return useSnapshot(headerHeightState).value
+  const percent = minmax(Number(paddingDef.replace('%', '')), 2, 10)
+  const width = 100 - percent * 2
+  return width
 }
-export function getHeaderHeight() {
-  return headerHeightState.value
-}
+
+export const $headerWidth = valtioFactory(calcHeaderWidth())
 
 // let Bilibili-Evolved run first
 setTimeout(() => {
-  headerHeightState.value = calcHeaderHeight()
-  const ob = new MutationObserver(() => {
-    headerHeightState.value = calcHeaderHeight()
-  })
+  function action() {
+    $headerHeight.state.value = calcHeaderHeight()
+    $headerWidth.state.value = calcHeaderWidth()
+  }
+
+  action()
+  const ob = new MutationObserver(() => action())
 
   ob.observe(document.documentElement, {
     attributes: true,
