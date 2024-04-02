@@ -63,7 +63,8 @@ function GlobalStyle() {
   const { colorPrimary } = useCurrentTheme()
   const { pureRecommend, styleUseCustomGrid } = useSettingsSnapshot()
 
-  const width = $headerWidth.use() ?? 90
+  const _width = $headerWidth.use()
+  const width = _width ?? 90
 
   return (
     <>
@@ -112,7 +113,8 @@ function GlobalStyle() {
                 .bili-feed4-layout,
                 .bili-feed4 .bili-header .bili-header__channel {
                   max-width: ${width}%;
-                  padding: 0 10px;
+                  /* 与 bilibili-evolve 视觉上对齐 */
+                  padding: ${_width ? '0 10px' : 0};
                 }
               `,
 
