@@ -1,5 +1,31 @@
 # Changelog
 
+## v0.21.1
+
+- styleFancy 变成 styleNewCardStyle & styleUseCustomGrid.
+- styleUseCustomGrid: grid 宽度默认 90%; 可跟随 Bilibili-Evolved 的自定义顶栏配置.
+- 收藏: 增加播放全部链接
+- 图片: 头像使用缩略图, 移除 coverUseAvif 设置项
+
+details
+
+- 1d34ec3 chore: investigate width change
+- 6086a75 chore: width tweaks
+- 48774cd fix: fix type errors
+- 0c84e88 chore: deps
+- 31d690a feat: split styleFancy to styleNewCardStyle & styleUseCustomGrid
+- b6322d3 refactor: extract dup code for formatCount
+- 77f5131 chore: not throwing in formatCount
+- 950067c chore: tweak stat-item formatCount
+- 8428ff3 chore: rm none practical coverUseAvif setting
+- 9ca61eb chore: clean up
+- 3c1b838 chore: extract Cover child component
+- f48ead5 feat(grid): always use custom grid --col config for RecGrid
+- 94071cd feat: update grid column config
+- 3b9730e deps: ncu
+- 69ef5aa feat: add fav folder playlist link
+- 7ee4405 refactor: simplify normalize stat-items
+
 ## v0.21.0
 
 - 之前内测首页现在是默认首页, 去掉分区首页的支持 see [#71](https://github.com/magicdawn/bilibili-app-recommend/discussions/71)
