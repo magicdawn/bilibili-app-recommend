@@ -39,25 +39,20 @@ function calcHeaderWidth(): number | undefined {
 
 export const $headerWidth = valtioFactory(calcHeaderWidth())
 
-// let Bilibili-Evolved run first
-setTimeout(() => {
-  function action() {
-    $headerHeight.state.value = calcHeaderHeight()
-    $headerWidth.state.value = calcHeaderWidth()
-  }
+function action() {
+  $headerHeight.state.value = calcHeaderHeight()
+  $headerWidth.state.value = calcHeaderWidth()
+}
 
-  action()
-  const ob = new MutationObserver(() => action())
-
-  ob.observe(document.documentElement, {
-    attributes: true,
-    attributeFilter: ['style'],
-  })
-  ob.observe(document.body, {
-    attributes: true,
-    attributeFilter: ['class'],
-  })
-  window.addEventListener('unload', () => {
-    ob.disconnect()
-  })
-}, 2000)
+const ob = new MutationObserver(() => action())
+ob.observe(document.documentElement, {
+  attributes: true,
+  attributeFilter: ['style'],
+})
+ob.observe(document.body, {
+  attributes: true,
+  attributeFilter: ['class'],
+})
+window.addEventListener('unload', () => {
+  ob.disconnect()
+})

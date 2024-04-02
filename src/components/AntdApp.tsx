@@ -63,8 +63,11 @@ function GlobalStyle() {
   const { colorPrimary } = useCurrentTheme()
   const { pureRecommend, styleUseCustomGrid } = useSettingsSnapshot()
 
-  const _width = $headerWidth.use()
-  const width = _width ?? 90
+  // 会有多次变宽的效果, 看起来很诡异!!!
+  // bilibili-default -> 90 % -> evolved宽度计算
+  const width = $headerWidth.use() ?? 90
+  // const padding = width === 90 ? 0 : '0 10px'
+  const padding = '0 10px'
 
   return (
     <>
@@ -114,7 +117,7 @@ function GlobalStyle() {
                 .bili-feed4 .bili-header .bili-header__channel {
                   max-width: ${width}%;
                   /* 与 bilibili-evolve 视觉上对齐 */
-                  padding: ${_width ? '0 10px' : 0};
+                  padding: ${padding};
                 }
               `,
 
