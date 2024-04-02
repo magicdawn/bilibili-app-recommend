@@ -37,18 +37,19 @@ export function formatCount(count?: number) {
     return count.toString()
   }
 
+  // 81.0 -> 81
+  const trimDotZero = (s: string) => s.replace(/\.0$/, '')
+
   count /= 1_0000
   if (count <= 9999) {
-    let _c = count.toFixed(1)
-    _c = _c.replace(/\.0$/, '') // 81.0 -> 81
-    return `${_c}万`
+    const c = trimDotZero(count.toFixed(1))
+    return `${c}万`
   }
 
   count /= 1_0000
   if (count <= 9999) {
-    let _c = count.toFixed(1)
-    _c = _c.replace(/\.0$/, '') // 81.0 -> 81
-    return `${_c}亿`
+    const c = trimDotZero(count.toFixed(1))
+    return `${c}亿`
   }
 
   console.warn(`formatCount(count = ${count}); can not handle input`)
