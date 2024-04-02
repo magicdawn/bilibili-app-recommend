@@ -21,6 +21,8 @@ describe.concurrent('$utility/video', () => {
     expect(formatCount(2_0000)).to.equal('2万')
     expect(formatCount(1234)).to.equal('1234')
     expect(formatCount(1_9000_0000)).to.equal('1.9亿')
+    expect(formatCount(undefined)).to.equal(undefined)
+    expect(formatCount(0)).to.equal('0')
   })
 
   it('.formatTimeStamp', () => {

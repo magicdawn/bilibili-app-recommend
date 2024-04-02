@@ -9,8 +9,11 @@ type IProps = {
   src: string
 } & Pick<ImgProps, 'alt' | 'style' | 'className'>
 
-export const CoverImg = memo(function (props: IProps) {
+function CoverImgWithRcImg(props: IProps) {
   const { src, ...imgProps } = props
+
+  // in firefox, alt text is visible during loading
+  const alt = isFirefox ? undefined : imgProps.alt
 
   const srcList = useMemo(() => {
     const _s = '@672w_378h_1c_!web-home-common-cover'
@@ -25,6 +28,19 @@ export const CoverImg = memo(function (props: IProps) {
       .flat()
   }, [src, isSafari])
 
+  /**
+   * 使用 react-image Img 并不能改善卡住的情况, 需要 useImage + 超时
+   * 但这对于加载一张图片来说未免也太重了吧~
+   * 给 avatar 加上参数后貌似 cover 这里情况好多了
+   */
+  const _rcImgEl = <Img src={srcList} {...imgProps} alt={alt} />
+
+  return _rcImgEl
+}
+
+export const CoverImg = memo(function (props: IProps) {
+  const { src, ...imgProps } = props
+
   // in firefox, alt text is visible during loading
   const alt = isFirefox ? undefined : imgProps.alt
 
@@ -37,13 +53,6 @@ export const CoverImg = memo(function (props: IProps) {
       <img src={`${src}@672w_378h_1c_!web-home-common-cover`} loading='lazy' alt={alt} />
     </picture>
   )
-
-  /**
-   * 使用 react-image Img 并不能改善卡住的情况, 需要 useImage + 超时
-   * 但这对于加载一张图片来说未免也太重了吧~
-   * 给 avatar 加上参数后貌似 cover 这里情况好多了
-   */
-  const _rcImgEl = <Img src={srcList} {...imgProps} alt={alt} />
 
   return _pictureEl
 })

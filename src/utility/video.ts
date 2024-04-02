@@ -28,7 +28,10 @@ export function formatDuration(d?: number) {
 }
 
 export function formatCount(count?: number) {
-  if (!count) return ''
+  if (!count) {
+    if (typeof count === 'number') return '0'
+    else return count
+  }
 
   if (count <= 9999) {
     return count.toString()
@@ -47,6 +50,8 @@ export function formatCount(count?: number) {
     _c = _c.replace(/\.0$/, '') // 81.0 -> 81
     return `${_c}亿`
   }
+
+  throw new Error('count too large')
 }
 
 export function parseCount(str: string) {

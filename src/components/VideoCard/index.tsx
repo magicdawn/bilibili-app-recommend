@@ -499,9 +499,9 @@ const VideoCardInner = memo(function VideoCardInner({
   }) => {
     let _text: string
     if (typeof text === 'number' || (text && /^\d+$/.test(text))) {
-      _text = formatCount(Number(text)) || STAT_NUMBER_FALLBACK
+      _text = formatCount(Number(text)) ?? STAT_NUMBER_FALLBACK
     } else {
-      _text = text || ''
+      _text = text ?? STAT_NUMBER_FALLBACK
     }
 
     return (
