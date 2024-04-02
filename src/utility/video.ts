@@ -51,7 +51,7 @@ export function formatCount(count?: number) {
     return `${_c}亿`
   }
 
-  throw new Error('count too large')
+  console.warn(`formatCount(count = ${count}); can not handle input`)
 }
 
 export function parseCount(str: string) {
