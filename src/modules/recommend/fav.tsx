@@ -14,6 +14,7 @@ import type { TransferDirection } from 'antd/es/transfer'
 import delay from 'delay'
 import { shuffle } from 'lodash'
 import pmap from 'promise.map'
+import type { Key } from 'react'
 import { QueueStrategy, type IService } from './base'
 
 export function formatFavFolderUrl(id: number) {
@@ -228,9 +229,9 @@ export function FavUsageInfo({
   }, [shuffleForFav, addSeparatorForFav])
 
   const handleChange = useMemoizedFn(
-    (newTargetKeys: string[], direction: TransferDirection, moveKeys: string[]) => {
+    (newTargetKeys: Key[], direction: TransferDirection, moveKeys: Key[]) => {
       setExcludeFavFolderIdsChanged(true)
-      updateSettings({ excludeFavFolderIds: newTargetKeys })
+      updateSettings({ excludeFavFolderIds: newTargetKeys.map((k) => k.toString()) })
     },
   )
 
