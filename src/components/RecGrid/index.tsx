@@ -28,7 +28,9 @@ import ms from 'ms'
 import { useInView } from 'react-intersection-observer'
 import {
   narrowMode,
+  newCardStyle,
   videoGrid,
+  videoGridBiliFeed4,
   videoGridContainer,
   videoGridCustom,
 } from '../video-grid.module.scss'
@@ -87,7 +89,6 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
   },
   ref,
 ) {
-  const { useNarrowMode, styleFancy } = useSettingsSnapshot()
   const tab = useCurrentSourceTab()
 
   const [loadCompleteCount, setLoadCompleteCount] = useState(0) // 已加载完成的 load call count, 类似 page
@@ -422,10 +423,12 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
     </div>
   )
 
+  const { useNarrowMode, styleUseCustomGrid, styleNewCardStyle } = useSettingsSnapshot()
   const gridClassName = cx(
     `${APP_NAME}-video-grid`, // for customize css
     videoGrid,
-    videoGridCustom,
+    { [newCardStyle]: styleNewCardStyle },
+    styleUseCustomGrid ? videoGridCustom : videoGridBiliFeed4,
     useNarrowMode && narrowMode, // 居中
     className,
   )

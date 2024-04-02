@@ -61,7 +61,7 @@ export function AntdApp({
 
 function GlobalStyle() {
   const { colorPrimary } = useCurrentTheme()
-  const { styleFancy, pureRecommend } = useSettingsSnapshot()
+  const { pureRecommend, styleUseCustomGrid } = useSettingsSnapshot()
 
   const width = $headerWidth.use() ?? 90
 
@@ -93,29 +93,31 @@ function GlobalStyle() {
       {pureRecommend && (
         <Global
           styles={[
-            // hide default content
             css`
               /* hide original main, in case not deleted */
               #i_cecream .bili-feed4-layout {
                 display: none;
               }
-
-              /* enlarge container width */
-              #i_cecream,
-              .bili-feed4 .bili-header,
-              .bili-feed4 .bili-header .bili-header__bar {
-                max-width: unset;
-              }
-
-              .bili-feed4-layout,
-              .bili-feed4 .bili-header .bili-header__channel {
-                max-width: ${width}%;
-                padding: 0;
-              }
             `,
 
+            styleUseCustomGrid &&
+              css`
+                /* enlarge container width */
+                #i_cecream,
+                .bili-feed4 .bili-header,
+                .bili-feed4 .bili-header .bili-header__bar {
+                  max-width: unset;
+                }
+
+                .bili-feed4-layout,
+                .bili-feed4 .bili-header .bili-header__channel {
+                  max-width: ${width}%;
+                  padding: 0 10px;
+                }
+              `,
+
             // handle background-color
-            styleFancy
+            styleUseCustomGrid
               ? css`
                   body,
                   .large-header,

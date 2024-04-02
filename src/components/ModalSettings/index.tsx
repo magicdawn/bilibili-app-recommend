@@ -118,7 +118,7 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
   useHotkeyForConfig(['shift.p'], 'autoPreviewWhenKeyboardSelect', '键盘选中后自动开始预览')
   useHotkeyForConfig(['shift.m'], 'autoPreviewWhenHover', '鼠标悬浮后自动开始预览')
   useHotkeyForConfig(['shift.c'], 'useNarrowMode', '居中模式')
-  useHotkeyForConfig(['shift.y'], 'styleFancy', '新卡片样式')
+  useHotkeyForConfig(['shift.y'], 'styleNewCardStyle', '新卡片样式')
 
   const { tab } = useSnapshot(modalSettingsStore)
 
@@ -257,11 +257,11 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                     <div className={cx(styles.settingsGroupContent)}>
                       <div className={styles.row}>
                         <FlagSettingItem
-                          configKey='styleFancy'
+                          configKey='styleNewCardStyle'
                           label='新卡片样式'
                           tooltip={
                             <>
-                              视频卡片会显示头像
+                              视频卡片: 显示头像, 更大的圆角.
                               <br />
                               切换设置快捷键: <Tag color='green'>shift+y</Tag>
                             </>
@@ -284,6 +284,22 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                               默认勾选: Tab 栏会吸附在顶栏下方
                               <br />
                               取消选中: Tab 栏会随页面一起滚动
+                            </>
+                          }
+                        />
+                      </div>
+                      <div className={styles.row} style={{ marginTop: 5 }}>
+                        <FlagSettingItem
+                          configKey='styleUseCustomGrid'
+                          label='全屏模式: 使用自定义网格配置'
+                          tooltip={
+                            <>
+                              网格配置指: 网格宽度, 间距, 列数等.
+                              <br />
+                              自定义网格配置: 宽度为90%; 可跟随 Bilibili-Evolved 自定义顶栏配置;
+                              列数: 4列 - 10列; {APP_NAME} 自定义;
+                              <br />
+                              默认网格配置: bili-feed4 首页使用的网格配置
                             </>
                           }
                         />

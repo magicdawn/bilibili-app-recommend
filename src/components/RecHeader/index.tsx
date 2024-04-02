@@ -56,7 +56,7 @@ export const RecHeader = forwardRef<
   const {
     accessKey,
     pureRecommend,
-    styleFancy,
+    styleUseCustomGrid,
     showModalFeedEntry,
     styleUseStickyTabbarInPureRecommend,
   } = useSettingsSnapshot()
@@ -127,7 +127,7 @@ export const RecHeader = forwardRef<
               styleUseStickyTabbarInPureRecommend &&
               sticky &&
               css`
-                background-color: var(--${styleFancy ? 'bg2' : 'bg1'}_float);
+                background-color: var(--${styleUseCustomGrid ? 'bg2' : 'bg1'}_float);
                 box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
               `,
           ]}

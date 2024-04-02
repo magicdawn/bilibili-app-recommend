@@ -109,14 +109,17 @@ export const initialSettings = {
    * 外观
    */
 
-  // 自用新样式
-  styleFancy: true,
+  // 新卡片样式
+  styleNewCardStyle: true,
 
   // video-source-tab 高度, 默认 compact
   styleUseStandardVideoSourceTab: false,
 
   // sticky tabbar
   styleUseStickyTabbarInPureRecommend: true,
+
+  // custom grid | default grid
+  styleUseCustomGrid: true,
 
   /**
    * 功能

@@ -137,7 +137,7 @@ export const VideoCard = memo(function VideoCard({
 })
 
 const SkeletonCard = memo(function SkeletonCard({ loading }: { loading: boolean }) {
-  const { styleFancy } = useSettingsSnapshot()
+  const { styleNewCardStyle } = useSettingsSnapshot()
 
   return (
     <div
@@ -148,7 +148,7 @@ const SkeletonCard = memo(function SkeletonCard({ loading }: { loading: boolean 
     >
       <div className='bili-video-card__skeleton--cover' style={borderRadiusStyle} />
 
-      {!styleFancy && (
+      {!styleNewCardStyle && (
         <div className='bili-video-card__skeleton--info'>
           <div className='bili-video-card__skeleton--right'>
             <p className='bili-video-card__skeleton--text'></p>
@@ -157,7 +157,7 @@ const SkeletonCard = memo(function SkeletonCard({ loading }: { loading: boolean 
           </div>
         </div>
       )}
-      {styleFancy && (
+      {styleNewCardStyle && (
         <div className='bili-video-card__skeleton--info'>
           <div
             className='bili-video-card__skeleton--avatar'
@@ -289,7 +289,7 @@ const VideoCardInner = memo(function VideoCardInner({
   const isWatchlater = item.api === 'watchlater'
   const isFav = item.api === 'fav'
 
-  const { styleFancy } = useSettingsSnapshot()
+  const { styleNewCardStyle } = useSettingsSnapshot()
 
   let {
     // video
@@ -1023,7 +1023,7 @@ const VideoCardInner = memo(function VideoCardInner({
       </Dropdown>
 
       {/* old, same as bilibili default */}
-      {!styleFancy && (
+      {!styleNewCardStyle && (
         <div className='bili-video-card__info __scale-disable'>
           <div className='bili-video-card__info--right'>
             <a
@@ -1067,7 +1067,7 @@ const VideoCardInner = memo(function VideoCardInner({
       )}
 
       {/* new, not so crowded */}
-      {styleFancy && (
+      {styleNewCardStyle && (
         <div
           css={css`
             display: flex;
