@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.21.2
+
+- detect avif 可用性
+- custom-grid: 更合理的优化
+
 ## v0.21.1
 
 - styleFancy 变成 styleNewCardStyle & styleUseCustomGrid.
