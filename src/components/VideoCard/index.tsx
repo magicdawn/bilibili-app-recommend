@@ -17,8 +17,9 @@ import { settings, useSettingsSnapshot } from '$modules/settings'
 import { UserFavService, defaultFavFolderName } from '$modules/user/fav'
 import { UserBlacklistService, useInBlacklist } from '$modules/user/relations/blacklist'
 import { UserfollowService } from '$modules/user/relations/follow'
-import { isMac, isSafari } from '$platform'
+import { isMac } from '$platform'
 import { AntdMessage } from '$utility'
+import { shouldUseAvif } from '$utility/image'
 import { toastRequestFail } from '$utility/toast'
 import { formatCount } from '$utility/video'
 import { useEventListener, useHover, usePrevious } from 'ahooks'
@@ -1077,7 +1078,7 @@ const VideoCardInner = memo(function VideoCardInner({
           <a href={authorHref} target='_blank' onClick={handleVideoLinkClick}>
             {authorFace ? (
               <Avatar
-                src={`${authorFace}@96w_96h_1c_1s_!web-avatar${isSafari ? '.webp' : '.avif'}`}
+                src={`${authorFace}@96w_96h_1c_1s_!web-avatar${shouldUseAvif ? '.avif' : '.webp'}`}
               />
             ) : (
               <Avatar>{authorName?.[0] || appBadgeDesc?.[0] || ''}</Avatar>

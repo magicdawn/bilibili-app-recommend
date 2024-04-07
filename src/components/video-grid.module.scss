@@ -56,11 +56,10 @@
 }
 
 /**
- * youtube like
+ * @container query
  */
 
 .video-grid-container {
-  container-name: video-grid-container;
   container-type: inline-size;
 }
 
@@ -68,7 +67,6 @@
 // max(min(40px, 1.6vw), 20px);
 $row-gap: clamp(20px, 1.6vw, 40px);
 $col-gap: 20px;
-$card-min-width: 330px;
 
 .video-grid-custom {
   --col: 4;
@@ -94,12 +92,21 @@ $card-min-width: 330px;
   }
 }
 
-@for $i from 4 through 10 {
-  @container video-grid-container (width >= #{$card-min-width * $i + $col-gap * ($i - 1)}) {
-    // 使用 .video-grid 增加权重, fix dark-reader 兼容性
-    // https://greasyfork.org/zh-CN/scripts/443530-bilibili-app-recommend/discussions/222126
-    // dark-reader 会将 没有@container 修饰的 .vdieo-grid-custom 再次添加, 导致 --col 覆盖为 2
-    // 也可以使用 :where 降低默认 .video-grid-custom 权重
+// 使用 .video-grid 增加权重, fix dark-reader 兼容性
+// https://greasyfork.org/zh-CN/scripts/443530-bilibili-app-recommend/discussions/222126
+// dark-reader 会将 没有@container 修饰的 .vdieo-grid-custom 再次添加, 导致 --col 覆盖为 2
+// 也可以使用 :where 降低默认 .video-grid-custom 权重
+
+// bili-feed4: <1440px 4列, 1440px 4列
+@container (width >= #{1440px * 0.9 - 20px}) {
+  .video-grid.video-grid-custom {
+    --col: 5;
+  }
+}
+
+$card-base-width: 300px;
+@for $i from 6 through 10 {
+  @container (inline-size >= #{($card-base-width + $i * 5px) * $i + $col-gap * ($i - 1)}) {
     .video-grid.video-grid-custom {
       --col: #{$i};
     }

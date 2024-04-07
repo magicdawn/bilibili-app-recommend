@@ -1,4 +1,5 @@
-import { isFirefox, isSafari } from '$platform'
+import { isFirefox } from '$platform'
+import { shouldUseAvif } from '$utility/image'
 import { shuffle } from 'lodash'
 import type { ComponentProps } from 'react'
 import { Img } from 'react-image'
@@ -17,7 +18,7 @@ function CoverImgWithRcImg(props: IProps) {
 
   const srcList = useMemo(() => {
     const _s = '@672w_378h_1c_!web-home-common-cover'
-    const suffixs = [!isSafari && `${_s}.avif`, `${_s}.webp`, _s].filter(Boolean)
+    const suffixs = [shouldUseAvif && `${_s}.avif`, `${_s}.webp`, _s].filter(Boolean)
     return suffixs
       .map((suffix) => {
         return shuffle([0, 1, 2]).map((domainNum) => {
@@ -26,7 +27,7 @@ function CoverImgWithRcImg(props: IProps) {
         })
       })
       .flat()
-  }, [src, isSafari])
+  }, [src])
 
   /**
    * 使用 react-image Img 并不能改善卡住的情况, 需要 useImage + 超时
@@ -46,7 +47,7 @@ export const CoverImg = memo(function (props: IProps) {
 
   const _pictureEl = (
     <picture {...imgProps}>
-      {!isSafari && (
+      {shouldUseAvif && (
         <source srcSet={`${src}@672w_378h_1c_!web-home-common-cover.avif`} type='image/avif' />
       )}
       <source srcSet={`${src}@672w_378h_1c_!web-home-common-cover.webp`} type='image/webp' />

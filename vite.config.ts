@@ -28,7 +28,8 @@ if (process.env.RELEASE) {
 
 // minify
 let minify = true
-// turn off via argv
+// via argv
+if (process.argv.includes('--minify')) minify = true
 if (process.argv.includes('--no-minify')) minify = false
 
 // GreasyFork: default no minify
