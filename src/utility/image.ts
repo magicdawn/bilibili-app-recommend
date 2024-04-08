@@ -27,3 +27,8 @@ function supportWebp() {
 }
 
 export const shouldUseAvif = !isSafari && (await supportAvif())
+
+export function getAvatarSrc(avatar: string) {
+  const suffix = shouldUseAvif ? '.avif' : '.webp'
+  return `${avatar}@96w_96h_1c_1s_!web-avatar${suffix}`
+}

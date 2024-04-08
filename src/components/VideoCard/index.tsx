@@ -17,9 +17,10 @@ import { settings, useSettingsSnapshot } from '$modules/settings'
 import { UserFavService, defaultFavFolderName } from '$modules/user/fav'
 import { UserBlacklistService, useInBlacklist } from '$modules/user/relations/blacklist'
 import { UserfollowService } from '$modules/user/relations/follow'
-import { isMac } from '$platform'
+import { isFirefox, isMac } from '$platform'
+import { Picture } from '$ui-components/Picture'
 import { AntdMessage } from '$utility'
-import { shouldUseAvif } from '$utility/image'
+import { getAvatarSrc } from '$utility/image'
 import { toastRequestFail } from '$utility/toast'
 import { formatCount } from '$utility/video'
 import { useEventListener, useHover, usePrevious } from 'ahooks'
@@ -33,7 +34,6 @@ import type { MouseEvent, MouseEventHandler } from 'react'
 import { AppRecIconScaleMap, AppRecIconSvgNameMap } from './app-rec-icon'
 import type { VideoData } from './card.service'
 import { cancelDislike, getVideoData, watchLaterAdd, watchLaterDel } from './card.service'
-import { CoverImg } from './child-components/Cover'
 import { PreviewImage } from './child-components/PreviewImage'
 import styles from './index.module.scss'
 import {
@@ -913,11 +913,14 @@ const VideoCardInner = memo(function VideoCardInner({
             {/* 故加上 aspect-ratio: 16/9 */}
 
             <div className='bili-video-card__image--wrap' style={{ borderRadius: 'inherit' }}>
-              <CoverImg
+              <Picture
                 className='v-img bili-video-card__cover'
                 style={{ borderRadius: 'inherit', overflow: 'hidden' }}
-                src={cover}
-                alt={title}
+                src={`${cover}@672w_378h_1c_!web-home-common-cover`}
+                imgProps={{
+                  // in firefox, alt text is visible during loading
+                  alt: isFirefox ? '' : title,
+                }}
               />
 
               {/* <div className='v-inline-player'></div> */}
@@ -1077,9 +1080,7 @@ const VideoCardInner = memo(function VideoCardInner({
         >
           <a href={authorHref} target='_blank' onClick={handleVideoLinkClick}>
             {authorFace ? (
-              <Avatar
-                src={`${authorFace}@96w_96h_1c_1s_!web-avatar${shouldUseAvif ? '.avif' : '.webp'}`}
-              />
+              <Avatar src={getAvatarSrc(authorFace)} />
             ) : (
               <Avatar>{authorName?.[0] || appBadgeDesc?.[0] || ''}</Avatar>
             )}

@@ -8,6 +8,7 @@ import { getRecentUpdateUpList } from '$modules/dynamic'
 import type { DynamicPortalUp } from '$modules/dynamic/portal'
 import { isWebApiSuccess, request } from '$request'
 import { toast } from '$utility'
+import { getAvatarSrc } from '$utility/image'
 import { fastOrderBy } from '$utility/order-by'
 import type { ArrayItem } from '$utility/type'
 import type { MenuProps } from 'antd'
@@ -206,7 +207,7 @@ export function DynamicFeedUsageInfo() {
     // }
 
     const items: MenuItemType[] = upListSorted.map((up) => {
-      let avatar: ReactNode = <Avatar size={'small'} src={up.face} />
+      let avatar: ReactNode = <Avatar size={'small'} src={getAvatarSrc(up.face)} />
       if (up.has_update) {
         avatar = <Badge dot>{avatar}</Badge>
       }
