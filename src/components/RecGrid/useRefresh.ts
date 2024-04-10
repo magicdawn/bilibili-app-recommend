@@ -1,5 +1,6 @@
 import { APP_KEY_PREFIX } from '$common'
 import { useRefInit } from '$common/hooks/useRefInit'
+import { useRefState } from '$common/hooks/useRefState'
 import { getCurrentSourceTab } from '$components/RecHeader/tab'
 import { ETabType, TabConfig } from '$components/RecHeader/tab.shared'
 import type { RecItemExtraType } from '$define'
@@ -12,7 +13,6 @@ import { PopularWeeklyService } from '$modules/recommend/popular-weekly'
 import { WatchLaterRecService } from '$modules/recommend/watchlater'
 import { settings } from '$modules/settings'
 import { nextTick, whenIdle } from '$utility'
-import { useGetState } from 'ahooks'
 import type { Debugger } from 'debug'
 import { createContext } from 'react'
 
@@ -95,7 +95,7 @@ export function useRefresh({
   const [pcRecService, setPcRecService] = useState(() => new PcRecService())
 
   const [refreshing, setRefreshing] = useState(false)
-  const [refreshedAt, setRefreshedAt, getRefreshedAt] = useGetState<number>(() => Date.now())
+  const [refreshedAt, setRefreshedAt, getRefreshedAt] = useRefState<number>(() => Date.now())
   const [refreshFor, setRefreshFor] = useState<ETabType>(tab)
   const [refreshAbortController, setRefreshAbortController] = useState<AbortController>(
     () => new AbortController(),

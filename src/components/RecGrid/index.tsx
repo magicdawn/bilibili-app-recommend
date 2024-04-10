@@ -177,7 +177,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
   /**
    * useMemoizedFn 只能确保 loadMore 开始调用时值时最新的.
    * 拿 refreshedAt 举例, loadMore 内部, 值 refreshedAt 不变
-   * 所以需要 useGetState, 从 getRefreshedAt 取最新的值
+   * 所以需要 useRefState, 从 getRefreshedAt 取最新的值
    */
   const loadMore = useMemoizedFn(async () => {
     if (!hasMore) return

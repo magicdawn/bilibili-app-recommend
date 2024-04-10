@@ -1,7 +1,7 @@
 import { APP_NAME, __PROD__ } from '$common'
 import { useRefState } from '$common/hooks/useRefState'
 import { settings } from '$modules/settings'
-import { useEventListener, useGetState, useMemoizedFn, useRafState, useUnmountedRef } from 'ahooks'
+import { useEventListener, useMemoizedFn, useRafState, useUnmountedRef } from 'ahooks'
 import delay from 'delay'
 import type { MouseEvent } from 'react'
 
@@ -155,7 +155,7 @@ export function usePreviewAnimation({
     setAnimationPaused(false)
   })
 
-  const [animationPaused, setAnimationPaused, getAnimationPaused] = useGetState(false)
+  const [animationPaused, setAnimationPaused, getAnimationPaused] = useRefState(false)
 
   const resumeAnimationInner = useRef<(progress: number) => void>()
 
