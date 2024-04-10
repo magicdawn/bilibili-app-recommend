@@ -2,17 +2,17 @@ import { APP_NAME_ROOT_CLASSNAME } from '$common'
 import { AntdApp } from '$components/AntdApp'
 import { BaseModal, BaseModalClass, ModalClose } from '$components/BaseModal'
 import { useIsDarkMode } from '$platform'
+import { QRCode } from 'antd'
 import { once } from 'lodash'
 import mitt from 'mitt'
 import { pEvent } from 'p-event'
-import { QRCodeSVG } from 'qrcode.react'
 import { createRoot } from 'react-dom/client'
 import { proxy, useSnapshot } from 'valtio'
 import { qrcodeConfirm } from './api'
 
 const initialValue = {
   show: false,
-  qrcode: '',
+  qrcodeUrl: '',
   auth_code: '',
   message: '',
 }
@@ -49,7 +49,7 @@ async function confirmQrCodeLoginWithCookie() {
 }
 
 export function TvQrCodeAuth() {
-  const { qrcode, show, message } = useSnapshot(store)
+  const { qrcodeUrl, show, message } = useSnapshot(store)
   const onHide = hideQrCodeModal
 
   const dark = useIsDarkMode()
@@ -65,6 +65,7 @@ export function TvQrCodeAuth() {
       `}
       cssModal={css`
         width: 280px;
+        aspect-ratio: 10 / 16;
       `}
     >
       <div className={BaseModalClass.modalHeader}>
@@ -73,51 +74,49 @@ export function TvQrCodeAuth() {
         <ModalClose onClick={onHide} />
       </div>
 
-      <div className={BaseModalClass.modalBody}>
+      <div
+        className={BaseModalClass.modalBody}
+        css={css`
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+        `}
+      >
         <div
-          className='wrapper'
           css={css`
-            text-align: center;
-            padding-top: 15px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 25px;
+            margin-bottom: 2px;
           `}
         >
-          <div
-            className='qr-wrapper'
+          {message || ''}
+        </div>
+
+        {qrcodeUrl && (
+          <QRCode
             css={css`
-              margin-top: 20px;
+              margin: 0 auto;
               margin-bottom: 40px;
             `}
-          >
-            <div
-              css={css`
-                font-size: 14px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                min-height: 25px;
-                margin-bottom: 5px;
-              `}
-            >
-              {message || ''}
-            </div>
+            value={qrcodeUrl}
+            size={220}
+            icon='https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/72/9c/b6/729cb6d8-75f5-0a56-0508-3a26cbba69ae/AppIcon-1x_U007emarketing-0-6-0-0-85-220-0.png/230x0w.webp'
+          />
+        )}
 
-            {qrcode ? (
-              <QRCodeSVG value={qrcode} size={200} includeMargin={dark} />
-            ) : (
-              <div className='qrcode-placeholder'></div>
-            )}
-          </div>
-
-          <div
-            className='footnote'
-            css={css`
-              font-size: 13px;
-              margin-bottom: 20px;
-            `}
-          >
-            打开「哔哩哔哩」或「bilibili」APP <br />
-            扫码获取 access_key
-          </div>
+        <div
+          className='footnote'
+          css={css`
+            font-size: 13px;
+          `}
+        >
+          打开「哔哩哔哩」或「bilibili」APP <br />
+          扫码获取 access_key
         </div>
       </div>
     </BaseModal>

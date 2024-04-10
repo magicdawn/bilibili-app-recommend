@@ -20,7 +20,7 @@ async function refreshQrCode() {
   if (!qrinfo) return
 
   // show
-  showQrCodeModal({ qrcode: qrinfo.url, auth_code: qrinfo.auth_code })
+  showQrCodeModal({ qrcodeUrl: qrinfo.url, auth_code: qrinfo.auth_code })
   return true
 }
 
