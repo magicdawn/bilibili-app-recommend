@@ -23,7 +23,7 @@ import { AntdMessage } from '$utility'
 import { getAvatarSrc } from '$utility/image'
 import { toastRequestFail } from '$utility/toast'
 import { formatCount } from '$utility/video'
-import { useEventListener, useHover, usePrevious } from 'ahooks'
+import { useHover, usePrevious } from 'ahooks'
 import type { MenuProps } from 'antd'
 import { Avatar, Dropdown } from 'antd'
 import delay from 'delay'
@@ -290,7 +290,7 @@ const VideoCardInner = memo(function VideoCardInner({
   const isWatchlater = item.api === 'watchlater'
   const isFav = item.api === 'fav'
 
-  const { styleNewCardStyle } = useSettingsSnapshot()
+  const { styleNewCardStyle, autoPreviewWhenHover, accessKey } = useSettingsSnapshot()
 
   let {
     // video
@@ -352,32 +352,26 @@ const VideoCardInner = memo(function VideoCardInner({
    */
 
   const videoPreviewWrapperRef = useRef<HTMLDivElement>(null)
-  const [mouseEnterRelativeX, setMouseEnterRelativeX] = useState<number | undefined>(undefined)
-  useEventListener(
-    'mouseenter',
-    (e: MouseEvent) => {
-      const rect = videoPreviewWrapperRef.current?.getBoundingClientRect()
-      if (!rect) return
 
-      // https://github.com/alibaba/hooks/blob/v3.7.0/packages/hooks/src/useMouse/index.ts#L62
-      const { x } = rect
-      const relativeX = e.pageX - window.pageXOffset - x
-      setMouseEnterRelativeX(relativeX)
-    },
-    { target: videoPreviewWrapperRef },
-  )
-  const isHovering = useHover(videoPreviewWrapperRef)
-  const { autoPreviewWhenHover } = useSettingsSnapshot()
+  const {
+    onStartPreviewAnimation,
+    onHotkeyPreviewAnimation,
+    previewAnimationProgress,
+    isHovering,
+    isHoveringAfterDelay,
+    mouseEnterRelativeX,
+  } = usePreviewAnimation({
+    bvid,
+    title,
+    autoPreviewWhenHover,
+    active,
+    tryFetchVideoData,
+    videoPreviewWrapperRef,
+  })
 
-  const { onStartPreviewAnimation, onHotkeyPreviewAnimation, previewAnimationProgress } =
-    usePreviewAnimation({
-      bvid,
-      title,
-      autoPreviewWhenHover,
-      active,
-      tryFetchVideoData,
-      videoPreviewWrapperRef,
-    })
+  // const isHovering = useHover(videoPreviewWrapperRef)
+  // const isHovering = _isHoveringAfterDelay
+  // console.log('isHovering', isHovering)
 
   useUpdateEffect(() => {
     if (!active) return
@@ -404,7 +398,6 @@ const VideoCardInner = memo(function VideoCardInner({
   const watchLaterAdded = useWatchLaterState(bvid)
   const watchLaterAddedPrevious = usePrevious(watchLaterAdd)
 
-  const { accessKey } = useSettingsSnapshot()
   const authed = Boolean(accessKey)
 
   useEffect(() => {
@@ -927,7 +920,7 @@ const VideoCardInner = memo(function VideoCardInner({
 
               {/* preview */}
               {/* follow-mouse or manual-control */}
-              {(isHovering || typeof previewAnimationProgress === 'number') && (
+              {(isHoveringAfterDelay || typeof previewAnimationProgress === 'number') && (
                 <PreviewImage
                   videoDuration={duration}
                   pvideo={videoData?.videoshotData}
@@ -941,7 +934,7 @@ const VideoCardInner = memo(function VideoCardInner({
                 <div
                   className={`${styles.watchLater}`}
                   style={{
-                    display: isHovering || active ? 'flex' : 'none',
+                    display: isHoveringAfterDelay || active ? 'flex' : 'none',
                   }}
                   ref={watchLaterRef}
                   onClick={onToggleWatchLater}
@@ -983,7 +976,7 @@ const VideoCardInner = memo(function VideoCardInner({
                   ref={btnDislikeRef}
                   className={styles.btnDislike}
                   onClick={onTriggerDislike}
-                  style={{ display: isHovering ? 'flex' : 'none' }}
+                  style={{ display: isHoveringAfterDelay ? 'flex' : 'none' }}
                 >
                   <svg className={styles.btnDislikeIcon}>
                     <use href='#widget-close'></use>

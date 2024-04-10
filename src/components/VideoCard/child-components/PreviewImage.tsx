@@ -32,7 +32,7 @@ interface IProps {
   pvideo?: PvideoData
 
   // hover => listen mousemove of PreviewImage div ref
-  // 如果没有移动鼠标, 后面 mousemove 无法触发, 这个时候需要从前面 mouseenter 中读取 enterCursorState
+  // 如果没有移动鼠标, 后面 mousemove 无法触发, 这个时候需要从前面 mouseenter 中读取 enter cursor state
   mouseEnterRelativeX: number | undefined
 
   previewAnimationProgress?: number

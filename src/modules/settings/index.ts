@@ -53,9 +53,8 @@ export const initialSettings = {
   // 鼠标悬浮自动预览, 不再跟随鼠标位置, 默认: 跟随鼠标
   autoPreviewWhenHover: false,
 
-  // 颜色主题
-  theme: '',
-  colorPickerThemeSelectedColor: '', // 自定义颜色
+  // hover 延时
+  useDelayForHover: true,
 
   /**
    * tab=watchlater
@@ -85,7 +84,6 @@ export const initialSettings = {
    * 过滤器模块
    * 使用 flat config 方便使用 FlagSettingItem
    */
-
   filterEnabled: true,
 
   // 最少播放量
@@ -120,6 +118,12 @@ export const initialSettings = {
 
   // custom grid | default grid
   styleUseCustomGrid: true,
+
+  /**
+   * 颜色主题
+   */
+  theme: '',
+  colorPickerThemeSelectedColor: '', // 自定义颜色
 
   /**
    * 功能

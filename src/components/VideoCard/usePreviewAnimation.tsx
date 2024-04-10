@@ -1,7 +1,11 @@
-import { APP_NAME } from '$common'
+import { APP_NAME, __PROD__ } from '$common'
+import { useRefState } from '$common/hooks/useRefState'
 import { settings } from '$modules/settings'
 import { useEventListener, useGetState, useMemoizedFn, useRafState, useUnmountedRef } from 'ahooks'
+import delay from 'delay'
 import type { MouseEvent } from 'react'
+
+const HOVER_DELAY = 800
 
 /**
  * 自动以动画方式预览
@@ -21,7 +25,10 @@ export function usePreviewAnimation({
   tryFetchVideoData: () => Promise<void>
   videoPreviewWrapperRef: RefObject<HTMLDivElement>
 }) {
-  const DEBUG_ANIMATION = process.env.NODE_ENV !== 'production' && false
+  const DEBUG_ANIMATION = __PROD__
+    ? false
+    : // free to change
+      false
 
   const [previewAnimationProgress, setPreviewAnimationProgress] = useRafState<number | undefined>(
     undefined,
@@ -30,14 +37,39 @@ export function usePreviewAnimation({
   const [mouseMoved, setMouseMoved] = useState(false)
 
   // 在 pvideodata 加载的时候, useHover 会有变化, so 使用 mouseenter/mouseleave 自己处理
-  const isHovering = useRef(false)
+  const [isHovering, setIsHovering, getIsHovering] = useRefState(false)
+  const [isHoveringAfterDelay, setIsHoveringAfterDelay, getIsHoveringAfterDelay] =
+    useRefState(false)
   const startByHover = useRef(false)
+
+  // mouseenter cursor state
+  const [mouseEnterRelativeX, setMouseEnterRelativeX] = useState<number | undefined>(undefined)
+  const updateMouseEnterRelativeX = (e: MouseEvent) => {
+    const rect = videoPreviewWrapperRef.current?.getBoundingClientRect()
+    if (!rect) return
+    // https://github.com/alibaba/hooks/blob/v3.7.0/packages/hooks/src/useMouse/index.ts#L62
+    const { x } = rect
+    const relativeX = e.pageX - window.pageXOffset - x
+    setMouseEnterRelativeX(relativeX)
+  }
 
   useEventListener(
     'mouseenter',
-    (e) => {
-      isHovering.current = true
+    async (e) => {
+      setIsHovering(true)
+      updateMouseEnterRelativeX(e)
 
+      if (settings.useDelayForHover) {
+        await delay(HOVER_DELAY)
+      }
+
+      // mouse leave after delay
+      if (!getIsHovering()) return
+
+      // set delay flag
+      setIsHoveringAfterDelay(true)
+
+      // start preview animation
       if (autoPreviewWhenHover && !idRef.current) {
         DEBUG_ANIMATION &&
           console.log(
@@ -53,7 +85,8 @@ export function usePreviewAnimation({
   useEventListener(
     'mouseleave',
     (e) => {
-      isHovering.current = false
+      setIsHovering(false)
+      setIsHoveringAfterDelay(false)
     },
     { target: videoPreviewWrapperRef },
   )
@@ -62,6 +95,12 @@ export function usePreviewAnimation({
     'mousemove',
     (e: MouseEvent) => {
       setMouseMoved(true)
+
+      // update mouse enter state in mouseenter-delay
+      if (isHovering && !isHoveringAfterDelay) {
+        updateMouseEnterRelativeX(e)
+      }
+
       if (!autoPreviewWhenHover) {
         stopAnimation()
       }
@@ -84,7 +123,7 @@ export function usePreviewAnimation({
     // mixed keyboard & mouse control
     if (autoPreviewWhenHover) {
       if (startByHover.current) {
-        if (!isHovering.current) return true
+        if (!getIsHovering()) return true
       } else {
         if (!active) return true
       }
@@ -104,7 +143,7 @@ export function usePreviewAnimation({
       console.log(`[${APP_NAME}]: [animation] stopAnimation: %o`, {
         autoPreviewWhenHover,
         unmounted: unmounted.current,
-        isHovering: isHovering.current,
+        isHovering: getIsHovering(),
         active,
         mouseMoved,
       })
@@ -201,5 +240,8 @@ export function usePreviewAnimation({
     onHotkeyPreviewAnimation,
     onStartPreviewAnimation,
     previewAnimationProgress,
+    isHovering,
+    isHoveringAfterDelay,
+    mouseEnterRelativeX,
   }
 }
