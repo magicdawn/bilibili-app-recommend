@@ -22,7 +22,7 @@ export function SectionRecommend() {
     items,
     refresh,
     error: refreshError,
-    swr,
+    useSkeleton,
   } = useRefresh({
     tab,
     debug,
@@ -31,7 +31,7 @@ export function SectionRecommend() {
   })
   useMount(refresh)
 
-  const showSkeleton = !items.length || refreshError || (refreshing && !swr)
+  const showSkeleton = !items.length || refreshError || (refreshing && useSkeleton)
 
   return (
     <section data-area='推荐'>
