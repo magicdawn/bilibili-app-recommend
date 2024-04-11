@@ -84,6 +84,14 @@ export class DynamicFeedRecService implements IService {
           uniqId: item.id_str || crypto.randomUUID(),
         }
       })
+
+    // side effects
+    const { upMid, upName } = dynamicFeedFilterStore
+    if (upMid && upName && upName === upMid.toString() && items[0]) {
+      const authorName = items[0].modules.module_author.name
+      dynamicFeedFilterStore.upName = authorName
+    }
+
     return items
   }
 

@@ -22,7 +22,6 @@ import { Picture } from '$ui-components/Picture'
 import { AntdMessage } from '$utility'
 import { getAvatarSrc } from '$utility/image'
 import { toastRequestFail } from '$utility/toast'
-import { formatCount } from '$utility/video'
 import { useHover, usePrevious } from 'ahooks'
 import type { MenuProps } from 'antd'
 import { Avatar, Dropdown } from 'antd'
@@ -30,20 +29,16 @@ import delay from 'delay'
 import { motion } from 'framer-motion'
 import type { Emitter } from 'mitt'
 import mitt from 'mitt'
+import { tryit } from 'radash'
 import type { MouseEvent, MouseEventHandler } from 'react'
-import { AppRecIconScaleMap, AppRecIconSvgNameMap } from './app-rec-icon'
 import type { VideoData } from './card.service'
 import { cancelDislike, getVideoData, watchLaterAdd, watchLaterDel } from './card.service'
 import { PreviewImage } from './child-components/PreviewImage'
 import styles from './index.module.scss'
-import {
-  PLAYER_SCREEN_MODE,
-  PlayerScreenMode,
-  STAT_NUMBER_FALLBACK,
-  borderRadiusStyle,
-} from './index.shared'
-import type { IVideoCardData, StatItemType } from './process/normalize'
+import { PLAYER_SCREEN_MODE, PlayerScreenMode, borderRadiusStyle } from './index.shared'
+import type { IVideoCardData } from './process/normalize'
 import { normalizeCardData } from './process/normalize'
+import { AppRecIconScaleMap, AppRecIconSvgNameMap, makeStatItem } from './stat-item'
 import { usePreviewAnimation } from './usePreviewAnimation'
 
 const debug = baseDebug.extend('components:VideoCard')
@@ -377,12 +372,9 @@ const VideoCardInner = memo(function VideoCardInner({
     if (!active) return
 
     // update global item data for debug
-    try {
+    tryit(() => {
       ;(unsafeWindow as any)[`${APP_KEY_PREFIX}_activeItem`] = item
-    } catch (e: any) {
-      console.warn('set unsafeWindow activeItem error')
-      console.warn(e.stack || e)
-    }
+    })()
 
     // 自动开始预览
     if (settings.autoPreviewWhenKeyboardSelect) {
@@ -409,7 +401,6 @@ const VideoCardInner = memo(function VideoCardInner({
    */
 
   const hasWatchLaterEntry = item.api !== 'app' || (item.api === 'app' && item.goto === 'av')
-
   const requestingWatchLaterApi = useRef(false)
   const onToggleWatchLater = useMemoizedFn(
     async (
@@ -463,6 +454,7 @@ const VideoCardInner = memo(function VideoCardInner({
   /**
    * 不喜欢
    */
+  const hasDislikeEntry = isApp && authed && !!item.three_point?.dislike_reasons?.length
   const btnDislikeRef = useRef(null)
   const isBtnDislikeHovering = useHover(btnDislikeRef)
   const onTriggerDislike = useMemoizedFn((e?: MouseEvent) => {
@@ -482,41 +474,10 @@ const VideoCardInner = memo(function VideoCardInner({
     showModalDislike(item)
   })
 
-  const makeStatItem = ({
-    text,
-    iconSvgName,
-    iconSvgScale,
-  }: {
-    text: StatItemType['value']
-    iconSvgName: string
-    iconSvgScale?: number
-  }) => {
-    let _text: string
-    if (typeof text === 'number' || (text && /^\d+$/.test(text))) {
-      _text = formatCount(Number(text)) ?? STAT_NUMBER_FALLBACK
-    } else {
-      _text = text ?? STAT_NUMBER_FALLBACK
-    }
-
-    return (
-      <span className='bili-video-card__stats--item'>
-        <svg
-          className='bili-video-card__stats--icon'
-          style={{
-            transform: iconSvgScale ? `scale(${iconSvgScale})` : undefined,
-          }}
-        >
-          <use href={iconSvgName}></use>
-        </svg>
-        <span
-          className='bili-video-card__stats--text'
-          style={{ lineHeight: 'calc(var(--icon-size) + 1px)' }}
-        >
-          {_text}
-        </span>
-      </span>
-    )
-  }
+  /**
+   * 充电专属
+   */
+  const hasChargeTag = item.api === EApiType.dynamic && recommendReason === '充电专属'
 
   /**
    * 收藏状态
@@ -613,8 +574,6 @@ const VideoCardInner = memo(function VideoCardInner({
   useMittOn(emitter, 'trigger-dislike', () => onTriggerDislike())
   useMittOn(emitter, 'start-preview-animation', onStartPreviewAnimation)
   useMittOn(emitter, 'hotkey-preview-animation', onHotkeyPreviewAnimation)
-
-  const hasDislikeEntry = isApp && authed && !!item.three_point?.dislike_reasons?.length
 
   /**
    * context menu
@@ -987,6 +946,39 @@ const VideoCardInner = memo(function VideoCardInner({
                   >
                     我不想看
                   </span>
+                </div>
+              )}
+
+              {/* 充电专属 */}
+              {hasChargeTag && (
+                <div
+                  className={styles.chargeTagWrapper}
+                  css={css`
+                    padding: 1px 4px 2px;
+                    font-size: 10px;
+                    color: #fff;
+                    text-align: center;
+                    line-height: 17px;
+                    border-radius: 2px;
+                    margin-left: 4px;
+                    white-space: nowrap;
+                    background-color: #f69;
+                    padding-right: 6px;
+                  `}
+                >
+                  <svg
+                    width='16'
+                    height='17'
+                    viewBox='0 0 16 17'
+                    fill='none'
+                    xmlns='http://www.w3.org/2000/svg'
+                  >
+                    <path
+                      d='M5.00014 14.9839C4.94522 15.1219 5.12392 15.2322 5.22268 15.1212L11.5561 8.00214C11.7084 7.83093 11.5869 7.56014 11.3578 7.56014H9.13662L11.6019 3.57178C11.7112 3.39489 11.584 3.16666 11.376 3.16666H7.4475C7.22576 3.16666 7.02737 3.30444 6.94992 3.51221L4.68362 9.59189C4.61894 9.76539 4.74725 9.95014 4.93241 9.95014H7.00268L5.00014 14.9839Z'
+                      fill='white'
+                    ></path>
+                  </svg>
+                  充电专属
                 </div>
               )}
             </div>

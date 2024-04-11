@@ -2,6 +2,10 @@
  * app 接口返回的 icon 是数字 (id), 映射成 field(play / like ...), field 映射成 svg-icon
  */
 
+import { formatCount } from '$utility'
+import { STAT_NUMBER_FALLBACK } from './index.shared'
+import type { StatItemType } from './process/normalize'
+
 export const AppRecIconSvgNameMap = {
   play: '#widget-video-play-count', // or #widget-play-count
   danmaku: '#widget-video-danmaku',
@@ -45,4 +49,40 @@ export function statItemForId(id: number) {
     iconSvgName: getSvgName(id),
     iconSvgScale: getSvgScale(id),
   }
+}
+
+export function makeStatItem({
+  text,
+  iconSvgName,
+  iconSvgScale,
+}: {
+  text: StatItemType['value']
+  iconSvgName: string
+  iconSvgScale?: number
+}) {
+  let _text: string
+  if (typeof text === 'number' || (text && /^\d+$/.test(text))) {
+    _text = formatCount(Number(text)) ?? STAT_NUMBER_FALLBACK
+  } else {
+    _text = text ?? STAT_NUMBER_FALLBACK
+  }
+
+  return (
+    <span className='bili-video-card__stats--item'>
+      <svg
+        className='bili-video-card__stats--icon'
+        style={{
+          transform: iconSvgScale ? `scale(${iconSvgScale})` : undefined,
+        }}
+      >
+        <use href={iconSvgName}></use>
+      </svg>
+      <span
+        className='bili-video-card__stats--text'
+        style={{ lineHeight: 'calc(var(--icon-size) + 1px)' }}
+      >
+        {_text}
+      </span>
+    </span>
+  )
 }

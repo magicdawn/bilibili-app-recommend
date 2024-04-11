@@ -17,28 +17,36 @@ $z: 3;
 // https://github.com/magicdawn/bilibili-app-recommend/issues/66
 // B站自己的样式 className 会变
 
+@mixin generate-top-styles($horizontal-position) {
+  @if $horizontal-position != left and $horizontal-position != right {
+    @error "$horizontal-position allowed: [left, right], but got #{$horizontal-position}";
+  }
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  position: absolute;
+  top: 8px;
+  #{$horizontal-position}: 8px;
+
+  transform: translateZ(0);
+  // z-index: 9;
+  z-index: $z + 2;
+}
+
 @mixin generate-action-button($class-name, $horizontal-position, $icon-size) {
   @if $horizontal-position != left and $horizontal-position != right {
     @error "$horizontal-position allowed: [left, right], but got #{$horizontal-position}";
   }
 
   .#{$class-name} {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    position: absolute;
-    top: 8px;
-    #{$horizontal-position}: 8px;
+    @include generate-top-styles($horizontal-position);
 
     width: 28px;
     height: 28px;
     border-radius: 6px;
     cursor: pointer;
     background-color: rgba(33, 33, 33, 0.8);
-    transform: translateZ(0);
-    // z-index: 9;
-    z-index: $z + 2;
 
     .#{$class-name}-icon {
       pointer-events: none;
@@ -69,6 +77,10 @@ $z: 3;
 
 @include generate-action-button(btn-dislike, left, 12px);
 @include generate-action-button(watch-later, right, 22px);
+
+.charge-tag-wrapper {
+  @include generate-top-styles(left);
+}
 
 .badge {
   color: #fa6a9d;

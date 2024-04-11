@@ -24,8 +24,8 @@ import {
 } from '$utility/video'
 import { BvCode } from '@mgdn/bvid'
 import dayjs from 'dayjs'
-import type { AppRecIconField } from '../app-rec-icon'
-import { AppRecIconMap, getField } from '../app-rec-icon'
+import type { AppRecIconField } from '../stat-item'
+import { AppRecIconMap, getField } from '../stat-item'
 
 export type StatItemType = { field: AppRecIconField; value: number | string | undefined }
 
