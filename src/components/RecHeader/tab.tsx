@@ -3,6 +3,7 @@ import { flexVerticalCenterStyle } from '$common/emotion-css'
 import { proxyWithLocalStorage } from '$common/hooks/proxyWithLocalStorage'
 import { type OnRefresh } from '$components/RecGrid/useRefresh'
 import { HelpInfo } from '$components/piece'
+import { QUERY_DYNAMIC_UP_MID } from '$modules/recommend/dynamic-feed'
 import { useSettingsSnapshot } from '$modules/settings'
 import { checkLoginStatus, getHasLogined, useHasLogined } from '$utility'
 import { Radio } from 'antd'
@@ -15,12 +16,20 @@ import {
   type TabConfigItem,
 } from './tab.shared'
 
+/**
+ * initial tab
+ */
+
 const VIDEO_SOURCE_TAB_STORAGE_KEY = `${APP_NAME}-video-source-tab`
 
 export const videoSourceTabState = proxyWithLocalStorage<{ value: ETabType }>(
   { value: ETabType.RecommendApp },
   VIDEO_SOURCE_TAB_STORAGE_KEY,
 )
+
+if (QUERY_DYNAMIC_UP_MID && videoSourceTabState.value !== ETabType.DynamicFeed) {
+  videoSourceTabState.value = ETabType.DynamicFeed
+}
 
 export function useCurrentShowingTabKeys(): ETabType[] {
   const { hidingTabKeys } = useSettingsSnapshot()

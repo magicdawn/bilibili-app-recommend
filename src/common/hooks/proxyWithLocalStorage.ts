@@ -10,9 +10,12 @@ export function proxyWithLocalStorage<T extends object>(initialVaue: T, storageK
     ...savedValue,
   })
 
-  subscribe(p, () => {
-    const val = snapshot(p)
-    localStorage.setItem(storageKey, JSON.stringify(val))
+  // start subscribe in nextTick, so value can be changed synchronously without persist
+  setTimeout(() => {
+    subscribe(p, () => {
+      const val = snapshot(p)
+      localStorage.setItem(storageKey, JSON.stringify(val))
+    })
   })
 
   return p

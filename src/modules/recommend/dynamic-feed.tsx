@@ -104,12 +104,14 @@ export class DynamicFeedRecService implements IService {
  * view dynamic of <mid> via query
  */
 
+const searchParams = new URLSearchParams(location.search)
+export const QUERY_DYNAMIC_UP_MID = !!searchParams.get('dyn-mid')
+
 let upMidInitial: number | undefined = undefined
 let upNameInitial: string | undefined = undefined
-const searchParams = new URLSearchParams(location.search)
-if (searchParams.get('dyn-mid')) {
+if (QUERY_DYNAMIC_UP_MID) {
   upMidInitial = Number(searchParams.get('dyn-mid'))
-  upNameInitial = searchParams.get('dyn-name') ?? searchParams.get('dyn-mid') ?? undefined
+  upNameInitial = searchParams.get('dyn-name') ?? upMidInitial.toString() ?? undefined
 }
 
 export const dynamicFeedFilterStore = proxy({

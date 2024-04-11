@@ -413,15 +413,25 @@ const VideoCardInner = memo(function VideoCardInner({
   const hasDynamicFeedFilterSelectUpEntry =
     isNormalVideo && !!authorMid && !!authorName && !!onRefresh
   const onDynamicFeedFilterSelectUp = useMemoizedFn(async () => {
-    if (!authorMid || !authorName) return
-    dynamicFeedFilterSelectUp({
-      upMid: Number(authorMid),
-      upName: authorName,
-      searchText: undefined,
-    })
-    videoSourceTabState.value = ETabType.DynamicFeed
-    await delay(100)
-    await onRefresh?.()
+    if (!hasDynamicFeedFilterSelectUpEntry) return
+
+    async function openInCurrentWindow() {
+      dynamicFeedFilterSelectUp({
+        upMid: Number(authorMid),
+        upName: authorName,
+        searchText: undefined,
+      })
+      videoSourceTabState.value = ETabType.DynamicFeed
+      await delay(100)
+      await onRefresh?.()
+    }
+
+    function openInNewWindow() {
+      const u = `/?dyn-mid=${authorMid}`
+      GM_openInTab(u, { insert: true, active: true })
+    }
+
+    openInNewWindow()
   })
 
   const contextMenus: MenuProps['items'] = useMemo(() => {
