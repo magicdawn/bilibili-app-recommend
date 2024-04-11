@@ -1,18 +1,26 @@
 import { APP_NAME } from '$common'
 import { AntdTooltip } from '$components/AntdApp'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
-import type {
-  AndroidAppRecItemExtend,
-  AppRecItemExtend,
-  DynamicFeedItemExtend,
-  IpadAppRecItemExtend,
-  PcRecItemExtend,
-  PopularGeneralItemExtend,
-  PopularWeeklyItemExtend,
-  RecItemType,
-  WatchLaterItemExtend,
+import {
+  isApp,
+  isDynamic,
+  isFav,
+  isPc,
+  isPopularGeneral,
+  isPopularWeekly,
+  isWatchlater,
+  type AndroidAppRecItemExtend,
+  type AppRecItemExtend,
+  type DynamicFeedItemExtend,
+  type IpadAppRecItemExtend,
+  type PcRecItemExtend,
+  type PopularGeneralItemExtend,
+  type PopularWeeklyItemExtend,
+  type RecItemType,
+  type WatchLaterItemExtend,
 } from '$define'
 import type { FavItemExtend } from '$define/fav'
+import type { EApiType } from '$define/index.shared'
 import { IconPark } from '$icon-park'
 import { toHttps } from '$utility'
 import {
@@ -66,33 +74,34 @@ export interface IVideoCardData {
   appBadgeDesc?: string
 }
 
+type Getter<T> = Record<RecItemType['api'], (item: RecItemType) => T>
+
 export function lookinto<T>(
   item: RecItemType,
   opts: {
-    'pc': (item: PcRecItemExtend) => T
-    'app': (item: AppRecItemExtend) => T
-    'dynamic': (item: DynamicFeedItemExtend) => T
-    'watchlater': (item: WatchLaterItemExtend) => T
-    'fav': (item: FavItemExtend) => T
-    'popular-general': (item: PopularGeneralItemExtend) => T
-    'popular-weekly': (item: PopularWeeklyItemExtend) => T
+    [EApiType.App]: (item: AppRecItemExtend) => T
+    [EApiType.Pc]: (item: PcRecItemExtend) => T
+    [EApiType.Dynamic]: (item: DynamicFeedItemExtend) => T
+    [EApiType.Watchlater]: (item: WatchLaterItemExtend) => T
+    [EApiType.Fav]: (item: FavItemExtend) => T
+    [EApiType.PopularGeneral]: (item: PopularGeneralItemExtend) => T
+    [EApiType.PopularWeekly]: (item: PopularWeeklyItemExtend) => T
   },
 ): T {
-  if (item.api === 'pc') return opts.pc(item)
-  if (item.api === 'app') return opts.app(item)
-  if (item.api === 'dynamic') return opts.dynamic(item)
-  if (item.api === 'watchlater') return opts.watchlater(item)
-  if (item.api === 'fav') return opts.fav(item)
-  if (item.api === 'popular-general') return opts['popular-general'](item)
-  if (item.api === 'popular-weekly') return opts['popular-weekly'](item)
-
+  if (isApp(item)) return opts.app(item)
+  if (isPc(item)) return opts.pc(item)
+  if (isDynamic(item)) return opts.dynamic(item)
+  if (isWatchlater(item)) return opts.watchlater(item)
+  if (isFav(item)) return opts.fav(item)
+  if (isPopularGeneral(item)) return opts['popular-general'](item)
+  if (isPopularWeekly(item)) return opts['popular-weekly'](item)
   throw new Error(`unknown api type`)
 }
 
 export function normalizeCardData(item: RecItemType) {
   const ret = lookinto<IVideoCardData>(item, {
-    'pc': apiPcAdapter,
     'app': apiAppAdapter,
+    'pc': apiPcAdapter,
     'dynamic': apiDynamicAdapter,
     'watchlater': apiWatchLaterAdapter,
     'fav': apiFavAdapter,

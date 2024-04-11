@@ -21,7 +21,7 @@ export function filterRecItems(items: RecItemExtraType[], tab: ETabType) {
 
   return items.filter((item) => {
     // just keep it
-    if (item.api === EApiType.separator) return true
+    if (item.api === EApiType.Separator) return true
 
     const { play, duration, recommendReason, goto } = normalizeCardData(item)
     const isFollowed = recommendReason === '已关注' || recommendReason?.includes('关注')

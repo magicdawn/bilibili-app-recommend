@@ -44,7 +44,7 @@ export class PopularGeneralService implements IService {
     let items = (json.data.list || []).map((item) => {
       return {
         ...item,
-        api: EApiType.popularGeneral,
+        api: EApiType.PopularGeneral,
         uniqId: item.bvid,
       } as PopularGeneralItemExtend
     })

@@ -91,7 +91,7 @@ export class FavRecService implements IService {
       const header = this.addSeparator &&
         service.page === 1 &&
         items?.length && {
-          api: EApiType.separator as const,
+          api: EApiType.Separator as const,
           uniqId: `fav-folder-${service.entry.id}`,
           content: (
             <>
@@ -204,7 +204,7 @@ export class FavFolderService {
       return {
         ...item,
         folder: this.info!,
-        api: EApiType.fav,
+        api: EApiType.Fav,
         uniqId: `fav-${this.info?.id}-${item.bvid}`,
       }
     })

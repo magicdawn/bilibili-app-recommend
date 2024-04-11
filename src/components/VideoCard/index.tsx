@@ -1,12 +1,11 @@
-import { APP_KEY_PREFIX, APP_NAME, OPERATION_FAIL_MSG, baseDebug } from '$common'
+import { APP_KEY_PREFIX, APP_NAME, baseDebug } from '$common'
 import { useMittOn } from '$common/hooks/useMitt'
-import type { Reason } from '$components/ModalDislike'
-import { delDislikeId, showModalDislike, useDislikedReason } from '$components/ModalDislike'
+import { showModalDislike, useDislikedReason } from '$components/ModalDislike'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import type { OnRefresh } from '$components/RecGrid/useRefresh'
 import { useCurrentSourceTab, videoSourceTabState } from '$components/RecHeader/tab'
 import { ETabType } from '$components/RecHeader/tab.shared'
-import type { AppRecItem, AppRecItemExtend, RecItemType } from '$define'
+import { isApp, type AppRecItemExtend, type RecItemType } from '$define'
 import { EApiType } from '$define/index.shared'
 import { IconPark } from '$icon-park'
 import { cx } from '$libs'
@@ -21,21 +20,25 @@ import { isFirefox, isMac } from '$platform'
 import { Picture } from '$ui-components/Picture'
 import { AntdMessage } from '$utility'
 import { getAvatarSrc } from '$utility/image'
-import { toastRequestFail } from '$utility/toast'
 import { useHover, usePrevious } from 'ahooks'
 import type { MenuProps } from 'antd'
 import { Avatar, Dropdown } from 'antd'
 import delay from 'delay'
 import { motion } from 'framer-motion'
-import type { Emitter } from 'mitt'
-import mitt from 'mitt'
 import { tryit } from 'radash'
 import type { MouseEvent, MouseEventHandler } from 'react'
 import type { VideoData } from './card.service'
-import { cancelDislike, getVideoData, watchLaterAdd, watchLaterDel } from './card.service'
+import { getVideoData, watchLaterAdd, watchLaterDel } from './card.service'
 import { PreviewImage } from './child-components/PreviewImage'
+import { BlacklistCard, DislikedCard, SkeletonCard } from './child-components/other-cards'
 import styles from './index.module.scss'
-import { PLAYER_SCREEN_MODE, PlayerScreenMode, borderRadiusStyle } from './index.shared'
+import type { VideoCardEmitter } from './index.shared'
+import {
+  PLAYER_SCREEN_MODE,
+  PlayerScreenMode,
+  borderRadiusStyle,
+  defaultEmitter,
+} from './index.shared'
 import type { IVideoCardData } from './process/normalize'
 import { normalizeCardData } from './process/normalize'
 import { AppRecIconScaleMap, AppRecIconSvgNameMap, makeStatItem } from './stat-item'
@@ -59,10 +62,6 @@ export type VideoCardEvents = {
   'start-preview-animation': void | undefined
   'hotkey-preview-animation': void | undefined
 }
-
-export type VideoCardEmitter = Emitter<VideoCardEvents>
-
-const defaultEmitter = mitt<VideoCardEvents>()
 
 export type VideoCardProps = {
   style?: CSSProperties
@@ -132,135 +131,6 @@ export const VideoCard = memo(function VideoCard({
   )
 })
 
-const SkeletonCard = memo(function SkeletonCard({ loading }: { loading: boolean }) {
-  const { styleNewCardStyle } = useSettingsSnapshot()
-
-  return (
-    <div
-      className={cx('bili-video-card__skeleton', {
-        hide: !loading,
-        [styles.skeletonActive]: loading,
-      })}
-    >
-      <div className='bili-video-card__skeleton--cover' style={borderRadiusStyle} />
-
-      {!styleNewCardStyle && (
-        <div className='bili-video-card__skeleton--info'>
-          <div className='bili-video-card__skeleton--right'>
-            <p className='bili-video-card__skeleton--text'></p>
-            <p className='bili-video-card__skeleton--text short'></p>
-            <p className='bili-video-card__skeleton--light'></p>
-          </div>
-        </div>
-      )}
-      {styleNewCardStyle && (
-        <div className='bili-video-card__skeleton--info'>
-          <div
-            className='bili-video-card__skeleton--avatar'
-            css={css`
-              width: 32px;
-              height: 32px;
-              border-radius: 50%;
-            `}
-          />
-          <div
-            className='bili-video-card__skeleton--right'
-            css={css`
-              flex: 1;
-              margin-left: 10px;
-            `}
-          >
-            <p className='bili-video-card__skeleton--text'></p>
-            <p className='bili-video-card__skeleton--text short'></p>
-            <p className='bili-video-card__skeleton--light'></p>
-            <p className='bili-video-card__skeleton--text tiny'></p>
-          </div>
-        </div>
-      )}
-    </div>
-  )
-})
-
-const DislikedCard = memo(function DislikedCard({
-  dislikedReason,
-  item,
-  emitter = defaultEmitter,
-}: {
-  item: AppRecItem
-  dislikedReason: Reason
-  emitter?: VideoCardEmitter
-}) {
-  const onCancelDislike = useMemoizedFn(async () => {
-    if (!dislikedReason?.id) return
-
-    let success = false
-    let err: Error | undefined
-    try {
-      success = await cancelDislike(item, dislikedReason.id)
-    } catch (e) {
-      err = e as Error
-    }
-
-    if (err) {
-      console.error(err.stack || err)
-      return toastRequestFail()
-    }
-
-    success ? AntdMessage.success('已撤销') : AntdMessage.error(OPERATION_FAIL_MSG)
-    if (success) {
-      delDislikeId(item.param)
-    }
-  })
-
-  useMittOn(emitter, 'cancel-dislike', onCancelDislike)
-
-  return (
-    <div className={cx(styles.dislikedWrapper)}>
-      <div className={styles.dislikeContentCover}>
-        <div className={styles.dislikeContentCoverInner}>
-          <IconPark name='DistraughtFace' size={32} className={styles.dislikeIcon} />
-          <div className={styles.dislikeReason}>{dislikedReason?.name}</div>
-          <div className={styles.dislikeDesc}>{dislikedReason?.toast || '将减少此类内容推荐'}</div>
-        </div>
-      </div>
-      <div className={styles.dislikeContentAction}>
-        <button onClick={onCancelDislike}>
-          <IconPark name='Return' size='16' style={{ marginRight: 4, marginTop: -2 }} />
-          撤销
-        </button>
-      </div>
-    </div>
-  )
-})
-
-const BlacklistCard = memo(function BlacklistCard({ cardData }: { cardData: IVideoCardData }) {
-  const { authorMid, authorName } = cardData
-
-  const onCancel = useMemoizedFn(async () => {
-    if (!authorMid) return
-    const success = await UserBlacklistService.remove(authorMid)
-    if (success) AntdMessage.success(`已移出黑名单: ${authorName}`)
-  })
-
-  return (
-    <div className={cx(styles.dislikedWrapper)}>
-      <div className={styles.dislikeContentCover}>
-        <div className={styles.dislikeContentCoverInner}>
-          <IconPark name='PeopleDelete' size={32} className={styles.dislikeIcon} />
-          <div className={styles.dislikeReason}>已拉黑</div>
-          <div className={styles.dislikeDesc}>UP: {authorName}</div>
-        </div>
-      </div>
-      <div className={styles.dislikeContentAction}>
-        <button onClick={onCancel}>
-          <IconPark name='Return' size='16' style={{ marginRight: 4, marginTop: -2 }} />
-          撤销
-        </button>
-      </div>
-    </div>
-  )
-})
-
 type VideoCardInnerProps = {
   item: RecItemType
   cardData: IVideoCardData
@@ -279,13 +149,8 @@ const VideoCardInner = memo(function VideoCardInner({
   onRefresh,
   emitter = defaultEmitter,
 }: VideoCardInnerProps) {
-  const isPc = item.api === 'pc'
-  const isApp = item.api === 'app'
-  const isDynamic = item.api === 'dynamic'
-  const isWatchlater = item.api === 'watchlater'
-  const isFav = item.api === 'fav'
-
   const { styleNewCardStyle, autoPreviewWhenHover, accessKey } = useSettingsSnapshot()
+  const authed = Boolean(accessKey)
 
   let {
     // video
@@ -321,19 +186,11 @@ const VideoCardInner = memo(function VideoCardInner({
     console.warn(`[${APP_NAME}]: none (av,bangumi,picture) goto type %s`, goto, item)
   }
 
-  /**
-   * transformed
-   */
-
   const [videoData, setVideoData] = useState<VideoData | null>(null)
   const isFetchingVideoData = useRef(false)
-
   const tryFetchVideoData = useMemoizedFn(async () => {
-    // already fetched
-    if (videoData) return
-    // fetching
-    if (isFetchingVideoData.current) return
-
+    if (videoData) return // already fetched
+    if (isFetchingVideoData.current) return // fetching
     try {
       isFetchingVideoData.current = true
       setVideoData(await getVideoData(bvid))
@@ -345,9 +202,7 @@ const VideoCardInner = memo(function VideoCardInner({
   /**
    * 预览 hover state
    */
-
   const videoPreviewWrapperRef = useRef<HTMLDivElement>(null)
-
   const {
     onStartPreviewAnimation,
     onHotkeyPreviewAnimation,
@@ -380,98 +235,25 @@ const VideoCardInner = memo(function VideoCardInner({
     }
   }, [active])
 
-  // 稍后再看 hover state
-  const watchLaterRef = useRef(null)
-  const isWatchLaterHovering = useHover(watchLaterRef)
+  // 稍候再看
+  const { watchlaterIconEl, onToggleWatchLater, watchLaterAdded, hasWatchLaterEntry } =
+    useWatchlaterRelated({
+      item,
+      cardData,
+      onRemoveCurrent,
+      active,
+      isHoveringAfterDelay,
+    })
 
-  // watchLater added
-  const watchLaterAdded = useWatchLaterState(bvid)
-  const watchLaterAddedPrevious = usePrevious(watchLaterAdd)
-
-  const authed = Boolean(accessKey)
-
-  /**
-   * 稍候再看
-   */
-
-  const hasWatchLaterEntry = item.api !== 'app' || (item.api === 'app' && item.goto === 'av')
-  const requestingWatchLaterApi = useRef(false)
-  const onToggleWatchLater = useMemoizedFn(
-    async (
-      e?: MouseEvent,
-      usingAction?: typeof watchLaterDel | typeof watchLaterAdd,
-    ): Promise<{ success: boolean; targetState?: boolean }> => {
-      e?.preventDefault()
-      e?.stopPropagation()
-
-      usingAction ??= watchLaterAdded ? watchLaterDel : watchLaterAdd
-      if (usingAction !== watchLaterAdd && usingAction !== watchLaterDel) {
-        throw new Error('unexpected usingAction provided')
-      }
-
-      if (requestingWatchLaterApi.current) return { success: false }
-      requestingWatchLaterApi.current = true
-
-      let success = false
-      try {
-        success = await usingAction(avid)
-      } finally {
-        requestingWatchLaterApi.current = false
-      }
-
-      const targetState = usingAction === watchLaterAdd ? true : false
-      if (success) {
-        if (targetState) {
-          watchLaterState.bvidSet.add(bvid)
-        } else {
-          watchLaterState.bvidSet.delete(bvid)
-        }
-
-        // 稍后再看
-        if (item.api === 'watchlater') {
-          // when remove-watchlater for watchlater tab, remove this card
-          if (!targetState) {
-            await delay(100)
-            onRemoveCurrent?.(item, cardData)
-          }
-        }
-        // 其他 Tab
-        else {
-          AntdMessage.success(`已${targetState ? '添加' : '移除'}稍后再看`)
-        }
-      }
-
-      return { success, targetState }
-    },
-  )
-
-  /**
-   * 不喜欢
-   */
-  const hasDislikeEntry = isApp && authed && !!item.three_point?.dislike_reasons?.length
-  const btnDislikeRef = useRef(null)
-  const isBtnDislikeHovering = useHover(btnDislikeRef)
-  const onTriggerDislike = useMemoizedFn((e?: MouseEvent) => {
-    e?.preventDefault()
-    e?.stopPropagation()
-
-    if (!hasDislikeEntry) {
-      if (item.api !== 'app') {
-        return AntdMessage.error('当前视频不支持提交「我不想看」')
-      }
-      if (!authed) {
-        return AntdMessage.error('请先获取 access_key')
-      }
-      return
-    }
-
-    showModalDislike(item)
+  // 不喜欢
+  const { dislikeIconEl, hasDislikeEntry, onTriggerDislike } = useDislikeRelated({
+    item,
+    authed,
+    isHoveringAfterDelay,
   })
 
-  /**
-   * 充电专属
-   */
-  const hasChargeTag = item.api === EApiType.dynamic && recommendReason === '充电专属'
+  // 充电专属
+  const hasChargeTag = item.api === EApiType.Dynamic && recommendReason === '充电专属'
 
   /**
    * 收藏状态
@@ -502,7 +284,7 @@ const VideoCardInner = memo(function VideoCardInner({
     let popupHeight = Math.ceil((popupWidth / 16) * 9)
 
     // try detect 竖屏视频
-    if (item.api === EApiType.app && item.uri?.startsWith('bilibili://')) {
+    if (item.api === EApiType.App && item.uri?.startsWith('bilibili://')) {
       const searchParams = new URL(item.uri).searchParams
       const playerWidth = Number(searchParams.get('player_width') || 0)
       const playerHeight = Number(searchParams.get('player_height') || 0)
@@ -883,65 +665,10 @@ const VideoCardInner = memo(function VideoCardInner({
               )}
 
               {/* 稍后再看 */}
-              {hasWatchLaterEntry && (
-                <div
-                  className={`${styles.watchLater}`}
-                  style={{
-                    display: isHoveringAfterDelay || active ? 'flex' : 'none',
-                  }}
-                  ref={watchLaterRef}
-                  onClick={onToggleWatchLater}
-                >
-                  {watchLaterAdded ? (
-                    <svg className={styles.watchLaterIcon} viewBox='0 0 200 200'>
-                      <motion.path
-                        d='M25,100 l48,48 a 8.5,8.5 0 0 0 10,0 l90,-90'
-                        strokeWidth='20'
-                        stroke='currentColor'
-                        fill='transparent'
-                        strokeLinecap='round'
-                        {...(!watchLaterAddedPrevious
-                          ? {
-                              initial: { pathLength: 0 },
-                              animate: { pathLength: 1 },
-                            }
-                          : undefined)}
-                      />
-                    </svg>
-                  ) : (
-                    <svg className={styles.watchLaterIcon}>
-                      <use href={'#widget-watch-later'} />
-                    </svg>
-                  )}
-                  {/* <use href={watchLaterAdded ? '#widget-watch-save' : '#widget-watch-later'} /> */}
-                  <span
-                    className={styles.watchLaterTip}
-                    style={{ display: isWatchLaterHovering ? 'block' : 'none' }}
-                  >
-                    {watchLaterAdded ? '移除稍后再看' : '稍后再看'}
-                  </span>
-                </div>
-              )}
+              {watchlaterIconEl}
 
               {/* 我不想看 */}
-              {hasDislikeEntry && (
-                <div
-                  ref={btnDislikeRef}
-                  className={styles.btnDislike}
-                  onClick={onTriggerDislike}
-                  style={{ display: isHoveringAfterDelay ? 'flex' : 'none' }}
-                >
-                  <svg className={styles.btnDislikeIcon}>
-                    <use href='#widget-close'></use>
-                  </svg>
-                  <span
-                    className={styles.btnDislikeTip}
-                    style={{ display: isBtnDislikeHovering ? 'block' : 'none' }}
-                  >
-                    我不想看
-                  </span>
-                </div>
-              )}
+              {dislikeIconEl}
 
               {/* 充电专属 */}
               {hasChargeTag && (
@@ -1146,3 +873,184 @@ const VideoCardInner = memo(function VideoCardInner({
     </div>
   )
 })
+
+/**
+ * 稍候再看
+ */
+function useWatchlaterRelated({
+  item,
+  cardData,
+  onRemoveCurrent,
+  isHoveringAfterDelay,
+  active,
+}: {
+  item: RecItemType
+  cardData: IVideoCardData
+  onRemoveCurrent: VideoCardInnerProps['onRemoveCurrent']
+  isHoveringAfterDelay: boolean
+  active: boolean
+}) {
+  const { avid, bvid } = cardData
+
+  const hasWatchLaterEntry = item.api !== 'app' || (item.api === 'app' && item.goto === 'av')
+
+  // 稍后再看 hover state
+  const watchLaterRef = useRef(null)
+  const isWatchLaterHovering = useHover(watchLaterRef)
+
+  // watchLater added
+  const watchLaterAdded = useWatchLaterState(bvid)
+  const watchLaterAddedPrevious = usePrevious(watchLaterAdd)
+
+  const requestingWatchLaterApi = useRef(false)
+  const onToggleWatchLater = useMemoizedFn(
+    async (
+      e?: MouseEvent,
+      usingAction?: typeof watchLaterDel | typeof watchLaterAdd,
+    ): Promise<{ success: boolean; targetState?: boolean }> => {
+      e?.preventDefault()
+      e?.stopPropagation()
+
+      usingAction ??= watchLaterAdded ? watchLaterDel : watchLaterAdd
+      if (usingAction !== watchLaterAdd && usingAction !== watchLaterDel) {
+        throw new Error('unexpected usingAction provided')
+      }
+
+      if (requestingWatchLaterApi.current) return { success: false }
+      requestingWatchLaterApi.current = true
+
+      let success = false
+      try {
+        success = await usingAction(avid)
+      } finally {
+        requestingWatchLaterApi.current = false
+      }
+
+      const targetState = usingAction === watchLaterAdd ? true : false
+      if (success) {
+        if (targetState) {
+          watchLaterState.bvidSet.add(bvid)
+        } else {
+          watchLaterState.bvidSet.delete(bvid)
+        }
+
+        // 稍后再看
+        if (item.api === 'watchlater') {
+          // when remove-watchlater for watchlater tab, remove this card
+          if (!targetState) {
+            await delay(100)
+            onRemoveCurrent?.(item, cardData)
+          }
+        }
+        // 其他 Tab
+        else {
+          AntdMessage.success(`已${targetState ? '添加' : '移除'}稍后再看`)
+        }
+      }
+
+      return { success, targetState }
+    },
+  )
+
+  const watchlaterIconEl = (
+    <>
+      {hasWatchLaterEntry && (
+        <div
+          className={`${styles.watchLater}`}
+          style={{
+            display: isHoveringAfterDelay || active ? 'flex' : 'none',
+          }}
+          ref={watchLaterRef}
+          onClick={onToggleWatchLater}
+        >
+          {watchLaterAdded ? (
+            <svg className={styles.watchLaterIcon} viewBox='0 0 200 200'>
+              <motion.path
+                d='M25,100 l48,48 a 8.5,8.5 0 0 0 10,0 l90,-90'
+                strokeWidth='20'
+                stroke='currentColor'
+                fill='transparent'
+                strokeLinecap='round'
+                {...(!watchLaterAddedPrevious
+                  ? {
+                      initial: { pathLength: 0 },
+                      animate: { pathLength: 1 },
+                    }
+                  : undefined)}
+              />
+            </svg>
+          ) : (
+            <svg className={styles.watchLaterIcon}>
+              <use href={'#widget-watch-later'} />
+            </svg>
+          )}
+          {/* <use href={watchLaterAdded ? '#widget-watch-save' : '#widget-watch-later'} /> */}
+          <span
+            className={styles.watchLaterTip}
+            style={{ display: isWatchLaterHovering ? 'block' : 'none' }}
+          >
+            {watchLaterAdded ? '移除稍后再看' : '稍后再看'}
+          </span>
+        </div>
+      )}
+    </>
+  )
+
+  return { watchlaterIconEl, onToggleWatchLater, watchLaterAdded, hasWatchLaterEntry }
+}
+
+/**
+ * 我不想看
+ */
+function useDislikeRelated({
+  item,
+  authed,
+  isHoveringAfterDelay,
+}: {
+  item: RecItemType
+  authed: boolean
+  isHoveringAfterDelay: boolean
+}) {
+  const hasDislikeEntry = isApp(item) && authed && !!item.three_point?.dislike_reasons?.length
+
+  const onTriggerDislike = useMemoizedFn((e?: MouseEvent) => {
+    e?.preventDefault()
+    e?.stopPropagation()
+
+    if (!hasDislikeEntry) {
+      if (item.api !== 'app') {
+        return AntdMessage.error('当前视频不支持提交「我不想看」')
+      }
+      if (!authed) {
+        return AntdMessage.error('请先获取 access_key')
+      }
+      return
+    }
+
+    showModalDislike(item)
+  })
+
+  const _ref = useRef(null)
+  const _hovering = useHover(_ref)
+  const dislikeIconEl = (
+    <>
+      {hasDislikeEntry && (
+        <div
+          ref={_ref}
+          className={styles.btnDislike}
+          onClick={onTriggerDislike}
+          style={{ display: isHoveringAfterDelay ? 'flex' : 'none' }}
+        >
+          <svg className={styles.btnDislikeIcon}>
+            <use href='#widget-close'></use>
+          </svg>
+          <span className={styles.btnDislikeTip} style={{ display: _hovering ? 'block' : 'none' }}>
+            我不想看
+          </span>
+        </div>
+      )}
+    </>
+  )
+
+  return { dislikeIconEl, hasDislikeEntry, onTriggerDislike }
+}

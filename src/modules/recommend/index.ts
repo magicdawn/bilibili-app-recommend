@@ -13,7 +13,7 @@ import { PcRecService } from './pc'
 const debug = baseDebug.extend('service')
 
 export const recItemUniqer = (item: RecItemExtraType) =>
-  item.api === EApiType.separator
+  item.api === EApiType.Separator
     ? item.uniqId
     : lookinto<string | number>(item, {
         'pc': (item) => item.bvid,
@@ -120,7 +120,7 @@ export async function getMinCount(
     }
 
     // enough
-    const len = items.filter((x) => x.api !== EApiType.separator).length
+    const len = items.filter((x) => x.api !== EApiType.Separator).length
     if (len >= count) break
 
     await addMore(count - items.length)

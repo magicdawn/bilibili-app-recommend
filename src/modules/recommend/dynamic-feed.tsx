@@ -80,7 +80,7 @@ export class DynamicFeedRecService implements IService {
       .map((item) => {
         return {
           ...item,
-          api: EApiType.dynamic,
+          api: EApiType.Dynamic,
           uniqId: item.id_str || crypto.randomUUID(),
         }
       })

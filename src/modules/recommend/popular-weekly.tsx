@@ -82,7 +82,7 @@ export class PopularWeeklyService implements IService {
       const items = await fetchWeeklyItems(epNum)
       this.qs.bufferQueue.push(
         {
-          api: EApiType.separator,
+          api: EApiType.Separator,
           uniqId: `popular-weekly-${epNum}`,
           content: (
             <a target='_blank' href={`https://www.bilibili.com/v/popular/weekly?num=${epNum}`}>
@@ -144,7 +144,7 @@ async function fetchWeeklyItems(episodeNum: number) {
     const items = (json.data.list || []).map((item) => {
       return {
         ...item,
-        api: EApiType.popularWeekly,
+        api: EApiType.PopularWeekly,
         uniqId: item.bvid,
       } as PopularWeeklyItemExtend
     })

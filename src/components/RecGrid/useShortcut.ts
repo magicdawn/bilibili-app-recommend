@@ -1,4 +1,4 @@
-import type { VideoCardEmitter } from '$components/VideoCard'
+import type { VideoCardEmitter } from '$components/VideoCard/index.shared'
 import { settings } from '$modules/settings'
 import { shouldDisableShortcut } from '$utility/dom'
 import { videoGrid } from '../video-grid.module.scss'

@@ -7,5 +7,5 @@ export type FavItem = Media & {
 
 export type FavItemExtend = FavItem & {
   uniqId: string
-  api: EApiType.fav
+  api: EApiType.Fav
 }

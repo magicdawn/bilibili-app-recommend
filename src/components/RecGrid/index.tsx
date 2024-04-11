@@ -8,8 +8,9 @@ import { useModalDislikeVisible } from '$components/ModalDislike'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import { useCurrentSourceTab } from '$components/RecHeader/tab'
 import { ETabType } from '$components/RecHeader/tab.shared'
-import type { VideoCardEmitter, VideoCardEvents } from '$components/VideoCard'
+import type { VideoCardEvents } from '$components/VideoCard'
 import { VideoCard } from '$components/VideoCard'
+import type { VideoCardEmitter } from '$components/VideoCard/index.shared'
 import { borderRadiusValue } from '$components/VideoCard/index.shared'
 import type { IVideoCardData } from '$components/VideoCard/process/normalize'
 import { type RecItemExtraType, type RecItemType } from '$define'
@@ -284,7 +285,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
   const modalDislikeVisible = useModalDislikeVisible()
 
   const usingVideoItems = useMemo(() => {
-    return items.filter((x) => x.api !== EApiType.separator)
+    return items.filter((x) => x.api !== EApiType.Separator)
   }, [usingItems])
 
   // emitters
@@ -360,7 +361,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
       // rm
       newItems.splice(index, 1)
       // insert
-      const newIndex = newItems.findIndex((x) => x.api !== EApiType.separator)
+      const newIndex = newItems.findIndex((x) => x.api !== EApiType.Separator)
       newItems.splice(newIndex, 0, currentItem)
 
       return newItems
@@ -376,7 +377,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
     onChange(inView) {
       if (inView) {
         debug('footerInView change to visible', inView)
-        loadMore()
+        setTimeout(checkShouldLoadMore)
       }
     },
   })
@@ -454,7 +455,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
   }
 
   const renderItem = (item: RecItemExtraType) => {
-    if (item.api === EApiType.separator) {
+    if (item.api === EApiType.Separator) {
       return (
         <Divider
           key={item.uniqId}

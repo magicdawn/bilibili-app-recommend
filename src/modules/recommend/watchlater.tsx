@@ -52,7 +52,7 @@ export class WatchLaterRecService implements IService {
     const items: WatchLaterItemExtend[] = json.data.list.map((item) => {
       return {
         ...item,
-        api: EApiType.watchlater,
+        api: EApiType.Watchlater,
         uniqId: `watchlater-${item.bvid}`,
       }
     })
@@ -93,7 +93,7 @@ export class WatchLaterRecService implements IService {
       itemsWithSeparator = [
         !!recent.length &&
           this.addSeparator && {
-            api: EApiType.separator as const,
+            api: EApiType.Separator as const,
             uniqId: 'watchlater-recent',
             content: '近期',
           },
@@ -101,7 +101,7 @@ export class WatchLaterRecService implements IService {
 
         !!earlier.length &&
           this.addSeparator && {
-            api: EApiType.separator as const,
+            api: EApiType.Separator as const,
             uniqId: 'watchlater-earlier',
             content: '更早',
           },
@@ -118,7 +118,7 @@ export class WatchLaterRecService implements IService {
 
     // save for next keepOrder=true
     WatchLaterRecService.LAST_BVID_ARR = itemsWithSeparator
-      .map((item) => item.api === EApiType.watchlater && item.bvid)
+      .map((item) => item.api === EApiType.Watchlater && item.bvid)
       .filter(Boolean)
 
     return itemsWithSeparator
