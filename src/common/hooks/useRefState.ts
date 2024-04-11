@@ -10,20 +10,23 @@ export function useRefState<T>(initValue: T | (() => T)) {
 
   const ref = useRef(state)
 
-  const setStateWraped: typeof setState = useMemoizedFn((payload) => {
-    if (typeof payload === 'function') {
-      setState((prev) => {
-        const newVal = (payload as (prev: T) => T)(prev)
-        ref.current = newVal
-        return newVal
-      })
-    } else {
-      ref.current = payload
-      setState(payload)
-    }
-  })
+  const setStateWraped: typeof setState = useCallback(
+    (payload) => {
+      if (typeof payload === 'function') {
+        setState((prev) => {
+          const newVal = (payload as (prev: T) => T)(prev)
+          ref.current = newVal
+          return newVal
+        })
+      } else {
+        ref.current = payload
+        setState(payload)
+      }
+    },
+    [setState],
+  )
 
-  const getState = useMemoizedFn(() => ref.current)
+  const getState = useCallback(() => ref.current, [])
 
   return [state, setStateWraped, getState] as const
 }

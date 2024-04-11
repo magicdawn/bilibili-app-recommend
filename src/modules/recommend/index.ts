@@ -1,4 +1,3 @@
-/* eslint-disable no-constant-condition */
 import { baseDebug } from '$common'
 import { getIService, type FetcherOptions } from '$components/RecGrid/useRefresh'
 import { getColumnCount } from '$components/RecGrid/useShortcut'

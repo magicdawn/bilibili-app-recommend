@@ -14,6 +14,7 @@ import { WatchLaterRecService } from '$modules/recommend/watchlater'
 import { settings } from '$modules/settings'
 import { nextTick, whenIdle } from '$utility'
 import type { Debugger } from 'debug'
+import { tryit } from 'radash'
 import { createContext } from 'react'
 
 export type OnRefreshOptions = { watchlaterKeepOrder?: boolean }
@@ -77,14 +78,12 @@ export function useRefresh({
   const itemsCache = useRefInit<Partial<Record<ETabType, RecItemExtraType[]>>>(() => ({}))
   const itemsHasCache = useRefInit<Partial<Record<ETabType, boolean>>>(() => ({}))
 
-  const [hasMore, setHasMore] = useState(true)
-  const [items, setItems] = useState<RecItemExtraType[]>([])
+  const [hasMore, setHasMore, getHasMore] = useRefState(true)
+  const [items, setItems, getItems] = useRefState<RecItemExtraType[]>([])
   useEffect(() => {
-    try {
+    tryit(() => {
       ;(unsafeWindow as any)[`${APP_KEY_PREFIX}_gridItems`] = items
-    } catch (e) {
-      // noop
-    }
+    })()
   }, [items])
 
   const [serviceMap, setServiceMap] = useState<ServiceMap>(() => {
@@ -94,7 +93,7 @@ export function useRefresh({
   })
   const [pcRecService, setPcRecService] = useState(() => new PcRecService())
 
-  const [refreshing, setRefreshing] = useState(false)
+  const [refreshing, setRefreshing, getRefreshing] = useRefState(false)
   const [refreshedAt, setRefreshedAt, getRefreshedAt] = useRefState<number>(() => Date.now())
   const [refreshFor, setRefreshFor] = useState<ETabType>(tab)
   const [refreshAbortController, setRefreshAbortController] = useState<AbortController>(
@@ -308,19 +307,21 @@ export function useRefresh({
     const service = getIService(newServiceMap, tab)
     if (service) setHasMore(service.hasMore)
 
+    updateRefreshing(false)
     await nextTick() // wait setState works, if neccssary
+
     await postAction?.()
 
     const cost = performance.now() - start
     debug('refresh(): [success] cost %s ms', cost.toFixed(0))
-
-    updateRefreshing(false)
   })
 
   return {
     items,
-    itemsCache,
     setItems,
+    getItems,
+
+    itemsCache,
     error,
 
     refreshedAt,
@@ -329,6 +330,7 @@ export function useRefresh({
 
     refreshing,
     setRefreshing,
+    getRefreshing,
 
     refreshFor,
     setRefreshFor,
@@ -338,6 +340,7 @@ export function useRefresh({
 
     hasMore,
     setHasMore,
+    getHasMore,
 
     swr,
     setSwr,

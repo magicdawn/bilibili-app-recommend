@@ -3,6 +3,7 @@
  */
 
 import { APP_NAME, baseDebug } from '$common'
+import { useRefState } from '$common/hooks/useRefState'
 import { useModalDislikeVisible } from '$components/ModalDislike'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import { useCurrentSourceTab } from '$components/RecHeader/tab'
@@ -91,7 +92,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
 ) {
   const tab = useCurrentSourceTab()
 
-  const [loadCompleteCount, setLoadCompleteCount] = useState(0) // 已加载完成的 load call count, 类似 page
+  const [loadCompleteCount, setLoadCompleteCount, getLoadCompleteCount] = useRefState(0) // 已加载完成的 load call count, 类似 page
 
   // before refresh
   const preAction = useMemoizedFn(() => {
@@ -105,7 +106,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
     setLoadCompleteCount(1)
     updateExtraInfo(tab)
     // check need loadMore
-    queueMicrotask(checkShouldLoadMore)
+    setTimeout(checkShouldLoadMore)
   })
 
   const updateExtraInfo = useMemoizedFn((tab: ETabType) => {
@@ -118,15 +119,18 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
 
     items,
     setItems,
+    getItems,
     error: refreshError,
 
     refreshing,
+    getRefreshing,
     refreshedAt,
     getRefreshedAt,
     swr,
 
     hasMore,
     setHasMore,
+    getHasMore,
 
     refreshAbortController,
     pcRecService,
@@ -172,22 +176,29 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
     { target: document },
   )
 
+  const checkShouldLoadMore = useMemoizedFn(async () => {
+    // always async, `footerInViewRef` depends on `__footerInView` state
+    await delay(isSafari ? 100 : 0)
+
+    debug('checkShouldLoadMore(): footerInView = %s', footerInViewRef.current)
+    if (footerInViewRef.current) {
+      loadMore()
+    }
+  })
+
   const loadMoreRequesting = useRef<Record<number, boolean>>({})
 
-  /**
-   * useMemoizedFn 只能确保 loadMore 开始调用时值时最新的.
-   * 拿 refreshedAt 举例, loadMore 内部, 值 refreshedAt 不变
-   * 所以需要 useRefState, 从 getRefreshedAt 取最新的值
-   */
+  // 在 refresh & loadMore 都有可能更改的 state, 需要 useRefState
+
   const loadMore = useMemoizedFn(async () => {
-    if (!hasMore) return
-    if (refreshing) return
+    if (!getHasMore()) return
+    if (getRefreshing()) return
 
-    const refreshAtWhenStart = refreshedAt
-    if (loadMoreRequesting.current[refreshAtWhenStart]) return
-    loadMoreRequesting.current = { [refreshAtWhenStart]: true }
+    const _refreshedAt = refreshedAt
+    if (loadMoreRequesting.current[_refreshedAt]) return
+    loadMoreRequesting.current = { [_refreshedAt]: true }
 
-    let newItems = items
+    let newItems = getItems()
     let newHasMore = true
     try {
       const service = getIService(serviceMap, tab)
@@ -196,7 +207,6 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
         newItems = uniqConcat(newItems, more)
         newHasMore = service.hasMore
       }
-
       // others
       else {
         // loadMore 至少 load 一项, 需要触发 InfiniteScroll.componentDidUpdate
@@ -208,53 +218,33 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
         }
       }
     } catch (e) {
-      loadMoreRequesting.current[refreshAtWhenStart] = false
+      loadMoreRequesting.current[_refreshedAt] = false
       throw e
     }
 
-    // loadMore 发出请求了, 但稍候刷新了, setItems 时可能
-    //  - 在刷新
-    //  - 刷新结束了
-    if (refreshAtWhenStart !== getRefreshedAt()) {
+    // loadMore 发出请求了, 但稍候重新刷新了, setItems 后续操作应该 abort
+    if (_refreshedAt !== getRefreshedAt()) {
       debug(
         'loadMore: skip update for mismatch refreshedAt, %s != %s',
-        refreshAtWhenStart,
+        _refreshedAt,
         getRefreshedAt(),
       )
       return
     }
 
-    debug('loadMore: seq(%s) len %s -> %s', loadCompleteCount + 1, items.length, newItems.length)
+    debug(
+      'loadMore: seq(%s) len %s -> %s',
+      getLoadCompleteCount() + 1,
+      items.length,
+      newItems.length,
+    )
     setHasMore(newHasMore)
     setItems(newItems)
     setLoadCompleteCount((c) => c + 1)
-    loadMoreRequesting.current[refreshAtWhenStart] = false
+    loadMoreRequesting.current[_refreshedAt] = false
 
     // check
     checkShouldLoadMore()
-  })
-
-  //
-  // loadMore may need more loadMore
-  // 例如大屏的初始化问题: https://greasyfork.org/zh-CN/scripts/443530-bilibili-app-recommend/discussions/182834
-  //
-  // react-infinite-scroll 的使用方法
-  // check threshold -> detach scroll, loadMore -> loadMore 引发数据变化 -> InfiniteScroll.componentDidUpdate -> re-bind scroll event
-  // 问题在于, loadMore 结束后还需要再 loadMore, 这时需要手动 scroll 一下
-  // 这里模拟一下 scroll event
-  //
-  const checkShouldLoadMore = useMemoizedFn(async () => {
-    const ms = isSafari ? 100 : 50
-    await delay(ms) // always in nextTick
-
-    debug('checkShouldLoadMore(): footerInView = %s', footerInViewRef.current)
-    if (footerInViewRef.current) {
-      loadMore()
-    }
-
-    // legacy trigger for react-infinite-scroller
-    // const scroller = infiteScrollUseWindow ? window : scrollerRef?.current
-    // scroller?.dispatchEvent(new CustomEvent('scroll'))
   })
 
   // 渲染使用的 items
