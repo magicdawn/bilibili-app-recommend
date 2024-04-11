@@ -104,6 +104,19 @@ export class PcRecService implements IService {
 
     await (true ? parallel : sequence)()
 
+    list = list.filter((item) => {
+      const goto = item.goto as string
+
+      // ad
+      if (goto === 'ad') return false
+      if (goto.includes('ad')) return false
+
+      // can't handle for now
+      if (goto === 'live') return false
+
+      return true
+    })
+
     list = uniqBy(list, (item) => item.id)
 
     // 推荐理由补全

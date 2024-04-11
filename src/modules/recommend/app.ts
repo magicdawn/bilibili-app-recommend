@@ -6,16 +6,16 @@ import { settings } from '$modules/settings'
 import { gmrequest } from '$request'
 import { toast } from '$utility/toast'
 import { uniqBy } from 'lodash'
-import pretry, { RetryError } from 'promise.retry'
+import pretry from 'promise.retry'
 import type { IService } from './base'
 
 class RecReqError extends Error {
   json: AppRecommendJson
   constructor(json: AppRecommendJson) {
     super()
-    Error.captureStackTrace(this, RecReqError)
     this.json = json
     this.message = json.message || JSON.stringify(json)
+    Error.captureStackTrace(this, RecReqError)
   }
 }
 
@@ -25,12 +25,8 @@ export async function getRecommend(device: EAppApiDevice) {
     platformParams = { mobi_app: 'android' }
   }
   if (device === EAppApiDevice.ipad) {
-    platformParams = {
-      // has avatar, date, etc
-      // see BewlyBewly usage
-      mobi_app: 'iphone',
-      device: 'pad',
-    }
+    // has avatar, date, etc. see BewlyBewly's usage
+    platformParams = { mobi_app: 'iphone', device: 'pad' }
   }
 
   // /x/feed/index
@@ -67,32 +63,13 @@ export async function getRecommend(device: EAppApiDevice) {
   return items
 }
 
-const tryfn = pretry(getRecommend, {
+const tryGetRecommend = pretry(getRecommend, {
   times: 5,
   timeout: 2000,
   onerror(err, index) {
     console.info('[%s] tryGetRecommend onerror: index=%s', APP_NAME, index, err)
   },
 })
-
-async function tryGetRecommend(device: EAppApiDevice) {
-  try {
-    return await tryfn(device)
-  } catch (e) {
-    if (e instanceof RetryError) {
-      console.error(e.errors)
-      const msg = [
-        `请求出错, 已重试${e.times}次:`,
-        ...e.errors.map((innerError, index) => `  ${index + 1}) ${innerError.message}`),
-        '',
-        '请重新获取 access_key 后重试~',
-      ].join('\n')
-      toast(msg, 5000)
-    }
-
-    throw e
-  }
-}
 
 export class AppRecService implements IService {
   static PAGE_SIZE = 10
