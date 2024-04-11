@@ -475,12 +475,12 @@ function TabPaneBasic() {
             }
           />
 
-          <FlagSettingItem
+          {/* <FlagSettingItem
             configKey='useDelayForHover'
             label='鼠标悬浮延时'
             className={styles.check}
             tooltip={<>防止滚动页面时触发悬浮状态</>}
-          />
+          /> */}
         </div>
       </div>
 

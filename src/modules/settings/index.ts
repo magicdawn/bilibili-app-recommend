@@ -54,7 +54,7 @@ export const initialSettings = {
   autoPreviewWhenHover: false,
 
   // hover 延时
-  useDelayForHover: true,
+  useDelayForHover: false,
 
   /**
    * tab=watchlater

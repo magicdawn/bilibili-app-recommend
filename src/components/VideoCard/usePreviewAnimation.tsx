@@ -59,6 +59,7 @@ export function usePreviewAnimation({
       setIsHovering(true)
       updateMouseEnterRelativeX(e)
 
+      await tryFetchVideoData()
       if (settings.useDelayForHover) {
         await delay(HOVER_DELAY)
       }
@@ -159,9 +160,10 @@ export function usePreviewAnimation({
 
   const resumeAnimationInner = useRef<(progress: number) => void>()
 
-  const onHotkeyPreviewAnimation = useMemoizedFn(() => {
+  const onHotkeyPreviewAnimation = useMemoizedFn(async () => {
     // console.log('hotkey preview', animationPaused)
     if (!idRef.current) {
+      await tryFetchVideoData()
       onStartPreviewAnimation()
       return
     }
@@ -185,7 +187,7 @@ export function usePreviewAnimation({
     startByHover.current = _startByHover
     setMouseMoved(false)
     setAnimationPaused(false)
-    tryFetchVideoData()
+    // tryFetchVideoData()
     stopAnimation(true) // clear existing
     setPreviewAnimationProgress((val) => (typeof val === 'undefined' ? 0 : val)) // get rid of undefined
 

@@ -364,10 +364,6 @@ const VideoCardInner = memo(function VideoCardInner({
     videoPreviewWrapperRef,
   })
 
-  // const isHovering = useHover(videoPreviewWrapperRef)
-  // const isHovering = _isHoveringAfterDelay
-  // console.log('isHovering', isHovering)
-
   useUpdateEffect(() => {
     if (!active) return
 
@@ -378,7 +374,9 @@ const VideoCardInner = memo(function VideoCardInner({
 
     // 自动开始预览
     if (settings.autoPreviewWhenKeyboardSelect) {
-      onStartPreviewAnimation()
+      tryFetchVideoData().then(() => {
+        onStartPreviewAnimation()
+      })
     }
   }, [active])
 
@@ -391,10 +389,6 @@ const VideoCardInner = memo(function VideoCardInner({
   const watchLaterAddedPrevious = usePrevious(watchLaterAdd)
 
   const authed = Boolean(accessKey)
-
-  useEffect(() => {
-    if (isHovering) tryFetchVideoData()
-  }, [isHovering])
 
   /**
    * 稍候再看

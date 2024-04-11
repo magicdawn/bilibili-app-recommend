@@ -48,6 +48,20 @@ export async function getVideoData(bvid: string) {
   const videoshotData = await videoshot(bvid)
   const dmData: string[] = []
   cache.set(bvid, { videoshotData, dmData })
+
+  // load images
+  const imgs = videoshotData.image.slice(0, 3)
+  await Promise.all(
+    imgs.map((src) => {
+      return new Promise<boolean>((resolve) => {
+        const img = new Image()
+        img.src = src
+        img.onload = () => resolve(true)
+        img.onerror = () => resolve(false)
+      })
+    }),
+  )
+
   return { videoshotData, dmData }
 }
 
