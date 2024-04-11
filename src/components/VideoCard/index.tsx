@@ -963,6 +963,7 @@ const VideoCardInner = memo(function VideoCardInner({
                     margin-left: 4px;
                     white-space: nowrap;
                     background-color: #f69;
+                    background-color: ${colorPrimaryValue};
                     padding-right: 6px;
                   `}
                 >
