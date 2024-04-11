@@ -139,11 +139,23 @@ export function useRefresh({
     // scroll to top
     await onScrollToTop?.()
 
+    // reuse configs
+    const shouldReuse = reuse && !!itemsHasCache.current[tab]
+    const swr =
+      shouldReuse &&
+      (!!TabConfig[tab].swr ||
+        (tab === ETabType.Fav && !serviceMap[ETabType.Fav].useShuffle && !settings.shuffleForFav) ||
+        (tab === ETabType.PopularWeekly &&
+          !serviceMap[ETabType.PopularWeekly].useShuffle &&
+          !settings.shuffleForPopularWeekly))
+
+    // all reuse case, do not show skeleton
+    setUseSkeleton(!shouldReuse)
+
     const updateRefreshing = (val: boolean) => {
       setRefreshing(val)
       setUpperRefreshing?.(val)
     }
-
     updateRefreshing(true)
     setRefreshedAt(Date.now())
     setRefreshFor(tab)
@@ -174,19 +186,6 @@ export function useRefresh({
      * 默认顺序: swr 策略
      * 乱序: 使用 QueueStrategy cache, 即 own cache, 切换 tab 要重 doFetch
      */
-
-    // reuse
-    const shouldReuse = reuse && !!itemsHasCache.current[tab]
-    const swr =
-      shouldReuse &&
-      (!!TabConfig[tab].swr ||
-        (tab === ETabType.Fav && !serviceMap[ETabType.Fav].useShuffle && !settings.shuffleForFav) ||
-        (tab === ETabType.PopularWeekly &&
-          !serviceMap[ETabType.PopularWeekly].useShuffle &&
-          !settings.shuffleForPopularWeekly))
-
-    // all reuse case, do not show skeleton
-    setUseSkeleton(!shouldReuse)
 
     let useGridCache = true
     if ((tab === ETabType.Fav || tab === ETabType.PopularWeekly) && !swr) {
