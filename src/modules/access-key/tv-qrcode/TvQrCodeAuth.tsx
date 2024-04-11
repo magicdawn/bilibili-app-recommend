@@ -64,7 +64,7 @@ export function TvQrCodeAuth() {
         backdrop-filter: blur(10px);
       `}
       cssModal={css`
-        width: 280px;
+        width: 260px;
         aspect-ratio: 10 / 16;
       `}
     >
@@ -102,9 +102,11 @@ export function TvQrCodeAuth() {
             css={css`
               margin: 0 auto;
               margin-bottom: 40px;
+              padding: 8px;
+              flex-shrink: 0;
             `}
             value={qrcodeUrl}
-            size={220}
+            size={200}
             icon='https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/72/9c/b6/729cb6d8-75f5-0a56-0508-3a26cbba69ae/AppIcon-1x_U007emarketing-0-6-0-0-85-220-0.png/230x0w.webp'
           />
         )}
