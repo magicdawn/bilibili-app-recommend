@@ -12,7 +12,7 @@ import { PopularGeneralService } from '$modules/recommend/popular-general'
 import { PopularWeeklyService } from '$modules/recommend/popular-weekly'
 import { WatchLaterRecService } from '$modules/recommend/watchlater'
 import { settings } from '$modules/settings'
-import { nextTick, whenIdle } from '$utility'
+import { nextTick } from '$utility'
 import type { Debugger } from 'debug'
 import { tryit } from 'radash'
 import { createContext } from 'react'
@@ -99,7 +99,7 @@ export function useRefresh({
   const [refreshAbortController, setRefreshAbortController] = useState<AbortController>(
     () => new AbortController(),
   )
-  const [swr, setSwr] = useState(false)
+  const [useSkeleton, setUseSkeleton] = useState(false)
   const [error, setError] = useState<any>(undefined)
 
   const refresh: OnRefresh = useMemoizedFn(async (reuse = false, options) => {
@@ -186,7 +186,7 @@ export function useRefresh({
           !settings.shuffleForPopularWeekly))
 
     // all reuse case, do not show skeleton
-    setSwr(shouldReuse)
+    setUseSkeleton(!shouldReuse)
 
     let useGridCache = true
     if ((tab === ETabType.Fav || tab === ETabType.PopularWeekly) && !swr) {
@@ -296,7 +296,6 @@ export function useRefresh({
     }
 
     // update items
-    await whenIdle({ timeout: 400 })
     if (_signal.aborted) {
       debug('refresh(): [legacy] skip setItems-postAction etc for aborted, legacy tab = %s', tab)
       return
@@ -342,8 +341,8 @@ export function useRefresh({
     setHasMore,
     getHasMore,
 
-    swr,
-    setSwr,
+    useSkeleton,
+    setUseSkeleton,
 
     pcRecService,
     serviceMap,

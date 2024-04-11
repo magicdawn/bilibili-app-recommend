@@ -126,7 +126,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
     getRefreshing,
     refreshedAt,
     getRefreshedAt,
-    swr,
+    useSkeleton,
 
     hasMore,
     setHasMore,
@@ -439,8 +439,8 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
   }
 
   // skeleton loading
-  const showSkeleton = refreshing && !swr
-  if (showSkeleton) {
+  const _skeleton = refreshing && useSkeleton
+  if (_skeleton) {
     return (
       <div className={videoGridContainer}>
         <div className={gridClassName}>
