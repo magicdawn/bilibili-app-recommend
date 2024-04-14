@@ -1,10 +1,7 @@
 import child_process from 'child_process'
 import dl from 'dl-vampire'
-import esmUtils from 'esm-utils'
 import fsp from 'fs/promises'
 import path from 'path'
-
-const { __dirname } = esmUtils(import.meta)
 
 void (async function () {
   await dl({
@@ -13,7 +10,7 @@ void (async function () {
     url: 'https://raw.githubusercontent.com/lyswhut/lx-music-desktop/v2.2.2/src/common/theme/index.json',
   })
 
-  const arr = JSON.parse(await fsp.readFile(__dirname + '/tmp/lx-themes.json', 'utf-8'))
+  const arr = JSON.parse(await fsp.readFile(import.meta.dirname + '/tmp/lx-themes.json', 'utf-8'))
 
   const picked = arr.map((theme) => {
     return {

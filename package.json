@@ -44,7 +44,6 @@
     "dl-vampire": "^2.1.1",
     "eslint": "^9.0.0",
     "eslint-config-prettier": "^9.1.0",
-    "esm-utils": "^4.2.1",
     "globals": "^15.0.0",
     "husky": "^8.0.3",
     "knip": "^5.9.3",

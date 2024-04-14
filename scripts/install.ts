@@ -1,16 +1,13 @@
-#!/usr/bin/env bun
+// #!/usr/bin/env bun
 // #!/usr/bin/env ts-node
 
 import chalk from 'chalk'
-import esmUtils from 'esm-utils'
 import open, { apps as openApps } from 'open'
 import path from 'path'
+import { name } from '../package.json'
 
-const { __dirname, require } = esmUtils(import.meta)
-const { name } = require('../package.json')
-
-const projectRoot = path.resolve(__dirname, '..')
-const url = `file://${projectRoot}/dist/${name}.user.js`
+const projectRoot = path.resolve(import.meta.dirname, '..')
+const url = `file://${projectRoot}/dist/${name}.mini.user.js`
 
 console.log('-'.repeat(50))
 console.log(`script url:`)
