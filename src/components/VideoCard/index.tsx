@@ -685,7 +685,7 @@ const VideoCardInner = memo(function VideoCardInner({
                 <div
                   className={styles.chargeTagWrapper}
                   css={css`
-                    padding: 1px 4px 2px;
+                    padding: 1px 6px 1px 4px;
                     font-size: 10px;
                     color: #fff;
                     text-align: center;
@@ -695,7 +695,6 @@ const VideoCardInner = memo(function VideoCardInner({
                     white-space: nowrap;
                     background-color: #f69;
                     background-color: ${colorPrimaryValue};
-                    padding-right: 6px;
                   `}
                 >
                   <svg
