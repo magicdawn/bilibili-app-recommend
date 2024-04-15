@@ -46,6 +46,10 @@ export function filterRecItems(items: RecItemExtraType[], tab: ETabType) {
       // 不过滤已关注视频
       if (isFollowed && !settings.enableFilterForFollowedVideo) return true
 
+      // https://github.com/magicdawn/bilibili-app-recommend/issues/87
+      // 反向推送, 蜜汁操作.
+      if (recommendReason === '关注了你') return false
+
       // paly
       if (
         settings.filterMinPlayCountEnabled &&
