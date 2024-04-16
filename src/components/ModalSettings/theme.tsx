@@ -7,6 +7,7 @@
  */
 
 import { flexCenterStyle } from '$common/emotion-css'
+import { AntdTooltip } from '$components/AntdApp'
 import { HelpInfo } from '$components/piece'
 import { IconPark } from '$icon-park'
 import { updateSettings, useSettingsSnapshot } from '$modules/settings'
@@ -112,9 +113,8 @@ export function ThemesSelect() {
                   )
                 }
 
-                return (
+                let el = (
                   <div
-                    key={t.id}
                     css={css`
                       min-width: 60px;
                       text-align: center;
@@ -128,6 +128,16 @@ export function ThemesSelect() {
                     {t.name}
                   </div>
                 )
+
+                // wrap tooltip
+                if (t.tooltip) {
+                  el = <AntdTooltip title={t.tooltip}>{el}</AntdTooltip>
+                }
+
+                // wrap with key
+                el = <Fragment key={t.id}>{el}</Fragment>
+
+                return el
               })}
             </div>
           </Fragment>

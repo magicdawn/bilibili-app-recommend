@@ -39,9 +39,17 @@ function calcHeaderWidth(): number | undefined {
 
 export const $headerWidth = valtioFactory(calcHeaderWidth())
 
+function calcEvoledThemeColor() {
+  const s = globalThis.getComputedStyle(document.documentElement)
+  return s.getPropertyValue('--theme-color')
+}
+
+export const $evoledThemeColor = valtioFactory(calcEvoledThemeColor())
+
 function action() {
   $headerHeight.state.value = calcHeaderHeight()
   $headerWidth.state.value = calcHeaderWidth()
+  $evoledThemeColor.state.value = calcEvoledThemeColor()
 }
 
 const ob = new MutationObserver(() => action())

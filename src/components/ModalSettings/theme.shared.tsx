@@ -1,4 +1,5 @@
 import { APP_NAME } from '$common'
+import { $evoledThemeColor } from '$header'
 import { settings, useSettingsSnapshot } from '$modules/settings'
 import LX_THEMES from './lx-themes.json'
 
@@ -11,6 +12,7 @@ export interface LxTheme {
   isDark?: boolean
   isCustom?: boolean
   colorPrimary: string
+  tooltip?: ReactNode
 }
 
 export const DEFAULT_BILI_PINK_THEME: LxTheme = {
@@ -68,6 +70,8 @@ const LongwashingThemes = toThemes(
   `,
 )
 
+export const BIBIBILI_EVOLVED_SYNC_ID = 'bilibili-evolved-sync'
+
 export const ThemeGroups: {
   name: string
   tooltip?: ReactNode
@@ -79,6 +83,17 @@ export const ThemeGroups: {
       DEFAULT_BILI_PINK_THEME,
       { id: 'bilibili-blue', name: 'B站蓝', colorPrimary: '#00aeec' },
       { id: 'app-靓紫', name: '靓紫', colorPrimary: '#8500ff' },
+      {
+        id: BIBIBILI_EVOLVED_SYNC_ID,
+        name: 'B-Evolved',
+        colorPrimary: 'var(--theme-color, #f69)',
+        tooltip: (
+          <>
+            使用 Bilibili-Evolved 的主题色
+            <br />在 Bilibili-Evolved 修改主题色后需刷新页面同步
+          </>
+        ),
+      },
       COLOR_PICKER_THEME,
     ],
   },
@@ -154,4 +169,20 @@ export function useCurrentTheme() {
     }
     return theme
   }, [themeId, colorPickerThemeSelectedColor])
+}
+
+/**
+ * colorPrimary hex 值, 需传入 antd
+ */
+
+export function useColorPrimaryHex() {
+  const currentTheme = useCurrentTheme()
+  const evoledThemeColor = $evoledThemeColor.use()
+
+  let colorPrimary = currentTheme.colorPrimary
+  if (currentTheme.id === BIBIBILI_EVOLVED_SYNC_ID) {
+    colorPrimary = evoledThemeColor || DEFAULT_BILI_PINK_THEME.colorPrimary
+  }
+
+  return colorPrimary
 }

@@ -9,6 +9,7 @@ import zhCN from 'antd/locale/zh_CN'
 import {
   colorPrimaryIdentifier,
   colorPrimaryValue,
+  useColorPrimaryHex,
   useCurrentTheme,
 } from './ModalSettings/theme.shared'
 
@@ -26,7 +27,7 @@ export function AntdApp({
   renderAppComponent?: boolean
 }) {
   const dark = useIsDarkMode()
-  const { colorPrimary } = useCurrentTheme()
+  const colorPrimary = useColorPrimaryHex()
 
   return (
     <ConfigProvider
