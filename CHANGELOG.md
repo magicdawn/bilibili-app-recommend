@@ -1,5 +1,39 @@
 # Changelog
 
+## v0.21.3
+
+- 图片相关: 动态筛选头像也会使用缩略图, 之前是使用的原图.
+- 使用 antd builtin QRCode 组件
+- 动态Tab: 充电专属 tag
+- 查看UP的动态: 改为新窗口打开, 查看
+- 视频过滤: 去掉推荐理由为 "关注了你" 的反向推送视频. #87
+
+details
+
+- 7864121 fix(filter): handle recommendReason '关注'
+- 44f4f98 feat: filter out video from followers, close #87
+- 75b2c48 css: tweak .charge-tag
+- 16b9e4a chore: rm esm-utils
+- 8d209dd chore: some service tweaks
+- a22060d feat: view up dynamic contents in new window
+- 4b3a049 chore: qrcode tweaks
+- ef713b2 refactor: extract more VideoCard/index.tsx
+- 39ad7d6 feat: preload imgs before start preview
+- 28acc58 feat: .charge-tag use theme color too
+- fe96d79 feat(dynamic-feed): add .charge-tag display
+- 503b394 chore: mitigate scrollTop collapse issue
+- 86efabf chore: fix build
+- 8a56201 chore: rename things
+- d55250a chore: refresh tweaks
+- 9c81d9d chore: rm ahooks.useGetState
+- 2e4f133 feat: utilize useRefState
+- ebf5da4 fix antd QRCode build issue
+- 120be9e Merge branch 'main' of github.com:magicdawn/bilibili-app-recommend
+- ddbb602 feat: use antd builtin QRCode
+- 8515df7 Merge pull request #86 from magicdawn/dependabot/github_actions/peaceiris/actions-gh-pages-4
+- fcef1de chore(deps): bump peaceiris/actions-gh-pages from 3 to 4
+- f135fbd feat: img avif tweaks
+
 ## v0.21.2
 
 - detect avif 可用性
