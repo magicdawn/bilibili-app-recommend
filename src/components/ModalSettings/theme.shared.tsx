@@ -90,7 +90,7 @@ export const ThemeGroups: {
         tooltip: (
           <>
             使用 Bilibili-Evolved 的主题色
-            <br />在 Bilibili-Evolved 修改主题色后需刷新页面同步
+            <br />在 Bilibili-Evolved 设置中修改主题色后可能需要刷新页面同步
           </>
         ),
       },

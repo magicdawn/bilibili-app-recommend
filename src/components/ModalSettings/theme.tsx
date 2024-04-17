@@ -9,6 +9,7 @@
 import { flexCenterStyle } from '$common/emotion-css'
 import { AntdTooltip } from '$components/AntdApp'
 import { HelpInfo } from '$components/piece'
+import { $evoledThemeColor } from '$header'
 import { IconPark } from '$icon-park'
 import { updateSettings, useSettingsSnapshot } from '$modules/settings'
 import { ColorPicker } from 'antd'
@@ -26,6 +27,10 @@ export function ThemesSelect() {
   const customColorHex = useMemo(() => {
     return typeof customColor === 'string' ? customColor : customColor.toHexString()
   }, [customColor])
+
+  useMount(() => {
+    $evoledThemeColor.updateThrottled()
+  })
 
   return (
     <div>

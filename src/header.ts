@@ -26,7 +26,7 @@ function calcHeaderHeight() {
   return height
 }
 // prefix with $ 避免与普通变量冲突
-export const $headerHeight = valtioFactory(calcHeaderHeight())
+export const $headerHeight = valtioFactory(calcHeaderHeight)
 
 function calcHeaderWidth(): number | undefined {
   const paddingDef = document.documentElement.style.getPropertyValue('--navbar-bounds-padding')
@@ -36,20 +36,17 @@ function calcHeaderWidth(): number | undefined {
   const width = 100 - percent * 2
   return width
 }
-
-export const $headerWidth = valtioFactory(calcHeaderWidth())
+export const $headerWidth = valtioFactory(calcHeaderWidth)
 
 function calcEvoledThemeColor() {
-  const s = globalThis.getComputedStyle(document.documentElement)
-  return s.getPropertyValue('--theme-color')
+  return window.getComputedStyle(document.documentElement).getPropertyValue('--theme-color')
 }
-
-export const $evoledThemeColor = valtioFactory(calcEvoledThemeColor())
+export const $evoledThemeColor = valtioFactory(calcEvoledThemeColor)
 
 function action() {
-  $headerHeight.state.value = calcHeaderHeight()
-  $headerWidth.state.value = calcHeaderWidth()
-  $evoledThemeColor.state.value = calcEvoledThemeColor()
+  $headerHeight.updateThrottled()
+  $headerWidth.updateThrottled()
+  $evoledThemeColor.updateThrottled()
 }
 
 const ob = new MutationObserver(() => action())
@@ -64,3 +61,19 @@ ob.observe(document.body, {
 window.addEventListener('unload', () => {
   ob.disconnect()
 })
+
+document.body.addEventListener(
+  'click',
+  (e) => {
+    const el = e.target as HTMLElement
+    // ensure click ok button
+    const isClickOnButton = (el: HTMLElement | null) => !!el?.matches('.be-button.ok')
+    if (!isClickOnButton(el) && !isClickOnButton(el.parentElement)) return
+
+    // ensure click from be-popup
+    if (!el.closest('.be-popup.picker.open')) return
+
+    setTimeout($evoledThemeColor.updateThrottled, 1000)
+  },
+  { capture: true, passive: true },
+)
