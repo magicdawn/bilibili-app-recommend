@@ -103,6 +103,11 @@ function GlobalStyle() {
               #i_cecream .bili-feed4-layout {
                 display: none;
               }
+
+              /* em 有点深井冰 */
+              /* :root {
+                scrollbar-color: ${colorPrimaryValue} #f69;
+              } */
             `,
 
             styleUseCustomGrid &&

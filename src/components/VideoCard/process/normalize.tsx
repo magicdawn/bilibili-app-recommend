@@ -35,6 +35,8 @@ import dayjs from 'dayjs'
 import type { AppRecIconField } from '../stat-item'
 import { AppRecIconMap, getField } from '../stat-item'
 
+export const DESC_SEPARATOR = ' · '
+
 export type StatItemType = { field: AppRecIconField; value: number | string | undefined }
 
 export interface IVideoCardData {
@@ -281,6 +283,9 @@ function apiIpadAppAdapter(item: IpadAppRecItemExtend): IVideoCardData {
       : { field: 'bangumiFollow', value: bangumiFollow },
   ]
 
+  const desc = item.desc || ''
+  const [descAuthorName = undefined, descDate = undefined] = desc.split(DESC_SEPARATOR)
+
   return {
     // video
     avid,
@@ -288,10 +293,9 @@ function apiIpadAppAdapter(item: IpadAppRecItemExtend): IVideoCardData {
     goto: item.goto,
     href,
     title: item.title,
-    desc: item.desc,
     cover: item.cover,
     pubts: undefined,
-    pubdateDisplay: undefined,
+    pubdateDisplay: descDate,
     duration: item.player_args?.duration || 0,
     durationStr: formatDuration(item.player_args?.duration),
     recommendReason: item.bottom_rcmd_reason || item.top_rcmd_reason, // TODO: top_rcmd_reason
@@ -306,7 +310,7 @@ function apiIpadAppAdapter(item: IpadAppRecItemExtend): IVideoCardData {
     statItems,
 
     // author
-    authorName: item.args.up_name,
+    authorName: item.args.up_name || descAuthorName,
     authorFace: item.avatar.cover,
     authorMid: String(item.args.up_id || ''),
 

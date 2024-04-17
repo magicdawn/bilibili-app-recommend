@@ -40,7 +40,7 @@ import {
   defaultEmitter,
 } from './index.shared'
 import type { IVideoCardData } from './process/normalize'
-import { normalizeCardData } from './process/normalize'
+import { DESC_SEPARATOR, normalizeCardData } from './process/normalize'
 import { AppRecIconScaleMap, AppRecIconSvgNameMap, makeStatItem } from './stat-item'
 import { usePreviewAnimation } from './usePreviewAnimation'
 
@@ -152,7 +152,7 @@ const VideoCardInner = memo(function VideoCardInner({
   const { styleNewCardStyle, autoPreviewWhenHover, accessKey } = useSettingsSnapshot()
   const authed = Boolean(accessKey)
 
-  let {
+  const {
     // video
     avid,
     bvid,
@@ -185,6 +185,30 @@ const VideoCardInner = memo(function VideoCardInner({
   if (!['av', 'bangumi', 'picture'].includes(goto)) {
     console.warn(`[${APP_NAME}]: none (av,bangumi,picture) goto type %s`, goto, item)
   }
+
+  // fallback to href
+  const authorHref = authorMid ? `https://space.bilibili.com/${authorMid}` : href
+
+  // firsr-line: title
+  // second-line: desc = (author-name + date)
+  let descTitle = desc
+  if (authorName && (pubdateDisplay || pubdateDisplayTitle)) {
+    descTitle = `${authorName} · ${pubdateDisplayTitle || pubdateDisplay}`
+  }
+
+  // fix https://greasyfork.org/zh-CN/scripts/479861-bilibili-%E9%A1%B5%E9%9D%A2%E5%87%80%E5%8C%96%E5%A4%A7%E5%B8%88/discussions/238294
+  const descInnerSpans = desc ? (
+    <>
+      <span className='bili-video-card__info--author'>{desc}</span>
+    </>
+  ) : (
+    <>
+      <span className='bili-video-card__info--author'>{authorName}</span>
+      {pubdateDisplay && (
+        <span className='bili-video-card__info--date'>{DESC_SEPARATOR + pubdateDisplay}</span>
+      )}
+    </>
+  )
 
   const [videoData, setVideoData] = useState<VideoData | null>(null)
   const isFetchingVideoData = useRef(false)
@@ -616,16 +640,6 @@ const VideoCardInner = memo(function VideoCardInner({
     updateFavFolderNames()
   })
 
-  // fallback to href
-  const authorHref = authorMid ? `https://space.bilibili.com/${authorMid}` : href
-
-  // firsr-line: title
-  // second-line: desc
-  // desc defaults to `author-name video-pub-date`
-  desc ||= `${authorName}${pubdateDisplay ? ` · ${pubdateDisplay}` : ''}`
-  const descTitle =
-    authorName && pubdateDisplayTitle ? `${authorName} · ${pubdateDisplayTitle}` : desc
-
   return (
     <div
       data-bvid={bvid || ''}
@@ -773,7 +787,7 @@ const VideoCardInner = memo(function VideoCardInner({
                       <use href='#widget-up'></use>
                     </svg>
                   )}
-                  <span className='bili-video-card__info--author'>{desc}</span>
+                  {descInnerSpans}
                 </a>
               ) : appBadge || appBadgeDesc ? (
                 <a className='bili-video-card__info--owner' href={href} target='_blank'>
@@ -809,7 +823,7 @@ const VideoCardInner = memo(function VideoCardInner({
               overflow: hidden;
             `}
           >
-            <a href={href} target='_blank'>
+            <a href={href} target='_blank' data-role='bili-video-card__info--tit'>
               <h3
                 title={title}
                 // className='bili-video-card__info--tit'
@@ -853,7 +867,7 @@ const VideoCardInner = memo(function VideoCardInner({
                       target='_blank'
                       title={descTitle}
                     >
-                      <span className='bili-video-card__info--author'>{desc}</span>
+                      {descInnerSpans}
                     </a>
                   </div>
                   {!!recommendReason && (
