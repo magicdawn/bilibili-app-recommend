@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.21.4
+
+- 主题选择: 新增 B-Evolved, 使用 Bilibili-Evolved 主题色.
+- 视频卡片: .desc 拆分成 .author + .date
+
 ## v0.21.3
 
 - 图片相关: 动态筛选头像也会使用缩略图, 之前是使用的原图.
