@@ -1,5 +1,5 @@
+import { valtioFactory } from '$utility/valtio'
 import UAParser from 'ua-parser-js'
-import { proxy, useSnapshot } from 'valtio'
 
 /**
  * BILIBILI-Evolved dark mode
@@ -8,15 +8,15 @@ import { proxy, useSnapshot } from 'valtio'
  * document.querySelector('[data-name=darkMode] .main-content').click()
  */
 
-const getIsDarkMode = () =>
-  document.body.classList.contains('dark') ||
-  document.body.classList.contains('bilibili-helper-dark-mode')
-// ||
-// document.documentElement.getAttribute('data-darkreader-scheme') === 'dark'
-const isDarkModeState = proxy({ value: getIsDarkMode() }) // like vue3 ref()
+const $darkMode = valtioFactory(() => {
+  return (
+    document.body.classList.contains('dark') ||
+    document.body.classList.contains('bilibili-helper-dark-mode')
+  )
+})
 
 export function useIsDarkMode() {
-  return useSnapshot(isDarkModeState).value
+  return $darkMode.use()
 }
 
 export function useColors() {
@@ -29,19 +29,19 @@ export function useColors() {
   return { bg, c }
 }
 
-const darkOb = new MutationObserver(function () {
-  isDarkModeState.value = getIsDarkMode()
+const ob = new MutationObserver(function () {
+  $darkMode.updateThrottled()
 })
-darkOb.observe(document.body, {
+ob.observe(document.body, {
   attributes: true,
   attributeFilter: ['class'],
 })
-darkOb.observe(document.documentElement, {
+ob.observe(document.documentElement, {
   attributes: true,
   attributeFilter: ['data-darkreader-scheme'],
 })
 window.addEventListener('unload', () => {
-  darkOb.disconnect()
+  ob.disconnect()
 })
 
 export const uaParseResult = UAParser()
