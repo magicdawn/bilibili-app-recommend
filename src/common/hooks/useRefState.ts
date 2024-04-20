@@ -12,16 +12,10 @@ export function useRefState<T>(initValue: T | (() => T)) {
 
   const setStateWraped: typeof setState = useCallback(
     (payload) => {
-      if (typeof payload === 'function') {
-        setState((prev) => {
-          const newVal = (payload as (prev: T) => T)(prev)
-          ref.current = newVal
-          return newVal
-        })
-      } else {
-        ref.current = payload
-        setState(payload)
-      }
+      const nextState =
+        typeof payload === 'function' ? (payload as (prev: T) => T)(ref.current) : payload
+      ref.current = nextState
+      setState(nextState)
     },
     [setState],
   )
