@@ -33,7 +33,7 @@ export async function dm(aid: string) {
   return json.data
 }
 
-export const cache = new QuickLRU<string, VideoData>({ maxSize: 1_0000 })
+const cache = new QuickLRU<string, VideoData>({ maxSize: 1_0000 })
 
 export type VideoData = {
   videoshotData: PvideoJson['data']

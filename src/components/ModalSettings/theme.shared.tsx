@@ -70,7 +70,7 @@ const LongwashingThemes = toThemes(
   `,
 )
 
-export const BIBIBILI_EVOLVED_SYNC_ID = 'bilibili-evolved-sync'
+const BIBIBILI_EVOLVED_SYNC_ID = 'bilibili-evolved-sync'
 
 export const ThemeGroups: {
   name: string

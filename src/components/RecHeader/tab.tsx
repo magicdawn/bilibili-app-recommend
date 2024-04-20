@@ -36,7 +36,7 @@ export function useCurrentShowingTabKeys(): ETabType[] {
   return useMemo(() => TabKeys.filter((key) => !hidingTabKeys.includes(key)), [hidingTabKeys])
 }
 
-export function sortTabKeys(customTabKeysOrder: ETabType[]) {
+function sortTabKeys(customTabKeysOrder: ETabType[]) {
   return TabKeys.slice().sort((a, b) => {
     let aIndex = customTabKeysOrder.indexOf(a)
     let bIndex = customTabKeysOrder.indexOf(b)
@@ -88,7 +88,7 @@ export function getCurrentSourceTab(): ETabType {
   return _getCurrentSourceTab(videoSourceTabState.value, getHasLogined())
 }
 
-export const iconCss = css`
+const iconCss = css`
   margin-right: 4px;
   margin-top: -1px;
 `
