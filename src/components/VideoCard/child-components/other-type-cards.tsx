@@ -14,6 +14,7 @@ import styles from '../index.module.scss'
 import type { VideoCardEmitter } from '../index.shared'
 import { borderRadiusStyle, defaultEmitter } from '../index.shared'
 import type { IVideoCardData } from '../process/normalize'
+import { VideoCardBottom } from './VideoCardBottom'
 
 export const SkeletonCard = memo(function SkeletonCard({ loading }: { loading: boolean }) {
   const { styleNewCardStyle } = useSettingsSnapshot()
@@ -65,11 +66,13 @@ export const SkeletonCard = memo(function SkeletonCard({ loading }: { loading: b
 })
 
 export const DislikedCard = memo(function DislikedCard({
-  dislikedReason,
   item,
+  cardData,
+  dislikedReason,
   emitter = defaultEmitter,
 }: {
   item: AppRecItem
+  cardData: IVideoCardData
   dislikedReason: Reason
   emitter?: VideoCardEmitter
 }) {
@@ -97,6 +100,8 @@ export const DislikedCard = memo(function DislikedCard({
 
   useMittOn(emitter, 'cancel-dislike', onCancelDislike)
 
+  const { cover, title } = cardData
+
   return (
     <div className={cx(styles.dislikedWrapper)}>
       <div className={styles.dislikeContentCover}>
@@ -107,10 +112,13 @@ export const DislikedCard = memo(function DislikedCard({
         </div>
       </div>
       <div className={styles.dislikeContentAction}>
-        <button onClick={onCancelDislike}>
-          <IconPark name='Return' size='16' style={{ marginRight: 4, marginTop: -2 }} />
-          撤销
-        </button>
+        <VideoCardBottom cardData={cardData} />
+        <div className={styles.dislikeContentActionInner}>
+          <button onClick={onCancelDislike}>
+            <IconPark name='Return' size='16' style={{ marginRight: 4, marginTop: -2 }} />
+            撤销
+          </button>
+        </div>
       </div>
     </div>
   )
@@ -139,10 +147,12 @@ export const BlacklistCard = memo(function BlacklistCard({
         </div>
       </div>
       <div className={styles.dislikeContentAction}>
-        <button onClick={onCancel}>
-          <IconPark name='Return' size='16' style={{ marginRight: 4, marginTop: -2 }} />
-          撤销
-        </button>
+        <div className={styles.dislikeContentActionInner}>
+          <button onClick={onCancel}>
+            <IconPark name='Return' size='16' style={{ marginRight: 4, marginTop: -2 }} />
+            撤销
+          </button>
+        </div>
       </div>
     </div>
   )

@@ -1,17 +1,16 @@
 import { APP_KEY_PREFIX, APP_NAME, baseDebug } from '$common'
 import { useMittOn } from '$common/hooks/useMitt'
-import { showModalDislike, useDislikedReason } from '$components/ModalDislike'
+import { useDislikedReason } from '$components/ModalDislike'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import type { OnRefresh } from '$components/RecGrid/useRefresh'
 import { useCurrentSourceTab, videoSourceTabState } from '$components/RecHeader/tab'
 import { ETabType } from '$components/RecHeader/tab.shared'
-import { isApp, type AppRecItemExtend, type RecItemType } from '$define'
+import { type AppRecItemExtend, type RecItemType } from '$define'
 import { EApiType } from '$define/index.shared'
 import { IconPark } from '$icon-park'
 import { cx } from '$libs'
 import { dynamicFeedFilterSelectUp } from '$modules/recommend/dynamic-feed'
 import { formatFavFolderUrl } from '$modules/recommend/fav'
-import { useWatchLaterState, watchLaterState } from '$modules/recommend/watchlater'
 import { settings, useSettingsSnapshot } from '$modules/settings'
 import { UserFavService, defaultFavFolderName } from '$modules/user/fav'
 import { UserBlacklistService, useInBlacklist } from '$modules/user/relations/blacklist'
@@ -19,18 +18,16 @@ import { UserfollowService } from '$modules/user/relations/follow'
 import { isFirefox, isMac } from '$platform'
 import { Picture } from '$ui-components/Picture'
 import { AntdMessage } from '$utility'
-import { getAvatarSrc } from '$utility/image'
-import { useHover, usePrevious } from 'ahooks'
 import type { MenuProps } from 'antd'
-import { Avatar, Dropdown } from 'antd'
+import { Dropdown } from 'antd'
 import delay from 'delay'
-import { motion } from 'framer-motion'
 import { tryit } from 'radash'
-import type { MouseEvent, MouseEventHandler } from 'react'
+import type { MouseEventHandler } from 'react'
 import type { VideoData } from './card.service'
-import { getVideoData, watchLaterAdd, watchLaterDel } from './card.service'
+import { getVideoData, watchLaterAdd } from './card.service'
 import { PreviewImage } from './child-components/PreviewImage'
-import { BlacklistCard, DislikedCard, SkeletonCard } from './child-components/other-cards'
+import { VideoCardBottom } from './child-components/VideoCardBottom'
+import { BlacklistCard, DislikedCard, SkeletonCard } from './child-components/other-type-cards'
 import styles from './index.module.scss'
 import type { VideoCardEmitter } from './index.shared'
 import {
@@ -40,9 +37,11 @@ import {
   defaultEmitter,
 } from './index.shared'
 import type { IVideoCardData } from './process/normalize'
-import { DESC_SEPARATOR, normalizeCardData } from './process/normalize'
+import { normalizeCardData } from './process/normalize'
 import { AppRecIconScaleMap, AppRecIconSvgNameMap, makeStatItem } from './stat-item'
+import { useDislikeRelated } from './useDislikeRelated'
 import { usePreviewAnimation } from './usePreviewAnimation'
+import { useWatchlaterRelated } from './useWatchlaterRelated'
 
 const debug = baseDebug.extend('components:VideoCard')
 
@@ -110,6 +109,7 @@ export const VideoCard = memo(function VideoCard({
         (dislikedReason ? (
           <DislikedCard
             item={item as AppRecItemExtend}
+            cardData={cardData}
             emitter={emitter}
             dislikedReason={dislikedReason!}
           />
@@ -131,7 +131,7 @@ export const VideoCard = memo(function VideoCard({
   )
 })
 
-type VideoCardInnerProps = {
+export type VideoCardInnerProps = {
   item: RecItemType
   cardData: IVideoCardData
   active?: boolean
@@ -149,7 +149,7 @@ const VideoCardInner = memo(function VideoCardInner({
   onRefresh,
   emitter = defaultEmitter,
 }: VideoCardInnerProps) {
-  const { styleNewCardStyle, autoPreviewWhenHover, accessKey } = useSettingsSnapshot()
+  const { autoPreviewWhenHover, accessKey } = useSettingsSnapshot()
   const authed = Boolean(accessKey)
 
   const {
@@ -159,11 +159,7 @@ const VideoCardInner = memo(function VideoCardInner({
     goto,
     href,
     title,
-    titleRender,
-    desc,
     cover,
-    pubdateDisplay,
-    pubdateDisplayTitle,
     duration,
     durationStr,
     recommendReason,
@@ -173,42 +169,13 @@ const VideoCardInner = memo(function VideoCardInner({
 
     // author
     authorName,
-    authorFace,
     authorMid,
-
-    // adpater specific
-    appBadge,
-    appBadgeDesc,
   } = cardData
 
   const isNormalVideo = goto === 'av'
   if (!['av', 'bangumi', 'picture'].includes(goto)) {
     console.warn(`[${APP_NAME}]: none (av,bangumi,picture) goto type %s`, goto, item)
   }
-
-  // fallback to href
-  const authorHref = authorMid ? `https://space.bilibili.com/${authorMid}` : href
-
-  // firsr-line: title
-  // second-line: desc = (author-name + date)
-  let descTitle = desc
-  if (authorName && (pubdateDisplay || pubdateDisplayTitle)) {
-    descTitle = `${authorName} · ${pubdateDisplayTitle || pubdateDisplay}`
-  }
-
-  // fix https://greasyfork.org/zh-CN/scripts/479861-bilibili-%E9%A1%B5%E9%9D%A2%E5%87%80%E5%8C%96%E5%A4%A7%E5%B8%88/discussions/238294
-  const descInnerSpans = desc ? (
-    <>
-      <span className='bili-video-card__info--author'>{desc}</span>
-    </>
-  ) : (
-    <>
-      <span className='bili-video-card__info--author'>{authorName}</span>
-      {pubdateDisplay && (
-        <span className='bili-video-card__info--date'>{DESC_SEPARATOR + pubdateDisplay}</span>
-      )}
-    </>
-  )
 
   const [videoData, setVideoData] = useState<VideoData | null>(null)
   const isFetchingVideoData = useRef(false)
@@ -756,324 +723,8 @@ const VideoCardInner = memo(function VideoCardInner({
         </a>
       </Dropdown>
 
-      {/* old, same as bilibili default */}
-      {!styleNewCardStyle && (
-        <div className='bili-video-card__info __scale-disable'>
-          <div className='bili-video-card__info--right'>
-            <a
-              href={href}
-              target='_blank'
-              data-mod='partition_recommend'
-              data-idx='content'
-              data-ext='click'
-              onClick={handleVideoLinkClick}
-            >
-              <h3 className='bili-video-card__info--tit' title={title}>
-                {titleRender ?? title}
-              </h3>
-            </a>
-            <p className='bili-video-card__info--bottom'>
-              {isNormalVideo ? (
-                <a
-                  className='bili-video-card__info--owner'
-                  href={authorHref}
-                  target='_blank'
-                  title={descTitle}
-                >
-                  {recommendReason ? (
-                    <span className={styles.recommendReason}>{recommendReason}</span>
-                  ) : (
-                    <svg className='bili-video-card__info--owner__up'>
-                      <use href='#widget-up'></use>
-                    </svg>
-                  )}
-                  {descInnerSpans}
-                </a>
-              ) : appBadge || appBadgeDesc ? (
-                <a className='bili-video-card__info--owner' href={href} target='_blank'>
-                  <span className={styles.badge}>{appBadge || ''}</span>
-                  <span className={styles.bangumiDesc}>{appBadgeDesc || ''}</span>
-                </a>
-              ) : null}
-            </p>
-          </div>
-        </div>
-      )}
-
-      {/* new, not so crowded */}
-      {styleNewCardStyle && (
-        <div
-          css={css`
-            display: flex;
-            margin-top: 15px;
-          `}
-        >
-          <a href={authorHref} target='_blank' onClick={handleVideoLinkClick}>
-            {authorFace ? (
-              <Avatar src={getAvatarSrc(authorFace)} />
-            ) : (
-              <Avatar>{authorName?.[0] || appBadgeDesc?.[0] || ''}</Avatar>
-            )}
-          </a>
-
-          <div
-            css={css`
-              flex: 1;
-              margin-left: 10px;
-              overflow: hidden;
-            `}
-          >
-            <a href={href} target='_blank' data-role='bili-video-card__info--tit'>
-              <h3
-                title={title}
-                // className='bili-video-card__info--tit'
-                css={css`
-                  display: -webkit-box;
-                  -webkit-line-clamp: 2;
-                  -webkit-box-orient: vertical;
-                  overflow: hidden;
-                  text-overflow: ellipsis;
-                  word-break: break-all;
-                  line-break: anywhere;
-
-                  color: var(--text1);
-                  font-size: var(--title-font-size);
-                  line-height: var(--title-line-height);
-                  /* min-height: 48px; */
-                `}
-              >
-                {titleRender ?? title}
-              </h3>
-            </a>
-
-            <div
-              css={css`
-                margin-top: 4px;
-                color: var(--text3);
-                font-size: var(--subtitle-font-size);
-              `}
-            >
-              {isNormalVideo ? (
-                <>
-                  <div
-                    css={css`
-                      display: flex;
-                      align-items: center;
-                    `}
-                  >
-                    <a
-                      className='bili-video-card__info--owner'
-                      href={authorHref}
-                      target='_blank'
-                      title={descTitle}
-                    >
-                      {descInnerSpans}
-                    </a>
-                  </div>
-                  {!!recommendReason && (
-                    <div
-                      className={styles.recommendReason}
-                      css={css`
-                        margin-top: 4px;
-                        padding-left: 0;
-                        max-width: 100%;
-                      `}
-                    >
-                      {recommendReason}
-                    </div>
-                  )}
-                </>
-              ) : appBadge || appBadgeDesc ? (
-                <a className='bili-video-card__info--owner' href={href} target='_blank'>
-                  {!!appBadge && <span className={styles.badge}>{appBadge}</span>}
-                  {!!appBadgeDesc && <span className={styles.bangumiDesc}>{appBadgeDesc}</span>}
-                </a>
-              ) : null}
-            </div>
-          </div>
-        </div>
-      )}
+      {/* bottom: after the cover */}
+      <VideoCardBottom cardData={cardData} handleVideoLinkClick={handleVideoLinkClick} />
     </div>
   )
 })
-
-/**
- * 稍候再看
- */
-function useWatchlaterRelated({
-  item,
-  cardData,
-  onRemoveCurrent,
-  isHoveringAfterDelay,
-  active,
-}: {
-  item: RecItemType
-  cardData: IVideoCardData
-  onRemoveCurrent: VideoCardInnerProps['onRemoveCurrent']
-  isHoveringAfterDelay: boolean
-  active: boolean
-}) {
-  const { avid, bvid } = cardData
-
-  const hasWatchLaterEntry = item.api !== 'app' || (item.api === 'app' && item.goto === 'av')
-
-  // 稍后再看 hover state
-  const watchLaterRef = useRef(null)
-  const isWatchLaterHovering = useHover(watchLaterRef)
-
-  // watchLater added
-  const watchLaterAdded = useWatchLaterState(bvid)
-  const watchLaterAddedPrevious = usePrevious(watchLaterAdd)
-
-  const requestingWatchLaterApi = useRef(false)
-  const onToggleWatchLater = useMemoizedFn(
-    async (
-      e?: MouseEvent,
-      usingAction?: typeof watchLaterDel | typeof watchLaterAdd,
-    ): Promise<{ success: boolean; targetState?: boolean }> => {
-      e?.preventDefault()
-      e?.stopPropagation()
-
-      usingAction ??= watchLaterAdded ? watchLaterDel : watchLaterAdd
-      if (usingAction !== watchLaterAdd && usingAction !== watchLaterDel) {
-        throw new Error('unexpected usingAction provided')
-      }
-
-      if (requestingWatchLaterApi.current) return { success: false }
-      requestingWatchLaterApi.current = true
-
-      let success = false
-      try {
-        success = await usingAction(avid)
-      } finally {
-        requestingWatchLaterApi.current = false
-      }
-
-      const targetState = usingAction === watchLaterAdd ? true : false
-      if (success) {
-        if (targetState) {
-          watchLaterState.bvidSet.add(bvid)
-        } else {
-          watchLaterState.bvidSet.delete(bvid)
-        }
-
-        // 稍后再看
-        if (item.api === 'watchlater') {
-          // when remove-watchlater for watchlater tab, remove this card
-          if (!targetState) {
-            await delay(100)
-            onRemoveCurrent?.(item, cardData)
-          }
-        }
-        // 其他 Tab
-        else {
-          AntdMessage.success(`已${targetState ? '添加' : '移除'}稍后再看`)
-        }
-      }
-
-      return { success, targetState }
-    },
-  )
-
-  const watchlaterIconEl = (
-    <>
-      {hasWatchLaterEntry && (
-        <div
-          className={`${styles.watchLater}`}
-          style={{
-            display: isHoveringAfterDelay || active ? 'flex' : 'none',
-          }}
-          ref={watchLaterRef}
-          onClick={onToggleWatchLater}
-        >
-          {watchLaterAdded ? (
-            <svg className={styles.watchLaterIcon} viewBox='0 0 200 200'>
-              <motion.path
-                d='M25,100 l48,48 a 8.5,8.5 0 0 0 10,0 l90,-90'
-                strokeWidth='20'
-                stroke='currentColor'
-                fill='transparent'
-                strokeLinecap='round'
-                {...(!watchLaterAddedPrevious
-                  ? {
-                      initial: { pathLength: 0 },
-                      animate: { pathLength: 1 },
-                    }
-                  : undefined)}
-              />
-            </svg>
-          ) : (
-            <svg className={styles.watchLaterIcon}>
-              <use href={'#widget-watch-later'} />
-            </svg>
-          )}
-          {/* <use href={watchLaterAdded ? '#widget-watch-save' : '#widget-watch-later'} /> */}
-          <span
-            className={styles.watchLaterTip}
-            style={{ display: isWatchLaterHovering ? 'block' : 'none' }}
-          >
-            {watchLaterAdded ? '移除稍后再看' : '稍后再看'}
-          </span>
-        </div>
-      )}
-    </>
-  )
-
-  return { watchlaterIconEl, onToggleWatchLater, watchLaterAdded, hasWatchLaterEntry }
-}
-
-/**
- * 我不想看
- */
-function useDislikeRelated({
-  item,
-  authed,
-  isHoveringAfterDelay,
-}: {
-  item: RecItemType
-  authed: boolean
-  isHoveringAfterDelay: boolean
-}) {
-  const hasDislikeEntry = isApp(item) && authed && !!item.three_point?.dislike_reasons?.length
-
-  const onTriggerDislike = useMemoizedFn((e?: MouseEvent) => {
-    e?.preventDefault()
-    e?.stopPropagation()
-
-    if (!hasDislikeEntry) {
-      if (item.api !== 'app') {
-        return AntdMessage.error('当前视频不支持提交「我不想看」')
-      }
-      if (!authed) {
-        return AntdMessage.error('请先获取 access_key')
-      }
-      return
-    }
-
-    showModalDislike(item)
-  })
-
-  const _ref = useRef(null)
-  const _hovering = useHover(_ref)
-  const dislikeIconEl = (
-    <>
-      {hasDislikeEntry && (
-        <div
-          ref={_ref}
-          className={styles.btnDislike}
-          onClick={onTriggerDislike}
-          style={{ display: isHoveringAfterDelay ? 'flex' : 'none' }}
-        >
-          <svg className={styles.btnDislikeIcon}>
-            <use href='#widget-close'></use>
-          </svg>
-          <span className={styles.btnDislikeTip} style={{ display: _hovering ? 'block' : 'none' }}>
-            我不想看
-          </span>
-        </div>
-      )}
-    </>
-  )
-
-  return { dislikeIconEl, hasDislikeEntry, onTriggerDislike }
-}

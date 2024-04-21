@@ -120,14 +120,12 @@ $z: 3;
 }
 
 .disliked-wrapper {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
+  // grid align-items 默认为 stretch, 同 row 互相撑起高度
   height: 100%;
 
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 
   border-radius: var(--video-card-border-radius);
   border: 1px solid #eee;
@@ -138,9 +136,8 @@ $z: 3;
   .dislike-content-cover {
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
-    // https://stackoverflow.com/questions/17621181/how-is-padding-top-as-a-percentage-related-to-the-parents-width
-    // 基于 width * 百分比
-    padding-top: 56.25%;
+    aspect-ratio: 16 / 9;
+    // padding-top: #{calc(9 / 16 * 100%)};
     position: relative;
 
     .dislike-content-cover-inner {
@@ -149,6 +146,7 @@ $z: 3;
       left: 0;
       width: 100%;
       height: 100%;
+      // backdrop-filter: blur(10px);
 
       display: flex;
       flex-direction: column;
@@ -173,22 +171,32 @@ $z: 3;
 
   .dislike-content-action {
     flex: 1;
-    width: 100%;
+    position: relative;
 
     border-top: 1px solid #eee;
     :global(body.dark) & {
       border-top: 1px solid #333;
     }
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    .dislike-content-action-inner {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      // backdrop-filter: blur(10px);
+      background-color: var(--bg2);
 
-    button {
-      font-size: 16px;
-      color: inherit;
       display: flex;
       align-items: center;
+      justify-content: center;
+
+      button {
+        font-size: 16px;
+        color: inherit;
+        display: flex;
+        align-items: center;
+      }
     }
   }
 }
