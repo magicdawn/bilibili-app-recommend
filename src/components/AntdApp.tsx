@@ -1,7 +1,7 @@
-import { APP_NAME_ROOT_CLASSNAME } from '$common'
+import { APP_NAME, APP_NAME_ROOT_CLASSNAME } from '$common'
 import { $headerWidth } from '$header'
 import { useSettingsSnapshot } from '$modules/settings'
-import { useIsDarkMode } from '$platform'
+import { useColors, useIsDarkMode } from '$platform'
 import { UseApp } from '$utility/antd-static'
 import { Global, css as _css, css } from '@emotion/react'
 import { ConfigProvider, Tooltip, theme } from 'antd'
@@ -63,6 +63,7 @@ export function AntdApp({
 function GlobalStyle() {
   const { colorPrimary } = useCurrentTheme()
   const { pureRecommend, styleUseCustomGrid } = useSettingsSnapshot()
+  const { c, bg } = useColors()
 
   // 会有多次变宽的效果, 看起来很诡异!!!
   // bilibili-default -> 90 % -> evolved宽度计算
@@ -76,6 +77,8 @@ function GlobalStyle() {
         styles={_css`
           :root {
             ${colorPrimaryIdentifier}: ${colorPrimary};
+            --${APP_NAME}-color: ${c};
+            --${APP_NAME}-bg-color: ${bg};
           }
 
           .${APP_NAME_ROOT_CLASSNAME} {
@@ -135,6 +138,11 @@ function GlobalStyle() {
                   #i_cecream,
                   .bili-header .bili-header__channel {
                     background-color: var(--bg2);
+                  }
+
+                  .bili-header .bili-header__channel .channel-entry-more__link,
+                  .bili-header .bili-header__channel .channel-link {
+                    background-color: var(--bg1);
                   }
                 `
               : css`

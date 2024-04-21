@@ -1,5 +1,7 @@
+import { settings } from '$modules/settings'
 import { valtioFactory } from '$utility/valtio'
 import UAParser from 'ua-parser-js'
+import { subscribe } from 'valtio'
 
 /**
  * BILIBILI-Evolved dark mode
@@ -14,23 +16,34 @@ const $darkMode = valtioFactory(() => {
     document.body.classList.contains('bilibili-helper-dark-mode')
   )
 })
-
 export function useIsDarkMode() {
   return $darkMode.use()
 }
 
-export function useColors() {
-  const isDarkMode = useIsDarkMode()
-  const { bg, c } = useMemo(() => {
-    const bg = window.getComputedStyle(document.body).backgroundColor
-    const c = window.getComputedStyle(document.body).color
-    return { bg, c }
-  }, [isDarkMode])
+/**
+ * color & bg-color 相关
+ */
+
+export const $colors = valtioFactory(() => {
+  const bg = window.getComputedStyle(document.body).backgroundColor
+  const c = window.getComputedStyle(document.body).color
   return { bg, c }
+})
+
+export function useColors() {
+  return $colors.use()
 }
 
-const ob = new MutationObserver(function () {
-  $darkMode.updateThrottled()
+// update
+setTimeout($colors.updateThrottled, 2000) // onload complete
+subscribe($darkMode.state, $colors.updateThrottled) // when dark mode change
+subscribe(settings, () => setTimeout($colors.updateThrottled, 500)) // when settings.styleUseCustomGridConfig change
+
+const ob = new MutationObserver(() => {
+  setTimeout(() => {
+    $darkMode.updateThrottled()
+    setTimeout($colors.updateThrottled)
+  })
 })
 ob.observe(document.body, {
   attributes: true,

@@ -1,3 +1,8 @@
 $bili-pink: #ff6699;
 
-$color-primary: var(--bilibili-app-recommend-color-primary);
+$app-name: bilibili-app-recommend;
+
+$app-color-primary: var(--#{$app-name}-color-primary);
+
+$app-color: var(--#{$app-name}-color);
+$app-bg-color: var(--#{$app-name}-bg-color);
