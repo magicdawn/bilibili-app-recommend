@@ -175,11 +175,6 @@ $z: 3;
     flex: 1;
     position: relative;
 
-    border-top: 1px solid #eee;
-    :global(body.dark) & {
-      border-top: 1px solid #333;
-    }
-
     .dislike-content-action-inner {
       position: absolute;
       top: 0;
@@ -188,6 +183,11 @@ $z: 3;
       height: 100%;
       // backdrop-filter: blur(10px);
       background-color: vars.$app-bg-color;
+
+      border-top: 1px solid #eee;
+      :global(body.dark) & {
+        border-top: 1px solid #333;
+      }
 
       display: flex;
       align-items: center;
