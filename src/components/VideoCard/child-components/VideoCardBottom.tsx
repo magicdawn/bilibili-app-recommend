@@ -146,7 +146,17 @@ export function VideoCardBottom({
                 }
               `}
             >
-              <a href={href} target='_blank' rel='noopener'>
+              <a
+                href={href}
+                target='_blank'
+                rel='noopener'
+                css={css`
+                  .bili-video-card .bili-video-card__info--tit > a& {
+                    font-family: inherit;
+                    font-weight: initial;
+                  }
+                `}
+              >
                 {titleRender ?? title}
               </a>
             </h3>
