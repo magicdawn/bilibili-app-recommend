@@ -1,5 +1,5 @@
 import { settings } from '$modules/settings'
-import { valtioFactory } from '$utility/valtio'
+import { subscribeOnKeys, valtioFactory } from '$utility/valtio'
 import UAParser from 'ua-parser-js'
 import { subscribe } from 'valtio'
 
@@ -37,7 +37,7 @@ export function useColors() {
 // update
 setTimeout($colors.updateThrottled, 2000) // onload complete
 subscribe($darkMode.state, $colors.updateThrottled) // when dark mode change
-subscribe(settings, () => setTimeout($colors.updateThrottled, 500)) // when settings.styleUseCustomGridConfig change
+subscribeOnKeys(settings, ['styleUseCustomGrid'], () => setTimeout($colors.updateThrottled, 500)) // when settings.styleUseCustomGrid change
 
 const ob = new MutationObserver(() => {
   setTimeout(() => {
