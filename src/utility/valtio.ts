@@ -29,10 +29,10 @@ export function subscribeOnKeys<T extends object>(
   let prevVal = pick(snapshot(state), keys)
 
   subscribe(state, () => {
-    const stateValues = snapshot(state)
-    const val = pick(stateValues, keys)
+    const snap = snapshot(state)
+    const val = pick(snap, keys)
     if (!isEqual(prevVal, val)) {
-      callback(stateValues as T)
+      callback(snap as T)
     }
     prevVal = val
   })
