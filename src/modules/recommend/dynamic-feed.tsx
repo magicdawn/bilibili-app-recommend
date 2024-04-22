@@ -9,7 +9,7 @@ import type { DynamicPortalUp } from '$modules/dynamic/portal'
 import { isWebApiSuccess, request } from '$request'
 import { toast } from '$utility'
 import { getAvatarSrc } from '$utility/image'
-import { fastOrderBy } from '$utility/order-by'
+import { fastSortWithOrders } from '$utility/order-by'
 import type { ArrayItem } from '$utility/type'
 import type { MenuProps } from 'antd'
 import { Avatar, Badge, Button, Dropdown, Input, Space } from 'antd'
@@ -199,17 +199,16 @@ export function DynamicFeedUsageInfo() {
     // see https://github.com/lodash/lodash/pull/3764
 
     const _s = performance.now()
-    const upListSorted = fastOrderBy(
-      upList,
-      [(it) => (it.has_update ? 1 : 0), 'uname'],
-      [
-        'desc',
-        (a: string, b: string) => {
+    const upListSorted = fastSortWithOrders(upList, [
+      { prop: (it) => (it.has_update ? 1 : 0), order: 'desc' },
+      {
+        prop: 'uname',
+        order: (a: string, b: string) => {
           ;[a, b] = [a, b].map(mapName)
           return a.localeCompare(b, 'zh-CN')
         },
-      ],
-    )
+      },
+    ])
 
     // if (upList.length) {
     // const _cost = performance.now() - _s
