@@ -35,7 +35,8 @@ interface IProps {
   // 如果没有移动鼠标, 后面 mousemove 无法触发, 这个时候需要从前面 mouseenter 中读取 enter cursor state
   mouseEnterRelativeX: number | undefined
 
-  previewAnimationProgress?: number
+  previewProgress?: number
+  previewT?: number
 }
 
 function fallbackWhenNan(...args: number[]) {
@@ -51,7 +52,8 @@ export function PreviewImage({
   videoDuration,
   pvideo,
   mouseEnterRelativeX,
-  previewAnimationProgress,
+  previewProgress,
+  previewT,
 }: IProps) {
   const ref = useRef<HTMLDivElement>(null)
   const cursorState = useMouse(ref)
@@ -65,8 +67,8 @@ export function PreviewImage({
   })
 
   let progress = 0
-  if (typeof previewAnimationProgress === 'number') {
-    progress = previewAnimationProgress
+  if (typeof previewProgress === 'number') {
+    progress = previewProgress
   } else {
     const relativeX = fallbackWhenNan(cursorState.elementX, mouseEnterRelativeX || 0)
     if (size.width && relativeX && !isNaN(relativeX)) {
@@ -82,6 +84,7 @@ export function PreviewImage({
     elWidth: size.width,
     elHeight: size.height,
     progress,
+    t: previewT,
   }
 
   return (
@@ -97,14 +100,16 @@ function PreviewImageInner({
   elWidth,
   elHeight,
   progress,
+  t,
 }: {
   videoDuration: number
   pvideo: PvideoData
   elWidth: number
   elHeight: number
   progress: number
+  t?: number
 }) {
-  const t = Math.floor((videoDuration || 0) * progress)
+  t ??= Math.floor((videoDuration || 0) * progress)
 
   let index = useMemo(() => {
     const arr = pvideo?.index || []

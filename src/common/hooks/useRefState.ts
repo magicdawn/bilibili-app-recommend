@@ -5,8 +5,8 @@
  * 还没有合并, 这里简单实现一下, signature 与 useGetState 一致
  */
 
-export function useRefState<T>(initValue: T | (() => T)) {
-  const [state, setState] = useState<T>(initValue)
+export function useRefState<T>(initialValue: T | (() => T)) {
+  const [state, setState] = useState<T>(initialValue)
 
   const ref = useRef(state)
 
@@ -23,4 +23,35 @@ export function useRefState<T>(initValue: T | (() => T)) {
   const getState = useCallback(() => ref.current, [])
 
   return [state, setStateWraped, getState] as const
+}
+
+export function useRefState$<T>(initialValue: T | (() => T)) {
+  const [state, set, get] = useRefState(initialValue)
+  return {
+    state, // use state in render, other case use `.val`
+    get,
+    set,
+    get val() {
+      return get()
+    },
+    set val(newValue) {
+      set(newValue)
+    },
+  }
+}
+
+export function useRef$<T>(initialValue: T) {
+  const ref = useRef(initialValue)
+  const get = useCallback(() => ref.current, [])
+  const set = useCallback((newValue: T) => (ref.current = newValue), [])
+  return {
+    get,
+    set,
+    get val() {
+      return get()
+    },
+    set val(newValue: T) {
+      set(newValue)
+    },
+  }
 }

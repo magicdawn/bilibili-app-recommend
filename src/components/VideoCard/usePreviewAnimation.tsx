@@ -1,9 +1,11 @@
 import { APP_NAME, __PROD__ } from '$common'
-import { useRefState } from '$common/hooks/useRefState'
+import { useRef$, useRefState$ } from '$common/hooks/useRefState'
 import { settings } from '$modules/settings'
+import { minmax } from '$utility/num'
 import { useEventListener, useMemoizedFn, useRafState, useUnmountedRef } from 'ahooks'
 import delay from 'delay'
 import type { MouseEvent } from 'react'
+import type { VideoData } from './card.service'
 
 const HOVER_DELAY = 800
 
@@ -13,16 +15,20 @@ const HOVER_DELAY = 800
 export function usePreviewAnimation({
   bvid,
   title,
-  autoPreviewWhenHover,
   active,
+  videoDuration,
   tryFetchVideoData,
+  accessVideoData,
+  autoPreviewWhenHover,
   videoPreviewWrapperRef,
 }: {
   bvid: string
   title: string
-  autoPreviewWhenHover: boolean
   active: boolean
+  videoDuration: number
   tryFetchVideoData: () => Promise<void>
+  accessVideoData: () => VideoData | null
+  autoPreviewWhenHover: boolean
   videoPreviewWrapperRef: RefObject<HTMLDivElement>
 }) {
   const DEBUG_ANIMATION = __PROD__
@@ -30,17 +36,21 @@ export function usePreviewAnimation({
     : // free to change
       false
 
-  const [previewAnimationProgress, setPreviewAnimationProgress] = useRafState<number | undefined>(
-    undefined,
-  )
+  const hasVideoData = useMemoizedFn(() => {
+    return Boolean(accessVideoData()?.videoshotData)
+  })
+
+  const [previewProgress, setPreviewProgress] = useRafState<number | undefined>()
+  const [previewT, setPreviewT] = useRafState<number | undefined>()
+  const getProgress = useMemoizedFn(() => previewProgress || 0)
+  const getT = useMemoizedFn(() => previewT || 0)
 
   const [mouseMoved, setMouseMoved] = useState(false)
 
   // 在 pvideodata 加载的时候, useHover 会有变化, so 使用 mouseenter/mouseleave 自己处理
-  const [isHovering, setIsHovering, getIsHovering] = useRefState(false)
-  const [isHoveringAfterDelay, setIsHoveringAfterDelay, getIsHoveringAfterDelay] =
-    useRefState(false)
-  const startByHover = useRef(false)
+  const $isHovering = useRefState$(false)
+  const $isHoveringAfterDelay = useRefState$(false)
+  const $startByHover = useRef$(false)
 
   // mouseenter cursor state
   const [mouseEnterRelativeX, setMouseEnterRelativeX] = useState<number | undefined>(undefined)
@@ -56,7 +66,7 @@ export function usePreviewAnimation({
   useEventListener(
     'mouseenter',
     async (e) => {
-      setIsHovering(true)
+      $isHovering.set(true)
       updateMouseEnterRelativeX(e)
 
       await tryFetchVideoData()
@@ -65,13 +75,13 @@ export function usePreviewAnimation({
       }
 
       // mouse leave after delay
-      if (!getIsHovering()) return
+      if (!$isHovering.val) return
 
       // set delay flag
-      setIsHoveringAfterDelay(true)
+      $isHoveringAfterDelay.set(true)
 
       // start preview animation
-      if (autoPreviewWhenHover && !idRef.current) {
+      if (autoPreviewWhenHover && !idRef.current && hasVideoData()) {
         DEBUG_ANIMATION &&
           console.log(
             `[${APP_NAME}]: [animation] mouseenter onStartPreviewAnimation bvid=%s title=%s`,
@@ -86,8 +96,8 @@ export function usePreviewAnimation({
   useEventListener(
     'mouseleave',
     (e) => {
-      setIsHovering(false)
-      setIsHoveringAfterDelay(false)
+      $isHovering.set(false)
+      $isHoveringAfterDelay.set(false)
     },
     { target: videoPreviewWrapperRef },
   )
@@ -98,12 +108,12 @@ export function usePreviewAnimation({
       setMouseMoved(true)
 
       // update mouse enter state in mouseenter-delay
-      if (isHovering && !isHoveringAfterDelay) {
+      if ($isHovering.val && !$isHoveringAfterDelay.val) {
         updateMouseEnterRelativeX(e)
       }
 
       if (!autoPreviewWhenHover) {
-        stopAnimation()
+        __stop()
       }
     },
     { target: videoPreviewWrapperRef },
@@ -115,21 +125,16 @@ export function usePreviewAnimation({
   const idRef = useRef<number | undefined>(undefined)
 
   // 停止动画
-  //  鼠标动了
-  //  不再 active
-  //  组件卸载了
-  const shouldStopAnimation = useMemoizedFn(() => {
+  //  - 鼠标动了
+  //  - 不再 active
+  //  - 组件卸载了
+  const __shouldStop = useMemoizedFn(() => {
     if (unmounted.current) return true
 
-    // mixed keyboard & mouse control
-    if (autoPreviewWhenHover) {
-      if (startByHover.current) {
-        if (!getIsHovering()) return true
-      } else {
-        if (!active) return true
-      }
+    // mouse
+    if ($startByHover.val) {
+      if (!$isHovering.val) return true
     }
-
     // normal keyboard control
     else {
       if (!active) return true
@@ -139,12 +144,12 @@ export function usePreviewAnimation({
     return false
   })
 
-  const stopAnimation = useMemoizedFn((isClear = false) => {
+  const __stop = useMemoizedFn((isClear = false) => {
     if (!isClear && DEBUG_ANIMATION) {
       console.log(`[${APP_NAME}]: [animation] stopAnimation: %o`, {
         autoPreviewWhenHover,
         unmounted: unmounted.current,
-        isHovering: getIsHovering(),
+        isHovering: $isHovering.val,
         active,
         mouseMoved,
       })
@@ -152,83 +157,104 @@ export function usePreviewAnimation({
 
     if (idRef.current) cancelAnimationFrame(idRef.current)
     idRef.current = undefined
-    setPreviewAnimationProgress(undefined)
-    setAnimationPaused(false)
+    setPreviewProgress(undefined)
+    setPreviewT(undefined)
+    animationController.reset()
   })
 
-  const [animationPaused, setAnimationPaused, getAnimationPaused] = useRefState(false)
+  const __resumeRef = useRef<() => void>()
 
-  const resumeAnimationInner = useRef<(progress: number) => void>()
+  const __$paused = useRefState$(false)
+
+  const animationController = {
+    shouldStop: __shouldStop,
+    stop: __stop,
+
+    get paused() {
+      return __$paused.val
+    },
+    set paused(val: boolean) {
+      __$paused.val = val
+    },
+    togglePaused() {
+      const prev = this.paused
+      this.paused = !this.paused
+      if (prev) {
+        // to resume
+        __resumeRef.current?.()
+      } else {
+        // to pause
+      }
+    },
+    reset() {
+      this.paused = false
+    },
+  }
 
   const onHotkeyPreviewAnimation = useMemoizedFn(async () => {
     // console.log('hotkey preview', animationPaused)
     if (!idRef.current) {
       await tryFetchVideoData()
-      onStartPreviewAnimation()
+      if (hasVideoData()) {
+        onStartPreviewAnimation()
+      }
       return
     }
 
     // toggle
-    setAnimationPaused((val) => !val)
-
-    if (animationPaused) {
-      // to resume
-      resumeAnimationInner.current?.(previewAnimationProgress || 0)
-    } else {
-      // to pause
-    }
+    animationController.togglePaused()
   })
 
-  const getProgress = useMemoizedFn(() => {
-    return previewAnimationProgress || 0
-  })
-
-  const onStartPreviewAnimation = useMemoizedFn((_startByHover = false) => {
-    startByHover.current = _startByHover
+  const onStartPreviewAnimation = useMemoizedFn((startByHover = false) => {
+    $startByHover.set(startByHover)
     setMouseMoved(false)
-    setAnimationPaused(false)
-    // tryFetchVideoData()
-    stopAnimation(true) // clear existing
-    setPreviewAnimationProgress((val) => (typeof val === 'undefined' ? 0 : val)) // get rid of undefined
+    animationController.reset()
+    animationController.stop(true) // clear existing
 
-    // ms
+    setPreviewProgress((val) => (typeof val === 'undefined' ? 0 : val)) // get rid of undefined
+    setPreviewT(undefined)
+
+    // total ms
     const runDuration = 8000
-    const updateProgressInterval = () =>
-      typeof settings.autoPreviewUpdateInterval === 'number'
-        ? settings.autoPreviewUpdateInterval
-        : 400
+    const durationBoundary = [8_000, 16_000] as const
+    {
+      const data = accessVideoData()
+      if (data) {
+        // const imgLen = data.videoshotData.index.length
+        // runDuration = minmax(imgLen * 400, ...durationBoundary)
+      }
+    }
+
+    const getInterval = () => {
+      return settings.autoPreviewUpdateIntervalV2
+    }
 
     let start = performance.now()
-    let lastUpdateAt = 0
+    let tUpdateAt = 0
 
-    // 闭包这里获取不到最新 previewAnimationProgress
-    resumeAnimationInner.current = () => {
+    // resume()'s implementation, 闭包这里获取不到最新 previewAnimationProgress
+    __resumeRef.current = () => {
       start = performance.now() - getProgress() * runDuration
     }
 
     function frame(t: number) {
-      // console.log('in raf run %s', t)
-      // 停止动画
-      if (shouldStopAnimation()) {
-        stopAnimation()
+      // stop
+      if (animationController.shouldStop()) {
+        animationController.stop()
         return
       }
 
-      const update = () => {
+      if (!animationController.paused) {
         const elapsed = performance.now() - start
-        const p = Math.min((elapsed % runDuration) / runDuration, 1)
-        // console.log('p', p)
-        setPreviewAnimationProgress(p)
-      }
+        const p = minmax((elapsed % runDuration) / runDuration, 0, 1)
+        setPreviewProgress(p)
 
-      if (!getAnimationPaused()) {
-        if (updateProgressInterval()) {
-          if (!lastUpdateAt || performance.now() - lastUpdateAt >= updateProgressInterval()) {
-            lastUpdateAt = performance.now()
-            update()
+        if (!tUpdateAt || performance.now() - tUpdateAt >= getInterval()) {
+          tUpdateAt = performance.now()
+          if (videoDuration) {
+            const t = p * videoDuration
+            setPreviewT(t)
           }
-        } else {
-          update()
         }
       }
 
@@ -241,9 +267,10 @@ export function usePreviewAnimation({
   return {
     onHotkeyPreviewAnimation,
     onStartPreviewAnimation,
-    previewAnimationProgress,
-    isHovering,
-    isHoveringAfterDelay,
+    previewProgress,
+    previewT,
+    isHovering: $isHovering.state,
+    isHoveringAfterDelay: $isHoveringAfterDelay.state,
     mouseEnterRelativeX,
   }
 }

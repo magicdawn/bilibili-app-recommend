@@ -40,7 +40,7 @@ export type VideoData = {
   dmData: DmJson['data']
 }
 
-export async function getVideoData(bvid: string) {
+export async function fetchVideoData(bvid: string) {
   if (cache.has(bvid)) {
     return cache.get(bvid) as VideoData
   }

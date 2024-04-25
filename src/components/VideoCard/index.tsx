@@ -1,5 +1,6 @@
 import { APP_KEY_PREFIX, APP_NAME, baseDebug } from '$common'
 import { useMittOn } from '$common/hooks/useMitt'
+import { useRefState } from '$common/hooks/useRefState'
 import { useDislikedReason } from '$components/ModalDislike'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import type { OnRefresh } from '$components/RecGrid/useRefresh'
@@ -24,7 +25,7 @@ import delay from 'delay'
 import { tryit } from 'radash'
 import type { MouseEventHandler } from 'react'
 import type { VideoData } from './card.service'
-import { getVideoData, watchLaterAdd } from './card.service'
+import { fetchVideoData, watchLaterAdd } from './card.service'
 import { PreviewImage } from './child-components/PreviewImage'
 import { VideoCardBottom } from './child-components/VideoCardBottom'
 import { BlacklistCard, DislikedCard, SkeletonCard } from './child-components/other-type-cards'
@@ -177,14 +178,14 @@ const VideoCardInner = memo(function VideoCardInner({
     console.warn(`[${APP_NAME}]: none (av,bangumi,picture) goto type %s`, goto, item)
   }
 
-  const [videoData, setVideoData] = useState<VideoData | null>(null)
+  const [videoData, setVideoData, accessVideoData] = useRefState<VideoData | null>(null)
   const isFetchingVideoData = useRef(false)
   const tryFetchVideoData = useMemoizedFn(async () => {
     if (videoData) return // already fetched
     if (isFetchingVideoData.current) return // fetching
     try {
       isFetchingVideoData.current = true
-      setVideoData(await getVideoData(bvid))
+      setVideoData(await fetchVideoData(bvid))
     } finally {
       isFetchingVideoData.current = false
     }
@@ -197,16 +198,19 @@ const VideoCardInner = memo(function VideoCardInner({
   const {
     onStartPreviewAnimation,
     onHotkeyPreviewAnimation,
-    previewAnimationProgress,
+    previewProgress,
+    previewT,
     isHovering,
     isHoveringAfterDelay,
     mouseEnterRelativeX,
   } = usePreviewAnimation({
     bvid,
     title,
-    autoPreviewWhenHover,
     active,
+    videoDuration: duration,
     tryFetchVideoData,
+    accessVideoData,
+    autoPreviewWhenHover,
     videoPreviewWrapperRef,
   })
 
@@ -646,12 +650,13 @@ const VideoCardInner = memo(function VideoCardInner({
 
               {/* preview */}
               {/* follow-mouse or manual-control */}
-              {(isHoveringAfterDelay || typeof previewAnimationProgress === 'number') && (
+              {(isHoveringAfterDelay || typeof previewProgress === 'number') && (
                 <PreviewImage
                   videoDuration={duration}
                   pvideo={videoData?.videoshotData}
                   mouseEnterRelativeX={mouseEnterRelativeX}
-                  previewAnimationProgress={previewAnimationProgress}
+                  previewProgress={previewProgress}
+                  previewT={previewT}
                 />
               )}
 

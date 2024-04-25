@@ -48,7 +48,10 @@ export const initialSettings = {
   autoPreviewWhenKeyboardSelect: false,
 
   // 自动预览更新间隔
-  autoPreviewUpdateInterval: 400,
+  // @history:
+  //  - v1 400ms,
+  //  - v2 progress 与 t 分开, 更新为 700ms
+  autoPreviewUpdateIntervalV2: 700,
 
   // 鼠标悬浮自动预览, 不再跟随鼠标位置, 默认: 跟随鼠标
   autoPreviewWhenHover: false,
