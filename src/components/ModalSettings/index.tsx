@@ -549,7 +549,7 @@ function TabPaneBasic() {
 }
 
 function TabPaneAdvance() {
-  const { autoPreviewUpdateIntervalV2, appApiDecice } = useSettingsSnapshot()
+  const { autoPreviewUpdateInterval, appApiDecice } = useSettingsSnapshot()
 
   return (
     <div className={styles.tabPane}>
@@ -616,10 +616,10 @@ function TabPaneAdvance() {
             min={0}
             max={1000}
             keyboard
-            onChange={(val) => (settings.autoPreviewUpdateIntervalV2 = val)}
-            value={autoPreviewUpdateIntervalV2}
+            onChange={(val) => (settings.autoPreviewUpdateInterval = val)}
+            value={autoPreviewUpdateInterval}
           />
-          <span style={{ width: '65px' }}>({autoPreviewUpdateIntervalV2}ms)</span>
+          <span style={{ width: '65px' }}>({autoPreviewUpdateInterval}ms)</span>
         </div>
       </div>
     </div>

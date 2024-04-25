@@ -226,7 +226,7 @@ export function usePreviewAnimation({
     }
 
     const getInterval = () => {
-      return settings.autoPreviewUpdateIntervalV2
+      return settings.autoPreviewUpdateInterval
     }
 
     let start = performance.now()
@@ -245,14 +245,19 @@ export function usePreviewAnimation({
       }
 
       if (!animationController.paused) {
-        const elapsed = performance.now() - start
+        const now = performance.now()
+        const elapsed = now - start
         const p = minmax((elapsed % runDuration) / runDuration, 0, 1)
-        setPreviewProgress(p)
 
-        if (!tUpdateAt || performance.now() - tUpdateAt >= getInterval()) {
-          tUpdateAt = performance.now()
+        // progress 一直动影响注意力, 但跳动感觉也不好, ...
+        // setPreviewProgress(p)
+
+        if (!tUpdateAt || now - tUpdateAt >= getInterval()) {
+          setPreviewProgress(p)
+
+          tUpdateAt = now
           if (videoDuration) {
-            const t = p * videoDuration
+            const t = minmax(Math.round(p * videoDuration), 0, videoDuration)
             setPreviewT(t)
           }
         }
