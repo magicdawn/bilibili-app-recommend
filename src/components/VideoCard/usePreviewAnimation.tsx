@@ -37,7 +37,8 @@ export function usePreviewAnimation({
       false
 
   const hasVideoData = useMemoizedFn(() => {
-    return Boolean(accessVideoData()?.videoshotData)
+    const data = accessVideoData()?.videoshotData
+    return Boolean(data?.index?.length && data?.image?.length)
   })
 
   const [previewProgress, setPreviewProgress] = useRafState<number | undefined>()
