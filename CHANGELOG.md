@@ -1,5 +1,29 @@
 # Changelog
 
+## v0.21.5
+
+details
+
+- d74db15 chore: fix typecheck
+- 8117e3e feat: showPopularWeeklyOnlyOnWeekend
+- ee6ba9c chore: utilize more react-if
+- fc7e130 feat: separate config for #fff background-color
+- 17a9699 chore: tweak hasVideoData
+- 761d600 chore: back to old behavior
+- 12392f4 feat: update auto-preview feature
+- f53651e feat: use react-if
+- 5ef8fbe chore: rename vars
+- 9786d61 chore: refactor fast-sort orderBy
+- 0995295 feat: add subscribeOnKeys
+- 0d2e15c chore: video-card title font tweak
+- e26af01 chore(DislikeCard): tweak border position to prevent height change
+- 267b276 fix: take care of color & bg-color
+- 3c28bbf refactor: extract VideoCardBottom, fix DislikeCard height collapse issue
+- 0532a22 fix: useRefState
+- 3fad835 knip: clean export
+- 6d002cb ci: update node & pnpm version
+- 7f04711 feat: utilize valtioFactory
+
 ## v0.21.4
 
 - 主题选择: 新增 B-Evolved, 使用 Bilibili-Evolved 主题色.
