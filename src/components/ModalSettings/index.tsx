@@ -44,7 +44,6 @@ import {
 } from 'antd'
 import delay from 'delay'
 import { pick } from 'lodash'
-import { useCurrentShowingTabKeys } from '.'
 import styles from './index.module.scss'
 import { set_HAS_RESTORED_SETTINGS } from './index.shared'
 import { ThemesSelect } from './theme'
