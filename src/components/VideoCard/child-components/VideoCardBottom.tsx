@@ -2,7 +2,7 @@ import { useSettingsSnapshot } from '$modules/settings'
 import { getAvatarSrc } from '$utility/image'
 import { Avatar } from 'antd'
 import type { MouseEventHandler } from 'react'
-import { Else, If, Then } from 'react-if'
+import { Case, Else, If, Switch, Then } from 'react-if'
 import styles from '../index.module.scss'
 import type { IVideoCardData } from '../process/normalize'
 import { DESC_SEPARATOR } from '../process/normalize'
@@ -87,28 +87,31 @@ export function VideoCardBottom({
                 </h3>
               </a>
               <p className='bili-video-card__info--bottom'>
-                {isNormalVideo ? (
-                  <a
-                    className='bili-video-card__info--owner'
-                    href={authorHref}
-                    target='_blank'
-                    title={descTitle}
-                  >
-                    {recommendReason ? (
-                      <span className={styles.recommendReason}>{recommendReason}</span>
-                    ) : (
-                      <svg className='bili-video-card__info--owner__up'>
-                        <use href='#widget-up'></use>
-                      </svg>
-                    )}
-                    {descInnerSpans}
-                  </a>
-                ) : appBadge || appBadgeDesc ? (
-                  <a className='bili-video-card__info--owner' href={href} target='_blank'>
-                    <span className={styles.badge}>{appBadge || ''}</span>
-                    <span className={styles.bangumiDesc}>{appBadgeDesc || ''}</span>
-                  </a>
-                ) : null}
+                <Switch>
+                  <Case condition={isNormalVideo}>
+                    <a
+                      className='bili-video-card__info--owner'
+                      href={authorHref}
+                      target='_blank'
+                      title={descTitle}
+                    >
+                      {recommendReason ? (
+                        <span className={styles.recommendReason}>{recommendReason}</span>
+                      ) : (
+                        <svg className='bili-video-card__info--owner__up'>
+                          <use href='#widget-up'></use>
+                        </svg>
+                      )}
+                      {descInnerSpans}
+                    </a>
+                  </Case>
+                  <Case condition={appBadge || appBadgeDesc}>
+                    <a className='bili-video-card__info--owner' href={href} target='_blank'>
+                      <span className={styles.badge}>{appBadge || ''}</span>
+                      <span className={styles.bangumiDesc}>{appBadgeDesc || ''}</span>
+                    </a>
+                  </Case>
+                </Switch>
               </p>
             </div>
           </div>
@@ -163,8 +166,8 @@ export function VideoCardBottom({
                 </a>
               </h3>
 
-              {isNormalVideo ? (
-                <>
+              <Switch>
+                <Case condition={isNormalVideo}>
                   <div>
                     <a
                       className='bili-video-card__info--owner'
@@ -188,18 +191,19 @@ export function VideoCardBottom({
                       {recommendReason}
                     </div>
                   )}
-                </>
-              ) : appBadge || appBadgeDesc ? (
-                <a
-                  className='bili-video-card__info--owner'
-                  css={descCss}
-                  href={href}
-                  target='_blank'
-                >
-                  {!!appBadge && <span className={styles.badge}>{appBadge}</span>}
-                  {!!appBadgeDesc && <span className={styles.bangumiDesc}>{appBadgeDesc}</span>}
-                </a>
-              ) : null}
+                </Case>
+                <Case condition={appBadge || appBadgeDesc}>
+                  <a
+                    className='bili-video-card__info--owner'
+                    css={descCss}
+                    href={href}
+                    target='_blank'
+                  >
+                    {!!appBadge && <span className={styles.badge}>{appBadge}</span>}
+                    {!!appBadgeDesc && <span className={styles.bangumiDesc}>{appBadgeDesc}</span>}
+                  </a>
+                </Case>
+              </Switch>
             </div>
           </div>
         </Then>
