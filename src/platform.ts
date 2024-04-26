@@ -37,7 +37,9 @@ export function useColors() {
 // update
 setTimeout($colors.updateThrottled, 2000) // onload complete
 subscribe($darkMode.state, $colors.updateThrottled) // when dark mode change
-subscribeOnKeys(settings, ['styleUseCustomGrid'], () => setTimeout($colors.updateThrottled, 500)) // when settings.styleUseCustomGrid change
+subscribeOnKeys(settings, ['styleUseWhiteBackground'], () =>
+  setTimeout($colors.updateThrottled, 500),
+) // when settings.styleUseWhiteBackground change
 
 const ob = new MutationObserver(() => {
   setTimeout(() => {

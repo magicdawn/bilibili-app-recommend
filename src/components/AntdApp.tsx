@@ -62,7 +62,7 @@ export function AntdApp({
 
 function GlobalStyle() {
   const { colorPrimary } = useCurrentTheme()
-  const { pureRecommend, styleUseCustomGrid } = useSettingsSnapshot()
+  const { pureRecommend, styleUseCustomGrid, styleUseWhiteBackground } = useSettingsSnapshot()
   const { c, bg } = useColors()
 
   // 会有多次变宽的效果, 看起来很诡异!!!
@@ -131,8 +131,14 @@ function GlobalStyle() {
               `,
 
             // handle background-color
-            styleUseCustomGrid
+            styleUseWhiteBackground
               ? css`
+                  /* same as #i_cecream */
+                  body {
+                    background-color: var(--bg1);
+                  }
+                `
+              : css`
                   body,
                   .large-header,
                   #i_cecream,
@@ -142,12 +148,6 @@ function GlobalStyle() {
 
                   .bili-header .bili-header__channel .channel-entry-more__link,
                   .bili-header .bili-header__channel .channel-link {
-                    background-color: var(--bg1);
-                  }
-                `
-              : css`
-                  /* same as #i_cecream */
-                  body {
                     background-color: var(--bg1);
                   }
                 `,

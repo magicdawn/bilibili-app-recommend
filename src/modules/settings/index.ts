@@ -119,6 +119,9 @@ export const initialSettings = {
   // custom grid | default grid
   styleUseCustomGrid: true,
 
+  // bg1
+  styleUseWhiteBackground: true,
+
   /**
    * 颜色主题
    */

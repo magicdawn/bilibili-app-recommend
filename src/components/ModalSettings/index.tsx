@@ -304,6 +304,12 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                           }
                         />
                       </div>
+                      <div className={styles.row} style={{ marginTop: 5 }}>
+                        <FlagSettingItem
+                          configKey='styleUseWhiteBackground'
+                          label='全屏模式: styleUseWhiteBackground'
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
