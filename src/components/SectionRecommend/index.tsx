@@ -1,6 +1,6 @@
 import { baseDebug } from '$common'
 import { useRefresh } from '$components/RecGrid/useRefresh'
-import { useCurrentSourceTab } from '$components/RecHeader/tab'
+import { useCurrentUsingTab } from '$components/RecHeader/tab'
 import { limitTwoLines, videoGrid, videoGridBiliFeed4 } from '$components/video-grid.module.scss'
 import { EApiType } from '$define/index.shared'
 import { cx } from '$libs'
@@ -16,7 +16,7 @@ export function SectionRecommend() {
     [],
   )
 
-  const tab = useCurrentSourceTab()
+  const tab = useCurrentUsingTab()
   const {
     refreshing,
     items,

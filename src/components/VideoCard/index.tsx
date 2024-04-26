@@ -4,7 +4,7 @@ import { useRefState } from '$common/hooks/useRefState'
 import { useDislikedReason } from '$components/ModalDislike'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import type { OnRefresh } from '$components/RecGrid/useRefresh'
-import { useCurrentSourceTab, videoSourceTabState } from '$components/RecHeader/tab'
+import { useCurrentUsingTab, videoSourceTabState } from '$components/RecHeader/tab'
 import { ETabType } from '$components/RecHeader/tab.shared'
 import { type AppRecItemExtend, type RecItemType } from '$define'
 import { EApiType } from '$define/index.shared'
@@ -371,7 +371,7 @@ const VideoCardInner = memo(function VideoCardInner({
    */
 
   // 已关注 item.api 也为 'pc', 故使用 tab, 而不是 api 区分
-  const tab = useCurrentSourceTab()
+  const tab = useCurrentUsingTab()
   const hasBlacklistEntry =
     tab === ETabType.RecommendApp ||
     tab === ETabType.RecommendPc ||

@@ -2,7 +2,7 @@ import { APP_NAME, __PROD__ } from '$common'
 import { AccessKeyManage } from '$components/AccessKeyManage'
 import { AntdTooltip } from '$components/AntdApp'
 import { BaseModal, BaseModalClass, ModalClose } from '$components/BaseModal'
-import { useCurrentShowingTabKeys, useSortedTabKeys } from '$components/RecHeader/tab'
+import { useSortedTabKeys } from '$components/RecHeader/tab'
 import { ETabType, TabConfig, TabIcon, TabKeys } from '$components/RecHeader/tab.shared'
 import { FlagSettingItem, HelpInfo } from '$components/piece'
 import { EAppApiDevice } from '$define/index.shared'
@@ -44,6 +44,7 @@ import {
 } from 'antd'
 import delay from 'delay'
 import { pick } from 'lodash'
+import { useCurrentShowingTabKeys } from '.'
 import styles from './index.module.scss'
 import { set_HAS_RESTORED_SETTINGS } from './index.shared'
 import { ThemesSelect } from './theme'
@@ -729,7 +730,7 @@ function TabPaneVideoSourceTabConfig() {
 
             <div
               css={css`
-                order: ${sortedTabKeys.indexOf('recommend-app') + 1};
+                order: ${sortedTabKeys.indexOf(ETabType.RecommendApp) + 1};
               `}
             >
               <div className={styles.settingsGroupSubTitle}>
@@ -758,11 +759,41 @@ function TabPaneVideoSourceTabConfig() {
                 />
               </div>
             </div>
+
+            <div
+              css={css`
+                order: ${sortedTabKeys.indexOf(ETabType.PopularWeekly) + 1};
+              `}
+            >
+              <div className={styles.settingsGroupSubTitle}>
+                <TabIcon tabKey={ETabType.PopularWeekly} mr={5} />
+                {TabConfig[ETabType.PopularWeekly].label}
+              </div>
+              <div style={{ width: '100%', display: 'flex', alignItems: 'center' }}>
+                <FlagSettingItem
+                  configKey='showPopularWeeklyOnlyOnWeekend'
+                  label='只在周末显示'
+                  tooltip={
+                    <>
+                      只在周末时段显示「{TabConfig[ETabType.PopularWeekly].label}」，也包括周五
+                      {TabConfig[ETabType.PopularWeekly].label}发布之后的时间
+                      <br />
+                      P.S 如果勾选此选项, 将忽略左侧勾选配置
+                    </>
+                  }
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   )
+}
+
+function useCurrentShowingTabKeys(): ETabType[] {
+  const { hidingTabKeys } = useSettingsSnapshot()
+  return useMemo(() => TabKeys.filter((key) => !hidingTabKeys.includes(key)), [hidingTabKeys])
 }
 
 function VideoSourceTabOrder({ className, style }: { className?: string; style?: CSSProperties }) {

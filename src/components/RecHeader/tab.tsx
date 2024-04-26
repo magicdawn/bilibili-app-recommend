@@ -4,8 +4,9 @@ import { proxyWithLocalStorage } from '$common/hooks/proxyWithLocalStorage'
 import { type OnRefresh } from '$components/RecGrid/useRefresh'
 import { HelpInfo } from '$components/piece'
 import { QUERY_DYNAMIC_UP_MID } from '$modules/recommend/dynamic-feed'
+import { isWeekendForPopularWeekly } from '$modules/recommend/popular-weekly'
 import { useSettingsSnapshot } from '$modules/settings'
-import { checkLoginStatus, getHasLogined, useHasLogined } from '$utility'
+import { checkLoginStatus, useHasLogined } from '$utility'
 import { Radio } from 'antd'
 import {
   ETabType,
@@ -31,12 +32,7 @@ if (QUERY_DYNAMIC_UP_MID && videoSourceTabState.value !== ETabType.DynamicFeed) 
   videoSourceTabState.value = ETabType.DynamicFeed
 }
 
-export function useCurrentShowingTabKeys(): ETabType[] {
-  const { hidingTabKeys } = useSettingsSnapshot()
-  return useMemo(() => TabKeys.filter((key) => !hidingTabKeys.includes(key)), [hidingTabKeys])
-}
-
-function sortTabKeys(customTabKeysOrder: ETabType[]) {
+function getSortedTabKeys(customTabKeysOrder: ETabType[]) {
   return TabKeys.slice().sort((a, b) => {
     let aIndex = customTabKeysOrder.indexOf(a)
     let bIndex = customTabKeysOrder.indexOf(b)
@@ -48,44 +44,56 @@ function sortTabKeys(customTabKeysOrder: ETabType[]) {
 
 export function useSortedTabKeys() {
   const { customTabKeysOrder } = useSettingsSnapshot()
-  return useMemo(() => sortTabKeys(customTabKeysOrder), [customTabKeysOrder])
+  return useMemo(() => getSortedTabKeys(customTabKeysOrder), [customTabKeysOrder])
 }
 
-//
-export function useCurrentTabConfigList(): ({ key: ETabType } & TabConfigItem)[] {
-  const { hidingTabKeys, customTabKeysOrder } = useSettingsSnapshot()
+function useCurrentDisplayingTabKeys() {
+  const { hidingTabKeys, customTabKeysOrder, showPopularWeeklyOnlyOnWeekend } =
+    useSettingsSnapshot()
   const logined = useHasLogined()
-
   return useMemo(() => {
-    let tabkeys = sortTabKeys(customTabKeysOrder)
-    tabkeys = tabkeys.filter(
-      (key) => !hidingTabKeys.includes(key) || (!logined && key === ETabType.RecommendApp),
-    )
-    return tabkeys.map((k) => ({ key: k, ...TabConfig[k] }))
-  }, [hidingTabKeys, customTabKeysOrder, logined])
+    const tabkeys = getSortedTabKeys(customTabKeysOrder)
+    return tabkeys.filter((key) => {
+      if (key === ETabType.RecommendApp && !logined) {
+        return true
+      }
+
+      if (key === ETabType.DynamicFeed && QUERY_DYNAMIC_UP_MID) {
+        return true
+      }
+
+      if (key === ETabType.PopularWeekly && showPopularWeeklyOnlyOnWeekend) {
+        return isWeekendForPopularWeekly()
+      }
+
+      return !hidingTabKeys.includes(key)
+    })
+  }, [hidingTabKeys, customTabKeysOrder, showPopularWeeklyOnlyOnWeekend, logined])
 }
 
-function _getCurrentSourceTab(videoSourceTab: ETabType, logined: boolean): ETabType {
+function useCurrentDisplayingTabConfigList(): ({ key: ETabType } & TabConfigItem)[] {
+  const keys = useCurrentDisplayingTabKeys()
+  return useMemo(() => keys.map((key) => ({ key, ...TabConfig[key] })), [keys])
+}
+
+export function useCurrentUsingTab(): ETabType {
+  const tab = useSnapshot(videoSourceTabState).value
+  const displayTabKeys = useCurrentDisplayingTabKeys()
+  const logined = useHasLogined()
+  const fallbackTab = ETabType.RecommendApp
+
   // invalid
-  if (!TabKeys.includes(videoSourceTab)) return ETabType.RecommendApp
+  if (!displayTabKeys.includes(tab)) return fallbackTab
 
   // not logined
   if (!logined) {
     // 不允许游客访问
-    if (!TabConfig[videoSourceTab].anonymousUsage) {
-      return ETabType.RecommendApp
+    if (!TabConfig[tab].anonymousUsage) {
+      return fallbackTab
     }
   }
 
-  return videoSourceTab
-}
-
-export function useCurrentSourceTab(): ETabType {
-  return _getCurrentSourceTab(useSnapshot(videoSourceTabState).value, useHasLogined())
-}
-
-export function getCurrentSourceTab(): ETabType {
-  return _getCurrentSourceTab(videoSourceTabState.value, getHasLogined())
+  return tab
 }
 
 const iconCss = css`
@@ -113,9 +121,9 @@ const radioBtnStandardCss = css`
 
 export function VideoSourceTab({ onRefresh }: { onRefresh: OnRefresh }) {
   const logined = useHasLogined()
-  const tab = useCurrentSourceTab()
+  const tab = useCurrentUsingTab()
   const { styleUseStandardVideoSourceTab } = useSettingsSnapshot()
-  const currentTabConfigList = useCurrentTabConfigList()
+  const currentTabConfigList = useCurrentDisplayingTabConfigList()
 
   return (
     <div css={flexVerticalCenterStyle}>

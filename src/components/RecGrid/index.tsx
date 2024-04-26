@@ -6,7 +6,7 @@ import { APP_NAME, baseDebug } from '$common'
 import { useRefState } from '$common/hooks/useRefState'
 import { useModalDislikeVisible } from '$components/ModalDislike'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
-import { useCurrentSourceTab } from '$components/RecHeader/tab'
+import { useCurrentUsingTab } from '$components/RecHeader/tab'
 import { ETabType } from '$components/RecHeader/tab.shared'
 import type { VideoCardEvents } from '$components/VideoCard'
 import { VideoCard } from '$components/VideoCard'
@@ -91,7 +91,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
   },
   ref,
 ) {
-  const tab = useCurrentSourceTab()
+  const tab = useCurrentUsingTab()
 
   const [loadCompleteCount, setLoadCompleteCount, getLoadCompleteCount] = useRefState(0) // 已加载完成的 load call count, 类似 page
 

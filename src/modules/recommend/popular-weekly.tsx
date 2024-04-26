@@ -36,6 +36,11 @@ async function getEpisodeList() {
   return episodes
 }
 
+export function isWeekendForPopularWeekly() {
+  const d = dayjs()
+  return d.day() === 6 || d.day() === 0 || (d.day() === 5 && d.hour() >= 18)
+}
+
 export class PopularWeeklyService implements IService {
   static id = 0
   static PAGE_SIZE = 20

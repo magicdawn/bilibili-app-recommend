@@ -78,7 +78,8 @@ export const initialSettings = {
   /**
    * tab=popular-weekly
    */
-  shuffleForPopularWeekly: false,
+  shuffleForPopularWeekly: false, // shuffle
+  showPopularWeeklyOnlyOnWeekend: false, // only on weekend
 
   /**
    * 过滤器模块

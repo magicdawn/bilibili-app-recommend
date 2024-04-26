@@ -1,7 +1,7 @@
 import { APP_KEY_PREFIX } from '$common'
 import { useRefInit } from '$common/hooks/useRefInit'
 import { useRefState } from '$common/hooks/useRefState'
-import { getCurrentSourceTab } from '$components/RecHeader/tab'
+import { useCurrentUsingTab } from '$components/RecHeader/tab'
 import { ETabType, TabConfig } from '$components/RecHeader/tab.shared'
 import type { RecItemExtraType } from '$define'
 import type { IService } from '$modules/recommend/base'
@@ -73,7 +73,7 @@ export function useRefresh({
   setUpperRefreshing?: (val: boolean) => void
   onScrollToTop?: () => void | Promise<void>
 }) {
-  const tab = getCurrentSourceTab()
+  const tab = useCurrentUsingTab()
 
   const itemsCache = useRefInit<Partial<Record<ETabType, RecItemExtraType[]>>>(() => ({}))
   const itemsHasCache = useRefInit<Partial<Record<ETabType, boolean>>>(() => ({}))

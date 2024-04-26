@@ -5,7 +5,7 @@ import { shouldDisableShortcut } from '$utility/dom'
 import { Button } from 'antd'
 import { useAnimate } from 'framer-motion'
 import type { MouseEvent, MouseEventHandler } from 'react'
-import { useCurrentSourceTab } from './tab'
+import { useCurrentUsingTab } from './tab'
 import { ETabType } from './tab.shared'
 
 export type RefreshButtonActions = { click: () => void }
@@ -45,7 +45,7 @@ export const RefreshButton = forwardRef<RefreshButtonActions, RefreshButtonProps
     { exactMatch: true },
   )
 
-  const tab = useCurrentSourceTab()
+  const tab = useCurrentUsingTab()
   const { shuffleForFav, shuffleForWatchLater, shuffleForPopularWeekly } = useSettingsSnapshot()
 
   const text =
