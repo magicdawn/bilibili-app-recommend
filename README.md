@@ -12,19 +12,14 @@
 
 ## 功能
 
-- [x] 纯推荐模式, 无限滚动 (设置中开启)
-- [x] 无侵入推荐块, 推荐弹窗 (默认)
-- [x] 深色模式兼容
-- [x] 居中双列模式
-- [x] 稍候再看
-- [x] 我不想看
-- [x] 鼠标快速预览, 鼠标自动预览
+- [x] App 推荐: 将手机 App 推荐内容搬到桌面
+- [x] App 推荐: 我不想看, 用于推荐系统反馈
+- [x] 推荐: 视频过滤
+- [x] 一站式体验, 方便快捷的访问: 动态 / 稍后再看 / 收藏 / 热门等内容
+- [x] 主题设置: 预设主题 + color-picker 自定义
+- [x] Bilibili-Evolved 适配: 夜间模式 / 自定义顶栏 / 主题色.
 - [x] 完善的键盘支持
-- [x] 视频过滤
-- [x] API 切换
 - [x] IINA
-- [x] 主题设置(预设主题 + color-picker 自定义)
-- [x] 已关注 / 动态 / 稍后再看 / 收藏 Tab
 
 ## 链接
 
@@ -37,7 +32,7 @@
 
 ## 声明
 
-代码 fork 自此处
+代码 fork 自 [indefined/UserScripts](https://github.com/indefined/UserScripts/tree/master/bilibiliHome)
 
 - https://github.com/indefined/UserScripts/tree/master/bilibiliHome
 - https://github.com/indefined/UserScripts/issues/76
@@ -182,7 +177,8 @@ _\* 开关-第一项_
 
 #### 深色模式兼容
 
-本脚本不提供深色模式, 但与 [Bilibili-Evolved](https://github.com/the1812/Bilibili-Evolved) 提供的深色模式兼容
+- 方案1: 使用 [Bilibili-Evolved](https://github.com/the1812/Bilibili-Evolved) 提供的深色模式切换, 这个脚本适配了 Evolved 的夜间模式.
+- 方案2: 使用 [Dark Reader](https://chromewebstore.google.com/detail/dark-reader/eimadpbcbfnmbkopoojfekhnkhdbieeh) 扩展: 无适配, 但基本可用.
 
 #### 视频过滤
 
@@ -274,7 +270,7 @@ https://github.com/magicdawn/bilibili-app-recommend/raw/release-nightly/bilibili
 
 [CHANGELOG.md](https://github.com/magicdawn/bilibili-app-recommend/blob/main/CHANGELOG.md)
 
-## 参考的项目
+## ❤️ 参考的项目
 
 代码 / 样式 / 文档
 
