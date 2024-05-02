@@ -2,8 +2,9 @@ import { baseDebug } from '$common'
 import type { ETabType } from '$components/RecHeader/tab.shared'
 import type { RecItemExtraType } from '$define'
 import { EApiType } from '$define/index.shared'
-import { settings } from '$modules/settings'
+import { settings, settings as settingsProxy } from '$modules/settings'
 import { blacklistIds } from '$modules/user/relations/blacklist'
+import { snapshot } from 'valtio'
 import { normalizeCardData } from './normalize'
 
 const debug = baseDebug.extend('VideoCard:filter')
@@ -24,6 +25,8 @@ export function filterRecItems(items: RecItemExtraType[], tab: ETabType) {
   if (!anyFilterEnabled(tab)) {
     return items
   }
+
+  const settings = snapshot(settingsProxy)
 
   return items.filter((item) => {
     // just keep it
