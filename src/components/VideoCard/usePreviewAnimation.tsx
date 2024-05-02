@@ -1,4 +1,5 @@
 import { APP_NAME, __PROD__ } from '$common'
+import { useMittOn } from '$common/hooks/useMitt'
 import { useRef$, useRefState$ } from '$common/hooks/useRefState'
 import { settings } from '$modules/settings'
 import { minmax } from '$utility/num'
@@ -6,6 +7,7 @@ import { useEventListener, useMemoizedFn, useRafState, useUnmountedRef } from 'a
 import delay from 'delay'
 import type { MouseEvent } from 'react'
 import type { VideoData } from './card.service'
+import type { VideoCardEmitter } from './index.shared'
 
 const HOVER_DELAY = 800
 
@@ -13,7 +15,8 @@ const HOVER_DELAY = 800
  * 自动以动画方式预览
  */
 export function usePreviewAnimation({
-  bvid,
+  uniqId,
+  emitter,
   title,
   active,
   videoDuration,
@@ -22,7 +25,8 @@ export function usePreviewAnimation({
   autoPreviewWhenHover,
   videoPreviewWrapperRef,
 }: {
-  bvid: string
+  uniqId: string
+  emitter: VideoCardEmitter
   title: string
   active: boolean
   videoDuration: number
@@ -67,6 +71,8 @@ export function usePreviewAnimation({
   useEventListener(
     'mouseenter',
     async (e) => {
+      emitter.emit('mouseenter', uniqId)
+
       $isHovering.set(true)
       updateMouseEnterRelativeX(e)
 
@@ -85,8 +91,8 @@ export function usePreviewAnimation({
       if (autoPreviewWhenHover && !idRef.current && hasVideoData()) {
         DEBUG_ANIMATION &&
           console.log(
-            `[${APP_NAME}]: [animation] mouseenter onStartPreviewAnimation bvid=%s title=%s`,
-            bvid,
+            `[${APP_NAME}]: [animation] mouseenter onStartPreviewAnimation uniqId=%s title=%s`,
+            uniqId,
             title,
           )
         onStartPreviewAnimation(true)
@@ -94,14 +100,17 @@ export function usePreviewAnimation({
     },
     { target: videoPreviewWrapperRef },
   )
-  useEventListener(
-    'mouseleave',
-    (e) => {
-      $isHovering.set(false)
-      $isHoveringAfterDelay.set(false)
-    },
-    { target: videoPreviewWrapperRef },
-  )
+
+  // mouseleave
+  const _mouseleaveAction = useMemoizedFn(() => {
+    $isHovering.set(false)
+    $isHoveringAfterDelay.set(false)
+  })
+  useEventListener('mouseleave', _mouseleaveAction, { target: videoPreviewWrapperRef })
+  useMittOn(emitter, 'mouseenter-other-card', (srcUniqId) => {
+    if (srcUniqId === uniqId) return
+    _mouseleaveAction()
+  })
 
   useEventListener(
     'mousemove',
@@ -114,7 +123,7 @@ export function usePreviewAnimation({
       }
 
       if (!autoPreviewWhenHover) {
-        __stop()
+        animationController.stop()
       }
     },
     { target: videoPreviewWrapperRef },

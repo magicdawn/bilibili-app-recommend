@@ -8,9 +8,8 @@ import { useModalDislikeVisible } from '$components/ModalDislike'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import { useCurrentUsingTab } from '$components/RecHeader/tab'
 import { ETabType } from '$components/RecHeader/tab.shared'
-import type { VideoCardEvents } from '$components/VideoCard'
 import { VideoCard } from '$components/VideoCard'
-import type { VideoCardEmitter } from '$components/VideoCard/index.shared'
+import type { VideoCardEmitter, VideoCardEvents } from '$components/VideoCard/index.shared'
 import { borderRadiusValue } from '$components/VideoCard/index.shared'
 import type { IVideoCardData } from '$components/VideoCard/process/normalize'
 import { type RecItemExtraType, type RecItemType } from '$define'
@@ -289,19 +288,39 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
   }, [usingItems])
 
   // emitters
-  const videoCardEmittersMap = useMemo(() => new Map<string, VideoCardEmitter>(), [refreshedAt])
+  const emitterCache = useMemo(() => new Map<string, VideoCardEmitter>(), [refreshedAt])
   const videoCardEmitters = useMemo(() => {
-    return usingVideoItems.map(({ uniqId: cacheKey }) => {
+    return usingVideoItems.map(({ uniqId }) => {
+      const cacheKey = uniqId
       return (
-        videoCardEmittersMap.get(cacheKey) ||
+        emitterCache.get(cacheKey) ||
         (() => {
           const instance = mitt<VideoCardEvents>()
-          videoCardEmittersMap.set(cacheKey, instance)
+          emitterCache.set(cacheKey, instance)
           return instance
         })()
       )
     })
   }, [usingVideoItems])
+
+  useEffect(() => {
+    const broadcastMouseEnter = (srcUniqId: string) => {
+      // broadcast
+      videoCardEmitters.forEach((emitter) => {
+        emitter.emit('mouseenter-other-card', srcUniqId)
+      })
+    }
+    videoCardEmitters.forEach((emitter) => {
+      emitter.on('mouseenter', (srcUniqId) => {
+        broadcastMouseEnter(srcUniqId)
+      })
+    })
+    return () => {
+      videoCardEmitters.forEach((emitter) => {
+        emitter.off('mouseenter')
+      })
+    }
+  }, [videoCardEmitters])
 
   // 快捷键
   const { activeIndex, clearActiveIndex } = useShortcut({

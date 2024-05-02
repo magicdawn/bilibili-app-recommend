@@ -1,5 +1,3 @@
-import type { VideoCardEvents } from '.'
-
 import mitt, { type Emitter } from 'mitt'
 
 export const borderRadiusIdentifier = '--video-card-border-radius'
@@ -18,6 +16,22 @@ export enum PlayerScreenMode {
   WebFullscreen = 'web',
   Fullscreen = 'full',
 }
+
+export type VideoCardEvents = {
+  // for cancel card
+  'cancel-dislike': void | undefined
+
+  // for normal card
+  'open': void | undefined
+  'toggle-watch-later': void | undefined
+  'trigger-dislike': void | undefined
+  'start-preview-animation': void | undefined
+  'hotkey-preview-animation': void | undefined
+
+  'mouseenter': string
+  'mouseenter-other-card': string
+}
+
 export type VideoCardEmitter = Emitter<VideoCardEvents>
 
 export const defaultEmitter = mitt<VideoCardEvents>()

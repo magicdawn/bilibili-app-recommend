@@ -51,18 +51,6 @@ function copyContent(content: string) {
   AntdMessage.success(`已复制: ${content}`)
 }
 
-export type VideoCardEvents = {
-  // for cancel card
-  'cancel-dislike': void | undefined
-
-  // for normal card
-  'open': void | undefined
-  'toggle-watch-later': void | undefined
-  'trigger-dislike': void | undefined
-  'start-preview-animation': void | undefined
-  'hotkey-preview-animation': void | undefined
-}
-
 export type VideoCardProps = {
   style?: CSSProperties
   className?: string
@@ -204,7 +192,8 @@ const VideoCardInner = memo(function VideoCardInner({
     isHoveringAfterDelay,
     mouseEnterRelativeX,
   } = usePreviewAnimation({
-    bvid,
+    uniqId: item.uniqId,
+    emitter,
     title,
     active,
     videoDuration: duration,
