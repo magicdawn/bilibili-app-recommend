@@ -969,7 +969,7 @@ function TabPaneFilter() {
               <div className={styles.settingsGroupSubTitle}>
                 <span>标题</span>
                 <HelpInfo>
-                  根据标题关键字过滤视频 <br />
+                  根据标题关键词过滤视频 <br />
                   支持正则(i), 语法：/abc|\d+/
                 </HelpInfo>
                 <SwitchSettingItem
@@ -982,7 +982,7 @@ function TabPaneFilter() {
               </div>
               <EditableListSettingItem
                 configKey={'filterByTitleKeywords'}
-                searchProps={{ placeholder: '添加过滤关键字' }}
+                searchProps={{ placeholder: '添加过滤关键词' }}
                 disabled={!filterEnabled || !filterByTitleEnabled}
               />
             </div>
