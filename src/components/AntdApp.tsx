@@ -13,6 +13,11 @@ import {
   useCurrentTheme,
 } from './ModalSettings/theme.shared'
 
+// https://github.com/emotion-js/emotion/issues/1105
+import { cache } from '@emotion/css'
+import { CacheProvider } from '@emotion/react'
+cache.compat = true
+
 // bilibili.com default: PingFang SC,HarmonyOS_Regular,Helvetica Neue,Microsoft YaHei,sans-serif
 const USING_FONT_FAMILY = 'HarmonyOS_Regular,PingFang SC,Helvetica Neue,Microsoft YaHei,sans-serif'
 // const USING_FONT_FAMILY = 'PingFang SC,HarmonyOS_Regular,Helvetica Neue,Microsoft YaHei,sans-serif'
@@ -30,33 +35,35 @@ export function AntdApp({
   const colorPrimary = useColorPrimaryHex()
 
   return (
-    <ConfigProvider
-      autoInsertSpaceInButton={false}
-      locale={zhCN}
-      theme={{
-        cssVar: true,
-        algorithm: dark ? theme.darkAlgorithm : theme.defaultAlgorithm,
-        token: {
-          colorPrimary,
-          colorBgSpotlight: colorPrimary, // tooltip bg
-          zIndexPopupBase: 11000, // base-modal 10002
-          fontFamily: USING_FONT_FAMILY,
-        },
-        components: {
-          // Message: {
-          //   contentBg: colorPrimary,
-          //   colorText: '#fff',
-          // },
-        },
-      }}
-    >
-      {renderAppComponent && <UseApp />}
-      {injectGlobalStyle && <GlobalStyle />}
+    <CacheProvider value={cache}>
+      <ConfigProvider
+        autoInsertSpaceInButton={false}
+        locale={zhCN}
+        theme={{
+          cssVar: true,
+          algorithm: dark ? theme.darkAlgorithm : theme.defaultAlgorithm,
+          token: {
+            colorPrimary,
+            colorBgSpotlight: colorPrimary, // tooltip bg
+            zIndexPopupBase: 11000, // base-modal 10002
+            fontFamily: USING_FONT_FAMILY,
+          },
+          components: {
+            // Message: {
+            //   contentBg: colorPrimary,
+            //   colorText: '#fff',
+            // },
+          },
+        }}
+      >
+        {renderAppComponent && <UseApp />}
+        {injectGlobalStyle && <GlobalStyle />}
 
-      {/* using framer-motion UMD */}
-      {/* <LazyMotion features={domAnimation}>{children}</LazyMotion> */}
-      {children}
-    </ConfigProvider>
+        {/* using framer-motion UMD */}
+        {/* <LazyMotion features={domAnimation}>{children}</LazyMotion> */}
+        {children}
+      </ConfigProvider>
+    </CacheProvider>
   )
 }
 

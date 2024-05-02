@@ -89,6 +89,18 @@ export function useWatchlaterRelated({
     },
   )
 
+  /**
+   * svg checked mark
+   *
+   * 自己画的
+   * viewBox = '0 0 200 200'
+   * checkMarkD = 'M25,100 l48,48 a 8.5,8.5 0 0 0 10,0 l90,-90'
+   *
+   * 其他来源
+   * 24 24 from iconify
+   * https://icones.js.org/collection/line-md?icon=line-md:confirm
+   */
+
   const watchlaterIconEl = (
     <>
       {hasWatchLaterEntry && (
@@ -101,21 +113,29 @@ export function useWatchlaterRelated({
           onClick={onToggleWatchLater}
         >
           {watchLaterAdded ? (
-            <svg className={styles.watchLaterIcon} viewBox='0 0 200 200'>
-              <motion.path
-                d='M25,100 l48,48 a 8.5,8.5 0 0 0 10,0 l90,-90'
-                strokeWidth='20'
-                stroke='currentColor'
-                fill='transparent'
-                strokeLinecap='round'
-                {...(!watchLaterAddedPrevious
-                  ? {
-                      initial: { pathLength: 0 },
-                      animate: { pathLength: 1 },
-                    }
-                  : undefined)}
-              />
-            </svg>
+            <>
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                className={styles.watchLaterIcon}
+                viewBox='0 0 24 24'
+              >
+                <motion.path
+                  fill='transparent'
+                  stroke='currentColor'
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  strokeWidth='2'
+                  d='M5 11L11 17L21 7'
+                  {...(!watchLaterAddedPrevious
+                    ? {
+                        initial: { pathLength: 0 },
+                        animate: { pathLength: 1 },
+                        transition: { duration: 0.2, ease: 'easeInOut' },
+                      }
+                    : undefined)}
+                />
+              </svg>
+            </>
           ) : (
             <svg className={styles.watchLaterIcon}>
               <use href={'#widget-watch-later'} />
