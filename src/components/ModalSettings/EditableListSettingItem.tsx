@@ -67,6 +67,7 @@ export function EditableListSettingItem({
             min-height: 82px;
             border-radius: 6px;
             border: 1px solid #eee;
+            margin-top: 3px;
             body.dark & {
               border-color: #333;
             }
