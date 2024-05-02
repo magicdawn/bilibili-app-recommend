@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.21.6
+
+- feat(filter): 支持按 up(name/mid), 按标题(keyword/regexp) 过滤推荐视频, close #90 以及之前的相关 feature request
+
+details
+
+- 59b506a chore: tweak words
+- ab22283 chore: clean up
+- 35781e4 feat(filter): support filter by up(name/mid) & title(keyword/regexp), close #90 & many prev feature-requests
+- b231e1f (origin/main, origin/HEAD) fix: prevent multiple auto-preview-animation
+- 8381893 fix: rm warnings
+- 45c4861 doc: simplify features part
+
 ## v0.21.5
 
 details
