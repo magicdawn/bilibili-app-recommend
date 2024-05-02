@@ -62,9 +62,6 @@ importers:
       delay:
         specifier: ^6.0.0
         version: 6.0.0
-      escape-string-regexp:
-        specifier: ^5.0.0
-        version: 5.0.0
       fast-sort:
         specifier: ^3.4.0
         version: 3.4.0
