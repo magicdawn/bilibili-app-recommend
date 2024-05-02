@@ -11,7 +11,7 @@ import { useIsDarkMode } from '$platform'
 import { CollapseBtn } from '$ui-components/CollapseBtn'
 import { AntdMessage } from '$utility'
 import { BaseModal, BaseModalClass, ModalClose } from '../BaseModal'
-import { FlagSettingItem } from '../piece'
+import { CheckboxSettingItem } from '../piece'
 import styles from './index.module.scss'
 
 interface IProps {
@@ -148,7 +148,7 @@ function ModalFeedConfigChecks() {
   `
   return (
     <>
-      <FlagSettingItem
+      <CheckboxSettingItem
         configKey={'showModalFeedOnLoad'}
         label='自动查看更多'
         tooltip='打开首页时默认打开推荐弹窗'
@@ -160,7 +160,7 @@ function ModalFeedConfigChecks() {
         }}
       />
 
-      <FlagSettingItem
+      <CheckboxSettingItem
         configKey='modalFeedFullScreen'
         label='全屏'
         tooltip='世界清净了~'

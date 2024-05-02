@@ -1,8 +1,12 @@
+import { baseDebug } from '$common'
 import type { ETabType } from '$components/RecHeader/tab.shared'
 import type { RecItemExtraType } from '$define'
 import { EApiType } from '$define/index.shared'
 import { settings } from '$modules/settings'
+import { blacklistIds } from '$modules/user/relations/blacklist'
 import { normalizeCardData } from './normalize'
+
+const debug = baseDebug.extend('VideoCard:filter')
 
 export function anyFilterEnabled(tab: ETabType) {
   return (
@@ -10,7 +14,9 @@ export function anyFilterEnabled(tab: ETabType) {
     (settings.filterEnabled &&
       (settings.filterMinDurationEnabled ||
         settings.filterMinPlayCountEnabled ||
-        settings.filterOutGotoTypePicture))
+        settings.filterOutGotoTypePicture ||
+        (settings.filterByAuthorNameEnabled && settings.filterByAuthorNameKeywords.length > 0) ||
+        (settings.filterByTitleEnabled && settings.filterByTitleKeywords.length > 0)))
   )
 }
 
@@ -23,7 +29,8 @@ export function filterRecItems(items: RecItemExtraType[], tab: ETabType) {
     // just keep it
     if (item.api === EApiType.Separator) return true
 
-    const { play, duration, recommendReason, goto } = normalizeCardData(item)
+    const { play, duration, recommendReason, goto, authorName, authorMid, title, bvid } =
+      normalizeCardData(item)
     const isFollowed = recommendReason === '已关注' || !!recommendReason?.endsWith('关注')
 
     /**
@@ -37,6 +44,55 @@ export function filterRecItems(items: RecItemExtraType[], tab: ETabType) {
     const isPicture = goto === 'picture'
     // console.log('filter: goto = %s', goto)
 
+    if (authorMid && blacklistIds.size) {
+      if (blacklistIds.has(authorMid)) {
+        debug('filter out by blacklist-rule: %s %o', authorMid, { bvid, title })
+        return false
+      }
+    }
+
+    // up
+    if (
+      settings.filterByAuthorNameEnabled &&
+      settings.filterByAuthorNameKeywords.length &&
+      (authorName || authorMid)
+    ) {
+      if (
+        (authorName && settings.filterByAuthorNameKeywords.includes(authorName)) ||
+        (authorMid && settings.filterByAuthorNameKeywords.includes(authorMid))
+      ) {
+        debug('filter out by author-rule: %o', {
+          authorName,
+          authorMid,
+          rules: settings.filterByAuthorNameKeywords,
+          bvid,
+          title,
+        })
+        return false
+      }
+    }
+
+    // title
+    if (settings.filterByTitleEnabled && settings.filterByTitleKeywords.length && title) {
+      if (
+        settings.filterByTitleKeywords.some((keyword) => {
+          if (keyword.startsWith('/') && keyword.endsWith('/')) {
+            const regex = new RegExp(keyword.slice(1, -1), 'i')
+            return regex.test(title)
+          } else {
+            return title.includes(keyword)
+          }
+        })
+      ) {
+        debug('filter out by title-rule: %o', {
+          title,
+          rules: settings.filterByTitleKeywords,
+          bvid,
+        })
+        return false
+      }
+    }
+
     if (isVideo) return filterVideo()
     if (isPicture) return filterPicture()
 
@@ -48,7 +104,13 @@ export function filterRecItems(items: RecItemExtraType[], tab: ETabType) {
 
       // https://github.com/magicdawn/bilibili-app-recommend/issues/87
       // 反向推送, 蜜汁操作.
-      if (recommendReason === '关注了你') return false
+      if (recommendReason === '关注了你') {
+        debug('filter out by recommendReason-rule: %s %o', recommendReason, {
+          bvid,
+          title,
+        })
+        return false
+      }
 
       // paly
       if (
@@ -57,6 +119,10 @@ export function filterRecItems(items: RecItemExtraType[], tab: ETabType) {
         typeof play === 'number' &&
         play < settings.filterMinPlayCount
       ) {
+        debug('filter out by min-play-count-rule: %s < %s, %o', play, settings.filterMinPlayCount, {
+          bvid,
+          title,
+        })
         return false
       }
 
@@ -67,6 +133,10 @@ export function filterRecItems(items: RecItemExtraType[], tab: ETabType) {
         duration &&
         duration < settings.filterMinDuration
       ) {
+        debug('filter out by min-duration-rule: %s < %s %o', duration, settings.filterMinDuration, {
+          bvid,
+          title,
+        })
         return false
       }
 
@@ -79,6 +149,10 @@ export function filterRecItems(items: RecItemExtraType[], tab: ETabType) {
         if (isFollowed && !settings.enableFilterForFollowedPicture) {
           return true
         }
+        debug('filter out by goto-type-picture-rule: %s %o', goto, {
+          bvid,
+          title,
+        })
         return false
       } else {
         return true

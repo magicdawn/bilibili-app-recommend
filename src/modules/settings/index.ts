@@ -104,6 +104,14 @@ export const initialSettings = {
   // 图文也是有 rcmd_reason = '已关注' 的
   enableFilterForFollowedPicture: false,
 
+  // authorName
+  filterByAuthorNameEnabled: false,
+  filterByAuthorNameKeywords: [] as string[],
+
+  // title
+  filterByTitleEnabled: false,
+  filterByTitleKeywords: [] as string[],
+
   /**
    * 外观
    */
@@ -156,6 +164,10 @@ export const allowedSettingsKeys = Object.keys(initialSettings) as SettingsKey[]
 
 export type BooleanSettingsKey = {
   [k in SettingsKey]: Settings[k] extends boolean ? k : never
+}[SettingsKey]
+
+export type ListSettingsKey = {
+  [k in SettingsKey]: Settings[k] extends Array<any> ? k : never
 }[SettingsKey]
 
 export function useSettingsSnapshot() {

@@ -4,7 +4,7 @@ import { AntdTooltip } from '$components/AntdApp'
 import { BaseModal, BaseModalClass, ModalClose } from '$components/BaseModal'
 import { useSortedTabKeys } from '$components/RecHeader/tab'
 import { ETabType, TabConfig, TabIcon, TabKeys } from '$components/RecHeader/tab.shared'
-import { FlagSettingItem, HelpInfo } from '$components/piece'
+import { CheckboxSettingItem, HelpInfo, SwitchSettingItem } from '$components/piece'
 import { EAppApiDevice } from '$define/index.shared'
 import { IconPark } from '$icon-park'
 import { cx } from '$libs'
@@ -38,12 +38,12 @@ import {
   Radio,
   Slider,
   Space,
-  Switch,
   Tabs,
   Tag,
 } from 'antd'
 import delay from 'delay'
 import { pick } from 'lodash'
+import { EditableListSettingItem } from './EditableListSettingItem'
 import styles from './index.module.scss'
 import { set_HAS_RESTORED_SETTINGS } from './index.shared'
 import { ThemesSelect } from './theme'
@@ -102,19 +102,10 @@ const enum TabPaneKey {
 const tab = __PROD__
   ? TabPaneKey.basic
   : // for debug, free to change this
-    TabPaneKey.videoSourceTabConfig
+    TabPaneKey.filter
 const modalSettingsStore = proxy({ tab })
 
 export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => void }) {
-  const {
-    filterEnabled,
-    filterMinPlayCount,
-    filterMinPlayCountEnabled,
-    filterMinDuration,
-    filterMinDurationEnabled,
-    filterOutGotoTypePicture,
-  } = useSettingsSnapshot()
-
   useHotkeyForConfig(['shift.p'], 'autoPreviewWhenKeyboardSelect', '键盘选中后自动开始预览')
   useHotkeyForConfig(['shift.m'], 'autoPreviewWhenHover', '鼠标悬浮后自动开始预览')
   useHotkeyForConfig(['shift.c'], 'useNarrowMode', '居中模式')
@@ -160,90 +151,7 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
             {
               label: '内容过滤',
               key: TabPaneKey.filter,
-              children: (
-                <div className={styles.tabPane}>
-                  <div className={styles.settingsGroup}>
-                    <div className={styles.settingsGroupTitle}>
-                      内容过滤
-                      <HelpInfo iconProps={{ name: 'Tips' }}>
-                        启用过滤会大幅降低加载速度, 谨慎开启! <br />
-                        仅推荐类 Tab 生效
-                      </HelpInfo>
-                      <Switch
-                        css={css`
-                          margin-left: 10px;
-                        `}
-                        checked={filterEnabled}
-                        onChange={(val) => {
-                          updateSettings({ filterEnabled: val })
-                        }}
-                      />
-                    </div>
-
-                    <div className={cx(styles.settingsGroupContent)}>
-                      <div className={styles.settingsGroupSubTitle}>视频</div>
-                      <div className={styles.row}>
-                        <FlagSettingItem
-                          disabled={!filterEnabled}
-                          configKey='filterMinPlayCountEnabled'
-                          label='按播放量过滤'
-                          tooltip={<>不显示播放量很少的视频</>}
-                        />
-                        <InputNumber
-                          size='small'
-                          min={1}
-                          step={1000}
-                          value={filterMinPlayCount}
-                          onChange={(val) => val && updateSettings({ filterMinPlayCount: val })}
-                          disabled={!filterEnabled || !filterMinPlayCountEnabled}
-                        />
-                      </div>
-                      <div className={styles.row} style={{ marginTop: 3 }}>
-                        <FlagSettingItem
-                          configKey='filterMinDurationEnabled'
-                          label='按视频时长过滤'
-                          tooltip={<>不显示短视频</>}
-                          disabled={!filterEnabled}
-                        />
-                        <InputNumber
-                          style={{ width: 150 }}
-                          size='small'
-                          min={1}
-                          step={10}
-                          addonAfter={'单位:秒'}
-                          value={filterMinDuration}
-                          onChange={(val) => val && updateSettings({ filterMinDuration: val })}
-                          disabled={!filterEnabled || !filterMinDurationEnabled}
-                        />
-                      </div>
-                      <FlagSettingItem
-                        className={styles.row}
-                        style={{ marginTop: 3 }}
-                        configKey='enableFilterForFollowedVideo'
-                        label='对「已关注」的视频启用过滤'
-                        tooltip={<>默认不过滤「已关注」</>}
-                        disabled={!filterEnabled}
-                      />
-
-                      <div className={styles.settingsGroupSubTitle}>图文</div>
-                      <FlagSettingItem
-                        className={styles.row}
-                        configKey='filterOutGotoTypePicture'
-                        label='启用图文(动态 & 专栏)过滤'
-                        tooltip={<>过滤掉图文推荐</>}
-                        disabled={!filterEnabled}
-                      />
-                      <FlagSettingItem
-                        className={styles.row}
-                        disabled={!filterEnabled || !filterOutGotoTypePicture}
-                        configKey='enableFilterForFollowedPicture'
-                        label='对「已关注」的图文启用过滤'
-                        tooltip={<>默认不过滤「已关注」</>}
-                      />
-                    </div>
-                  </div>
-                </div>
-              ),
+              children: <TabPaneFilter />,
             },
             {
               label: '外观设置',
@@ -256,7 +164,7 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                     </div>
                     <div className={cx(styles.settingsGroupContent)}>
                       <div className={styles.row}>
-                        <FlagSettingItem
+                        <CheckboxSettingItem
                           configKey='styleNewCardStyle'
                           label='新卡片样式'
                           tooltip={
@@ -269,14 +177,14 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                         />
                       </div>
                       <div className={styles.row} style={{ marginTop: 5 }}>
-                        <FlagSettingItem
+                        <CheckboxSettingItem
                           configKey='styleUseStandardVideoSourceTab'
                           label='推荐源切换 Tab 按钮: 使用标准高度'
                           tooltip='默认紧凑高度'
                         />
                       </div>
                       <div className={styles.row} style={{ marginTop: 5 }}>
-                        <FlagSettingItem
+                        <CheckboxSettingItem
                           configKey='styleUseStickyTabbarInPureRecommend'
                           label='全屏模式: sticky tab bar'
                           tooltip={
@@ -289,7 +197,7 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                         />
                       </div>
                       <div className={styles.row} style={{ marginTop: 5 }}>
-                        <FlagSettingItem
+                        <CheckboxSettingItem
                           configKey='styleUseCustomGrid'
                           label='全屏模式: 使用自定义网格配置'
                           tooltip={
@@ -305,7 +213,7 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                         />
                       </div>
                       <div className={styles.row} style={{ marginTop: 5 }}>
-                        <FlagSettingItem
+                        <CheckboxSettingItem
                           configKey='styleUseWhiteBackground'
                           label='全屏模式: styleUseWhiteBackground'
                         />
@@ -376,7 +284,7 @@ function TabPaneBasic() {
       <div className={styles.settingsGroup}>
         <div className={styles.settingsGroupTitle}>开关</div>
         <div className={cx(styles.settingsGroupContent, styles.row)}>
-          <FlagSettingItem
+          <CheckboxSettingItem
             configKey='pureRecommend'
             label='全屏模式'
             tooltip={
@@ -392,7 +300,7 @@ function TabPaneBasic() {
             extraAction={toastAndReload}
           />
 
-          <FlagSettingItem
+          <CheckboxSettingItem
             configKey={'useNarrowMode'}
             label='居中模式'
             tooltip={
@@ -405,7 +313,7 @@ function TabPaneBasic() {
             className={styles.check}
           />
 
-          <FlagSettingItem
+          <CheckboxSettingItem
             configKey={'showModalFeedOnLoad'}
             label='自动「查看更多」'
             tooltip='打开首页时自动打开「查看更多」弹窗'
@@ -419,7 +327,7 @@ function TabPaneBasic() {
             }}
           />
 
-          <FlagSettingItem
+          <CheckboxSettingItem
             configKey={'showModalFeedEntry'}
             label='「查看更多」按钮'
             tooltip='是否展示「查看更多」按钮'
@@ -431,14 +339,14 @@ function TabPaneBasic() {
       <div className={styles.settingsGroup}>
         <div className={styles.settingsGroupTitle}>视频链接</div>
         <div className={cx(styles.settingsGroupContent, styles.row)}>
-          <FlagSettingItem
+          <CheckboxSettingItem
             configKey={'openVideoInPopupWhenClick'}
             label='默认「小窗打开」'
             tooltip='点击视频链接默认行为改为「小窗打开」并自动网页全屏'
             className={styles.check}
           />
 
-          <FlagSettingItem
+          <CheckboxSettingItem
             configKey={'openVideoAutoFullscreen'}
             label='打开视频后自动全屏'
             tooltip={
@@ -456,7 +364,7 @@ function TabPaneBasic() {
       <div className={styles.settingsGroup}>
         <div className={styles.settingsGroupTitle}>预览</div>
         <div className={cx(styles.settingsGroupContent, styles.row)}>
-          <FlagSettingItem
+          <CheckboxSettingItem
             configKey='autoPreviewWhenKeyboardSelect'
             label='键盘选中后自动开始预览'
             className={styles.check}
@@ -469,7 +377,7 @@ function TabPaneBasic() {
             }
           />
 
-          <FlagSettingItem
+          <CheckboxSettingItem
             configKey='autoPreviewWhenHover'
             label='鼠标悬浮后自动开始预览'
             className={styles.check}
@@ -580,7 +488,7 @@ function TabPaneAdvance() {
         </div>
         <div className={cx(styles.settingsGroupContent)}>
           <div className={styles.row}>
-            <FlagSettingItem
+            <CheckboxSettingItem
               configKey='backupSettingsToArticleDraft'
               label='备份设置到专栏草稿箱中'
               tooltip={`专栏 - 草稿箱 - ${APP_NAME}`}
@@ -689,12 +597,12 @@ function TabPaneVideoSourceTabConfig() {
                 稍后再看
               </div>
               <div className={styles.row}>
-                <FlagSettingItem
+                <CheckboxSettingItem
                   configKey='shuffleForWatchLater'
                   label='随机顺序'
                   tooltip='不包括近期添加的「稍后再看」'
                 />
-                <FlagSettingItem
+                <CheckboxSettingItem
                   configKey='addSeparatorForWatchLater'
                   label='添加分割线'
                   tooltip='添加「近期」「更早」分割线'
@@ -715,8 +623,12 @@ function TabPaneVideoSourceTabConfig() {
                 收藏
               </div>
               <div className={styles.row}>
-                <FlagSettingItem configKey='shuffleForFav' label='随机顺序' tooltip='随机收藏' />
-                <FlagSettingItem
+                <CheckboxSettingItem
+                  configKey='shuffleForFav'
+                  label='随机顺序'
+                  tooltip='随机收藏'
+                />
+                <CheckboxSettingItem
                   configKey='addSeparatorForFav'
                   label='添加分割线'
                   tooltip='顺序显示时, 按收藏夹添加分割线'
@@ -769,7 +681,7 @@ function TabPaneVideoSourceTabConfig() {
                 {TabConfig[ETabType.PopularWeekly].label}
               </div>
               <div style={{ width: '100%', display: 'flex', alignItems: 'center' }}>
-                <FlagSettingItem
+                <CheckboxSettingItem
                   configKey='showPopularWeeklyOnlyOnWeekend'
                   label='只在周末显示'
                   tooltip={
@@ -921,6 +833,161 @@ function VideoSourceTabSortableItem({ id }: { id: ETabType }) {
         `}
       >
         <IconPark name='Drag' size={18} />
+      </div>
+    </div>
+  )
+}
+
+function TabPaneFilter() {
+  const {
+    filterEnabled,
+    filterMinPlayCount,
+    filterMinPlayCountEnabled,
+    filterMinDuration,
+    filterMinDurationEnabled,
+    filterOutGotoTypePicture,
+    filterByAuthorNameEnabled,
+    filterByTitleEnabled,
+  } = useSettingsSnapshot()
+
+  return (
+    <div className={styles.tabPane}>
+      <div className={styles.settingsGroup}>
+        <div className={styles.settingsGroupTitle}>
+          内容过滤
+          <HelpInfo iconProps={{ name: 'Tips' }}>
+            启用过滤会大幅降低加载速度, 谨慎开启! <br />
+            仅推荐类 Tab 生效
+          </HelpInfo>
+          <SwitchSettingItem
+            configKey='filterEnabled'
+            css={css`
+              margin-left: 10px;
+            `}
+          />
+        </div>
+
+        <div className={cx(styles.settingsGroupContent)}>
+          <div
+            css={css`
+              display: grid;
+              grid-template-columns: repeat(2, minmax(0, 1fr));
+              column-gap: 20px;
+              row-gap: 15px;
+            `}
+          >
+            <div className='col'>
+              <div className={styles.settingsGroupSubTitle}>视频</div>
+              <div className={styles.row}>
+                <CheckboxSettingItem
+                  disabled={!filterEnabled}
+                  configKey='filterMinPlayCountEnabled'
+                  label='按播放量过滤'
+                  tooltip={<>不显示播放量很少的视频</>}
+                />
+                <InputNumber
+                  size='small'
+                  min={1}
+                  step={1000}
+                  value={filterMinPlayCount}
+                  onChange={(val) => val && updateSettings({ filterMinPlayCount: val })}
+                  disabled={!filterEnabled || !filterMinPlayCountEnabled}
+                />
+              </div>
+              <div className={styles.row} style={{ marginTop: 3 }}>
+                <CheckboxSettingItem
+                  configKey='filterMinDurationEnabled'
+                  label='按视频时长过滤'
+                  tooltip={<>不显示短视频</>}
+                  disabled={!filterEnabled}
+                />
+                <InputNumber
+                  style={{ width: 150 }}
+                  size='small'
+                  min={1}
+                  step={10}
+                  addonAfter={'单位:秒'}
+                  value={filterMinDuration}
+                  onChange={(val) => val && updateSettings({ filterMinDuration: val })}
+                  disabled={!filterEnabled || !filterMinDurationEnabled}
+                />
+              </div>
+              <CheckboxSettingItem
+                className={styles.row}
+                style={{ marginTop: 3 }}
+                configKey='enableFilterForFollowedVideo'
+                label='对「已关注」的视频启用过滤'
+                tooltip={<>默认不过滤「已关注」</>}
+                disabled={!filterEnabled}
+              />
+            </div>
+
+            <div className='col'>
+              <div className={styles.settingsGroupSubTitle}>图文</div>
+              <CheckboxSettingItem
+                className={styles.row}
+                configKey='filterOutGotoTypePicture'
+                label='启用图文(动态 & 专栏)过滤'
+                tooltip={<>过滤掉图文推荐</>}
+                disabled={!filterEnabled}
+              />
+              <CheckboxSettingItem
+                className={styles.row}
+                disabled={!filterEnabled || !filterOutGotoTypePicture}
+                configKey='enableFilterForFollowedPicture'
+                label='对「已关注」的图文启用过滤'
+                tooltip={<>默认不过滤「已关注」</>}
+              />
+            </div>
+
+            <div className='col'>
+              <div className={styles.settingsGroupSubTitle}>
+                UP
+                <HelpInfo>
+                  根据 UP 过滤视频
+                  <br />
+                  P.S B站官方支持黑名单, 对于不喜欢的 UP 可以直接拉黑
+                  <br />
+                  P.S 这里是客户端过滤, 与黑名单功能重复, 后期版本可能会删除这个功能
+                </HelpInfo>
+                <SwitchSettingItem
+                  configKey='filterByAuthorNameEnabled'
+                  disabled={!filterEnabled}
+                  css={css`
+                    margin-left: 10px;
+                  `}
+                />
+              </div>
+              <EditableListSettingItem
+                configKey={'filterByAuthorNameKeywords'}
+                searchProps={{ placeholder: '添加 UP全名 / UP mid' }}
+                disabled={!filterEnabled || !filterByAuthorNameEnabled}
+              />
+            </div>
+
+            <div className='col'>
+              <div className={styles.settingsGroupSubTitle}>
+                <span>标题</span>
+                <HelpInfo>
+                  根据标题关键字过滤视频 <br />
+                  支持正则(i), 语法：/abc|\d+/
+                </HelpInfo>
+                <SwitchSettingItem
+                  configKey='filterByTitleEnabled'
+                  disabled={!filterEnabled}
+                  css={css`
+                    margin-left: 10px;
+                  `}
+                />
+              </div>
+              <EditableListSettingItem
+                configKey={'filterByTitleKeywords'}
+                searchProps={{ placeholder: '添加过滤关键字' }}
+                disabled={!filterEnabled || !filterByTitleEnabled}
+              />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   )

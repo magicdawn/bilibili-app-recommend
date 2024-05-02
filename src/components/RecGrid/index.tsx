@@ -311,9 +311,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
       })
     }
     videoCardEmitters.forEach((emitter) => {
-      emitter.on('mouseenter', (srcUniqId) => {
-        broadcastMouseEnter(srcUniqId)
-      })
+      emitter.on('mouseenter', broadcastMouseEnter)
     })
     return () => {
       videoCardEmitters.forEach((emitter) => {

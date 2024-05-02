@@ -4,6 +4,7 @@ import {
   AddTwo,
   CheckSmall,
   Close,
+  CloseSmall,
   Computer,
   Concern,
   Config,
@@ -64,6 +65,7 @@ const ImportedIcons = {
   TrendTwo,
   Drag,
   CheckSmall,
+  CloseSmall,
 } satisfies Record<string, Icon>
 
 export type IconName = keyof typeof ImportedIcons
