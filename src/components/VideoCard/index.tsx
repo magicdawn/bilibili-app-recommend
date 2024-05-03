@@ -468,7 +468,7 @@ const VideoCardInner = memo(function VideoCardInner({
 
     return [
       ...Object.values(VideoLinkOpenMode)
-        .filter((mode) => VideoLinkOpenModeConfig[mode].enabled ?? true)
+        .filter((mode) => typeof VideoLinkOpenModeConfig[mode].enabled === 'undefined')
         .map((mode) => {
           return {
             key: VideoLinkOpenModeKey[mode],
@@ -605,6 +605,30 @@ const VideoCardInner = memo(function VideoCardInner({
                 }
               },
             },
+          ]
+        : []),
+
+      ...(Object.values(VideoLinkOpenMode).filter(
+        (mode) =>
+          typeof VideoLinkOpenModeConfig[mode].enabled === 'boolean' &&
+          VideoLinkOpenModeConfig[mode].enabled,
+      ).length
+        ? [
+            { type: 'divider' as const },
+            ...Object.values(VideoLinkOpenMode)
+              .filter(
+                (mode) =>
+                  typeof VideoLinkOpenModeConfig[mode].enabled === 'boolean' &&
+                  VideoLinkOpenModeConfig[mode].enabled,
+              )
+              .map((mode) => {
+                return {
+                  key: VideoLinkOpenModeKey[mode],
+                  label: VideoLinkOpenModeConfig[mode].label,
+                  icon: VideoLinkOpenModeConfig[mode].icon,
+                  onClick: () => onOpenWithMode(mode),
+                }
+              }),
           ]
         : []),
     ].filter(Boolean)

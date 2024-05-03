@@ -274,13 +274,13 @@ function TabPaneBasic() {
               css={css`
                 display: flex;
                 align-items: center;
-                .i-icon {
-                  margin-right: 8px;
+                .label {
+                  margin-left: 8px;
                 }
               `}
             >
               {config.icon}
-              {config.label}
+              <span className='label'>{config.label}</span>
             </span>
           ),
         }

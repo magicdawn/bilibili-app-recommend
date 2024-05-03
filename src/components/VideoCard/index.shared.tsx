@@ -2,6 +2,8 @@ import { IconPark } from '$icon-park'
 import { isMac } from '$platform'
 import mitt, { type Emitter } from 'mitt'
 import type { ReactNode } from 'react'
+import BiPip from '~icons/bi/pip'
+import RiFullscreenFill from '~icons/ri/fullscreen-fill'
 
 export const borderRadiusIdentifier = '--video-card-border-radius'
 export const borderRadiusValue = `var(${borderRadiusIdentifier})`
@@ -51,12 +53,12 @@ export const VideoLinkOpenModeConfig: Record<VideoLinkOpenMode, VideoLinkOpenMod
     desc: '默认新窗口打开',
   },
   [VideoLinkOpenMode.NormalFullscreen]: {
-    icon: <IconPark name='EfferentFour' size={15} />,
+    icon: <RiFullscreenFill width={15} height={15} />,
     label: '打开-全屏',
     desc: '默认新窗口打开, 打开后自动全屏; 注: 由于浏览器限制, 需要任意用户交互(如鼠标移动 / 鼠标点击 / 键盘按键)才能自动全屏',
   },
   [VideoLinkOpenMode.Popup]: {
-    icon: <IconPark name='EfferentFour' size={15} />,
+    icon: <BiPip width={13} height={13} />,
     label: '小窗打开',
   },
   [VideoLinkOpenMode.Background]: {

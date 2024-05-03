@@ -4,6 +4,7 @@ import { execSync } from 'child_process'
 import postcssMediaMinmax from 'postcss-media-minmax'
 import { visualizer } from 'rollup-plugin-visualizer'
 import AutoImport from 'unplugin-auto-import/vite'
+import Icons from 'unplugin-icons/vite'
 import { defineConfig } from 'vite'
 import importer from 'vite-plugin-importer'
 import monkey, { cdn } from 'vite-plugin-monkey'
@@ -132,6 +133,11 @@ export default defineConfig(({ command }) => ({
           imports: ['css'],
         },
       ],
+    }),
+
+    Icons({
+      compiler: 'jsx',
+      jsx: 'react',
     }),
 
     /**
