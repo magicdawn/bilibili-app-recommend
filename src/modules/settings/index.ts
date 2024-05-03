@@ -1,6 +1,7 @@
 import { APP_NAME, IN_BILIBILI_HOMEPAGE, baseDebug } from '$common'
 import { HAS_RESTORED_SETTINGS } from '$components/ModalSettings/index.shared'
 import type { ETabType } from '$components/RecHeader/tab.shared'
+import { VideoLinkOpenMode } from '$components/VideoCard/index.shared'
 import { EAppApiDevice } from '$define/index.shared'
 import { BilibiliArticleDraft } from '$modules/user/article-draft'
 import { toast } from '$utility/toast'
@@ -140,13 +141,12 @@ export const initialSettings = {
   /**
    * 功能
    */
+
+  // 备份
   backupSettingsToArticleDraft: false,
 
-  // 点击视频默认在 popup 中打开
-  openVideoInPopupWhenClick: false,
-
-  // 新标签打开时, 自动全屏
-  openVideoAutoFullscreen: false,
+  // 默认打开模式
+  videoLinkOpenMode: VideoLinkOpenMode.Normal,
 
   /**
    * 隐藏的 tab, 使用黑名单, 功能迭代之后新增的 tab, 默认开启.

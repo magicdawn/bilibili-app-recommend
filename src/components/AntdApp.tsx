@@ -1,7 +1,7 @@
 import { APP_NAME, APP_NAME_ROOT_CLASSNAME } from '$common'
 import { $headerWidth } from '$header'
+import { useColors, useIsDarkMode } from '$modules/dark-mode'
 import { useSettingsSnapshot } from '$modules/settings'
-import { useColors, useIsDarkMode } from '$platform'
 import { UseApp } from '$utility/antd-static'
 import { Global, css as _css, css } from '@emotion/react'
 import { ConfigProvider, Tooltip, theme } from 'antd'

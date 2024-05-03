@@ -4,10 +4,12 @@ import { AntdTooltip } from '$components/AntdApp'
 import { BaseModal, BaseModalClass, ModalClose } from '$components/BaseModal'
 import { useSortedTabKeys } from '$components/RecHeader/tab'
 import { ETabType, TabConfig, TabIcon, TabKeys } from '$components/RecHeader/tab.shared'
+import { VideoLinkOpenMode, VideoLinkOpenModeConfig } from '$components/VideoCard/index.shared'
 import { CheckboxSettingItem, HelpInfo, SwitchSettingItem } from '$components/piece'
 import { EAppApiDevice } from '$define/index.shared'
 import { IconPark } from '$icon-park'
 import { cx } from '$libs'
+import { useIsDarkMode } from '$modules/dark-mode'
 import type { BooleanSettingsKey } from '$modules/settings'
 import {
   allowedSettingsKeys,
@@ -17,7 +19,6 @@ import {
   updateSettings,
   useSettingsSnapshot,
 } from '$modules/settings'
-import { useIsDarkMode } from '$platform'
 import { AntdMessage, shouldDisableShortcut } from '$utility'
 import type { DragEndEvent } from '@dnd-kit/core'
 import { DndContext, PointerSensor, closestCenter, useSensor, useSensors } from '@dnd-kit/core'
@@ -36,6 +37,7 @@ import {
   InputNumber,
   Popconfirm,
   Radio,
+  Select,
   Slider,
   Space,
   Tabs,
@@ -102,7 +104,7 @@ const enum TabPaneKey {
 const tab = __PROD__
   ? TabPaneKey.basic
   : // for debug, free to change this
-    TabPaneKey.filter
+    TabPaneKey.basic
 const modalSettingsStore = proxy({ tab })
 
 export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => void }) {
@@ -257,6 +259,34 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
 }
 
 function TabPaneBasic() {
+  const { videoLinkOpenMode } = useSettingsSnapshot()
+
+  const openModeOptions = useMemo(() => {
+    return Object.values(VideoLinkOpenMode)
+      .filter((mode) => VideoLinkOpenModeConfig[mode].enabled ?? true)
+      .map((mode) => {
+        const config = VideoLinkOpenModeConfig[mode]
+        return {
+          config,
+          value: mode,
+          label: (
+            <span
+              css={css`
+                display: flex;
+                align-items: center;
+                .i-icon {
+                  margin-right: 8px;
+                }
+              `}
+            >
+              {config.icon}
+              {config.label}
+            </span>
+          ),
+        }
+      })
+  }, [])
+
   return (
     <div className={styles.tabPane}>
       <div className={styles.settingsGroup}>
@@ -339,24 +369,43 @@ function TabPaneBasic() {
       <div className={styles.settingsGroup}>
         <div className={styles.settingsGroupTitle}>视频链接</div>
         <div className={cx(styles.settingsGroupContent, styles.row)}>
-          <CheckboxSettingItem
-            configKey={'openVideoInPopupWhenClick'}
-            label='默认「小窗打开」'
-            tooltip='点击视频链接默认行为改为「小窗打开」并自动网页全屏'
-            className={styles.check}
-          />
-
-          <CheckboxSettingItem
-            configKey={'openVideoAutoFullscreen'}
-            label='打开视频后自动全屏'
-            tooltip={
-              <>
-                点击视频链接新窗口打开视频后「自动全屏」
-                <br />
-                注: 由于浏览器限制, 需要任意鼠标点击或键盘按键才能自动全屏
-              </>
-            }
-            className={styles.check}
+          默认打开模式
+          <HelpInfo>
+            选择点击视频(封面图片 或 标题)时打开的模式 <br />
+            {openModeOptions.map(({ config }) => {
+              return (
+                <span
+                  css={css`
+                    display: flex;
+                    align-items: center;
+                    .label {
+                      margin-left: 4px;
+                      margin-right: 10px;
+                      min-width: 65px;
+                    }
+                  `}
+                >
+                  {!!config.desc && (
+                    <>
+                      {config.icon}
+                      <span className='label'>{config.label}</span>
+                      <span className='desc'>{config.desc}</span>
+                    </>
+                  )}
+                </span>
+              )
+            })}
+          </HelpInfo>
+          <Select
+            css={css`
+              width: 160px;
+              margin-left: 8px;
+            `}
+            options={openModeOptions}
+            value={videoLinkOpenMode}
+            onChange={(v) => {
+              updateSettings({ videoLinkOpenMode: v })
+            }}
           />
         </div>
       </div>

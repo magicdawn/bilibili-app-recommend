@@ -16,7 +16,7 @@ import { settings, useSettingsSnapshot } from '$modules/settings'
 import { UserFavService, defaultFavFolderName } from '$modules/user/fav'
 import { UserBlacklistService, useInBlacklist } from '$modules/user/relations/blacklist'
 import { UserfollowService } from '$modules/user/relations/follow'
-import { isFirefox, isMac } from '$platform'
+import { isFirefox } from '$platform'
 import { Picture } from '$ui-components/Picture'
 import { AntdMessage } from '$utility'
 import type { MenuProps } from 'antd'
@@ -34,6 +34,9 @@ import type { VideoCardEmitter } from './index.shared'
 import {
   PLAYER_SCREEN_MODE,
   PlayerScreenMode,
+  VideoLinkOpenMode,
+  VideoLinkOpenModeConfig,
+  VideoLinkOpenModeKey,
   borderRadiusStyle,
   defaultEmitter,
 } from './index.shared'
@@ -256,14 +259,37 @@ const VideoCardInner = memo(function VideoCardInner({
   })
 
   /**
-   * expose actions
+   * 花式打开
    */
 
-  const onOpen = useMemoizedFn(() => {
+  const onOpenWithMode = useMemoizedFn((mode?: VideoLinkOpenMode) => {
+    const handlers: Record<VideoLinkOpenMode, () => void> = {
+      [VideoLinkOpenMode.Normal]: onOpenNormal,
+      [VideoLinkOpenMode.NormalFullscreen]: onOpenNormalFullscreen,
+      [VideoLinkOpenMode.Popup]: onOpenInPopup,
+      [VideoLinkOpenMode.Background]: onOpenInBackground,
+      [VideoLinkOpenMode.Iina]: onOpenInIINA,
+    }
+    mode ||= settings.videoLinkOpenMode
+    handlers[mode]?.()
+  })
+
+  const onOpenNormal = useMemoizedFn(() => {
     window.open(href, '_blank')
   })
 
-  const onOpenInPopup = useMemoizedFn(() => {
+  const onOpenNormalFullscreen = useMemoizedFn(() => {
+    const u = new URL(href, location.href)
+    u.searchParams.set(PLAYER_SCREEN_MODE, PlayerScreenMode.Fullscreen)
+    const newHref = u.href
+    window.open(newHref, '_blank')?.focus()
+  })
+
+  const onOpenInPopup = useMemoizedFn(async () => {
+    const u = new URL(href, location.href)
+    u.searchParams.append(PLAYER_SCREEN_MODE, PlayerScreenMode.WebFullscreen)
+    const newHref = u.href
+
     let popupWidth = 1000
     let popupHeight = Math.ceil((popupWidth / 16) * 9)
 
@@ -282,40 +308,48 @@ const VideoCardInner = memo(function VideoCardInner({
       }
     }
 
-    // 将 left 减去 50px，你可以根据需要调整这个值
-    const left = (window.innerWidth - popupWidth) / 2
-    const top = (window.innerHeight - popupHeight) / 2 - 50
-
-    const features = [
-      'popup=true',
-      `width=${popupWidth}`,
-      `height=${popupHeight}`,
-      `left=${left}`,
-      `top=${top}`,
-    ].join(',')
-
-    const u = new URL(href, location.href)
-    u.searchParams.append(PLAYER_SCREEN_MODE, PlayerScreenMode.WebFullscreen)
-    const newHref = u.href
-
-    debug('openInPopup: features -> %s', features)
-    window.open(newHref, '_blank', features)
-  })
-
-  const handleVideoLinkClick: MouseEventHandler = useMemoizedFn((e) => {
-    if (settings.openVideoInPopupWhenClick) {
-      e.preventDefault()
-      onOpenInPopup()
-      return
+    let pipWindow: Window | undefined
+    try {
+      // Open a Picture-in-Picture window.
+      // https://developer.chrome.com/docs/web-platform/document-picture-in-picture
+      // @ts-ignore
+      pipWindow = await globalThis.documentPictureInPicture.requestWindow({
+        width: popupWidth,
+        height: popupHeight,
+      })
+    } catch (e) {
+      // noop
     }
 
-    if (settings.openVideoAutoFullscreen) {
-      e.preventDefault()
-      const u = new URL(href, location.href)
-      u.searchParams.set(PLAYER_SCREEN_MODE, PlayerScreenMode.Fullscreen)
-      const newHref = u.href
-      window.open(newHref, '_blank')?.focus()
-      return
+    // use pipWindow
+    if (pipWindow) {
+      // Move the player to the Picture-in-Picture window.
+      const iframe = document.createElement('iframe')
+      iframe.src = newHref
+      // @ts-ignore
+      iframe.style = 'width: 100%; height: 100%; border: none;'
+
+      pipWindow.document.body.append(iframe)
+      // @ts-ignore
+      pipWindow.document.body.style = 'margin: 0; padding: 0; width: 100%; height: 100%;'
+    }
+
+    // use window.open popup
+    else {
+      // 将 left 减去 50px，你可以根据需要调整这个值
+      const left = (window.innerWidth - popupWidth) / 2
+      const top = (window.innerHeight - popupHeight) / 2 - 50
+
+      const features = [
+        'popup=true',
+        `width=${popupWidth}`,
+        `height=${popupHeight}`,
+        `left=${left}`,
+        `top=${top}`,
+      ].join(',')
+
+      debug('openInPopup: features -> %s', features)
+      window.open(newHref, '_blank', features)
     }
   })
 
@@ -329,7 +363,26 @@ const VideoCardInner = memo(function VideoCardInner({
     })
   })
 
-  useMittOn(emitter, 'open', onOpen)
+  const onOpenInIINA = useMemoizedFn(() => {
+    let usingHref = href
+    if (item.api === 'watchlater') usingHref = `/video/${item.bvid}`
+    const fullHref = new URL(usingHref, location.href).href
+    const iinaUrl = `iina://open?url=${encodeURIComponent(fullHref)}`
+    window.open(iinaUrl, '_self')
+  })
+
+  const handleVideoLinkClick: MouseEventHandler = useMemoizedFn((e) => {
+    if (settings.videoLinkOpenMode !== VideoLinkOpenMode.Normal) {
+      e.preventDefault()
+      onOpenWithMode()
+    }
+  })
+
+  /**
+   * expose actions
+   */
+
+  useMittOn(emitter, 'open', onOpenWithMode)
   useMittOn(emitter, 'toggle-watch-later', () => onToggleWatchLater())
   useMittOn(emitter, 'trigger-dislike', () => onTriggerDislike())
   useMittOn(emitter, 'start-preview-animation', onStartPreviewAnimation)
@@ -345,14 +398,6 @@ const VideoCardInner = memo(function VideoCardInner({
       content = new URL(href, location.href).href
     }
     copyContent(content)
-  })
-
-  const onOpenInIINA = useMemoizedFn(() => {
-    let usingHref = href
-    if (item.api === 'watchlater') usingHref = `/video/${item.bvid}`
-    const fullHref = new URL(usingHref, location.href).href
-    const iinaUrl = `iina://open?url=${encodeURIComponent(fullHref)}`
-    window.open(iinaUrl, '_self')
   })
 
   /**
@@ -422,24 +467,16 @@ const VideoCardInner = memo(function VideoCardInner({
     const watchLaterLabel = watchLaterAdded ? '移除稍后再看' : '稍后再看'
 
     return [
-      {
-        key: 'open-link',
-        label: '打开',
-        icon: <IconPark name='EfferentFour' size={15} />,
-        onClick: onOpen,
-      },
-      {
-        key: 'open-link-in-popup',
-        label: '小窗打开',
-        icon: <IconPark name='EfferentFour' size={15} />,
-        onClick: onOpenInPopup,
-      },
-      {
-        key: 'open-link-in-background',
-        label: '后台打开',
-        icon: <IconPark name='Split' size={15} />,
-        onClick: onOpenInBackground,
-      },
+      ...Object.values(VideoLinkOpenMode)
+        .filter((mode) => VideoLinkOpenModeConfig[mode].enabled ?? true)
+        .map((mode) => {
+          return {
+            key: VideoLinkOpenModeKey[mode],
+            label: VideoLinkOpenModeConfig[mode].label,
+            icon: VideoLinkOpenModeConfig[mode].icon,
+            onClick: () => onOpenWithMode(mode),
+          }
+        }),
 
       { type: 'divider' as const },
       {
@@ -567,18 +604,6 @@ const VideoCardInner = memo(function VideoCardInner({
                   onRemoveCurrent?.(item, cardData)
                 }
               },
-            },
-          ]
-        : []),
-
-      ...(isMac
-        ? [
-            { type: 'divider' as const },
-            {
-              key: 'open-in-iina',
-              label: '在 IINA 中打开',
-              icon: <IconPark name='PlayTwo' size={15} />,
-              onClick: onOpenInIINA,
             },
           ]
         : []),

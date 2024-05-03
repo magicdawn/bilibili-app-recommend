@@ -1,7 +1,7 @@
 import { APP_NAME_ROOT_CLASSNAME } from '$common'
 import { IconPark } from '$icon-park'
 import { cx } from '$libs'
-import { useIsDarkMode } from '$platform'
+import { useIsDarkMode } from '$modules/dark-mode'
 import type { SerializedStyles } from '@emotion/react'
 import type { MouseEvent } from 'react'
 import { createPortal } from 'react-dom'
@@ -111,6 +111,9 @@ export function BaseModal({
 
     // click from antd popconfirm
     if (target.closest('.ant-popover-inner[role="tooltip"]')) return
+
+    // click from antd select dropdown
+    if (target.closest('.ant-select-dropdown')) return
 
     if (hideWhenMaskOnClick) {
       onHide()
