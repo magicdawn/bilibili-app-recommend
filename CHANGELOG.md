@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.21.7
+
+- feat: add VideoLinkOpenMode, 使用画中画增强 "小窗打开"
+
+details
+
+- 8e342b8 feat: set disallowReturnToOpener = true
+- e82db05 feat: extract useOpenRelated
+- 07e9fbc fix: use tsconfig module:ESNext to solve @emotion/css/create-instance has no call signature issue
+- 8582f2e feat: use unplugin-icons
+- cd7bc5a feat: 小窗打开使用 documentPictureInPicture.requestWindow API
+- a3e0e18 deps: ncu
+- 78d539b chore: style tweak
+
 ## v0.21.6
 
 - feat(filter): 支持按 up(name/mid), 按标题(keyword/regexp) 过滤推荐视频, close #90 以及之前的相关 feature request
