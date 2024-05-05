@@ -92,6 +92,7 @@ export function useOpenRelated({ href, item }: { href: string; item: RecItemType
         pipWindow = await (globalThis as any).documentPictureInPicture.requestWindow({
           width: popupWidth,
           height: popupHeight,
+          disallowReturnToOpener: true,
         })
       } catch (e) {
         // noop
