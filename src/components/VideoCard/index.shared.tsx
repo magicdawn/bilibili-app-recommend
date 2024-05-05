@@ -55,11 +55,31 @@ export const VideoLinkOpenModeConfig: Record<VideoLinkOpenMode, VideoLinkOpenMod
   [VideoLinkOpenMode.NormalFullscreen]: {
     icon: <RiFullscreenFill width={15} height={15} />,
     label: '打开-全屏',
-    desc: '默认新窗口打开, 打开后自动全屏; 注: 由于浏览器限制, 需要任意用户交互(如鼠标移动 / 鼠标点击 / 键盘按键)才能自动全屏',
+    desc: (
+      <>
+        默认新窗口打开, 打开后自动全屏
+        <br />
+        注: 由于浏览器限制, 需要任意用户交互(如鼠标移动 / 鼠标点击 / 键盘按键)才能自动全屏
+      </>
+    ),
   },
   [VideoLinkOpenMode.Popup]: {
     icon: <BiPip width={13} height={13} />,
     label: '小窗打开',
+    desc: (
+      <>
+        当{' '}
+        <a
+          href='https://developer.chrome.com/docs/web-platform/document-picture-in-picture'
+          target='_blank'
+        >
+          画中画窗口 API
+        </a>{' '}
+        可用时, 会使用画中画窗口的形式: 窗口置顶 + 播放页网页全屏.
+        <br />
+        当该 API 不可用时, 会使用 popup window + 播放页网页全屏 的形式.
+      </>
+    ),
   },
   [VideoLinkOpenMode.Background]: {
     icon: <IconPark name='Split' size={15} />,
@@ -69,6 +89,16 @@ export const VideoLinkOpenModeConfig: Record<VideoLinkOpenMode, VideoLinkOpenMod
     icon: <IconPark name='PlayTwo' size={15} />,
     label: '在 IINA 中打开',
     enabled: isMac,
+    desc: (
+      <>
+        <a
+          href='https://github.com/magicdawn/bilibili-app-recommend/blob/main/notes/iina.md'
+          target='_blank'
+        >
+          macOS IINA 设置教程
+        </a>
+      </>
+    ),
   },
 }
 

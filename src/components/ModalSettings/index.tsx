@@ -370,29 +370,40 @@ function TabPaneBasic() {
         <div className={styles.settingsGroupTitle}>视频链接</div>
         <div className={cx(styles.settingsGroupContent, styles.row)}>
           默认打开模式
-          <HelpInfo>
+          <HelpInfo
+            tooltipProps={{ color: 'rgba(0, 0, 0, 0.85)' }} // 默认使用 colorPrimary, 链接可能看不清
+          >
             选择点击视频(封面图片 或 标题)时打开的模式 <br />
-            {openModeOptions.map(({ config }) => {
+            {openModeOptions.map(({ value, config }) => {
               return (
-                <span
-                  css={css`
-                    display: flex;
-                    align-items: center;
-                    .label {
-                      margin-left: 4px;
-                      margin-right: 10px;
-                      min-width: 65px;
-                    }
-                  `}
-                >
-                  {!!config.desc && (
-                    <>
+                !!config.desc && (
+                  <div
+                    key={value}
+                    css={css`
+                      display: flex;
+                      align-items: flex-start;
+                      margin-top: 10px;
+                      &:first-child {
+                        margin-top: 0;
+                      }
+                      .label {
+                        display: inline-flex;
+                        align-items: center;
+                        .text {
+                          min-width: 65px;
+                          margin-left: 4px;
+                          margin-right: 10px;
+                        }
+                      }
+                    `}
+                  >
+                    <span className='label'>
                       {config.icon}
-                      <span className='label'>{config.label}</span>
-                      <span className='desc'>{config.desc}</span>
-                    </>
-                  )}
-                </span>
+                      <span className='text'>{config.label}</span>
+                    </span>
+                    <span className='desc'>{config.desc}</span>
+                  </div>
+                )
               )
             })}
           </HelpInfo>

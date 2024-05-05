@@ -204,6 +204,7 @@ export default defineConfig(({ command }) => ({
           'https://www.bilibili.com/index.html?*',
           'https://www.bilibili.com/video/*',
           'https://www.bilibili.com/list/watchlater?*',
+          'https://www.bilibili.com/bangumi/play/*',
         ],
         connect: [
           //

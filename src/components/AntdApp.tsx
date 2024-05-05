@@ -37,8 +37,8 @@ export function AntdApp({
   return (
     <CacheProvider value={cache}>
       <ConfigProvider
-        autoInsertSpaceInButton={false}
         locale={zhCN}
+        button={{ autoInsertSpace: false }}
         theme={{
           cssVar: true,
           algorithm: dark ? theme.darkAlgorithm : theme.defaultAlgorithm,

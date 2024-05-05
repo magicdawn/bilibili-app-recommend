@@ -33,4 +33,7 @@ export const IN_BILIBILI_HOMEPAGE = IN_BILIBILI && (pathname === '/' || pathname
 // https://www.bilibili.com/video/BVxxx
 // https://www.bilibili.com/list/watchlater?bvid=BVxxx
 export const IN_BILIBILI_VIDEO_PLAY_PAGE =
-  IN_BILIBILI && (pathname.startsWith('/video/') || pathname.startsWith('/list/watchlater'))
+  IN_BILIBILI &&
+  (pathname.startsWith('/video/') ||
+    pathname.startsWith('/list/watchlater') ||
+    pathname.startsWith('/bangumi/play/'))

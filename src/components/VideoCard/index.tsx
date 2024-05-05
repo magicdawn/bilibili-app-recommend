@@ -23,7 +23,6 @@ import type { MenuProps } from 'antd'
 import { Dropdown } from 'antd'
 import delay from 'delay'
 import { tryit } from 'radash'
-import type { MouseEventHandler } from 'react'
 import type { VideoData } from './card.service'
 import { fetchVideoData, watchLaterAdd } from './card.service'
 import { PreviewImage } from './child-components/PreviewImage'
@@ -31,19 +30,12 @@ import { VideoCardBottom } from './child-components/VideoCardBottom'
 import { BlacklistCard, DislikedCard, SkeletonCard } from './child-components/other-type-cards'
 import styles from './index.module.scss'
 import type { VideoCardEmitter } from './index.shared'
-import {
-  PLAYER_SCREEN_MODE,
-  PlayerScreenMode,
-  VideoLinkOpenMode,
-  VideoLinkOpenModeConfig,
-  VideoLinkOpenModeKey,
-  borderRadiusStyle,
-  defaultEmitter,
-} from './index.shared'
+import { borderRadiusStyle, defaultEmitter } from './index.shared'
 import type { IVideoCardData } from './process/normalize'
 import { normalizeCardData } from './process/normalize'
 import { AppRecIconScaleMap, AppRecIconSvgNameMap, makeStatItem } from './stat-item'
 import { useDislikeRelated } from './useDislikeRelated'
+import { useOpenRelated } from './useOpenRelated'
 import { usePreviewAnimation } from './usePreviewAnimation'
 import { useWatchlaterRelated } from './useWatchlaterRelated'
 
@@ -258,125 +250,12 @@ const VideoCardInner = memo(function VideoCardInner({
     }
   })
 
-  /**
-   * 花式打开
-   */
-
-  const onOpenWithMode = useMemoizedFn((mode?: VideoLinkOpenMode) => {
-    const handlers: Record<VideoLinkOpenMode, () => void> = {
-      [VideoLinkOpenMode.Normal]: onOpenNormal,
-      [VideoLinkOpenMode.NormalFullscreen]: onOpenNormalFullscreen,
-      [VideoLinkOpenMode.Popup]: onOpenInPopup,
-      [VideoLinkOpenMode.Background]: onOpenInBackground,
-      [VideoLinkOpenMode.Iina]: onOpenInIINA,
-    }
-    mode ||= settings.videoLinkOpenMode
-    handlers[mode]?.()
-  })
-
-  const onOpenNormal = useMemoizedFn(() => {
-    window.open(href, '_blank')
-  })
-
-  const onOpenNormalFullscreen = useMemoizedFn(() => {
-    const u = new URL(href, location.href)
-    u.searchParams.set(PLAYER_SCREEN_MODE, PlayerScreenMode.Fullscreen)
-    const newHref = u.href
-    window.open(newHref, '_blank')?.focus()
-  })
-
-  const onOpenInPopup = useMemoizedFn(async () => {
-    const u = new URL(href, location.href)
-    u.searchParams.append(PLAYER_SCREEN_MODE, PlayerScreenMode.WebFullscreen)
-    const newHref = u.href
-
-    let popupWidth = 1000
-    let popupHeight = Math.ceil((popupWidth / 16) * 9)
-
-    // try detect 竖屏视频
-    if (item.api === EApiType.App && item.uri?.startsWith('bilibili://')) {
-      const searchParams = new URL(item.uri).searchParams
-      const playerWidth = Number(searchParams.get('player_width') || 0)
-      const playerHeight = Number(searchParams.get('player_height') || 0)
-
-      if (playerWidth && playerHeight && !isNaN(playerWidth) && !isNaN(playerHeight)) {
-        // 竖屏视频
-        if (playerWidth < playerHeight) {
-          popupWidth = 720
-          popupHeight = Math.floor((popupWidth / 9) * 16)
-        }
-      }
-    }
-
-    let pipWindow: Window | undefined
-    try {
-      // Open a Picture-in-Picture window.
-      // https://developer.chrome.com/docs/web-platform/document-picture-in-picture
-      // @ts-ignore
-      pipWindow = await globalThis.documentPictureInPicture.requestWindow({
-        width: popupWidth,
-        height: popupHeight,
-      })
-    } catch (e) {
-      // noop
-    }
-
-    // use pipWindow
-    if (pipWindow) {
-      // Move the player to the Picture-in-Picture window.
-      const iframe = document.createElement('iframe')
-      iframe.src = newHref
-      // @ts-ignore
-      iframe.style = 'width: 100%; height: 100%; border: none;'
-
-      pipWindow.document.body.append(iframe)
-      // @ts-ignore
-      pipWindow.document.body.style = 'margin: 0; padding: 0; width: 100%; height: 100%;'
-    }
-
-    // use window.open popup
-    else {
-      // 将 left 减去 50px，你可以根据需要调整这个值
-      const left = (window.innerWidth - popupWidth) / 2
-      const top = (window.innerHeight - popupHeight) / 2 - 50
-
-      const features = [
-        'popup=true',
-        `width=${popupWidth}`,
-        `height=${popupHeight}`,
-        `left=${left}`,
-        `top=${top}`,
-      ].join(',')
-
-      debug('openInPopup: features -> %s', features)
-      window.open(newHref, '_blank', features)
-    }
-  })
-
-  const onOpenInBackground = useMemoizedFn(() => {
-    // `/video/BV1234` when used in TamperMonkey, it relatives to extension root
-    // see https://github.com/magicdawn/bilibili-app-recommend/issues/63
-    const fullHref = new URL(href, location.href).href
-    GM.openInTab(fullHref, {
-      active: false,
-      insert: true,
+  // 打开视频卡片
+  const { onOpenWithMode, handleVideoLinkClick, consistentOpenMenus, conditionalOpenMenus } =
+    useOpenRelated({
+      href,
+      item,
     })
-  })
-
-  const onOpenInIINA = useMemoizedFn(() => {
-    let usingHref = href
-    if (item.api === 'watchlater') usingHref = `/video/${item.bvid}`
-    const fullHref = new URL(usingHref, location.href).href
-    const iinaUrl = `iina://open?url=${encodeURIComponent(fullHref)}`
-    window.open(iinaUrl, '_self')
-  })
-
-  const handleVideoLinkClick: MouseEventHandler = useMemoizedFn((e) => {
-    if (settings.videoLinkOpenMode !== VideoLinkOpenMode.Normal) {
-      e.preventDefault()
-      onOpenWithMode()
-    }
-  })
 
   /**
    * expose actions
@@ -467,16 +346,7 @@ const VideoCardInner = memo(function VideoCardInner({
     const watchLaterLabel = watchLaterAdded ? '移除稍后再看' : '稍后再看'
 
     return [
-      ...Object.values(VideoLinkOpenMode)
-        .filter((mode) => typeof VideoLinkOpenModeConfig[mode].enabled === 'undefined')
-        .map((mode) => {
-          return {
-            key: VideoLinkOpenModeKey[mode],
-            label: VideoLinkOpenModeConfig[mode].label,
-            icon: VideoLinkOpenModeConfig[mode].icon,
-            onClick: () => onOpenWithMode(mode),
-          }
-        }),
+      ...consistentOpenMenus,
 
       { type: 'divider' as const },
       {
@@ -608,29 +478,7 @@ const VideoCardInner = memo(function VideoCardInner({
           ]
         : []),
 
-      ...(Object.values(VideoLinkOpenMode).filter(
-        (mode) =>
-          typeof VideoLinkOpenModeConfig[mode].enabled === 'boolean' &&
-          VideoLinkOpenModeConfig[mode].enabled,
-      ).length
-        ? [
-            { type: 'divider' as const },
-            ...Object.values(VideoLinkOpenMode)
-              .filter(
-                (mode) =>
-                  typeof VideoLinkOpenModeConfig[mode].enabled === 'boolean' &&
-                  VideoLinkOpenModeConfig[mode].enabled,
-              )
-              .map((mode) => {
-                return {
-                  key: VideoLinkOpenModeKey[mode],
-                  label: VideoLinkOpenModeConfig[mode].label,
-                  icon: VideoLinkOpenModeConfig[mode].icon,
-                  onClick: () => onOpenWithMode(mode),
-                }
-              }),
-          ]
-        : []),
+      ...conditionalOpenMenus,
     ].filter(Boolean)
   }, [
     item,
@@ -642,6 +490,8 @@ const VideoCardInner = memo(function VideoCardInner({
     hasDynamicFeedFilterSelectUpEntry,
     favFolderNames,
     favFolderUrls,
+    consistentOpenMenus,
+    conditionalOpenMenus,
   ])
 
   const onContextMenuOpenChange = useMemoizedFn((open: boolean) => {
