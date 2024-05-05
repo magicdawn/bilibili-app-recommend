@@ -4,6 +4,7 @@ import type { RecItemType } from '$define'
 import { EApiType } from '$define/index.shared'
 import { settings } from '$modules/settings'
 import createEmotion, { type Emotion } from '@emotion/css/create-instance'
+import { useHover } from 'ahooks'
 import type { MouseEventHandler } from 'react'
 import RadixIconsOpenInNewWindow from '~icons/radix-icons/open-in-new-window'
 import {
@@ -222,21 +223,7 @@ function CloseButton({
   newHref: string
   _css: Emotion['css']
 }) {
-  const [hovering, setHovering] = useState(false)
-  useEffect(() => {
-    const el = pipWindow.document.documentElement
-    const on = () => setHovering(true)
-    const off = () => setHovering(false)
-
-    el.addEventListener('mouseenter', on)
-    el.addEventListener('mouseleave', off)
-
-    return () => {
-      el.removeEventListener('mouseenter', on)
-      el.addEventListener('mouseleave', off)
-    }
-  }, [])
-
+  const hovering = useHover(pipWindow.document.documentElement)
   const colorPrimary = useColorPrimaryHex()
 
   return (
