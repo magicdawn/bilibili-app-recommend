@@ -94,7 +94,7 @@ export function useOpenRelated({
         // 竖屏视频
         if (playerWidth < playerHeight) {
           popupWidth = 720
-          popupHeight = Math.floor((popupWidth / 9) * 16)
+          popupHeight = Math.floor((popupWidth / playerWidth) * playerHeight)
         }
       }
     }
