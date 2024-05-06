@@ -165,7 +165,7 @@ export function useCurrentTheme() {
   return useMemo(() => {
     const theme = ALL_THEMES.find((t) => t.id === themeId) || DEFAULT_BILI_PINK_THEME
     if (theme.id === COLOR_PICKER_THEME.id && colorPickerThemeSelectedColor) {
-      theme.colorPrimary = colorPickerThemeSelectedColor
+      return { ...theme, colorPrimary: colorPickerThemeSelectedColor }
     }
     return theme
   }, [themeId, colorPickerThemeSelectedColor])

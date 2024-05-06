@@ -88,10 +88,10 @@ export function useOpenRelated({ href, item }: { href: string; item: RecItemType
     }
 
     let pipWindow: Window | undefined
-    if ((globalThis as any).documentPictureInPicture?.requestWindow) {
+    if (window.documentPictureInPicture?.requestWindow) {
       try {
         // https://developer.chrome.com/docs/web-platform/document-picture-in-picture
-        pipWindow = await (globalThis as any).documentPictureInPicture.requestWindow({
+        pipWindow = await window.documentPictureInPicture.requestWindow({
           width: popupWidth,
           height: popupHeight,
           disallowReturnToOpener: true,
