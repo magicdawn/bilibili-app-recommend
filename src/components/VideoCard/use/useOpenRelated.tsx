@@ -2,12 +2,14 @@ import { APP_NAME_ROOT_CLASSNAME, baseDebug } from '$common'
 import { AntdApp } from '$components/AntdApp'
 import type { RecItemType } from '$define'
 import { EApiType } from '$define/index.shared'
-import { settings } from '$modules/settings'
+import { settings, useSettingsSnapshot } from '$modules/settings'
 import createEmotion from '@emotion/css/create-instance'
 import { useHover } from 'ahooks'
 import { Button } from 'antd'
+import { once } from 'lodash'
 import type { MouseEventHandler } from 'react'
 import RadixIconsOpenInNewWindow from '~icons/radix-icons/open-in-new-window'
+import { VideoCardActionButton } from '../child-components/VideoCardActions'
 import {
   VideoLinkOpenMode as Mode,
   VideoLinkOpenModeConfig as ModeConfig,
@@ -15,7 +17,7 @@ import {
   PlayerScreenMode,
   VideoLinkOpenMode,
   VideoLinkOpenModeKey,
-} from './index.shared'
+} from '../index.shared'
 
 const debug = baseDebug.extend('VideoCard:useOpenRelated')
 
@@ -23,7 +25,17 @@ const debug = baseDebug.extend('VideoCard:useOpenRelated')
  * 花式打开
  */
 
-export function useOpenRelated({ href, item }: { href: string; item: RecItemType }) {
+export function useOpenRelated({
+  href,
+  item,
+  actionButtonVisible,
+}: {
+  href: string
+  item: RecItemType
+  actionButtonVisible: boolean
+}) {
+  const { videoLinkOpenMode } = useSettingsSnapshot()
+
   function getHref(action?: (u: URL) => void) {
     const u = new URL(href, location.href)
     action?.(u)
@@ -141,6 +153,11 @@ export function useOpenRelated({ href, item }: { href: string; item: RecItemType
         <CloseButton newHref={newHref} pipWindow={pipWindow} />
       </AntdApp>,
     )
+
+    setTimeout(() => {
+      // focus original window
+      window.focus()
+    }, 500)
   }
 
   function openPopupWindow(newHref: string, popupWidth: number, popupHeight: number) {
@@ -203,16 +220,56 @@ export function useOpenRelated({ href, item }: { href: string; item: RecItemType
       : []
   }, [])
 
+  const openInPopupButtonEl = useMemo(() => {
+    return (
+      videoLinkOpenMode !== VideoLinkOpenMode.Popup && (
+        <VideoCardActionButton
+          visible={actionButtonVisible}
+          inlinePosition={'right'}
+          icon={ModeConfig.Popup.icon}
+          tooltip={ModeConfig.Popup.label}
+          onClick={(e) => {
+            e.preventDefault()
+            onOpenWithMode(VideoLinkOpenMode.Popup)
+          }}
+        />
+      )
+    )
+  }, [videoLinkOpenMode, actionButtonVisible])
+
+  const onOpenInPopup = useMemoizedFn(() => {
+    onOpenWithMode(VideoLinkOpenMode.Popup)
+  })
+
   return {
     onOpenWithMode,
     handleVideoLinkClick,
     consistentOpenMenus,
     conditionalOpenMenus,
+    openInPopupButtonEl,
+    onOpenInPopup,
   }
 }
 
 function CloseButton({ newHref, pipWindow }: { pipWindow: Window; newHref: string }) {
   const hovering = useHover(pipWindow.document.documentElement)
+
+  const focusOnce = useMemo(() => {
+    return once(() => {
+      window.focus()
+    })
+  }, [])
+  useKeyPress(
+    ['leftarrow', 'rightarrow', 'uparrow', 'downawrrow', 'esc', 'tab'],
+    (e) => {
+      focusOnce()
+    },
+    {
+      exactMatch: true,
+      target: pipWindow.document.documentElement,
+    },
+  )
+
   return (
     <Button
       onClick={(e) => {

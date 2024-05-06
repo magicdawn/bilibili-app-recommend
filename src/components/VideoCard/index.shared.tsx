@@ -108,6 +108,7 @@ export type VideoCardEvents = {
 
   // for normal card
   'open': undefined
+  'open-in-popup': undefined
   'toggle-watch-later': void
   'trigger-dislike': void
   'start-preview-animation': void

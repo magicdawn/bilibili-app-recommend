@@ -1,6 +1,7 @@
 import type { VideoCardEmitter } from '$components/VideoCard/index.shared'
 import { settings } from '$modules/settings'
 import { shouldDisableShortcut } from '$utility/dom'
+import type { KeyFilter, KeyType } from 'ahooks/lib/useKeyPress'
 import { videoGrid } from '../video-grid.module.scss'
 import { CardClassNames } from './index'
 
@@ -134,17 +135,31 @@ export function useShortcut({
     makeVisible(newActiveIndex)
   }
 
-  // by 1
-  useKeyPress('leftarrow', addActiveIndex(-1), { exactMatch: true })
-  useKeyPress('rightarrow', addActiveIndex(1), { exactMatch: true })
+  const useKey = (
+    keyFilter: KeyFilter,
+    eventHandler: (event: KeyboardEvent, key: KeyType) => void,
+  ) => {
+    useKeyPress(
+      keyFilter,
+      (event, key) => {
+        if (!isEnabled()) return
+        eventHandler(event, key)
+      },
+      { exactMatch: true },
+    )
+  }
 
-  useKeyPress('tab', addActiveIndex(1), { exactMatch: true })
-  useKeyPress('shift.tab', addActiveIndex(-1), { exactMatch: true })
+  // by 1
+  useKey('leftarrow', addActiveIndex(-1))
+  useKey('rightarrow', addActiveIndex(1))
+
+  useKey('tab', addActiveIndex(1))
+  useKey('shift.tab', addActiveIndex(-1))
 
   // by row
   // 不使用 getColCount 是因为, Separator 类型导致有空的位置
-  useKeyPress('uparrow', addActiveIndex('up'), { exactMatch: true })
-  useKeyPress('downarrow', addActiveIndex('down'), { exactMatch: true })
+  useKey('uparrow', addActiveIndex('up'))
+  useKey('downarrow', addActiveIndex('down'))
 
   // actions
   const clearActiveIndex = () => {
@@ -157,35 +172,13 @@ export function useShortcut({
     return videoCardEmitters[activeIndex]
   }
 
-  useKeyPress('esc', clearActiveIndex)
-  useKeyPress('enter', () => {
-    if (!isEnabled() || typeof activeIndex !== 'number') return
-    getActiveEmitter()?.emit('open')
-  })
-  useKeyPress('backspace', () => {
-    if (!isEnabled() || typeof activeIndex !== 'number') return
-    getActiveEmitter()?.emit('trigger-dislike')
-  })
-
-  // 稍候再看
-  // s 与 BILIBILI-Envoled 快捷键冲突
-  useKeyPress(
-    ['s', 'w'],
-    () => {
-      if (!isEnabled() || typeof activeIndex !== 'number') return
-      getActiveEmitter()?.emit('toggle-watch-later')
-    },
-    { exactMatch: true },
-  )
-
-  useKeyPress(
-    ['period', 'p'],
-    () => {
-      if (!isEnabled() || typeof activeIndex !== 'number') return
-      getActiveEmitter()?.emit('hotkey-preview-animation')
-    },
-    { exactMatch: true },
-  )
+  useKey('esc', clearActiveIndex)
+  useKey('enter', () => getActiveEmitter()?.emit('open'))
+  useKey('x', () => getActiveEmitter()?.emit('open-in-popup'))
+  useKey('backspace', () => getActiveEmitter()?.emit('trigger-dislike'))
+  // 稍候再看, s 与 BILIBILI-Envoled 快捷键冲突
+  useKey(['s', 'w'], () => getActiveEmitter()?.emit('toggle-watch-later'))
+  useKey(['period', 'p'], () => getActiveEmitter()?.emit('hotkey-preview-animation'))
 
   function getInitialIndex() {
     const scrollerRect = getScrollerRect()
@@ -231,8 +224,8 @@ export function useShortcut({
       return
     }
     // 下面
-    if (scrollerRect.bottom - rect.bottom < 10) {
-      const offset = 10 - (scrollerRect.bottom - rect.bottom)
+    if (scrollerRect.bottom - rect.bottom < 20) {
+      const offset = 20 - (scrollerRect.bottom - rect.bottom)
       changeScrollY?.({ offset })
       return
     }

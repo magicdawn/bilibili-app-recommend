@@ -26,6 +26,7 @@ import { tryit } from 'radash'
 import type { VideoData } from './card.service'
 import { fetchVideoData, watchLaterAdd } from './card.service'
 import { PreviewImage } from './child-components/PreviewImage'
+import { VideoCardActionStyle } from './child-components/VideoCardActions'
 import { VideoCardBottom } from './child-components/VideoCardBottom'
 import { BlacklistCard, DislikedCard, SkeletonCard } from './child-components/other-type-cards'
 import styles from './index.module.scss'
@@ -34,10 +35,10 @@ import { borderRadiusStyle, defaultEmitter } from './index.shared'
 import type { IVideoCardData } from './process/normalize'
 import { normalizeCardData } from './process/normalize'
 import { AppRecIconScaleMap, AppRecIconSvgNameMap, makeStatItem } from './stat-item'
-import { useDislikeRelated } from './useDislikeRelated'
-import { useOpenRelated } from './useOpenRelated'
-import { usePreviewAnimation } from './usePreviewAnimation'
-import { useWatchlaterRelated } from './useWatchlaterRelated'
+import { DislikeIcon, useDislikeRelated } from './use/useDislikeRelated'
+import { useOpenRelated } from './use/useOpenRelated'
+import { usePreviewAnimation } from './use/usePreviewAnimation'
+import { useWatchlaterRelated } from './use/useWatchlaterRelated'
 
 const debug = baseDebug.extend('components:VideoCard')
 
@@ -133,7 +134,7 @@ const VideoCardInner = memo(function VideoCardInner({
   onRefresh,
   emitter = defaultEmitter,
 }: VideoCardInnerProps) {
-  const { autoPreviewWhenHover, accessKey } = useSettingsSnapshot()
+  const { autoPreviewWhenHover, accessKey, videoLinkOpenMode } = useSettingsSnapshot()
   const authed = Boolean(accessKey)
 
   const {
@@ -214,21 +215,22 @@ const VideoCardInner = memo(function VideoCardInner({
     }
   }, [active])
 
+  const actionButtonVisible = active || isHovering
+
   // 稍候再看
-  const { watchlaterIconEl, onToggleWatchLater, watchLaterAdded, hasWatchLaterEntry } =
+  const { watchlaterButtonEl, onToggleWatchLater, watchLaterAdded, hasWatchLaterEntry } =
     useWatchlaterRelated({
       item,
       cardData,
       onRemoveCurrent,
-      active,
-      hoveringOnCover: isHovering,
+      actionButtonVisible,
     })
 
   // 不喜欢
-  const { dislikeIconEl, hasDislikeEntry, onTriggerDislike } = useDislikeRelated({
+  const { dislikeButtonEl, hasDislikeEntry, onTriggerDislike } = useDislikeRelated({
     item,
     authed,
-    hoveringOnCover: isHovering,
+    actionButtonVisible,
   })
 
   // 充电专属
@@ -251,17 +253,25 @@ const VideoCardInner = memo(function VideoCardInner({
   })
 
   // 打开视频卡片
-  const { onOpenWithMode, handleVideoLinkClick, consistentOpenMenus, conditionalOpenMenus } =
-    useOpenRelated({
-      href,
-      item,
-    })
+  const {
+    onOpenWithMode,
+    handleVideoLinkClick,
+    consistentOpenMenus,
+    conditionalOpenMenus,
+    openInPopupButtonEl,
+    onOpenInPopup,
+  } = useOpenRelated({
+    href,
+    item,
+    actionButtonVisible,
+  })
 
   /**
    * expose actions
    */
 
   useMittOn(emitter, 'open', onOpenWithMode)
+  useMittOn(emitter, 'open-in-popup', onOpenInPopup)
   useMittOn(emitter, 'toggle-watch-later', () => onToggleWatchLater())
   useMittOn(emitter, 'trigger-dislike', () => onTriggerDislike())
   useMittOn(emitter, 'start-preview-animation', onStartPreviewAnimation)
@@ -368,7 +378,7 @@ const VideoCardInner = memo(function VideoCardInner({
       hasDislikeEntry && {
         key: 'dislike',
         label: '我不想看',
-        icon: <IconPark name='DislikeTwo' size={15} />,
+        icon: <DislikeIcon width={15} height={15} />,
         onClick() {
           onTriggerDislike()
         },
@@ -548,17 +558,27 @@ const VideoCardInner = memo(function VideoCardInner({
                 />
               )}
 
-              {/* 稍后再看 */}
-              {watchlaterIconEl}
+              {dislikeButtonEl && (
+                <div className='left-actions' css={VideoCardActionStyle.top('left')}>
+                  {/* 我不想看 */}
+                  {dislikeButtonEl}
+                </div>
+              )}
 
-              {/* 我不想看 */}
-              {dislikeIconEl}
+              {(watchlaterButtonEl || openInPopupButtonEl) && (
+                <div className='right-actions' css={VideoCardActionStyle.top('right')}>
+                  {/* 稍后再看 */}
+                  {watchlaterButtonEl}
+                  {/* 小窗打开 */}
+                  {openInPopupButtonEl}
+                </div>
+              )}
 
               {/* 充电专属 */}
               {hasChargeTag && (
                 <div
-                  className={styles.chargeTagWrapper}
                   css={css`
+                    ${VideoCardActionStyle.top('left')}
                     padding: 1px 6px 1px 4px;
                     font-size: 10px;
                     color: #fff;

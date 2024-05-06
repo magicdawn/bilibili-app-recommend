@@ -1,6 +1,7 @@
 import { APP_NAME_ROOT_CLASSNAME, OPERATION_FAIL_MSG } from '$common'
 import { BaseModal, BaseModalClass, ModalClose } from '$components/BaseModal'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
+import { DislikeIcon } from '$components/VideoCard/use/useDislikeRelated'
 import type { AppRecItem, AppRecItemExtend } from '$define'
 import { IconPark } from '$icon-park'
 import { cx } from '$libs'
@@ -137,11 +138,18 @@ function ModalDislike({ show, onHide, item }: IProps) {
     >
       <div className={BaseModalClass.modalHeader}>
         <div className={BaseModalClass.modalTitle}>
-          我不想看
+          <DislikeIcon width={25} height={25} />
           <span
             css={css`
-              margin-left: 5px;
-              font-size: 40%;
+              margin-inline: 5px;
+            `}
+          >
+            我不想看
+          </span>
+          <span
+            css={css`
+              font-size: 60%;
+              margin-top: 7px;
             `}
           >
             (选择后将减少相似内容推荐)

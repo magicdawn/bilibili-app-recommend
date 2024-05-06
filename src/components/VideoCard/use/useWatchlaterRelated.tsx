@@ -1,14 +1,14 @@
 import { type RecItemType } from '$define'
 import { useWatchLaterState, watchLaterState } from '$modules/recommend/watchlater'
 import { AntdMessage } from '$utility'
-import { useHover, usePrevious } from 'ahooks'
+import { usePrevious } from 'ahooks'
 import delay from 'delay'
 import { motion } from 'framer-motion'
 import type { MouseEvent } from 'react'
-import type { VideoCardInnerProps } from '.'
-import { watchLaterAdd, watchLaterDel } from './card.service'
-import styles from './index.module.scss'
-import type { IVideoCardData } from './process/normalize'
+import type { VideoCardInnerProps } from '..'
+import { watchLaterAdd, watchLaterDel } from '../card.service'
+import { VideoCardActionButton } from '../child-components/VideoCardActions'
+import type { IVideoCardData } from '../process/normalize'
 
 /**
  * 稍候再看
@@ -17,22 +17,15 @@ export function useWatchlaterRelated({
   item,
   cardData,
   onRemoveCurrent,
-  hoveringOnCover,
-  active,
+  actionButtonVisible,
 }: {
   item: RecItemType
   cardData: IVideoCardData
   onRemoveCurrent: VideoCardInnerProps['onRemoveCurrent']
-  hoveringOnCover: boolean
-  active: boolean
+  actionButtonVisible: boolean
 }) {
   const { avid, bvid } = cardData
-
   const hasWatchLaterEntry = item.api !== 'app' || (item.api === 'app' && item.goto === 'av')
-
-  // 稍后再看 hover state
-  const _iconRef = useRef(null)
-  const _iconHovering = useHover(_iconRef)
 
   // watchLater added
   const watchLaterAdded = useWatchLaterState(bvid)
@@ -101,57 +94,41 @@ export function useWatchlaterRelated({
    * https://icones.js.org/collection/line-md?icon=line-md:confirm
    */
 
-  const watchlaterIconEl = (
-    <>
-      {hasWatchLaterEntry && (
-        <div
-          className={`${styles.watchLater}`}
-          style={{
-            display: hoveringOnCover || active ? 'flex' : 'none',
-          }}
-          ref={_iconRef}
-          onClick={onToggleWatchLater}
-        >
-          {watchLaterAdded ? (
-            <>
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                className={styles.watchLaterIcon}
-                viewBox='0 0 24 24'
-              >
-                <motion.path
-                  fill='transparent'
-                  stroke='currentColor'
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  strokeWidth='2'
-                  d='M5 11L11 17L21 7'
-                  {...(!watchLaterAddedPrevious
-                    ? {
-                        initial: { pathLength: 0 },
-                        animate: { pathLength: 1 },
-                        transition: { duration: 0.2, ease: 'easeInOut' },
-                      }
-                    : undefined)}
-                />
-              </svg>
-            </>
-          ) : (
-            <svg className={styles.watchLaterIcon}>
-              <use href={'#widget-watch-later'} />
-            </svg>
-          )}
-          {/* <use href={watchLaterAdded ? '#widget-watch-save' : '#widget-watch-later'} /> */}
-          <span
-            className={styles.watchLaterTip}
-            style={{ display: _iconHovering ? 'block' : 'none' }}
-          >
-            {watchLaterAdded ? '移除稍后再看' : '稍后再看'}
-          </span>
-        </div>
-      )}
-    </>
+  // <use href={watchLaterAdded ? '#widget-watch-save' : '#widget-watch-later'} />
+
+  const size = 20
+  const icon = watchLaterAdded ? (
+    <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width={size} height={size}>
+      <motion.path
+        fill='transparent'
+        stroke='currentColor'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+        strokeWidth='2'
+        d='M5 11L11 17L21 7'
+        {...(!watchLaterAddedPrevious
+          ? {
+              initial: { pathLength: 0 },
+              animate: { pathLength: 1 },
+              transition: { duration: 0.2, ease: 'easeInOut' },
+            }
+          : undefined)}
+      />
+    </svg>
+  ) : (
+    <svg width={size} height={size}>
+      <use href={'#widget-watch-later'} />
+    </svg>
+  )
+  const watchlaterButtonEl = hasWatchLaterEntry && (
+    <VideoCardActionButton
+      visible={actionButtonVisible}
+      inlinePosition='right'
+      icon={icon}
+      tooltip={watchLaterAdded ? '移除稍后再看' : '稍后再看'}
+      onClick={onToggleWatchLater}
+    />
   )
 
-  return { watchlaterIconEl, onToggleWatchLater, watchLaterAdded, hasWatchLaterEntry }
+  return { watchlaterButtonEl, onToggleWatchLater, watchLaterAdded, hasWatchLaterEntry }
 }

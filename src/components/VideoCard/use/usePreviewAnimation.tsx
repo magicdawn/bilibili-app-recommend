@@ -6,8 +6,8 @@ import { minmax } from '$utility/num'
 import { useEventListener, useMemoizedFn, useRafState, useUnmountedRef } from 'ahooks'
 import delay from 'delay'
 import type { MouseEvent } from 'react'
-import type { VideoData } from './card.service'
-import type { VideoCardEmitter } from './index.shared'
+import type { VideoData } from '../card.service'
+import type { VideoCardEmitter } from '../index.shared'
 
 const HOVER_DELAY = 800
 
