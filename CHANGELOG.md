@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.21.8
+
+- feat: 小窗打开悬浮按钮
+- feat: 我不想看, 更新图标
+
+details
+
+- a968344 feat: open-in-popup action button
+- e9ba8bd refactor: rename vars
+- dea080e chore: augment global interface Window
+- 084578f feat: use @ant-design/cssinjs StyleProvider in documentPictureInPicture
+- 0f30b73 refactor: simplify with useHover
+
 ## v0.21.7
 
 - feat: add VideoLinkOpenMode, 使用画中画增强 "小窗打开"
