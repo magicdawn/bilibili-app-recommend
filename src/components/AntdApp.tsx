@@ -3,9 +3,12 @@ import { $headerWidth } from '$header'
 import { useColors, useIsDarkMode } from '$modules/dark-mode'
 import { useSettingsSnapshot } from '$modules/settings'
 import { UseApp } from '$utility/antd-static'
-import { Global, css as _css, css } from '@emotion/react'
+import { StyleProvider, type StyleProviderProps } from '@ant-design/cssinjs'
+import { cache as emotionCssDefaultCache } from '@emotion/css'
+import { CacheProvider, Global, css as _css, css, type EmotionCache } from '@emotion/react'
 import { ConfigProvider, Tooltip, theme } from 'antd'
 import zhCN from 'antd/locale/zh_CN'
+import type { ComponentProps, ReactNode } from 'react'
 import {
   colorPrimaryIdentifier,
   colorPrimaryValue,
@@ -14,28 +17,43 @@ import {
 } from './ModalSettings/theme.shared'
 
 // https://github.com/emotion-js/emotion/issues/1105
-import { cache } from '@emotion/css'
-import { CacheProvider } from '@emotion/react'
-cache.compat = true
+emotionCssDefaultCache.compat = true
 
 // bilibili.com default: PingFang SC,HarmonyOS_Regular,Helvetica Neue,Microsoft YaHei,sans-serif
 const USING_FONT_FAMILY = 'HarmonyOS_Regular,PingFang SC,Helvetica Neue,Microsoft YaHei,sans-serif'
 // const USING_FONT_FAMILY = 'PingFang SC,HarmonyOS_Regular,Helvetica Neue,Microsoft YaHei,sans-serif'
 
+function compose(...fns: ((c: ReactNode) => ReactNode)[]) {
+  return function (c: ReactNode) {
+    return fns.reduceRight((content, fn) => fn(content), c)
+  }
+}
+
 export function AntdApp({
   children,
   injectGlobalStyle = false,
   renderAppComponent = false,
+  emotionCache = emotionCssDefaultCache,
+  styleProviderProps,
 }: {
   children: ReactNode
   injectGlobalStyle?: boolean
   renderAppComponent?: boolean
+  emotionCache?: EmotionCache
+  styleProviderProps?: StyleProviderProps
 }) {
   const dark = useIsDarkMode()
   const colorPrimary = useColorPrimaryHex()
 
-  return (
-    <CacheProvider value={cache}>
+  const wrap = compose(
+    // emotion cache
+    (c) => <CacheProvider value={emotionCache}>{c}</CacheProvider>,
+
+    // antd style
+    (c) => <StyleProvider {...styleProviderProps}>{c}</StyleProvider>,
+
+    // antd config
+    (c) => (
       <ConfigProvider
         locale={zhCN}
         button={{ autoInsertSpace: false }}
@@ -56,14 +74,17 @@ export function AntdApp({
           },
         }}
       >
-        {renderAppComponent && <UseApp />}
-        {injectGlobalStyle && <GlobalStyle />}
-
-        {/* using framer-motion UMD */}
-        {/* <LazyMotion features={domAnimation}>{children}</LazyMotion> */}
-        {children}
+        {c}
       </ConfigProvider>
-    </CacheProvider>
+    ),
+  )
+
+  return wrap(
+    <>
+      {renderAppComponent && <UseApp />}
+      {injectGlobalStyle && <GlobalStyle />}
+      {children}
+    </>,
   )
 }
 

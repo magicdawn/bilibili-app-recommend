@@ -272,6 +272,10 @@ export default defineConfig(({ command }) => ({
                   'dayjs_plugin_duration',
                   'plugin/duration.js',
                 ),
+
+                // https://github.com/ant-design/ant-design/issues/45262
+                '@ant-design/cssinjs': cdn.npmmirror('antdCssinjs', 'dist/umd/cssinjs.min.js'),
+
                 'antd': cdn.npmmirror('antd', 'dist/antd-with-locales.min.js'),
                 'antd/locale/zh_CN': 'antd.locales.zh_CN',
               }),

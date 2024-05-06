@@ -1,10 +1,11 @@
 import { APP_NAME_ROOT_CLASSNAME, baseDebug } from '$common'
-import { useColorPrimaryHex } from '$components/ModalSettings/theme.shared'
+import { AntdApp } from '$components/AntdApp'
 import type { RecItemType } from '$define'
 import { EApiType } from '$define/index.shared'
 import { settings } from '$modules/settings'
-import createEmotion, { type Emotion } from '@emotion/css/create-instance'
+import createEmotion from '@emotion/css/create-instance'
 import { useHover } from 'ahooks'
+import { Button } from 'antd'
 import type { MouseEventHandler } from 'react'
 import RadixIconsOpenInNewWindow from '~icons/radix-icons/open-in-new-window'
 import {
@@ -110,29 +111,25 @@ export function useOpenRelated({ href, item }: { href: string; item: RecItemType
   }
 
   function openPipWindow(newHref: string, pipWindow: Window) {
-    const { css } = createEmotion({
+    const cssInsertContainer = pipWindow.document.head
+    const { css, cache } = createEmotion({
       key: 'pip-window',
-      container: pipWindow.document.head,
+      container: cssInsertContainer,
     })
-
-    const Cls = {
-      reset: css`
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        height: 100%;
-      `,
-      iframe: css`
-        border: none;
-      `,
-    }
-
-    pipWindow.document.body.classList.add(Cls.reset)
 
     const iframe = document.createElement('iframe')
     iframe.src = newHref
-    iframe.classList.add(Cls.reset, Cls.iframe)
     pipWindow.document.body.append(iframe)
+
+    const resetCls = css`
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    `
+    pipWindow.document.body.classList.add(resetCls)
+    iframe.classList.add(resetCls)
 
     const container = document.createElement('div')
     container.classList.add(APP_NAME_ROOT_CLASSNAME)
@@ -140,9 +137,9 @@ export function useOpenRelated({ href, item }: { href: string; item: RecItemType
 
     const root = createRoot(container)
     root.render(
-      <>
-        <CloseButton newHref={newHref} pipWindow={pipWindow} _css={css} />
-      </>,
+      <AntdApp emotionCache={cache} styleProviderProps={{ container: cssInsertContainer }}>
+        <CloseButton newHref={newHref} pipWindow={pipWindow} />
+      </AntdApp>,
     )
   }
 
@@ -214,125 +211,32 @@ export function useOpenRelated({ href, item }: { href: string; item: RecItemType
   }
 }
 
-function CloseButton({
-  newHref,
-  pipWindow,
-  _css: css,
-}: {
-  pipWindow: Window
-  newHref: string
-  _css: Emotion['css']
-}) {
+function CloseButton({ newHref, pipWindow }: { pipWindow: Window; newHref: string }) {
   const hovering = useHover(pipWindow.document.documentElement)
-  const colorPrimary = useColorPrimaryHex()
-
   return (
-    <>
-      {/* 没法用 StyleProvider, antd 样式不生效啊~ */}
-      <button
-        onClick={(e) => {
-          pipWindow.close()
-          const u = new URL(newHref)
-          u.searchParams.delete(PLAYER_SCREEN_MODE)
-          GM.openInTab(u.href)
-        }}
-        className={css`
-          --ant-button-font-weight: 400;
-          --ant-button-default-shadow: 0 2px 0 rgba(0, 0, 0, 0.02);
-          --ant-button-primary-shadow: 0 2px 0 rgba(11, 99, 74, 0.16);
-          --ant-button-danger-shadow: 0 2px 0 rgba(255, 38, 5, 0.06);
-          --ant-button-primary-color: #fff;
-          --ant-button-danger-color: #fff;
-          --ant-button-border-color-disabled: #d9d9d9;
-          --ant-button-default-ghost-color: #ffffff;
-          --ant-button-ghost-bg: transparent;
-          --ant-button-default-ghost-border-color: #ffffff;
-          --ant-button-padding-inline: 15px;
-          --ant-button-padding-inline-lg: 15px;
-          --ant-button-padding-inline-sm: 7px;
-          --ant-button-only-icon-size: 16px;
-          --ant-button-only-icon-size-sm: 14px;
-          --ant-button-only-icon-size-lg: 18px;
-          --ant-button-group-border-color: #46b3a4;
-          --ant-button-link-hover-bg: transparent;
-          --ant-button-text-hover-bg: rgba(0, 0, 0, 0.06);
-          --ant-button-default-color: rgba(0, 0, 0, 0.88);
-          --ant-button-default-bg: #ffffff;
-          --ant-button-default-border-color: #d9d9d9;
-          --ant-button-default-border-color-disabled: #d9d9d9;
-          --ant-button-default-hover-bg: #ffffff;
-          --ant-button-default-hover-color: #46b3a4;
-          --ant-button-default-hover-border-color: #46b3a4;
-          --ant-button-default-active-bg: #ffffff;
-          --ant-button-default-active-color: #178079;
-          --ant-button-default-active-border-color: #178079;
-          --ant-button-content-font-size: 14px;
-          --ant-button-content-font-size-sm: 14px;
-          --ant-button-content-font-size-lg: 16px;
-          --ant-button-content-line-height: 1.5714285714285714;
-          --ant-button-content-line-height-sm: 1.5714285714285714;
-          --ant-button-content-line-height-lg: 1.5;
-          --ant-button-padding-block: 4px;
-          --ant-button-padding-block-sm: 0px;
-          --ant-button-padding-block-lg: 7px;
-          --ant-border-radius: 6px;
-          --ant-line-width: 1px;
-          --ant-line-type: solid;
-
-          appearance: button;
-          -webkit-appearance: button;
-
-          font-size: 13px;
-          line-height: 24px;
-
-          display: ${hovering ? 'flex' : 'none'};
-          align-items: center;
-          justify-content: center;
-
-          background: var(--ant-button-default-bg);
-          border-color: var(--ant-button-default-border-color);
-          color: var(--ant-button-default-color);
-          box-shadow: var(--ant-button-default-shadow);
-
-          height: var(--ant-control-height);
-          padding: var(--ant-button-padding-block) var(--ant-button-padding-inline);
-          border-radius: var(--ant-border-radius);
-
-          outline: none;
-          font-weight: var(--ant-button-font-weight);
-          white-space: nowrap;
-          text-align: center;
-          border: var(--ant-line-width) var(--ant-line-type) transparent;
-          cursor: pointer;
-          transition: all var(--ant-motion-duration-mid) var(--ant-motion-ease-in-out);
-          user-select: none;
-          touch-action: manipulation;
-          box-sizing: border-box;
-
-          position: fixed;
-          right: 10px;
-          top: 10px;
-
-          /* &:hover {
-            background: var(--ant-button-default-hover-bg);
-            border-color: var(--ant-button-default-hover-border-color);
-            color: var(--ant-button-default-hover-color);
-            box-shadow: var(--ant-button-default-hover-shadow);
-          } */
-          &:hover {
-            background: var(--ant-button-default-hover-bg);
-            border-color: ${colorPrimary};
-            color: ${colorPrimary};
-          }
+    <Button
+      onClick={(e) => {
+        pipWindow.close()
+        const u = new URL(newHref)
+        u.searchParams.delete(PLAYER_SCREEN_MODE)
+        GM.openInTab(u.href)
+      }}
+      css={css`
+        position: fixed;
+        right: 10px;
+        top: 10px;
+        display: ${hovering ? 'flex' : 'none'};
+        align-items: center;
+        text-align: center;
+        justify-content: center;
+      `}
+    >
+      <RadixIconsOpenInNewWindow
+        css={css`
+          margin-right: 5px;
         `}
-      >
-        <RadixIconsOpenInNewWindow
-          className={css`
-            margin-right: 5px;
-          `}
-        />
-        打开
-      </button>
-    </>
+      />
+      打开
+    </Button>
   )
 }
