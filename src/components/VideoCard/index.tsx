@@ -1,6 +1,6 @@
 import { APP_KEY_PREFIX, APP_NAME, baseDebug } from '$common'
 import { useMittOn } from '$common/hooks/useMitt'
-import { useRefState } from '$common/hooks/useRefState'
+import { useRefState$ } from '$common/hooks/useRefState'
 import { useDislikedReason } from '$components/ModalDislike'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import type { OnRefresh } from '$components/RecGrid/useRefresh'
@@ -161,14 +161,14 @@ const VideoCardInner = memo(function VideoCardInner({
     console.warn(`[${APP_NAME}]: none (av,bangumi,picture) goto type %s`, goto, item)
   }
 
-  const [videoData, setVideoData, accessVideoData] = useRefState<VideoData | null>(null)
+  const $videoData = useRefState$<VideoData | null>(null)
   const isFetchingVideoData = useRef(false)
   const tryFetchVideoData = useMemoizedFn(async () => {
-    if (videoData) return // already fetched
+    if ($videoData.val) return // already fetched
     if (isFetchingVideoData.current) return // fetching
     try {
       isFetchingVideoData.current = true
-      setVideoData(await fetchVideoData(bvid))
+      $videoData.set(await fetchVideoData(bvid))
     } finally {
       isFetchingVideoData.current = false
     }
@@ -193,7 +193,7 @@ const VideoCardInner = memo(function VideoCardInner({
     active,
     videoDuration: duration,
     tryFetchVideoData,
-    accessVideoData,
+    $videoData,
     autoPreviewWhenHover,
     videoPreviewWrapperRef,
   })
@@ -221,14 +221,14 @@ const VideoCardInner = memo(function VideoCardInner({
       cardData,
       onRemoveCurrent,
       active,
-      isHoveringAfterDelay,
+      hoveringOnCover: isHovering,
     })
 
   // 不喜欢
   const { dislikeIconEl, hasDislikeEntry, onTriggerDislike } = useDislikeRelated({
     item,
     authed,
-    isHoveringAfterDelay,
+    hoveringOnCover: isHovering,
   })
 
   // 充电专属
@@ -541,7 +541,7 @@ const VideoCardInner = memo(function VideoCardInner({
               {(isHoveringAfterDelay || typeof previewProgress === 'number') && (
                 <PreviewImage
                   videoDuration={duration}
-                  pvideo={videoData?.videoshotData}
+                  pvideo={$videoData.state?.videoshotData}
                   mouseEnterRelativeX={mouseEnterRelativeX}
                   previewProgress={previewProgress}
                   previewT={previewT}

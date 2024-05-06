@@ -1,6 +1,6 @@
 import { APP_NAME, __PROD__ } from '$common'
 import { useMittOn } from '$common/hooks/useMitt'
-import { useRef$, useRefState$ } from '$common/hooks/useRefState'
+import { useRef$, useRefState$, type RefState$ } from '$common/hooks/useRefState'
 import { settings } from '$modules/settings'
 import { minmax } from '$utility/num'
 import { useEventListener, useMemoizedFn, useRafState, useUnmountedRef } from 'ahooks'
@@ -21,7 +21,7 @@ export function usePreviewAnimation({
   active,
   videoDuration,
   tryFetchVideoData,
-  accessVideoData,
+  $videoData,
   autoPreviewWhenHover,
   videoPreviewWrapperRef,
 }: {
@@ -31,7 +31,7 @@ export function usePreviewAnimation({
   active: boolean
   videoDuration: number
   tryFetchVideoData: () => Promise<void>
-  accessVideoData: () => VideoData | null
+  $videoData: RefState$<VideoData | null>
   autoPreviewWhenHover: boolean
   videoPreviewWrapperRef: RefObject<HTMLDivElement>
 }) {
@@ -41,7 +41,7 @@ export function usePreviewAnimation({
       false
 
   const hasVideoData = useMemoizedFn(() => {
-    const data = accessVideoData()?.videoshotData
+    const data = $videoData.val?.videoshotData
     return Boolean(data?.index?.length && data?.image?.length)
   })
 
@@ -228,8 +228,7 @@ export function usePreviewAnimation({
     const runDuration = 8000
     const durationBoundary = [8_000, 16_000] as const
     {
-      const data = accessVideoData()
-      if (data) {
+      if ($videoData.val) {
         // const imgLen = data.videoshotData.index.length
         // runDuration = minmax(imgLen * 400, ...durationBoundary)
       }

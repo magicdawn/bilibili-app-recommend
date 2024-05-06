@@ -25,6 +25,7 @@ export function useRefState<T>(initialValue: T | (() => T)) {
   return [state, setStateWraped, getState] as const
 }
 
+export type RefState$<T> = ReturnType<typeof useRefState$<T>>
 export function useRefState$<T>(initialValue: T | (() => T)) {
   const [state, set, get] = useRefState(initialValue)
   return {
@@ -40,6 +41,7 @@ export function useRefState$<T>(initialValue: T | (() => T)) {
   }
 }
 
+export type Ref$<T> = ReturnType<typeof useRef$<T>>
 export function useRef$<T>(initialValue: T) {
   const ref = useRef(initialValue)
   const get = useCallback(() => ref.current, [])

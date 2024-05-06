@@ -8,14 +8,15 @@ import styles from './index.module.scss'
 /**
  * 我不想看
  */
+
 export function useDislikeRelated({
   item,
   authed,
-  isHoveringAfterDelay,
+  hoveringOnCover,
 }: {
   item: RecItemType
   authed: boolean
-  isHoveringAfterDelay: boolean
+  hoveringOnCover: boolean
 }) {
   const hasDislikeEntry = isApp(item) && authed && !!item.three_point?.dislike_reasons?.length
 
@@ -36,21 +37,24 @@ export function useDislikeRelated({
     showModalDislike(item)
   })
 
-  const _ref = useRef(null)
-  const _hovering = useHover(_ref)
+  const _iconRef = useRef(null)
+  const _iconHovering = useHover(_iconRef)
   const dislikeIconEl = (
     <>
       {hasDislikeEntry && (
         <div
-          ref={_ref}
+          ref={_iconRef}
           className={styles.btnDislike}
           onClick={onTriggerDislike}
-          style={{ display: isHoveringAfterDelay ? 'flex' : 'none' }}
+          style={{ display: hoveringOnCover ? 'flex' : 'none' }}
         >
           <svg className={styles.btnDislikeIcon}>
             <use href='#widget-close'></use>
           </svg>
-          <span className={styles.btnDislikeTip} style={{ display: _hovering ? 'block' : 'none' }}>
+          <span
+            className={styles.btnDislikeTip}
+            style={{ display: _iconHovering ? 'block' : 'none' }}
+          >
             我不想看
           </span>
         </div>

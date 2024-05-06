@@ -17,13 +17,13 @@ export function useWatchlaterRelated({
   item,
   cardData,
   onRemoveCurrent,
-  isHoveringAfterDelay,
+  hoveringOnCover,
   active,
 }: {
   item: RecItemType
   cardData: IVideoCardData
   onRemoveCurrent: VideoCardInnerProps['onRemoveCurrent']
-  isHoveringAfterDelay: boolean
+  hoveringOnCover: boolean
   active: boolean
 }) {
   const { avid, bvid } = cardData
@@ -31,14 +31,14 @@ export function useWatchlaterRelated({
   const hasWatchLaterEntry = item.api !== 'app' || (item.api === 'app' && item.goto === 'av')
 
   // 稍后再看 hover state
-  const watchLaterRef = useRef(null)
-  const isWatchLaterHovering = useHover(watchLaterRef)
+  const _iconRef = useRef(null)
+  const _iconHovering = useHover(_iconRef)
 
   // watchLater added
   const watchLaterAdded = useWatchLaterState(bvid)
   const watchLaterAddedPrevious = usePrevious(watchLaterAdd)
 
-  const requestingWatchLaterApi = useRef(false)
+  const _requesting = useRef(false)
   const onToggleWatchLater = useMemoizedFn(
     async (
       e?: MouseEvent,
@@ -52,14 +52,14 @@ export function useWatchlaterRelated({
         throw new Error('unexpected usingAction provided')
       }
 
-      if (requestingWatchLaterApi.current) return { success: false }
-      requestingWatchLaterApi.current = true
+      if (_requesting.current) return { success: false }
+      _requesting.current = true
 
       let success = false
       try {
         success = await usingAction(avid)
       } finally {
-        requestingWatchLaterApi.current = false
+        _requesting.current = false
       }
 
       const targetState = usingAction === watchLaterAdd ? true : false
@@ -107,9 +107,9 @@ export function useWatchlaterRelated({
         <div
           className={`${styles.watchLater}`}
           style={{
-            display: isHoveringAfterDelay || active ? 'flex' : 'none',
+            display: hoveringOnCover || active ? 'flex' : 'none',
           }}
-          ref={watchLaterRef}
+          ref={_iconRef}
           onClick={onToggleWatchLater}
         >
           {watchLaterAdded ? (
@@ -144,7 +144,7 @@ export function useWatchlaterRelated({
           {/* <use href={watchLaterAdded ? '#widget-watch-save' : '#widget-watch-later'} /> */}
           <span
             className={styles.watchLaterTip}
-            style={{ display: isWatchLaterHovering ? 'block' : 'none' }}
+            style={{ display: _iconHovering ? 'block' : 'none' }}
           >
             {watchLaterAdded ? '移除稍后再看' : '稍后再看'}
           </span>
