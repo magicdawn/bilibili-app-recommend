@@ -259,10 +259,15 @@ export function usePreviewAnimation({
         const p = minmax((elapsed % runDuration) / runDuration, 0, 1)
 
         // progress 一直动影响注意力, 但跳动感觉也不好, ...
-        // setPreviewProgress(p)
+        if (!settings.autoPreviewUseRealProgress) {
+          setPreviewProgress(p)
+        }
 
         if (!tUpdateAt || now - tUpdateAt >= getInterval()) {
-          setPreviewProgress(p)
+          // real progress: progress & t 一起更新
+          if (settings.autoPreviewUseRealProgress) {
+            setPreviewProgress(p)
+          }
 
           tUpdateAt = now
           if (videoDuration) {

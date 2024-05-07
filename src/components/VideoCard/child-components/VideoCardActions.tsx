@@ -4,7 +4,7 @@ import type { ComponentProps, ReactNode } from 'react'
 
 const baseZ = 3
 
-type InlinePosition = 'left' | 'right'
+export type InlinePosition = 'left' | 'right'
 
 const S = {
   top: (inlinePosition: InlinePosition) => css`
@@ -65,7 +65,7 @@ export function VideoCardActionButton({
   visible,
   ...divProps
 }: {
-  inlinePosition: 'left' | 'right'
+  inlinePosition: InlinePosition
   icon: ReactNode
   tooltip: string
   visible?: boolean

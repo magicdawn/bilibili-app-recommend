@@ -595,6 +595,18 @@ function TabPaneAdvance() {
           />
           <span style={{ width: '65px' }}>({autoPreviewUpdateInterval}ms)</span>
         </div>
+        <div>
+          <CheckboxSettingItem
+            configKey={'autoPreviewUseRealProgress'}
+            label='自动预览: 使用真实进度'
+            tooltip={
+              <>
+                ✅ 跳跃式进度条
+                <br />❎ 连续式进度条
+              </>
+            }
+          />
+        </div>
       </div>
     </div>
   )

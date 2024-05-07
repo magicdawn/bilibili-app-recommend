@@ -48,8 +48,11 @@ export const initialSettings = {
   // 自动开始预览
   autoPreviewWhenKeyboardSelect: false,
 
-  // 自动预览更新间隔
+  // 自动预览: 更新间隔
   autoPreviewUpdateInterval: 400,
+
+  // 自动预览: 真实进度条(跳跃式)
+  autoPreviewUseRealProgress: true,
 
   // 鼠标悬浮自动预览, 不再跟随鼠标位置, 默认: 跟随鼠标
   autoPreviewWhenHover: false,
