@@ -523,7 +523,16 @@ const VideoCardInner = memo(function VideoCardInner({
         trigger={['contextMenu']}
         onOpenChange={onContextMenuOpenChange}
       >
-        <a href={href} target='_blank' onClick={handleVideoLinkClick}>
+        <a
+          href={href}
+          target='_blank'
+          onClick={handleVideoLinkClick}
+          onContextMenu={(e) => {
+            // try to solve https://github.com/magicdawn/bilibili-app-recommend/issues/92
+            // can't reproduce on macOS
+            e.preventDefault()
+          }}
+        >
           <div
             className='bili-video-card__image __scale-player-wrap'
             ref={videoPreviewWrapperRef}
