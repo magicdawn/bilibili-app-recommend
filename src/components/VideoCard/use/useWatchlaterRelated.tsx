@@ -96,7 +96,7 @@ export function useWatchlaterRelated({
 
   // <use href={watchLaterAdded ? '#widget-watch-save' : '#widget-watch-later'} />
 
-  const size = 20
+  const size = 16
   const icon = watchLaterAdded ? (
     <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width={size} height={size}>
       <motion.path

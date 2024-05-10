@@ -27,7 +27,7 @@ const singleLine = styled.generateClassName`
   text-align: center;
 `
 
-export function toast(msg: string, duration = 2000) {
+export function toast(msg: string, duration = 2000, container = document.body) {
   const div = document.createElement('div')
   div.classList.add(toastContainer, APP_NAME_ROOT_CLASSNAME)
   div.innerText = msg
@@ -36,7 +36,7 @@ export function toast(msg: string, duration = 2000) {
     div.classList.add(singleLine)
   }
 
-  document.body.appendChild(div)
+  container.appendChild(div)
   setTimeout(() => div.remove(), duration)
 }
 

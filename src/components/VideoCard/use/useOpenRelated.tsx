@@ -1,14 +1,8 @@
-import { APP_NAME_ROOT_CLASSNAME, baseDebug } from '$common'
-import { AntdApp } from '$components/AntdApp'
+import { baseDebug } from '$common'
 import type { RecItemType } from '$define'
 import { EApiType } from '$define/index.shared'
 import { settings, useSettingsSnapshot } from '$modules/settings'
-import createEmotion from '@emotion/css/create-instance'
-import { useHover } from 'ahooks'
-import { Button } from 'antd'
-import { once } from 'lodash'
 import type { MouseEventHandler } from 'react'
-import RadixIconsOpenInNewWindow from '~icons/radix-icons/open-in-new-window'
 import { VideoCardActionButton } from '../child-components/VideoCardActions'
 import {
   VideoLinkOpenMode as Mode,
@@ -18,6 +12,7 @@ import {
   VideoLinkOpenMode,
   VideoLinkOpenModeKey,
 } from '../index.shared'
+import { openPipWindow } from './_pip-window'
 
 const debug = baseDebug.extend('VideoCard:useOpenRelated')
 
@@ -122,44 +117,6 @@ export function useOpenRelated({
     }
   }
 
-  function openPipWindow(newHref: string, pipWindow: Window) {
-    const cssInsertContainer = pipWindow.document.head
-    const { css, cache } = createEmotion({
-      key: 'pip-window',
-      container: cssInsertContainer,
-    })
-
-    const iframe = document.createElement('iframe')
-    iframe.src = newHref
-    pipWindow.document.body.append(iframe)
-
-    const resetCls = css`
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      border: none;
-    `
-    pipWindow.document.body.classList.add(resetCls)
-    iframe.classList.add(resetCls)
-
-    const container = document.createElement('div')
-    container.classList.add(APP_NAME_ROOT_CLASSNAME)
-    pipWindow.document.body.appendChild(container)
-
-    const root = createRoot(container)
-    root.render(
-      <AntdApp emotionCache={cache} styleProviderProps={{ container: cssInsertContainer }}>
-        <CloseButton newHref={newHref} pipWindow={pipWindow} />
-      </AntdApp>,
-    )
-
-    setTimeout(() => {
-      // focus original window
-      window.focus()
-    }, 500)
-  }
-
   function openPopupWindow(newHref: string, popupWidth: number, popupHeight: number) {
     // 将 left 减去 50px，你可以根据需要调整这个值
     const left = (window.innerWidth - popupWidth) / 2
@@ -249,51 +206,4 @@ export function useOpenRelated({
     openInPopupButtonEl,
     onOpenInPopup,
   }
-}
-
-function CloseButton({ newHref, pipWindow }: { pipWindow: Window; newHref: string }) {
-  const hovering = useHover(pipWindow.document.documentElement)
-
-  const focusOnce = useMemo(() => {
-    return once(() => {
-      window.focus()
-    })
-  }, [])
-  useKeyPress(
-    ['leftarrow', 'rightarrow', 'uparrow', 'downawrrow', 'esc', 'tab'],
-    (e) => {
-      focusOnce()
-    },
-    {
-      exactMatch: true,
-      target: pipWindow.document.documentElement,
-    },
-  )
-
-  return (
-    <Button
-      onClick={(e) => {
-        pipWindow.close()
-        const u = new URL(newHref)
-        u.searchParams.delete(PLAYER_SCREEN_MODE)
-        GM.openInTab(u.href)
-      }}
-      css={css`
-        position: fixed;
-        right: 10px;
-        top: 10px;
-        display: ${hovering ? 'flex' : 'none'};
-        align-items: center;
-        text-align: center;
-        justify-content: center;
-      `}
-    >
-      <RadixIconsOpenInNewWindow
-        css={css`
-          margin-right: 5px;
-        `}
-      />
-      打开
-    </Button>
-  )
 }
