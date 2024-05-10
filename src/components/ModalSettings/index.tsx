@@ -1,4 +1,5 @@
 import { APP_NAME, __PROD__ } from '$common'
+import { flexVerticalCenterStyle } from '$common/emotion-css'
 import { AccessKeyManage } from '$components/AccessKeyManage'
 import { AntdTooltip } from '$components/AntdApp'
 import { BaseModal, BaseModalClass, ModalClose } from '$components/BaseModal'
@@ -14,6 +15,7 @@ import type { BooleanSettingsKey } from '$modules/settings'
 import {
   allowedSettingsKeys,
   articleDraft,
+  initialSettings,
   resetSettings,
   settings,
   updateSettings,
@@ -104,7 +106,7 @@ const enum TabPaneKey {
 const tab = __PROD__
   ? TabPaneKey.basic
   : // for debug, free to change this
-    TabPaneKey.basic
+    TabPaneKey.advance
 const modalSettingsStore = proxy({ tab })
 
 export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => void }) {
@@ -448,13 +450,6 @@ function TabPaneBasic() {
               </>
             }
           />
-
-          {/* <FlagSettingItem
-            configKey='useDelayForHover'
-            label='鼠标悬浮延时'
-            className={styles.check}
-            tooltip={<>防止滚动页面时触发悬浮状态</>}
-          /> */}
         </div>
       </div>
 
@@ -580,8 +575,33 @@ function TabPaneAdvance() {
           </div>
         </div>
 
-        <div className={styles.settingsGroupTitle} style={{ marginTop: 15 }}>
+        <div
+          className={styles.settingsGroupTitle}
+          style={{ marginTop: 15, justifyContent: 'space-between' }}
+        >
           预览
+          <Popconfirm
+            title={'确认?'}
+            onConfirm={() => {
+              updateSettings({
+                autoPreviewUpdateInterval: initialSettings.autoPreviewUpdateInterval,
+                autoPreviewUseRealProgress: initialSettings.autoPreviewUseRealProgress,
+              })
+            }}
+          >
+            <Button
+              size='middle'
+              css={[
+                flexVerticalCenterStyle,
+                css`
+                  margin-left: 30px;
+                `,
+              ]}
+            >
+              <IconPark name='Return' size='16' style={{ marginRight: 4, marginTop: -1 }} />
+              重置
+            </Button>
+          </Popconfirm>
         </div>
         <div style={{ width: '100%', display: 'flex', alignItems: 'center' }}>
           自动预览更新间隔

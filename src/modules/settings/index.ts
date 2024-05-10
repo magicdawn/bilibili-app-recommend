@@ -36,7 +36,7 @@ export const initialSettings = {
   showModalFeedOnLoad: false,
 
   // "查看更多" 按钮
-  showModalFeedEntry: true,
+  showModalFeedEntry: false,
 
   // ModalFeed.全屏
   modalFeedFullScreen: false,
@@ -45,17 +45,18 @@ export const initialSettings = {
    * Video Card
    */
 
-  // 自动开始预览
+  // 自动开始预览: 按键选择
   autoPreviewWhenKeyboardSelect: false,
 
+  // 自动开始预览: 鼠标悬浮; 不再跟随鼠标位置, 默认: 跟随鼠标
+  autoPreviewWhenHover: true,
+
+  // 自动预览: 真实进度条(跳跃式) 非真实(连续式)
+  autoPreviewUseRealProgress: false,
+
   // 自动预览: 更新间隔
-  autoPreviewUpdateInterval: 400,
-
-  // 自动预览: 真实进度条(跳跃式)
-  autoPreviewUseRealProgress: true,
-
-  // 鼠标悬浮自动预览, 不再跟随鼠标位置, 默认: 跟随鼠标
-  autoPreviewWhenHover: false,
+  // 跳跃式(400) 连续式(700)
+  autoPreviewUpdateInterval: 700,
 
   // hover 延时
   useDelayForHover: false,

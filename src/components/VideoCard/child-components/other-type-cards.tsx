@@ -100,8 +100,6 @@ export const DislikedCard = memo(function DislikedCard({
 
   useMittOn(emitter, 'cancel-dislike', onCancelDislike)
 
-  const { cover, title } = cardData
-
   return (
     <div className={cx(styles.dislikedWrapper)}>
       <div className={styles.dislikeContentCover}>

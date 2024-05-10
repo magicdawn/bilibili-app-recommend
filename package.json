@@ -25,7 +25,7 @@
   "devDependencies": {
     "@biomejs/biome": "^1.7.3",
     "@emotion/babel-plugin": "^11.11.0",
-    "@iconify/json": "^2.2.207",
+    "@iconify/json": "^2.2.208",
     "@magicdawn/prettier-config": "^0.0.3",
     "@styled/typescript-styled-plugin": "^1.0.1",
     "@svgr/core": "^8.1.0",
@@ -47,7 +47,7 @@
     "dl-vampire": "^2.1.1",
     "eslint": "^9.2.0",
     "eslint-config-prettier": "^9.1.0",
-    "globals": "^15.1.0",
+    "globals": "^15.2.0",
     "husky": "^8.0.3",
     "knip": "^5.13.0",
     "lint-staged": "^15.2.2",
