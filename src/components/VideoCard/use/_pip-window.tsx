@@ -105,7 +105,7 @@ export function PipWindowContent({ newHref, pipWindow }: { pipWindow: Window; ne
 
 const S = {
   button: css`
-    border: 1px solid ${colorPrimaryValue};
+    /* border: 1px solid ${colorPrimaryValue}; */
     svg {
       width: 14px;
       height: 14px;

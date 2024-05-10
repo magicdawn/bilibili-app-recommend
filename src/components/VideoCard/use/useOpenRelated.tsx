@@ -187,6 +187,7 @@ export function useOpenRelated({
           tooltip={ModeConfig.Popup.label}
           onClick={(e) => {
             e.preventDefault()
+            e.stopPropagation()
             onOpenWithMode(VideoLinkOpenMode.Popup)
           }}
         />

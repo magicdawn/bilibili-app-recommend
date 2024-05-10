@@ -1,3 +1,4 @@
+import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import { css } from '@emotion/react'
 import { useHover } from 'ahooks'
 import type { ComponentProps, ReactNode } from 'react'
@@ -26,6 +27,12 @@ const S = {
     border-radius: 6px;
     cursor: pointer;
     background-color: rgba(33, 33, 33, 0.7);
+    border: 1px solid #444;
+    color: #fff;
+    &:hover {
+      border-color: ${colorPrimaryValue};
+      color: ${colorPrimaryValue};
+    }
 
     display: ${visible ? 'inline-flex' : 'none'};
     align-items: center;
@@ -35,7 +42,6 @@ const S = {
     svg {
       pointer-events: none;
       user-select: none;
-      color: #fff;
     }
   `,
 
@@ -48,12 +54,13 @@ const S = {
     user-select: none;
     transform: translateY(100%);
     font-size: 12px;
-    color: #fff;
+    white-space: nowrap;
     border-radius: 4px;
     line-height: 18px;
     padding: 4px 8px;
+    color: #fff;
     background-color: rgba(0, 0, 0, 0.8);
-    white-space: nowrap;
+    background-color: ${colorPrimaryValue};
   `,
 }
 export const VideoCardActionStyle = S
