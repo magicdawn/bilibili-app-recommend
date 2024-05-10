@@ -13,7 +13,6 @@ import {
   colorPrimaryIdentifier,
   colorPrimaryValue,
   useColorPrimaryHex,
-  useCurrentTheme,
 } from './ModalSettings/theme.shared'
 
 // https://github.com/emotion-js/emotion/issues/1105
@@ -89,7 +88,7 @@ export function AntdApp({
 }
 
 function GlobalStyle() {
-  const { colorPrimary } = useCurrentTheme()
+  const colorPrimary = useColorPrimaryHex()
   const { pureRecommend, styleUseCustomGrid, styleUseWhiteBackground } = useSettingsSnapshot()
   const { c, bg } = useColors()
 

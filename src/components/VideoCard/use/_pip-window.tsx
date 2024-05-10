@@ -118,6 +118,8 @@ function LockOverlay({ locked }: { locked: boolean }) {
   const [targetTimes, setTargetTimes] = useState(3)
   const { message } = App.useApp()
 
+  // TODO: enable drag
+
   return (
     locked && (
       <div
