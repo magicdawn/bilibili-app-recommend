@@ -585,7 +585,7 @@ function TabPaneAdvance() {
             onConfirm={() => {
               updateSettings({
                 autoPreviewUpdateInterval: initialSettings.autoPreviewUpdateInterval,
-                autoPreviewUseRealProgress: initialSettings.autoPreviewUseRealProgress,
+                autoPreviewUseContinuousProgress: initialSettings.autoPreviewUseContinuousProgress,
               })
             }}
           >
@@ -617,12 +617,12 @@ function TabPaneAdvance() {
         </div>
         <div>
           <CheckboxSettingItem
-            configKey={'autoPreviewUseRealProgress'}
-            label='自动预览: 使用真实进度'
+            configKey={'autoPreviewUseContinuousProgress'}
+            label='自动预览: 使用连续式进度条'
             tooltip={
               <>
-                ✅ 跳跃式进度条
-                <br />❎ 连续式进度条
+                ✅ 连续式进度条
+                <br />❎ 跳跃式进度条
               </>
             }
           />

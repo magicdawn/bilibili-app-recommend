@@ -25,35 +25,43 @@ export function useRefState<T>(initialValue: T | (() => T)) {
   return [state, setStateWraped, getState] as const
 }
 
-export type RefState$<T> = ReturnType<typeof useRefState$<T>>
-export function useRefState$<T>(initialValue: T | (() => T)) {
+export type RefStateBox<T> = ReturnType<typeof useRefStateBox<T>>
+export function useRefStateBox<T>(initialValue: T | (() => T)) {
   const [state, set, get] = useRefState(initialValue)
-  return {
-    state, // use state in render, other case use `.val`
-    get,
-    set,
-    get val() {
-      return get()
-    },
-    set val(newValue) {
-      set(newValue)
-    },
-  }
+  const box = useMemo(
+    () => ({
+      state, // use state in render, other case use `.val`
+      get,
+      set,
+      get val() {
+        return get()
+      },
+      set val(newValue) {
+        set(newValue)
+      },
+    }),
+    [get, set],
+  )
+  box.state = state // latest state
+  return box
 }
 
-export type Ref$<T> = ReturnType<typeof useRef$<T>>
-export function useRef$<T>(initialValue: T) {
+export type RefBox<T> = ReturnType<typeof useRefBox<T>>
+export function useRefBox<T>(initialValue: T) {
   const ref = useRef(initialValue)
   const get = useCallback(() => ref.current, [])
   const set = useCallback((newValue: T) => (ref.current = newValue), [])
-  return {
-    get,
-    set,
-    get val() {
-      return get()
-    },
-    set val(newValue: T) {
-      set(newValue)
-    },
-  }
+  return useMemo(
+    () => ({
+      get,
+      set,
+      get val() {
+        return get()
+      },
+      set val(newValue: T) {
+        set(newValue)
+      },
+    }),
+    [get, set],
+  )
 }

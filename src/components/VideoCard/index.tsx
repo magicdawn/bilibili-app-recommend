@@ -1,6 +1,6 @@
 import { APP_KEY_PREFIX, APP_NAME, baseDebug } from '$common'
 import { useMittOn } from '$common/hooks/useMitt'
-import { useRefState$ } from '$common/hooks/useRefState'
+import { useRefStateBox } from '$common/hooks/useRefState'
 import { useDislikedReason } from '$components/ModalDislike'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import type { OnRefresh } from '$components/RecGrid/useRefresh'
@@ -162,14 +162,14 @@ const VideoCardInner = memo(function VideoCardInner({
     console.warn(`[${APP_NAME}]: none (av,bangumi,picture) goto type %s`, goto, item)
   }
 
-  const $videoData = useRefState$<VideoData | null>(null)
+  const videoDataBox = useRefStateBox<VideoData | null>(null)
   const isFetchingVideoData = useRef(false)
   const tryFetchVideoData = useMemoizedFn(async () => {
-    if ($videoData.val) return // already fetched
+    if (videoDataBox.val) return // already fetched
     if (isFetchingVideoData.current) return // fetching
     try {
       isFetchingVideoData.current = true
-      $videoData.set(await fetchVideoData(bvid))
+      videoDataBox.set(await fetchVideoData(bvid))
     } finally {
       isFetchingVideoData.current = false
     }
@@ -194,7 +194,7 @@ const VideoCardInner = memo(function VideoCardInner({
     active,
     videoDuration: duration,
     tryFetchVideoData,
-    $videoData,
+    videoDataBox,
     autoPreviewWhenHover,
     videoPreviewWrapperRef,
   })
@@ -560,7 +560,7 @@ const VideoCardInner = memo(function VideoCardInner({
               {(isHoveringAfterDelay || typeof previewProgress === 'number') && (
                 <PreviewImage
                   videoDuration={duration}
-                  pvideo={$videoData.state?.videoshotData}
+                  pvideo={videoDataBox.state?.videoshotData}
                   mouseEnterRelativeX={mouseEnterRelativeX}
                   previewProgress={previewProgress}
                   previewT={previewT}
