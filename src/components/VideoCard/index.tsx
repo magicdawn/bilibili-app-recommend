@@ -557,15 +557,16 @@ const VideoCardInner = memo(function VideoCardInner({
 
               {/* preview */}
               {/* follow-mouse or manual-control */}
-              {(isHoveringAfterDelay || typeof previewProgress === 'number') && (
-                <PreviewImage
-                  videoDuration={duration}
-                  pvideo={videoDataBox.state?.videoshotData}
-                  mouseEnterRelativeX={mouseEnterRelativeX}
-                  previewProgress={previewProgress}
-                  previewT={previewT}
-                />
-              )}
+              {(isHoveringAfterDelay || typeof previewProgress === 'number') &&
+                videoDataBox.state?.videoshotData?.image?.length && (
+                  <PreviewImage
+                    videoDuration={duration}
+                    pvideo={videoDataBox.state?.videoshotData}
+                    mouseEnterRelativeX={mouseEnterRelativeX}
+                    previewProgress={previewProgress}
+                    previewT={previewT}
+                  />
+                )}
 
               {dislikeButtonEl && (
                 <div className='left-actions' css={VideoCardActionStyle.top('left')}>

@@ -1,7 +1,7 @@
-import { HOST_APP } from '$common'
+import { APP_NAME, HOST_APP } from '$common'
 import type { AppRecItem, DmJson, PvideoJson } from '$define'
 import { gmrequest, isWebApiSuccess, request } from '$request'
-import { getCsrfToken } from '$utility'
+import { AntdMessage, getCsrfToken } from '$utility'
 import { toast } from '$utility/toast'
 import QuickLRU from 'quick-lru'
 
@@ -15,7 +15,11 @@ export async function videoshot(bvid: string) {
   })
   const json = res.data as PvideoJson
 
-  // TODO: process errors
+  if (!isWebApiSuccess(json)) {
+    console.warn('[%s] videoshot error for %s: %o', APP_NAME, bvid, json)
+    const msg = `${bvid}: ${json?.message} 错误代码:${json?.code}`
+    AntdMessage.warning(msg)
+  }
 
   return json.data
 }
@@ -50,7 +54,7 @@ export async function fetchVideoData(bvid: string) {
   cache.set(bvid, { videoshotData, dmData })
 
   // load images
-  const imgs = videoshotData.image.slice(0, 3)
+  const imgs = (videoshotData?.image || []).slice(0, 3)
   await Promise.all(
     imgs.map((src) => {
       return new Promise<boolean>((resolve) => {
