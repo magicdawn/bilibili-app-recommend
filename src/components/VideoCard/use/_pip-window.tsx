@@ -1,11 +1,13 @@
 import { APP_NAME_ROOT_CLASSNAME } from '$common'
 import { AntdApp } from '$components/AntdApp'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
+import { isEdge } from '$platform'
 import createEmotion from '@emotion/css/create-instance'
 import { Global } from '@emotion/react'
 import { useHover } from 'ahooks'
 import { App } from 'antd'
 import { once } from 'lodash'
+import RadixIconsCross2 from '~icons/radix-icons/cross-2'
 import RadixIconsLockClosed from '~icons/radix-icons/lock-closed'
 import RadixIconsLockOpen1 from '~icons/radix-icons/lock-open-1'
 import RadixIconsOpenInNewWindow from '~icons/radix-icons/open-in-new-window'
@@ -55,7 +57,15 @@ export function PipWindowContent({ newHref, pipWindow }: { pipWindow: Window; ne
   )
 
   const hovering = useHover(pipWindow.document.documentElement)
-  const [locked, setLocked] = useState(true)
+
+  const [locked, setLocked] = useState(() => {
+    // edge pipWindow 总是静音开播, 需要交互, so locked = false
+    if (isEdge) {
+      return false
+    }
+
+    return true
+  })
 
   return (
     <>
@@ -92,11 +102,13 @@ export function PipWindowContent({ newHref, pipWindow }: { pipWindow: Window; ne
           right: 10px;
           top: 10px;
           display: ${hovering ? 'flex' : 'none'};
-          column-gap: 8px;
+          column-gap: 6px;
           flex-direction: row-reverse;
         `}
       >
-        <CloseButton pipWindow={pipWindow} newHref={newHref} />
+        {/* edge 没有 title-bar, 无法关闭 pipWindow, 无法拖动; so 加个关闭按钮 */}
+        {isEdge && <CloseButton pipWindow={pipWindow} />}
+        <CloseThenOpenButton pipWindow={pipWindow} newHref={newHref} />
         <LockButton locked={locked} setLocked={setLocked} />
       </div>
     </>
@@ -145,12 +157,12 @@ function LockOverlay({ locked }: { locked: boolean }) {
   )
 }
 
-function CloseButton({ newHref, pipWindow }: { pipWindow: Window; newHref: string }) {
+function CloseThenOpenButton({ newHref, pipWindow }: { pipWindow: Window; newHref: string }) {
   const onClick = () => {
     pipWindow.close()
     const u = new URL(newHref)
     u.searchParams.delete(PLAYER_SCREEN_MODE)
-    GM.openInTab(u.href)
+    GM.openInTab(u.href, { active: true })
   }
 
   return (
@@ -160,6 +172,20 @@ function CloseButton({ newHref, pipWindow }: { pipWindow: Window; newHref: strin
       tooltip={'新窗口打开'}
       onClick={onClick}
       css={S.button}
+    />
+  )
+}
+
+function CloseButton({ pipWindow }: { pipWindow: Window }) {
+  return (
+    <VideoCardActionButton
+      inlinePosition={'right'}
+      icon={<RadixIconsCross2 />}
+      tooltip={'关闭'}
+      css={S.button}
+      onClick={() => {
+        pipWindow.close()
+      }}
     />
   )
 }
