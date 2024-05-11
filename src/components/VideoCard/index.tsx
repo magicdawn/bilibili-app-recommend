@@ -558,7 +558,7 @@ const VideoCardInner = memo(function VideoCardInner({
               {/* preview */}
               {/* follow-mouse or manual-control */}
               {(isHoveringAfterDelay || typeof previewProgress === 'number') &&
-                videoDataBox.state?.videoshotData?.image?.length && (
+                !!videoDataBox.state?.videoshotData?.image?.length && (
                   <PreviewImage
                     videoDuration={duration}
                     pvideo={videoDataBox.state?.videoshotData}
