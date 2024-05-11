@@ -1,5 +1,25 @@
 # Changelog
 
+## v0.21.9
+
+details
+
+- b392268 fix: react num => boolean
+- e6e1270 fix: videoshot images may be empty
+- 238fb4a feat: FullScreen 更新为更实用的 WebFullscreen
+- 266a9c8 refactor: rename hooks to {BlaBla}Box
+- a43725c feat: take care of colors
+- 2a9d045 fix: Fix B-Evolved colorPrimary not working issue
+- ab5b039 feat: support lock in pipWindow
+- 7f1a12b feat: modify default settings to self prefered
+- b9e56f5 chore: add preventDefault for VideoCard onContextMenu
+- ce1af6a Merge branch 'main' of github.com:magicdawn/bilibili-app-recommend
+- 4127273 deps: ncu
+- 2cb1931 Merge pull request #91 from magicdawn/dependabot/github_actions/pnpm/action-setup-4
+- dc68be7 chore(deps): bump pnpm/action-setup from 3 to 4
+- 1dab625 feat: new settings key 'autoPreviewUseRealProgress'
+- 938c0a7 feat: use real aspect-ratio in popup window
+
 ## v0.21.8
 
 - feat: 小窗打开悬浮按钮
