@@ -31,7 +31,8 @@ const S = {
     color: #fff;
     &:hover {
       border-color: ${colorPrimaryValue};
-      color: ${colorPrimaryValue};
+      /* 看不清, 就用 #fff 即可 */
+      /* color: ${colorPrimaryValue}; */
     }
 
     display: ${visible ? 'inline-flex' : 'none'};

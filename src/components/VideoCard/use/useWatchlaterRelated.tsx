@@ -96,9 +96,15 @@ export function useWatchlaterRelated({
 
   // <use href={watchLaterAdded ? '#widget-watch-save' : '#widget-watch-later'} />
 
-  const size = 16
+  const addSize = 15
+  const addedSize = 18
   const icon = watchLaterAdded ? (
-    <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width={size} height={size}>
+    <svg
+      xmlns='http://www.w3.org/2000/svg'
+      viewBox='0 0 24 24'
+      width={addedSize}
+      height={addedSize}
+    >
       <motion.path
         fill='transparent'
         stroke='currentColor'
@@ -116,7 +122,7 @@ export function useWatchlaterRelated({
       />
     </svg>
   ) : (
-    <svg width={size} height={size}>
+    <svg width={addSize} height={addSize}>
       <use href={'#widget-watch-later'} />
     </svg>
   )

@@ -49,10 +49,7 @@ export function useOpenRelated({
     mode ||= settings.videoLinkOpenMode
 
     const newHref = getHref((u) => {
-      if (mode === Mode.NormalFullscreen) {
-        u.searchParams.set(PLAYER_SCREEN_MODE, PlayerScreenMode.Fullscreen)
-      }
-      if (mode === Mode.Popup) {
+      if (mode === Mode.Popup || mode === Mode.NormalWebFullscreen) {
         u.searchParams.set(PLAYER_SCREEN_MODE, PlayerScreenMode.WebFullscreen)
       }
     })
@@ -68,7 +65,7 @@ export function useOpenRelated({
     const handlers: Record<Mode, () => void> = {
       [Mode.Normal]: commonOpen,
       [Mode.Background]: commonOpen,
-      [Mode.NormalFullscreen]: commonOpen,
+      [Mode.NormalWebFullscreen]: commonOpen,
       [Mode.Popup]: () => openInPipOrPopup(newHref),
       [Mode.Iina]: openInIINA,
     }

@@ -24,7 +24,7 @@ export enum PlayerScreenMode {
 
 export enum VideoLinkOpenMode {
   Normal = 'Normal',
-  NormalFullscreen = 'NormalFullscreen',
+  NormalWebFullscreen = 'NormalWebFullscreen',
   Popup = 'Popup',
   Background = 'Background',
   Iina = 'Iina',
@@ -52,16 +52,10 @@ export const VideoLinkOpenModeConfig: Record<VideoLinkOpenMode, VideoLinkOpenMod
     label: '打开',
     desc: '默认新窗口打开',
   },
-  [VideoLinkOpenMode.NormalFullscreen]: {
+  [VideoLinkOpenMode.NormalWebFullscreen]: {
     icon: <RiFullscreenFill width={15} height={15} />,
-    label: '打开-全屏',
-    desc: (
-      <>
-        默认新窗口打开, 打开后自动全屏
-        <br />
-        注: 由于浏览器限制, 需要任意用户交互(如鼠标移动 / 鼠标点击 / 键盘按键)才能自动全屏
-      </>
-    ),
+    label: '打开-网页全屏',
+    desc: <>默认新窗口打开, 打开后自动网页全屏</>,
   },
   [VideoLinkOpenMode.Popup]: {
     icon: <BiPip width={13} height={13} />,

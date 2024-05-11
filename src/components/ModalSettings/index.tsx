@@ -392,7 +392,7 @@ function TabPaneBasic() {
                         display: inline-flex;
                         align-items: center;
                         .text {
-                          min-width: 65px;
+                          min-width: 95px;
                           margin-left: 4px;
                           margin-right: 10px;
                         }

@@ -92,6 +92,9 @@ importers:
       p-event:
         specifier: ^6.0.1
         version: 6.0.1
+      polished:
+        specifier: ^4.3.1
+        version: 4.3.1
       promise.map:
         specifier: ^0.5.0
         version: 0.5.0
@@ -2825,6 +2828,10 @@ packages:
 
   pkg-types@1.1.0:
     resolution: {integrity: sha512-/RpmvKdxKf8uILTtoOhAgf30wYbP2Qw+L9p3Rvshx1JZVX+XQNZQFjlbmGHEGIm4CkVPlSn+NXmIM8+9oWQaSA==}
+
+  polished@4.3.1:
+    resolution: {integrity: sha512-OBatVyC/N7SCW/FaDHrSd+vn0o5cS855TOmYi4OkdWUMSJCET/xip//ch8xGUvtr3i44X9LVyWwQlRMTN3pwSA==}
+    engines: {node: '>=10'}
 
   postcss-media-minmax@5.0.0:
     resolution: {integrity: sha512-yDUvFf9QdFZTuCUg0g0uNSHVlJ5X1lSzDZjPSFaiCWvjgsvu8vEVxtahPrLMinIDEEGnx6cBe6iqdx5YWz08wQ==}
@@ -6571,6 +6578,10 @@ snapshots:
       confbox: 0.1.7
       mlly: 1.7.0
       pathe: 1.1.2
+
+  polished@4.3.1:
+    dependencies:
+      '@babel/runtime': 7.24.5
 
   postcss-media-minmax@5.0.0(postcss@8.4.38):
     dependencies:
