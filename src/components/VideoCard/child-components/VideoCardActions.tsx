@@ -1,4 +1,5 @@
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
+import { cx } from '$libs'
 import { css } from '@emotion/react'
 import { useHover } from 'ahooks'
 import type { ComponentProps, ReactNode } from 'react'
@@ -71,6 +72,7 @@ export function VideoCardActionButton({
   icon,
   tooltip,
   visible,
+  className,
   ...divProps
 }: {
   inlinePosition: InlinePosition
@@ -82,7 +84,12 @@ export function VideoCardActionButton({
   const hovering = useHover(wrapper)
   visible ??= true
   return (
-    <div ref={wrapper} css={[S.button(visible)]} {...divProps} className='action-button'>
+    <div
+      {...divProps}
+      ref={wrapper}
+      css={[S.button(visible)]}
+      className={cx('action-button', className)}
+    >
       {icon}
       <span style={{ display: hovering ? 'block' : 'none' }} css={S.tooltip(inlinePosition)}>
         {tooltip}
