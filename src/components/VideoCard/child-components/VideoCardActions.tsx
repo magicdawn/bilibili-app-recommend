@@ -82,7 +82,7 @@ export function VideoCardActionButton({
   const hovering = useHover(wrapper)
   visible ??= true
   return (
-    <div ref={wrapper} css={[S.button(visible)]} {...divProps}>
+    <div ref={wrapper} css={[S.button(visible)]} {...divProps} className='action-button'>
       {icon}
       <span style={{ display: hovering ? 'block' : 'none' }} css={S.tooltip(inlinePosition)}>
         {tooltip}
