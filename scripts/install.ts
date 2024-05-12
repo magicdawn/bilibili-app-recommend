@@ -1,3 +1,4 @@
+#!/usr/bin/env tsx
 // #!/usr/bin/env bun
 // #!/usr/bin/env ts-node
 

@@ -53,18 +53,19 @@ export async function fetchVideoData(bvid: string) {
   const dmData: string[] = []
   cache.set(bvid, { videoshotData, dmData })
 
-  // load images
-  const imgs = (videoshotData?.image || []).slice(0, 3)
-  await Promise.all(
-    imgs.map((src) => {
-      return new Promise<boolean>((resolve) => {
-        const img = new Image()
-        img.src = src
-        img.onload = () => resolve(true)
-        img.onerror = () => resolve(false)
-      })
-    }),
-  )
+  function preloadImg(src: string) {
+    return new Promise<boolean>((resolve) => {
+      const img = new Image()
+      img.src = src
+      img.onload = () => resolve(true)
+      img.onerror = () => resolve(false)
+    })
+  }
+
+  // preload first 3 imgs, then preload rest without waiting
+  const imgs = videoshotData?.image || []
+  await Promise.all(imgs.slice(0, 3).map(preloadImg))
+  imgs.slice(3).map(preloadImg) // without wait
 
   return { videoshotData, dmData }
 }
