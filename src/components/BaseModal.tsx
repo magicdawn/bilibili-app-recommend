@@ -1,13 +1,82 @@
 import { APP_NAME_ROOT_CLASSNAME } from '$common'
 import { IconPark } from '$icon-park'
-import { cx } from '$libs'
 import { useIsDarkMode } from '$modules/dark-mode'
-import type { SerializedStyles } from '@emotion/react'
-import type { MouseEvent } from 'react'
+import type { TheCssType } from '$utility/type'
+import type { ComponentProps, MouseEvent } from 'react'
 import { createPortal } from 'react-dom'
-import BaseModalClass from './BaseModal.module.scss'
 
-export { BaseModalClass }
+export const BaseModalStyle = {
+  modalMask: css`
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 10002;
+
+    // make .model center
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  `,
+
+  modal: css`
+    width: 500px;
+    max-height: calc(90vh - 50px);
+
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 0 15px 15px 15px;
+
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  `,
+
+  modalHeader: css`
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-bottom: none;
+    display: flex;
+    align-items: center;
+  `,
+
+  modalBody: css`
+    padding-top: 0;
+    flex-grow: 1;
+    overflow-y: scroll;
+  `,
+
+  modalTitle: css`
+    font-size: 1.5rem;
+    margin-bottom: 0;
+    line-height: 1.5;
+    display: flex;
+    align-items: center;
+  `,
+
+  btnClose: css`
+    margin-left: 10px;
+
+    svg {
+      width: 10px;
+      height: 10px;
+      margin-right: 3px;
+      margin-top: -1px;
+    }
+
+    :global(body.dark) & {
+      color: #eee !important;
+      background-color: #333 !important;
+      border-color: transparent !important;
+      height: auto;
+      padding: 8px 12px;
+      line-height: 16px;
+      font-size: 13px;
+    }
+  `,
+}
 
 interface IProps {
   show: boolean
@@ -15,13 +84,11 @@ interface IProps {
   children: ReactNode
 
   // classNames
-  styleModalMask?: CSSProperties
   clsModalMask?: string
-  cssModalMask?: SerializedStyles
+  cssModalMask?: TheCssType
 
-  styleModal?: CSSProperties
   clsModal?: string
-  cssModal?: SerializedStyles
+  cssModal?: TheCssType
 
   width?: CSSProperties['width']
 
@@ -48,10 +115,9 @@ export function BaseModal({
   onHide,
   children,
 
-  styleModalMask,
   clsModalMask,
   cssModalMask,
-  styleModal,
+
   clsModal,
   cssModal,
 
@@ -138,15 +204,14 @@ export function BaseModal({
 
   return createPortal(
     <div
-      style={styleModalMask}
-      className={cx(BaseModalClass.modalMask, clsModalMask)}
-      css={cssModalMask}
+      className={clsModalMask}
+      css={[BaseModalStyle.modalMask, cssModalMask]}
       onClick={onMaskClick}
     >
       <div
-        style={{ ...wrapperStyle, width, ...styleModal }}
-        className={cx(BaseModalClass.modal, clsModal)}
-        css={cssModal}
+        style={{ ...wrapperStyle, width }}
+        className={clsModal}
+        css={[BaseModalStyle.modal, cssModal]}
         ref={wrapperRef}
       >
         {children}

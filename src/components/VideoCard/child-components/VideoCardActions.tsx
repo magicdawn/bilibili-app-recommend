@@ -15,7 +15,10 @@ const S = {
     ${inlinePosition}: 8px;
     transform: translateZ(0);
     z-index: ${baseZ + 2};
+  `,
 
+  topContainer: (inlinePosition: InlinePosition) => css`
+    ${S.top(inlinePosition)}
     display: flex;
     flex-direction: ${inlinePosition === 'left' ? 'row' : 'row-reverse'};
     column-gap: 5px;

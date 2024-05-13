@@ -1,0 +1,161 @@
+import { CheckboxSettingItem, HelpInfo, SwitchSettingItem } from '$components/piece'
+import { cx } from '$libs'
+import { updateSettings, useSettingsSnapshot } from '$modules/settings'
+import { InputNumber } from 'antd'
+import { EditableListSettingItem } from '../EditableListSettingItem'
+import styles from '../index.module.scss'
+
+export function TabPaneFilter() {
+  const {
+    filterEnabled,
+    filterMinPlayCount,
+    filterMinPlayCountEnabled,
+    filterMinDuration,
+    filterMinDurationEnabled,
+    filterOutGotoTypePicture,
+    filterByAuthorNameEnabled,
+    filterByTitleEnabled,
+  } = useSettingsSnapshot()
+
+  return (
+    <div className={styles.tabPane}>
+      <div className={styles.settingsGroup}>
+        <div className={styles.settingsGroupTitle}>
+          内容过滤
+          <HelpInfo iconProps={{ name: 'Tips' }}>
+            启用过滤会大幅降低加载速度, 谨慎开启! <br />
+            仅推荐类 Tab 生效
+          </HelpInfo>
+          <SwitchSettingItem
+            configKey='filterEnabled'
+            css={css`
+              margin-left: 10px;
+            `}
+          />
+        </div>
+
+        <div className={cx(styles.settingsGroupContent)}>
+          <div
+            css={css`
+              display: grid;
+              grid-template-columns: repeat(2, minmax(0, 1fr));
+              column-gap: 20px;
+              row-gap: 15px;
+            `}
+          >
+            <div className='col'>
+              <div className={styles.settingsGroupSubTitle}>视频</div>
+              <div className={styles.row}>
+                <CheckboxSettingItem
+                  disabled={!filterEnabled}
+                  configKey='filterMinPlayCountEnabled'
+                  label='按播放量过滤'
+                  tooltip={<>不显示播放量很少的视频</>}
+                />
+                <InputNumber
+                  size='small'
+                  min={1}
+                  step={1000}
+                  value={filterMinPlayCount}
+                  onChange={(val) => val && updateSettings({ filterMinPlayCount: val })}
+                  disabled={!filterEnabled || !filterMinPlayCountEnabled}
+                />
+              </div>
+              <div className={styles.row} style={{ marginTop: 3 }}>
+                <CheckboxSettingItem
+                  configKey='filterMinDurationEnabled'
+                  label='按视频时长过滤'
+                  tooltip={<>不显示短视频</>}
+                  disabled={!filterEnabled}
+                />
+                <InputNumber
+                  style={{ width: 150 }}
+                  size='small'
+                  min={1}
+                  step={10}
+                  addonAfter={'单位:秒'}
+                  value={filterMinDuration}
+                  onChange={(val) => val && updateSettings({ filterMinDuration: val })}
+                  disabled={!filterEnabled || !filterMinDurationEnabled}
+                />
+              </div>
+              <CheckboxSettingItem
+                className={styles.row}
+                style={{ marginTop: 3 }}
+                configKey='enableFilterForFollowedVideo'
+                label='对「已关注」的视频启用过滤'
+                tooltip={<>默认不过滤「已关注」</>}
+                disabled={!filterEnabled}
+              />
+            </div>
+
+            <div className='col'>
+              <div className={styles.settingsGroupSubTitle}>图文</div>
+              <CheckboxSettingItem
+                className={styles.row}
+                configKey='filterOutGotoTypePicture'
+                label='启用图文(动态 & 专栏)过滤'
+                tooltip={<>过滤掉图文推荐</>}
+                disabled={!filterEnabled}
+              />
+              <CheckboxSettingItem
+                className={styles.row}
+                disabled={!filterEnabled || !filterOutGotoTypePicture}
+                configKey='enableFilterForFollowedPicture'
+                label='对「已关注」的图文启用过滤'
+                tooltip={<>默认不过滤「已关注」</>}
+              />
+            </div>
+
+            <div className='col'>
+              <div className={styles.settingsGroupSubTitle}>
+                UP
+                <HelpInfo>
+                  根据 UP 过滤视频
+                  <br />
+                  P.S B站官方支持黑名单, 对于不喜欢的 UP 可以直接拉黑
+                  <br />
+                  P.S 这里是客户端过滤, 与黑名单功能重复, 后期版本可能会删除这个功能
+                </HelpInfo>
+                <SwitchSettingItem
+                  configKey='filterByAuthorNameEnabled'
+                  disabled={!filterEnabled}
+                  css={css`
+                    margin-left: 10px;
+                  `}
+                />
+              </div>
+              <EditableListSettingItem
+                configKey={'filterByAuthorNameKeywords'}
+                searchProps={{ placeholder: '添加 UP全名 / UP mid' }}
+                disabled={!filterEnabled || !filterByAuthorNameEnabled}
+              />
+            </div>
+
+            <div className='col'>
+              <div className={styles.settingsGroupSubTitle}>
+                <span>标题</span>
+                <HelpInfo>
+                  根据标题关键词过滤视频 <br />
+                  支持正则(i), 语法：/abc|\d+/
+                </HelpInfo>
+                <SwitchSettingItem
+                  configKey='filterByTitleEnabled'
+                  disabled={!filterEnabled}
+                  css={css`
+                    margin-left: 10px;
+                  `}
+                />
+              </div>
+              <EditableListSettingItem
+                configKey={'filterByTitleKeywords'}
+                searchProps={{ placeholder: '添加过滤关键词' }}
+                disabled={!filterEnabled || !filterByTitleEnabled}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}

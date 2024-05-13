@@ -1,6 +1,6 @@
 import { APP_NAME_ROOT_CLASSNAME } from '$common'
 import { AntdApp } from '$components/AntdApp'
-import { BaseModal, BaseModalClass, ModalClose } from '$components/BaseModal'
+import { BaseModal, BaseModalStyle, ModalClose } from '$components/BaseModal'
 import { useIsDarkMode } from '$modules/dark-mode'
 import { QRCode } from 'antd'
 import { once } from 'lodash'
@@ -68,21 +68,23 @@ export function TvQrCodeAuth() {
         aspect-ratio: 10 / 16;
       `}
     >
-      <div className={BaseModalClass.modalHeader}>
-        <div className={BaseModalClass.modalTitle}></div>
+      <div css={BaseModalStyle.modalHeader}>
+        <div css={BaseModalStyle.modalTitle}></div>
         <div className='space' style={{ flex: 1 }}></div>
         <ModalClose onClick={onHide} />
       </div>
 
       <div
-        className={BaseModalClass.modalBody}
-        css={css`
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          text-align: center;
-        `}
+        css={[
+          BaseModalStyle.modalBody,
+          css`
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+          `,
+        ]}
       >
         <div
           css={css`
@@ -117,7 +119,7 @@ export function TvQrCodeAuth() {
             font-size: 13px;
           `}
         >
-          打开「哔哩哔哩」或「bilibili」APP <br />
+          打开「哔哩哔哩」或「bilibili」App <br />
           扫码获取 access_key
         </div>
       </div>

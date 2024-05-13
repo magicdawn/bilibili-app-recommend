@@ -5,14 +5,69 @@ import type { OnRefresh } from '$components/RecGrid/useRefresh'
 import { OnRefreshContext } from '$components/RecGrid/useRefresh'
 import { RefreshButton } from '$components/RecHeader/RefreshButton'
 import { VideoSourceTab } from '$components/RecHeader/tab'
-import { cx } from '$libs'
 import { useIsDarkMode } from '$modules/dark-mode'
 import { useSettingsSnapshot } from '$modules/settings'
 import { CollapseBtn } from '$ui-components/CollapseBtn'
 import { AntdMessage } from '$utility'
-import { BaseModal, BaseModalClass, ModalClose } from '../BaseModal'
+import { BaseModal, BaseModalStyle, ModalClose } from '../BaseModal'
 import { CheckboxSettingItem } from '../piece'
-import styles from './index.module.scss'
+
+const S = {
+  modalMask: (narrowMode: boolean) => [
+    narrowMode &&
+      css`
+        background-color: rgba(0, 0, 0, 0.9);
+      `,
+  ],
+
+  modal: (narrowMode: boolean, fullScreenMode: boolean) => [
+    css`
+      width: calc(100vw - 30px);
+      height: calc(100vh - 30px);
+      max-height: unset;
+      padding-right: 0; // 滚动条右移
+    `,
+    narrowMode &&
+      css`
+        /* $card-width: 283px; */
+        width: ${325 * 2 + 40}px;
+        height: calc(100vh - 10px);
+
+        border: none;
+        :global(body.dark) & {
+          border: none;
+        }
+      `,
+    fullScreenMode &&
+      css`
+        width: 100vw;
+        height: 100vh;
+        // border-radius: 20px;
+        // overflow: hidden;
+        // box-shadow: 0px 0px 9px 4px vars.$app-color-primary;
+      `,
+  ],
+
+  // 滚动条右移
+  modalHeader: css`
+    padding-right: 15px;
+  `,
+  modalBody: css`
+    padding-right: 15px;
+  `,
+
+  btnRefresh: css`
+    body.dark & {
+      color: #eee !important;
+      background-color: #333 !important;
+      border-color: transparent !important;
+      height: auto;
+      padding: 8px 12px;
+      line-height: 16px;
+      font-size: 13px;
+    }
+  `,
+}
 
 interface IProps {
   show: boolean
@@ -33,19 +88,15 @@ export const ModalFeed = memo(function ModalFeed({ show, onHide }: IProps) {
   const useFullScreen = !useNarrowMode && modalFeedFullScreen
   const dark = useIsDarkMode()
 
-  const moreStyles = useMemo(
-    () => ({
-      [styles.narrowMode]: useNarrowMode,
-      [styles.fullScreenMode]: useFullScreen,
-    }),
-    [useNarrowMode, useFullScreen],
-  )
-
-  const modalBorderStyle: CSSProperties | undefined = useMemo(() => {
+  const modalBorderCss = useMemo(() => {
     if (useFullScreen) {
-      return { border: `5px solid ${colorPrimaryValue}` }
+      return css`
+        border: 5px solid ${colorPrimaryValue};
+      `
     } else if (dark) {
-      return { border: `1px solid ${colorPrimaryValue}` }
+      return css`
+        border: 1px solid ${colorPrimaryValue};
+      `
     }
   }, [dark, useFullScreen])
 
@@ -66,21 +117,21 @@ export const ModalFeed = memo(function ModalFeed({ show, onHide }: IProps) {
   return (
     <BaseModal
       {...{ show, onHide }}
-      clsModalMask={cx(moreStyles)}
-      clsModal={cx(styles.modal, moreStyles)}
-      styleModal={{
-        ...modalBorderStyle,
-      }}
+      cssModalMask={S.modalMask(useNarrowMode)}
+      cssModal={[S.modal(useNarrowMode, useFullScreen), modalBorderCss]}
     >
       <OnRefreshContext.Provider value={onRefresh}>
         <div
-          className={cx(BaseModalClass.modalHeader, styles.modalHeader)}
-          css={css`
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            column-gap: 20px;
-          `}
+          css={[
+            BaseModalStyle.modalHeader,
+            S.modalHeader,
+            css`
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              column-gap: 20px;
+            `,
+          ]}
         >
           <div
             className='left'
@@ -114,11 +165,11 @@ export const ModalFeed = memo(function ModalFeed({ show, onHide }: IProps) {
 
             <RefreshButton
               css={css`
+                ${S.btnRefresh}
                 margin-left: 8px;
               `}
               refreshing={refreshing}
               onRefresh={onRefresh}
-              className={styles.btnRefresh}
               refreshHotkeyEnabled={show}
             />
 
@@ -126,7 +177,7 @@ export const ModalFeed = memo(function ModalFeed({ show, onHide }: IProps) {
           </div>
         </div>
 
-        <div className={cx(BaseModalClass.modalBody, styles.modalBody)} ref={scrollerRef}>
+        <div css={[BaseModalStyle.modalBody, S.modalBody]} ref={scrollerRef}>
           <RecGrid
             ref={recGridRef}
             shortcutEnabled={show}

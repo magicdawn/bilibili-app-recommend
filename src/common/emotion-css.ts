@@ -3,6 +3,11 @@ export const flexVerticalCenterStyle = css`
   align-items: center;
 `
 
+export const inlineFlexVerticalCenterStyle = css`
+  display: inline-flex;
+  align-items: center;
+`
+
 export const flexCenterStyle = css`
   ${flexVerticalCenterStyle}
   justify-content: center;

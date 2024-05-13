@@ -1,4 +1,5 @@
 import { APP_KEY_PREFIX, APP_NAME, baseDebug } from '$common'
+import { flexVerticalCenterStyle } from '$common/emotion-css'
 import { useMittOn } from '$common/hooks/useMitt'
 import { useRefStateBox } from '$common/hooks/useRefState'
 import { useDislikedReason } from '$components/ModalDislike'
@@ -569,14 +570,14 @@ const VideoCardInner = memo(function VideoCardInner({
                 )}
 
               {dislikeButtonEl && (
-                <div className='left-actions' css={VideoCardActionStyle.top('left')}>
+                <div className='left-actions' css={VideoCardActionStyle.topContainer('left')}>
                   {/* 我不想看 */}
                   {dislikeButtonEl}
                 </div>
               )}
 
               {(watchlaterButtonEl || openInPopupButtonEl) && (
-                <div className='right-actions' css={VideoCardActionStyle.top('right')}>
+                <div className='right-actions' css={VideoCardActionStyle.topContainer('right')}>
                   {/* 稍后再看 */}
                   {watchlaterButtonEl}
                   {/* 小窗打开 */}
@@ -589,6 +590,7 @@ const VideoCardInner = memo(function VideoCardInner({
                 <div
                   css={css`
                     ${VideoCardActionStyle.top('left')}
+                    ${flexVerticalCenterStyle}
                     padding: 1px 6px 1px 4px;
                     font-size: 10px;
                     color: #fff;

@@ -1,5 +1,5 @@
 import { APP_NAME_ROOT_CLASSNAME, OPERATION_FAIL_MSG } from '$common'
-import { BaseModal, BaseModalClass, ModalClose } from '$components/BaseModal'
+import { BaseModal, BaseModalStyle, ModalClose } from '$components/BaseModal'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import { DislikeIcon } from '$components/VideoCard/use/useDislikeRelated'
 import type { AppRecItem, AppRecItemExtend } from '$define'
@@ -136,8 +136,8 @@ function ModalDislike({ show, onHide, item }: IProps) {
       hideWhenEsc={true}
       width={500}
     >
-      <div className={BaseModalClass.modalHeader}>
-        <div className={BaseModalClass.modalTitle}>
+      <div css={BaseModalStyle.modalHeader}>
+        <div css={BaseModalStyle.modalTitle}>
           <DislikeIcon width={25} height={25} />
           <span
             css={css`
@@ -159,7 +159,7 @@ function ModalDislike({ show, onHide, item }: IProps) {
         <ModalClose onClick={onHide} />
       </div>
 
-      <div className={BaseModalClass.modalBody} ref={modalBodyRef}>
+      <div css={BaseModalStyle.modalBody} ref={modalBodyRef}>
         <div
           className='reason-list'
           css={css`
