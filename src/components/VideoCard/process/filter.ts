@@ -32,7 +32,7 @@ export function filterRecItems(items: RecItemExtraType[], tab: ETabType) {
     // just keep it
     if (item.api === EApiType.Separator) return true
 
-    const { play, duration, recommendReason, goto, authorName, authorMid, title, bvid } =
+    const { play, duration, recommendReason, goto, authorName, authorMid, title, bvid, href } =
       normalizeCardData(item)
     const isFollowed = recommendReason === '已关注' || !!recommendReason?.endsWith('关注')
 
@@ -45,6 +45,7 @@ export function filterRecItems(items: RecItemExtraType[], tab: ETabType) {
 
     const isVideo = goto === 'av'
     const isPicture = goto === 'picture'
+    const isBangumi = goto === 'bangumi'
     // console.log('filter: goto = %s', goto)
 
     if (authorMid && blacklistIds.size) {
@@ -98,6 +99,7 @@ export function filterRecItems(items: RecItemExtraType[], tab: ETabType) {
 
     if (isVideo) return filterVideo()
     if (isPicture) return filterPicture()
+    if (isBangumi) return filterBangumi()
 
     return true // just keep it
 
@@ -160,6 +162,14 @@ export function filterRecItems(items: RecItemExtraType[], tab: ETabType) {
       } else {
         return true
       }
+    }
+
+    function filterBangumi() {
+      if (settings.filterOutGotoTypeBangumi) {
+        debug('filter out by goto-type-bangumi-rule: %s %o', goto, { title, href })
+        return false
+      }
+      return true
     }
   })
 }

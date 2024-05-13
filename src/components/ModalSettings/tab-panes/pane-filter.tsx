@@ -94,8 +94,12 @@ export function TabPaneFilter() {
               <CheckboxSettingItem
                 className={styles.row}
                 configKey='filterOutGotoTypePicture'
-                label='启用图文(动态 & 专栏)过滤'
-                tooltip={<>过滤掉图文推荐</>}
+                label='过滤图文类型推荐'
+                tooltip={
+                  <>
+                    过滤 <kbd>goto = picture</kbd> 的内容: 包括 (动态 & 专栏) 等
+                  </>
+                }
                 disabled={!filterEnabled}
               />
               <CheckboxSettingItem
@@ -104,6 +108,19 @@ export function TabPaneFilter() {
                 configKey='enableFilterForFollowedPicture'
                 label='对「已关注」的图文启用过滤'
                 tooltip={<>默认不过滤「已关注」</>}
+              />
+
+              <div className={styles.settingsGroupSubTitle}>影视</div>
+              <CheckboxSettingItem
+                className={styles.row}
+                configKey='filterOutGotoTypeBangumi'
+                label='过滤影视类型推荐'
+                tooltip={
+                  <>
+                    过滤 <kbd>goto = bangumi</kbd> 的内容: 包括 (番剧 / 电影 / 国创 / 纪录片) 等
+                  </>
+                }
+                disabled={!filterEnabled}
               />
             </div>
 

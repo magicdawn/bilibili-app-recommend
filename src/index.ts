@@ -19,13 +19,13 @@ import '$components/ModalSettings/index.module.scss'
 import '$components/VideoCard/index.module.scss'
 import '$components/video-grid.module.scss'
 
-// load config first
-import './modules/settings'
-
 // dayjs setup
 import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
 dayjs.extend(duration)
+
+// load config first
+import './modules/settings'
 
 import { IN_BILIBILI_HOMEPAGE, IN_BILIBILI_VIDEO_PLAY_PAGE } from '$common'
 import { initHomepage } from '$main/homepage'

@@ -109,6 +109,9 @@ export const initialSettings = {
   // 图文也是有 rcmd_reason = '已关注' 的
   enableFilterForFollowedPicture: false,
 
+  // filter out whose goto = 'bangumi'
+  filterOutGotoTypeBangumi: false,
+
   // authorName
   filterByAuthorNameEnabled: false,
   filterByAuthorNameKeywords: [] as string[],
