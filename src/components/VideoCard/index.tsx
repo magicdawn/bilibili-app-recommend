@@ -1,5 +1,5 @@
 import { APP_KEY_PREFIX, APP_NAME } from '$common'
-import { flexVerticalCenterStyle } from '$common/emotion-css'
+import { flexCenterStyle, flexVerticalCenterStyle } from '$common/emotion-css'
 import { useMittOn } from '$common/hooks/useMitt'
 import { useRefStateBox } from '$common/hooks/useRefState'
 import { useDislikedReason } from '$components/ModalDislike'
@@ -7,7 +7,7 @@ import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import type { OnRefresh } from '$components/RecGrid/useRefresh'
 import { useCurrentUsingTab, videoSourceTabState } from '$components/RecHeader/tab'
 import { ETabType } from '$components/RecHeader/tab.shared'
-import { type AppRecItemExtend, type RecItemType } from '$define'
+import { isRanking, type AppRecItemExtend, type RecItemType } from '$define'
 import { EApiType } from '$define/index.shared'
 import { IconPark } from '$icon-park'
 import { cx } from '$libs'
@@ -299,7 +299,8 @@ const VideoCardInner = memo(function VideoCardInner({
     tab === ETabType.RecommendApp ||
     tab === ETabType.RecommendPc ||
     tab === ETabType.PopularGeneral ||
-    tab === ETabType.PopularWeekly
+    tab === ETabType.PopularWeekly ||
+    tab === ETabType.Ranking
 
   const onBlacklistUp = useMemoizedFn(async () => {
     if (!authorMid) return AntdMessage.error('UP mid 为空!')
@@ -351,6 +352,8 @@ const VideoCardInner = memo(function VideoCardInner({
 
     openInNewWindow()
   })
+
+  const hasRankingNo = isRanking(item)
 
   const contextMenus: MenuProps['items'] = useMemo(() => {
     const watchLaterLabel = watchLaterAdded ? '移除稍后再看' : '稍后再看'
@@ -615,6 +618,25 @@ const VideoCardInner = memo(function VideoCardInner({
                     ></path>
                   </svg>
                   充电专属
+                </div>
+              )}
+
+              {/* 排行榜 */}
+              {hasRankingNo && (
+                <div
+                  css={css`
+                    ${VideoCardActionStyle.top('left')}
+                    ${flexCenterStyle}
+                    color: #fff;
+                    border-radius: 50%;
+                    margin-left: 4px;
+                    white-space: nowrap;
+                    background-color: ${colorPrimaryValue};
+                    width: 28px;
+                    height: 28px;
+                  `}
+                >
+                  {item.rankingNo}
                 </div>
               )}
             </div>

@@ -1,6 +1,6 @@
 import { baseDebug } from '$common'
 import type { ETabType } from '$components/RecHeader/tab.shared'
-import type { RecItemExtraType } from '$define'
+import type { RecItemTypeOrSeparator } from '$define'
 import { EApiType } from '$define/index.shared'
 import { settings, settings as settingsProxy } from '$modules/settings'
 import { blacklistIds } from '$modules/user/relations/blacklist'
@@ -25,7 +25,7 @@ export function anyFilterEnabled(tab: ETabType) {
   )
 }
 
-export function filterRecItems(items: RecItemExtraType[], tab: ETabType) {
+export function filterRecItems(items: RecItemTypeOrSeparator[], tab: ETabType) {
   if (!anyFilterEnabled(tab)) {
     return items
   }

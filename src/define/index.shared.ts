@@ -4,6 +4,7 @@ export enum EAppApiDevice {
 }
 
 export enum EApiType {
+  Separator = 'separator',
   App = 'app',
   Pc = 'pc',
   Dynamic = 'dynamic',
@@ -11,5 +12,5 @@ export enum EApiType {
   Fav = 'fav',
   PopularGeneral = 'popular-general',
   PopularWeekly = 'popular-weekly',
-  Separator = 'separator',
+  Ranking = 'ranking',
 }

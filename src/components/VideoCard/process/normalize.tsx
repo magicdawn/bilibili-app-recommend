@@ -8,6 +8,7 @@ import {
   isPc,
   isPopularGeneral,
   isPopularWeekly,
+  isRanking,
   isWatchlater,
   type AndroidAppRecItemExtend,
   type AppRecItemExtend,
@@ -16,12 +17,14 @@ import {
   type PcRecItemExtend,
   type PopularGeneralItemExtend,
   type PopularWeeklyItemExtend,
+  type RankingItemExtended,
   type RecItemType,
   type WatchLaterItemExtend,
 } from '$define'
 import type { FavItemExtend } from '$define/fav'
 import type { EApiType } from '$define/index.shared'
 import { IconPark } from '$icon-park'
+import type { NormalRankingItem } from '$modules/recommend/ranking/api.normal-category'
 import { toHttps } from '$utility'
 import {
   formatDuration,
@@ -88,6 +91,7 @@ export function lookinto<T>(
     [EApiType.Fav]: (item: FavItemExtend) => T
     [EApiType.PopularGeneral]: (item: PopularGeneralItemExtend) => T
     [EApiType.PopularWeekly]: (item: PopularWeeklyItemExtend) => T
+    [EApiType.Ranking]: (item: RankingItemExtended) => T
   },
 ): T {
   if (isApp(item)) return opts.app(item)
@@ -97,6 +101,7 @@ export function lookinto<T>(
   if (isFav(item)) return opts.fav(item)
   if (isPopularGeneral(item)) return opts['popular-general'](item)
   if (isPopularWeekly(item)) return opts['popular-weekly'](item)
+  if (isRanking(item)) return opts['ranking'](item)
   throw new Error(`unknown api type`)
 }
 
@@ -109,6 +114,7 @@ export function normalizeCardData(item: RecItemType) {
     'fav': apiFavAdapter,
     'popular-general': apiPopularGeneralAdapter,
     'popular-weekly': apiPopularWeeklyAdapter,
+    'ranking': apiRankingAdapter,
   })
 
   // handle mixed content
@@ -557,6 +563,41 @@ function apiPopularWeeklyAdapter(item: PopularWeeklyItemExtend): IVideoCardData 
       { field: 'like', value: item.stat.like },
       { field: 'danmaku', value: item.stat.danmaku },
     ] satisfies StatItemType[],
+
+    // author
+    authorName: item.owner.name,
+    authorFace: item.owner.face,
+    authorMid: String(item.owner.mid),
+  }
+}
+
+function apiRankingAdapter(_item: RankingItemExtended): IVideoCardData {
+  const item = _item as NormalRankingItem
+
+  // normal
+  return {
+    // video
+    avid: String(item.aid),
+    bvid: item.bvid,
+    goto: 'av',
+    href: `/video/${item.bvid}/`,
+    title: item.title,
+    cover: item.pic,
+    pubts: item.pubdate,
+    pubdateDisplay: formatTimeStamp(item.pubdate),
+    duration: item.duration,
+    durationStr: formatDuration(item.duration),
+    recommendReason: undefined, // TODO: write something here
+
+    // stat
+    play: item.stat.view,
+    like: item.stat.like,
+    danmaku: item.stat.danmaku,
+    statItems: [
+      { field: 'play', value: item.stat.view } as const,
+      { field: 'like', value: item.stat.like } as const,
+      { field: 'danmaku', value: item.stat.danmaku } as const,
+    ].filter(Boolean) satisfies StatItemType[],
 
     // author
     authorName: item.owner.name,

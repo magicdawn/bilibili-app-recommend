@@ -10,8 +10,7 @@ import { isWebApiSuccess, request } from '$request'
 import { toast } from '$utility'
 import { getAvatarSrc } from '$utility/image'
 import { fastSortWithOrders } from '$utility/order-by'
-import type { ArrayItem } from '$utility/type'
-import type { MenuProps } from 'antd'
+import type { AntdMenuItemType } from '$utility/type'
 import { Avatar, Badge, Button, Dropdown, Input, Space } from 'antd'
 import delay from 'delay'
 import ms from 'ms'
@@ -148,8 +147,6 @@ async function updateUpList(force = false) {
   dynamicFeedFilterStore.upListUpdatedAt = Date.now()
 }
 
-type MenuItemType = ArrayItem<Exclude<MenuProps['items'], undefined>>
-
 export function dynamicFeedFilterSelectUp(payload: Partial<typeof dynamicFeedFilterStore>) {
   Object.assign(dynamicFeedFilterStore, payload)
   // 选择了 up, 去除红点
@@ -178,8 +175,8 @@ export function DynamicFeedUsageInfo() {
     onSelect({ upMid: undefined, upName: undefined, searchText: undefined })
   })
 
-  const menuItems = useMemo((): MenuItemType[] => {
-    const itemAll: MenuItemType = {
+  const menuItems = useMemo((): AntdMenuItemType[] => {
+    const itemAll: AntdMenuItemType = {
       key: 'all',
       icon: <Avatar size={'small'}>全</Avatar>,
       label: '全部',
@@ -215,7 +212,7 @@ export function DynamicFeedUsageInfo() {
     // console.log('sorted cost %s ms', _cost.toFixed(2))
     // }
 
-    const items: MenuItemType[] = upListSorted.map((up) => {
+    const items: AntdMenuItemType[] = upListSorted.map((up) => {
       let avatar: ReactNode = <Avatar size={'small'} src={getAvatarSrc(up.face)} />
       if (up.has_update) {
         avatar = <Badge dot>{avatar}</Badge>

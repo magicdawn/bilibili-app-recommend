@@ -1,12 +1,12 @@
-import type { RecItemExtraType } from '$define'
+import type { RecItemTypeOrSeparator } from '$define'
 
 export interface IService {
   hasMore: boolean
-  loadMore(abortSignal: AbortSignal): Promise<RecItemExtraType[] | undefined>
+  loadMore(abortSignal: AbortSignal): Promise<RecItemTypeOrSeparator[] | undefined>
   usageInfo?: ReactNode
 }
 
-export class QueueStrategy<T extends RecItemExtraType = RecItemExtraType> {
+export class QueueStrategy<T extends RecItemTypeOrSeparator = RecItemTypeOrSeparator> {
   // full-list = returnQueue + bufferQueue + more
   private returnQueue: T[] = []
   bufferQueue: T[] = []
