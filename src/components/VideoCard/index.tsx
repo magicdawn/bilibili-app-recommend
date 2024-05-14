@@ -1,4 +1,4 @@
-import { APP_KEY_PREFIX, APP_NAME, baseDebug } from '$common'
+import { APP_KEY_PREFIX, APP_NAME } from '$common'
 import { flexVerticalCenterStyle } from '$common/emotion-css'
 import { useMittOn } from '$common/hooks/useMitt'
 import { useRefStateBox } from '$common/hooks/useRefState'
@@ -33,6 +33,7 @@ import { BlacklistCard, DislikedCard, SkeletonCard } from './child-components/ot
 import styles from './index.module.scss'
 import type { VideoCardEmitter } from './index.shared'
 import { borderRadiusStyle, defaultEmitter } from './index.shared'
+import { getFollowedStatus } from './process/filter'
 import type { IVideoCardData } from './process/normalize'
 import { normalizeCardData } from './process/normalize'
 import { AppRecIconScaleMap, AppRecIconSvgNameMap, makeStatItem } from './stat-item'
@@ -40,8 +41,6 @@ import { DislikeIcon, useDislikeRelated } from './use/useDislikeRelated'
 import { useOpenRelated } from './use/useOpenRelated'
 import { usePreviewAnimation } from './use/usePreviewAnimation'
 import { useWatchlaterRelated } from './use/useWatchlaterRelated'
-
-const debug = baseDebug.extend('components:VideoCard')
 
 function copyContent(content: string) {
   GM.setClipboard(content)
@@ -77,7 +76,7 @@ export const VideoCard = memo(function VideoCard({
   // false when item provided
   loading = loading ?? !item
 
-  const dislikedReason = useDislikedReason(item?.api === 'app' && item.param)
+  const dislikedReason = useDislikedReason(item?.api === EApiType.App && item.param)
   const cardData = useMemo(() => item && normalizeCardData(item), [item])
   const blacklisted = useInBlacklist(cardData?.authorMid)
 
@@ -315,8 +314,8 @@ const VideoCardInner = memo(function VideoCardInner({
    */
 
   const hasUnfollowEntry =
-    item.api === 'dynamic' ||
-    ((item.api === 'app' || item.api === 'pc') && recommendReason === '已关注')
+    item.api === EApiType.Dynamic ||
+    ((item.api === EApiType.App || item.api === EApiType.Pc) && getFollowedStatus(recommendReason))
   const onUnfollowUp = useMemoizedFn(async () => {
     if (!authorMid) return
     const success = await UserfollowService.unfollow(authorMid)
@@ -402,7 +401,7 @@ const VideoCardInner = memo(function VideoCardInner({
         icon: <IconPark name='PeopleDelete' size={15} />,
         onClick: onBlacklistUp,
       },
-      item.api === 'watchlater' && {
+      item.api === EApiType.Watchlater && {
         key: 'add-fav',
         icon: (
           <IconPark
@@ -446,7 +445,7 @@ const VideoCardInner = memo(function VideoCardInner({
           onToggleWatchLater()
         },
       },
-      item.api === 'watchlater' &&
+      item.api === EApiType.Watchlater &&
         watchLaterAdded && {
           key: 'watchlater-readd',
           label: '重新添加稍候再看 (移到最前)',
@@ -458,7 +457,7 @@ const VideoCardInner = memo(function VideoCardInner({
           },
         },
 
-      ...(item.api === 'fav'
+      ...(item.api === EApiType.Fav
         ? [
             { type: 'divider' as const },
             {

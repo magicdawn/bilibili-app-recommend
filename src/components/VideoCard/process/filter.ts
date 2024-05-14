@@ -9,6 +9,10 @@ import { normalizeCardData } from './normalize'
 
 const debug = baseDebug.extend('VideoCard:filter')
 
+export function getFollowedStatus(recommendReason?: string): boolean {
+  return !!recommendReason && ['已关注', '新关注'].includes(recommendReason)
+}
+
 export function anyFilterEnabled(tab: ETabType) {
   return (
     tab === 'keep-follow-only' ||
@@ -34,13 +38,13 @@ export function filterRecItems(items: RecItemExtraType[], tab: ETabType) {
 
     const { play, duration, recommendReason, goto, authorName, authorMid, title, bvid, href } =
       normalizeCardData(item)
-    const isFollowed = recommendReason === '已关注' || !!recommendReason?.endsWith('关注')
+    const followed = getFollowedStatus(recommendReason)
 
     /**
      * 已关注 Tab
      */
     if (tab === 'keep-follow-only') {
-      if (!isFollowed) return false
+      if (!followed) return false
     }
 
     const isVideo = goto === 'av'
@@ -105,7 +109,7 @@ export function filterRecItems(items: RecItemExtraType[], tab: ETabType) {
 
     function filterVideo() {
       // 不过滤已关注视频
-      if (isFollowed && !settings.enableFilterForFollowedVideo) return true
+      if (followed && !settings.enableFilterForFollowedVideo) return true
 
       // https://github.com/magicdawn/bilibili-app-recommend/issues/87
       // 反向推送, 蜜汁操作.
@@ -151,7 +155,7 @@ export function filterRecItems(items: RecItemExtraType[], tab: ETabType) {
     function filterPicture() {
       if (settings.filterOutGotoTypePicture) {
         // 不去掉已关注的图文
-        if (isFollowed && !settings.enableFilterForFollowedPicture) {
+        if (followed && !settings.enableFilterForFollowedPicture) {
           return true
         }
         debug('filter out by goto-type-picture-rule: %s %o', goto, {

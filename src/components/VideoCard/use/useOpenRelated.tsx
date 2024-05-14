@@ -133,7 +133,7 @@ export function useOpenRelated({
 
   function openInIINA() {
     let usingHref = href
-    if (item.api === 'watchlater') usingHref = `/video/${item.bvid}`
+    if (item.api === EApiType.Watchlater) usingHref = `/video/${item.bvid}`
     const fullHref = new URL(usingHref, location.href).href
     const iinaUrl = `iina://open?url=${encodeURIComponent(fullHref)}`
     window.open(iinaUrl, '_self')

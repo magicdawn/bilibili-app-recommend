@@ -1,4 +1,5 @@
 import { type RecItemType } from '$define'
+import { EApiType } from '$define/index.shared'
 import { useWatchLaterState, watchLaterState } from '$modules/recommend/watchlater'
 import { AntdMessage } from '$utility'
 import { usePrevious } from 'ahooks'
@@ -25,7 +26,8 @@ export function useWatchlaterRelated({
   actionButtonVisible: boolean
 }) {
   const { avid, bvid } = cardData
-  const hasWatchLaterEntry = item.api !== 'app' || (item.api === 'app' && item.goto === 'av')
+  const hasWatchLaterEntry =
+    (item.api === EApiType.App && item.goto === 'av') || item.api !== EApiType.App
 
   // watchLater added
   const watchLaterAdded = useWatchLaterState(bvid)
@@ -64,7 +66,7 @@ export function useWatchlaterRelated({
         }
 
         // 稍后再看
-        if (item.api === 'watchlater') {
+        if (item.api === EApiType.Watchlater) {
           // when remove-watchlater for watchlater tab, remove this card
           if (!targetState) {
             await delay(100)
