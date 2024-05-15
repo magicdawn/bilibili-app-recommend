@@ -4,7 +4,7 @@ import { type PopularGeneralItemExtend } from '$define'
 import { EApiType } from '$define/index.shared'
 import type { PopularGeneralJson } from '$define/popular-general'
 import { settings, updateSettings, useSettingsSnapshot } from '$modules/settings'
-import { blacklistIds } from '$modules/user/relations/blacklist'
+import { blacklistMids } from '$modules/user/relations/blacklist'
 import { isWebApiSuccess, request } from '$request'
 import { toast } from '$utility'
 import { Space, Switch } from 'antd'
@@ -49,7 +49,7 @@ export class PopularGeneralService implements IService {
       } as PopularGeneralItemExtend
     })
     // 过滤黑名单
-    items = items.filter((item) => !blacklistIds.has(item.owner.mid.toString()))
+    items = items.filter((item) => !blacklistMids.has(item.owner.mid.toString()))
     return items
   }
 

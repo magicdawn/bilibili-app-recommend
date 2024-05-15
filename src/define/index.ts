@@ -1,4 +1,5 @@
-import type { CategoryType, RankingItem } from '$modules/recommend/ranking/api'
+import type { RankingItem } from '$modules/recommend/ranking/api'
+import type { CategorySlug } from '$modules/recommend/ranking/category'
 import type { android } from './app-recommend.android'
 import type { ipad } from './app-recommend.ipad'
 import type { DmJson } from './dm'
@@ -93,8 +94,8 @@ export type PopularWeeklyItemExtend = PopularWeeklyItem & {
 export type RankingItemExtended = RankingItem & {
   uniqId: string
   api: EApiType.Ranking
-  categoryType: CategoryType
   rankingNo: number
+  slug: CategorySlug
 }
 
 export function isApp(item: RecItemType): item is AppRecItemExtend {

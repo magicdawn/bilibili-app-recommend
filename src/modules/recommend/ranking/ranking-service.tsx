@@ -5,22 +5,19 @@ import { isWebApiSuccess, request } from '$request'
 import { toast } from '$utility'
 import type { IService } from '../base'
 import type { RankingItem } from './api'
-import { RANKING_CATEGORIES, getRequestUrl, type CategorySlug } from './category'
+import { RANKING_CATEGORIES_MAP, getRequestUrl, type CategorySlug } from './category'
 import { RankingUsageInfo } from './ranking-usage-info'
 
 export class RankingService implements IService {
   hasMore = true
-
-  slug: CategorySlug = 'all'
+  slug: CategorySlug
 
   constructor(slug?: CategorySlug) {
     this.slug = slug || 'all'
   }
 
   async loadMore(abortSignal: AbortSignal): Promise<RankingItemExtended[] | undefined> {
-    const c = RANKING_CATEGORIES.find((x) => x.slug === this.slug)
-    if (!c) throw new Error('category item not found')
-
+    const c = RANKING_CATEGORIES_MAP[this.slug]
     const url = getRequestUrl(c)
     const res = await request.get(url, { signal: abortSignal })
     const json = res.data
@@ -36,8 +33,8 @@ export class RankingService implements IService {
         ...item,
         api: EApiType.Ranking,
         uniqId: crypto.randomUUID(),
-        categoryType: c.type,
         rankingNo: index + 1,
+        slug: this.slug,
       }
     })
 

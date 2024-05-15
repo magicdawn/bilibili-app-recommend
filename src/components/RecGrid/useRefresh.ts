@@ -11,6 +11,7 @@ import { PcRecService } from '$modules/recommend/pc'
 import { PopularGeneralService } from '$modules/recommend/popular-general'
 import { PopularWeeklyService } from '$modules/recommend/popular-weekly'
 import { RankingService } from '$modules/recommend/ranking/ranking-service'
+import { rankingStore } from '$modules/recommend/ranking/ranking-usage-info'
 import { WatchLaterRecService } from '$modules/recommend/watchlater'
 import { settings } from '$modules/settings'
 import { nextTick } from '$utility'
@@ -33,7 +34,7 @@ const serviceFactories = {
   [ETabType.Fav]: () => new FavRecService(),
   [ETabType.PopularGeneral]: () => new PopularGeneralService(),
   [ETabType.PopularWeekly]: () => new PopularWeeklyService(),
-  [ETabType.Ranking]: () => new RankingService(),
+  [ETabType.Ranking]: () => new RankingService(rankingStore.slug),
 } satisfies Partial<Record<ETabType, (options?: OnRefreshOptions) => IService>>
 
 export type ServiceMapKey = keyof typeof serviceFactories
@@ -237,6 +238,9 @@ export function useRefresh({
       } else {
         recreateFor(tab)
       }
+    }
+    if (tab === ETabType.Ranking) {
+      recreateFor(tab)
     }
 
     const _abortController = new AbortController()

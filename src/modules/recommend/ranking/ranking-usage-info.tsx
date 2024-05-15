@@ -1,28 +1,34 @@
 import { flexCenterStyle } from '$common/emotion-css'
+import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
 import { Button, Popover } from 'antd'
 import { getPopupContainerFactory } from '../_shared'
-import { RANKING_CATEGORIES } from './category'
+import { RANKING_CATEGORIES, RANKING_CATEGORIES_MAP, type CategorySlug } from './category'
+
+export const rankingStore = proxy<{ slug: CategorySlug }>({
+  slug: 'all',
+})
 
 export function RankingUsageInfo() {
   const ref = useRef<HTMLDivElement>(null)
   const getPopupContainer = useMemo(() => getPopupContainerFactory(ref), [])
 
   const [open, setOpen] = useState(false)
-
-  const hide = () => {
-    setOpen(false)
-  }
-
-  const handleOpenChange = (newOpen: boolean) => {
+  const hide = useCallback(() => setOpen(false), [])
+  const onOpenChange = useCallback((newOpen: boolean) => {
     setOpen(newOpen)
-  }
+  }, [])
+
+  const { slug } = useSnapshot(rankingStore)
+  const category = useMemo(() => RANKING_CATEGORIES_MAP[slug], [slug])
+
+  const onRefresh = useOnRefreshContext()
 
   return (
     <div ref={ref}>
       <Popover
         arrow={false}
         open={open}
-        onOpenChange={handleOpenChange}
+        onOpenChange={onOpenChange}
         placement='bottomLeft'
         getPopupContainer={getPopupContainer}
         content={
@@ -38,10 +44,11 @@ export function RankingUsageInfo() {
               {RANKING_CATEGORIES.map((c) => {
                 return (
                   <Button
-                    css={[flexCenterStyle, css``]}
+                    css={[flexCenterStyle]}
                     onClick={(e) => {
                       hide()
-                      // TODO: link to category
+                      rankingStore.slug = c.slug as CategorySlug
+                      onRefresh?.()
                     }}
                   >
                     {c.name}
@@ -52,7 +59,7 @@ export function RankingUsageInfo() {
           </>
         }
       >
-        <Button>全站</Button>
+        <Button>{category.name}</Button>
       </Popover>
     </div>
   )

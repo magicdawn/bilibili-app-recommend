@@ -33,11 +33,13 @@ export type CinemaCategory = Merge<
 
 export type Category = NormalCategory | BangumiCategory | CinemaCategory
 
+export type CategoryType = Category['type']
+
 export function isBangumiCategory(c: Category): c is BangumiCategory {
-  return 'type' in c && c.type === 'bangumi'
+  return c.type === 'bangumi'
 }
 export function isCinemaCategory(c: Category): c is CinemaCategory {
-  return 'type' in c && c.type === 'cinema'
+  return c.type === 'cinema'
 }
 
 export function getRequestUrl(c: Category) {
@@ -194,3 +196,11 @@ const arr = [
 export type CategorySlug = (typeof arr)[number]['slug']
 
 export const RANKING_CATEGORIES = arr as ReadonlyArray<Category>
+
+export const RANKING_CATEGORIES_MAP: Record<CategorySlug, Category> = RANKING_CATEGORIES.reduce(
+  (map, c) => {
+    map[c.slug as CategorySlug] = c
+    return map
+  },
+  {} as Record<CategorySlug, Category>,
+)

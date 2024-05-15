@@ -134,7 +134,7 @@ const VideoCardInner = memo(function VideoCardInner({
   onRefresh,
   emitter = defaultEmitter,
 }: VideoCardInnerProps) {
-  const { autoPreviewWhenHover, accessKey, videoLinkOpenMode } = useSettingsSnapshot()
+  const { autoPreviewWhenHover, accessKey } = useSettingsSnapshot()
   const authed = Boolean(accessKey)
 
   const {

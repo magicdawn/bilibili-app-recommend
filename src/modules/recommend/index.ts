@@ -62,6 +62,7 @@ export async function getMinCount(
     if (service) {
       cur = (await service.loadMore(abortSignal)) || []
       hasMore = service.hasMore
+      cur = filterRecItems(cur, tab)
       items = items.concat(cur)
       items = uniqBy(items, recItemUniqer)
       return
