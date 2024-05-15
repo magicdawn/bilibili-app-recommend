@@ -27,7 +27,15 @@ export class RankingService implements IService {
       return
     }
 
-    const list = (json?.data?.list || []) as RankingItem[]
+    let list: RankingItem[] = []
+    if (c.type === 'bangumi') {
+      list = json?.result?.list || []
+    } else if (c.type === 'cinema') {
+      list = json?.data?.list || []
+    } else {
+      list = json?.data?.list || []
+    }
+
     const items: RankingItemExtended[] = list.map((item, index) => {
       return {
         ...item,
@@ -35,10 +43,9 @@ export class RankingService implements IService {
         uniqId: crypto.randomUUID(),
         rankingNo: index + 1,
         slug: this.slug,
+        categoryType: c.type,
       }
     })
-
-    // TODO: filter blacklist / up / title etc
 
     this.hasMore = false
     return items

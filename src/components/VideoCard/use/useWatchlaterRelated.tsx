@@ -26,8 +26,15 @@ export function useWatchlaterRelated({
   actionButtonVisible: boolean
 }) {
   const { avid, bvid } = cardData
-  const hasWatchLaterEntry =
-    (item.api === EApiType.App && item.goto === 'av') || item.api !== EApiType.App
+  const hasWatchLaterEntry = (() => {
+    if (item.api === EApiType.App) {
+      return item.goto === 'av'
+    }
+    if (item.api === EApiType.Ranking) {
+      return cardData.goto === 'av'
+    }
+    return true
+  })()
 
   // watchLater added
   const watchLaterAdded = useWatchLaterState(bvid)

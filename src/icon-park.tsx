@@ -25,6 +25,7 @@ import {
   PeopleMinus,
   PeopleSearch,
   PlayTwo,
+  Ranking,
   Return,
   Split,
   Star,
@@ -66,6 +67,7 @@ const ImportedIcons = {
   Drag,
   CheckSmall,
   CloseSmall,
+  Ranking,
 } satisfies Record<string, Icon>
 
 export type IconName = keyof typeof ImportedIcons

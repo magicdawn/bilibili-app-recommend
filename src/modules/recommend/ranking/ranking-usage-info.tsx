@@ -1,4 +1,5 @@
 import { flexCenterStyle } from '$common/emotion-css'
+import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
 import { Button, Popover } from 'antd'
 import { getPopupContainerFactory } from '../_shared'
@@ -42,9 +43,19 @@ export function RankingUsageInfo() {
               `}
             >
               {RANKING_CATEGORIES.map((c) => {
+                const active = c.slug === slug
+
                 return (
                   <Button
-                    css={[flexCenterStyle]}
+                    key={c.slug}
+                    css={[
+                      flexCenterStyle,
+                      active &&
+                        css`
+                          border-color: ${colorPrimaryValue};
+                          color: ${colorPrimaryValue};
+                        `,
+                    ]}
                     onClick={(e) => {
                       hide()
                       rankingStore.slug = c.slug as CategorySlug

@@ -17,6 +17,7 @@ import {
   type PcRecItemExtend,
   type PopularGeneralItemExtend,
   type PopularWeeklyItemExtend,
+  type RankingItemExtendProps,
   type RankingItemExtended,
   type RecItemType,
   type WatchLaterItemExtend,
@@ -24,6 +25,8 @@ import {
 import type { FavItemExtend } from '$define/fav'
 import type { EApiType } from '$define/index.shared'
 import { IconPark } from '$icon-park'
+import type { BangumiRankingItem } from '$modules/recommend/ranking/api.bangumi-category'
+import type { CinemaRankingItem } from '$modules/recommend/ranking/api.cinema-category'
 import type { NormalRankingItem } from '$modules/recommend/ranking/api.normal-category'
 import { toHttps } from '$utility'
 import {
@@ -77,6 +80,7 @@ export interface IVideoCardData {
   // adpater specific
   appBadge?: string
   appBadgeDesc?: string
+  rankingDesc?: string
 }
 
 type Getter<T> = Record<RecItemType['api'], (item: RecItemType) => T>
@@ -572,9 +576,37 @@ function apiPopularWeeklyAdapter(item: PopularWeeklyItemExtend): IVideoCardData 
 }
 
 function apiRankingAdapter(_item: RankingItemExtended): IVideoCardData {
-  const item = _item as NormalRankingItem
+  if (_item.categoryType === 'bangumi' || _item.categoryType === 'cinema') {
+    const item = _item as (BangumiRankingItem | CinemaRankingItem) & RankingItemExtendProps
+    return {
+      // video
+      avid: '',
+      bvid: '',
+      goto: 'bangumi',
+      href: item.url,
+      title: item.title,
+      cover: item.ss_horizontal_cover,
+      pubts: undefined,
+      pubdateDisplay: undefined,
+      duration: 0,
+      durationStr: '',
+
+      // stat
+      play: item.stat.view,
+      like: item.stat.follow,
+      danmaku: item.stat.danmaku,
+      statItems: [
+        { field: 'play', value: item.stat.view } as const,
+        { field: 'like', value: item.stat.follow } as const,
+        { field: 'danmaku', value: item.stat.danmaku } as const,
+      ].filter(Boolean) satisfies StatItemType[],
+
+      rankingDesc: 'desc' in item ? item.desc : undefined,
+    }
+  }
 
   // normal
+  const item = _item as NormalRankingItem & RankingItemExtendProps
   return {
     // video
     avid: String(item.aid),

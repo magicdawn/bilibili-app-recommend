@@ -78,7 +78,7 @@ export const TabConfig: Record<ETabType, TabConfigItem> = {
     anonymousUsage: true,
   },
   [ETabType.Ranking]: {
-    icon: 'TrendTwo',
+    icon: 'Ranking',
     iconProps: { size: 15 },
     label: '排行榜',
     desc: '排行榜根据稿件内容质量，近期的数据综合展示，动态更新',
