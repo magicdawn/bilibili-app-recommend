@@ -258,6 +258,7 @@ const VideoCardInner = memo(function VideoCardInner({
   } = useOpenRelated({
     href,
     item,
+    cardData,
     actionButtonVisible,
   })
 

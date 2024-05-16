@@ -4,6 +4,8 @@ import { EApiType } from '$define/index.shared'
 import type { NormalRankingItem } from '$modules/recommend/ranking/api.normal-category'
 import { RANKING_CATEGORIES_MAP, isNormalCategory } from '$modules/recommend/ranking/category'
 import { settings, useSettingsSnapshot } from '$modules/settings'
+import { getVideoDetail } from '$modules/video/video-detail'
+import delay from 'delay'
 import type { MouseEventHandler } from 'react'
 import { VideoCardActionButton } from '../child-components/VideoCardActions'
 import {
@@ -14,6 +16,7 @@ import {
   VideoLinkOpenMode,
   VideoLinkOpenModeKey,
 } from '../index.shared'
+import type { IVideoCardData } from '../process/normalize'
 import { openPipWindow } from './_pip-window'
 
 const debug = baseDebug.extend('VideoCard:useOpenRelated')
@@ -25,10 +28,12 @@ const debug = baseDebug.extend('VideoCard:useOpenRelated')
 export function useOpenRelated({
   href,
   item,
+  cardData,
   actionButtonVisible,
 }: {
   href: string
   item: RecItemType
+  cardData: IVideoCardData
   actionButtonVisible: boolean
 }) {
   const { videoLinkOpenMode } = useSettingsSnapshot()
@@ -68,35 +73,23 @@ export function useOpenRelated({
       [Mode.Normal]: commonOpen,
       [Mode.Background]: commonOpen,
       [Mode.NormalWebFullscreen]: commonOpen,
-      [Mode.Popup]: () => openInPipOrPopup(newHref),
+      [Mode.Popup]: () => handlePopup(newHref),
       [Mode.Iina]: openInIINA,
     }
     handlers[mode]?.()
   })
 
-  async function openInPipOrPopup(newHref: string) {
-    let popupWidth = 1000
-    let popupHeight = Math.ceil((popupWidth / 16) * 9)
-
-    /**
-     * detect 竖屏视频
-     */
-    function handleVerticalVideo(w: number, h: number) {
-      const maxHeight = Math.min(Math.floor(window.screen.availHeight * 0.8), 1000)
-      const maxWidth = Math.floor((maxHeight / h) * w)
-      popupWidth = Math.min(720, maxWidth)
-      popupHeight = Math.floor((popupWidth / w) * h)
-    }
+  function handlePopup(newHref: string) {
+    let videoWidth: number | undefined
+    let videoHeight: number | undefined
 
     if (item.api === EApiType.App && item.uri?.startsWith('bilibili://')) {
       const searchParams = new URL(item.uri).searchParams
       const playerWidth = Number(searchParams.get('player_width') || 0)
       const playerHeight = Number(searchParams.get('player_height') || 0)
       if (playerWidth && playerHeight && !isNaN(playerWidth) && !isNaN(playerHeight)) {
-        // 竖屏视频
-        if (playerWidth < playerHeight) {
-          handleVerticalVideo(playerWidth, playerHeight)
-        }
+        videoWidth = playerWidth
+        videoHeight = playerHeight
       }
     }
 
@@ -105,53 +98,12 @@ export function useOpenRelated({
       const w = _item.dimension.width
       const h = _item.dimension.height
       if (w && h && !isNaN(w) && !isNaN(h)) {
-        // 竖屏视频
-        if (w < h) {
-          handleVerticalVideo(w, h)
-        }
+        videoWidth = w
+        videoHeight = h
       }
     }
 
-    debug('openInPipOrPopup newHref=%s size=%sx%s', newHref, popupWidth, popupHeight)
-
-    let pipWindow: Window | undefined
-    if (window.documentPictureInPicture?.requestWindow) {
-      try {
-        // https://developer.chrome.com/docs/web-platform/document-picture-in-picture
-        pipWindow = await window.documentPictureInPicture.requestWindow({
-          width: popupWidth,
-          height: popupHeight,
-          disallowReturnToOpener: true,
-        })
-      } catch (e) {
-        // noop
-      }
-    }
-
-    if (pipWindow) {
-      // use pipWindow
-      openPipWindow(newHref, pipWindow)
-    } else {
-      // use window.open popup
-      openPopupWindow(newHref, popupWidth, popupHeight)
-    }
-  }
-
-  function openPopupWindow(newHref: string, popupWidth: number, popupHeight: number) {
-    // 将 left 减去 50px，你可以根据需要调整这个值
-    const left = (window.innerWidth - popupWidth) / 2
-    const top = (window.innerHeight - popupHeight) / 2 - 50
-
-    const features = [
-      'popup=true',
-      `width=${popupWidth}`,
-      `height=${popupHeight}`,
-      `left=${left}`,
-      `top=${top}`,
-    ].join(',')
-
-    debug('openInPopup: features -> %s', features)
-    window.open(newHref, '_blank', features)
+    return openInPipOrPopup(newHref, cardData.bvid, videoWidth, videoHeight)
   }
 
   function openInIINA() {
@@ -224,4 +176,73 @@ export function useOpenRelated({
     openInPopupButtonEl,
     onOpenInPopup,
   }
+}
+
+export async function openInPipOrPopup(
+  newHref: string,
+  bvid?: string,
+  videoWidth?: number,
+  videoHeight?: number,
+) {
+  let popupWidth = 1000
+  let popupHeight = Math.ceil((popupWidth / 16) * 9)
+
+  // get video width and height via API if needed
+  const MAX_API_WAIT = 200
+  if ((!videoWidth || !videoHeight) && bvid) {
+    const detail = await Promise.race([getVideoDetail(bvid), delay<undefined>(MAX_API_WAIT)])
+    if (detail) {
+      videoWidth = detail.dimension.width
+      videoHeight = detail.dimension.height
+    }
+  }
+
+  // handle vertical video
+  if (videoWidth && videoHeight && videoWidth < videoHeight) {
+    const maxHeight = Math.min(Math.floor(window.screen.availHeight * 0.8), 1000)
+    const maxWidth = Math.floor((maxHeight / videoHeight) * videoWidth)
+    popupWidth = Math.min(720, maxWidth)
+    popupHeight = Math.floor((popupWidth / videoWidth) * videoHeight)
+  }
+
+  debug('openInPipOrPopup newHref=%s size=%sx%s', newHref, popupWidth, popupHeight)
+
+  let pipWindow: Window | undefined
+  if (window.documentPictureInPicture?.requestWindow) {
+    try {
+      // https://developer.chrome.com/docs/web-platform/document-picture-in-picture
+      pipWindow = await window.documentPictureInPicture.requestWindow({
+        width: popupWidth,
+        height: popupHeight,
+        disallowReturnToOpener: true,
+      })
+    } catch (e) {
+      // noop
+    }
+  }
+
+  if (pipWindow) {
+    // use pipWindow
+    openPipWindow(newHref, pipWindow)
+  } else {
+    // use window.open popup
+    openPopupWindow(newHref, popupWidth, popupHeight)
+  }
+}
+
+function openPopupWindow(newHref: string, popupWidth: number, popupHeight: number) {
+  // 将 left 减去 50px，你可以根据需要调整这个值
+  const left = (window.innerWidth - popupWidth) / 2
+  const top = (window.innerHeight - popupHeight) / 2 - 50
+
+  const features = [
+    'popup=true',
+    `width=${popupWidth}`,
+    `height=${popupHeight}`,
+    `left=${left}`,
+    `top=${top}`,
+  ].join(',')
+
+  debug('openInPopup: features -> %s', features)
+  window.open(newHref, '_blank', features)
 }
