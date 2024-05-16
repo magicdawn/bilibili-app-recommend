@@ -156,21 +156,18 @@ export function useOpenRelated({
     return Object.values(Mode).filter(
       (mode) => typeof ModeConfig[mode].enabled === 'boolean' && ModeConfig[mode].enabled,
     ).length
-      ? [
-          { type: 'divider' as const },
-          ...Object.values(VideoLinkOpenMode)
-            .filter(
-              (mode) => typeof ModeConfig[mode].enabled === 'boolean' && ModeConfig[mode].enabled,
-            )
-            .map((mode) => {
-              return {
-                key: VideoLinkOpenModeKey[mode],
-                label: ModeConfig[mode].label,
-                icon: ModeConfig[mode].icon,
-                onClick: () => onOpenWithMode(mode),
-              }
-            }),
-        ]
+      ? Object.values(VideoLinkOpenMode)
+          .filter(
+            (mode) => typeof ModeConfig[mode].enabled === 'boolean' && ModeConfig[mode].enabled,
+          )
+          .map((mode) => {
+            return {
+              key: VideoLinkOpenModeKey[mode],
+              label: ModeConfig[mode].label,
+              icon: ModeConfig[mode].icon,
+              onClick: () => onOpenWithMode(mode),
+            }
+          })
       : []
   }, [])
 

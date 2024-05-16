@@ -291,11 +291,12 @@ const VideoCardInner = memo(function VideoCardInner({
   // 已关注 item.api 也为 'pc', 故使用 tab, 而不是 api 区分
   const tab = useCurrentUsingTab()
   const hasBlacklistEntry =
-    tab === ETabType.RecommendApp ||
-    tab === ETabType.RecommendPc ||
-    tab === ETabType.PopularGeneral ||
-    tab === ETabType.PopularWeekly ||
-    tab === ETabType.Ranking
+    authorMid &&
+    (tab === ETabType.RecommendApp ||
+      tab === ETabType.RecommendPc ||
+      tab === ETabType.PopularGeneral ||
+      tab === ETabType.PopularWeekly ||
+      tab === ETabType.Ranking)
 
   const onBlacklistUp = useMemoizedFn(async () => {
     if (!authorMid) return AntdMessage.error('UP mid 为空!')
@@ -353,17 +354,16 @@ const VideoCardInner = memo(function VideoCardInner({
   const contextMenus: MenuProps['items'] = useMemo(() => {
     const watchLaterLabel = watchLaterAdded ? '移除稍后再看' : '稍后再看'
 
-    return [
-      ...consistentOpenMenus,
+    const divider = { type: 'divider' as const }
 
-      { type: 'divider' as const },
+    const copyMenus: MenuProps['items'] = [
       {
         key: 'copy-link',
         label: '复制视频链接',
         icon: <IconPark name='Copy' size={15} />,
         onClick: onCopyLink,
       },
-      {
+      bvid && {
         key: 'copy-bvid',
         label: '复制 BVID',
         icon: <IconPark name='Copy' size={15} />,
@@ -371,8 +371,9 @@ const VideoCardInner = memo(function VideoCardInner({
           copyContent(bvid)
         },
       },
+    ].filter(Boolean)
 
-      { type: 'divider' as const },
+    const actionMenus: MenuProps['items'] = [
       hasDislikeEntry && {
         key: 'dislike',
         label: '我不想看',
@@ -454,10 +455,11 @@ const VideoCardInner = memo(function VideoCardInner({
             onMoveToFirst?.(item, cardData)
           },
         },
+    ].filter(Boolean)
 
-      ...(item.api === EApiType.Fav
+    const favMenus: MenuProps['items'] =
+      item.api === EApiType.Fav
         ? [
-            { type: 'divider' as const },
             {
               key: 'open-fav-folder',
               label: '浏览收藏夹',
@@ -484,8 +486,21 @@ const VideoCardInner = memo(function VideoCardInner({
               },
             },
           ]
-        : []),
+        : []
 
+    return [
+      ...consistentOpenMenus,
+
+      copyMenus.length && divider,
+      ...copyMenus,
+
+      actionMenus.length && divider,
+      ...actionMenus,
+
+      favMenus.length && divider,
+      ...favMenus,
+
+      conditionalOpenMenus.length && divider,
       ...conditionalOpenMenus,
     ].filter(Boolean)
   }, [
