@@ -1,5 +1,35 @@
 # Changelog
 
+## v0.22.0
+
+- 新 Tab: 排行榜 (我发现排行榜上可能会发现有意思的视频, 所以就加了)
+- 小窗打开: 在 edge 下添加一个关闭按钮.
+- 过滤: 支持过滤 goto=bangumi 内容.
+
+details
+
+- d73b504 deps: ncu
+- 7cb8b50 Merge pull request #95 from magicdawn/feat-ranking
+- da94daa feat(ranking): 添加其他上榜视频
+- 4097112 feat(ranking): use medal colors & add tooltip help text
+- 6b94755 feat(ranking): detect vertical video for open-in-pip
+- aa40585 feat: add custom usePopupContainer hook
+- 5f95a89 refactor: contextMenus
+- b298846 chore: hide KeepFollowOnly in default settings
+- c0bfcad feat(ranking): continue polish ranking tab
+- a36811b feat(ranking): impl for bangumi & cinema ranking-type
+- 62241a0 feat(ranking): it works for normal-category
+- a7649d1 feat: partial implement ranking
+- 154f2f7 deps: ncu
+- eaf920f feat: unify getFollowedStatus
+- dffb62c feat: add filter for bangumi
+- 80532da refactor: move settings pane to separate files & migrate more scss modules to emotion
+- 8fcc2e5 fix: Fix emotion css prop not working issue
+- 1a5438b chore: utilize corepack
+- 19e29ff feat: update videoshot img preload strategy
+- c436fc1 feat: add .action-button for custom css
+- 5367906 feat: add edge only close-button
+
 ## v0.21.9
 
 details
