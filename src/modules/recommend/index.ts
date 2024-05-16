@@ -4,7 +4,7 @@ import { getColumnCount } from '$components/RecGrid/useShortcut'
 import { ETabType } from '$components/RecHeader/tab.shared'
 import { anyFilterEnabled, filterRecItems } from '$components/VideoCard/process/filter'
 import { lookinto } from '$components/VideoCard/process/normalize'
-import type { RecItemExtraType } from '$define'
+import type { RecItemTypeOrSeparator } from '$define'
 import { EApiType } from '$define/index.shared'
 import { uniqBy } from 'lodash'
 import { AppRecService } from './app'
@@ -12,20 +12,21 @@ import { PcRecService } from './pc'
 
 const debug = baseDebug.extend('service')
 
-export const recItemUniqer = (item: RecItemExtraType) =>
+export const recItemUniqer = (item: RecItemTypeOrSeparator) =>
   item.api === EApiType.Separator
     ? item.uniqId
     : lookinto<string | number>(item, {
-        'pc': (item) => item.bvid,
-        'app': (item) => item.param,
-        'dynamic': (item) => item.modules.module_dynamic.major.archive.bvid,
-        'watchlater': (item) => item.bvid,
-        'fav': (item) => item.bvid,
-        'popular-general': (item) => item.bvid,
-        'popular-weekly': (item) => item.bvid,
+        [EApiType.App]: (item) => item.param,
+        [EApiType.Pc]: (item) => item.bvid,
+        [EApiType.Dynamic]: (item) => item.modules.module_dynamic.major.archive.bvid,
+        [EApiType.Watchlater]: (item) => item.bvid,
+        [EApiType.Fav]: (item) => item.bvid,
+        [EApiType.PopularGeneral]: (item) => item.bvid,
+        [EApiType.PopularWeekly]: (item) => item.bvid,
+        [EApiType.Ranking]: (item) => item.uniqId,
       })
 
-export function uniqConcat(existing: RecItemExtraType[], newItems: RecItemExtraType[]) {
+export function uniqConcat(existing: RecItemTypeOrSeparator[], newItems: RecItemTypeOrSeparator[]) {
   const ids = existing.map(recItemUniqer)
   newItems = uniqBy(newItems, recItemUniqer)
   return existing.concat(
@@ -46,11 +47,11 @@ export async function getMinCount(
   const { tab, abortSignal, pcRecService, serviceMap } = fetcherOptions
   const appRecService = new AppRecService()
 
-  let items: RecItemExtraType[] = []
+  let items: RecItemTypeOrSeparator[] = []
   let hasMore = true
 
   const addMore = async (restCount: number) => {
-    let cur: RecItemExtraType[] = []
+    let cur: RecItemTypeOrSeparator[] = []
 
     // dynamic-feed     动态
     // watchlater       稍候再看
@@ -61,6 +62,7 @@ export async function getMinCount(
     if (service) {
       cur = (await service.loadMore(abortSignal)) || []
       hasMore = service.hasMore
+      cur = filterRecItems(cur, tab)
       items = items.concat(cur)
       items = uniqBy(items, recItemUniqer)
       return
@@ -151,7 +153,7 @@ export async function refreshForGrid(fetcherOptions: FetcherOptions) {
 }
 
 export async function getRecommendTimes(times: number, tab: ETabType, pcRecService: PcRecService) {
-  let items: RecItemExtraType[] = usePcApi(tab)
+  let items: RecItemTypeOrSeparator[] = usePcApi(tab)
     ? await pcRecService.getRecommendTimes(times)
     : await new AppRecService().getRecommendTimes(times)
   items = filterRecItems(items, tab)

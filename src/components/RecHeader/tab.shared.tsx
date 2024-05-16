@@ -11,6 +11,7 @@ export enum ETabType {
   Fav = 'fav',
   PopularGeneral = 'popular-general',
   PopularWeekly = 'popular-weekly',
+  Ranking = 'ranking',
 }
 
 export type TabConfigItem = {
@@ -75,6 +76,14 @@ export const TabConfig: Record<ETabType, TabConfigItem> = {
     label: '每周必看',
     desc: '每周五晚 18:00 更新',
     anonymousUsage: true,
+  },
+  [ETabType.Ranking]: {
+    icon: 'Ranking',
+    iconProps: { size: 15 },
+    label: '排行榜',
+    desc: '排行榜根据稿件内容质量，近期的数据综合展示，动态更新',
+    anonymousUsage: true,
+    swr: true,
   },
 }
 

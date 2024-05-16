@@ -18,3 +18,12 @@ export const antdBtnTextStyle = css`
   display: inline-block;
   margin-top: 2px;
 `
+
+export const antdCss = {
+  btn: css`
+    ${flexCenterStyle}
+    >span {
+      ${antdBtnTextStyle}
+    }
+  `,
+}

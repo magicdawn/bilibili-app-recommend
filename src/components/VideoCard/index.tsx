@@ -1,5 +1,4 @@
 import { APP_KEY_PREFIX, APP_NAME } from '$common'
-import { flexVerticalCenterStyle } from '$common/emotion-css'
 import { useMittOn } from '$common/hooks/useMitt'
 import { useRefStateBox } from '$common/hooks/useRefState'
 import { useDislikedReason } from '$components/ModalDislike'
@@ -7,7 +6,7 @@ import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import type { OnRefresh } from '$components/RecGrid/useRefresh'
 import { useCurrentUsingTab, videoSourceTabState } from '$components/RecHeader/tab'
 import { ETabType } from '$components/RecHeader/tab.shared'
-import { type AppRecItemExtend, type RecItemType } from '$define'
+import { isRanking, type AppRecItemExtend, type RecItemType } from '$define'
 import { EApiType } from '$define/index.shared'
 import { IconPark } from '$icon-park'
 import { cx } from '$libs'
@@ -20,6 +19,7 @@ import { UserfollowService } from '$modules/user/relations/follow'
 import { isFirefox } from '$platform'
 import { Picture } from '$ui-components/Picture'
 import { AntdMessage } from '$utility'
+import { useLockFn } from 'ahooks'
 import type { MenuProps } from 'antd'
 import { Dropdown } from 'antd'
 import delay from 'delay'
@@ -37,6 +37,7 @@ import { getFollowedStatus } from './process/filter'
 import type { IVideoCardData } from './process/normalize'
 import { normalizeCardData } from './process/normalize'
 import { AppRecIconScaleMap, AppRecIconSvgNameMap, makeStatItem } from './stat-item'
+import { ChargeTag, RankingNumMark } from './top-marks'
 import { DislikeIcon, useDislikeRelated } from './use/useDislikeRelated'
 import { useOpenRelated } from './use/useOpenRelated'
 import { usePreviewAnimation } from './use/usePreviewAnimation'
@@ -134,7 +135,7 @@ const VideoCardInner = memo(function VideoCardInner({
   onRefresh,
   emitter = defaultEmitter,
 }: VideoCardInnerProps) {
-  const { autoPreviewWhenHover, accessKey, videoLinkOpenMode } = useSettingsSnapshot()
+  const { autoPreviewWhenHover, accessKey } = useSettingsSnapshot()
   const authed = Boolean(accessKey)
 
   const {
@@ -163,16 +164,10 @@ const VideoCardInner = memo(function VideoCardInner({
   }
 
   const videoDataBox = useRefStateBox<VideoData | null>(null)
-  const isFetchingVideoData = useRef(false)
-  const tryFetchVideoData = useMemoizedFn(async () => {
+  const tryFetchVideoData = useLockFn(async () => {
+    if (!bvid) return // no bvid
     if (videoDataBox.val) return // already fetched
-    if (isFetchingVideoData.current) return // fetching
-    try {
-      isFetchingVideoData.current = true
-      videoDataBox.set(await fetchVideoData(bvid))
-    } finally {
-      isFetchingVideoData.current = false
-    }
+    videoDataBox.set(await fetchVideoData(bvid))
   })
 
   /**
@@ -296,10 +291,12 @@ const VideoCardInner = memo(function VideoCardInner({
   // 已关注 item.api 也为 'pc', 故使用 tab, 而不是 api 区分
   const tab = useCurrentUsingTab()
   const hasBlacklistEntry =
-    tab === ETabType.RecommendApp ||
-    tab === ETabType.RecommendPc ||
-    tab === ETabType.PopularGeneral ||
-    tab === ETabType.PopularWeekly
+    authorMid &&
+    (tab === ETabType.RecommendApp ||
+      tab === ETabType.RecommendPc ||
+      tab === ETabType.PopularGeneral ||
+      tab === ETabType.PopularWeekly ||
+      tab === ETabType.Ranking)
 
   const onBlacklistUp = useMemoizedFn(async () => {
     if (!authorMid) return AntdMessage.error('UP mid 为空!')
@@ -352,20 +349,21 @@ const VideoCardInner = memo(function VideoCardInner({
     openInNewWindow()
   })
 
+  const hasRankingNo = isRanking(item)
+
   const contextMenus: MenuProps['items'] = useMemo(() => {
     const watchLaterLabel = watchLaterAdded ? '移除稍后再看' : '稍后再看'
 
-    return [
-      ...consistentOpenMenus,
+    const divider = { type: 'divider' as const }
 
-      { type: 'divider' as const },
+    const copyMenus: MenuProps['items'] = [
       {
         key: 'copy-link',
         label: '复制视频链接',
         icon: <IconPark name='Copy' size={15} />,
         onClick: onCopyLink,
       },
-      {
+      bvid && {
         key: 'copy-bvid',
         label: '复制 BVID',
         icon: <IconPark name='Copy' size={15} />,
@@ -373,8 +371,9 @@ const VideoCardInner = memo(function VideoCardInner({
           copyContent(bvid)
         },
       },
+    ].filter(Boolean)
 
-      { type: 'divider' as const },
+    const actionMenus: MenuProps['items'] = [
       hasDislikeEntry && {
         key: 'dislike',
         label: '我不想看',
@@ -456,10 +455,11 @@ const VideoCardInner = memo(function VideoCardInner({
             onMoveToFirst?.(item, cardData)
           },
         },
+    ].filter(Boolean)
 
-      ...(item.api === EApiType.Fav
+    const favMenus: MenuProps['items'] =
+      item.api === EApiType.Fav
         ? [
-            { type: 'divider' as const },
             {
               key: 'open-fav-folder',
               label: '浏览收藏夹',
@@ -486,8 +486,21 @@ const VideoCardInner = memo(function VideoCardInner({
               },
             },
           ]
-        : []),
+        : []
 
+    return [
+      ...consistentOpenMenus,
+
+      copyMenus.length && divider,
+      ...copyMenus,
+
+      actionMenus.length && divider,
+      ...actionMenus,
+
+      favMenus.length && divider,
+      ...favMenus,
+
+      conditionalOpenMenus.length && divider,
       ...conditionalOpenMenus,
     ].filter(Boolean)
   }, [
@@ -585,38 +598,10 @@ const VideoCardInner = memo(function VideoCardInner({
               )}
 
               {/* 充电专属 */}
-              {hasChargeTag && (
-                <div
-                  css={css`
-                    ${VideoCardActionStyle.top('left')}
-                    ${flexVerticalCenterStyle}
-                    padding: 1px 6px 1px 4px;
-                    font-size: 10px;
-                    color: #fff;
-                    text-align: center;
-                    line-height: 17px;
-                    border-radius: 2px;
-                    margin-left: 4px;
-                    white-space: nowrap;
-                    background-color: #f69;
-                    background-color: ${colorPrimaryValue};
-                  `}
-                >
-                  <svg
-                    width='16'
-                    height='17'
-                    viewBox='0 0 16 17'
-                    fill='none'
-                    xmlns='http://www.w3.org/2000/svg'
-                  >
-                    <path
-                      d='M5.00014 14.9839C4.94522 15.1219 5.12392 15.2322 5.22268 15.1212L11.5561 8.00214C11.7084 7.83093 11.5869 7.56014 11.3578 7.56014H9.13662L11.6019 3.57178C11.7112 3.39489 11.584 3.16666 11.376 3.16666H7.4475C7.22576 3.16666 7.02737 3.30444 6.94992 3.51221L4.68362 9.59189C4.61894 9.76539 4.74725 9.95014 4.93241 9.95014H7.00268L5.00014 14.9839Z'
-                      fill='white'
-                    ></path>
-                  </svg>
-                  充电专属
-                </div>
-              )}
+              {hasChargeTag && <ChargeTag />}
+
+              {/* 排行榜 */}
+              {hasRankingNo && <RankingNumMark item={item} />}
             </div>
 
             <div

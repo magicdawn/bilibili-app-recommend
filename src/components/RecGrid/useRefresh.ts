@@ -3,13 +3,15 @@ import { useRefInit } from '$common/hooks/useRefInit'
 import { useRefState } from '$common/hooks/useRefState'
 import { useCurrentUsingTab } from '$components/RecHeader/tab'
 import { ETabType, TabConfig } from '$components/RecHeader/tab.shared'
-import type { RecItemExtraType } from '$define'
+import type { RecItemTypeOrSeparator } from '$define'
 import type { IService } from '$modules/recommend/base'
 import { DynamicFeedRecService, dynamicFeedFilterStore } from '$modules/recommend/dynamic-feed'
 import { FavRecService } from '$modules/recommend/fav'
 import { PcRecService } from '$modules/recommend/pc'
 import { PopularGeneralService } from '$modules/recommend/popular-general'
 import { PopularWeeklyService } from '$modules/recommend/popular-weekly'
+import { RankingService } from '$modules/recommend/ranking/ranking-service'
+import { rankingStore } from '$modules/recommend/ranking/ranking-usage-info'
 import { WatchLaterRecService } from '$modules/recommend/watchlater'
 import { settings } from '$modules/settings'
 import { nextTick } from '$utility'
@@ -32,6 +34,7 @@ const serviceFactories = {
   [ETabType.Fav]: () => new FavRecService(),
   [ETabType.PopularGeneral]: () => new PopularGeneralService(),
   [ETabType.PopularWeekly]: () => new PopularWeeklyService(),
+  [ETabType.Ranking]: () => new RankingService(rankingStore.slug),
 } satisfies Partial<Record<ETabType, (options?: OnRefreshOptions) => IService>>
 
 export type ServiceMapKey = keyof typeof serviceFactories
@@ -65,7 +68,7 @@ export function useRefresh({
 }: {
   tab: ETabType
   debug: Debugger
-  fetcher: (opts: FetcherOptions) => Promise<RecItemExtraType[]>
+  fetcher: (opts: FetcherOptions) => Promise<RecItemTypeOrSeparator[]>
   recreateService: boolean
   preAction?: () => void | Promise<void>
   postAction?: () => void | Promise<void>
@@ -75,11 +78,11 @@ export function useRefresh({
 }) {
   const tab = useCurrentUsingTab()
 
-  const itemsCache = useRefInit<Partial<Record<ETabType, RecItemExtraType[]>>>(() => ({}))
+  const itemsCache = useRefInit<Partial<Record<ETabType, RecItemTypeOrSeparator[]>>>(() => ({}))
   const itemsHasCache = useRefInit<Partial<Record<ETabType, boolean>>>(() => ({}))
 
   const [hasMore, setHasMore, getHasMore] = useRefState(true)
-  const [items, setItems, getItems] = useRefState<RecItemExtraType[]>([])
+  const [items, setItems, getItems] = useRefState<RecItemTypeOrSeparator[]>([])
   useEffect(() => {
     tryit(() => {
       ;(unsafeWindow as any)[`${APP_KEY_PREFIX}_gridItems`] = items
@@ -166,7 +169,7 @@ export function useRefresh({
 
     await preAction?.()
 
-    let _items: RecItemExtraType[] = []
+    let _items: RecItemTypeOrSeparator[] = []
     let err: any
     const doFetch = async () => {
       try {
@@ -235,6 +238,9 @@ export function useRefresh({
       } else {
         recreateFor(tab)
       }
+    }
+    if (tab === ETabType.Ranking) {
+      recreateFor(tab)
     }
 
     const _abortController = new AbortController()

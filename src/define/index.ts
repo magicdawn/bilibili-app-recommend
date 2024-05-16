@@ -1,3 +1,5 @@
+import type { RankingItem } from '$modules/recommend/ranking/api'
+import type { CategorySlug, CategoryType } from '$modules/recommend/ranking/category'
 import type { android } from './app-recommend.android'
 import type { ipad } from './app-recommend.ipad'
 import type { DmJson } from './dm'
@@ -58,35 +60,45 @@ export type RecItemType =
   | FavItemExtend
   | PopularGeneralItemExtend
   | PopularWeeklyItemExtend
+  | RankingItemExtended
 
-export type RecItemExtraType = RecItemType | ItemsSeparator
+export type RecItemTypeOrSeparator = RecItemType | ItemsSeparator
 
 export type ItemsSeparator = { uniqId: string; api: EApiType.Separator; content: ReactNode }
 
-export interface PcRecItemExtend extends PcRecItem {
+export type PcRecItemExtend = PcRecItem & {
   uniqId: string
   api: EApiType.Pc
 }
 
-export interface DynamicFeedItemExtend extends DynamicFeedItem {
+export type DynamicFeedItemExtend = DynamicFeedItem & {
   uniqId: string
   api: EApiType.Dynamic
 }
 
-export interface WatchLaterItemExtend extends WatchLaterItem {
+export type WatchLaterItemExtend = WatchLaterItem & {
   uniqId: string
   api: EApiType.Watchlater
 }
 
-export interface PopularGeneralItemExtend extends PopularGeneralItem {
+export type PopularGeneralItemExtend = PopularGeneralItem & {
   uniqId: string
   api: EApiType.PopularGeneral
 }
 
-export interface PopularWeeklyItemExtend extends PopularWeeklyItem {
+export type PopularWeeklyItemExtend = PopularWeeklyItem & {
   uniqId: string
   api: EApiType.PopularWeekly
 }
+
+export type RankingItemExtendProps = {
+  uniqId: string
+  api: EApiType.Ranking
+  rankingNo: number
+  slug: CategorySlug
+  categoryType: CategoryType
+}
+export type RankingItemExtended = RankingItem & RankingItemExtendProps
 
 export function isApp(item: RecItemType): item is AppRecItemExtend {
   return item.api === EApiType.App
@@ -108,4 +120,8 @@ export function isPopularGeneral(item: RecItemType): item is PopularGeneralItemE
 }
 export function isPopularWeekly(item: RecItemType): item is PopularWeeklyItemExtend {
   return item.api === EApiType.PopularWeekly
+}
+
+export function isRanking(item: RecItemType): item is RankingItemExtended {
+  return item.api === EApiType.Ranking
 }

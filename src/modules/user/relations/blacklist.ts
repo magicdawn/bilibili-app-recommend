@@ -22,13 +22,13 @@ export const UserBlacklistService = {
 
 const STORAGE_KEY = `${APP_NAME}-blacklist-mids`
 const initialVaue = (localStorage.getItem(STORAGE_KEY) || '').split(',')
-export const blacklistIds = proxySet<string>(initialVaue)
-subscribe(blacklistIds, (val) => {
-  localStorage.setItem(STORAGE_KEY, Array.from(snapshot(blacklistIds)).join(','))
+export const blacklistMids = proxySet<string>(initialVaue)
+subscribe(blacklistMids, (val) => {
+  localStorage.setItem(STORAGE_KEY, Array.from(snapshot(blacklistMids)).join(','))
 })
 
 export function useInBlacklist(upMid?: string) {
-  const set = useSnapshot(blacklistIds)
+  const set = useSnapshot(blacklistMids)
   return upMid && set.has(upMid)
 }
 
@@ -40,9 +40,9 @@ function blacklistActionFactory(action: 'follow' | 'remove') {
 
     if (success) {
       if (action === 'follow') {
-        blacklistIds.add(upMid)
+        blacklistMids.add(upMid)
       } else if (action === 'remove') {
-        blacklistIds.delete(upMid)
+        blacklistMids.delete(upMid)
       }
     }
 
@@ -94,9 +94,9 @@ export async function getUserBlacklist() {
   const ids = await getUserBlacklist()
 
   if (ids) {
-    blacklistIds.clear()
+    blacklistMids.clear()
     ids.forEach((x) => {
-      blacklistIds.add(x.toString())
+      blacklistMids.add(x.toString())
     })
   }
 

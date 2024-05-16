@@ -12,7 +12,7 @@ import { VideoCard } from '$components/VideoCard'
 import type { VideoCardEmitter, VideoCardEvents } from '$components/VideoCard/index.shared'
 import { borderRadiusValue } from '$components/VideoCard/index.shared'
 import type { IVideoCardData } from '$components/VideoCard/process/normalize'
-import { type RecItemExtraType, type RecItemType } from '$define'
+import { type RecItemType, type RecItemTypeOrSeparator } from '$define'
 import { EApiType } from '$define/index.shared'
 import { $headerHeight } from '$header'
 import { IconPark } from '$icon-park'
@@ -471,7 +471,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
     )
   }
 
-  const renderItem = (item: RecItemExtraType) => {
+  const renderItem = (item: RecItemTypeOrSeparator) => {
     if (item.api === EApiType.Separator) {
       return (
         <Divider

@@ -2,7 +2,7 @@ import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import { cx } from '$libs'
 import { css } from '@emotion/react'
 import { useHover } from 'ahooks'
-import type { ComponentProps, ReactNode } from 'react'
+import { type ComponentProps, type ReactNode } from 'react'
 
 const baseZ = 3
 
@@ -83,20 +83,34 @@ export function VideoCardActionButton({
   tooltip: string
   visible?: boolean
 } & ComponentProps<'div'>) {
-  const wrapper = useRef(null)
-  const hovering = useHover(wrapper)
   visible ??= true
+  const { triggerRef, tooltipEl } = useTooltip({ inlinePosition, tooltip })
   return (
     <div
       {...divProps}
-      ref={wrapper}
+      ref={triggerRef}
       css={[S.button(visible)]}
       className={cx('action-button', className)}
     >
       {icon}
-      <span style={{ display: hovering ? 'block' : 'none' }} css={S.tooltip(inlinePosition)}>
-        {tooltip}
-      </span>
+      {tooltipEl}
     </div>
   )
+}
+
+export function useTooltip({
+  inlinePosition,
+  tooltip,
+}: {
+  inlinePosition: InlinePosition
+  tooltip: ReactNode
+}) {
+  const triggerRef = useRef(null)
+  const hovering = useHover(triggerRef)
+  const tooltipEl = (
+    <span style={{ display: hovering ? 'block' : 'none' }} css={S.tooltip(inlinePosition)}>
+      {tooltip}
+    </span>
+  )
+  return { triggerRef, tooltipEl }
 }

@@ -1,6 +1,6 @@
 import { baseDebug } from '$common'
 // import { useSticky } from 'react-use-sticky'
-import { antdBtnTextStyle, flexCenterStyle } from '$common/emotion-css'
+import { antdCss, flexCenterStyle } from '$common/emotion-css'
 import { useSticky } from '$common/hooks/useSticky'
 import { ModalSettings } from '$components/ModalSettings'
 import type { OnRefresh } from '$components/RecGrid/useRefresh'
@@ -176,8 +176,8 @@ export const RecHeader = forwardRef<
               />
 
               {showModalFeedEntry && (
-                <Button css={flexCenterStyle} onClick={showModalFeed}>
-                  <span css={antdBtnTextStyle}>查看更多</span>
+                <Button css={antdCss.btn} onClick={showModalFeed}>
+                  <span>查看更多</span>
                   <svg
                     css={css`
                       width: 12px;

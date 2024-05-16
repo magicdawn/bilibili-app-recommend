@@ -33,6 +33,7 @@ export function VideoCardBottom({
     // adpater specific
     appBadge,
     appBadgeDesc,
+    rankingDesc,
   } = cardData
 
   const isNormalVideo = goto === 'av'
@@ -123,21 +124,24 @@ export function VideoCardBottom({
             css={css`
               display: flex;
               margin-top: 15px;
+              column-gap: 5px;
             `}
           >
-            <a href={authorHref} target='_blank' onClick={handleVideoLinkClick}>
-              {authorFace ? (
-                <Avatar src={getAvatarSrc(authorFace)} />
-              ) : (
-                <Avatar>{authorName?.[0] || appBadgeDesc?.[0] || ''}</Avatar>
-              )}
-            </a>
+            {!!authorMid && (
+              <a href={authorHref} target='_blank' onClick={handleVideoLinkClick}>
+                {authorFace ? (
+                  <Avatar src={getAvatarSrc(authorFace)} />
+                ) : (
+                  <Avatar>{authorName?.[0] || appBadgeDesc?.[0] || ''}</Avatar>
+                )}
+              </a>
+            )}
 
             <div
               css={css`
                 flex: 1;
-                margin-left: 10px;
                 overflow: hidden;
+                margin-left: 5px;
               `}
             >
               <h3
@@ -202,6 +206,17 @@ export function VideoCardBottom({
                     {!!appBadge && <span className={styles.badge}>{appBadge}</span>}
                     {!!appBadgeDesc && <span className={styles.bangumiDesc}>{appBadgeDesc}</span>}
                   </a>
+                </Case>
+                <Case condition={rankingDesc}>
+                  <div
+                    css={css`
+                      color: #999;
+                      font-size: 12px;
+                      margin-top: 2px;
+                    `}
+                  >
+                    {rankingDesc}
+                  </div>
                 </Case>
               </Switch>
             </div>

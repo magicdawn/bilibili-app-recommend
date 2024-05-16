@@ -1,9 +1,9 @@
 import { baseDebug } from '$common'
-import type { ETabType } from '$components/RecHeader/tab.shared'
-import type { RecItemExtraType } from '$define'
+import { ETabType } from '$components/RecHeader/tab.shared'
+import type { RecItemTypeOrSeparator } from '$define'
 import { EApiType } from '$define/index.shared'
 import { settings, settings as settingsProxy } from '$modules/settings'
-import { blacklistIds } from '$modules/user/relations/blacklist'
+import { blacklistMids } from '$modules/user/relations/blacklist'
 import { snapshot } from 'valtio'
 import { normalizeCardData } from './normalize'
 
@@ -16,6 +16,7 @@ export function getFollowedStatus(recommendReason?: string): boolean {
 export function anyFilterEnabled(tab: ETabType) {
   return (
     tab === 'keep-follow-only' ||
+    blacklistMids.size ||
     (settings.filterEnabled &&
       (settings.filterMinDurationEnabled ||
         settings.filterMinPlayCountEnabled ||
@@ -25,7 +26,7 @@ export function anyFilterEnabled(tab: ETabType) {
   )
 }
 
-export function filterRecItems(items: RecItemExtraType[], tab: ETabType) {
+export function filterRecItems(items: RecItemTypeOrSeparator[], tab: ETabType) {
   if (!anyFilterEnabled(tab)) {
     return items
   }
@@ -47,63 +48,86 @@ export function filterRecItems(items: RecItemExtraType[], tab: ETabType) {
       if (!followed) return false
     }
 
-    const isVideo = goto === 'av'
-    const isPicture = goto === 'picture'
-    const isBangumi = goto === 'bangumi'
-    // console.log('filter: goto = %s', goto)
-
-    if (authorMid && blacklistIds.size) {
-      if (blacklistIds.has(authorMid)) {
-        debug('filter out by blacklist-rule: %s %o', authorMid, { bvid, title })
-        return false
+    function commonChecks() {
+      // blacklist
+      if (authorMid && blacklistMids.size) {
+        if (blacklistMids.has(authorMid)) {
+          debug('filter out by blacklist-rule: %s %o', authorMid, { bvid, title })
+          return false
+        }
       }
-    }
 
-    // up
-    if (
-      settings.filterByAuthorNameEnabled &&
-      settings.filterByAuthorNameKeywords.length &&
-      (authorName || authorMid)
-    ) {
+      // up
       if (
-        (authorName && settings.filterByAuthorNameKeywords.includes(authorName)) ||
-        (authorMid && settings.filterByAuthorNameKeywords.includes(authorMid))
+        settings.filterByAuthorNameEnabled &&
+        settings.filterByAuthorNameKeywords.length &&
+        (authorName || authorMid)
       ) {
-        debug('filter out by author-rule: %o', {
-          authorName,
-          authorMid,
-          rules: settings.filterByAuthorNameKeywords,
-          bvid,
-          title,
-        })
+        if (
+          (authorName && settings.filterByAuthorNameKeywords.includes(authorName)) ||
+          (authorMid && settings.filterByAuthorNameKeywords.includes(authorMid))
+        ) {
+          debug('filter out by author-rule: %o', {
+            authorName,
+            authorMid,
+            rules: settings.filterByAuthorNameKeywords,
+            bvid,
+            title,
+          })
+          return false
+        }
+      }
+
+      // title
+      if (settings.filterByTitleEnabled && settings.filterByTitleKeywords.length && title) {
+        if (
+          settings.filterByTitleKeywords.some((keyword) => {
+            if (keyword.startsWith('/') && keyword.endsWith('/')) {
+              const regex = new RegExp(keyword.slice(1, -1), 'i')
+              return regex.test(title)
+            } else {
+              return title.includes(keyword)
+            }
+          })
+        ) {
+          debug('filter out by title-rule: %o', {
+            title,
+            rules: settings.filterByTitleKeywords,
+            bvid,
+          })
+          return false
+        }
+      }
+    }
+
+    // expect
+    // KeepFollowOnly = 'keep-follow-only',
+    // DynamicFeed = 'dynamic-feed',
+    // Watchlater = 'watchlater',
+    // Fav = 'fav',
+    const enableCommonChecks = (
+      [
+        ETabType.RecommendApp,
+        ETabType.RecommendPc,
+        ETabType.PopularGeneral,
+        ETabType.PopularWeekly,
+        ETabType.Ranking,
+      ] satisfies ETabType[]
+    ).includes(tab)
+    if (enableCommonChecks) {
+      if (commonChecks() === false) {
         return false
       }
     }
 
-    // title
-    if (settings.filterByTitleEnabled && settings.filterByTitleKeywords.length && title) {
-      if (
-        settings.filterByTitleKeywords.some((keyword) => {
-          if (keyword.startsWith('/') && keyword.endsWith('/')) {
-            const regex = new RegExp(keyword.slice(1, -1), 'i')
-            return regex.test(title)
-          } else {
-            return title.includes(keyword)
-          }
-        })
-      ) {
-        debug('filter out by title-rule: %o', {
-          title,
-          rules: settings.filterByTitleKeywords,
-          bvid,
-        })
-        return false
-      }
+    if (tab === ETabType.RecommendApp || tab === ETabType.RecommendPc) {
+      const isVideo = goto === 'av'
+      const isPicture = goto === 'picture'
+      const isBangumi = goto === 'bangumi'
+      if (isVideo) return filterVideo()
+      if (isPicture) return filterPicture()
+      if (isBangumi) return filterBangumi()
     }
-
-    if (isVideo) return filterVideo()
-    if (isPicture) return filterPicture()
-    if (isBangumi) return filterBangumi()
 
     return true // just keep it
 

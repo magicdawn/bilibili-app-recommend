@@ -15,6 +15,7 @@ import delay from 'delay'
 import { shuffle } from 'lodash'
 import pmap from 'promise.map'
 import type { Key } from 'react'
+import { usePopupContainer } from './_shared'
 import { QueueStrategy, type IService } from './base'
 
 export function formatFavFolderUrl(id: number) {
@@ -263,9 +264,12 @@ export function FavUsageInfo({
     }
   })
 
+  const { ref, getPopupContainer } = usePopupContainer()
+
   return (
-    <Space>
+    <Space ref={ref}>
       <Popover
+        getTooltipContainer={getPopupContainer}
         trigger={'click'}
         placement='bottom'
         onOpenChange={onPopupOpenChange}

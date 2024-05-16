@@ -6,7 +6,7 @@ import { EAppApiDevice } from '$define/index.shared'
 import { IconPark } from '$icon-park'
 import { cx } from '$libs'
 import { useIsDarkMode } from '$modules/dark-mode'
-import { updateSettings, useSettingsSnapshot } from '$modules/settings'
+import { initialSettings, updateSettings, useSettingsSnapshot } from '$modules/settings'
 import { AntdMessage } from '$utility'
 import type { DragEndEvent } from '@dnd-kit/core'
 import { DndContext, PointerSensor, closestCenter, useSensor, useSensors } from '@dnd-kit/core'
@@ -19,6 +19,7 @@ import {
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { Button, Checkbox, Col, Popconfirm, Radio } from 'antd'
+import { cloneDeep, pick } from 'lodash'
 import styles from '../index.module.scss'
 
 export function TabPaneVideoSourceTabConfig() {
@@ -50,7 +51,9 @@ export function TabPaneVideoSourceTabConfig() {
               title='确定'
               description='确定不是手欠点着玩? 再点一次确定吧~'
               onConfirm={() => {
-                updateSettings({ hidingTabKeys: [], customTabKeysOrder: [] })
+                updateSettings(
+                  cloneDeep(pick(initialSettings, ['hidingTabKeys', 'customTabKeysOrder'])),
+                )
               }}
             >
               <Button>重置</Button>

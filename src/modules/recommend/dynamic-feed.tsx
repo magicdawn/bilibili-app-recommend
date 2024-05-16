@@ -1,5 +1,5 @@
 import { IN_BILIBILI_HOMEPAGE, REQUEST_FAIL_MSG } from '$common'
-import { antdBtnTextStyle, flexCenterStyle } from '$common/emotion-css'
+import { antdCss } from '$common/emotion-css'
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
 import { type DynamicFeedItemExtend, type DynamicFeedJson } from '$define'
 import { EApiType } from '$define/index.shared'
@@ -10,11 +10,11 @@ import { isWebApiSuccess, request } from '$request'
 import { toast } from '$utility'
 import { getAvatarSrc } from '$utility/image'
 import { fastSortWithOrders } from '$utility/order-by'
-import type { ArrayItem } from '$utility/type'
-import type { MenuProps } from 'antd'
+import type { AntdMenuItemType } from '$utility/type'
 import { Avatar, Badge, Button, Dropdown, Input, Space } from 'antd'
 import delay from 'delay'
 import ms from 'ms'
+import { usePopupContainer } from './_shared'
 import type { IService } from './base'
 
 export class DynamicFeedRecService implements IService {
@@ -148,8 +148,6 @@ async function updateUpList(force = false) {
   dynamicFeedFilterStore.upListUpdatedAt = Date.now()
 }
 
-type MenuItemType = ArrayItem<Exclude<MenuProps['items'], undefined>>
-
 export function dynamicFeedFilterSelectUp(payload: Partial<typeof dynamicFeedFilterStore>) {
   Object.assign(dynamicFeedFilterStore, payload)
   // 选择了 up, 去除红点
@@ -160,8 +158,10 @@ export function dynamicFeedFilterSelectUp(payload: Partial<typeof dynamicFeedFil
 }
 
 export function DynamicFeedUsageInfo() {
+  const { ref, getPopupContainer } = usePopupContainer()
+
   const onRefresh = useOnRefreshContext()
-  const { hasSelectedUp, upName, upMid, searchText, upList } = useSnapshot(dynamicFeedFilterStore)
+  const { hasSelectedUp, upName, upMid, upList } = useSnapshot(dynamicFeedFilterStore)
 
   // try update on mount
   useMount(() => {
@@ -178,8 +178,8 @@ export function DynamicFeedUsageInfo() {
     onSelect({ upMid: undefined, upName: undefined, searchText: undefined })
   })
 
-  const menuItems = useMemo((): MenuItemType[] => {
-    const itemAll: MenuItemType = {
+  const menuItems = useMemo((): AntdMenuItemType[] => {
+    const itemAll: AntdMenuItemType = {
       key: 'all',
       icon: <Avatar size={'small'}>全</Avatar>,
       label: '全部',
@@ -215,7 +215,7 @@ export function DynamicFeedUsageInfo() {
     // console.log('sorted cost %s ms', _cost.toFixed(2))
     // }
 
-    const items: MenuItemType[] = upListSorted.map((up) => {
+    const items: AntdMenuItemType[] = upListSorted.map((up) => {
       let avatar: ReactNode = <Avatar size={'small'} src={getAvatarSrc(up.face)} />
       if (up.has_update) {
         avatar = <Badge dot>{avatar}</Badge>
@@ -259,10 +259,10 @@ export function DynamicFeedUsageInfo() {
 
   return (
     <>
-      {/* {hasSelectedUp && flexBreak} */}
-      <Space>
+      <Space ref={ref}>
         <Dropdown
           placement='bottomLeft'
+          getPopupContainer={getPopupContainer}
           menu={{
             items: menuItems,
             style: { maxHeight: '60vh', overflowY: 'scroll' },
@@ -272,9 +272,9 @@ export function DynamicFeedUsageInfo() {
         </Dropdown>
 
         {hasSelectedUp && (
-          <Button onClick={onClear} css={[flexCenterStyle]}>
+          <Button onClick={onClear} css={[antdCss.btn]}>
             <IconPark name='Return' size={14} style={{ marginRight: 5 }} />
-            <span css={antdBtnTextStyle}>清除</span>
+            <span>清除</span>
           </Button>
         )}
 
