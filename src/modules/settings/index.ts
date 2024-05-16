@@ -1,6 +1,6 @@
 import { APP_NAME, IN_BILIBILI_HOMEPAGE, baseDebug } from '$common'
 import { HAS_RESTORED_SETTINGS } from '$components/ModalSettings/index.shared'
-import type { ETabType } from '$components/RecHeader/tab.shared'
+import { ETabType } from '$components/RecHeader/tab.shared'
 import { VideoLinkOpenMode } from '$components/VideoCard/index.shared'
 import { EAppApiDevice } from '$define/index.shared'
 import { BilibiliArticleDraft } from '$modules/user/article-draft'
@@ -159,8 +159,8 @@ export const initialSettings = {
    * 隐藏的 tab, 使用黑名单, 功能迭代之后新增的 tab, 默认开启.
    * 如果使用白名单, 新增的 tab 会被隐藏
    */
-  hidingTabKeys: [] as ETabType[],
-  customTabKeysOrder: [] as ETabType[],
+  hidingTabKeys: [ETabType.KeepFollowOnly] satisfies ETabType[] as ETabType[],
+  customTabKeysOrder: [] satisfies ETabType[] as ETabType[],
 }
 
 export type Settings = typeof initialSettings
