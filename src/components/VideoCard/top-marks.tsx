@@ -1,7 +1,10 @@
 import { flexCenterStyle, flexVerticalCenterStyle } from '$common/emotion-css'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
-import type { RankingItemExtended } from '$define'
-import { RANKING_CATEGORIES_MAP } from '$modules/recommend/ranking/category'
+import type { RankingItemExtendProps, RankingItemExtended } from '$define'
+import type { NormalRankingItem } from '$modules/recommend/ranking/api.normal-category'
+import { RANKING_CATEGORIES_MAP, isNormalCategory } from '$modules/recommend/ranking/category'
+import { Dropdown } from 'antd'
+import IconParkOutlineMore from '~icons/icon-park-outline/more'
 import PhCrownFill from '~icons/ph/crown-fill'
 import { VideoCardActionStyle, useTooltip } from './child-components/VideoCardActions'
 
@@ -42,38 +45,85 @@ export function ChargeTag() {
   )
 }
 
+/* https://color.adobe.com/zh/metals-color-theme-18770781/ */
+function getColor(no: number) {
+  return no === 1
+    ? // gold
+      '#FFD700'
+    : no === 2
+      ? '#C0C0C0'
+      : no === 3
+        ? '#B36700'
+        : colorPrimaryValue
+}
+
 export function RankingNumMark({ item }: { item: RankingItemExtended }) {
-  const tooltip = `「${RANKING_CATEGORIES_MAP[item.slug].name}」排行第 ${item.rankingNo} 名`
-  const { triggerRef, tooltipEl } = useTooltip({ inlinePosition: 'left', tooltip })
+  const category = RANKING_CATEGORIES_MAP[item.slug]
+
   const hasMedal = item.rankingNo <= 3
 
+  let hasOthers = false
+  let others: NormalRankingItem[] = []
+  if (isNormalCategory(category)) {
+    const _item = item as NormalRankingItem & RankingItemExtendProps
+    if (_item.others?.length) {
+      hasOthers = true
+      others = _item.others
+    }
+  }
+
+  const tooltip = `「${category.name}」排行第 ${item.rankingNo} 名`
+  const { triggerRef, tooltipEl } = useTooltip({ inlinePosition: 'left', tooltip })
+
+  const roundButtonCss = [
+    flexCenterStyle,
+    css`
+      color: #fff;
+      border-radius: 50%;
+      margin-left: 4px;
+      white-space: nowrap;
+      width: 28px;
+      height: 28px;
+      background-color: ${getColor(item.rankingNo)};
+    `,
+  ]
+
   return (
-    <div
-      ref={triggerRef}
-      css={[
-        VideoCardActionStyle.top('left'),
-        flexCenterStyle,
-        css`
-          color: #fff;
-          border-radius: 50%;
-          margin-left: 4px;
-          white-space: nowrap;
-          width: 28px;
-          height: 28px;
-          /* cursor: help; */
-          /* https://color.adobe.com/zh/metals-color-theme-18770781/ */
-          background-color: ${item.rankingNo === 1
-            ? '#FFD700'
-            : item.rankingNo === 2
-              ? '#C0C0C0'
-              : item.rankingNo === 3
-                ? '#B36700'
-                : colorPrimaryValue};
-        `,
-      ]}
-    >
-      {hasMedal ? <PhCrownFill /> : item.rankingNo}
-      {tooltipEl}
+    <div css={VideoCardActionStyle.topContainer('left')}>
+      <div ref={triggerRef} css={roundButtonCss}>
+        {hasMedal ? <PhCrownFill /> : item.rankingNo}
+        {tooltipEl}
+      </div>
+
+      {hasOthers && (
+        <Dropdown
+          placement='bottomLeft'
+          menu={{
+            items: [
+              {
+                type: 'group',
+                label: '「其他上榜视频」',
+                children: others.map((x) => {
+                  return {
+                    key: x.bvid,
+                    label: x.title,
+                    onClick() {
+                      GM.openInTab(new URL(`/video/${x.bvid}`, location.href).href, {
+                        active: true,
+                        insert: true,
+                      })
+                    },
+                  }
+                }),
+              },
+            ],
+          }}
+        >
+          <div css={roundButtonCss}>
+            <IconParkOutlineMore />
+          </div>
+        </Dropdown>
+      )}
     </div>
   )
 }
