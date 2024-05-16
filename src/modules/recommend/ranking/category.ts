@@ -43,6 +43,10 @@ export function isCinemaCategory(c: Category): c is CinemaCategory {
   return c.type === 'cinema'
 }
 
+export function isNormalCategory(c: Category): c is NormalCategory {
+  return !isBangumiCategory(c) && !isCinemaCategory(c)
+}
+
 export function getRequestUrl(c: Category) {
   if (c.type === 'bangumi') {
     // 国产动画是个另类

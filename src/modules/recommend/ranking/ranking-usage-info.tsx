@@ -107,7 +107,7 @@ export function RankingUsageInfo() {
         onOpenChange={onOpenChange}
         placement='bottomLeft'
         getPopupContainer={getPopupContainer}
-        // overlayInnerStyle={{ border: `1px solid ${colorPrimaryValue}` }}
+        overlayInnerStyle={{ border: `1px solid ${colorPrimaryValue}` }}
         content={
           <>
             {renderCategoryList(RANKING_CATEGORIES_GROUPDED.normal, 'normal', '视频')}
