@@ -51,7 +51,7 @@ function useCurrentDisplayingTabKeys() {
   const { hidingTabKeys, customTabKeysOrder, showPopularWeeklyOnlyOnWeekend } =
     useSettingsSnapshot()
   const logined = useHasLogined()
-  return useMemo(() => {
+  const keys = useMemo(() => {
     const tabkeys = getSortedTabKeys(customTabKeysOrder)
     return tabkeys.filter((key) => {
       if (key === ETabType.RecommendApp && !logined) {
@@ -69,6 +69,12 @@ function useCurrentDisplayingTabKeys() {
       return !hidingTabKeys.includes(key)
     })
   }, [hidingTabKeys, customTabKeysOrder, showPopularWeeklyOnlyOnWeekend, logined])
+
+  if (QUERY_DYNAMIC_UP_MID && keys.includes(ETabType.DynamicFeed)) {
+    return [ETabType.DynamicFeed]
+  }
+
+  return keys
 }
 
 function useCurrentDisplayingTabConfigList(): ({ key: ETabType } & TabConfigItem)[] {
