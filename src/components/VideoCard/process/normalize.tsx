@@ -601,7 +601,7 @@ function apiRankingAdapter(_item: RankingItemExtended): IVideoCardData {
       danmaku: item.stat.danmaku,
       statItems: [
         { field: 'play', value: item.stat.view } as const,
-        { field: 'like', value: item.stat.follow } as const,
+        { field: 'bangumiFollow', value: item.stat.follow } as const,
         { field: 'danmaku', value: item.stat.danmaku } as const,
       ].filter(Boolean) satisfies StatItemType[],
 

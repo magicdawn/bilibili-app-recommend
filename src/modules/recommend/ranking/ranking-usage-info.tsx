@@ -38,7 +38,7 @@ export function RankingUsageInfo() {
       <div
         css={css`
           max-width: 500px;
-          margin-top: 12px;
+          margin-top: 15px;
           padding-top: 5px;
           &:first-child {
             margin-top: 0;

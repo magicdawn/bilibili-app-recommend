@@ -1,5 +1,4 @@
 import { APP_KEY_PREFIX, APP_NAME } from '$common'
-import { flexCenterStyle, flexVerticalCenterStyle } from '$common/emotion-css'
 import { useMittOn } from '$common/hooks/useMitt'
 import { useRefStateBox } from '$common/hooks/useRefState'
 import { useDislikedReason } from '$components/ModalDislike'
@@ -38,6 +37,7 @@ import { getFollowedStatus } from './process/filter'
 import type { IVideoCardData } from './process/normalize'
 import { normalizeCardData } from './process/normalize'
 import { AppRecIconScaleMap, AppRecIconSvgNameMap, makeStatItem } from './stat-item'
+import { ChargeTag, RankingNumMark } from './top-marks'
 import { DislikeIcon, useDislikeRelated } from './use/useDislikeRelated'
 import { useOpenRelated } from './use/useOpenRelated'
 import { usePreviewAnimation } from './use/usePreviewAnimation'
@@ -598,57 +598,10 @@ const VideoCardInner = memo(function VideoCardInner({
               )}
 
               {/* 充电专属 */}
-              {hasChargeTag && (
-                <div
-                  css={css`
-                    ${VideoCardActionStyle.top('left')}
-                    ${flexVerticalCenterStyle}
-                    padding: 1px 6px 1px 4px;
-                    font-size: 10px;
-                    color: #fff;
-                    text-align: center;
-                    line-height: 17px;
-                    border-radius: 2px;
-                    margin-left: 4px;
-                    white-space: nowrap;
-                    background-color: #f69;
-                    background-color: ${colorPrimaryValue};
-                  `}
-                >
-                  <svg
-                    width='16'
-                    height='17'
-                    viewBox='0 0 16 17'
-                    fill='none'
-                    xmlns='http://www.w3.org/2000/svg'
-                  >
-                    <path
-                      d='M5.00014 14.9839C4.94522 15.1219 5.12392 15.2322 5.22268 15.1212L11.5561 8.00214C11.7084 7.83093 11.5869 7.56014 11.3578 7.56014H9.13662L11.6019 3.57178C11.7112 3.39489 11.584 3.16666 11.376 3.16666H7.4475C7.22576 3.16666 7.02737 3.30444 6.94992 3.51221L4.68362 9.59189C4.61894 9.76539 4.74725 9.95014 4.93241 9.95014H7.00268L5.00014 14.9839Z'
-                      fill='white'
-                    ></path>
-                  </svg>
-                  充电专属
-                </div>
-              )}
+              {hasChargeTag && <ChargeTag />}
 
               {/* 排行榜 */}
-              {hasRankingNo && (
-                <div
-                  css={css`
-                    ${VideoCardActionStyle.top('left')}
-                    ${flexCenterStyle}
-                    color: #fff;
-                    border-radius: 50%;
-                    margin-left: 4px;
-                    white-space: nowrap;
-                    background-color: ${colorPrimaryValue};
-                    width: 28px;
-                    height: 28px;
-                  `}
-                >
-                  {item.rankingNo}
-                </div>
-              )}
+              {hasRankingNo && <RankingNumMark item={item} />}
             </div>
 
             <div
