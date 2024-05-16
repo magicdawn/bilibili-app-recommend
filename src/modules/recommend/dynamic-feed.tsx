@@ -1,5 +1,5 @@
 import { IN_BILIBILI_HOMEPAGE, REQUEST_FAIL_MSG } from '$common'
-import { antdBtnTextStyle, flexCenterStyle } from '$common/emotion-css'
+import { antdCss } from '$common/emotion-css'
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
 import { type DynamicFeedItemExtend, type DynamicFeedJson } from '$define'
 import { EApiType } from '$define/index.shared'
@@ -14,6 +14,7 @@ import type { AntdMenuItemType } from '$utility/type'
 import { Avatar, Badge, Button, Dropdown, Input, Space } from 'antd'
 import delay from 'delay'
 import ms from 'ms'
+import { usePopupContainer } from './_shared'
 import type { IService } from './base'
 
 export class DynamicFeedRecService implements IService {
@@ -157,8 +158,10 @@ export function dynamicFeedFilterSelectUp(payload: Partial<typeof dynamicFeedFil
 }
 
 export function DynamicFeedUsageInfo() {
+  const { ref, getPopupContainer } = usePopupContainer()
+
   const onRefresh = useOnRefreshContext()
-  const { hasSelectedUp, upName, upMid, searchText, upList } = useSnapshot(dynamicFeedFilterStore)
+  const { hasSelectedUp, upName, upMid, upList } = useSnapshot(dynamicFeedFilterStore)
 
   // try update on mount
   useMount(() => {
@@ -256,10 +259,10 @@ export function DynamicFeedUsageInfo() {
 
   return (
     <>
-      {/* {hasSelectedUp && flexBreak} */}
-      <Space>
+      <Space ref={ref}>
         <Dropdown
           placement='bottomLeft'
+          getPopupContainer={getPopupContainer}
           menu={{
             items: menuItems,
             style: { maxHeight: '60vh', overflowY: 'scroll' },
@@ -269,9 +272,9 @@ export function DynamicFeedUsageInfo() {
         </Dropdown>
 
         {hasSelectedUp && (
-          <Button onClick={onClear} css={[flexCenterStyle]}>
+          <Button onClick={onClear} css={[antdCss.btn]}>
             <IconPark name='Return' size={14} style={{ marginRight: 5 }} />
-            <span css={antdBtnTextStyle}>清除</span>
+            <span>清除</span>
           </Button>
         )}
 

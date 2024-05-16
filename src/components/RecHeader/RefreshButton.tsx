@@ -1,4 +1,4 @@
-import { antdBtnTextStyle, flexCenterStyle } from '$common/emotion-css'
+import { antdCss } from '$common/emotion-css'
 import type { OnRefresh } from '$components/RecGrid/useRefresh'
 import { useSettingsSnapshot } from '$modules/settings'
 import { shouldDisableShortcut } from '$utility/dom'
@@ -69,12 +69,14 @@ export const RefreshButton = forwardRef<RefreshButtonActions, RefreshButtonProps
       disabled={refreshing}
       className={className}
       style={style}
-      css={css`
-        ${flexCenterStyle}
-        &.ant-btn:not(:disabled):focus-visible {
-          outline: none;
-        }
-      `}
+      css={[
+        antdCss.btn,
+        css`
+          &.ant-btn:not(:disabled):focus-visible {
+            outline: none;
+          }
+        `,
+      ]}
       ref={btn}
       onClick={onClick}
     >
@@ -88,7 +90,7 @@ export const RefreshButton = forwardRef<RefreshButtonActions, RefreshButtonProps
       >
         <use href='#widget-roll'></use>
       </svg>
-      <span css={antdBtnTextStyle}>{text}</span>
+      <span>{text}</span>
     </Button>
   )
 })

@@ -1,8 +1,9 @@
-import { flexCenterStyle } from '$common/emotion-css'
-import { borderColorValue, colorPrimaryValue } from '$components/ModalSettings/theme.shared'
+import { antdCss, flexVerticalCenterStyle } from '$common/emotion-css'
+import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
+import { HelpInfo } from '$components/piece'
 import { Button, Popover } from 'antd'
-import { getPopupContainerFactory } from '../_shared'
+import { usePopupContainer } from '../_shared'
 import {
   RANKING_CATEGORIES_GROUPDED,
   RANKING_CATEGORIES_MAP,
@@ -14,19 +15,8 @@ export const rankingStore = proxy<{ slug: CategorySlug }>({
   slug: 'all',
 })
 
-const S = {
-  btn: css`
-    ${flexCenterStyle}
-    >span {
-      display: inline-block;
-      margin-top: 1px;
-    }
-  `,
-}
-
 export function RankingUsageInfo() {
-  const ref = useRef<HTMLDivElement>(null)
-  const getPopupContainer = useMemo(() => getPopupContainerFactory(ref), [])
+  const { ref, getPopupContainer } = usePopupContainer()
 
   const [open, setOpen] = useState(false)
   const hide = useCallback(() => setOpen(false), [])
@@ -39,37 +29,46 @@ export function RankingUsageInfo() {
 
   const onRefresh = useOnRefreshContext()
 
-  const renderCategoryList = (list: Category[], label: string) => {
+  const renderCategoryList = (
+    list: Category[],
+    key: keyof typeof RANKING_CATEGORIES_GROUPDED,
+    label: string,
+  ) => {
     return (
       <div
         css={css`
           max-width: 500px;
-
-          margin-top: 8px;
-          border-top: 1px solid ${borderColorValue};
-          padding-top: 8px;
-
+          margin-top: 12px;
+          padding-top: 5px;
           &:first-child {
             margin-top: 0;
-            border-top: none;
             padding-top: 0;
           }
         `}
       >
         <p
-          css={css`
-            margin-bottom: 5px;
-            margin-left: 2px;
-          `}
+          css={[
+            flexVerticalCenterStyle,
+            css`
+              margin-bottom: 8px;
+              color: #fff;
+              background-color: ${colorPrimaryValue};
+              padding: 5px 0;
+              padding-left: 6px;
+              border-radius: 5px;
+            `,
+          ]}
         >
           {label}
+          {key !== 'normal' && <HelpInfo>不能提供预览</HelpInfo>}
         </p>
         <div
           className='grid'
           css={css`
             display: grid;
             grid-template-columns: repeat(5, minmax(0, 1fr));
-            gap: 8px 15px;
+            gap: 8px 12px;
+            padding-inline: 2px;
           `}
         >
           {list.map((c) => {
@@ -78,7 +77,7 @@ export function RankingUsageInfo() {
               <Button
                 key={c.slug}
                 css={[
-                  S.btn,
+                  antdCss.btn,
                   active &&
                     css`
                       border-color: ${colorPrimaryValue};
@@ -108,15 +107,16 @@ export function RankingUsageInfo() {
         onOpenChange={onOpenChange}
         placement='bottomLeft'
         getPopupContainer={getPopupContainer}
+        // overlayInnerStyle={{ border: `1px solid ${colorPrimaryValue}` }}
         content={
           <>
-            {renderCategoryList(RANKING_CATEGORIES_GROUPDED.normal, '视频')}
-            {renderCategoryList(RANKING_CATEGORIES_GROUPDED.cinema, '影视')}
-            {renderCategoryList(RANKING_CATEGORIES_GROUPDED.bangumi, '番剧')}
+            {renderCategoryList(RANKING_CATEGORIES_GROUPDED.normal, 'normal', '视频')}
+            {renderCategoryList(RANKING_CATEGORIES_GROUPDED.cinema, 'cinema', '影视')}
+            {renderCategoryList(RANKING_CATEGORIES_GROUPDED.bangumi, 'bangumi', '番剧')}
           </>
         }
       >
-        <Button css={S.btn}>{category.name}</Button>
+        <Button css={antdCss.btn}>{category.name}</Button>
       </Popover>
     </div>
   )
