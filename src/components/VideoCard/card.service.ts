@@ -62,10 +62,16 @@ export async function fetchVideoData(bvid: string) {
     })
   }
 
-  // preload first 3 imgs, then preload rest without waiting
   const imgs = videoshotData?.image || []
-  await Promise.all(imgs.slice(0, 3).map(preloadImg))
-  imgs.slice(3).map(preloadImg) // without wait
+
+  // preload first img
+  await preloadImg(imgs[0])
+  // without wait rest
+  ;(async () => {
+    for (const src of imgs.slice(1)) {
+      await preloadImg(src)
+    }
+  })()
 
   return { videoshotData, dmData }
 }
