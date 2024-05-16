@@ -6,6 +6,10 @@
 - 小窗打开: 在 edge 下添加一个关闭按钮.
 - 过滤: 支持过滤 goto=bangumi 内容.
 
+![image](https://github.com/magicdawn/bilibili-app-recommend/assets/4067115/4a95b052-2b9d-4db4-912b-25cc0233f177)
+
+![image](https://github.com/magicdawn/bilibili-app-recommend/assets/4067115/ced2c989-5818-4f5e-b582-b6c0507f50c9)
+
 details
 
 - d73b504 deps: ncu
