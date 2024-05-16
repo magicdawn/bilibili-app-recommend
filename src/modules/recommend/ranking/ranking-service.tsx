@@ -27,15 +27,7 @@ export class RankingService implements IService {
       return
     }
 
-    let list: RankingItem[] = []
-    if (c.type === 'bangumi') {
-      list = json?.result?.list || []
-    } else if (c.type === 'cinema') {
-      list = json?.data?.list || []
-    } else {
-      list = json?.data?.list || []
-    }
-
+    const list: RankingItem[] = json?.data?.list || json?.result?.list || []
     const items: RankingItemExtended[] = list.map((item, index) => {
       return {
         ...item,

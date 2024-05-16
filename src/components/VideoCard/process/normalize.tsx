@@ -578,6 +578,10 @@ function apiPopularWeeklyAdapter(item: PopularWeeklyItemExtend): IVideoCardData 
 function apiRankingAdapter(_item: RankingItemExtended): IVideoCardData {
   if (_item.categoryType === 'bangumi' || _item.categoryType === 'cinema') {
     const item = _item as (BangumiRankingItem | CinemaRankingItem) & RankingItemExtendProps
+
+    const cover = item.new_ep.cover
+    const rankingDesc = item.new_ep.index_show
+
     return {
       // video
       avid: '',
@@ -585,7 +589,7 @@ function apiRankingAdapter(_item: RankingItemExtended): IVideoCardData {
       goto: 'bangumi',
       href: item.url,
       title: item.title,
-      cover: item.ss_horizontal_cover,
+      cover,
       pubts: undefined,
       pubdateDisplay: undefined,
       duration: 0,
@@ -601,7 +605,7 @@ function apiRankingAdapter(_item: RankingItemExtended): IVideoCardData {
         { field: 'danmaku', value: item.stat.danmaku } as const,
       ].filter(Boolean) satisfies StatItemType[],
 
-      rankingDesc: 'desc' in item ? item.desc : undefined,
+      rankingDesc,
     }
   }
 

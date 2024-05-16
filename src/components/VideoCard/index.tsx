@@ -20,6 +20,7 @@ import { UserfollowService } from '$modules/user/relations/follow'
 import { isFirefox } from '$platform'
 import { Picture } from '$ui-components/Picture'
 import { AntdMessage } from '$utility'
+import { useLockFn } from 'ahooks'
 import type { MenuProps } from 'antd'
 import { Dropdown } from 'antd'
 import delay from 'delay'
@@ -163,16 +164,10 @@ const VideoCardInner = memo(function VideoCardInner({
   }
 
   const videoDataBox = useRefStateBox<VideoData | null>(null)
-  const isFetchingVideoData = useRef(false)
-  const tryFetchVideoData = useMemoizedFn(async () => {
+  const tryFetchVideoData = useLockFn(async () => {
+    if (!bvid) return // no bvid
     if (videoDataBox.val) return // already fetched
-    if (isFetchingVideoData.current) return // fetching
-    try {
-      isFetchingVideoData.current = true
-      videoDataBox.set(await fetchVideoData(bvid))
-    } finally {
-      isFetchingVideoData.current = false
-    }
+    videoDataBox.set(await fetchVideoData(bvid))
   })
 
   /**

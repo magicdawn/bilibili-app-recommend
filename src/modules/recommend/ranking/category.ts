@@ -2,6 +2,7 @@
  * extract from https://s1.hdslb.com/bfs/static/jinkela/popular/popular.dde4e174100382a65855d76269b39d174d847e31.js
  */
 
+import { groupBy } from 'lodash'
 import type { Merge, SetOptional } from 'type-fest'
 
 // /x/web-interface/ranking/v2?rid=0&type=all
@@ -43,10 +44,14 @@ export function isCinemaCategory(c: Category): c is CinemaCategory {
 }
 
 export function getRequestUrl(c: Category) {
-  if (isBangumiCategory(c)) {
+  if (c.type === 'bangumi') {
+    // 国产动画是个另类
+    if ((c.slug as CategorySlug) === 'guochan') {
+      return `/pgc/season/rank/web/list?day=3&season_type=${c.season_type}`
+    }
     return `/pgc/web/rank/list?day=3&season_type=${c.season_type}`
   }
-  if (isCinemaCategory(c)) {
+  if (c.type === 'cinema') {
     return `/pgc/season/rank/web/list?day=3&season_type=${c.season_type}`
   }
   return `/x/web-interface/ranking/v2?rid=${c.tid}&type=${c.rank_type || 'all'}`
@@ -204,3 +209,8 @@ export const RANKING_CATEGORIES_MAP: Record<CategorySlug, Category> = RANKING_CA
   },
   {} as Record<CategorySlug, Category>,
 )
+
+export const RANKING_CATEGORIES_GROUPDED = groupBy(
+  RANKING_CATEGORIES,
+  (x) => x.type || 'normal',
+) as Record<Exclude<CategoryType, undefined> | 'normal', Category[]>

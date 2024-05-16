@@ -106,6 +106,11 @@ function GlobalStyle() {
             ${colorPrimaryIdentifier}: ${colorPrimary};
             --${APP_NAME}-color: ${c};
             --${APP_NAME}-bg-color: ${bg};
+
+            --${APP_NAME}-border-color: #eee;
+            body.dark {
+              --${APP_NAME}-border-color: #333;
+            }
           }
 
           .${APP_NAME_ROOT_CLASSNAME} {
