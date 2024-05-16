@@ -80,7 +80,6 @@ export function RankingNumMark({ item }: { item: RankingItemExtended }) {
     css`
       color: #fff;
       border-radius: 50%;
-      margin-left: 4px;
       white-space: nowrap;
       width: 28px;
       height: 28px;
@@ -91,7 +90,7 @@ export function RankingNumMark({ item }: { item: RankingItemExtended }) {
   return (
     <div css={VideoCardActionStyle.topContainer('left')}>
       <div ref={triggerRef} css={roundButtonCss}>
-        {hasMedal ? <PhCrownFill /> : item.rankingNo}
+        {hasMedal ? <PhCrownFill /> : <span style={{ marginLeft: -1 }}>{item.rankingNo}</span>}
         {tooltipEl}
       </div>
 
