@@ -7,9 +7,9 @@ declare global {
     documentPictureInPicture:
       | {
           requestWindow(options: {
-            width: number
-            height: number
-            disallowReturnToOpener: boolean
+            width?: number
+            height?: number
+            disallowReturnToOpener?: boolean
           }): Promise<Window>
         }
       | undefined
