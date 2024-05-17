@@ -16,7 +16,9 @@ const debug = baseDebug.extend('main:video-play-page')
 
 export function initVideoPlayPage() {
   handleFullscreen()
-  addOpenInPipWindowButton()
+
+  // disable for not always working
+  // addOpenInPipWindowButton()
 }
 
 /**
