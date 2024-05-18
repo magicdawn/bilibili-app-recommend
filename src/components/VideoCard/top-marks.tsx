@@ -8,7 +8,7 @@ import IconParkOutlineMore from '~icons/icon-park-outline/more'
 import PhCrownFill from '~icons/ph/crown-fill'
 import { VideoCardActionStyle, useTooltip } from './child-components/VideoCardActions'
 
-export function ChargeTag() {
+export function ChargeOnlyTag() {
   return (
     <div
       css={[
@@ -38,7 +38,7 @@ export function ChargeTag() {
         <path
           d='M5.00014 14.9839C4.94522 15.1219 5.12392 15.2322 5.22268 15.1212L11.5561 8.00214C11.7084 7.83093 11.5869 7.56014 11.3578 7.56014H9.13662L11.6019 3.57178C11.7112 3.39489 11.584 3.16666 11.376 3.16666H7.4475C7.22576 3.16666 7.02737 3.30444 6.94992 3.51221L4.68362 9.59189C4.61894 9.76539 4.74725 9.95014 4.93241 9.95014H7.00268L5.00014 14.9839Z'
           fill='white'
-        ></path>
+        />
       </svg>
       充电专属
     </div>
@@ -73,11 +73,16 @@ export function RankingNumMark({ item }: { item: RankingItemExtended }) {
   }
 
   const tooltip = `「${category.name}」排行第 ${item.rankingNo} 名`
-  const { triggerRef, tooltipEl } = useTooltip({ inlinePosition: 'left', tooltip })
+  const { triggerRef, tooltipEl } = useTooltip({
+    inlinePosition: 'left',
+    tooltip,
+    tooltipOffset: 2,
+  })
 
   const roundButtonCss = [
     flexCenterStyle,
     css`
+      position: relative;
       color: #fff;
       border-radius: 50%;
       white-space: nowrap;

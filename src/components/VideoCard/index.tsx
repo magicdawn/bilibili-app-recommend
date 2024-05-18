@@ -37,7 +37,7 @@ import { getFollowedStatus } from './process/filter'
 import type { IVideoCardData } from './process/normalize'
 import { normalizeCardData } from './process/normalize'
 import { AppRecIconScaleMap, AppRecIconSvgNameMap, makeStatItem } from './stat-item'
-import { ChargeTag, RankingNumMark } from './top-marks'
+import { ChargeOnlyTag, RankingNumMark } from './top-marks'
 import { DislikeIcon, useDislikeRelated } from './use/useDislikeRelated'
 import { useOpenRelated } from './use/useOpenRelated'
 import { usePreviewAnimation } from './use/usePreviewAnimation'
@@ -229,7 +229,7 @@ const VideoCardInner = memo(function VideoCardInner({
   })
 
   // 充电专属
-  const hasChargeTag = item.api === EApiType.Dynamic && recommendReason === '充电专属'
+  const hasChargeOnlyTag = item.api === EApiType.Dynamic && recommendReason === '充电专属'
 
   /**
    * 收藏状态
@@ -599,7 +599,7 @@ const VideoCardInner = memo(function VideoCardInner({
               )}
 
               {/* 充电专属 */}
-              {hasChargeTag && <ChargeTag />}
+              {hasChargeOnlyTag && <ChargeOnlyTag />}
 
               {/* 排行榜 */}
               {hasRankingNo && <RankingNumMark item={item} />}
