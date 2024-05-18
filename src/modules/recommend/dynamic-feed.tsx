@@ -288,7 +288,7 @@ export function DynamicFeedUsageInfo() {
             configKey={'hideChargeOnlyDynamicFeedVideos'}
             label={`隐藏「${CHARGE_ONLY_TEXT}」`}
             extraAction={() => onRefresh?.()}
-            tooltip='UP 创作不易, 有条件请充电支持~'
+            tooltip={`隐藏「${CHARGE_ONLY_TEXT}」视频`}
           />
         )}
 
