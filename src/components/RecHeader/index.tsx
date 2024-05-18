@@ -142,7 +142,7 @@ export const RecHeader = forwardRef<
 
                 /* as container */
                 flex-wrap: wrap;
-                row-gap: 4px;
+                row-gap: 8px;
                 column-gap: 15px;
               `,
             ]}

@@ -1,12 +1,21 @@
 import { flexCenterStyle, flexVerticalCenterStyle } from '$common/emotion-css'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
-import type { RankingItemExtendProps, RankingItemExtended } from '$define'
+import type { RankingItemExtendProps, RankingItemExtended, RecItemType } from '$define'
+import { EApiType } from '$define/index.shared'
 import type { NormalRankingItem } from '$modules/recommend/ranking/api.normal-category'
 import { RANKING_CATEGORIES_MAP, isNormalCategory } from '$modules/recommend/ranking/category'
 import { Dropdown } from 'antd'
 import IconParkOutlineMore from '~icons/icon-park-outline/more'
 import PhCrownFill from '~icons/ph/crown-fill'
 import { VideoCardActionStyle, useTooltip } from './child-components/VideoCardActions'
+
+export const CHARGE_ONLY_TEXT = '充电专属'
+
+export function getHasChargeOnlyTag(item: RecItemType, recommendReason?: string) {
+  if (item.api !== EApiType.Dynamic) return false
+  recommendReason ||= item.modules.module_dynamic.major.archive.badge.text as string
+  return recommendReason === CHARGE_ONLY_TEXT
+}
 
 export function ChargeOnlyTag() {
   return (
@@ -40,7 +49,7 @@ export function ChargeOnlyTag() {
           fill='white'
         />
       </svg>
-      充电专属
+      {CHARGE_ONLY_TEXT}
     </div>
   )
 }

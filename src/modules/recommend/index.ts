@@ -26,14 +26,19 @@ export const recItemUniqer = (item: RecItemTypeOrSeparator) =>
         [EApiType.Ranking]: (item) => item.uniqId,
       })
 
-export function uniqConcat(existing: RecItemTypeOrSeparator[], newItems: RecItemTypeOrSeparator[]) {
+export function uniqFilter(existing: RecItemTypeOrSeparator[], newItems: RecItemTypeOrSeparator[]) {
   const ids = existing.map(recItemUniqer)
+  // make self uniq
   newItems = uniqBy(newItems, recItemUniqer)
-  return existing.concat(
-    newItems.filter((item) => {
-      return !ids.includes(recItemUniqer(item))
-    }),
-  )
+  // uniq by existing
+  newItems = newItems.filter((item) => {
+    return !ids.includes(recItemUniqer(item))
+  })
+  return newItems
+}
+
+export function uniqConcat(existing: RecItemTypeOrSeparator[], newItems: RecItemTypeOrSeparator[]) {
+  return existing.concat(uniqFilter(existing, newItems))
 }
 
 export const usePcApi = (tab: ETabType) =>

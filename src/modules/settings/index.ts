@@ -5,7 +5,7 @@ import { VideoLinkOpenMode } from '$components/VideoCard/index.shared'
 import { EAppApiDevice } from '$define/index.shared'
 import { BilibiliArticleDraft } from '$modules/user/article-draft'
 import { toast } from '$utility/toast'
-import { omit, pick, throttle } from 'lodash'
+import { isEqual, omit, pick, throttle } from 'lodash'
 import ms from 'ms'
 import { proxy, snapshot, subscribe, useSnapshot } from 'valtio'
 
@@ -60,6 +60,11 @@ export const initialSettings = {
 
   // hover 延时
   useDelayForHover: false,
+
+  /**
+   * tab=dynamic-feed
+   */
+  hideChargeOnlyDynamicFeedVideos: false,
 
   /**
    * tab=watchlater
@@ -214,15 +219,37 @@ export async function save() {
   await saveToDraft(newVal as Readonly<Settings>)
 }
 
+const omitKeys: SettingsKey[] = [
+  // private
+  'accessKey',
+  'accessKeyExpireAt',
+
+  // 无关紧要
+  'shuffleForFav',
+  'addSeparatorForFav',
+
+  'shuffleForWatchLater',
+  'addSeparatorForWatchLater',
+
+  'shuffleForPopularWeekly',
+  'anonymousForPopularGeneral',
+  'hideChargeOnlyDynamicFeedVideos',
+]
+
+let lastBackupVal: Partial<Settings> | undefined
+
 async function saveToDraft(val: Readonly<Settings>) {
   if (!val.backupSettingsToArticleDraft) return
-
   // skip when `HAS_RESTORED_SETTINGS=true`
   if (HAS_RESTORED_SETTINGS) return
 
-  const httpBackupVal = omit(val, ['accessKey', 'accessKeyExpireAt'])
+  const currentBackupVal = omit(val, omitKeys)
+  const shouldBackup = !lastBackupVal || !isEqual(lastBackupVal, currentBackupVal)
+  if (!shouldBackup) return
+
   try {
-    await setDataThrottled(httpBackupVal)
+    await setDataThrottled(currentBackupVal)
+    lastBackupVal = currentBackupVal
     debug('backup to article draft complete')
   } catch (e: any) {
     console.error(e.stack || e)

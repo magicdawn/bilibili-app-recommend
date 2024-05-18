@@ -1,6 +1,8 @@
 import { IN_BILIBILI_HOMEPAGE, REQUEST_FAIL_MSG } from '$common'
 import { antdCss } from '$common/emotion-css'
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
+import { CHARGE_ONLY_TEXT } from '$components/VideoCard/top-marks'
+import { CheckboxSettingItem } from '$components/piece'
 import { type DynamicFeedItemExtend, type DynamicFeedJson } from '$define'
 import { EApiType } from '$define/index.shared'
 import { IconPark } from '$icon-park'
@@ -279,14 +281,20 @@ export function DynamicFeedUsageInfo() {
         )}
 
         {hasSelectedUp && (
-          <Input.Search
+          <CheckboxSettingItem
             css={css`
-              .ant-btn {
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-              }
+              margin-left: 5px;
             `}
+            configKey={'hideChargeOnlyDynamicFeedVideos'}
+            label={`隐藏「${CHARGE_ONLY_TEXT}」`}
+            extraAction={() => onRefresh?.()}
+            tooltip='UP 创作不易, 有条件请充电支持~'
+          />
+        )}
+
+        {hasSelectedUp && (
+          <Input.Search
+            style={{ width: 160 }}
             placeholder='按标题过滤'
             type='search'
             autoCorrect='off'

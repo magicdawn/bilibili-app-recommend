@@ -11,6 +11,7 @@ import { ETabType } from '$components/RecHeader/tab.shared'
 import { VideoCard } from '$components/VideoCard'
 import type { VideoCardEmitter, VideoCardEvents } from '$components/VideoCard/index.shared'
 import { borderRadiusValue } from '$components/VideoCard/index.shared'
+import { filterRecItems } from '$components/VideoCard/process/filter'
 import type { IVideoCardData } from '$components/VideoCard/process/normalize'
 import { type RecItemType, type RecItemTypeOrSeparator } from '$define'
 import { EApiType } from '$define/index.shared'
@@ -203,7 +204,8 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
     try {
       const service = getIService(serviceMap, tab)
       if (service) {
-        const more = (await service.loadMore(refreshAbortController.signal)) || []
+        let more = (await service.loadMore(refreshAbortController.signal)) || []
+        more = filterRecItems(more, tab)
         newItems = uniqConcat(newItems, more)
         newHasMore = service.hasMore
       }

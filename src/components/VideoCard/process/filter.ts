@@ -2,9 +2,11 @@ import { baseDebug } from '$common'
 import { ETabType } from '$components/RecHeader/tab.shared'
 import type { RecItemTypeOrSeparator } from '$define'
 import { EApiType } from '$define/index.shared'
+import { dynamicFeedFilterStore } from '$modules/recommend/dynamic-feed'
 import { settings, settings as settingsProxy } from '$modules/settings'
 import { blacklistMids } from '$modules/user/relations/blacklist'
 import { snapshot } from 'valtio'
+import { CHARGE_ONLY_TEXT } from '../top-marks'
 import { normalizeCardData } from './normalize'
 
 const debug = baseDebug.extend('VideoCard:filter')
@@ -13,17 +15,66 @@ export function getFollowedStatus(recommendReason?: string): boolean {
   return !!recommendReason && ['已关注', '新关注'].includes(recommendReason)
 }
 
+/**
+ * 用于快速判断是否应该启用过滤, 避免 normalizeData 等一些列操作
+ */
+
 export function anyFilterEnabled(tab: ETabType) {
-  return (
-    tab === 'keep-follow-only' ||
-    blacklistMids.size ||
-    (settings.filterEnabled &&
+  if (tab === ETabType.KeepFollowOnly) {
+    return true
+  }
+
+  // common checks
+  if (shouldEnableCommonChecks(tab)) {
+    if (
+      blacklistMids.size ||
+      (settings.filterEnabled &&
+        ((settings.filterByAuthorNameEnabled && settings.filterByAuthorNameKeywords.length > 0) ||
+          (settings.filterByTitleEnabled && settings.filterByTitleKeywords.length > 0)))
+    ) {
+      return true
+    }
+  }
+
+  // recommend
+  if (tab === ETabType.RecommendApp || tab === ETabType.RecommendPc) {
+    if (
+      settings.filterEnabled &&
       (settings.filterMinDurationEnabled ||
         settings.filterMinPlayCountEnabled ||
-        settings.filterOutGotoTypePicture ||
-        (settings.filterByAuthorNameEnabled && settings.filterByAuthorNameKeywords.length > 0) ||
-        (settings.filterByTitleEnabled && settings.filterByTitleKeywords.length > 0)))
-  )
+        settings.filterOutGotoTypePicture)
+    ) {
+      return true
+    }
+  }
+
+  // 动态过滤
+  if (
+    tab === ETabType.DynamicFeed &&
+    dynamicFeedFilterStore.hasSelectedUp &&
+    settings.hideChargeOnlyDynamicFeedVideos
+  ) {
+    return true
+  }
+
+  return false
+}
+
+function shouldEnableCommonChecks(tab: ETabType) {
+  // expect
+  // KeepFollowOnly = 'keep-follow-only',
+  // DynamicFeed = 'dynamic-feed',
+  // Watchlater = 'watchlater',
+  // Fav = 'fav',
+  return (
+    [
+      ETabType.RecommendApp,
+      ETabType.RecommendPc,
+      ETabType.PopularGeneral,
+      ETabType.PopularWeekly,
+      ETabType.Ranking,
+    ] satisfies ETabType[]
+  ).includes(tab)
 }
 
 export function filterRecItems(items: RecItemTypeOrSeparator[], tab: ETabType) {
@@ -105,21 +156,28 @@ export function filterRecItems(items: RecItemTypeOrSeparator[], tab: ETabType) {
     // DynamicFeed = 'dynamic-feed',
     // Watchlater = 'watchlater',
     // Fav = 'fav',
-    const enableCommonChecks = (
-      [
-        ETabType.RecommendApp,
-        ETabType.RecommendPc,
-        ETabType.PopularGeneral,
-        ETabType.PopularWeekly,
-        ETabType.Ranking,
-      ] satisfies ETabType[]
-    ).includes(tab)
-    if (enableCommonChecks) {
+    if (shouldEnableCommonChecks(tab)) {
       if (commonChecks() === false) {
         return false
       }
     }
 
+    // 动态过滤
+    if (
+      tab === ETabType.DynamicFeed &&
+      dynamicFeedFilterStore.hasSelectedUp &&
+      settings.hideChargeOnlyDynamicFeedVideos
+    ) {
+      if (recommendReason === CHARGE_ONLY_TEXT) {
+        debug('filter out by dynamic-feed:hide-charge-only-rule: %s %o', recommendReason, {
+          bvid,
+          title,
+        })
+        return false
+      }
+    }
+
+    // 推荐
     if (tab === ETabType.RecommendApp || tab === ETabType.RecommendPc) {
       const isVideo = goto === 'av'
       const isPicture = goto === 'picture'

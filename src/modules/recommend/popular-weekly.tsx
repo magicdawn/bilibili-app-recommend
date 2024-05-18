@@ -4,7 +4,6 @@ import { EApiType } from '$define/index.shared'
 import type { PopularWeeklyJson } from '$define/popular-weekly'
 import type { PopularWeeklyListItem, PopularWeeklyListJson } from '$define/popular-weekly.list'
 import { settings, updateSettings, useSettingsSnapshot } from '$modules/settings'
-import { blacklistMids } from '$modules/user/relations/blacklist'
 import { request } from '$request'
 import { Space, Switch } from 'antd'
 import dayjs from 'dayjs'
@@ -156,10 +155,7 @@ async function fetchWeeklyItems(episodeNum: number) {
 
     cache[episodeNum] = items
   }
-  let items = cache[episodeNum]
-
-  // 过滤黑名单
-  items = items.filter((x) => !blacklistMids.has(x.owner.mid.toString()))
+  const items = cache[episodeNum]
   return items
 }
 
