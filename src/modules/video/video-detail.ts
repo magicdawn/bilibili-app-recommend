@@ -1,16 +1,16 @@
 import { APP_NAME } from '$common'
 import { request } from '$request'
-import LocalForage from 'localforage'
+import localforage from 'localforage'
 import type { VideoDetailData, VideoDetailJson } from './api.video-detail'
 
 /**
  * @see https://socialsisteryi.github.io/bilibili-API-collect/docs/video/info.html
  */
 
-const videoDetailCacheDB = LocalForage.createInstance({
+const videoDetailCacheDB = localforage.createInstance({
   name: APP_NAME,
   storeName: 'video_detail',
-  driver: LocalForage.INDEXEDDB,
+  driver: localforage.INDEXEDDB,
 })
 
 export async function getVideoDetail(bvid: string) {

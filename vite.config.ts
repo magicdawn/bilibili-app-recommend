@@ -246,6 +246,7 @@ export default defineConfig(({ command }) => ({
           'react-dom': cdn.npmmirror('ReactDOM', 'umd/react-dom.production.min.js'),
           'ua-parser-js': cdn.npmmirror('UAParser', 'dist/ua-parser.min.js'),
           'framer-motion': cdn.npmmirror('Motion', 'dist/framer-motion.js'),
+          'localforage': cdn.npmmirror('localforage', 'dist/localforage.min.js'),
 
           // size:
           //  external 944kB + 36kB
