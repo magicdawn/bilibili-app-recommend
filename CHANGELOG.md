@@ -1,5 +1,24 @@
 # Changelog
 
+## v0.22.1
+
+- fix loadMore 没有使用 filter 的问题. (主要更新, commit: b59ba65)
+- 动态Tab: 支持隐藏充电专属
+- 查看UP的动态: 新窗打开时只有一个动态 Tab
+- 小窗打开: 使用 video-detail API 判断是否是竖屏视频
+
+details
+
+- b59ba65 feat: support hide charge-only video in dynamic-feed tab
+- ef13d64 chore: tooltip style tweaks
+- caec3ac chore: disable add open-in-pip button in video-play-page
+- c99a534 chore: add edge settings note
+- f9696a8 feat: add open in pip window in video-play-page
+- 5aea8b7 feat: use api to detect vertical video when open in pip
+- f84883e chore: style tweaks
+- bd29139 feat: show solo dynamic-up tab when filter up via query
+- 3eec1d7 changelog: add screenshot to changelog
+
 ## v0.22.0
 
 - 新 Tab: 排行榜 (我发现排行榜上可能会发现有意思的视频, 所以就加了)
