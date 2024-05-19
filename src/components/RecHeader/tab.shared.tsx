@@ -9,6 +9,10 @@ export enum ETabType {
   DynamicFeed = 'dynamic-feed',
   Watchlater = 'watchlater',
   Fav = 'fav',
+  Hot = 'hot',
+}
+
+export enum EHotSubTabType {
   PopularGeneral = 'popular-general',
   PopularWeekly = 'popular-weekly',
   Ranking = 'ranking',
@@ -62,7 +66,18 @@ export const TabConfig: Record<ETabType, TabConfigItem> = {
     label: '收藏',
     desc: '你添加的收藏; 默认随机乱序, 可在设置中关闭乱序',
   },
-  [ETabType.PopularGeneral]: {
+  [ETabType.Hot]: {
+    icon: 'Fire',
+    iconProps: { size: 16 },
+    label: '热门',
+    desc: '各个领域中新奇好玩的优质内容都在这里~',
+    swr: true,
+    anonymousUsage: true,
+  },
+}
+
+const HotSubTabConfig: Record<EHotSubTabType, TabConfigItem> = {
+  [EHotSubTabType.PopularGeneral]: {
     icon: 'Fire',
     iconProps: { size: 16 },
     label: '综合热门',
@@ -70,14 +85,14 @@ export const TabConfig: Record<ETabType, TabConfigItem> = {
     swr: true,
     anonymousUsage: true,
   },
-  [ETabType.PopularWeekly]: {
+  [EHotSubTabType.PopularWeekly]: {
     icon: 'TrendTwo',
     iconProps: { size: 15 },
     label: '每周必看',
     desc: '每周五晚 18:00 更新',
     anonymousUsage: true,
   },
-  [ETabType.Ranking]: {
+  [EHotSubTabType.Ranking]: {
     icon: 'Ranking',
     iconProps: { size: 15 },
     label: '排行榜',
