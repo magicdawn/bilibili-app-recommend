@@ -53,7 +53,8 @@ export const RefreshButton = forwardRef<RefreshButtonActions, RefreshButtonProps
     (tab === ETabType.Watchlater && !shuffleForWatchLater) ||
     (tab === ETabType.Fav && !shuffleForFav) ||
     tab === ETabType.PopularGeneral ||
-    (tab === ETabType.PopularWeekly && !shuffleForPopularWeekly)
+    (tab === ETabType.PopularWeekly && !shuffleForPopularWeekly) ||
+    tab === ETabType.Ranking
       ? '刷新'
       : '换一换'
 
