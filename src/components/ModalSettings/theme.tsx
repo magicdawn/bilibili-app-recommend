@@ -10,14 +10,16 @@ import { flexCenterStyle } from '$common/emotion-css'
 import { AntdTooltip } from '$components/AntdApp'
 import { HelpInfo } from '$components/piece'
 import { $evoledThemeColor } from '$header'
-import { IconPark } from '$icon-park'
+import { IconAnimatedChecked } from '$modules/icon/animated-checked'
 import { updateSettings, useSettingsSnapshot } from '$modules/settings'
+import { usePrevious } from 'ahooks'
 import { ColorPicker } from 'antd'
 import type { Color } from 'antd/es/color-picker'
 import { DEFAULT_BILI_PINK_THEME, ThemeGroups, useCurrentTheme } from './theme.shared'
 
 export function ThemesSelect() {
   const activeId = useCurrentTheme().id
+  const prevActiveId = usePrevious(activeId)
 
   // color-picker
   const { colorPickerThemeSelectedColor } = useSettingsSnapshot()
@@ -57,6 +59,10 @@ export function ThemesSelect() {
                 const isActive = activeId === t.id
                 const isCustom = t.isCustom
 
+                // 反应 selected-false -> selected-true 的转变
+                // 初始 prevActiveId 为 undefined
+                const useAnimation = !!prevActiveId && prevActiveId !== t.id
+
                 const innerSize = 30
                 const outerSize = innerSize + 8
 
@@ -88,12 +94,13 @@ export function ThemesSelect() {
                           width: ${innerSize}px;
                           background-color: ${isCustom ? customColorHex : t.colorPrimary};
                           border-radius: 50%;
+                          color: #fff;
                           /* border-radius: 4px; */
                         `,
                         flexCenterStyle,
                       ]}
                     >
-                      {isActive && <IconPark name='CheckSmall' size={18} fill='#fff' />}
+                      {isActive && <IconAnimatedChecked size={18} useAnimation={useAnimation} />}
                     </div>
                   </div>
                 )

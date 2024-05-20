@@ -1,10 +1,10 @@
 import { type RecItemType } from '$define'
 import { EApiType } from '$define/index.shared'
+import { IconAnimatedChecked } from '$modules/icon/animated-checked'
 import { useWatchLaterState, watchLaterState } from '$modules/recommend/watchlater'
 import { AntdMessage } from '$utility'
 import { usePrevious } from 'ahooks'
 import delay from 'delay'
-import { motion } from 'framer-motion'
 import type { MouseEvent } from 'react'
 import type { VideoCardInnerProps } from '..'
 import { watchLaterAdd, watchLaterDel } from '../card.service'
@@ -38,7 +38,7 @@ export function useWatchlaterRelated({
 
   // watchLater added
   const watchLaterAdded = useWatchLaterState(bvid)
-  const watchLaterAddedPrevious = usePrevious(watchLaterAdd)
+  const watchLaterAddedPrevious = usePrevious(watchLaterAdded)
 
   const _requesting = useRef(false)
   const onToggleWatchLater = useMemoizedFn(
@@ -91,45 +91,11 @@ export function useWatchlaterRelated({
     },
   )
 
-  /**
-   * svg checked mark
-   *
-   * 自己画的
-   * viewBox = '0 0 200 200'
-   * checkMarkD = 'M25,100 l48,48 a 8.5,8.5 0 0 0 10,0 l90,-90'
-   *
-   * 其他来源
-   * 24 24 from iconify
-   * https://icones.js.org/collection/line-md?icon=line-md:confirm
-   */
-
   // <use href={watchLaterAdded ? '#widget-watch-save' : '#widget-watch-later'} />
-
   const addSize = 15
   const addedSize = 18
   const icon = watchLaterAdded ? (
-    <svg
-      xmlns='http://www.w3.org/2000/svg'
-      viewBox='0 0 24 24'
-      width={addedSize}
-      height={addedSize}
-    >
-      <motion.path
-        fill='transparent'
-        stroke='currentColor'
-        strokeLinecap='round'
-        strokeLinejoin='round'
-        strokeWidth='2'
-        d='M5 11L11 17L21 7'
-        {...(!watchLaterAddedPrevious
-          ? {
-              initial: { pathLength: 0 },
-              animate: { pathLength: 1 },
-              transition: { duration: 0.2, ease: 'easeInOut' },
-            }
-          : undefined)}
-      />
-    </svg>
+    <IconAnimatedChecked size={addedSize} useAnimation={watchLaterAddedPrevious === false} />
   ) : (
     <svg width={addSize} height={addSize}>
       <use href={'#widget-watch-later'} />
