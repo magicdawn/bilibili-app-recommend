@@ -17,7 +17,7 @@ import {
   VideoLinkOpenModeKey,
 } from '../index.shared'
 import type { IVideoCardData } from '../process/normalize'
-import { openPipWindow } from './_pip-window'
+import { renderInPipWindow } from './_pip-window'
 
 const debug = baseDebug.extend('VideoCard:useOpenRelated')
 
@@ -223,7 +223,7 @@ export async function openInPipOrPopup(
 
   if (pipWindow) {
     // use pipWindow
-    openPipWindow(newHref, pipWindow)
+    renderInPipWindow(newHref, pipWindow)
   } else {
     // use window.open popup
     openPopupWindow(newHref, popupWidth, popupHeight)

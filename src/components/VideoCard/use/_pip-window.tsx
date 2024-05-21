@@ -14,7 +14,7 @@ import RadixIconsOpenInNewWindow from '~icons/radix-icons/open-in-new-window'
 import { VideoCardActionButton } from '../child-components/VideoCardActions'
 import { PLAYER_SCREEN_MODE } from '../index.shared'
 
-export function openPipWindow(newHref: string, pipWindow: Window) {
+export function renderInPipWindow(newHref: string, pipWindow: Window) {
   const cssInsertContainer = pipWindow.document.head
   const { cache } = createEmotion({
     key: 'pip-window',
