@@ -70,6 +70,8 @@ export function RankingNumMark({ item }: { item: RankingItemExtended }) {
   const category = RANKING_CATEGORIES_MAP[item.slug]
 
   const hasMedal = item.rankingNo <= 3
+  const medalSymbols = ['🥇', '🥈', '🥉'] // emoji builtin, 可以换, 但是丑
+  const medalIcon = <PhCrownFill />
 
   let hasOthers = false
   let others: NormalRankingItem[] = []
@@ -104,7 +106,7 @@ export function RankingNumMark({ item }: { item: RankingItemExtended }) {
   return (
     <div css={VideoCardActionStyle.topContainer('left')}>
       <div ref={triggerRef} css={roundButtonCss}>
-        {hasMedal ? <PhCrownFill /> : <span style={{ marginLeft: -1 }}>{item.rankingNo}</span>}
+        {hasMedal ? medalIcon : <span style={{ marginLeft: -1 }}>{item.rankingNo}</span>}
         {tooltipEl}
       </div>
 
