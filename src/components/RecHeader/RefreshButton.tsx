@@ -1,12 +1,13 @@
-import { antdCss } from '$common/emotion-css'
+import { antdCustomCss } from '$common/emotion-css'
 import type { OnRefresh } from '$components/RecGrid/useRefresh'
+import { isHotTabUsingShuffle } from '$modules/recommend/hot'
 import { useSettingsSnapshot } from '$modules/settings'
 import { shouldDisableShortcut } from '$utility/dom'
 import { Button } from 'antd'
 import { useAnimate } from 'framer-motion'
 import type { MouseEvent, MouseEventHandler } from 'react'
 import { useCurrentUsingTab } from './tab'
-import { ETabType } from './tab.shared'
+import { ETab } from './tab-enum'
 
 export type RefreshButtonActions = { click: () => void }
 export type RefreshButtonProps = {
@@ -49,12 +50,10 @@ export const RefreshButton = forwardRef<RefreshButtonActions, RefreshButtonProps
   const { shuffleForFav, shuffleForWatchLater, shuffleForPopularWeekly } = useSettingsSnapshot()
 
   const text =
-    tab === ETabType.DynamicFeed ||
-    (tab === ETabType.Watchlater && !shuffleForWatchLater) ||
-    (tab === ETabType.Fav && !shuffleForFav) ||
-    tab === ETabType.PopularGeneral ||
-    (tab === ETabType.PopularWeekly && !shuffleForPopularWeekly) ||
-    tab === ETabType.Ranking
+    tab === ETab.DynamicFeed ||
+    (tab === ETab.Watchlater && !shuffleForWatchLater) ||
+    (tab === ETab.Fav && !shuffleForFav) ||
+    (tab === ETab.Hot && !isHotTabUsingShuffle(shuffleForPopularWeekly))
       ? '刷新'
       : '换一换'
 
@@ -71,7 +70,7 @@ export const RefreshButton = forwardRef<RefreshButtonActions, RefreshButtonProps
       className={className}
       style={style}
       css={[
-        antdCss.btn,
+        antdCustomCss.button,
         css`
           &.ant-btn:not(:disabled):focus-visible {
             outline: none;

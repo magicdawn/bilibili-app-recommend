@@ -16,11 +16,11 @@ export const flexCenterStyle = css`
 // harmonyos_regular 没法对齐
 export const antdBtnTextStyle = css`
   display: inline-block;
-  margin-top: 2px;
+  margin-top: 1px;
 `
 
-export const antdCss = {
-  btn: css`
+export const antdCustomCss = {
+  button: css`
     ${flexCenterStyle}
     >span {
       ${antdBtnTextStyle}

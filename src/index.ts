@@ -19,6 +19,8 @@ import '$components/ModalSettings/index.module.scss'
 import '$components/VideoCard/index.module.scss'
 import '$components/video-grid.module.scss'
 
+import 'virtual:uno.css'
+
 // dayjs setup
 import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'

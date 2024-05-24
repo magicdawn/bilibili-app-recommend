@@ -9,9 +9,9 @@ import { isWebApiSuccess, request } from '$request'
 import { toast } from '$utility'
 import { Space, Switch } from 'antd'
 import delay from 'delay'
-import type { IService } from './base'
+import type { IService } from '../base'
 
-export class PopularGeneralService implements IService {
+export class PopularGeneralRecService implements IService {
   hasMore = true
   page = 0 // pages loaded
 

@@ -10,8 +10,8 @@ import dayjs from 'dayjs'
 import delay from 'delay'
 import { shuffle } from 'lodash'
 import pmap from 'promise.map'
-import type { IService } from './base'
-import { QueueStrategy } from './base'
+import type { IService } from '../base'
+import { QueueStrategy } from '../base'
 
 let episodes: PopularWeeklyListItem[] = []
 let cacheKey = ''
@@ -40,7 +40,7 @@ export function isWeekendForPopularWeekly() {
   return d.day() === 6 || d.day() === 0 || (d.day() === 5 && d.hour() >= 18)
 }
 
-export class PopularWeeklyService implements IService {
+export class PopularWeeklyRecService implements IService {
   static id = 0
   static PAGE_SIZE = 20
 
@@ -50,12 +50,14 @@ export class PopularWeeklyService implements IService {
   id: number
   useShuffle: boolean
   constructor() {
-    this.id = PopularWeeklyService.id++
+    this.id = PopularWeeklyRecService.id++
     this.useShuffle = settings.shuffleForPopularWeekly
   }
 
   // full-list = returnedItems + bufferQueue + more
-  qs = new QueueStrategy<PopularWeeklyItemExtend | ItemsSeparator>(PopularWeeklyService.PAGE_SIZE)
+  qs = new QueueStrategy<PopularWeeklyItemExtend | ItemsSeparator>(
+    PopularWeeklyRecService.PAGE_SIZE,
+  )
 
   get hasMore() {
     if (!this.episodesLoaded) return true // not loaded yet
@@ -108,7 +110,7 @@ export class PopularWeeklyService implements IService {
     // make queue enough
     const prefetchPage = 5
     while (
-      this.qs.bufferQueue.length < PopularWeeklyService.PAGE_SIZE * prefetchPage &&
+      this.qs.bufferQueue.length < PopularWeeklyRecService.PAGE_SIZE * prefetchPage &&
       this.episodes.length
     ) {
       this.episodes = shuffle(this.episodes)

@@ -2,18 +2,15 @@ import { APP_KEY_PREFIX } from '$common'
 import { useRefInit } from '$common/hooks/useRefInit'
 import { useRefState } from '$common/hooks/useRefState'
 import { useCurrentUsingTab } from '$components/RecHeader/tab'
-import { ETabType, TabConfig } from '$components/RecHeader/tab.shared'
+import { TabConfig } from '$components/RecHeader/tab-config'
+import { ETab, type EHotSubTab } from '$components/RecHeader/tab-enum'
 import type { RecItemTypeOrSeparator } from '$define'
 import type { IService } from '$modules/recommend/base'
 import { DynamicFeedRecService, dynamicFeedFilterStore } from '$modules/recommend/dynamic-feed'
 import { FavRecService } from '$modules/recommend/fav'
+import { HotRecService, hotStore } from '$modules/recommend/hot'
 import { PcRecService } from '$modules/recommend/pc'
-import { PopularGeneralService } from '$modules/recommend/popular-general'
-import { PopularWeeklyService } from '$modules/recommend/popular-weekly'
-import { RankingService } from '$modules/recommend/ranking/ranking-service'
-import { rankingStore } from '$modules/recommend/ranking/ranking-usage-info'
 import { WatchLaterRecService } from '$modules/recommend/watchlater'
-import { settings } from '$modules/settings'
 import { nextTick } from '$utility'
 import type { Debugger } from 'debug'
 import { tryit } from 'radash'
@@ -27,28 +24,26 @@ export function useOnRefreshContext() {
   return useContext(OnRefreshContext)
 }
 
-const serviceFactories = {
-  [ETabType.DynamicFeed]: () =>
+const createServiceMap = {
+  [ETab.DynamicFeed]: () =>
     new DynamicFeedRecService(dynamicFeedFilterStore.upMid, dynamicFeedFilterStore.searchText),
-  [ETabType.Watchlater]: (options) => new WatchLaterRecService(options?.watchlaterKeepOrder),
-  [ETabType.Fav]: () => new FavRecService(),
-  [ETabType.PopularGeneral]: () => new PopularGeneralService(),
-  [ETabType.PopularWeekly]: () => new PopularWeeklyService(),
-  [ETabType.Ranking]: () => new RankingService(rankingStore.slug),
-} satisfies Partial<Record<ETabType, (options?: OnRefreshOptions) => IService>>
+  [ETab.Watchlater]: (options) => new WatchLaterRecService(options?.watchlaterKeepOrder),
+  [ETab.Fav]: () => new FavRecService(),
+  [ETab.Hot]: () => new HotRecService(),
+} satisfies Partial<Record<ETab, (options?: OnRefreshOptions) => IService>>
 
-export type ServiceMapKey = keyof typeof serviceFactories
+export type ServiceMapKey = keyof typeof createServiceMap
 
 export type ServiceMap = {
-  [K in ServiceMapKey]: ReturnType<(typeof serviceFactories)[K]>
+  [K in ServiceMapKey]: ReturnType<(typeof createServiceMap)[K]>
 }
 
-export function getIService(serviceMap: ServiceMap, tab: ETabType): IService | undefined {
+export function getIService(serviceMap: ServiceMap, tab: ETab): IService | undefined {
   return serviceMap[tab as ServiceMapKey]
 }
 
 export type FetcherOptions = {
-  tab: ETabType
+  tab: ETab
   abortSignal: AbortSignal
   serviceMap: ServiceMap
   pcRecService: PcRecService
@@ -59,27 +54,54 @@ export function useRefresh({
   // tab,
   recreateService,
   fetcher,
+
   preAction,
   postAction,
+  updateExtraInfo,
 
   // RecGrid 定制
   onScrollToTop,
   setUpperRefreshing,
 }: {
-  tab: ETabType
+  tab: ETab
   debug: Debugger
   fetcher: (opts: FetcherOptions) => Promise<RecItemTypeOrSeparator[]>
   recreateService: boolean
+
   preAction?: () => void | Promise<void>
   postAction?: () => void | Promise<void>
+  updateExtraInfo?: (tab: ETab) => void
 
   setUpperRefreshing?: (val: boolean) => void
   onScrollToTop?: () => void | Promise<void>
 }) {
   const tab = useCurrentUsingTab()
 
-  const itemsCache = useRefInit<Partial<Record<ETabType, RecItemTypeOrSeparator[]>>>(() => ({}))
-  const itemsHasCache = useRefInit<Partial<Record<ETabType, boolean>>>(() => ({}))
+  /**
+   * cache
+   */
+  const itemsCache = useRefInit<
+    Partial<Record<Exclude<ETab, ETab.Hot> | EHotSubTab, RecItemTypeOrSeparator[]>>
+  >(() => ({}))
+  const getCacheFor = useMemoizedFn((tab: ETab) => {
+    const cache = itemsCache.current
+    if (tab === ETab.Hot) {
+      return cache[hotStore.subtab]
+    } else {
+      return cache[tab]
+    }
+  })
+  const setCacheFor = useMemoizedFn((tab: ETab, items: RecItemTypeOrSeparator[]) => {
+    const cache = itemsCache.current
+    if (tab === ETab.Hot) {
+      cache[hotStore.subtab] = items
+    } else {
+      cache[tab] = items
+    }
+  })
+  const hasCache = useMemoizedFn((tab: ETab) => {
+    return !!getCacheFor(tab)?.length
+  })
 
   const [hasMore, setHasMore, getHasMore] = useRefState(true)
   const [items, setItems, getItems] = useRefState<RecItemTypeOrSeparator[]>([])
@@ -89,16 +111,16 @@ export function useRefresh({
     })()
   }, [items])
 
-  const [serviceMap, setServiceMap] = useState<ServiceMap>(() => {
+  const [serviceMap, setServiceMap, getServiceMap] = useRefState<ServiceMap>(() => {
     return Object.fromEntries(
-      Object.entries(serviceFactories).map(([key, factory]) => [key, factory(undefined)]),
+      Object.entries(createServiceMap).map(([key, factory]) => [key, factory(undefined)]),
     ) as unknown as ServiceMap
   })
   const [pcRecService, setPcRecService] = useState(() => new PcRecService())
 
   const [refreshing, setRefreshing, getRefreshing] = useRefState(false)
   const [refreshedAt, setRefreshedAt, getRefreshedAt] = useRefState<number>(() => Date.now())
-  const [refreshFor, setRefreshFor] = useState<ETabType>(tab)
+  const [refreshFor, setRefreshFor] = useState<ETab>(tab)
   const [refreshAbortController, setRefreshAbortController] = useState<AbortController>(
     () => new AbortController(),
   )
@@ -114,11 +136,20 @@ export function useRefresh({
       if (tab === refreshFor) {
         // same tab but conditions changed
         if (
-          tab === ETabType.DynamicFeed &&
-          serviceMap[ETabType.DynamicFeed].searchText !== dynamicFeedFilterStore.searchText
+          tab === ETab.DynamicFeed &&
+          serviceMap[ETab.DynamicFeed].searchText !== dynamicFeedFilterStore.searchText
         ) {
           debug(
             'refresh(): [start] [refreshing] sametab(%s) but conditions change, abort existing',
+            tab,
+          )
+          refreshAbortController.abort()
+        }
+
+        // has sub-tabs
+        else if (tab === ETab.Hot && serviceMap[ETab.Hot].subtab !== hotStore.subtab) {
+          debug(
+            'refresh(): [start] [refreshing] sametab(%s) but subtab changed, abort existing',
             tab,
           )
           refreshAbortController.abort()
@@ -143,14 +174,8 @@ export function useRefresh({
     await onScrollToTop?.()
 
     // reuse configs
-    const shouldReuse = reuse && !!itemsHasCache.current[tab]
-    const swr =
-      shouldReuse &&
-      (!!TabConfig[tab].swr ||
-        (tab === ETabType.Fav && !serviceMap[ETabType.Fav].useShuffle && !settings.shuffleForFav) ||
-        (tab === ETabType.PopularWeekly &&
-          !serviceMap[ETabType.PopularWeekly].useShuffle &&
-          !settings.shuffleForPopularWeekly))
+    const shouldReuse = reuse && hasCache(tab)
+    const swr = shouldReuse && !!TabConfig[tab].swr
 
     // all reuse case, do not show skeleton
     setUseSkeleton(!shouldReuse)
@@ -191,8 +216,8 @@ export function useRefresh({
      */
 
     let useGridCache = true
-    if ((tab === ETabType.Fav || tab === ETabType.PopularWeekly) && !swr) {
-      // use own cache
+    // conditional swr and disabled (for shuffle case), use own cache
+    if (TabConfig[tab].swr === false) {
       useGridCache = false
     }
 
@@ -204,17 +229,17 @@ export function useRefresh({
     const newServiceMap = { ...serviceMap }
     const recreateFor = (tab: ServiceMapKey) => {
       // @ts-ignore
-      newServiceMap[tab] = serviceFactories[tab](options)
+      newServiceMap[tab] = createServiceMap[tab](options)
       setServiceMap(newServiceMap)
     }
 
-    if (tab === ETabType.DynamicFeed) {
+    if (tab === ETab.DynamicFeed) {
       recreateFor(tab)
     }
-    if (tab === ETabType.Watchlater) {
+    if (tab === ETab.Watchlater) {
       recreateFor(tab)
     }
-    if (tab === ETabType.Fav) {
+    if (tab === ETab.Fav) {
       if (shouldReuse) {
         if (swr) {
           recreateFor(tab)
@@ -225,22 +250,18 @@ export function useRefresh({
         recreateFor(tab)
       }
     }
-    if (tab === ETabType.PopularGeneral) {
-      recreateFor(tab)
-    }
-    if (tab === ETabType.PopularWeekly) {
+    if (tab === ETab.Hot) {
       if (shouldReuse) {
         if (swr) {
           recreateFor(tab)
         } else {
-          serviceMap[tab].qs.restore()
+          const hotInnerService = serviceMap[tab].service
+          ;(hotInnerService as any).qs?.restore()
         }
       } else {
         recreateFor(tab)
       }
-    }
-    if (tab === ETabType.Ranking) {
-      recreateFor(tab)
+      updateExtraInfo?.(tab)
     }
 
     const _abortController = new AbortController()
@@ -257,22 +278,22 @@ export function useRefresh({
     debug('refresh(): shouldReuse=%s swr=%s useGridCache=%s', shouldReuse, swr, useGridCache)
     if (shouldReuse) {
       if (swr) {
-        _items = itemsCache.current[tab] || []
+        _items = getCacheFor(tab) || []
         setItems(_items)
         await doFetch()
       }
       // for 收藏/每日必看 乱序, 已经 retore, 需要 doFetch
       else if (!useGridCache) {
-        itemsCache.current[tab] = []
+        setCacheFor(tab, [])
         await doFetch()
       }
       // for 推荐类 tab
       else {
-        _items = itemsCache.current[tab] || []
+        _items = getCacheFor(tab) || []
         // setItems(_items) // setItems will be called next
       }
     } else {
-      itemsCache.current[tab] = []
+      setCacheFor(tab, [])
       await doFetch()
     }
 
@@ -290,13 +311,11 @@ export function useRefresh({
     }
 
     if (_items.length) {
-      itemsHasCache.current[tab] = true // mark refreshed
-
       // if swr or possibile-swr, save list starting part only
-      if (TabConfig[tab].swr || tab === ETabType.Fav || tab === ETabType.PopularWeekly) {
-        itemsCache.current[tab] = _items.slice(0, 30)
+      if (TabConfig[tab].swr || tab === ETab.Fav || tab === ETab.Hot) {
+        setCacheFor(tab, _items.slice(0, 30))
       } else {
-        itemsCache.current[tab] = _items
+        setCacheFor(tab, _items)
       }
     }
 
@@ -351,6 +370,7 @@ export function useRefresh({
 
     pcRecService,
     serviceMap,
+    getServiceMap,
 
     setPcRecService,
     setServiceMap,

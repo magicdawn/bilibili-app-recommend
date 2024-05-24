@@ -1,6 +1,7 @@
 import { inlineFlexVerticalCenterStyle } from '$common/emotion-css'
 import { AccessKeyManage } from '$components/AccessKeyManage'
-import { ETabType, TabIcon } from '$components/RecHeader/tab.shared'
+import { TabIcon } from '$components/RecHeader/tab-config'
+import { ETab } from '$components/RecHeader/tab-enum'
 import { VideoLinkOpenMode, VideoLinkOpenModeConfig } from '$components/VideoCard/index.shared'
 import { CheckboxSettingItem, HelpInfo } from '$components/piece'
 import { IconPark } from '$icon-park'
@@ -44,7 +45,7 @@ export function TabPaneBasic() {
     <div className={styles.tabPane}>
       <div className={styles.settingsGroup}>
         <div className={styles.settingsGroupTitle}>
-          <TabIcon tabKey={ETabType.RecommendApp} size={30} mr={5} /> 推荐 access_key
+          <TabIcon tabKey={ETab.RecommendApp} size={30} mr={5} /> 推荐 access_key
           <HelpInfo
             iconProps={{
               name: 'Help',
@@ -54,7 +55,7 @@ export function TabPaneBasic() {
           >
             <span css={inlineFlexVerticalCenterStyle}>
               用于「
-              <TabIcon tabKey={ETabType.RecommendApp} mr={5} />
+              <TabIcon tabKey={ETab.RecommendApp} mr={5} />
               推荐」Tab
             </span>
             <br />

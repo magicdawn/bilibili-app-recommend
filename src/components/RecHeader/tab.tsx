@@ -1,38 +1,29 @@
-import { APP_NAME } from '$common'
 import { flexVerticalCenterStyle } from '$common/emotion-css'
-import { proxyWithLocalStorage } from '$common/hooks/proxyWithLocalStorage'
+import { proxyWithGmStorage } from '$common/hooks/proxyWithLocalStorage'
 import { type OnRefresh } from '$components/RecGrid/useRefresh'
 import { HelpInfo } from '$components/piece'
 import { QUERY_DYNAMIC_UP_MID } from '$modules/recommend/dynamic-feed'
-import { isWeekendForPopularWeekly } from '$modules/recommend/popular-weekly'
 import { useSettingsSnapshot } from '$modules/settings'
 import { checkLoginStatus, useHasLogined } from '$utility'
 import { Radio } from 'antd'
-import {
-  ETabType,
-  TabConfig,
-  TabIcon,
-  TabKeys,
-  toastNeedLogin,
-  type TabConfigItem,
-} from './tab.shared'
+import type { TabConfigItem } from './tab-config'
+import { TabConfig, TabIcon, toastNeedLogin } from './tab-config'
+import { ETab, TabKeys } from './tab-enum'
 
 /**
  * initial tab
  */
 
-const VIDEO_SOURCE_TAB_STORAGE_KEY = `${APP_NAME}-video-source-tab`
-
-export const videoSourceTabState = proxyWithLocalStorage<{ value: ETabType }>(
-  { value: ETabType.RecommendApp },
-  VIDEO_SOURCE_TAB_STORAGE_KEY,
+export const videoSourceTabState = await proxyWithGmStorage<{ value: ETab }>(
+  { value: ETab.RecommendApp },
+  `video-source-tab`,
 )
 
-if (QUERY_DYNAMIC_UP_MID && videoSourceTabState.value !== ETabType.DynamicFeed) {
-  videoSourceTabState.value = ETabType.DynamicFeed
+if (QUERY_DYNAMIC_UP_MID && videoSourceTabState.value !== ETab.DynamicFeed) {
+  videoSourceTabState.value = ETab.DynamicFeed
 }
 
-function getSortedTabKeys(customTabKeysOrder: ETabType[]) {
+function getSortedTabKeys(customTabKeysOrder: ETab[]) {
   return TabKeys.slice().sort((a, b) => {
     let aIndex = customTabKeysOrder.indexOf(a)
     let bIndex = customTabKeysOrder.indexOf(b)
@@ -54,39 +45,39 @@ function useCurrentDisplayingTabKeys() {
   const keys = useMemo(() => {
     const tabkeys = getSortedTabKeys(customTabKeysOrder)
     return tabkeys.filter((key) => {
-      if (key === ETabType.RecommendApp && !logined) {
+      if (key === ETab.RecommendApp && !logined) {
         return true
       }
 
-      if (key === ETabType.DynamicFeed && QUERY_DYNAMIC_UP_MID) {
+      if (key === ETab.DynamicFeed && QUERY_DYNAMIC_UP_MID) {
         return true
       }
 
-      if (key === ETabType.PopularWeekly && showPopularWeeklyOnlyOnWeekend) {
-        return isWeekendForPopularWeekly()
-      }
+      // if (key === ETabType.PopularWeekly && showPopularWeeklyOnlyOnWeekend) {
+      //   return isWeekendForPopularWeekly()
+      // }
 
       return !hidingTabKeys.includes(key)
     })
   }, [hidingTabKeys, customTabKeysOrder, showPopularWeeklyOnlyOnWeekend, logined])
 
-  if (QUERY_DYNAMIC_UP_MID && keys.includes(ETabType.DynamicFeed)) {
-    return [ETabType.DynamicFeed]
+  if (QUERY_DYNAMIC_UP_MID && keys.includes(ETab.DynamicFeed)) {
+    return [ETab.DynamicFeed]
   }
 
   return keys
 }
 
-function useCurrentDisplayingTabConfigList(): ({ key: ETabType } & TabConfigItem)[] {
+function useCurrentDisplayingTabConfigList(): ({ key: ETab } & TabConfigItem)[] {
   const keys = useCurrentDisplayingTabKeys()
   return useMemo(() => keys.map((key) => ({ key, ...TabConfig[key] })), [keys])
 }
 
-export function useCurrentUsingTab(): ETabType {
+export function useCurrentUsingTab(): ETab {
   const tab = useSnapshot(videoSourceTabState).value
   const displayTabKeys = useCurrentDisplayingTabKeys()
   const logined = useHasLogined()
-  const fallbackTab = ETabType.RecommendApp
+  const fallbackTab = ETab.RecommendApp
 
   // invalid
   if (!displayTabKeys.includes(tab)) return fallbackTab
@@ -145,7 +136,7 @@ export function VideoSourceTab({ onRefresh }: { onRefresh: OnRefresh }) {
           target.blur()
         }}
         onChange={(e) => {
-          const newValue = e.target.value as ETabType
+          const newValue = e.target.value as ETab
 
           if (!logined) {
             if (!TabConfig[newValue].anonymousUsage) {

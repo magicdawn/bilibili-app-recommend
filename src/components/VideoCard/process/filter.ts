@@ -1,5 +1,5 @@
 import { baseDebug } from '$common'
-import { ETabType } from '$components/RecHeader/tab.shared'
+import { ETab } from '$components/RecHeader/tab-enum'
 import type { RecItemTypeOrSeparator } from '$define'
 import { EApiType } from '$define/index.shared'
 import { dynamicFeedFilterStore } from '$modules/recommend/dynamic-feed'
@@ -19,8 +19,8 @@ export function getFollowedStatus(recommendReason?: string): boolean {
  * 用于快速判断是否应该启用过滤, 避免 normalizeData 等一些列操作
  */
 
-export function anyFilterEnabled(tab: ETabType) {
-  if (tab === ETabType.KeepFollowOnly) {
+export function anyFilterEnabled(tab: ETab) {
+  if (tab === ETab.KeepFollowOnly) {
     return true
   }
 
@@ -37,7 +37,7 @@ export function anyFilterEnabled(tab: ETabType) {
   }
 
   // recommend
-  if (tab === ETabType.RecommendApp || tab === ETabType.RecommendPc) {
+  if (tab === ETab.RecommendApp || tab === ETab.RecommendPc) {
     if (
       settings.filterEnabled &&
       (settings.filterMinDurationEnabled ||
@@ -50,7 +50,7 @@ export function anyFilterEnabled(tab: ETabType) {
 
   // 动态过滤
   if (
-    tab === ETabType.DynamicFeed &&
+    tab === ETab.DynamicFeed &&
     dynamicFeedFilterStore.hasSelectedUp &&
     settings.hideChargeOnlyDynamicFeedVideos
   ) {
@@ -60,24 +60,16 @@ export function anyFilterEnabled(tab: ETabType) {
   return false
 }
 
-function shouldEnableCommonChecks(tab: ETabType) {
+function shouldEnableCommonChecks(tab: ETab) {
   // expect
   // KeepFollowOnly = 'keep-follow-only',
   // DynamicFeed = 'dynamic-feed',
   // Watchlater = 'watchlater',
   // Fav = 'fav',
-  return (
-    [
-      ETabType.RecommendApp,
-      ETabType.RecommendPc,
-      ETabType.PopularGeneral,
-      ETabType.PopularWeekly,
-      ETabType.Ranking,
-    ] satisfies ETabType[]
-  ).includes(tab)
+  return ([ETab.RecommendApp, ETab.RecommendPc, ETab.Hot] satisfies ETab[]).includes(tab)
 }
 
-export function filterRecItems(items: RecItemTypeOrSeparator[], tab: ETabType) {
+export function filterRecItems(items: RecItemTypeOrSeparator[], tab: ETab) {
   if (!anyFilterEnabled(tab)) {
     return items
   }
@@ -164,7 +156,7 @@ export function filterRecItems(items: RecItemTypeOrSeparator[], tab: ETabType) {
 
     // 动态过滤
     if (
-      tab === ETabType.DynamicFeed &&
+      tab === ETab.DynamicFeed &&
       dynamicFeedFilterStore.hasSelectedUp &&
       settings.hideChargeOnlyDynamicFeedVideos
     ) {
@@ -178,7 +170,7 @@ export function filterRecItems(items: RecItemTypeOrSeparator[], tab: ETabType) {
     }
 
     // 推荐
-    if (tab === ETabType.RecommendApp || tab === ETabType.RecommendPc) {
+    if (tab === ETab.RecommendApp || tab === ETab.RecommendPc) {
       const isVideo = goto === 'av'
       const isPicture = goto === 'picture'
       const isBangumi = goto === 'bangumi'

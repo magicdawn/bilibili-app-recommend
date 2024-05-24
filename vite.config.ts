@@ -3,9 +3,10 @@ import reactSwc from '@vitejs/plugin-react-swc'
 import { execSync } from 'child_process'
 import postcssMediaMinmax from 'postcss-media-minmax'
 import { visualizer } from 'rollup-plugin-visualizer'
+import UnoCSS from 'unocss/vite'
 import AutoImport from 'unplugin-auto-import/vite'
 import Icons from 'unplugin-icons/vite'
-import { defineConfig } from 'vite'
+import { defineConfig, type ConfigEnv, type PluginOption } from 'vite'
 import importer from 'vite-plugin-importer'
 import monkey, { cdn } from 'vite-plugin-monkey'
 import tsconfigPaths from 'vite-tsconfig-paths'
@@ -140,48 +141,10 @@ export default defineConfig(({ command }) => ({
       jsx: 'react',
     }),
 
-    /**
-     * babel-plugin-import
-     */
+    ...getBabelImportPlugins(command),
 
-    command === 'build' &&
-      minify &&
-      importer({
-        libraryName: 'antd',
-        libraryDirectory: 'es',
-      }),
-
-    // import {get} from 'lodash' -> import get from 'lodash/get'
-    command === 'build' &&
-      minify &&
-      importer({
-        libraryName: 'lodash',
-        libraryDirectory: '',
-        camel2DashComponentName: false,
-      }),
-
-    command === 'build' &&
-      importer({
-        libraryName: '@icon-park/react',
-        libraryDirectory: 'es/icons',
-        camel2DashComponentName: false, // default: true,
-      }),
-
-    // use @vitejs/plugin-react in build
-    // for use emotion babel plugin
-    // https://emotion.sh/docs/babel#features-which-are-enabled-with-the-babel-plugin
-    command === 'serve'
-      ? reactSwc({
-          jsxImportSource: '@emotion/react',
-        })
-      : react({
-          jsxImportSource: '@emotion/react',
-          babel: {
-            plugins: ['@emotion/babel-plugin'],
-          },
-        }),
-
-    // https://github.com/lisonge/vite-plugin-monkey
+    getReactPlugin(command),
+    UnoCSS(),
     monkey({
       entry: './src/index.ts',
       userscript: {
@@ -221,7 +184,7 @@ export default defineConfig(({ command }) => ({
       server: {
         // prefix: (name) => `${name} Dev`,
         prefix: false, // 一样的, 避免切换
-        open: true,
+        open: false,
         mountGmApi: true,
       },
 
@@ -292,3 +255,54 @@ export default defineConfig(({ command }) => ({
       }),
   ].filter(Boolean),
 }))
+
+/**
+ * babel-plugin-import related
+ */
+
+function getBabelImportPlugins(command: ConfigEnv['command']): PluginOption[] {
+  return [
+    command === 'build' &&
+      minify &&
+      importer({
+        libraryName: 'antd',
+        libraryDirectory: 'es',
+      }),
+
+    // import {get} from 'lodash' -> import get from 'lodash/get'
+    command === 'build' &&
+      minify &&
+      importer({
+        libraryName: 'lodash',
+        libraryDirectory: '',
+        camel2DashComponentName: false,
+      }),
+
+    command === 'build' &&
+      importer({
+        libraryName: '@icon-park/react',
+        libraryDirectory: 'es/icons',
+        camel2DashComponentName: false, // default: true,
+      }),
+  ].filter(Boolean)
+}
+
+function getReactPlugin(command: ConfigEnv['command']) {
+  const swc = reactSwc({
+    jsxImportSource: '@emotion/react',
+  })
+
+  const babel = react({
+    jsxImportSource: '@emotion/react',
+    babel: {
+      plugins: ['@emotion/babel-plugin'],
+    },
+  })
+
+  return babel
+
+  // use @vitejs/plugin-react in build
+  // for use emotion babel plugin
+  // https://emotion.sh/docs/babel#features-which-are-enabled-with-the-babel-plugin
+  return command === 'serve' ? swc : babel
+}

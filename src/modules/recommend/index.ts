@@ -1,7 +1,7 @@
 import { baseDebug } from '$common'
 import { getIService, type FetcherOptions } from '$components/RecGrid/useRefresh'
 import { getColumnCount } from '$components/RecGrid/useShortcut'
-import { ETabType } from '$components/RecHeader/tab.shared'
+import { ETab } from '$components/RecHeader/tab-enum'
 import { anyFilterEnabled, filterRecItems } from '$components/VideoCard/process/filter'
 import { lookinto } from '$components/VideoCard/process/normalize'
 import type { RecItemTypeOrSeparator } from '$define'
@@ -41,8 +41,7 @@ export function uniqConcat(existing: RecItemTypeOrSeparator[], newItems: RecItem
   return existing.concat(uniqFilter(existing, newItems))
 }
 
-export const usePcApi = (tab: ETabType) =>
-  tab === ETabType.KeepFollowOnly || tab === ETabType.RecommendPc
+export const usePcApi = (tab: ETab) => tab === ETab.KeepFollowOnly || tab === ETab.RecommendPc
 
 export async function getMinCount(
   count: number,
@@ -76,7 +75,7 @@ export async function getMinCount(
     let times: number
 
     // 已关注
-    if (tab === ETabType.KeepFollowOnly) {
+    if (tab === ETab.KeepFollowOnly) {
       times = 8
       debug('getMinCount: addMore(restCount = %s) times=%s', restCount, times)
     }
@@ -138,7 +137,7 @@ export async function getMinCount(
 
 export async function refreshForHome(fetcherOptions: FetcherOptions) {
   let items = await getMinCount(getColumnCount(undefined, false) * 2, fetcherOptions, 5) // 7 * 2-row
-  if (fetcherOptions.tab === ETabType.Watchlater) {
+  if (fetcherOptions.tab === ETab.Watchlater) {
     items = items.slice(0, 20)
   }
   return items
@@ -148,8 +147,8 @@ export async function refreshForGrid(fetcherOptions: FetcherOptions) {
   let minCount = getColumnCount() * 3 + 1 // 7 * 3-row, 1 screen
 
   if (
-    fetcherOptions.tab === ETabType.DynamicFeed &&
-    fetcherOptions.serviceMap[ETabType.DynamicFeed].searchText
+    fetcherOptions.tab === ETab.DynamicFeed &&
+    fetcherOptions.serviceMap[ETab.DynamicFeed].searchText
   ) {
     minCount = 1
   }
@@ -157,7 +156,7 @@ export async function refreshForGrid(fetcherOptions: FetcherOptions) {
   return getMinCount(minCount, fetcherOptions, 5)
 }
 
-export async function getRecommendTimes(times: number, tab: ETabType, pcRecService: PcRecService) {
+export async function getRecommendTimes(times: number, tab: ETab, pcRecService: PcRecService) {
   let items: RecItemTypeOrSeparator[] = usePcApi(tab)
     ? await pcRecService.getRecommendTimes(times)
     : await new AppRecService().getRecommendTimes(times)
