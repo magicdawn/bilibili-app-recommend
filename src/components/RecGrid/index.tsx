@@ -7,7 +7,7 @@ import { useRefState } from '$common/hooks/useRefState'
 import { useModalDislikeVisible } from '$components/ModalDislike'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import { useCurrentUsingTab } from '$components/RecHeader/tab'
-import { ETab } from '$components/RecHeader/tab-enum'
+import { EHotSubTab, ETab } from '$components/RecHeader/tab-enum'
 import { VideoCard } from '$components/VideoCard'
 import type { VideoCardEmitter, VideoCardEvents } from '$components/VideoCard/index.shared'
 import { borderRadiusValue } from '$components/VideoCard/index.shared'
@@ -19,6 +19,7 @@ import { $headerHeight } from '$header'
 import { IconPark } from '$icon-park'
 import { cx, styled } from '$libs'
 import { getRecommendTimes, refreshForGrid, uniqConcat } from '$modules/recommend'
+import { hotStore } from '$modules/recommend/hot'
 import { useSettingsSnapshot } from '$modules/settings'
 import { isSafari } from '$platform'
 import { AntdMessage } from '$utility'
@@ -453,6 +454,14 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
         `}
       >
         <p>出错了, 请刷新重试!</p>
+        {tab === ETab.Hot && hotStore.subtab === EHotSubTab.PopularWeekly && (
+          <p className='mt-8px'>
+            可能需手动输入验证码
+            <a href='https://www.bilibili.com/v/popular/weekly' target='_blank' className='ml-4px'>
+              每周必看
+            </a>
+          </p>
+        )}
       </div>
     )
   }
