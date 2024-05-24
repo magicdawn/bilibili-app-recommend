@@ -2,7 +2,6 @@ import { proxyWithGmStorage } from '$common/hooks/proxyWithLocalStorage'
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
 import { EHotSubTab } from '$components/RecHeader/tab-enum'
 import type { RecItemTypeOrSeparator } from '$define'
-import { IconPark } from '$icon-park'
 import { settings } from '$modules/settings'
 import type { AntdMenuItemType } from '$utility/type'
 import { Button, Dropdown } from 'antd'
@@ -27,22 +26,27 @@ export function isHotTabUsingShuffle(shuffleForPopularWeekly?: boolean) {
   return change
 }
 
+const imgOf = (src: string) => <img src={src} alt='' className='w-18px h-18px' />
+
 const HotSubTabConfig = {
   [EHotSubTab.PopularGeneral]: {
-    icon: <IconPark name='Fire' size={15} />,
+    // icon: <IconPark name='Fire' size={15} />,
+    icon: imgOf('https://s1.hdslb.com/bfs/static/jinkela/popular/assets/icon_popular.png'),
     label: '综合热门',
     desc: '各个领域中新奇好玩的优质内容都在这里~',
     swr: true,
     anonymousUsage: true,
   },
   [EHotSubTab.PopularWeekly]: {
-    icon: <IconPark name='TrendTwo' size={15} />,
+    // icon: <IconPark name='TrendTwo' size={15} />,
+    icon: imgOf('https://s1.hdslb.com/bfs/static/jinkela/popular/assets/icon_weekly.png'),
     label: '每周必看',
     desc: '每周五晚 18:00 更新',
     anonymousUsage: true,
   },
   [EHotSubTab.Ranking]: {
-    icon: <IconPark name='Ranking' size={15} />,
+    // icon: <IconPark name='Ranking' size={15} />,
+    icon: imgOf('https://s1.hdslb.com/bfs/static/jinkela/popular/assets/icon_rank.png'),
     label: '排行榜',
     desc: '排行榜根据稿件内容质量，近期的数据综合展示，动态更新',
     anonymousUsage: true,
