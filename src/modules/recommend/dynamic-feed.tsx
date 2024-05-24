@@ -1,5 +1,5 @@
 import { IN_BILIBILI_HOMEPAGE, REQUEST_FAIL_MSG } from '$common'
-import { antdCss } from '$common/emotion-css'
+import { antdCustomCss } from '$common/emotion-css'
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
 import { CHARGE_ONLY_TEXT } from '$components/VideoCard/top-marks'
 import { CheckboxSettingItem } from '$components/piece'
@@ -274,7 +274,7 @@ export function DynamicFeedUsageInfo() {
         </Dropdown>
 
         {hasSelectedUp && (
-          <Button onClick={onClear} css={[antdCss.btn]}>
+          <Button onClick={onClear} css={[antdCustomCss.button]}>
             <IconPark name='Return' size={14} style={{ marginRight: 5 }} />
             <span>清除</span>
           </Button>

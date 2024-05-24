@@ -25,9 +25,9 @@ import {
 import type { FavItemExtend } from '$define/fav'
 import type { EApiType } from '$define/index.shared'
 import { IconPark } from '$icon-park'
-import type { BangumiRankingItem } from '$modules/recommend/ranking/api.bangumi-category'
-import type { CinemaRankingItem } from '$modules/recommend/ranking/api.cinema-category'
-import type { NormalRankingItem } from '$modules/recommend/ranking/api.normal-category'
+import type { BangumiRankingItem } from '$modules/recommend/hot/ranking/api.bangumi-category'
+import type { CinemaRankingItem } from '$modules/recommend/hot/ranking/api.cinema-category'
+import type { NormalRankingItem } from '$modules/recommend/hot/ranking/api.normal-category'
 import { toHttps } from '$utility'
 import {
   formatDuration,

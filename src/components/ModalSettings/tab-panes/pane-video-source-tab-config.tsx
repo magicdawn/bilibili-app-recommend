@@ -1,6 +1,7 @@
 import { AntdTooltip } from '$components/AntdApp'
 import { useSortedTabKeys } from '$components/RecHeader/tab'
-import { ETabType, TabConfig, TabIcon, TabKeys } from '$components/RecHeader/tab.shared'
+import { TabConfig, TabIcon } from '$components/RecHeader/tab-config'
+import { ETab, TabKeys } from '$components/RecHeader/tab-enum'
 import { CheckboxSettingItem, HelpInfo } from '$components/piece'
 import { EAppApiDevice } from '$define/index.shared'
 import { IconPark } from '$icon-park'
@@ -77,7 +78,7 @@ export function TabPaneVideoSourceTabConfig() {
               `}
             >
               <div className={styles.settingsGroupSubTitle}>
-                <TabIcon tabKey={ETabType.Watchlater} mr={5} mt={-1} />
+                <TabIcon tabKey={ETab.Watchlater} mr={5} mt={-1} />
                 稍后再看
               </div>
               <div className={styles.row}>
@@ -103,7 +104,7 @@ export function TabPaneVideoSourceTabConfig() {
               `}
             >
               <div className={styles.settingsGroupSubTitle}>
-                <TabIcon tabKey={ETabType.Fav} mr={5} mt={-2} />
+                <TabIcon tabKey={ETab.Fav} mr={5} mt={-2} />
                 收藏
               </div>
               <div className={styles.row}>
@@ -125,11 +126,11 @@ export function TabPaneVideoSourceTabConfig() {
 
             <div
               css={css`
-                order: ${sortedTabKeys.indexOf(ETabType.RecommendApp) + 1};
+                order: ${sortedTabKeys.indexOf(ETab.RecommendApp) + 1};
               `}
             >
               <div className={styles.settingsGroupSubTitle}>
-                <TabIcon tabKey={ETabType.RecommendApp} mr={5} />
+                <TabIcon tabKey={ETab.RecommendApp} mr={5} />
                 App 推荐
               </div>
               <div style={{ width: '100%', display: 'flex', alignItems: 'center' }}>
@@ -154,31 +155,6 @@ export function TabPaneVideoSourceTabConfig() {
                 />
               </div>
             </div>
-
-            <div
-              css={css`
-                order: ${sortedTabKeys.indexOf(ETabType.PopularWeekly) + 1};
-              `}
-            >
-              <div className={styles.settingsGroupSubTitle}>
-                <TabIcon tabKey={ETabType.PopularWeekly} mr={5} />
-                {TabConfig[ETabType.PopularWeekly].label}
-              </div>
-              <div style={{ width: '100%', display: 'flex', alignItems: 'center' }}>
-                <CheckboxSettingItem
-                  configKey='showPopularWeeklyOnlyOnWeekend'
-                  label='只在周末显示'
-                  tooltip={
-                    <>
-                      只在周末时段显示「{TabConfig[ETabType.PopularWeekly].label}」，也包括周五
-                      {TabConfig[ETabType.PopularWeekly].label}发布之后的时间
-                      <br />
-                      P.S 如果勾选此选项, 将忽略左侧勾选配置
-                    </>
-                  }
-                />
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -186,7 +162,7 @@ export function TabPaneVideoSourceTabConfig() {
   )
 }
 
-function useCurrentShowingTabKeys(): ETabType[] {
+function useCurrentShowingTabKeys(): ETab[] {
   const { hidingTabKeys } = useSettingsSnapshot()
   return useMemo(() => TabKeys.filter((key) => !hidingTabKeys.includes(key)), [hidingTabKeys])
 }
@@ -242,7 +218,7 @@ function VideoSourceTabOrder({ className, style }: { className?: string; style?:
   )
 }
 
-function VideoSourceTabSortableItem({ id }: { id: ETabType }) {
+function VideoSourceTabSortableItem({ id }: { id: ETab }) {
   const { attributes, listeners, setNodeRef, transform, transition, setActivatorNodeRef } =
     useSortable({ id })
 
@@ -251,7 +227,7 @@ function VideoSourceTabSortableItem({ id }: { id: ETabType }) {
     transition,
   }
 
-  const { label, desc, icon, iconProps } = TabConfig[id]
+  const { label, desc } = TabConfig[id]
 
   const dark = useIsDarkMode()
 

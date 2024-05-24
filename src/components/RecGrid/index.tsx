@@ -7,7 +7,7 @@ import { useRefState } from '$common/hooks/useRefState'
 import { useModalDislikeVisible } from '$components/ModalDislike'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import { useCurrentUsingTab } from '$components/RecHeader/tab'
-import { ETabType } from '$components/RecHeader/tab.shared'
+import { ETab } from '$components/RecHeader/tab-enum'
 import { VideoCard } from '$components/VideoCard'
 import type { VideoCardEmitter, VideoCardEvents } from '$components/VideoCard/index.shared'
 import { borderRadiusValue } from '$components/VideoCard/index.shared'
@@ -110,8 +110,8 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
     setTimeout(checkShouldLoadMore)
   })
 
-  const updateExtraInfo = useMemoizedFn((tab: ETabType) => {
-    const info = getIService(serviceMap, tab)?.usageInfo ?? null
+  const updateExtraInfo = useMemoizedFn((tab: ETab) => {
+    const info = getIService(getServiceMap(), tab)?.usageInfo ?? null
     setExtraInfo?.(info)
   })
 
@@ -136,13 +136,16 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
     refreshAbortController,
     pcRecService,
     serviceMap,
+    getServiceMap,
   } = useRefresh({
     tab,
     debug,
     fetcher: refreshForGrid,
     recreateService: true,
+
     preAction,
     postAction,
+    updateExtraInfo,
 
     onScrollToTop,
     setUpperRefreshing,
@@ -166,11 +169,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
 
       // 场景
       // 当前 Tab: 稍后再看, 点视频进去, 在视频页移除了, 关闭视频页, 回到首页
-      if (
-        tab === ETabType.Watchlater &&
-        goOutAt.current &&
-        Date.now() - goOutAt.current > ms('1h')
-      ) {
+      if (tab === ETab.Watchlater && goOutAt.current && Date.now() - goOutAt.current > ms('1h')) {
         refresh(true, { watchlaterKeepOrder: true })
       }
     },
@@ -214,7 +213,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
         // loadMore 至少 load 一项, 需要触发 InfiniteScroll.componentDidUpdate
         while (!(newItems.length > items.length)) {
           // keep-follow-only 需要大基数
-          const times = tab === ETabType.KeepFollowOnly ? 5 : 2
+          const times = tab === ETab.KeepFollowOnly ? 5 : 2
           const more = await getRecommendTimes(times, tab, pcRecService)
           newItems = uniqConcat(newItems, more)
         }
@@ -358,11 +357,11 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
       newItems.splice(index, 1)
       AntdMessage.success(`已移除: ${data.title}`, 4)
 
-      if (tab === ETabType.Watchlater) {
+      if (tab === ETab.Watchlater) {
         serviceMap[tab].count--
         updateExtraInfo(tab)
       }
-      if (tab === ETabType.Fav) {
+      if (tab === ETab.Fav) {
         serviceMap[tab].total--
         updateExtraInfo(tab)
       }

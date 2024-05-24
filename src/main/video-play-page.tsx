@@ -1,5 +1,5 @@
 import { baseDebug } from '$common'
-import { antdCss } from '$common/emotion-css'
+import { antdCustomCss } from '$common/emotion-css'
 import { AntdApp } from '$components/AntdApp'
 import {
   PLAYER_SCREEN_MODE,
@@ -93,7 +93,7 @@ async function addOpenInPipWindowButton() {
   root.render(
     <>
       <AntdApp>
-        <Button size='small' css={antdCss.btn} onClick={handleClick}>
+        <Button size='small' css={antdCustomCss.button} onClick={handleClick}>
           {VideoLinkOpenModeConfig.Popup.icon}
           <span css={{ marginLeft: 4 }}>{VideoLinkOpenModeConfig.Popup.label}</span>
         </Button>

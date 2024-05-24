@@ -1,5 +1,5 @@
-import type { RankingItem } from '$modules/recommend/ranking/api'
-import type { CategorySlug, CategoryType } from '$modules/recommend/ranking/category'
+import type { RankingItem } from '$modules/recommend/hot/ranking/api'
+import type { CategorySlug, CategoryType } from '$modules/recommend/hot/ranking/category'
 import type { android } from './app-recommend.android'
 import type { ipad } from './app-recommend.ipad'
 import type { DmJson } from './dm'

@@ -1,19 +1,27 @@
-import { antdCss, flexVerticalCenterStyle } from '$common/emotion-css'
+import { antdCustomCss, flexVerticalCenterStyle } from '$common/emotion-css'
+import { proxyWithGmStorage } from '$common/hooks/proxyWithLocalStorage'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
 import { HelpInfo } from '$components/piece'
 import { Button, Popover } from 'antd'
-import { usePopupContainer } from '../_shared'
+import { usePopupContainer } from '../../_shared'
 import {
+  RANKING_CATEGORIES,
   RANKING_CATEGORIES_GROUPDED,
   RANKING_CATEGORIES_MAP,
   type Category,
   type CategorySlug,
 } from './category'
 
-export const rankingStore = proxy<{ slug: CategorySlug }>({
-  slug: 'all',
-})
+export const rankingStore = await proxyWithGmStorage<{ slug: CategorySlug }>(
+  { slug: 'all' },
+  'ranking-store',
+)
+
+// valid check
+if (!RANKING_CATEGORIES.map((x) => x.slug).includes(rankingStore.slug)) {
+  rankingStore.slug = 'all'
+}
 
 export function RankingUsageInfo() {
   const { ref, getPopupContainer } = usePopupContainer()
@@ -77,7 +85,7 @@ export function RankingUsageInfo() {
               <Button
                 key={c.slug}
                 css={[
-                  antdCss.btn,
+                  antdCustomCss.button,
                   active &&
                     css`
                       border-color: ${colorPrimaryValue};
@@ -116,7 +124,7 @@ export function RankingUsageInfo() {
           </>
         }
       >
-        <Button css={antdCss.btn}>{category.name}</Button>
+        <Button css={antdCustomCss.button}>{category.name}</Button>
       </Popover>
     </div>
   )

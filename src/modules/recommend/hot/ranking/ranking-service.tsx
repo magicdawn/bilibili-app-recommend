@@ -3,10 +3,10 @@ import type { RankingItemExtended } from '$define'
 import { EApiType } from '$define/index.shared'
 import { isWebApiSuccess, request } from '$request'
 import { toast } from '$utility'
-import { QueueStrategy, type IService } from '../base'
+import { QueueStrategy, type IService } from '../../base'
 import type { RankingItem } from './api'
 import { RANKING_CATEGORIES_MAP, getRequestUrl, type CategorySlug } from './category'
-import { RankingUsageInfo } from './ranking-usage-info'
+import { RankingUsageInfo, rankingStore } from './ranking-usage-info'
 
 export class RankingService implements IService {
   loaded = false
@@ -14,7 +14,7 @@ export class RankingService implements IService {
   qs = new QueueStrategy<RankingItemExtended>(20)
 
   constructor(slug?: CategorySlug) {
-    this.slug = slug || 'all'
+    this.slug = slug || rankingStore.slug
   }
 
   get hasMore() {

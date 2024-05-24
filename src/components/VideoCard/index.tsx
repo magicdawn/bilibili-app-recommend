@@ -5,7 +5,7 @@ import { useDislikedReason } from '$components/ModalDislike'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import type { OnRefresh } from '$components/RecGrid/useRefresh'
 import { useCurrentUsingTab, videoSourceTabState } from '$components/RecHeader/tab'
-import { ETabType } from '$components/RecHeader/tab.shared'
+import { ETab } from '$components/RecHeader/tab-enum'
 import { isRanking, type AppRecItemExtend, type RecItemType } from '$define'
 import { EApiType } from '$define/index.shared'
 import { IconPark } from '$icon-park'
@@ -292,12 +292,7 @@ const VideoCardInner = memo(function VideoCardInner({
   // 已关注 item.api 也为 'pc', 故使用 tab, 而不是 api 区分
   const tab = useCurrentUsingTab()
   const hasBlacklistEntry =
-    authorMid &&
-    (tab === ETabType.RecommendApp ||
-      tab === ETabType.RecommendPc ||
-      tab === ETabType.PopularGeneral ||
-      tab === ETabType.PopularWeekly ||
-      tab === ETabType.Ranking)
+    authorMid && (tab === ETab.RecommendApp || tab === ETab.RecommendPc || tab === ETab.Hot)
 
   const onBlacklistUp = useMemoizedFn(async () => {
     if (!authorMid) return AntdMessage.error('UP mid 为空!')
@@ -337,7 +332,7 @@ const VideoCardInner = memo(function VideoCardInner({
         upName: authorName,
         searchText: undefined,
       })
-      videoSourceTabState.value = ETabType.DynamicFeed
+      videoSourceTabState.value = ETab.DynamicFeed
       await delay(100)
       await onRefresh?.()
     }
