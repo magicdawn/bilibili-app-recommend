@@ -1,5 +1,24 @@
 # Changelog
 
+## v0.22.2
+
+- 热门相关Tab 收纳到 热门 Tab 中.
+
+details
+
+- 5c9d559 Merge pull request #98 from magicdawn/feat-hot-tab
+- b38c7db feat(hot-sub): use bilibili.com default hot images
+- 93f2d08 refactor: add Rec prefix to recommend services
+- 7915c61 chore: more style tweaks
+- f3ddb52 feat: new hot tab, contains old hot related tab
+- f3989ac chore(hot-tab): enum modified, but no idea how to design sub-tab placement
+- 3f60635 chore: try emoji medals
+- 05ebb14 chore: update corepack pnpm
+- 898d2d6 refactor: rename things
+- 0b1938b feat: extract IconAnimatedChecked
+- 2fa38c2 chore: refresh button text
+- ae125da chore: tweak hideChargeOnlyDynamicFeedVideos tooltip
+
 ## v0.22.1
 
 - fix loadMore 没有使用 filter 的问题. (主要更新, commit: b59ba65)

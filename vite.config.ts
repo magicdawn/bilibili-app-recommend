@@ -184,7 +184,7 @@ export default defineConfig(({ command }) => ({
       server: {
         // prefix: (name) => `${name} Dev`,
         prefix: false, // 一样的, 避免切换
-        open: false,
+        open: true,
         mountGmApi: true,
       },
 
