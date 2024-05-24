@@ -455,9 +455,10 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
       >
         <p>出错了, 请刷新重试!</p>
         {tab === ETab.Hot && hotStore.subtab === EHotSubTab.PopularWeekly && (
-          <p className='mt-8px'>
+          <p className='mt-8px flex items-center justify-center'>
             可能需手动输入验证码
-            <a href='https://www.bilibili.com/v/popular/weekly' target='_blank' className='ml-4px'>
+            <IconPark name='EfferentFour' className='ml-3' />
+            <a href='https://www.bilibili.com/v/popular/weekly' target='_blank' className='ml-2px'>
               每周必看
             </a>
           </p>
