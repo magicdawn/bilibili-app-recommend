@@ -1,4 +1,3 @@
-import { antdCustomCss } from '$common/emotion-css'
 import { proxyWithGmStorage } from '$common/hooks/proxyWithLocalStorage'
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
 import { EHotSubTab } from '$components/RecHeader/tab-enum'
@@ -8,6 +7,7 @@ import { settings } from '$modules/settings'
 import type { AntdMenuItemType } from '$utility/type'
 import { Button, Dropdown } from 'antd'
 import type { ReactNode } from 'react'
+import { usePopupContainer } from '../_shared'
 import type { IService } from '../base'
 import { PopularGeneralService } from './popular-general'
 import { PopularWeeklyService } from './popular-weekly'
@@ -29,7 +29,7 @@ export function isHotTabUsingShuffle(shuffleForPopularWeekly?: boolean) {
 
 const HotSubTabConfig = {
   [EHotSubTab.PopularGeneral]: {
-    icon: <IconPark name='Fire' size={16} />,
+    icon: <IconPark name='Fire' size={15} />,
     label: '综合热门',
     desc: '各个领域中新奇好玩的优质内容都在这里~',
     swr: true,
@@ -51,8 +51,10 @@ const HotSubTabConfig = {
 }
 
 export class HotRecService implements IService {
+  subtab: EHotSubTab
   service: IService
   constructor() {
+    this.subtab = hotStore.subtab
     this.service = new ServiceMap[hotStore.subtab]()
   }
 
@@ -80,29 +82,37 @@ function HotUsageInfo({ children }: { children?: ReactNode }) {
   const { subtab } = useSnapshot(hotStore)
   const { icon, label } = HotSubTabConfig[subtab]
   const onRefresh = useOnRefreshContext()
+  const { ref, getPopupContainer } = usePopupContainer<HTMLButtonElement>()
 
   const menus: AntdMenuItemType[] = useMemo(
     () =>
-      [EHotSubTab.PopularGeneral, EHotSubTab.PopularWeekly, EHotSubTab.Ranking].map((subtab) => {
-        const config = HotSubTabConfig[subtab]
-        return {
-          key: subtab,
-          label: config.label,
-          icon: config.icon,
-          onClick() {
-            hotStore.subtab = subtab
-            onRefresh?.()
-          },
-        }
-      }),
+      [EHotSubTab.PopularGeneral, EHotSubTab.PopularWeekly, EHotSubTab.Ranking]
+        .map((subtab, index) => {
+          const config = HotSubTabConfig[subtab]
+          return [
+            index > 0 && { type: 'divider' as const },
+            {
+              key: subtab,
+              label: config.label,
+              icon: config.icon,
+              onClick() {
+                if (subtab === hotStore.subtab) return
+                hotStore.subtab = subtab
+                // onRefresh?.(true) // 可以但没必要, 有 skeleton 有 Tab切换 的反馈
+                onRefresh?.()
+              },
+            } satisfies AntdMenuItemType,
+          ].filter(Boolean)
+        })
+        .flat(),
     [],
   )
 
   return (
     <>
-      <Dropdown menu={{ items: menus }}>
-        <Button css={antdCustomCss.button} className='w-110px'>
-          {icon} <span className='ml-8px'>{label}</span>
+      <Dropdown menu={{ items: menus }} getPopupContainer={getPopupContainer}>
+        <Button ref={ref} className='w-110px flex items-center justify-start'>
+          {icon} <span className='ml-8px mt-1px'>{label}</span>
         </Button>
       </Dropdown>
       {children}

@@ -3,12 +3,12 @@ import { useRefInit } from '$common/hooks/useRefInit'
 import { useRefState } from '$common/hooks/useRefState'
 import { useCurrentUsingTab } from '$components/RecHeader/tab'
 import { TabConfig } from '$components/RecHeader/tab-config'
-import { ETab } from '$components/RecHeader/tab-enum'
+import { ETab, type EHotSubTab } from '$components/RecHeader/tab-enum'
 import type { RecItemTypeOrSeparator } from '$define'
 import type { IService } from '$modules/recommend/base'
 import { DynamicFeedRecService, dynamicFeedFilterStore } from '$modules/recommend/dynamic-feed'
 import { FavRecService } from '$modules/recommend/fav'
-import { HotRecService } from '$modules/recommend/hot'
+import { HotRecService, hotStore } from '$modules/recommend/hot'
 import { PcRecService } from '$modules/recommend/pc'
 import { WatchLaterRecService } from '$modules/recommend/watchlater'
 import { nextTick } from '$utility'
@@ -77,8 +77,31 @@ export function useRefresh({
 }) {
   const tab = useCurrentUsingTab()
 
-  const itemsCache = useRefInit<Partial<Record<ETab, RecItemTypeOrSeparator[]>>>(() => ({}))
-  const itemsHasCache = useRefInit<Partial<Record<ETab, boolean>>>(() => ({}))
+  /**
+   * cache
+   */
+  const itemsCache = useRefInit<
+    Partial<Record<Exclude<ETab, ETab.Hot> | EHotSubTab, RecItemTypeOrSeparator[]>>
+  >(() => ({}))
+  const getCacheFor = useMemoizedFn((tab: ETab) => {
+    const cache = itemsCache.current
+    if (tab === ETab.Hot) {
+      return cache[hotStore.subtab]
+    } else {
+      return cache[tab]
+    }
+  })
+  const setCacheFor = useMemoizedFn((tab: ETab, items: RecItemTypeOrSeparator[]) => {
+    const cache = itemsCache.current
+    if (tab === ETab.Hot) {
+      cache[hotStore.subtab] = items
+    } else {
+      cache[tab] = items
+    }
+  })
+  const hasCache = useMemoizedFn((tab: ETab) => {
+    return !!getCacheFor(tab)?.length
+  })
 
   const [hasMore, setHasMore, getHasMore] = useRefState(true)
   const [items, setItems, getItems] = useRefState<RecItemTypeOrSeparator[]>([])
@@ -123,6 +146,15 @@ export function useRefresh({
           refreshAbortController.abort()
         }
 
+        // has sub-tabs
+        else if (tab === ETab.Hot && serviceMap[ETab.Hot].subtab !== hotStore.subtab) {
+          debug(
+            'refresh(): [start] [refreshing] sametab(%s) but subtab changed, abort existing',
+            tab,
+          )
+          refreshAbortController.abort()
+        }
+
         // prevent same tab `refresh()`
         else {
           debug('refresh(): [start] [refreshing] prevent same tab(%s) refresh()', tab)
@@ -142,7 +174,7 @@ export function useRefresh({
     await onScrollToTop?.()
 
     // reuse configs
-    const shouldReuse = reuse && !!itemsHasCache.current[tab]
+    const shouldReuse = reuse && hasCache(tab)
     const swr = shouldReuse && !!TabConfig[tab].swr
 
     // all reuse case, do not show skeleton
@@ -184,9 +216,8 @@ export function useRefresh({
      */
 
     let useGridCache = true
-    // shuffle case: swr disabled
-    if ((tab === ETab.Fav || tab === ETab.Hot) && !swr) {
-      // use own cache
+    // conditional swr and disabled (for shuffle case), use own cache
+    if (TabConfig[tab].swr === false) {
       useGridCache = false
     }
 
@@ -247,22 +278,22 @@ export function useRefresh({
     debug('refresh(): shouldReuse=%s swr=%s useGridCache=%s', shouldReuse, swr, useGridCache)
     if (shouldReuse) {
       if (swr) {
-        _items = itemsCache.current[tab] || []
+        _items = getCacheFor(tab) || []
         setItems(_items)
         await doFetch()
       }
       // for 收藏/每日必看 乱序, 已经 retore, 需要 doFetch
       else if (!useGridCache) {
-        itemsCache.current[tab] = []
+        setCacheFor(tab, [])
         await doFetch()
       }
       // for 推荐类 tab
       else {
-        _items = itemsCache.current[tab] || []
+        _items = getCacheFor(tab) || []
         // setItems(_items) // setItems will be called next
       }
     } else {
-      itemsCache.current[tab] = []
+      setCacheFor(tab, [])
       await doFetch()
     }
 
@@ -280,13 +311,11 @@ export function useRefresh({
     }
 
     if (_items.length) {
-      itemsHasCache.current[tab] = true // mark refreshed
-
       // if swr or possibile-swr, save list starting part only
       if (TabConfig[tab].swr || tab === ETab.Fav || tab === ETab.Hot) {
-        itemsCache.current[tab] = _items.slice(0, 30)
+        setCacheFor(tab, _items.slice(0, 30))
       } else {
-        itemsCache.current[tab] = _items
+        setCacheFor(tab, _items)
       }
     }
 
