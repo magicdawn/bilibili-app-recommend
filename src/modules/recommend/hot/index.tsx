@@ -9,14 +9,14 @@ import { Button, Dropdown } from 'antd'
 import type { ReactNode } from 'react'
 import { usePopupContainer } from '../_shared'
 import type { IService } from '../base'
-import { PopularGeneralService } from './popular-general'
-import { PopularWeeklyService } from './popular-weekly'
-import { RankingService } from './ranking/ranking-service'
+import { PopularGeneralRecService } from './popular-general'
+import { PopularWeeklyRecService } from './popular-weekly'
+import { RankingRecService } from './ranking/ranking-service'
 
 const ServiceMap = {
-  [EHotSubTab.PopularGeneral]: PopularGeneralService,
-  [EHotSubTab.PopularWeekly]: PopularWeeklyService,
-  [EHotSubTab.Ranking]: RankingService,
+  [EHotSubTab.PopularGeneral]: PopularGeneralRecService,
+  [EHotSubTab.PopularWeekly]: PopularWeeklyRecService,
+  [EHotSubTab.Ranking]: RankingRecService,
 } satisfies Record<EHotSubTab, new () => IService>
 
 // 是否是: 换一换

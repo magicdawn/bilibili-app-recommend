@@ -8,7 +8,7 @@ import type { RankingItem } from './api'
 import { RANKING_CATEGORIES_MAP, getRequestUrl, type CategorySlug } from './category'
 import { RankingUsageInfo, rankingStore } from './ranking-usage-info'
 
-export class RankingService implements IService {
+export class RankingRecService implements IService {
   loaded = false
   slug: CategorySlug
   qs = new QueueStrategy<RankingItemExtended>(20)
