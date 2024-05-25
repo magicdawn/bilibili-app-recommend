@@ -1,6 +1,6 @@
 # bilibili-app-recommend
 
-> 为 B 站首页添加像 App 一样的推荐
+> B站首页推荐
 
 [![Greasy Fork Version](https://img.shields.io/greasyfork/v/443530?style=flat-square)][gfurl]
 [![Greasy Fork Downloads](https://img.shields.io/greasyfork/dt/443530?style=flat-square)][gfurl]
@@ -16,6 +16,7 @@
 - [x] App 推荐: 我不想看, 用于推荐系统反馈
 - [x] 推荐: 视频过滤
 - [x] 一站式体验, 方便快捷的访问: 动态 / 稍后再看 / 收藏 / 热门等内容
+- [x] 随机: 稍后再看, 收藏, 每周必看等支持随机顺序.
 - [x] 主题设置: 预设主题 + color-picker 自定义
 - [x] Bilibili-Evolved 适配: 夜间模式 / 自定义顶栏 / 主题色.
 - [x] 完善的键盘支持
