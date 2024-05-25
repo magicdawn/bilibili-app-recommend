@@ -75,14 +75,7 @@ export function VideoCardBottom({
         <Else>
           <div className='bili-video-card__info __scale-disable'>
             <div className='bili-video-card__info--right'>
-              <a
-                href={href}
-                target='_blank'
-                data-mod='partition_recommend'
-                data-idx='content'
-                data-ext='click'
-                onClick={handleVideoLinkClick}
-              >
+              <a onClick={handleVideoLinkClick} href={href} target='_blank'>
                 <h3 className='bili-video-card__info--tit' title={title}>
                   {titleRender ?? title}
                 </h3>
@@ -128,7 +121,7 @@ export function VideoCardBottom({
             `}
           >
             {!!authorMid && (
-              <a href={authorHref} target='_blank' onClick={handleVideoLinkClick}>
+              <a href={authorHref} target='_blank'>
                 {authorFace ? (
                   <Avatar src={getAvatarSrc(authorFace)} />
                 ) : (
@@ -156,6 +149,7 @@ export function VideoCardBottom({
                 `}
               >
                 <a
+                  onClick={handleVideoLinkClick}
                   href={href}
                   target='_blank'
                   rel='noopener'
