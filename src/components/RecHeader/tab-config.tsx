@@ -1,5 +1,5 @@
-import type { IconName } from '$icon-park'
-import { IconPark } from '$icon-park'
+import type { IconName } from '$modules/icon/icon-park'
+import { IconPark } from '$modules/icon/icon-park'
 import { isHotTabUsingShuffle } from '$modules/recommend/hot'
 import { settings } from '$modules/settings'
 import { toast } from '$utility'

@@ -180,6 +180,9 @@ importers:
       '@types/ua-parser-js':
         specifier: ^0.7.39
         version: 0.7.39
+      '@unocss/preset-attributify':
+        specifier: ^0.60.3
+        version: 0.60.3
       '@unocss/preset-rem-to-px':
         specifier: ^0.60.3
         version: 0.60.3

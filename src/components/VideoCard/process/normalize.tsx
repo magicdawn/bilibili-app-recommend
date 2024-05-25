@@ -24,7 +24,7 @@ import {
 } from '$define'
 import type { FavItemExtend } from '$define/fav'
 import type { EApiType } from '$define/index.shared'
-import { IconPark } from '$icon-park'
+import { IconPark } from '$modules/icon/icon-park'
 import type { BangumiRankingItem } from '$modules/recommend/hot/ranking/api.bangumi-category'
 import type { CinemaRankingItem } from '$modules/recommend/hot/ranking/api.cinema-category'
 import type { NormalRankingItem } from '$modules/recommend/hot/ranking/api.normal-category'

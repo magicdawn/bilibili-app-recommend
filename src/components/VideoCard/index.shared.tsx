@@ -1,4 +1,4 @@
-import { IconPark } from '$icon-park'
+import { IconPark } from '$modules/icon/icon-park'
 import { isMac } from '$platform'
 import mitt, { type Emitter } from 'mitt'
 import type { ReactNode } from 'react'

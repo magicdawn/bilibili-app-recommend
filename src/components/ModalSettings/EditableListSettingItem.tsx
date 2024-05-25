@@ -1,5 +1,5 @@
-import { IconPark } from '$icon-park'
 import { cx } from '$libs'
+import { IconPark } from '$modules/icon/icon-park'
 import {
   settings,
   updateSettings,

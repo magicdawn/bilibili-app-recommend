@@ -1,8 +1,8 @@
 import { APP_NAME } from '$common'
 import { flexVerticalCenterStyle } from '$common/emotion-css'
 import { CheckboxSettingItem } from '$components/piece'
-import { IconPark } from '$icon-park'
 import { cx } from '$libs'
+import { IconPark } from '$modules/icon/icon-park'
 import {
   allowedSettingsKeys,
   articleDraft,

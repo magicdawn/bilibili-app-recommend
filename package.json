@@ -38,6 +38,7 @@
     "@types/react": "18.3.3",
     "@types/react-dom": "18.3.0",
     "@types/ua-parser-js": "^0.7.39",
+    "@unocss/preset-attributify": "^0.60.3",
     "@unocss/preset-rem-to-px": "^0.60.3",
     "@unocss/transformer-attributify-jsx": "^0.60.3",
     "@violentmonkey/types": "^0.1.7",

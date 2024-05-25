@@ -6,13 +6,17 @@ import { defineConfig, presetAttributify, presetUno } from 'unocss'
 // import { defineConfig, presetAttributify, presetUno } from 'unocss'
 
 export default defineConfig({
+  rules: [
+    // `size-15` or `size-15px`
+    [/^size-([.\d]+)(?:px)?$/, ([_, num]) => ({ width: `${num}px`, height: `${num}px` })],
+  ],
   presets: [
     presetUno,
     presetRemToPx,
     presetAttributify({
       prefixedOnly: true,
-      // prefix: 'uno',
+      prefix: 'uno:',
     }),
   ],
-  // transformers: [transformerAttributifyJsx()], this does not work
+  // transformers: [transformerAttributifyJsx()], // this does not work
 })

@@ -1,4 +1,4 @@
-import { IconPark } from '$icon-park'
+import { IconPark } from '$modules/icon/icon-park'
 import type { BooleanSettingsKey } from '$modules/settings'
 import { updateSettings, useSettingsSnapshot } from '$modules/settings'
 import { Checkbox, Switch, Tooltip } from 'antd'

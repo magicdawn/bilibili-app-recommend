@@ -26,7 +26,7 @@ export function isHotTabUsingShuffle(shuffleForPopularWeekly?: boolean) {
   return change
 }
 
-const imgOf = (src: string) => <img src={src} alt='' className='w-18px h-18px' />
+const imgOf = (src: string) => <img src={src} alt='' uno:size='18' />
 
 const HotSubTabConfig = {
   [EHotSubTab.PopularGeneral]: {

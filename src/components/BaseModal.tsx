@@ -1,6 +1,6 @@
 import { APP_NAME_ROOT_CLASSNAME } from '$common'
-import { IconPark } from '$icon-park'
 import { useIsDarkMode } from '$modules/dark-mode'
+import { IconPark } from '$modules/icon/icon-park'
 import type { TheCssType } from '$utility/type'
 import type { ComponentProps, MouseEvent } from 'react'
 import { createPortal } from 'react-dom'
