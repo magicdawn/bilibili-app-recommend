@@ -321,9 +321,8 @@ const VideoCardInner = memo(function VideoCardInner({
    * 动态筛选
    */
 
-  const hasDynamicFeedFilterSelectUpEntry =
-    isNormalVideo && !!authorMid && !!authorName && !!onRefresh
-  const onDynamicFeedFilterSelectUp = useMemoizedFn(async () => {
+  const hasDynamicFeedFilterSelectUpEntry = isNormalVideo && !!authorMid && !!authorName
+  const onDynamicFeedFilterSelectUp = useMemoizedFn(async (newWindow?: boolean) => {
     if (!hasDynamicFeedFilterSelectUpEntry) return
 
     async function openInCurrentWindow() {
@@ -342,17 +341,23 @@ const VideoCardInner = memo(function VideoCardInner({
       GM_openInTab(u, { insert: true, active: true })
     }
 
-    openInNewWindow()
+    newWindow ??= tab !== ETab.DynamicFeed
+    if (newWindow) {
+      openInNewWindow()
+    } else {
+      openInCurrentWindow()
+    }
   })
 
   const hasRankingNo = isRanking(item)
 
-  const contextMenus: MenuProps['items'] = useMemo(() => {
+  type MenuArr = MenuProps['items']
+  const contextMenus: MenuArr = useMemo(() => {
     const watchLaterLabel = watchLaterAdded ? '移除稍后再看' : '稍后再看'
 
     const divider = { type: 'divider' as const }
 
-    const copyMenus: MenuProps['items'] = [
+    const copyMenus: MenuArr = [
       {
         key: 'copy-link',
         label: '复制视频链接',
@@ -369,7 +374,7 @@ const VideoCardInner = memo(function VideoCardInner({
       },
     ].filter(Boolean)
 
-    const actionMenus: MenuProps['items'] = [
+    const actionMenus: MenuArr = [
       hasDislikeEntry && {
         key: 'dislike',
         label: '我不想看',
@@ -382,7 +387,9 @@ const VideoCardInner = memo(function VideoCardInner({
         key: 'dymamic-feed-filter-select-up',
         label: '查看 UP 的动态',
         icon: <IconPark name='PeopleSearch' size={15} />,
-        onClick: onDynamicFeedFilterSelectUp,
+        onClick() {
+          onDynamicFeedFilterSelectUp()
+        },
       },
       hasUnfollowEntry && {
         key: 'unfollow-up',
@@ -453,7 +460,7 @@ const VideoCardInner = memo(function VideoCardInner({
         },
     ].filter(Boolean)
 
-    const favMenus: MenuProps['items'] =
+    const favMenus: MenuArr =
       item.api === EApiType.Fav
         ? [
             {
