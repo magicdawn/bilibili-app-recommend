@@ -3,15 +3,6 @@ import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
 import { type ItemsSeparator } from '$define'
 import { EApiType } from '$define/index.shared'
 import { IconPark } from '$modules/icon/icon-park'
-import type { FavItemExtend } from '$modules/rec-services/fav/define'
-import type {
-  FavFolderListAllItem,
-  FavFolderListAllJson,
-} from '$modules/rec-services/fav/define/folder-list-all'
-import type {
-  FavFolderDetailInfo,
-  ResourceListJSON,
-} from '$modules/rec-services/fav/define/resource-list'
 import { settings, updateSettings, useSettingsSnapshot } from '$modules/settings'
 import { isWebApiSuccess, request } from '$request'
 import { getUid, toast } from '$utility'
@@ -22,6 +13,9 @@ import { shuffle } from 'lodash'
 import pmap from 'promise.map'
 import type { Key } from 'react'
 import { QueueStrategy, usePopupContainer, type IService } from '../_base'
+import type { FavItemExtend } from './define'
+import type { FavFolderListAllItem, FavFolderListAllJson } from './define/folder-list-all'
+import type { FavFolderDetailInfo, ResourceListJSON } from './define/resource-list'
 
 export function formatFavFolderUrl(id: number) {
   const uid = getUid()
