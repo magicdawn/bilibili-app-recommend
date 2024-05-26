@@ -341,7 +341,9 @@ const VideoCardInner = memo(function VideoCardInner({
       GM_openInTab(u, { insert: true, active: true })
     }
 
-    newWindow ??= tab !== ETab.DynamicFeed
+    // newWindow ??= tab !== ETab.DynamicFeed
+    newWindow ??= true
+
     if (newWindow) {
       openInNewWindow()
     } else {
