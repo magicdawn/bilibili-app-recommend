@@ -1,11 +1,17 @@
 import { REQUEST_FAIL_MSG } from '$common'
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
 import { type ItemsSeparator } from '$define'
-import type { FavItemExtend } from '$define/fav'
-import type { FavFolderListAllItem, FavFolderListAllJson } from '$define/fav/folder-list-all'
-import type { FavFolderDetailInfo, ResourceListJSON } from '$define/fav/resource-list'
 import { EApiType } from '$define/index.shared'
 import { IconPark } from '$modules/icon/icon-park'
+import type { FavItemExtend } from '$modules/rec-services/fav/define'
+import type {
+  FavFolderListAllItem,
+  FavFolderListAllJson,
+} from '$modules/rec-services/fav/define/folder-list-all'
+import type {
+  FavFolderDetailInfo,
+  ResourceListJSON,
+} from '$modules/rec-services/fav/define/resource-list'
 import { settings, updateSettings, useSettingsSnapshot } from '$modules/settings'
 import { isWebApiSuccess, request } from '$request'
 import { getUid, toast } from '$utility'
@@ -15,8 +21,7 @@ import delay from 'delay'
 import { shuffle } from 'lodash'
 import pmap from 'promise.map'
 import type { Key } from 'react'
-import { usePopupContainer } from './_shared'
-import { QueueStrategy, type IService } from './base'
+import { QueueStrategy, usePopupContainer, type IService } from '../_base'
 
 export function formatFavFolderUrl(id: number) {
   const uid = getUid()

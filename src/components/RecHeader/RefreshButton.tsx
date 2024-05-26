@@ -1,6 +1,6 @@
 import { antdCustomCss } from '$common/emotion-css'
 import type { OnRefresh } from '$components/RecGrid/useRefresh'
-import { isHotTabUsingShuffle } from '$modules/recommend/hot'
+import { isHotTabUsingShuffle } from '$modules/rec-services/hot'
 import { useSettingsSnapshot } from '$modules/settings'
 import { shouldDisableShortcut } from '$utility/dom'
 import { Button } from 'antd'

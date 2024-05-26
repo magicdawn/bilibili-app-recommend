@@ -36,3 +36,11 @@ export class QueueStrategy<T extends RecItemTypeOrSeparator = RecItemTypeOrSepar
     this.returnQueue = []
   }
 }
+
+export function usePopupContainer<T extends HTMLElement = HTMLDivElement>() {
+  const ref = useRef<T>(null)
+  const getPopupContainer = useCallback(() => {
+    return ref.current?.closest<T>('.area-header') || document.body
+  }, [])
+  return { ref, getPopupContainer }
+}

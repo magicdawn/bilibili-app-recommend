@@ -7,7 +7,7 @@ import { gmrequest } from '$request'
 import { toast } from '$utility/toast'
 import { uniqBy } from 'lodash'
 import pretry from 'promise.retry'
-import type { IService } from './base'
+import type { IService } from './_base'
 
 class RecReqError extends Error {
   json: AppRecommendJson

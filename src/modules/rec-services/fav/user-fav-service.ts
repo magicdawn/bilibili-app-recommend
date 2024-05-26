@@ -6,10 +6,10 @@
  */
 
 import { OPERATION_FAIL_MSG } from '$common'
-import type { FavFolderListAllJson } from '$define/fav/folder-list-all'
-import { apiFavFolderListAll, formatFavFolderUrl } from '$modules/recommend/fav'
 import { isWebApiSuccess, request } from '$request'
 import { getCsrfToken, getHasLogined, getUid, toast } from '$utility'
+import type { FavFolderListAllJson } from './define/folder-list-all'
+import { apiFavFolderListAll, formatFavFolderUrl } from './fav-rec-service'
 
 export const UserFavService = {
   removeFav,

@@ -2,7 +2,7 @@ import type { PcRecItem, PcRecItemExtend, PcRecommendJson } from '$define'
 import { isWebApiSuccess, request } from '$request'
 import { toast } from '$utility/toast'
 import { uniqBy } from 'lodash'
-import type { IService } from './base'
+import type { IService } from './_base'
 
 /**
  * 使用 web api 获取推荐

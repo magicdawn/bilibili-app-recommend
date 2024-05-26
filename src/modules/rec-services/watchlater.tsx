@@ -11,7 +11,7 @@ import delay from 'delay'
 import { shuffle } from 'lodash'
 import { proxy, useSnapshot } from 'valtio'
 import { proxySet } from 'valtio/utils'
-import { QueueStrategy, type IService } from './base'
+import { QueueStrategy, type IService } from './_base'
 
 export const watchLaterState = proxy({
   updatedAt: 0,

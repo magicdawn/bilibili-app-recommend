@@ -1,4 +1,4 @@
-import type { EApiType } from '../index.shared'
+import type { EApiType } from '$define/index.shared'
 import type { FavFolderDetailInfo, Media } from './resource-list'
 
 export type FavItem = Media & {

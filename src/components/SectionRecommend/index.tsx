@@ -4,7 +4,7 @@ import { useCurrentUsingTab } from '$components/RecHeader/tab'
 import { limitTwoLines, videoGrid, videoGridBiliFeed4 } from '$components/video-grid.module.scss'
 import { EApiType } from '$define/index.shared'
 import { cx } from '$libs'
-import { refreshForHome } from '$modules/recommend'
+import { refreshForHome } from '$modules/rec-services'
 import { RecHeader } from '../RecHeader'
 import { VideoCard } from '../VideoCard'
 

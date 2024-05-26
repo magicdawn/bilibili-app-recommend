@@ -6,11 +6,11 @@ import { settings } from '$modules/settings'
 import type { AntdMenuItemType } from '$utility/type'
 import { Button, Dropdown } from 'antd'
 import type { ReactNode } from 'react'
-import { usePopupContainer } from '../_shared'
-import type { IService } from '../base'
+import type { IService } from '../_base'
+import { usePopupContainer } from '../_base'
 import { PopularGeneralRecService } from './popular-general'
 import { PopularWeeklyRecService } from './popular-weekly'
-import { RankingRecService } from './ranking/ranking-service'
+import { RankingRecService } from './ranking'
 
 const ServiceMap = {
   [EHotSubTab.PopularGeneral]: PopularGeneralRecService,

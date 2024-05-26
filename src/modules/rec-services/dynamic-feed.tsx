@@ -16,8 +16,8 @@ import type { AntdMenuItemType } from '$utility/type'
 import { Avatar, Badge, Button, Dropdown, Input, Space } from 'antd'
 import delay from 'delay'
 import ms from 'ms'
-import { usePopupContainer } from './_shared'
-import type { IService } from './base'
+import type { IService } from './_base'
+import { usePopupContainer } from './_base'
 
 export class DynamicFeedRecService implements IService {
   static PAGE_SIZE = 15

@@ -2,8 +2,11 @@ import { flexCenterStyle, flexVerticalCenterStyle } from '$common/emotion-css'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import type { RankingItemExtendProps, RankingItemExtended, RecItemType } from '$define'
 import { EApiType } from '$define/index.shared'
-import type { NormalRankingItem } from '$modules/recommend/hot/ranking/api.normal-category'
-import { RANKING_CATEGORIES_MAP, isNormalCategory } from '$modules/recommend/hot/ranking/category'
+import type { NormalRankingItem } from '$modules/rec-services/hot/ranking/api.normal-category'
+import {
+  RANKING_CATEGORIES_MAP,
+  isNormalCategory,
+} from '$modules/rec-services/hot/ranking/category'
 import { Dropdown } from 'antd'
 import IconParkOutlineMore from '~icons/icon-park-outline/more'
 import PhCrownFill from '~icons/ph/crown-fill'

@@ -22,12 +22,12 @@ import {
   type RecItemType,
   type WatchLaterItemExtend,
 } from '$define'
-import type { FavItemExtend } from '$define/fav'
 import type { EApiType } from '$define/index.shared'
 import { IconPark } from '$modules/icon/icon-park'
-import type { BangumiRankingItem } from '$modules/recommend/hot/ranking/api.bangumi-category'
-import type { CinemaRankingItem } from '$modules/recommend/hot/ranking/api.cinema-category'
-import type { NormalRankingItem } from '$modules/recommend/hot/ranking/api.normal-category'
+import type { FavItemExtend } from '$modules/rec-services/fav/define'
+import type { BangumiRankingItem } from '$modules/rec-services/hot/ranking/api.bangumi-category'
+import type { CinemaRankingItem } from '$modules/rec-services/hot/ranking/api.cinema-category'
+import type { NormalRankingItem } from '$modules/rec-services/hot/ranking/api.normal-category'
 import { toHttps } from '$utility'
 import {
   formatDuration,

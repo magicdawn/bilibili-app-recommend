@@ -1,7 +1,7 @@
 import { type RecItemType } from '$define'
 import { EApiType } from '$define/index.shared'
 import { IconAnimatedChecked } from '$modules/icon/animated-checked'
-import { useWatchLaterState, watchLaterState } from '$modules/recommend/watchlater'
+import { useWatchLaterState, watchLaterState } from '$modules/rec-services/watchlater'
 import { AntdMessage } from '$utility'
 import { usePrevious } from 'ahooks'
 import delay from 'delay'

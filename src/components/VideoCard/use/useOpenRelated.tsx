@@ -1,8 +1,11 @@
 import { baseDebug } from '$common'
 import type { RankingItemExtendProps, RecItemType } from '$define'
 import { EApiType } from '$define/index.shared'
-import type { NormalRankingItem } from '$modules/recommend/hot/ranking/api.normal-category'
-import { RANKING_CATEGORIES_MAP, isNormalCategory } from '$modules/recommend/hot/ranking/category'
+import type { NormalRankingItem } from '$modules/rec-services/hot/ranking/api.normal-category'
+import {
+  RANKING_CATEGORIES_MAP,
+  isNormalCategory,
+} from '$modules/rec-services/hot/ranking/category'
 import { settings, useSettingsSnapshot } from '$modules/settings'
 import { getVideoDetail } from '$modules/video/video-detail'
 import delay from 'delay'

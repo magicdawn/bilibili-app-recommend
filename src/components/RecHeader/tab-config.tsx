@@ -1,6 +1,6 @@
 import type { IconName } from '$modules/icon/icon-park'
 import { IconPark } from '$modules/icon/icon-park'
-import { isHotTabUsingShuffle } from '$modules/recommend/hot'
+import { isHotTabUsingShuffle } from '$modules/rec-services/hot'
 import { settings } from '$modules/settings'
 import { toast } from '$utility'
 import type { Icon } from '@icon-park/react/es/runtime'

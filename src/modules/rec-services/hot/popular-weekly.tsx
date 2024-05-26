@@ -10,8 +10,8 @@ import dayjs from 'dayjs'
 import delay from 'delay'
 import { shuffle } from 'lodash'
 import pmap from 'promise.map'
-import type { IService } from '../base'
-import { QueueStrategy } from '../base'
+import type { IService } from '../_base'
+import { QueueStrategy } from '../_base'
 
 let episodes: PopularWeeklyListItem[] = []
 let cacheKey = ''
