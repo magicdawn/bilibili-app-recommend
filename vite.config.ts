@@ -1,8 +1,10 @@
 import react from '@vitejs/plugin-react'
 import reactSwc from '@vitejs/plugin-react-swc'
 import { execSync } from 'child_process'
+import { interopImportCJSDefault } from 'node-cjs-interop'
 import postcssMediaMinmax from 'postcss-media-minmax'
 import { visualizer } from 'rollup-plugin-visualizer'
+import typedScssModulesOriginal from 'typed-scss-modules'
 import UnoCSS from 'unocss/vite'
 import AutoImport from 'unplugin-auto-import/vite'
 import Icons from 'unplugin-icons/vite'
@@ -11,6 +13,15 @@ import importer from 'vite-plugin-importer'
 import monkey, { cdn } from 'vite-plugin-monkey'
 import tsconfigPaths from 'vite-tsconfig-paths'
 import { name as packageName, version as packageVersion } from './package.json'
+
+const typedScssModules = interopImportCJSDefault(typedScssModulesOriginal)
+const isDev = process.env.NODE_ENV == 'development'
+if (isDev) {
+  // only needed in dev mode
+  typedScssModules(__dirname + '/src', {
+    watch: true,
+  })
+}
 
 // version
 let scriptVersion = packageVersion

@@ -5,9 +5,7 @@
   "type": "module",
   "scripts": {
     "prepare": "husky",
-    "dev:scss": "typed-scss-modules src --watch",
-    "dev:vite": "vite",
-    "dev": "concurrently -k npm:dev:*",
+    "dev": "vite",
     "typecheck": "tsc --noEmit",
     "build:scss": "typed-scss-modules src",
     "build:vite": "vite build",
@@ -54,6 +52,7 @@
     "husky": "^9.0.11",
     "knip": "^5.16.0",
     "lint-staged": "^15.2.5",
+    "node-cjs-interop": "^0.1.6",
     "open": "^10.1.0",
     "postcss-media-minmax": "^5.0.0",
     "prettier": "^3.2.5",

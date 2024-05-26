@@ -228,6 +228,9 @@ importers:
       lint-staged:
         specifier: ^15.2.5
         version: 15.2.5
+      node-cjs-interop:
+        specifier: ^0.1.6
+        version: 0.1.6
       open:
         specifier: ^10.1.0
         version: 10.1.0
@@ -2969,6 +2972,9 @@ packages:
 
   no-case@3.0.4:
     resolution: {integrity: sha512-fgAN3jGAh+RoxUGZHTSOLJIqUc2wmoBwGR4tbpNAKmmovFoWq0OdRkb0VkldReO2a2iBT/OEulG9XSUc10r3zg==}
+
+  node-cjs-interop@0.1.6:
+    resolution: {integrity: sha512-apLUa7jj1jRPi8ufDXFE61DtUYOQCfe4m4oj6RPCucJ41mALHLKSLkNInyThjoT302jjKdT6O6L6eQL4f4/CTw==}
 
   node-fetch-native@1.6.4:
     resolution: {integrity: sha512-IhOigYzAKHd244OC0JIMIUrjzctirCmPkaIfhDeGcEETWof5zKYUW7e7MYvChGWh/4CJeXEgsRyGzuF334rOOQ==}
@@ -7169,6 +7175,8 @@ snapshots:
     dependencies:
       lower-case: 2.0.2
       tslib: 2.6.2
+
+  node-cjs-interop@0.1.6: {}
 
   node-fetch-native@1.6.4: {}
 
