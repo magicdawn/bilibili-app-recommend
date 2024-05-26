@@ -1,8 +1,9 @@
 import { isEqual, pick, throttle } from 'lodash'
-import { snapshot, subscribe } from 'valtio'
+import { proxy, snapshot, subscribe } from 'valtio'
+import { proxySet } from 'valtio/utils'
 
-export function valtioFactory<T>(getValue: () => T) {
-  const state = proxy({ value: getValue() })
+export function valtioFactory<T>(computeValue: () => T) {
+  const state = proxy({ value: computeValue() })
 
   function use() {
     return useSnapshot(state).value
@@ -13,7 +14,7 @@ export function valtioFactory<T>(getValue: () => T) {
   }
 
   function update() {
-    state.value = getValue()
+    state.value = computeValue()
   }
 
   const updateThrottled = throttle(update, 100, { leading: true, trailing: true })
@@ -36,4 +37,59 @@ export function subscribeOnKeys<T extends object>(
     }
     prevVal = val
   })
+}
+
+export function proxyWithLocalStorage<T extends object>(initialVaue: T, storageKey: string) {
+  const allowedKeys = Object.keys(initialVaue)
+  const savedValue = pick(JSON.parse(localStorage.getItem(storageKey) || '{}'), allowedKeys)
+
+  const p = proxy<T>({
+    ...initialVaue,
+    ...savedValue,
+  })
+
+  // start subscribe in nextTick, so value can be changed synchronously without persist
+  setTimeout(() => {
+    subscribe(p, () => {
+      const val = snapshot(p)
+      localStorage.setItem(storageKey, JSON.stringify(val))
+    })
+  })
+
+  return p
+}
+
+export async function proxyWithGmStorage<T extends object>(initialVaue: T, storageKey: string) {
+  const allowedKeys = Object.keys(initialVaue)
+  const savedValue = pick((await GM.getValue(storageKey)) || {}, allowedKeys)
+
+  const p = proxy<T>({
+    ...initialVaue,
+    ...savedValue,
+  })
+
+  // start subscribe in nextTick, so value can be changed synchronously without persist
+  setTimeout(() => {
+    subscribe(p, () => {
+      const val = snapshot(p)
+      GM.setValue(storageKey, val)
+    })
+  })
+
+  return p
+}
+
+export async function proxySetWithGmStorage<T>(storageKey: string) {
+  const savedValue: T[] = (await GM.getValue(storageKey)) || []
+  const p = proxySet<T>(savedValue)
+
+  // start subscribe in nextTick, so value can be changed synchronously without persist
+  setTimeout(() => {
+    subscribe(p, () => {
+      const val = Array.from(snapshot(p))
+      GM.setValue(storageKey, val)
+    })
+  })
+
+  return p
 }

@@ -104,4 +104,4 @@ export const RANKING_CATEGORIES_MAP: Record<CategorySlug, Category> = RANKING_CA
 export const RANKING_CATEGORIES_GROUPDED = groupBy(
   RANKING_CATEGORIES,
   (x) => x.type || 'normal',
-) as Record<Exclude<CategoryType, undefined> | 'normal', Category[]>
+) as Record<NonNullable<CategoryType | 'normal'>, Category[]>

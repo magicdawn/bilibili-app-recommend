@@ -1,7 +1,7 @@
 import { IN_BILIBILI_HOMEPAGE, REQUEST_FAIL_MSG } from '$common'
 import { antdCustomCss } from '$common/emotion-css'
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
-import { CHARGE_ONLY_TEXT } from '$components/VideoCard/top-marks'
+import { CHARGE_ONLY_TEXT, getHasChargeOnlyTag } from '$components/VideoCard/top-marks'
 import { CheckboxSettingItem } from '$components/piece'
 import { type DynamicFeedItemExtend, type DynamicFeedJson } from '$define'
 import { EApiType } from '$define/index.shared'
@@ -12,6 +12,7 @@ import { toast } from '$utility'
 import { getAvatarSrc } from '$utility/image'
 import { fastSortWithOrders } from '$utility/order-by'
 import type { AntdMenuItemType } from '$utility/type'
+import { proxySetWithGmStorage } from '$utility/valtio'
 import { Avatar, Badge, Button, Dropdown, Input, Space } from 'antd'
 import delay from 'delay'
 import ms from 'ms'
@@ -25,7 +26,7 @@ export class DynamicFeedRecService implements IService {
   offset: string = ''
   page = 0 // pages loaded
   hasMore = true
-  upMid: number | undefined
+  upMid: UpMidType | undefined
   searchText: string | undefined
 
   constructor(upMid?: number, searchText?: string) {
@@ -87,11 +88,25 @@ export class DynamicFeedRecService implements IService {
         }
       })
 
-    // side effects
-    const { upMid, upName } = dynamicFeedFilterStore
+    /**
+     * side effects
+     */
+
+    // fill up-name when filter up via query
+    const { upMid, upName } = store
     if (upMid && upName && upName === upMid.toString() && items[0]) {
       const authorName = items[0].modules.module_author.name
-      dynamicFeedFilterStore.upName = authorName
+      store.upName = authorName
+    }
+
+    // mark up(mid) has charge-only video
+    if (
+      store.hasSelectedUp &&
+      this.upMid &&
+      !store.hasChargeOnlyVideoUpSet.has(this.upMid) &&
+      items.some((x) => getHasChargeOnlyTag(x))
+    ) {
+      store.hasChargeOnlyVideoUpSet.add(this.upMid)
     }
 
     return items
@@ -116,8 +131,10 @@ if (QUERY_DYNAMIC_UP_MID) {
   upNameInitial = searchParams.get('dyn-name') ?? upMidInitial.toString() ?? undefined
 }
 
+type UpMidType = number
+
 export const dynamicFeedFilterStore = proxy({
-  upMid: upMidInitial as number | undefined,
+  upMid: upMidInitial as UpMidType | undefined,
   upName: upNameInitial as string | undefined,
   searchText: undefined as string | undefined,
   upList: [] as DynamicPortalUp[],
@@ -125,12 +142,17 @@ export const dynamicFeedFilterStore = proxy({
   get hasSelectedUp(): boolean {
     return !!(this.upName && this.upMid)
   },
+  hasChargeOnlyVideoUpSet: await proxySetWithGmStorage<UpMidType>(
+    'dynamic-feed:has-charge-only-video-mids',
+  ),
 })
+
+const store = dynamicFeedFilterStore
 
 setTimeout(() => {
   if (!IN_BILIBILI_HOMEPAGE) return
 
-  if (!dynamicFeedFilterStore.upList.length) {
+  if (!store.upList.length) {
     requestIdleCallback(() => {
       updateUpList()
     })
@@ -140,37 +162,41 @@ setTimeout(() => {
 async function updateUpList(force = false) {
   const cacheHit =
     !force &&
-    dynamicFeedFilterStore.upList.length &&
-    dynamicFeedFilterStore.upListUpdatedAt &&
-    dynamicFeedFilterStore.upListUpdatedAt - Date.now() < ms('5min')
+    store.upList.length &&
+    store.upListUpdatedAt &&
+    store.upListUpdatedAt - Date.now() < ms('5min')
   if (cacheHit) return
 
   const list = await getRecentUpdateUpList()
-  dynamicFeedFilterStore.upList = list
-  dynamicFeedFilterStore.upListUpdatedAt = Date.now()
+  store.upList = list
+  store.upListUpdatedAt = Date.now()
 }
 
-export function dynamicFeedFilterSelectUp(payload: Partial<typeof dynamicFeedFilterStore>) {
-  Object.assign(dynamicFeedFilterStore, payload)
+export function dynamicFeedFilterSelectUp(payload: Partial<typeof store>) {
+  Object.assign(store, payload)
   // 选择了 up, 去除红点
   if (payload.upMid) {
-    const item = dynamicFeedFilterStore.upList.find((x) => x.mid === payload.upMid)
+    const item = store.upList.find((x) => x.mid === payload.upMid)
     if (item) item.has_update = false
   }
 }
 
 export function DynamicFeedUsageInfo() {
   const { ref, getPopupContainer } = usePopupContainer()
-
   const onRefresh = useOnRefreshContext()
-  const { hasSelectedUp, upName, upMid, upList } = useSnapshot(dynamicFeedFilterStore)
+
+  const { hasSelectedUp, upName, upMid, upList, hasChargeOnlyVideoUpSet } = useSnapshot(store)
+  const hasChargeOnlyVideo = useMemo(
+    () => !!upMid && !!hasChargeOnlyVideoUpSet.has(upMid),
+    [hasChargeOnlyVideoUpSet, upMid],
+  )
 
   // try update on mount
   useMount(() => {
     updateUpList()
   })
 
-  const onSelect = useMemoizedFn(async (payload: Partial<typeof dynamicFeedFilterStore>) => {
+  const onSelect = useMemoizedFn(async (payload: Partial<typeof store>) => {
     dynamicFeedFilterSelectUp(payload)
     await delay(100)
     onRefresh?.()
@@ -280,7 +306,7 @@ export function DynamicFeedUsageInfo() {
           </Button>
         )}
 
-        {hasSelectedUp && (
+        {hasSelectedUp && hasChargeOnlyVideo && (
           <CheckboxSettingItem
             css={css`
               margin-left: 5px;
@@ -305,7 +331,7 @@ export function DynamicFeedUsageInfo() {
             autoComplete='on'
             allowClear
             onSearch={async (val) => {
-              dynamicFeedFilterStore.searchText = val || undefined
+              store.searchText = val || undefined
               await delay(100)
               onRefresh?.()
             }}

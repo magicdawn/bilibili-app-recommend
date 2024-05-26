@@ -1,9 +1,10 @@
-import { proxyWithGmStorage } from '$common/hooks/proxyWithLocalStorage'
+import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
 import { EHotSubTab } from '$components/RecHeader/tab-enum'
 import type { RecItemTypeOrSeparator } from '$define'
 import { settings } from '$modules/settings'
 import type { AntdMenuItemType } from '$utility/type'
+import { proxyWithGmStorage } from '$utility/valtio'
 import { Button, Dropdown } from 'antd'
 import type { ReactNode } from 'react'
 import type { IService } from '../_base'
@@ -83,8 +84,8 @@ if (!Object.values(EHotSubTab).includes(hotStore.subtab)) {
 }
 
 function HotUsageInfo({ children }: { children?: ReactNode }) {
-  const { subtab } = useSnapshot(hotStore)
-  const { icon, label } = HotSubTabConfig[subtab]
+  const { subtab: activeSubtab } = useSnapshot(hotStore)
+  const { icon, label } = HotSubTabConfig[activeSubtab]
   const onRefresh = useOnRefreshContext()
   const { ref, getPopupContainer } = usePopupContainer<HTMLButtonElement>()
 
@@ -93,11 +94,23 @@ function HotUsageInfo({ children }: { children?: ReactNode }) {
       [EHotSubTab.PopularGeneral, EHotSubTab.PopularWeekly, EHotSubTab.Ranking]
         .map((subtab, index) => {
           const config = HotSubTabConfig[subtab]
+          const active = subtab === activeSubtab
           return [
             index > 0 && { type: 'divider' as const },
             {
               key: subtab,
-              label: config.label,
+              label: (
+                <span
+                  css={[
+                    active &&
+                      css`
+                        color: ${colorPrimaryValue};
+                      `,
+                  ]}
+                >
+                  {config.label}
+                </span>
+              ),
               icon: config.icon,
               onClick() {
                 if (subtab === hotStore.subtab) return
@@ -109,7 +122,7 @@ function HotUsageInfo({ children }: { children?: ReactNode }) {
           ].filter(Boolean)
         })
         .flat(),
-    [],
+    [activeSubtab],
   )
 
   return (

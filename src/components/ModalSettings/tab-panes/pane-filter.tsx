@@ -25,7 +25,7 @@ export function TabPaneFilter() {
           <HelpInfo>
             启用过滤会大幅降低加载速度, 谨慎开启! <br />
             视频/图文/影视: 仅推荐类 Tab 生效 <br />
-            UP/标题: 推荐类 / 综合热门 / 每周必看 / 排行榜 等 Tab 生效
+            UP/标题: 推荐类 / 热门 等Tab 生效
           </HelpInfo>
           <SwitchSettingItem
             configKey='filterEnabled'
@@ -131,7 +131,7 @@ export function TabPaneFilter() {
                 <HelpInfo>
                   根据 UP 过滤视频
                   <br />
-                  作用范围: 推荐 / 综合热门 / 每周必看 / 排行榜
+                  作用范围: 推荐 / 热门
                   <br />
                   P.S B站官方支持黑名单, 对于不喜欢的 UP 可以直接拉黑
                   <br />
@@ -158,7 +158,7 @@ export function TabPaneFilter() {
                 <HelpInfo>
                   根据标题关键词过滤视频 <br />
                   支持正则(i), 语法：/abc|\d+/ <br />
-                  作用范围: 推荐 / 综合热门 / 每周必看 / 排行榜
+                  作用范围: 推荐 / 热门
                 </HelpInfo>
                 <SwitchSettingItem
                   configKey='filterByTitleEnabled'
