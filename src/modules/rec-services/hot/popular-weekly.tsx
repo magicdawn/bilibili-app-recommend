@@ -1,11 +1,11 @@
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
+import { SwitchSettingItem } from '$components/piece'
 import { type ItemsSeparator, type PopularWeeklyItemExtend } from '$define'
 import { EApiType } from '$define/index.shared'
 import type { PopularWeeklyJson } from '$define/popular-weekly'
 import type { PopularWeeklyListItem, PopularWeeklyListJson } from '$define/popular-weekly.list'
-import { settings, updateSettings, useSettingsSnapshot } from '$modules/settings'
+import { settings } from '$modules/settings'
 import { request } from '$request'
-import { Space, Switch } from 'antd'
 import dayjs from 'dayjs'
 import delay from 'delay'
 import { shuffle } from 'lodash'
@@ -162,22 +162,18 @@ async function fetchWeeklyItems(episodeNum: number) {
 }
 
 function PopularWeeklyUsageInfo() {
-  const { shuffleForPopularWeekly } = useSettingsSnapshot()
   const onRefresh = useOnRefreshContext()
-
   return (
-    <Space>
-      <Switch
-        style={{ marginLeft: '10px' }}
-        checked={shuffleForPopularWeekly}
-        onChange={async (val) => {
-          updateSettings({ shuffleForPopularWeekly: val })
+    <>
+      <SwitchSettingItem
+        configKey={'shuffleForPopularWeekly'}
+        checkedChildren='随机顺序: 开'
+        unCheckedChildren='随机顺序: 关'
+        extraAction={async () => {
           await delay(100)
           onRefresh?.()
         }}
-        checkedChildren='随机顺序'
-        unCheckedChildren='默认顺序'
       />
-    </Space>
+    </>
   )
 }

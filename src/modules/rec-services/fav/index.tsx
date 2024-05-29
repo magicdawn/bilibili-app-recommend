@@ -1,12 +1,13 @@
 import { REQUEST_FAIL_MSG } from '$common'
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
+import { SwitchSettingItem } from '$components/piece'
 import { type ItemsSeparator } from '$define'
 import { EApiType } from '$define/index.shared'
 import { IconPark } from '$modules/icon/icon-park'
 import { settings, updateSettings, useSettingsSnapshot } from '$modules/settings'
 import { isWebApiSuccess, request } from '$request'
 import { getUid, toast } from '$utility'
-import { Popover, Space, Switch, Tag, Transfer } from 'antd'
+import { Popover, Space, Tag, Transfer } from 'antd'
 import type { TransferDirection } from 'antd/es/transfer'
 import delay from 'delay'
 import { shuffle } from 'lodash'
@@ -299,13 +300,10 @@ export function FavUsageInfo({
         </Tag>
       </Popover>
 
-      <Switch
-        checkedChildren='随机顺序'
-        unCheckedChildren='默认顺序'
-        checked={shuffleForFav}
-        onChange={(checked) => {
-          updateSettings({ shuffleForFav: checked })
-        }}
+      <SwitchSettingItem
+        configKey={'shuffleForFav'}
+        checkedChildren='随机顺序: 开'
+        unCheckedChildren='随机顺序: 关'
       />
     </Space>
   )

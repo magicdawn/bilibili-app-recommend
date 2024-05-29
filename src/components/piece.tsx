@@ -1,7 +1,7 @@
 import { IconPark } from '$modules/icon/icon-park'
 import type { BooleanSettingsKey } from '$modules/settings'
 import { updateSettings, useSettingsSnapshot } from '$modules/settings'
-import { Checkbox, Switch, Tooltip } from 'antd'
+import { Checkbox, Switch } from 'antd'
 import type { CheckboxChangeEvent } from 'antd/es/checkbox'
 import type { ReactNode } from 'react'
 import type { SetOptional } from 'type-fest'
@@ -36,11 +36,7 @@ function __FlagSettingItem({
 
   const wrapTooltip = (children: ReactNode) => {
     if (!tooltip) return children
-    return (
-      <Tooltip title={tooltip} overlayStyle={{ width: 'max-content', maxWidth: '50vw' }}>
-        {children}
-      </Tooltip>
-    )
+    return <AntdTooltip title={tooltip}>{children}</AntdTooltip>
   }
 
   if (as === 'checkbox') {

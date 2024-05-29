@@ -1,13 +1,13 @@
 import { REQUEST_FAIL_MSG } from '$common'
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
+import { SwitchSettingItem } from '$components/piece'
 import { type PopularGeneralItemExtend } from '$define'
 import { EApiType } from '$define/index.shared'
 import type { PopularGeneralJson } from '$define/popular-general'
-import { settings, updateSettings, useSettingsSnapshot } from '$modules/settings'
+import { settings } from '$modules/settings'
 import { blacklistMids } from '$modules/user/relations/blacklist'
 import { isWebApiSuccess, request } from '$request'
 import { toast } from '$utility'
-import { Space, Switch } from 'antd'
 import delay from 'delay'
 import type { IService } from '../_base'
 
@@ -59,22 +59,17 @@ export class PopularGeneralRecService implements IService {
 }
 
 function PopularGeneralUsageInfo() {
-  const { anonymousForPopularGeneral } = useSettingsSnapshot()
-
   const onRefresh = useOnRefreshContext()
-
   return (
-    <Space>
-      <Switch
-        checkedChildren='匿名访问'
-        unCheckedChildren='登录访问'
-        checked={anonymousForPopularGeneral}
-        onChange={async (val) => {
-          updateSettings({ anonymousForPopularGeneral: val })
-          await delay(100)
-          onRefresh?.()
-        }}
-      />
-    </Space>
+    <SwitchSettingItem
+      configKey={'anonymousForPopularGeneral'}
+      checkedChildren='匿名访问: 开'
+      unCheckedChildren='匿名访问: 关'
+      tooltip={<>✅ 匿名访问: 使用游客身份访问</>}
+      extraAction={async () => {
+        await delay(100)
+        onRefresh?.()
+      }}
+    />
   )
 }

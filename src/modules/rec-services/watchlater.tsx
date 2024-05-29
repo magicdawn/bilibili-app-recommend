@@ -1,11 +1,12 @@
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
+import { SwitchSettingItem } from '$components/piece'
 import { type ItemsSeparator, type WatchLaterItemExtend, type WatchLaterJson } from '$define'
 import { EApiType } from '$define/index.shared'
-import { settings, updateSettings, useSettingsSnapshot } from '$modules/settings'
+import { settings, useSettingsSnapshot } from '$modules/settings'
 import { request } from '$request'
 import { getHasLogined } from '$utility'
 import { toast } from '$utility/toast'
-import { Space, Switch, Tag } from 'antd'
+import { Space, Tag } from 'antd'
 import dayjs from 'dayjs'
 import delay from 'delay'
 import { shuffle } from 'lodash'
@@ -188,13 +189,10 @@ function WatchLaterUsageInfo({ count }: { count: number }) {
         {count}
       </Tag>
 
-      <Switch
-        checkedChildren='随机顺序'
-        unCheckedChildren='添加顺序'
-        checked={shuffleForWatchLater}
-        onChange={(checked) => {
-          updateSettings({ shuffleForWatchLater: checked })
-        }}
+      <SwitchSettingItem
+        configKey={'shuffleForWatchLater'}
+        checkedChildren='随机顺序: 开'
+        unCheckedChildren='随机顺序: 关'
       />
     </Space>
   )

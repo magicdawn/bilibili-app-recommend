@@ -21,7 +21,15 @@ export async function videoshot(bvid: string) {
     AntdMessage.warning(msg)
   }
 
+  if (!isVideoshotDataValid(json.data)) {
+    console.warn('[%s] videoshot data invalid bvid=%s: %o', APP_NAME, bvid, json.data)
+  }
+
   return json.data
+}
+
+export function isVideoshotDataValid(videoshotData: PvideoJson['data']) {
+  return !!(videoshotData?.image?.length && videoshotData?.index?.length)
 }
 
 // dm
@@ -46,7 +54,10 @@ export type VideoData = {
 
 export async function fetchVideoData(bvid: string) {
   if (cache.has(bvid)) {
-    return cache.get(bvid) as VideoData
+    const cached = cache.get(bvid)
+    if (cached && isVideoshotDataValid(cached.videoshotData)) {
+      return cached
+    }
   }
 
   const videoshotData = await videoshot(bvid)
@@ -64,9 +75,8 @@ export async function fetchVideoData(bvid: string) {
 
   const imgs = videoshotData?.image || []
 
-  // preload first img
+  // preload first img & without wait rest
   await preloadImg(imgs[0])
-  // without wait rest
   ;(async () => {
     for (const src of imgs.slice(1)) {
       await preloadImg(src)

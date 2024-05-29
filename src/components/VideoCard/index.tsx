@@ -25,7 +25,7 @@ import { Dropdown } from 'antd'
 import delay from 'delay'
 import { tryit } from 'radash'
 import type { VideoData } from './card.service'
-import { fetchVideoData, watchLaterAdd } from './card.service'
+import { fetchVideoData, isVideoshotDataValid, watchLaterAdd } from './card.service'
 import { PreviewImage } from './child-components/PreviewImage'
 import { VideoCardActionStyle } from './child-components/VideoCardActions'
 import { VideoCardBottom } from './child-components/VideoCardBottom'
@@ -166,7 +166,7 @@ const VideoCardInner = memo(function VideoCardInner({
   const videoDataBox = useRefStateBox<VideoData | null>(null)
   const tryFetchVideoData = useLockFn(async () => {
     if (!bvid) return // no bvid
-    if (videoDataBox.val) return // already fetched
+    if (videoDataBox.val && isVideoshotDataValid(videoDataBox.val.videoshotData)) return // already fetched
     videoDataBox.set(await fetchVideoData(bvid))
   })
 

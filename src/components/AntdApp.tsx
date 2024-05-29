@@ -197,7 +197,7 @@ export function AntdTooltip(props: ComponentProps<typeof Tooltip>) {
       overlayStyle={{
         width: 'max-content',
         maxWidth: '50vw',
-        ...props.overlayInnerStyle,
+        ...props.overlayStyle,
       }}
     >
       {props.children}
