@@ -1,5 +1,29 @@
 # Changelog
 
+## v0.22.3
+
+- fix: new-card-style handleVideoLinkClick wrong position
+- fix: disable preset-uno default .container
+- more tweaks
+
+details
+
+- 8ecbbe3 chore: style tweaks
+- 6752696 fix: handle videoshot index 为空数组的 case & refactor usage-infos with SwitchSettingItem
+- 9cf6241 unocss: simplify with blocklist
+- f750a83 build: add uno.config.ts as build dep
+- c7ebd63 fix: disable preset-uno default .container
+- 115a66c feat: show hide-charge-only-video Checkbox only when up has charge-only video
+- c7eb484 feat: revert dynamicFeedFilterSelectUp in current window when tab=dynamic-feed
+- e2f2d72 dev: integrate typed-scss-modules to vite.config.ts
+- 19cfa8e deps: ncu
+- 102aea0 refactor: rename files ++
+- 020685a refactor: rename files
+- 6dfe1a7 doc: modify readme
+- acbbfdc fix: new-card-style handleVideoLinkClick wrong position
+- 3f25e82 chore: adjust context-menus
+- 7363650 chore: tweak icons
+
 ## v0.22.2
 
 - 热门相关Tab 收纳到 热门 Tab 中.
