@@ -2,6 +2,7 @@ import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
 import { EHotSubTab } from '$components/RecHeader/tab-enum'
 import type { RecItemTypeOrSeparator } from '$define'
+import { styled } from '$libs'
 import { settings } from '$modules/settings'
 import type { AntdMenuItemType } from '$utility/type'
 import { proxyWithGmStorage } from '$utility/valtio'
@@ -127,8 +128,16 @@ function HotUsageInfo({ children }: { children?: ReactNode }) {
 
   return (
     <>
-      <Dropdown menu={{ items: menus }} getPopupContainer={getPopupContainer}>
-        <Button ref={ref} className='w-110px flex items-center justify-start'>
+      <Dropdown
+        menu={{ items: menus }}
+        getPopupContainer={getPopupContainer}
+        rootClassName={styled.generateClassName`
+          .ant-dropdown-menu-item-divider {
+            margin: 2px 0 !important;
+          }
+        `}
+      >
+        <Button ref={ref} className='w-114px flex items-center justify-start'>
           {icon} <span className='ml-8px mt-1px'>{label}</span>
         </Button>
       </Dropdown>

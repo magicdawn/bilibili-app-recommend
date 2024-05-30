@@ -98,14 +98,9 @@ async function initHomepagePureRecommend() {
   // let bilibili default content run
   if (isSafari) await delay(500)
 
-  // main content
-  tryToRemove('#i_cecream .bili-feed4-layout')
+  tryToRemove('#i_cecream .bili-feed4-layout') // main content
   tryToRemove('.bili-feed4 .header-channel')
-  // 右侧浮动按钮
-  tryToRemove('.palette-button-wrap')
-
-  // antd 回到顶部
-  const renderBackTop = true
+  tryToRemove('.palette-button-wrap') // 右侧浮动按钮
 
   const biliLayout = document.createElement('div')
   biliLayout.classList.add('bili-feed4-layout', 'pure-recommend')
@@ -122,14 +117,12 @@ async function initHomepagePureRecommend() {
   root.render(
     <AntdApp injectGlobalStyle renderAppComponent>
       <PureRecommend />
-      {renderBackTop && (
-        <FloatButton.BackTop
-          style={{
-            // right
-            insetInlineEnd: 'var(--back-top-right, 24px)',
-          }}
-        />
-      )}
+      <FloatButton.BackTop
+        style={{
+          // right
+          insetInlineEnd: 'var(--back-top-right, 24px)',
+        }}
+      />
     </AntdApp>,
   )
 }
