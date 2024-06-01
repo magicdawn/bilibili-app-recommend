@@ -209,7 +209,8 @@ export default defineConfig(({ command }) => ({
         externalGlobals: {
           // https://caniuse.com/resizeobserver
           // support starts from Chrome 76
-          'resize-observer-polyfill': 'ResizeObserver',
+          // can't resolve
+          // 'resize-observer-polyfill': 'ResizeObserver',
 
           'axios': cdn.npmmirror('axios', 'dist/axios.min.js'),
           'axios-userscript-adapter': cdn.npmmirror(
