@@ -129,7 +129,11 @@ export function VideoSourceTab({ onRefresh }: { onRefresh: OnRefresh }) {
         buttonStyle='solid'
         size='middle'
         value={tab}
-        style={{ overflow: 'hidden' }}
+        css={css`
+          display: inline-flex;
+          align-items: center;
+          overflow: hidden;
+        `}
         onFocus={(e) => {
           // 不移除 focus, refresh `r` 无法响应
           const target = e.target as HTMLElement
