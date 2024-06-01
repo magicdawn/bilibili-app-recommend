@@ -1,7 +1,7 @@
-import { C } from '$common/emotion-css'
 import { OpenExternalLinkIcon, PlayerIcon } from '$modules/icon'
 import { isMac } from '$platform'
 import mitt, { type Emitter } from 'mitt'
+import { size } from 'polished'
 import type { ReactNode } from 'react'
 import AkarIconsMiniplayer from '~icons/akar-icons/miniplayer'
 import EosIconsBackgroundTasks from '~icons/eos-icons/background-tasks'
@@ -50,17 +50,17 @@ export type VideoLinkOpenModeConfigItem = {
 
 export const VideoLinkOpenModeConfig: Record<VideoLinkOpenMode, VideoLinkOpenModeConfigItem> = {
   [VideoLinkOpenMode.Normal]: {
-    icon: <OpenExternalLinkIcon css={C.size(16)} />,
+    icon: <OpenExternalLinkIcon {...size(16)} />,
     label: '打开',
     desc: '默认新窗口打开',
   },
   [VideoLinkOpenMode.NormalWebFullscreen]: {
-    icon: <RiFullscreenFill width={15} height={15} />,
+    icon: <RiFullscreenFill {...size(15)} />,
     label: '打开-网页全屏',
     desc: <>默认新窗口打开, 打开后自动网页全屏</>,
   },
   [VideoLinkOpenMode.Popup]: {
-    icon: <AkarIconsMiniplayer css={C.size(15)} />,
+    icon: <AkarIconsMiniplayer {...size(15)} />,
     label: '小窗打开',
     desc: (
       <>
@@ -78,11 +78,11 @@ export const VideoLinkOpenModeConfig: Record<VideoLinkOpenMode, VideoLinkOpenMod
     ),
   },
   [VideoLinkOpenMode.Background]: {
-    icon: <EosIconsBackgroundTasks css={C.size(15)} />,
+    icon: <EosIconsBackgroundTasks {...size(15)} />,
     label: '后台打开',
   },
   [VideoLinkOpenMode.Iina]: {
-    icon: <PlayerIcon css={C.size(15)} />,
+    icon: <PlayerIcon {...size(15)} />,
     label: '在 IINA 中打开',
     enabled: isMac,
     desc: (

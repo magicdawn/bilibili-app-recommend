@@ -1,6 +1,6 @@
 import { baseDebug } from '$common'
 // import { useSticky } from 'react-use-sticky'
-import { C, antdCustomCss, flexCenterStyle } from '$common/emotion-css'
+import { antdCustomCss, flexCenterStyle } from '$common/emotion-css'
 import { useSticky } from '$common/hooks/useSticky'
 import { ModalSettings } from '$components/ModalSettings'
 import type { OnRefresh } from '$components/RecGrid/useRefresh'
@@ -10,6 +10,7 @@ import { ConfigIcon } from '$modules/icon'
 import { useSettingsSnapshot } from '$modules/settings'
 import { shouldDisableShortcut } from '$utility/dom'
 import { Button, Space } from 'antd'
+import { size } from 'polished'
 import { AccessKeyManage } from '../AccessKeyManage'
 import { ModalFeed } from '../ModalFeed'
 import { RefreshButton } from './RefreshButton'
@@ -160,7 +161,7 @@ export const RecHeader = forwardRef<
               {!accessKey && <AccessKeyManage style={{ marginLeft: 5 }} />}
 
               <Button onClick={showModalConfig} css={configStyles.btn}>
-                <ConfigIcon css={C.size(14)} />
+                <ConfigIcon {...size(14)} />
               </Button>
 
               <RefreshButton

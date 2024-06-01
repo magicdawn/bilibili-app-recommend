@@ -6,10 +6,11 @@ import { showModalDislike } from '$components/ModalDislike'
 import { isApp, type RecItemType } from '$define'
 import { DislikeIcon } from '$modules/icon'
 import { AntdMessage, toast } from '$utility'
+import { size } from 'polished'
 import type { MouseEvent } from 'react'
 import { VideoCardActionButton } from '../child-components/VideoCardActions'
 
-export const dislikeIcon = <DislikeIcon className='size-16' />
+export const dislikeIcon = <DislikeIcon {...size(16)} />
 
 export function useDislikeRelated({
   item,
