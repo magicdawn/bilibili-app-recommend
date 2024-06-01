@@ -1,5 +1,5 @@
 import { APP_NAME } from '$common'
-import { $evoledThemeColor } from '$header'
+import { $evolvedThemeColor } from '$header'
 import { settings, useSettingsSnapshot } from '$modules/settings'
 import LX_THEMES from './lx-themes.json'
 
@@ -179,11 +179,11 @@ export function useCurrentTheme() {
 
 export function useColorPrimaryHex() {
   const currentTheme = useCurrentTheme()
-  const evoledThemeColor = $evoledThemeColor.use()
+  const evolvedThemeColor = $evolvedThemeColor.use()
 
   let colorPrimary = currentTheme.colorPrimary
   if (currentTheme.id === BIBIBILI_EVOLVED_SYNC_ID) {
-    colorPrimary = evoledThemeColor || DEFAULT_BILI_PINK_THEME.colorPrimary
+    colorPrimary = evolvedThemeColor || DEFAULT_BILI_PINK_THEME.colorPrimary
   }
 
   return colorPrimary

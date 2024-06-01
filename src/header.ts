@@ -38,15 +38,15 @@ function calcHeaderWidth(): number | undefined {
 }
 export const $headerWidth = valtioFactory(calcHeaderWidth)
 
-function calcEvoledThemeColor() {
+function calcEvolvedThemeColor() {
   return window.getComputedStyle(document.documentElement).getPropertyValue('--theme-color')
 }
-export const $evoledThemeColor = valtioFactory(calcEvoledThemeColor)
+export const $evolvedThemeColor = valtioFactory(calcEvolvedThemeColor)
 
 function action() {
   $headerHeight.updateThrottled()
   $headerWidth.updateThrottled()
-  $evoledThemeColor.updateThrottled()
+  $evolvedThemeColor.updateThrottled()
 }
 
 const ob = new MutationObserver(() => action())
@@ -73,7 +73,7 @@ document.body.addEventListener(
     // ensure click from be-popup
     if (!el.closest('.be-popup.picker.open')) return
 
-    setTimeout($evoledThemeColor.updateThrottled, 1000)
+    setTimeout($evolvedThemeColor.updateThrottled, 1000)
   },
   { capture: true, passive: true },
 )

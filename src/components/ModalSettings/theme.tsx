@@ -9,7 +9,7 @@
 import { flexCenterStyle } from '$common/emotion-css'
 import { AntdTooltip } from '$components/AntdApp'
 import { HelpInfo } from '$components/piece'
-import { $evoledThemeColor } from '$header'
+import { $evolvedThemeColor } from '$header'
 import { IconAnimatedChecked } from '$modules/icon/animated-checked'
 import { updateSettings, useSettingsSnapshot } from '$modules/settings'
 import { usePrevious } from 'ahooks'
@@ -31,7 +31,7 @@ export function ThemesSelect() {
   }, [customColor])
 
   useMount(() => {
-    $evoledThemeColor.updateThrottled()
+    $evolvedThemeColor.updateThrottled()
   })
 
   return (
