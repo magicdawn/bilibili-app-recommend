@@ -17,14 +17,14 @@ let AntdNotification: NotificationInstance = _notification
 const messageConfig: MessageConfigOptions = {
   // duration: default 3, 单位秒
   maxCount: 5,
-  top: $headerHeight.get() + 5,
+  top: $headerHeight.get() - 4,
 }
 _message.config(messageConfig)
 
 export function UseApp() {
   const h = $headerHeight.use()
   return (
-    <App component={false} message={{ ...messageConfig, top: h + 5 }}>
+    <App component={false} message={{ ...messageConfig, top: h - 4 }}>
       <UseAppInner />
     </App>
   )
