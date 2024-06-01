@@ -1,5 +1,5 @@
+import { SwitchSettingItem } from '$components/ModalSettings/setting-item'
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
-import { SwitchSettingItem } from '$components/piece'
 import { type ItemsSeparator, type WatchLaterItemExtend, type WatchLaterJson } from '$define'
 import { EApiType } from '$define/index.shared'
 import { settings, useSettingsSnapshot } from '$modules/settings'

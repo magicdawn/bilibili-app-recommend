@@ -6,9 +6,9 @@ import { UseApp } from '$utility/antd-static'
 import { StyleProvider, type StyleProviderProps } from '@ant-design/cssinjs'
 import { cache as emotionCssDefaultCache } from '@emotion/css'
 import { CacheProvider, Global, css as _css, css, type EmotionCache } from '@emotion/react'
-import { ConfigProvider, Tooltip, theme } from 'antd'
+import { ConfigProvider, theme } from 'antd'
 import zhCN from 'antd/locale/zh_CN'
-import type { ComponentProps, ReactNode } from 'react'
+import type { ReactNode } from 'react'
 import {
   colorPrimaryIdentifier,
   colorPrimaryValue,
@@ -187,20 +187,5 @@ function GlobalStyle() {
         />
       )}
     </>
-  )
-}
-
-export function AntdTooltip(props: ComponentProps<typeof Tooltip>) {
-  return (
-    <Tooltip
-      {...props}
-      overlayStyle={{
-        width: 'max-content',
-        maxWidth: '50vw',
-        ...props.overlayStyle,
-      }}
-    >
-      {props.children}
-    </Tooltip>
   )
 }

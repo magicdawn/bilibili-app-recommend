@@ -1,5 +1,5 @@
+import { SwitchSettingItem } from '$components/ModalSettings/setting-item'
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
-import { SwitchSettingItem } from '$components/piece'
 import { type ItemsSeparator, type PopularWeeklyItemExtend } from '$define'
 import { EApiType } from '$define/index.shared'
 import type { PopularWeeklyJson } from '$define/popular-weekly'

@@ -1,5 +1,4 @@
 import { APP_NAME } from '$common'
-import { AntdTooltip } from '$components/AntdApp'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import {
   isApp,
@@ -28,6 +27,7 @@ import type { FavItemExtend } from '$modules/rec-services/fav/define'
 import type { BangumiRankingItem } from '$modules/rec-services/hot/ranking/api.bangumi-category'
 import type { CinemaRankingItem } from '$modules/rec-services/hot/ranking/api.cinema-category'
 import type { NormalRankingItem } from '$modules/rec-services/hot/ranking/api.normal-category'
+import { AntdTooltip } from '$ui-components/antd-custom'
 import { toHttps } from '$utility'
 import {
   formatDuration,

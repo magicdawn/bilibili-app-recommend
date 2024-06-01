@@ -1,6 +1,7 @@
-import { CheckboxSettingItem, HelpInfo, SwitchSettingItem } from '$components/piece'
+import { CheckboxSettingItem, SwitchSettingItem } from '$components/ModalSettings/setting-item'
 import { cx } from '$libs'
 import { updateSettings, useSettingsSnapshot } from '$modules/settings'
+import { HelpInfo } from '$ui-components/HelpInfo'
 import { InputNumber } from 'antd'
 import { EditableListSettingItem } from '../EditableListSettingItem'
 import styles from '../index.module.scss'

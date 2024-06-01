@@ -1,6 +1,6 @@
 import { REQUEST_FAIL_MSG } from '$common'
+import { SwitchSettingItem } from '$components/ModalSettings/setting-item'
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
-import { SwitchSettingItem } from '$components/piece'
 import { type PopularGeneralItemExtend } from '$define'
 import { EApiType } from '$define/index.shared'
 import type { PopularGeneralJson } from '$define/popular-general'

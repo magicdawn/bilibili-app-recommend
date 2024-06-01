@@ -9,8 +9,8 @@ import { useIsDarkMode } from '$modules/dark-mode'
 import { useSettingsSnapshot } from '$modules/settings'
 import { CollapseBtn } from '$ui-components/CollapseBtn'
 import { AntdMessage } from '$utility'
-import { BaseModal, BaseModalStyle, ModalClose } from '../BaseModal'
-import { CheckboxSettingItem } from '../piece'
+import { BaseModal, BaseModalStyle, ModalClose } from '../../ui-components/BaseModal'
+import { CheckboxSettingItem } from '../ModalSettings/setting-item'
 
 const S = {
   modalMask: (narrowMode: boolean) => [
