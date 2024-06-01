@@ -4,13 +4,12 @@
 
 import { showModalDislike } from '$components/ModalDislike'
 import { isApp, type RecItemType } from '$define'
+import { DislikeIcon } from '$modules/icon'
 import { AntdMessage, toast } from '$utility'
 import type { MouseEvent } from 'react'
-import PhThumbsDownDuotone from '~icons/ph/thumbs-down-duotone'
 import { VideoCardActionButton } from '../child-components/VideoCardActions'
 
-export const DislikeIcon = PhThumbsDownDuotone
-export const dislikeIcon = <DislikeIcon width={16} height={16} />
+export const dislikeIcon = <DislikeIcon className='size-16' />
 
 export function useDislikeRelated({
   item,

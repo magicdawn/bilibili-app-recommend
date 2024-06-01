@@ -1,7 +1,8 @@
 import { APP_NAME } from '$common'
-import { flexVerticalCenterStyle } from '$common/emotion-css'
+import { C, flexVerticalCenterStyle } from '$common/emotion-css'
 import { CheckboxSettingItem } from '$components/ModalSettings/setting-item'
 import { cx } from '$libs'
+import { OpenExternalLinkIcon } from '$modules/icon'
 import { IconPark } from '$modules/icon/icon-park'
 import {
   allowedSettingsKeys,
@@ -78,7 +79,7 @@ export function TabPaneAdvance() {
               href='https://member.bilibili.com/platform/upload/text/draft'
               target='_blank'
             >
-              <IconPark name='EfferentFour' size={16} style={{ marginRight: 4 }} />
+              <OpenExternalLinkIcon css={[C.size(16), C.mr(4)]} />
               去草稿箱浏览
             </a>
           </div>

@@ -1,5 +1,5 @@
+import { C } from '$common/emotion-css'
 import { cx } from '$libs'
-import { IconPark } from '$modules/icon/icon-park'
 import {
   settings,
   updateSettings,
@@ -10,6 +10,7 @@ import { AntdMessage } from '$utility'
 import { Empty, Input } from 'antd'
 import { uniq } from 'lodash'
 import type { ComponentPropsWithoutRef } from 'react'
+import IconParkOutlineCloseSmall from '~icons/icon-park-outline/close-small'
 import { colorPrimaryValue } from './theme.shared'
 
 const { Search } = Input
@@ -172,15 +173,14 @@ const TagItemDisplay = forwardRef<
       ]}
     >
       {tag}
-      <IconPark
-        name='CloseSmall'
-        size={16}
+      <IconParkOutlineCloseSmall
         onClick={() => {
           onDelete?.(tag)
         }}
         css={css`
+          ${C.size(16)};
+          ${C.ml(5)};
           cursor: pointer;
-          margin-left: 5px;
           font-size: 12px;
         `}
       />

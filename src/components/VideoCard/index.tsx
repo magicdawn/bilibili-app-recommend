@@ -1,4 +1,5 @@
 import { APP_KEY_PREFIX, APP_NAME } from '$common'
+import { C } from '$common/emotion-css'
 import { useMittOn } from '$common/hooks/useMitt'
 import { useRefStateBox } from '$common/hooks/useRefState'
 import { useDislikedReason } from '$components/ModalDislike'
@@ -9,6 +10,7 @@ import { ETab } from '$components/RecHeader/tab-enum'
 import { isRanking, type AppRecItemExtend, type RecItemType } from '$define'
 import { EApiType } from '$define/index.shared'
 import { cx } from '$libs'
+import { DislikeIcon, OpenExternalLinkIcon } from '$modules/icon'
 import { IconPark } from '$modules/icon/icon-park'
 import { dynamicFeedFilterSelectUp } from '$modules/rec-services/dynamic-feed'
 import { formatFavFolderUrl } from '$modules/rec-services/fav'
@@ -38,7 +40,7 @@ import type { IVideoCardData } from './process/normalize'
 import { normalizeCardData } from './process/normalize'
 import { AppRecIconScaleMap, AppRecIconSvgNameMap, makeStatItem } from './stat-item'
 import { ChargeOnlyTag, RankingNumMark, getHasChargeOnlyTag } from './top-marks'
-import { DislikeIcon, useDislikeRelated } from './use/useDislikeRelated'
+import { useDislikeRelated } from './use/useDislikeRelated'
 import { useOpenRelated } from './use/useOpenRelated'
 import { usePreviewAnimation } from './use/usePreviewAnimation'
 import { useWatchlaterRelated } from './use/useWatchlaterRelated'
@@ -468,7 +470,7 @@ const VideoCardInner = memo(function VideoCardInner({
             {
               key: 'open-fav-folder',
               label: '浏览收藏夹',
-              icon: <IconPark name='EfferentFour' size={15} />,
+              icon: <OpenExternalLinkIcon css={C.size(15)} />,
               onClick() {
                 const { id } = item.folder
                 const url = formatFavFolderUrl(id)

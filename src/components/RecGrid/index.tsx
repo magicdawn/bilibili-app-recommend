@@ -17,6 +17,7 @@ import { type RecItemType, type RecItemTypeOrSeparator } from '$define'
 import { EApiType } from '$define/index.shared'
 import { $headerHeight } from '$header'
 import { cx, styled } from '$libs'
+import { OpenExternalLinkIcon } from '$modules/icon'
 import { IconPark } from '$modules/icon/icon-park'
 import { getRecommendTimes, refreshForGrid, uniqConcat } from '$modules/rec-services'
 import { hotStore } from '$modules/rec-services/hot'
@@ -457,7 +458,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
         {tab === ETab.Hot && hotStore.subtab === EHotSubTab.PopularWeekly && (
           <p className='mt-8px flex items-center justify-center'>
             可能需手动输入验证码
-            <IconPark name='EfferentFour' className='ml-3' />
+            <OpenExternalLinkIcon className='ml-3' />
             <a href='https://www.bilibili.com/v/popular/weekly' target='_blank' className='ml-2px'>
               每周必看
             </a>

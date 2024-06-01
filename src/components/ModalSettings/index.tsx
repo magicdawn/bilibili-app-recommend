@@ -1,7 +1,8 @@
 import { APP_NAME, __PROD__ } from '$common'
+import { C } from '$common/emotion-css'
 import { CheckboxSettingItem } from '$components/ModalSettings/setting-item'
 import { cx } from '$libs'
-import { IconPark } from '$modules/icon/icon-park'
+import { ConfigIcon } from '$modules/icon'
 import type { BooleanSettingsKey } from '$modules/settings'
 import { settings } from '$modules/settings'
 import { BaseModal, BaseModalStyle, ModalClose } from '$ui-components/BaseModal'
@@ -69,7 +70,7 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
     >
       <div css={BaseModalStyle.modalHeader}>
         <div css={BaseModalStyle.modalTitle}>
-          <IconPark name='Config' className={styles.configIcon} />
+          <ConfigIcon css={[C.size(26), C.mr(5), C.mt(-2)]} />
           设置项
         </div>
 

@@ -1,7 +1,9 @@
 import { APP_NAME_ROOT_CLASSNAME } from '$common'
+import { C } from '$common/emotion-css'
 import { useIsDarkMode } from '$modules/dark-mode'
-import { IconPark } from '$modules/icon/icon-park'
 import type { TheCssType } from '$utility/type'
+import { Close } from '@icon-park/react'
+import type { Icon } from '@icon-park/react/es/runtime'
 import type { ComponentProps, MouseEvent } from 'react'
 import { createPortal } from 'react-dom'
 
@@ -221,17 +223,15 @@ export function BaseModal({
   )
 }
 
-export const ModalClose = (props: Omit<ComponentProps<typeof IconPark>, 'name'>) => {
+export const ModalClose = (props: ComponentProps<Icon>) => {
   return (
-    <IconPark
+    <Close
       {...props}
-      name='Close'
-      size={18}
-      style={{
-        cursor: 'pointer',
-        marginLeft: 10,
-        ...props.style,
-      }}
+      css={css`
+        ${C.size(18)};
+        ${C.ml(10)};
+        cursor: pointer;
+      `}
     />
   )
 }

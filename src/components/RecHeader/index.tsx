@@ -1,12 +1,12 @@
 import { baseDebug } from '$common'
 // import { useSticky } from 'react-use-sticky'
-import { antdCustomCss, flexCenterStyle } from '$common/emotion-css'
+import { C, antdCustomCss, flexCenterStyle } from '$common/emotion-css'
 import { useSticky } from '$common/hooks/useSticky'
 import { ModalSettings } from '$components/ModalSettings'
 import type { OnRefresh } from '$components/RecGrid/useRefresh'
 import { OnRefreshContext } from '$components/RecGrid/useRefresh'
 import { $headerHeight } from '$header'
-import { IconPark } from '$modules/icon/icon-park'
+import { ConfigIcon } from '$modules/icon'
 import { useSettingsSnapshot } from '$modules/settings'
 import { shouldDisableShortcut } from '$utility/dom'
 import { Button, Space } from 'antd'
@@ -31,12 +31,6 @@ const configStyles = {
     height: 32px;
     border-radius: 50%;
     ${flexCenterStyle}
-  `,
-  icon: css`
-    svg {
-      width: 14px;
-      height: 14px;
-    }
   `,
 }
 
@@ -166,7 +160,7 @@ export const RecHeader = forwardRef<
               {!accessKey && <AccessKeyManage style={{ marginLeft: 5 }} />}
 
               <Button onClick={showModalConfig} css={configStyles.btn}>
-                <IconPark name='Config' css={configStyles.icon} />
+                <ConfigIcon css={C.size(14)} />
               </Button>
 
               <RefreshButton

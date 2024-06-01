@@ -1,9 +1,10 @@
 import { REQUEST_FAIL_MSG } from '$common'
+import { C } from '$common/emotion-css'
 import { SwitchSettingItem } from '$components/ModalSettings/setting-item'
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
 import { type ItemsSeparator } from '$define'
 import { EApiType } from '$define/index.shared'
-import { IconPark } from '$modules/icon/icon-park'
+import { OpenExternalLinkIcon, PlayerIcon } from '$modules/icon'
 import { settings, updateSettings, useSettingsSnapshot } from '$modules/settings'
 import { isWebApiSuccess, request } from '$request'
 import { getUid, toast } from '$utility'
@@ -84,8 +85,10 @@ export class FavRecService implements IService {
             margin-left: 30px;
           }
 
-          .i-icon {
+          /* the icon */
+          svg {
             margin-right: 5px;
+            margin-top: -1px;
           }
         `,
       }
@@ -97,11 +100,11 @@ export class FavRecService implements IService {
           content: (
             <>
               <a target='_blank' href={formatFavFolderUrl(service.entry.id)} css={S.item}>
-                <IconPark name='EfferentFour' size={18} />
+                <OpenExternalLinkIcon css={C.size(16)} />
                 {service.entry.title}
               </a>
               <a target='_blank' href={formatFavPlaylistUrl(service.entry.id)} css={S.item}>
-                <IconPark name='PlayTwo' size={18} />
+                <PlayerIcon css={C.size(16)} />
                 播放全部
               </a>
             </>

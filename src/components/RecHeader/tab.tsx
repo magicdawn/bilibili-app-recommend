@@ -155,7 +155,7 @@ export function VideoSourceTab({ onRefresh }: { onRefresh: OnRefresh }) {
           })
         }}
       >
-        {currentTabConfigList.map(({ key, label, icon, iconProps }) => (
+        {currentTabConfigList.map(({ key, label }) => (
           <Radio.Button
             css={[radioBtnCss, styleUseStandardVideoSourceTab && radioBtnStandardCss]}
             className='video-source-tab' // can be used to customize css
@@ -171,7 +171,7 @@ export function VideoSourceTab({ onRefresh }: { onRefresh: OnRefresh }) {
                 height: 100%;
               `}
             >
-              <TabIcon tabKey={key} css={iconCss} />
+              <TabIcon tabKey={key} moreCss={iconCss} />
               {label}
             </span>
           </Radio.Button>
@@ -179,7 +179,7 @@ export function VideoSourceTab({ onRefresh }: { onRefresh: OnRefresh }) {
       </Radio.Group>
       <HelpInfo iconProps={{ name: 'Tips', size: 16, style: { marginLeft: 6 } }}>
         <>
-          {currentTabConfigList.map(({ key, label, icon, iconProps, desc }) => (
+          {currentTabConfigList.map(({ key, label, desc }) => (
             <div
               key={key}
               css={css`
@@ -188,7 +188,7 @@ export function VideoSourceTab({ onRefresh }: { onRefresh: OnRefresh }) {
                 height: 22px;
               `}
             >
-              <TabIcon tabKey={key} css={iconCss} />
+              <TabIcon tabKey={key} moreCss={iconCss} />
               {label}: {desc}
             </div>
           ))}

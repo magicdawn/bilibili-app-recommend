@@ -27,3 +27,36 @@ export const antdCustomCss = {
     }
   `,
 }
+
+/**
+ * emotion css helper, `C` = css-helper
+ */
+
+export const C = {
+  size(size: number) {
+    return css`
+      width: ${size}px;
+      height: ${size}px;
+    `
+  },
+  ml(size: number) {
+    return css`
+      margin-left: ${size}px;
+    `
+  },
+  mr(size: number) {
+    return css`
+      margin-right: ${size}px;
+    `
+  },
+  mt(size: number) {
+    return css`
+      margin-top: ${size}px;
+    `
+  },
+  mb(size: number) {
+    return css`
+      margin-bottom: ${size}px;
+    `
+  },
+}

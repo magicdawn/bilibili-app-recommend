@@ -1,12 +1,12 @@
 import { APP_NAME_ROOT_CLASSNAME, OPERATION_FAIL_MSG } from '$common'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
-import { DislikeIcon } from '$components/VideoCard/use/useDislikeRelated'
 import type { AppRecItem, AppRecItemExtend } from '$define'
 import { cx } from '$libs'
-import { IconPark } from '$modules/icon/icon-park'
+import { DislikeIcon } from '$modules/icon'
 import { BaseModal, BaseModalStyle, ModalClose } from '$ui-components/BaseModal'
 import { AntdMessage } from '$utility'
 import { toastRequestFail } from '$utility/toast'
+import { Info } from '@icon-park/react'
 import { useUpdateLayoutEffect } from 'ahooks'
 import type { Root } from 'react-dom/client'
 import { createRoot } from 'react-dom/client'
@@ -138,14 +138,8 @@ function ModalDislike({ show, onHide, item }: IProps) {
     >
       <div css={BaseModalStyle.modalHeader}>
         <div css={BaseModalStyle.modalTitle}>
-          <DislikeIcon width={25} height={25} />
-          <span
-            css={css`
-              margin-inline: 5px;
-            `}
-          >
-            我不想看
-          </span>
+          <DislikeIcon className='size-25' />
+          <span className='m-inline-5px'>我不想看</span>
           <span
             css={css`
               font-size: 60%;
@@ -155,7 +149,7 @@ function ModalDislike({ show, onHide, item }: IProps) {
             (选择后将减少相似内容推荐)
           </span>
         </div>
-        <div className='space' style={{ flex: 1 }}></div>
+        <div className='flex-1' />
         <ModalClose onClick={onHide} />
       </div>
 
@@ -175,7 +169,7 @@ function ModalDislike({ show, onHide, item }: IProps) {
             return (
               <button
                 className={cx('reason', { active })}
-                css={[_css.reason, active && _css.reasonActive]}
+                css={[S.reason, active && S.reasonActive]}
                 key={reason.id}
                 data-id={reason.id}
                 onClick={() => {
@@ -217,13 +211,13 @@ function ModalDislike({ show, onHide, item }: IProps) {
             margin-top: 20px;
           `}
         >
-          <div className='tips' css={_css.tips}>
-            <IconPark name='Info' size={15} style={{ marginRight: 5 }} />
+          <div className='tips' css={S.tips}>
+            <Info className='mr-5px size-15' />
             使用删除键打开弹窗, 数字键选择, Esc 关闭
           </div>
           {activeReasonName && (
-            <div className='tips' css={_css.tips}>
-              <IconPark name='Info' size={15} style={{ marginRight: 5 }} />
+            <div className='tips' css={S.tips}>
+              <Info className='mr-5px size-15' />
               已选择「{activeReasonName}」, 回车键提交
             </div>
           )}
@@ -233,7 +227,7 @@ function ModalDislike({ show, onHide, item }: IProps) {
   )
 }
 
-const _css = {
+const S = {
   reason: css`
     color: inherit;
     width: 48%;
