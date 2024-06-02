@@ -76,6 +76,12 @@ export function filterRecItems(items: RecItemTypeOrSeparator[], tab: ETab) {
 
   const settings = snapshot(settingsProxy)
 
+  const reg = /^(?<uid>\d+)\([\S ]+\)$/
+  const blockMidsThatHasRemark = settings.filterByAuthorNameKeywords
+    .filter((x) => reg.test(x))
+    .map((x) => reg.exec(x)?.groups?.uid)
+    .filter(Boolean)
+
   return items.filter((item) => {
     // just keep it
     if (item.api === EApiType.Separator) return true
@@ -108,7 +114,9 @@ export function filterRecItems(items: RecItemTypeOrSeparator[], tab: ETab) {
       ) {
         if (
           (authorName && settings.filterByAuthorNameKeywords.includes(authorName)) ||
-          (authorMid && settings.filterByAuthorNameKeywords.includes(authorMid))
+          (authorMid &&
+            (settings.filterByAuthorNameKeywords.includes(authorMid) ||
+              blockMidsThatHasRemark.includes(authorMid)))
         ) {
           debug('filter out by author-rule: %o', {
             authorName,
