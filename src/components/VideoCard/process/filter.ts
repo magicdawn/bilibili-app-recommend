@@ -61,7 +61,7 @@ export function anyFilterEnabled(tab: ETab) {
 }
 
 function shouldEnableCommonChecks(tab: ETab) {
-  // expect
+  // except
   // KeepFollowOnly = 'keep-follow-only',
   // DynamicFeed = 'dynamic-feed',
   // Watchlater = 'watchlater',
@@ -76,11 +76,20 @@ export function filterRecItems(items: RecItemTypeOrSeparator[], tab: ETab) {
 
   const settings = snapshot(settingsProxy)
 
-  const reg = /^(?<uid>\d+)\([\S ]+\)$/
-  const blockMidsThatHasRemark = settings.filterByAuthorNameKeywords
-    .filter((x) => reg.test(x))
-    .map((x) => reg.exec(x)?.groups?.uid)
-    .filter(Boolean)
+  const blockUpMids = new Set<string>()
+  const blockUpNames = new Set<string>()
+  const regMidWithRemark = /^(?<mid>\d+)\([\S ]+\)$/
+  const regMid = /^\d+$/
+  settings.filterByAuthorNameKeywords.forEach((x) => {
+    if (regMidWithRemark.test(x)) {
+      const mid = regMidWithRemark.exec(x)?.groups?.mid
+      if (mid) blockUpMids.add(mid)
+    } else if (regMid.test(x)) {
+      blockUpMids.add(x) // 会有纯数字的用户名么?
+    } else {
+      blockUpNames.add(x)
+    }
+  })
 
   return items.filter((item) => {
     // just keep it
@@ -108,20 +117,21 @@ export function filterRecItems(items: RecItemTypeOrSeparator[], tab: ETab) {
 
       // up
       if (
+        settings.filterEnabled &&
         settings.filterByAuthorNameEnabled &&
-        settings.filterByAuthorNameKeywords.length &&
+        (blockUpMids.size || blockUpNames.size) &&
         (authorName || authorMid)
       ) {
         if (
-          (authorName && settings.filterByAuthorNameKeywords.includes(authorName)) ||
-          (authorMid &&
-            (settings.filterByAuthorNameKeywords.includes(authorMid) ||
-              blockMidsThatHasRemark.includes(authorMid)))
+          (authorName && blockUpNames.has(authorName)) ||
+          (authorMid && blockUpMids.has(authorMid))
         ) {
           debug('filter out by author-rule: %o', {
             authorName,
             authorMid,
             rules: settings.filterByAuthorNameKeywords,
+            blockUpMids,
+            blockUpNames,
             bvid,
             title,
           })
@@ -130,7 +140,12 @@ export function filterRecItems(items: RecItemTypeOrSeparator[], tab: ETab) {
       }
 
       // title
-      if (settings.filterByTitleEnabled && settings.filterByTitleKeywords.length && title) {
+      if (
+        settings.filterEnabled &&
+        settings.filterByTitleEnabled &&
+        settings.filterByTitleKeywords.length &&
+        title
+      ) {
         if (
           settings.filterByTitleKeywords.some((keyword) => {
             if (keyword.startsWith('/') && keyword.endsWith('/')) {
@@ -179,12 +194,14 @@ export function filterRecItems(items: RecItemTypeOrSeparator[], tab: ETab) {
 
     // 推荐
     if (tab === ETab.RecommendApp || tab === ETab.RecommendPc) {
-      const isVideo = goto === 'av'
-      const isPicture = goto === 'picture'
-      const isBangumi = goto === 'bangumi'
-      if (isVideo) return filterVideo()
-      if (isPicture) return filterPicture()
-      if (isBangumi) return filterBangumi()
+      if (settings.filterEnabled) {
+        const isVideo = goto === 'av'
+        const isPicture = goto === 'picture'
+        const isBangumi = goto === 'bangumi'
+        if (isVideo) return filterVideo()
+        if (isPicture) return filterPicture()
+        if (isBangumi) return filterBangumi()
+      }
     }
 
     return true // just keep it
