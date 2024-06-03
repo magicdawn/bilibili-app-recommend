@@ -251,17 +251,12 @@ function VideoSourceTabSortableItem({ id }: { id: ETab }) {
         margin-top: 8px;
       `}
     >
-      <AntdTooltip
-        align={{ offset: [0, -6] }}
-        title={desc}
-        css={css`
-          display: inline-flex;
-          align-items: center;
-        `}
-      >
+      <AntdTooltip align={{ offset: [0, -10] }} title={desc}>
         <Checkbox
           value={id}
           css={css`
+            display: inline-flex;
+            align-items: center;
             .ant-checkbox + span {
               user-select: none;
               display: inline-flex;

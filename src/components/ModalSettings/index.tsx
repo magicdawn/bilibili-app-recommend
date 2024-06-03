@@ -33,18 +33,18 @@ function useHotkeyForConfig(
 }
 
 const enum TabPaneKey {
-  basic = 'basic',
-  filter = 'filter',
-  ui = 'ui',
-  themeSelect = 'theme-select',
-  videoSourceTabConfig = 'video-source-tab-config',
-  advance = 'advance',
+  Basic = 'basic',
+  Filter = 'filter',
+  CustomUi = 'custom-ui',
+  ThemeSelect = 'theme-select',
+  VideoSourceTabConfig = 'video-source-tab-config',
+  Advance = 'advance',
 }
 
 const tab = __PROD__
-  ? TabPaneKey.basic
+  ? TabPaneKey.Basic
   : // for debug, free to change this
-    TabPaneKey.advance
+    TabPaneKey.Advance
 const modalSettingsStore = proxy({ tab })
 
 export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => void }) {
@@ -84,23 +84,48 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
         <Tabs
           tabPosition='left'
           size='middle'
-          className={styles.settingTabs}
+          css={css`
+            &.ant-tabs {
+              .ant-tabs-tab {
+                justify-content: end;
+                /* 8 24 */
+                padding-inline: 5px 15px;
+                /* --ant-tabs-vertical-item-margin: 10px 0 0 0; */
+              }
+            }
+          `}
           activeKey={tab}
           onChange={(tab) => (modalSettingsStore.tab = tab as TabPaneKey)}
           items={[
             {
               label: '常规设置',
-              key: TabPaneKey.basic,
+              key: TabPaneKey.Basic,
               children: <TabPaneBasic />,
             },
             {
               label: '内容过滤',
-              key: TabPaneKey.filter,
+              key: TabPaneKey.Filter,
               children: <TabPaneFilter />,
             },
             {
-              label: '外观设置',
-              key: TabPaneKey.ui,
+              label: '主题选择',
+              key: TabPaneKey.ThemeSelect,
+              children: (
+                <div className={styles.tabPane}>
+                  <div className={styles.settingsGroup}>
+                    <div className={styles.settingsGroupTitle} style={{ marginBottom: 15 }}>
+                      主题选择
+                    </div>
+                    <div className={cx(styles.settingsGroupContent)}>
+                      <ThemesSelect />
+                    </div>
+                  </div>
+                </div>
+              ),
+            },
+            {
+              label: '样式自定',
+              key: TabPaneKey.CustomUi,
               children: (
                 <div className={styles.tabPane}>
                   <div className={styles.settingsGroup}>
@@ -169,29 +194,13 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
               ),
             },
             {
-              label: '主题选择',
-              key: TabPaneKey.themeSelect,
-              children: (
-                <div className={styles.tabPane}>
-                  <div className={styles.settingsGroup}>
-                    <div className={styles.settingsGroupTitle} style={{ marginBottom: 15 }}>
-                      主题选择
-                    </div>
-                    <div className={cx(styles.settingsGroupContent)}>
-                      <ThemesSelect />
-                    </div>
-                  </div>
-                </div>
-              ),
-            },
-            {
               label: 'Tab 设置',
-              key: TabPaneKey.videoSourceTabConfig,
+              key: TabPaneKey.VideoSourceTabConfig,
               children: <TabPaneVideoSourceTabConfig />,
             },
             {
               label: '高级设置',
-              key: TabPaneKey.advance,
+              key: TabPaneKey.Advance,
               children: <TabPaneAdvance />,
             },
           ]}
