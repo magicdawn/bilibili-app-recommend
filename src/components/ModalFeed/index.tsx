@@ -138,7 +138,7 @@ export const ModalFeed = memo(function ModalFeed({ show, onHide }: IProps) {
             css={css`
               flex-shrink: 1;
               display: flex;
-              align-content: center;
+              align-items: center;
               flex-wrap: wrap;
               row-gap: 4px;
               column-gap: 15px;
