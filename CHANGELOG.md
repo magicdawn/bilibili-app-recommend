@@ -1,5 +1,9 @@
 # Changelog
 
+## 之后版本的更新记录在 GitHub Release 查看
+
+https://github.com/magicdawn/bilibili-app-recommend/releases
+
 ## v0.22.3
 
 - fix: new-card-style handleVideoLinkClick wrong position

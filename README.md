@@ -269,7 +269,7 @@ https://github.com/magicdawn/bilibili-app-recommend/raw/release-nightly/bilibili
 
 ## 更新日志
 
-[CHANGELOG.md](https://github.com/magicdawn/bilibili-app-recommend/blob/main/CHANGELOG.md)
+[GitHub Release](https://github.com/magicdawn/bilibili-app-recommend/releases)
 
 ## ❤️ 参考的项目
 
