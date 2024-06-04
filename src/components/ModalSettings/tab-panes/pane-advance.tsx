@@ -1,5 +1,5 @@
 import { APP_NAME } from '$common'
-import { C, flexVerticalCenterStyle } from '$common/emotion-css'
+import { C, antdCustomCss } from '$common/emotion-css'
 import { CheckboxSettingItem } from '$components/ModalSettings/setting-item'
 import { cx } from '$libs'
 import { OpenExternalLinkIcon } from '$modules/icon'
@@ -110,17 +110,9 @@ export function TabPaneAdvance() {
               })
             }}
           >
-            <Button
-              size='middle'
-              css={[
-                flexVerticalCenterStyle,
-                css`
-                  margin-left: 30px;
-                `,
-              ]}
-            >
-              <IconPark name='Return' size='16' style={{ marginRight: 4, marginTop: -1 }} />
-              重置
+            <Button css={antdCustomCss.button}>
+              <IconPark name='Return' size='16' />
+              <span>重置</span>
             </Button>
           </Popconfirm>
         </div>

@@ -1,3 +1,4 @@
+import { C, antdCustomCss } from '$common/emotion-css'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
 import { EHotSubTab } from '$components/RecHeader/tab-enum'
@@ -7,6 +8,7 @@ import { settings } from '$modules/settings'
 import type { AntdMenuItemType } from '$utility/type'
 import { proxyWithGmStorage } from '$utility/valtio'
 import { Button, Dropdown } from 'antd'
+import { size } from 'polished'
 import type { ReactNode } from 'react'
 import type { IService } from '../_base'
 import { usePopupContainer } from '../_base'
@@ -28,7 +30,7 @@ export function isHotTabUsingShuffle(shuffleForPopularWeekly?: boolean) {
   return change
 }
 
-const imgOf = (src: string) => <img src={src} alt='' uno:size='18' />
+const imgOf = (src: string) => <img src={src} alt='' style={size('18px')} />
 
 const HotSubTabConfig = {
   [EHotSubTab.PopularGeneral]: {
@@ -137,8 +139,18 @@ function HotUsageInfo({ children }: { children?: ReactNode }) {
           }
         `}
       >
-        <Button ref={ref} className='w-114px flex items-center justify-start'>
-          {icon} <span className='ml-8px mt-1px'>{label}</span>
+        <Button
+          ref={ref}
+          className='w-114px gap-0 flex items-center justify-start'
+          css={[
+            antdCustomCss.button,
+            css`
+              padding-left: 16px;
+            `,
+          ]}
+        >
+          {icon}
+          <span css={C.ml(8)}>{label}</span>
         </Button>
       </Dropdown>
       {children}

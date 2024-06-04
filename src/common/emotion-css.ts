@@ -14,16 +14,32 @@ export const flexCenterStyle = css`
 `
 
 // harmonyos_regular 没法对齐
-export const antdBtnTextStyle = css`
+const antdBtnTextStyle = css`
   display: inline-block;
-  margin-top: 1px;
+
+  /* 不同 zoom 表现不同 */
+  /* margin-top: 1px; */
+
+  /* 使用 line-height 在不同 zoom 下表现更好 */
+  line-height: var(--ant-control-height);
 `
 
 export const antdCustomCss = {
   button: css`
-    ${flexCenterStyle}
-    >span {
-      ${antdBtnTextStyle}
+    &.ant-btn {
+      > span {
+        line-height: var(--ant-control-height);
+      }
+    }
+    &.ant-btn-lg {
+      > span {
+        line-height: var(--ant-control-height-lg);
+      }
+    }
+    &.ant-btn-sm {
+      > span {
+        line-height: var(--ant-control-height-sm);
+      }
     }
   `,
 }

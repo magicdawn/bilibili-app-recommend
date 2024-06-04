@@ -296,11 +296,11 @@ export function DynamicFeedUsageInfo() {
             style: { maxHeight: '60vh', overflowY: 'scroll' },
           }}
         >
-          <Button>{upName ? `UP: ${upName}` : '全部'}</Button>
+          <Button css={[antdCustomCss.button]}>{upName ? `UP: ${upName}` : '全部'}</Button>
         </Dropdown>
 
         {hasSelectedUp && (
-          <Button onClick={onClear} css={[antdCustomCss.button]}>
+          <Button onClick={onClear} css={[antdCustomCss.button]} className='gap-0'>
             <IconPark name='Return' size={14} style={{ marginRight: 5 }} />
             <span>清除</span>
           </Button>

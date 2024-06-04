@@ -72,6 +72,7 @@ export const RefreshButton = forwardRef<RefreshButtonActions, RefreshButtonProps
       css={[
         antdCustomCss.button,
         css`
+          gap: 0;
           &.ant-btn:not(:disabled):focus-visible {
             outline: none;
           }

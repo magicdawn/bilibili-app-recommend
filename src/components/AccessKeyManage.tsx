@@ -28,18 +28,16 @@ export function AccessKeyManage({
       {!accessKey ? (
         <>
           <Button onClick={runAsync} disabled={loading}>
-            <span>获取 access_key</span>
+            获取 access_key
           </Button>
           {btnAccessKeyHelpLink}
         </>
       ) : (
         <>
           <Button onClick={runAsync} disabled={loading}>
-            <span>重新获取 access_key</span>
+            重新获取 access_key
           </Button>
-          <Button onClick={onDeleteAccessKey}>
-            <span>删除 access_key</span>
-          </Button>
+          <Button onClick={onDeleteAccessKey}>删除 access_key</Button>
           {btnAccessKeyHelpLink}
         </>
       )}

@@ -171,7 +171,7 @@ export const RecHeader = forwardRef<
               />
 
               {showModalFeedEntry && (
-                <Button css={antdCustomCss.button} onClick={showModalFeed}>
+                <Button css={antdCustomCss.button} onClick={showModalFeed} className='gap-0'>
                   <span>查看更多</span>
                   <svg
                     css={css`
