@@ -132,15 +132,10 @@ export function TabPaneFilter() {
                 <HelpInfo>
                   根据 UP 过滤视频
                   <br />
-                  <br />
-                  mid 指个人空间网址上的数字, 如 <Tag>https://space.bilibili.com/8047632</Tag> mid
-                  为 <Tag>8047632</Tag>
-                  <br />
                   使用 mid 屏蔽时支持备注, 格式: <Tag color='success'>mid(备注)</Tag>
                   {'  '}如 <Tag color='success'>8047632(B站官方)</Tag>
                   <br />
                   作用范围: 推荐 / 热门
-                  <br />
                   <br />
                   P.S B站官方支持黑名单, 对于不喜欢的 UP 可以直接拉黑
                   <br />
@@ -156,7 +151,7 @@ export function TabPaneFilter() {
               </div>
               <EditableListSettingItem
                 configKey={'filterByAuthorNameKeywords'}
-                searchProps={{ placeholder: '添加 UP全名 / UP mid' }}
+                searchProps={{ placeholder: '添加UP: 全名 / mid / mid(备注)' }}
                 disabled={!filterEnabled || !filterByAuthorNameEnabled}
               />
             </div>
