@@ -1,9 +1,9 @@
-name: release
+name: Release
 
 on:
   push:
     tags:
-      - 'v0*'
+      - 'v*'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -49,16 +49,35 @@ jobs:
         env:
           MINIFY: 'true'
 
-      # prepare
-      - run: cp README.md CHANGELOG.md ./dist
+      #
+      # commit to release branch, orphan commit
+      #
+      - run: mkdir dist-release-branch && touch ./dist-release-branch/bilibili-app-recommend.user.js
+      - uses: peaceiris/actions-gh-pages@v4
+        with:
+          publish_branch: release
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist-release-branch
+          force_orphan: true
 
+      #
       # commit to release branch
+      #
+      - run: cp README.md ./dist
       - uses: peaceiris/actions-gh-pages@v4
         with:
           publish_branch: release
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
-          # webhook not working when orphan commit
-          # greasyfork webhook 依赖 modified: [], 需要包含 xxx.user.js
-          # https://github.com/YDX-2147483647/BIT-enhanced/issues/4#issuecomment-1590620027
           force_orphan: false
+
+      # release with changelog
+      - run: pnpx changelogithub@0
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+      # release assets
+      - name: Upload *.user.js to Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ./dist/*.user.js

@@ -180,12 +180,7 @@ export default defineConfig(({ command }) => ({
           'https://www.bilibili.com/list/watchlater?*',
           'https://www.bilibili.com/bangumi/play/*',
         ],
-        connect: [
-          //
-          'app.bilibili.com',
-          'passport.bilibili.com',
-          // 'www.mcbbs.net', // for get_access_key
-        ],
+        connect: ['app.bilibili.com'],
         grant: [
           // axios gm adapter use
           'GM.xmlHttpRequest',
@@ -193,7 +188,6 @@ export default defineConfig(({ command }) => ({
       },
 
       server: {
-        // prefix: (name) => `${name} Dev`,
         prefix: false, // 一样的, 避免切换
         open: true,
         mountGmApi: true,
