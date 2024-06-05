@@ -2,11 +2,11 @@
  * user blacklist services
  */
 
-import { APP_NAME, IN_BILIBILI_HOMEPAGE, baseDebug } from '$common'
+import { IN_BILIBILI_HOMEPAGE, baseDebug } from '$common'
 import { isWebApiSuccess, request } from '$request'
 import { whenIdle } from '$utility'
-import { snapshot, subscribe, useSnapshot } from 'valtio'
-import { proxySet } from 'valtio/utils'
+import { proxySetWithGmStorage } from '$utility/valtio'
+import { useSnapshot } from 'valtio'
 import type { ListBlackJson } from './api.list-black'
 import { modifyRelations } from './common'
 
@@ -20,12 +20,7 @@ export const UserBlacklistService = {
   remove: blacklistRemove,
 }
 
-const STORAGE_KEY = `${APP_NAME}-blacklist-mids`
-const initialVaue = (localStorage.getItem(STORAGE_KEY) || '').split(',')
-export const blacklistMids = proxySet<string>(initialVaue)
-subscribe(blacklistMids, (val) => {
-  localStorage.setItem(STORAGE_KEY, Array.from(snapshot(blacklistMids)).join(','))
-})
+export const blacklistMids = await proxySetWithGmStorage('blacklist-mids')
 
 export function useInBlacklist(upMid?: string) {
   const set = useSnapshot(blacklistMids)

@@ -5,7 +5,6 @@ import { type PopularGeneralItemExtend } from '$define'
 import { EApiType } from '$define/index.shared'
 import type { PopularGeneralJson } from '$define/popular-general'
 import { settings } from '$modules/settings'
-import { blacklistMids } from '$modules/user/relations/blacklist'
 import { isWebApiSuccess, request } from '$request'
 import { toast } from '$utility'
 import delay from 'delay'
@@ -41,15 +40,13 @@ export class PopularGeneralRecService implements IService {
     this.page++
     this.hasMore = !json.data.no_more
 
-    let items = (json.data.list || []).map((item) => {
+    const items = (json.data.list || []).map((item) => {
       return {
         ...item,
         api: EApiType.PopularGeneral,
         uniqId: item.bvid,
       } as PopularGeneralItemExtend
     })
-    // 过滤黑名单
-    items = items.filter((item) => !blacklistMids.has(item.owner.mid.toString()))
     return items
   }
 
