@@ -25,11 +25,20 @@ export async function videoshot(bvid: string) {
     console.warn('[%s] videoshot data invalid bvid=%s: %o', APP_NAME, bvid, json.data)
   }
 
-  return json.data
+  return json
 }
 
 export function isVideoshotDataValid(videoshotData: PvideoJson['data']) {
   return !!(videoshotData?.image?.length && videoshotData?.index?.length)
+}
+
+export function isVideoshotJsonCacheable(json: PvideoJson) {
+  const success = isWebApiSuccess(json)
+  if (!success) {
+    return true
+  } else {
+    return isVideoshotDataValid(json.data)
+  }
 }
 
 // dm
@@ -53,16 +62,21 @@ export type VideoData = {
 }
 
 export async function fetchVideoData(bvid: string) {
+  // cache:lookup
   if (cache.has(bvid)) {
     const cached = cache.get(bvid)
-    if (cached && isVideoshotDataValid(cached.videoshotData)) {
-      return cached
-    }
+    if (cached) return cached
   }
 
-  const videoshotData = await videoshot(bvid)
+  const videoshotJson = await videoshot(bvid)
+  const videoshotData = videoshotJson.data
   const dmData: string[] = []
-  cache.set(bvid, { videoshotData, dmData })
+
+  // cache:save
+  const cacheable = isVideoshotJsonCacheable(videoshotJson)
+  if (cacheable) {
+    cache.set(bvid, { videoshotData, dmData })
+  }
 
   function preloadImg(src: string) {
     return new Promise<boolean>((resolve) => {

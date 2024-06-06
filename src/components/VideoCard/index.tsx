@@ -168,6 +168,8 @@ const VideoCardInner = memo(function VideoCardInner({
   const videoDataBox = useRefStateBox<VideoData | null>(null)
   const tryFetchVideoData = useLockFn(async () => {
     if (!bvid) return // no bvid
+    if (!bvid.startsWith('BV')) return // bvid invalid
+    if (goto !== 'av') return // scrrenshot only for video
     if (videoDataBox.val && isVideoshotDataValid(videoDataBox.val.videoshotData)) return // already fetched
     videoDataBox.set(await fetchVideoData(bvid))
   })
