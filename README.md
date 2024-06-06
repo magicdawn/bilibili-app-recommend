@@ -12,7 +12,7 @@
 
 ## 安装
 
-👉 [GreasyFork](gfurl)
+👉 [GreasyFork][gfurl]
 <span style="display: inline-block; margin-left: 20px;">
 👉 [开发版: 包含未发布的更改](https://github.com/magicdawn/bilibili-app-recommend/raw/release-nightly/bilibili-app-recommend.mini.user.js)
 </span>
