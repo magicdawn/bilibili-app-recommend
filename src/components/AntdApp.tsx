@@ -1,5 +1,5 @@
 import { APP_NAME, APP_NAME_ROOT_CLASSNAME } from '$common'
-import { $headerWidth } from '$header'
+import { $headerWidth, useBackToTopRight } from '$header'
 import { useColors, useIsDarkMode } from '$modules/dark-mode'
 import { useSettingsSnapshot } from '$modules/settings'
 import { UseApp } from '$utility/antd-static'
@@ -91,6 +91,7 @@ function GlobalStyle() {
   const colorPrimary = useColorPrimaryHex()
   const { pureRecommend, styleUseCustomGrid, styleUseWhiteBackground } = useSettingsSnapshot()
   const { c, bg } = useColors()
+  const backToTopRight = useBackToTopRight()
 
   // 会有多次变宽的效果, 看起来很诡异!!!
   // bilibili-default -> 90 % -> evolved宽度计算
@@ -141,7 +142,8 @@ function GlobalStyle() {
 
               /* em 有点深井冰 */
               /* :root {
-                scrollbar-color: ${colorPrimaryValue} #f69;
+                scrollbar-color: ${colorPrimaryValue} var(--bg1);
+                scrollbar-width: thin;
               } */
             `,
 
@@ -159,6 +161,14 @@ function GlobalStyle() {
                   max-width: ${width}%;
                   /* 与 bilibili-evolve 视觉上对齐 */
                   padding: ${padding};
+                }
+              `,
+
+            styleUseCustomGrid &&
+              typeof backToTopRight === 'number' &&
+              css`
+                .${APP_NAME_ROOT_CLASSNAME} {
+                  --back-top-right: ${backToTopRight}px;
                 }
               `,
 

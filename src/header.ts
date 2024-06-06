@@ -2,6 +2,7 @@
  * BILIBILI-Evolved header related
  */
 
+import { useSettingsSnapshot } from '$modules/settings'
 import { minmax } from '$utility/num'
 import { valtioFactory } from '$utility/valtio'
 
@@ -37,6 +38,31 @@ function calcHeaderWidth(): number | undefined {
   return width
 }
 export const $headerWidth = valtioFactory(calcHeaderWidth)
+
+/**
+ * 处理 styleUseCustomGrid, 并且 bilibili-evolved padding 留的很小, back-to-top 与内容重叠的情况
+ */
+export function useBackToTopRight(): number | undefined {
+  const width = $headerWidth.use()
+  const { styleUseCustomGrid, pureRecommend } = useSettingsSnapshot()
+
+  if (!pureRecommend || !styleUseCustomGrid) return
+  if (!width) return
+
+  const rest = ((1 - width / 100) / 2) * window.innerWidth + /* padding */ 10
+  const backToTopWidth = 40
+
+  if (rest > backToTopWidth + /** default back-top-right */ 24 + /** visual padding */ 5) {
+    return
+  }
+
+  if (rest < backToTopWidth) {
+    return 0
+  }
+
+  const right = Math.floor((rest - backToTopWidth) / 2)
+  return right
+}
 
 function calcEvolvedThemeColor() {
   return window.getComputedStyle(document.documentElement).getPropertyValue('--theme-color')
