@@ -1,0 +1,69 @@
+/**
+ * from https://view-transitions.netlify.app/cards/spa/
+ */
+
+@layer view-transitions {
+  /* Don’t capture the root, allowing pointer interaction while cards are animating */
+  @layer no-root {
+    :root {
+      view-transition-name: none;
+    }
+    ::view-transition {
+      pointer-events: none;
+    }
+  }
+
+  /* Cards, in general, should use a bounce effect when moving to their new position */
+  @layer reorder-cards {
+    @supports (view-transition-class: bili-video-card) {
+      // .bili-video-card {
+      //   view-transition-class: bili-video-card;
+      // }
+
+      /* Without view-transition-class you had to write a selector that targets all cards … and that selector needed updating whenever you added/removed a card */
+      ::view-transition-group(*.bili-video-card) {
+        animation-timing-function: ease-in-out;
+        animation-duration: 0.5s;
+        // z-index: 100;
+      }
+    }
+  }
+
+  /* Newly added cards should animate-in */
+  @layer add-card {
+    @keyframes animate-in {
+      0% {
+        opacity: 0;
+        translate: 0 -200px;
+      }
+      100% {
+        opacity: 1;
+        translate: 0 0;
+      }
+    }
+
+    ::view-transition-new(targeted-card):only-child {
+      animation: animate-in ease-in 0.25s;
+    }
+  }
+
+  /* Cards that get removed should animate-out */
+  @layer remove-card {
+    @keyframes animate-out {
+      0% {
+        opacity: 1;
+        translate: 0 0;
+      }
+      100% {
+        opacity: 0;
+        translate: 0 -200px;
+      }
+    }
+
+    // bili-video-card-will-be-removed
+    // ::view-transition-old(bili-video-card-will-be-removed):only-child {
+    ::view-transition-old(bili-video-card-will-be-removed) {
+      animation: animate-out ease-out 0.5s;
+    }
+  }
+}

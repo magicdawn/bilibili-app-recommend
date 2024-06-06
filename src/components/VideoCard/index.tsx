@@ -26,13 +26,13 @@ import type { MenuProps } from 'antd'
 import { Dropdown } from 'antd'
 import delay from 'delay'
 import { tryit } from 'radash'
+import './card-transition.scss'
 import type { VideoData } from './card.service'
 import { fetchVideoData, isVideoshotDataValid, watchLaterAdd } from './card.service'
 import { PreviewImage } from './child-components/PreviewImage'
 import { VideoCardActionStyle } from './child-components/VideoCardActions'
 import { VideoCardBottom } from './child-components/VideoCardBottom'
 import { BlacklistCard, DislikedCard, SkeletonCard } from './child-components/other-type-cards'
-import styles from './index.module.scss'
 import type { VideoCardEmitter } from './index.shared'
 import { borderRadiusStyle, defaultEmitter } from './index.shared'
 import { getFollowedStatus } from './process/filter'
@@ -60,6 +60,7 @@ export type VideoCardProps = {
   onMoveToFirst?: (item: RecItemType, data: IVideoCardData) => void | Promise<void>
   onRefresh?: OnRefresh
   emitter?: VideoCardEmitter
+  willBeRemoved?: boolean
 } & ComponentProps<'div'>
 
 export const VideoCard = memo(function VideoCard({
@@ -72,6 +73,7 @@ export const VideoCard = memo(function VideoCard({
   onMoveToFirst,
   onRefresh,
   emitter,
+  willBeRemoved,
   ...restProps
 }: VideoCardProps) {
   // loading defaults to
@@ -85,8 +87,20 @@ export const VideoCard = memo(function VideoCard({
 
   return (
     <div
-      style={style}
-      className={cx('bili-video-card', styles.biliVideoCard, className)}
+      style={{
+        ...style,
+        viewTransitionName: willBeRemoved
+          ? `bili-video-card-will-be-removed`
+          : `bili-video-card-${item?.uniqId}`,
+      }}
+      className={cx('bili-video-card', className)}
+      css={css`
+        position: relative;
+        view-transition-class: bili-video-card;
+        .bili-video-card__stats--item {
+          margin-right: 8px;
+        }
+      `}
       {...restProps}
     >
       {loading ? (

@@ -29,6 +29,7 @@ import { Divider } from 'antd'
 import delay from 'delay'
 import mitt from 'mitt'
 import ms from 'ms'
+import { flushSync } from 'react-dom'
 import { useInView } from 'react-intersection-observer'
 import {
   narrowMode,
@@ -349,43 +350,66 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
   /**
    * card state change
    */
+  const [willBeRemoved, setWillBeRemoved] = useState<string | undefined>()
 
-  const handleRemoveCard = useMemoizedFn((item: RecItemType, data: IVideoCardData) => {
-    setItems((items) => {
-      const index = items.findIndex((x) => x.uniqId === item.uniqId)
-      if (index === -1) return items
+  const handleRemoveCard = useMemoizedFn(async (item: RecItemType, data: IVideoCardData) => {
+    function update() {
+      setItems((items) => {
+        const index = items.findIndex((x) => x.uniqId === item.uniqId)
+        if (index === -1) return items
 
-      const newItems = items.slice()
-      newItems.splice(index, 1)
-      AntdMessage.success(`已移除: ${data.title}`, 4)
+        const newItems = Array.from(items)
+        newItems.splice(index, 1)
 
-      if (tab === ETab.Watchlater) {
-        serviceMap[tab].count--
-        updateExtraInfo(tab)
-      }
-      if (tab === ETab.Fav) {
-        serviceMap[tab].total--
-        updateExtraInfo(tab)
-      }
+        setTimeout(() => {
+          AntdMessage.success(`已移除: ${data.title}`, 4)
 
-      return newItems
-    })
+          if (tab === ETab.Watchlater) {
+            serviceMap[tab].count--
+            updateExtraInfo(tab)
+          }
+          if (tab === ETab.Fav) {
+            serviceMap[tab].total--
+            updateExtraInfo(tab)
+          }
+        })
+
+        return newItems
+      })
+    }
+
+    if (!document.startViewTransition) {
+      return update()
+    } else {
+      flushSync(() => setWillBeRemoved(item.uniqId))
+      const transition = document.startViewTransition(update)
+      await transition.finished
+      setWillBeRemoved(undefined)
+    }
   })
   const handleMoveCardToFirst = useMemoizedFn((item: RecItemType, data: IVideoCardData) => {
-    setItems((items) => {
-      const currentItem = items.find((x) => x.uniqId === item.uniqId)
-      if (!currentItem) return items
-      const index = items.indexOf(currentItem)
+    function update() {
+      setItems((items) => {
+        const currentItem = items.find((x) => x.uniqId === item.uniqId)
+        if (!currentItem) return items
+        const index = items.indexOf(currentItem)
 
-      const newItems = items.slice()
-      // rm
-      newItems.splice(index, 1)
-      // insert
-      const newIndex = newItems.findIndex((x) => x.api !== EApiType.Separator)
-      newItems.splice(newIndex, 0, currentItem)
+        const newItems = Array.from(items)
+        // rm
+        newItems.splice(index, 1)
+        // insert
+        const newIndex = newItems.findIndex((x) => x.api !== EApiType.Separator)
+        newItems.splice(newIndex, 0, currentItem)
 
-      return newItems
-    })
+        return newItems
+      })
+    }
+
+    if (!document.startViewTransition) {
+      return update()
+    } else {
+      document.startViewTransition(update)
+    }
   })
 
   /**
@@ -524,6 +548,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
           onMoveToFirst={handleMoveCardToFirst}
           onRefresh={refresh}
           emitter={videoCardEmitters[index]}
+          willBeRemoved={willBeRemoved === item.uniqId}
         />
       )
     }

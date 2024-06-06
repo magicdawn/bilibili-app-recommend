@@ -29,6 +29,7 @@
     "@svgr/core": "^8.1.0",
     "@svgr/plugin-jsx": "^8.1.0",
     "@types/debug": "^4.1.12",
+    "@types/dom-view-transitions": "^1.0.4",
     "@types/lodash": "4.17.4",
     "@types/md5": "^2.3.5",
     "@types/ms": "^0.7.34",

@@ -2,16 +2,6 @@
 
 $z: 3;
 
-.bili-video-card {
-  position: relative;
-
-  :global {
-    .bili-video-card__stats--item {
-      margin-right: 8px;
-    }
-  }
-}
-
 .preview-card-wrapper {
   z-index: $z + 1;
 }
