@@ -10,6 +10,13 @@
 
 [gfurl]: https://greasyfork.org/zh-CN/scripts/443530-bilibili-app-recommend
 
+## 安装
+
+👉 [GreasyFork](gfurl)
+<span style="display: inline-block; margin-left: 20px;">
+👉 [开发版: 包含未发布的更改](https://github.com/magicdawn/bilibili-app-recommend/raw/release-nightly/bilibili-app-recommend.mini.user.js)
+</span>
+
 ## 功能
 
 - [x] App 推荐: 将手机 App 推荐内容搬到桌面
