@@ -342,7 +342,7 @@ const VideoCardInner = memo(function VideoCardInner({
 
     function openInNewWindow() {
       const u = `/?dyn-mid=${authorMid}`
-      GM_openInTab(u, { insert: true, active: true })
+      GM.openInTab(u, { insert: true, active: true })
     }
 
     // newWindow ??= tab !== ETab.DynamicFeed
