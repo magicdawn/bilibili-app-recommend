@@ -1,16 +1,26 @@
+import { flexCenterStyle } from '$common/emotion-css'
+import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
+import type { RecItemType } from '$define'
+import { EApiType } from '$define/index.shared'
+import { LiveIcon } from '$modules/icon'
+import { ELiveStatus } from '$modules/rec-services/live/live-enum'
 import { useSettingsSnapshot } from '$modules/settings'
 import { getAvatarSrc } from '$utility/image'
+import type { TheCssType } from '$utility/type'
 import { Avatar } from 'antd'
-import type { MouseEventHandler } from 'react'
+import { size } from 'polished'
+import { type MouseEventHandler } from 'react'
 import { Case, Else, If, Switch, Then } from 'react-if'
 import styles from '../index.module.scss'
 import type { IVideoCardData } from '../process/normalize'
 import { DESC_SEPARATOR } from '../process/normalize'
 
 export function VideoCardBottom({
+  item,
   cardData,
   handleVideoLinkClick,
 }: {
+  item: RecItemType
   cardData: IVideoCardData
   handleVideoLinkClick?: MouseEventHandler
 }) {
@@ -20,9 +30,13 @@ export function VideoCardBottom({
     // video
     goto,
     href,
+
     title,
     titleRender,
+
     desc,
+    descRender,
+
     pubdateDisplay,
     pubdateDisplayTitle,
     recommendReason,
@@ -49,7 +63,9 @@ export function VideoCardBottom({
   }
 
   // fix https://greasyfork.org/zh-CN/scripts/479861-bilibili-%E9%A1%B5%E9%9D%A2%E5%87%80%E5%8C%96%E5%A4%A7%E5%B8%88/discussions/238294
-  const descInnerSpans = desc ? (
+  const descInnerSpans = descRender ? (
+    descRender
+  ) : desc ? (
     <>
       <span className='bili-video-card__info--author'>{desc}</span>
     </>
@@ -67,6 +83,22 @@ export function VideoCardBottom({
     color: var(--text3);
     font-size: var(--subtitle-font-size);
   `
+
+  const living = item.api === EApiType.Live && item.live_status === ELiveStatus.Live
+
+  const avatarExtraCss: TheCssType = [
+    css`
+      ${flexCenterStyle}
+      padding: 1px;
+      border: 1px solid transparent;
+      border-radius: 50%;
+      position: relative;
+    `,
+    living &&
+      css`
+        border-color: ${colorPrimaryValue};
+      `,
+  ]
 
   return (
     <>
@@ -122,11 +154,26 @@ export function VideoCardBottom({
           >
             {!!authorMid && (
               <a href={authorHref} target='_blank'>
-                {authorFace ? (
-                  <Avatar src={getAvatarSrc(authorFace)} />
-                ) : (
-                  <Avatar>{authorName?.[0] || appBadgeDesc?.[0] || ''}</Avatar>
-                )}
+                <span css={avatarExtraCss}>
+                  {authorFace ? (
+                    <Avatar src={getAvatarSrc(authorFace)} />
+                  ) : (
+                    <Avatar>{authorName?.[0] || appBadgeDesc?.[0] || ''}</Avatar>
+                  )}
+                  {living && (
+                    <LiveIcon
+                      {...size(12)}
+                      active
+                      css={css`
+                        position: absolute;
+                        bottom: 0;
+                        right: 0;
+                        background-color: ${colorPrimaryValue};
+                        border-radius: 50%;
+                      `}
+                    />
+                  )}
+                </span>
               </a>
             )}
 
@@ -141,6 +188,11 @@ export function VideoCardBottom({
                 className='bili-video-card__info--tit'
                 title={title}
                 css={css`
+                  h3& {
+                    text-indent: 0;
+                  }
+
+                  text-indent: 0;
                   .bili-video-card &.bili-video-card__info--tit {
                     padding-right: 0;
                     height: auto;
@@ -165,7 +217,7 @@ export function VideoCardBottom({
               </h3>
 
               <Switch>
-                <Case condition={isNormalVideo}>
+                <Case condition={isNormalVideo || !!descInnerSpans}>
                   <div>
                     <a
                       className='bili-video-card__info--owner'

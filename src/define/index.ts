@@ -1,5 +1,6 @@
 import type { RankingItem } from '$modules/rec-services/hot/ranking/api'
 import type { CategorySlug, CategoryType } from '$modules/rec-services/hot/ranking/category'
+import type { LiveItem } from '$modules/rec-services/live/define/list-live'
 import type { FavItemExtend } from '../modules/rec-services/fav/define'
 import type { android } from './app-recommend.android'
 import type { ipad } from './app-recommend.ipad'
@@ -59,7 +60,8 @@ export type RecItemType =
   | FavItemExtend
   | PopularGeneralItemExtend
   | PopularWeeklyItemExtend
-  | RankingItemExtended
+  | RankingItemExtend
+  | LiveItemExtend
 
 export type RecItemTypeOrSeparator = RecItemType | ItemsSeparator
 
@@ -97,7 +99,12 @@ export type RankingItemExtendProps = {
   slug: CategorySlug
   categoryType: CategoryType
 }
-export type RankingItemExtended = RankingItem & RankingItemExtendProps
+export type RankingItemExtend = RankingItem & RankingItemExtendProps
+
+export type LiveItemExtend = LiveItem & {
+  uniqId: string
+  api: EApiType.Live
+}
 
 export function isApp(item: RecItemType): item is AppRecItemExtend {
   return item.api === EApiType.App
@@ -120,7 +127,9 @@ export function isPopularGeneral(item: RecItemType): item is PopularGeneralItemE
 export function isPopularWeekly(item: RecItemType): item is PopularWeeklyItemExtend {
   return item.api === EApiType.PopularWeekly
 }
-
-export function isRanking(item: RecItemType): item is RankingItemExtended {
+export function isRanking(item: RecItemType): item is RankingItemExtend {
   return item.api === EApiType.Ranking
+}
+export function isLive(item: RecItemType): item is LiveItemExtend {
+  return item.api === EApiType.Live
 }

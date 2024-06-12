@@ -2,7 +2,7 @@ import { REQUEST_FAIL_MSG } from '$common'
 import { antdCustomCss, flexVerticalCenterStyle } from '$common/emotion-css'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
-import type { RankingItemExtended } from '$define'
+import type { RankingItemExtend } from '$define'
 import { EApiType } from '$define/index.shared'
 import { usePopupContainer } from '$modules/rec-services/_base'
 import { isWebApiSuccess, request } from '$request'
@@ -24,7 +24,7 @@ import {
 export class RankingRecService implements IService {
   loaded = false
   slug: CategorySlug
-  qs = new QueueStrategy<RankingItemExtended>(20)
+  qs = new QueueStrategy<RankingItemExtend>(20)
 
   constructor(slug?: CategorySlug) {
     this.slug = slug || rankingStore.slug
@@ -35,7 +35,7 @@ export class RankingRecService implements IService {
     return !!this.qs.bufferQueue.length
   }
 
-  async loadMore(abortSignal: AbortSignal): Promise<RankingItemExtended[] | undefined> {
+  async loadMore(abortSignal: AbortSignal): Promise<RankingItemExtend[] | undefined> {
     if (!this.hasMore) return
 
     if (!this.loaded) {
@@ -51,7 +51,7 @@ export class RankingRecService implements IService {
       }
 
       const list: RankingItem[] = json?.data?.list || json?.result?.list || []
-      const items: RankingItemExtended[] = list.map((item, index) => {
+      const items: RankingItemExtend[] = list.map((item, index) => {
         return {
           ...item,
           api: EApiType.Ranking,

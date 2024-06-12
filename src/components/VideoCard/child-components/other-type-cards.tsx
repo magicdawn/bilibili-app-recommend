@@ -2,7 +2,7 @@ import { OPERATION_FAIL_MSG } from '$common'
 import { useMittOn } from '$common/hooks/useMitt'
 import type { Reason } from '$components/ModalDislike'
 import { delDislikeId } from '$components/ModalDislike'
-import type { AppRecItem } from '$define'
+import type { AppRecItem, RecItemType } from '$define'
 import { cx } from '$libs'
 import { IconPark } from '$modules/icon/icon-park'
 import { useSettingsSnapshot } from '$modules/settings'
@@ -110,7 +110,7 @@ export const DislikedCard = memo(function DislikedCard({
         </div>
       </div>
       <div className={styles.dislikeContentAction}>
-        <VideoCardBottom cardData={cardData} />
+        <VideoCardBottom item={item as RecItemType} cardData={cardData} />
         <div className={styles.dislikeContentActionInner}>
           <button onClick={onCancelDislike}>
             <IconPark name='Return' size='16' style={{ marginRight: 4, marginTop: -2 }} />

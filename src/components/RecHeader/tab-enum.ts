@@ -6,6 +6,7 @@ export enum ETab {
   Watchlater = 'watchlater',
   Fav = 'fav',
   Hot = 'hot',
+  Live = 'live',
 }
 
 export enum EHotSubTab {

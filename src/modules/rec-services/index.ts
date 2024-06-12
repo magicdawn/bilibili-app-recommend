@@ -24,6 +24,7 @@ export const recItemUniqer = (item: RecItemTypeOrSeparator) =>
         [EApiType.PopularGeneral]: (item) => item.bvid,
         [EApiType.PopularWeekly]: (item) => item.bvid,
         [EApiType.Ranking]: (item) => item.uniqId,
+        [EApiType.Live]: (item) => item.roomid,
       })
 
 export function uniqFilter(existing: RecItemTypeOrSeparator[], newItems: RecItemTypeOrSeparator[]) {
