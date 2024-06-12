@@ -142,6 +142,8 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                               视频卡片: 显示头像, 更大的圆角.
                               <br />
                               切换设置快捷键: <Tag color='green'>shift+y</Tag>
+                              <br />
+                              旧的只为兼容, 逐渐不维护了...
                             </>
                           }
                         />
