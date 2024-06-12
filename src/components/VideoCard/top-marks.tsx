@@ -1,6 +1,6 @@
 import { flexCenterStyle, flexVerticalCenterStyle } from '$common/emotion-css'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
-import type { RankingItemExtendProps, RankingItemExtended, RecItemType } from '$define'
+import type { RankingItemExtend, RankingItemExtendProps, RecItemType } from '$define'
 import { EApiType } from '$define/index.shared'
 import type { NormalRankingItem } from '$modules/rec-services/hot/ranking/api.normal-category'
 import {
@@ -69,7 +69,7 @@ function getColor(no: number) {
         : colorPrimaryValue
 }
 
-export function RankingNumMark({ item }: { item: RankingItemExtended }) {
+export function RankingNumMark({ item }: { item: RankingItemExtend }) {
   const category = RANKING_CATEGORIES_MAP[item.slug]
 
   const hasMedal = item.rankingNo <= 3

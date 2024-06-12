@@ -9,7 +9,7 @@ import {
 import { settings, useSettingsSnapshot } from '$modules/settings'
 import { getVideoDetail } from '$modules/video/video-detail'
 import delay from 'delay'
-import type { MouseEventHandler } from 'react'
+import type { MouseEventHandler, ReactNode } from 'react'
 import { VideoCardActionButton } from '../child-components/VideoCardActions'
 import {
   VideoLinkOpenMode as Mode,
@@ -149,21 +149,21 @@ export function useOpenRelated({
       : []
   }, [])
 
-  const openInPopupButtonEl = useMemo(() => {
+  const openInPopupButtonEl: ReactNode = useMemo(() => {
+    if (videoLinkOpenMode === VideoLinkOpenMode.Popup) return
+    if (item.api === EApiType.Live) return
     return (
-      videoLinkOpenMode !== VideoLinkOpenMode.Popup && (
-        <VideoCardActionButton
-          visible={actionButtonVisible}
-          inlinePosition={'right'}
-          icon={ModeConfig.Popup.icon}
-          tooltip={ModeConfig.Popup.label}
-          onClick={(e) => {
-            e.preventDefault()
-            e.stopPropagation()
-            onOpenWithMode(VideoLinkOpenMode.Popup)
-          }}
-        />
-      )
+      <VideoCardActionButton
+        visible={actionButtonVisible}
+        inlinePosition={'right'}
+        icon={ModeConfig.Popup.icon}
+        tooltip={ModeConfig.Popup.label}
+        onClick={(e) => {
+          e.preventDefault()
+          e.stopPropagation()
+          onOpenWithMode(VideoLinkOpenMode.Popup)
+        }}
+      />
     )
   }, [videoLinkOpenMode, actionButtonVisible])
 

@@ -13,4 +13,5 @@ export enum EApiType {
   PopularGeneral = 'popular-general',
   PopularWeekly = 'popular-weekly',
   Ranking = 'ranking',
+  Live = 'live',
 }

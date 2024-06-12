@@ -33,6 +33,9 @@ export function useWatchlaterRelated({
     if (item.api === EApiType.Ranking) {
       return cardData.goto === 'av'
     }
+    if (item.api === EApiType.Live) {
+      return false
+    }
     return true
   })()
 
@@ -48,6 +51,10 @@ export function useWatchlaterRelated({
     ): Promise<{ success: boolean; targetState?: boolean }> => {
       e?.preventDefault()
       e?.stopPropagation()
+
+      if (!avid || !bvid) {
+        return { success: false }
+      }
 
       usingAction ??= watchLaterAdded ? watchLaterDel : watchLaterAdd
       if (usingAction !== watchLaterAdd && usingAction !== watchLaterDel) {

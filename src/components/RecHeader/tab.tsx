@@ -175,7 +175,7 @@ export function VideoSourceTab({ onRefresh }: { onRefresh: OnRefresh }) {
                 height: 100%;
               `}
             >
-              <TabIcon tabKey={key} moreCss={iconCss} />
+              <TabIcon tabKey={key} moreCss={iconCss} active={key === tab} />
               {label}
             </span>
           </Radio.Button>
@@ -192,7 +192,7 @@ export function VideoSourceTab({ onRefresh }: { onRefresh: OnRefresh }) {
                 height: 22px;
               `}
             >
-              <TabIcon tabKey={key} moreCss={iconCss} />
+              <TabIcon tabKey={key} moreCss={iconCss} active />
               {label}: {desc}
             </div>
           ))}

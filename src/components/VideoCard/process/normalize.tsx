@@ -1,9 +1,11 @@
 import { APP_NAME } from '$common'
+import { C, flexCenterStyle } from '$common/emotion-css'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import {
   isApp,
   isDynamic,
   isFav,
+  isLive,
   isPc,
   isPopularGeneral,
   isPopularWeekly,
@@ -13,20 +15,23 @@ import {
   type AppRecItemExtend,
   type DynamicFeedItemExtend,
   type IpadAppRecItemExtend,
+  type LiveItemExtend,
   type PcRecItemExtend,
   type PopularGeneralItemExtend,
   type PopularWeeklyItemExtend,
+  type RankingItemExtend,
   type RankingItemExtendProps,
-  type RankingItemExtended,
   type RecItemType,
   type WatchLaterItemExtend,
 } from '$define'
 import type { EApiType } from '$define/index.shared'
+import { LiveIcon } from '$modules/icon'
 import { IconPark } from '$modules/icon/icon-park'
 import type { FavItemExtend } from '$modules/rec-services/fav/define'
 import type { BangumiRankingItem } from '$modules/rec-services/hot/ranking/api.bangumi-category'
 import type { CinemaRankingItem } from '$modules/rec-services/hot/ranking/api.cinema-category'
 import type { NormalRankingItem } from '$modules/rec-services/hot/ranking/api.normal-category'
+import { ELiveStatus } from '$modules/rec-services/live/live-enum'
 import { AntdTooltip } from '$ui-components/antd-custom'
 import { toHttps } from '$utility'
 import {
@@ -38,6 +43,8 @@ import {
 } from '$utility/video'
 import { BvCode } from '@mgdn/bvid'
 import dayjs from 'dayjs'
+import { size } from 'polished'
+import type { ReactNode } from 'react'
 import type { AppRecIconField } from '../stat-item'
 import { AppRecIconMap, getField } from '../stat-item'
 
@@ -47,19 +54,22 @@ export type StatItemType = { field: AppRecIconField; value: number | string | un
 
 export interface IVideoCardData {
   // video
-  avid: string
-  bvid: string
+  avid?: string
+  bvid?: string
   goto: string
   href: string
+
   title: string
   desc?: string
   titleRender?: ReactNode
+  descRender?: ReactNode
+
   cover: string
   pubts?: number // unix timestamp
   pubdateDisplay?: string // for display
   pubdateDisplayTitle?: string
-  duration: number
-  durationStr: string
+  duration?: number
+  durationStr?: string
   recommendReason?: string
 
   // stat
@@ -95,7 +105,8 @@ export function lookinto<T>(
     [EApiType.Fav]: (item: FavItemExtend) => T
     [EApiType.PopularGeneral]: (item: PopularGeneralItemExtend) => T
     [EApiType.PopularWeekly]: (item: PopularWeeklyItemExtend) => T
-    [EApiType.Ranking]: (item: RankingItemExtended) => T
+    [EApiType.Ranking]: (item: RankingItemExtend) => T
+    [EApiType.Live]: (item: LiveItemExtend) => T
   },
 ): T {
   if (isApp(item)) return opts.app(item)
@@ -106,6 +117,7 @@ export function lookinto<T>(
   if (isPopularGeneral(item)) return opts['popular-general'](item)
   if (isPopularWeekly(item)) return opts['popular-weekly'](item)
   if (isRanking(item)) return opts['ranking'](item)
+  if (isLive(item)) return opts.live(item)
   throw new Error(`unknown api type`)
 }
 
@@ -119,6 +131,7 @@ export function normalizeCardData(item: RecItemType) {
     'popular-general': apiPopularGeneralAdapter,
     'popular-weekly': apiPopularWeeklyAdapter,
     'ranking': apiRankingAdapter,
+    'live': apiLiveAdapter,
   })
 
   // handle mixed content
@@ -575,7 +588,7 @@ function apiPopularWeeklyAdapter(item: PopularWeeklyItemExtend): IVideoCardData 
   }
 }
 
-function apiRankingAdapter(_item: RankingItemExtended): IVideoCardData {
+function apiRankingAdapter(_item: RankingItemExtend): IVideoCardData {
   if (_item.categoryType === 'bangumi' || _item.categoryType === 'cinema') {
     const item = _item as (BangumiRankingItem | CinemaRankingItem) & RankingItemExtendProps
 
@@ -640,4 +653,78 @@ function apiRankingAdapter(_item: RankingItemExtended): IVideoCardData {
     authorFace: item.owner.face,
     authorMid: String(item.owner.mid),
   }
+}
+
+function apiLiveAdapter(item: LiveItemExtend): IVideoCardData {
+  const area = `「${item.area_name_v2}」`
+  const suffix =
+    item.live_status === ELiveStatus.Live
+      ? `${area}`
+      : `${formatTimeStamp(item.record_live_time, true)} 直播过${area}`
+  const desc = `${item.uname} · ${suffix}`
+
+  return {
+    // video
+    goto: 'live',
+    href: `https://live.bilibili.com/${item.roomid}`,
+    title: item.title,
+    titleRender: (
+      <>
+        {item.live_status === ELiveStatus.Live && <LiveBadge css={[C.mr(4)]} />}
+        {item.title}
+      </>
+    ),
+    desc,
+    cover: item.room_cover,
+    recommendReason: undefined, // TODO: write something here
+
+    // stat
+    statItems: [{ field: 'play', value: item.text_small } as const].filter(
+      Boolean,
+    ) satisfies StatItemType[],
+
+    // author
+    authorName: item.uname,
+    authorFace: item.face,
+    authorMid: String(item.uid),
+  }
+}
+
+export function LiveBadge({ className }: { className?: string }) {
+  return (
+    <span
+      className={className}
+      css={css`
+        /* position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform-origin: top left;
+        transform: translateX(-50%); */
+
+        height: 15px;
+        padding: 0 4px;
+        width: max-content;
+
+        border-radius: 22px;
+        /* background: linear-gradient(0deg, #f69, #f69), linear-gradient(0deg, #fff, #fff); */
+        background-color: ${colorPrimaryValue};
+        border: 2px solid #fff;
+
+        ${flexCenterStyle};
+        display: inline-flex;
+        flex-shrink: 0;
+      `}
+    >
+      <LiveIcon active {...size(12)} css={[C.mr(4)]} />
+      <span
+        css={css`
+          font-weight: 400;
+          font-size: 10px;
+          color: #fff;
+        `}
+      >
+        直播中
+      </span>
+    </span>
+  )
 }

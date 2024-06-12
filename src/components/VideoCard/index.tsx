@@ -161,8 +161,9 @@ const VideoCardInner = memo(function VideoCardInner({
   } = cardData
 
   const isNormalVideo = goto === 'av'
-  if (!['av', 'bangumi', 'picture'].includes(goto)) {
-    console.warn(`[${APP_NAME}]: none (av,bangumi,picture) goto type %s`, goto, item)
+  const allowed = ['av', 'bangumi', 'picture', 'live']
+  if (!allowed.includes(goto)) {
+    console.warn(`[${APP_NAME}]: none (${allowed.join(',')}) goto type %s`, goto, item)
   }
 
   const videoDataBox = useRefStateBox<VideoData | null>(null)
@@ -243,6 +244,7 @@ const VideoCardInner = memo(function VideoCardInner({
   const updateFavFolderNames = useMemoizedFn(async () => {
     // 只在「稍后再看」提供收藏状态
     if (item.api !== 'watchlater') return
+    if (!avid) return
     const result = await UserFavService.getVideoFavState(avid)
     if (result) {
       const { favFolderNames, favFolderUrls } = result
@@ -427,6 +429,8 @@ const VideoCardInner = memo(function VideoCardInner({
           ? `已收藏 ${favFolderNames.map((n) => `「${n}」`).join('')}`
           : '快速收藏',
         async onClick() {
+          if (!avid) return
+
           const hasFaved = Boolean(favFolderNames?.length)
 
           // 浏览收藏夹
@@ -579,16 +583,19 @@ const VideoCardInner = memo(function VideoCardInner({
 
               {/* preview */}
               {/* follow-mouse or manual-control */}
-              {(isHoveringAfterDelay || typeof previewProgress === 'number') &&
-                !!videoDataBox.state?.videoshotData?.image?.length && (
-                  <PreviewImage
-                    videoDuration={duration}
-                    pvideo={videoDataBox.state?.videoshotData}
-                    mouseEnterRelativeX={mouseEnterRelativeX}
-                    previewProgress={previewProgress}
-                    previewT={previewT}
-                  />
-                )}
+              {!!(
+                (isHoveringAfterDelay || typeof previewProgress === 'number') &&
+                videoDataBox.state?.videoshotData?.image?.length &&
+                duration
+              ) && (
+                <PreviewImage
+                  videoDuration={duration}
+                  pvideo={videoDataBox.state?.videoshotData}
+                  mouseEnterRelativeX={mouseEnterRelativeX}
+                  previewProgress={previewProgress}
+                  previewT={previewT}
+                />
+              )}
 
               {dislikeButtonEl && (
                 <div className='left-actions' css={VideoCardActionStyle.topContainer('left')}>
@@ -642,7 +649,11 @@ const VideoCardInner = memo(function VideoCardInner({
       </Dropdown>
 
       {/* bottom: after the cover */}
-      <VideoCardBottom cardData={cardData} handleVideoLinkClick={handleVideoLinkClick} />
+      <VideoCardBottom
+        item={item}
+        cardData={cardData}
+        handleVideoLinkClick={handleVideoLinkClick}
+      />
     </div>
   )
 })

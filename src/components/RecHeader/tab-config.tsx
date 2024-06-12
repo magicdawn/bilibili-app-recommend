@@ -1,4 +1,5 @@
 import { C } from '$common/emotion-css'
+import { LiveIcon } from '$modules/icon'
 import { isHotTabUsingShuffle } from '$modules/rec-services/hot'
 import { settings } from '$modules/settings'
 import { toast } from '$utility'
@@ -70,6 +71,13 @@ export const TabConfig: Record<ETab, TabConfigItem> = {
       return !isHotTabUsingShuffle()
     },
   },
+  [ETab.Live]: {
+    icon: <LiveIcon {...size(16)} />,
+    // icon: <MaterialSymbolsBarChart {...size(16)} />,
+    label: '直播',
+    desc: '直播~',
+    swr: true,
+  },
 }
 
 export function TabIcon({
@@ -80,6 +88,7 @@ export function TabIcon({
   mr,
   mt,
   mb,
+  active,
 }: {
   tabKey: ETab
   moreCss?: TheCssType
@@ -88,6 +97,7 @@ export function TabIcon({
   mr?: number
   mt?: number
   mb?: number
+  active?: boolean
 }) {
   const { icon } = TabConfig[tabKey]
   const newCssProp = [
@@ -104,6 +114,7 @@ export function TabIcon({
     css: newCssProp,
     width: _size ? size(_size).width : icon.props.width,
     height: _size ? size(_size).height : icon.props.height,
+    active,
   })
   return cloned
 }

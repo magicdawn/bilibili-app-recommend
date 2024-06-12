@@ -9,6 +9,7 @@ import type { IService } from '$modules/rec-services/_base'
 import { DynamicFeedRecService, dynamicFeedFilterStore } from '$modules/rec-services/dynamic-feed'
 import { FavRecService } from '$modules/rec-services/fav'
 import { HotRecService, hotStore } from '$modules/rec-services/hot'
+import { LiveRecService } from '$modules/rec-services/live'
 import { PcRecService } from '$modules/rec-services/pc'
 import { WatchLaterRecService } from '$modules/rec-services/watchlater'
 import { nextTick } from '$utility'
@@ -30,6 +31,7 @@ const createServiceMap = {
   [ETab.Watchlater]: (options) => new WatchLaterRecService(options?.watchlaterKeepOrder),
   [ETab.Fav]: () => new FavRecService(),
   [ETab.Hot]: () => new HotRecService(),
+  [ETab.Live]: () => new LiveRecService(),
 } satisfies Partial<Record<ETab, (options?: OnRefreshOptions) => IService>>
 
 export type ServiceMapKey = keyof typeof createServiceMap
@@ -233,12 +235,10 @@ export function useRefresh({
       setServiceMap(newServiceMap)
     }
 
-    if (tab === ETab.DynamicFeed) {
+    if (tab === ETab.DynamicFeed || tab === ETab.Watchlater || tab === ETab.Live) {
       recreateFor(tab)
     }
-    if (tab === ETab.Watchlater) {
-      recreateFor(tab)
-    }
+
     if (tab === ETab.Fav) {
       if (shouldReuse) {
         if (swr) {
@@ -250,6 +250,7 @@ export function useRefresh({
         recreateFor(tab)
       }
     }
+
     if (tab === ETab.Hot) {
       if (shouldReuse) {
         if (swr) {

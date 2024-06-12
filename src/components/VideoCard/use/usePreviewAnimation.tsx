@@ -34,7 +34,7 @@ export function usePreviewAnimation({
   emitter: VideoCardEmitter
   title: string
   active: boolean
-  videoDuration: number
+  videoDuration?: number
   tryFetchVideoData: () => Promise<void>
   videoDataBox: RefStateBox<VideoData | null>
   autoPreviewWhenHover: boolean
