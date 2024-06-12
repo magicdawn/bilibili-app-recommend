@@ -1,9 +1,15 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "pipeline": {
+  "tasks": {
     "build:vite": {
-      "dependsOn": ["build:scss"],
-      "env": ["RELEASE", "RELEASE_NIGHTLY", "MINIFY"],
+      "dependsOn": [
+        "build:scss"
+      ],
+      "env": [
+        "RELEASE",
+        "RELEASE_NIGHTLY",
+        "MINIFY"
+      ],
       "inputs": [
         "src/**/*.{ts,tsx}",
         "tsconfig.json",
@@ -11,11 +17,19 @@
         "uno.config.ts",
         "package.json"
       ],
-      "outputs": ["dist/bilibili-app-recommend.mini.user.js"]
+      "outputs": [
+        "dist/bilibili-app-recommend.mini.user.js"
+      ]
     },
     "build:vite-raw": {
-      "dependsOn": ["build:scss"],
-      "env": ["RELEASE", "RELEASE_NIGHTLY", "MINIFY"],
+      "dependsOn": [
+        "build:scss"
+      ],
+      "env": [
+        "RELEASE",
+        "RELEASE_NIGHTLY",
+        "MINIFY"
+      ],
       "inputs": [
         "src/**/*.{ts,tsx}",
         "tsconfig.json",
@@ -23,15 +37,26 @@
         "uno.config.ts",
         "package.json"
       ],
-      "outputs": ["dist/bilibili-app-recommend.user.js"]
+      "outputs": [
+        "dist/bilibili-app-recommend.user.js"
+      ]
     },
     "typecheck": {
-      "dependsOn": ["build:scss"],
-      "inputs": ["src/**/*.{ts,tsx}", "tsconfig.json"]
+      "dependsOn": [
+        "build:scss"
+      ],
+      "inputs": [
+        "src/**/*.{ts,tsx}",
+        "tsconfig.json"
+      ]
     },
     "build:scss": {
-      "inputs": ["src/**/*.scss"],
-      "outputs": ["src/**/*.scss.d.ts"]
+      "inputs": [
+        "src/**/*.scss"
+      ],
+      "outputs": [
+        "src/**/*.scss.d.ts"
+      ]
     }
   }
 }
