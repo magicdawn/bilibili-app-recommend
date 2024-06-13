@@ -8,7 +8,7 @@ import { EApiType } from '$define/index.shared'
 import { IconPark } from '$modules/icon/icon-park'
 import type { DynamicPortalUp } from '$modules/rec-services/dynamic-feed/portal'
 import { isWebApiSuccess, request } from '$request'
-import { toast } from '$utility'
+import { setPageTitle, toast } from '$utility'
 import { getAvatarSrc } from '$utility/image'
 import { fastSortWithOrders } from '$utility/order-by'
 import type { AntdMenuItemType } from '$utility/type'
@@ -16,6 +16,7 @@ import { proxySetWithGmStorage } from '$utility/valtio'
 import { Avatar, Badge, Button, Dropdown, Input, Space } from 'antd'
 import delay from 'delay'
 import ms from 'ms'
+import { subscribeKey } from 'valtio/utils'
 import type { IService } from '../_base'
 import { usePopupContainer } from '../_base'
 import { getRecentUpdateUpList } from './portal-api'
@@ -94,7 +95,14 @@ export class DynamicFeedRecService implements IService {
 
     // fill up-name when filter up via query
     const { upMid, upName } = store
-    if (upMid && upName && upName === upMid.toString() && items[0]) {
+    if (
+      //
+      QUERY_DYNAMIC_UP_MID &&
+      upMid &&
+      upName &&
+      upName === upMid.toString() &&
+      items[0]
+    ) {
       const authorName = items[0].modules.module_author.name
       store.upName = authorName
     }
@@ -148,6 +156,13 @@ export const dynamicFeedFilterStore = proxy({
 })
 
 const store = dynamicFeedFilterStore
+
+if (QUERY_DYNAMIC_UP_MID) {
+  subscribeKey(store, 'upName', (upName) => {
+    const title = upName ? `「${upName}」的动态` : '动态'
+    setPageTitle(title)
+  })
+}
 
 setTimeout(() => {
   if (!IN_BILIBILI_HOMEPAGE) return

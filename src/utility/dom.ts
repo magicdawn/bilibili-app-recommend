@@ -109,3 +109,13 @@ export function whenIdle(options?: IdleRequestOptions): Promise<void> {
       : setTimeout(resolve)
   })
 }
+
+export let ORIGINAL_TITLE: string = ''
+
+export function setPageTitle(title: string) {
+  // backup original title on first call
+  if (!ORIGINAL_TITLE) {
+    ORIGINAL_TITLE = document.title
+  }
+  document.title = `${title} - ${ORIGINAL_TITLE}`
+}
