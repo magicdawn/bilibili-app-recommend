@@ -60,14 +60,12 @@ export interface IVideoCardData {
   href: string
 
   title: string
-  desc?: string
   titleRender?: ReactNode
-  descRender?: ReactNode
 
   cover: string
   pubts?: number // unix timestamp
   pubdateDisplay?: string // for display
-  pubdateDisplayTitle?: string
+  pubdateDisplayForTitleAttr?: string
   duration?: number
   durationStr?: string
   recommendReason?: string
@@ -91,6 +89,7 @@ export interface IVideoCardData {
   appBadge?: string
   appBadgeDesc?: string
   rankingDesc?: string
+  liveDesc?: string
 }
 
 type Getter<T> = Record<RecItemType['api'], (item: RecItemType) => T>
@@ -445,7 +444,7 @@ function apiWatchLaterAdapter(item: WatchLaterItemExtend): IVideoCardData {
     cover: item.pic,
     pubts: item.pubdate,
     pubdateDisplay: formatTimeStamp(item.pubdate),
-    pubdateDisplayTitle: `${formatTimeStamp(item.pubdate, true)} 发布, ${formatTimeStamp(
+    pubdateDisplayForTitleAttr: `${formatTimeStamp(item.pubdate, true)} 发布, ${formatTimeStamp(
       item.add_at,
       true,
     )} 添加稍后再看`,
@@ -657,11 +656,24 @@ function apiRankingAdapter(_item: RankingItemExtend): IVideoCardData {
 
 function apiLiveAdapter(item: LiveItemExtend): IVideoCardData {
   const area = `「${item.area_name_v2}」`
-  const suffix =
-    item.live_status === ELiveStatus.Live
-      ? `${area}`
-      : `${formatTimeStamp(item.record_live_time, true)} 直播过${area}`
-  const desc = `${item.uname} · ${suffix}`
+  const liveDesc =
+    item.live_status === ELiveStatus.Streaming
+      ? `${DESC_SEPARATOR.trimEnd()}${area}` // 「 不需要 space padding
+      : `${DESC_SEPARATOR}${formatLiveTime(item.record_live_time)} 直播过${area}`
+
+  function formatLiveTime(ts: number) {
+    const today = dayjs().format('YYYYMMDD')
+    const yesterday = dayjs().subtract(1, 'day').format('YYYYMMDD')
+
+    const d = dayjs.unix(ts)
+    if (d.format('YYYYMMDD') === today) {
+      return d.format('HH:mm')
+    }
+    if (d.format('YYYYMMDD') === yesterday) {
+      return `昨天 ${d.format('HH:mm')}`
+    }
+    return d.format('MM-DD HH:mm')
+  }
 
   return {
     // video
@@ -670,11 +682,11 @@ function apiLiveAdapter(item: LiveItemExtend): IVideoCardData {
     title: item.title,
     titleRender: (
       <>
-        {item.live_status === ELiveStatus.Live && <LiveBadge css={[C.mr(4)]} />}
+        {item.live_status === ELiveStatus.Streaming && <LiveBadge css={[C.mr(4)]} />}
         {item.title}
       </>
     ),
-    desc,
+    liveDesc,
     cover: item.room_cover,
     recommendReason: undefined, // TODO: write something here
 

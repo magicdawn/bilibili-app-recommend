@@ -114,7 +114,7 @@ export function TabIcon({
     css: newCssProp,
     width: _size ? size(_size).width : icon.props.width,
     height: _size ? size(_size).height : icon.props.height,
-    active,
+    active: tabKey === ETab.Live ? active : undefined, // 否则 warn: svg recived boolean props
   })
   return cloned
 }

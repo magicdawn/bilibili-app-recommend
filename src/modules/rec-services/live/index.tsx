@@ -66,13 +66,9 @@ export class LiveRecService implements IService {
     const last = items.at(-1)
     const gateTime = dayjs().subtract(2, 'weeks').unix()
     if (last) {
-      const lastStatus = last?.live_status
-      const lastLiveTime = last?.record_live_time
-
-      // 0：未开播
-      // 1：直播中
-      // 2：轮播中
-      if (lastStatus !== ELiveStatus.Live && lastLiveTime < gateTime) {
+      const lastStatus = last.live_status
+      const lastLiveTime = last.record_live_time
+      if (lastStatus !== ELiveStatus.Streaming && lastLiveTime && lastLiveTime < gateTime) {
         this.hasMore = false
       }
     }
@@ -80,9 +76,9 @@ export class LiveRecService implements IService {
     const ret: RecItemTypeOrSeparator[] = items
 
     // add separator
-    if (!this.separatorAdded && items.some((x) => x.live_status !== 1)) {
+    if (!this.separatorAdded && items.some((x) => x.live_status !== ELiveStatus.Streaming)) {
       this.separatorAdded = true
-      const index = items.findIndex((x) => x.live_status !== 1)
+      const index = items.findIndex((x) => x.live_status !== ELiveStatus.Streaming)
       ret.splice(index, 0, {
         api: EApiType.Separator,
         uniqId: 'live-separator',
