@@ -303,13 +303,22 @@ export function VideoCardBottom({
 
         <Case condition={isLive(item)}>
           <a
-            className='bili-video-card__info--owner'
-            css={descOwnerCss}
+            css={[
+              descOwnerCss,
+              css`
+                display: -webkit-box;
+                -webkit-box-orient: vertical;
+                -webkit-line-clamp: 1;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 100%;
+              `,
+            ]}
             href={authorHref}
             target='_blank'
             title={(authorName || '') + (liveDesc || '')}
           >
-            <span className='bili-video-card__info--author'>{authorName}</span>
+            <span>{authorName}</span>
             {liveDesc && <span css={descSuffixCss}>{liveDesc}</span>}
           </a>
         </Case>
