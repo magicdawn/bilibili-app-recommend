@@ -53,7 +53,8 @@ export const RefreshButton = forwardRef<RefreshButtonActions, RefreshButtonProps
     tab === ETab.DynamicFeed ||
     (tab === ETab.Watchlater && !shuffleForWatchLater) ||
     (tab === ETab.Fav && !shuffleForFav) ||
-    (tab === ETab.Hot && !isHotTabUsingShuffle(shuffleForPopularWeekly))
+    (tab === ETab.Hot && !isHotTabUsingShuffle(shuffleForPopularWeekly)) ||
+    tab === ETab.Live
       ? '刷新'
       : '换一换'
 
