@@ -3,7 +3,6 @@ import { useMittOn } from '$common/hooks/useMitt'
 import type { Reason } from '$components/ModalDislike'
 import { delDislikeId } from '$components/ModalDislike'
 import type { AppRecItem, RecItemType } from '$define'
-import { cx } from '$libs'
 import { IconPark } from '$modules/icon/icon-park'
 import { useSettingsSnapshot } from '$modules/settings'
 import { UserBlacklistService } from '$modules/user/relations/blacklist'
@@ -12,7 +11,7 @@ import { toastRequestFail } from '$utility/toast'
 import { cancelDislike } from '../card.service'
 import styles from '../index.module.scss'
 import type { VideoCardEmitter } from '../index.shared'
-import { borderRadiusStyle, defaultEmitter } from '../index.shared'
+import { borderRadiusValue, defaultEmitter } from '../index.shared'
 import type { IVideoCardData } from '../process/normalize'
 import { VideoCardBottom } from './VideoCardBottom'
 
@@ -21,12 +20,15 @@ export const SkeletonCard = memo(function SkeletonCard({ loading }: { loading: b
 
   return (
     <div
-      className={cx('bili-video-card__skeleton', {
+      className={clsx('bili-video-card__skeleton', {
         hide: !loading,
         [styles.skeletonActive]: loading,
       })}
     >
-      <div className='bili-video-card__skeleton--cover' style={borderRadiusStyle} />
+      <div
+        className='bili-video-card__skeleton--cover'
+        style={{ borderRadius: borderRadiusValue }}
+      />
 
       {!styleNewCardStyle && (
         <div className='bili-video-card__skeleton--info'>
@@ -38,7 +40,12 @@ export const SkeletonCard = memo(function SkeletonCard({ loading }: { loading: b
         </div>
       )}
       {styleNewCardStyle && (
-        <div className='bili-video-card__skeleton--info'>
+        <div
+          className='bili-video-card__skeleton--info'
+          css={css`
+            padding-inline: 5px;
+          `}
+        >
           <div
             className='bili-video-card__skeleton--avatar'
             css={css`
@@ -101,7 +108,7 @@ export const DislikedCard = memo(function DislikedCard({
   useMittOn(emitter, 'cancel-dislike', onCancelDislike)
 
   return (
-    <div className={cx(styles.dislikedWrapper)}>
+    <div className={clsx(styles.dislikedWrapper)}>
       <div className={styles.dislikeContentCover}>
         <div className={styles.dislikeContentCoverInner}>
           <IconPark name='DistraughtFace' size={32} className={styles.dislikeIcon} />
@@ -136,7 +143,7 @@ export const BlacklistCard = memo(function BlacklistCard({
   })
 
   return (
-    <div className={cx(styles.dislikedWrapper)}>
+    <div className={clsx(styles.dislikedWrapper)}>
       <div className={styles.dislikeContentCover}>
         <div className={styles.dislikeContentCoverInner}>
           <IconPark name='PeopleDelete' size={32} className={styles.dislikeIcon} />

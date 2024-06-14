@@ -2,21 +2,23 @@
  * 推荐内容, 无限滚动
  */
 
-import { APP_NAME, baseDebug } from '$common'
+import { APP_CLS_CARD, APP_CLS_CARD_ACTIVE, APP_CLS_GRID, baseDebug } from '$common'
 import { useRefState } from '$common/hooks/useRefState'
 import { useModalDislikeVisible } from '$components/ModalDislike'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import { useCurrentUsingTab } from '$components/RecHeader/tab'
 import { EHotSubTab, ETab } from '$components/RecHeader/tab-enum'
 import { VideoCard } from '$components/VideoCard'
-import type { VideoCardEmitter, VideoCardEvents } from '$components/VideoCard/index.shared'
-import { borderRadiusValue } from '$components/VideoCard/index.shared'
+import {
+  borderRadiusValue,
+  type VideoCardEmitter,
+  type VideoCardEvents,
+} from '$components/VideoCard/index.shared'
 import { filterRecItems } from '$components/VideoCard/process/filter'
 import type { IVideoCardData } from '$components/VideoCard/process/normalize'
 import { type RecItemType, type RecItemTypeOrSeparator } from '$define'
 import { EApiType } from '$define/index.shared'
 import { $headerHeight } from '$header'
-import { cx, styled } from '$libs'
 import { OpenExternalLinkIcon } from '$modules/icon'
 import { IconPark } from '$modules/icon/icon-park'
 import { getRecommendTimes, refreshForGrid, uniqConcat } from '$modules/rec-services'
@@ -24,6 +26,7 @@ import { hotStore } from '$modules/rec-services/hot'
 import { useSettingsSnapshot } from '$modules/settings'
 import { isSafari } from '$platform'
 import { AntdMessage } from '$utility'
+import type { TheCssType } from '$utility/type'
 import { useEventListener, useLatest } from 'ahooks'
 import { Divider } from 'antd'
 import delay from 'delay'
@@ -45,27 +48,6 @@ import { useShortcut } from './useShortcut'
 const debug = baseDebug.extend('components:RecGrid')
 
 const ENABLE_VIRTUAL_GRID = false
-
-export const CardClassNames = {
-  card: styled.generateClassName`
-    border: 2px solid transparent;
-
-    /* global class under .card */
-    .bili-video-card__info {
-      padding-left: 2px;
-      padding-bottom: 1px;
-      margin-top: calc(var(--info-margin-top) - 1px);
-    }
-  `,
-
-  cardActive: styled.generateClassName`
-    border-color: ${colorPrimaryValue};
-    border-radius: ${borderRadiusValue};
-    overflow: hidden;
-    /* try here https://box-shadow.dev/ */
-    box-shadow: 0px 0px 9px 4px ${colorPrimaryValue};
-  `,
-}
 
 export type RecGridRef = {
   refresh: OnRefresh
@@ -435,8 +417,8 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
   )
 
   const { useNarrowMode, styleUseCustomGrid, styleNewCardStyle } = useSettingsSnapshot()
-  const gridClassName = cx(
-    `${APP_NAME}-video-grid`, // for customize css
+  const gridClassName = clsx(
+    APP_CLS_GRID, // for customize css
     videoGrid,
     { [newCardStyle]: styleNewCardStyle },
     styleUseCustomGrid ? videoGridCustom : videoGridBiliFeed4,
@@ -475,8 +457,8 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
       <div className={videoGridContainer}>
         <div className={gridClassName}>
           {new Array(28).fill(undefined).map((_, index) => {
-            const x = <VideoCard key={index} loading={true} className={CardClassNames.card} />
-            return <VideoCard key={index} loading={true} className={CardClassNames.card} />
+            const x = <VideoCard key={index} loading={true} className={APP_CLS_CARD} />
+            return <VideoCard key={index} loading={true} className={APP_CLS_CARD} />
           })}
         </div>
       </div>
@@ -512,12 +494,12 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
     } else {
       const index = usingVideoItems.findIndex((x) => x.uniqId === item.uniqId)
       const active = index === activeIndex
+
       return (
         <VideoCard
           key={item.uniqId}
-          className={cx(CardClassNames.card, {
-            [CardClassNames.cardActive]: active,
-          })}
+          className={clsx(APP_CLS_CARD, { [APP_CLS_CARD_ACTIVE]: active })}
+          css={getUsingCss(active, styleNewCardStyle)}
           item={item}
           active={active}
           onRemoveCurrent={handleRemoveCard}
@@ -539,3 +521,45 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
     </div>
   )
 })
+
+function getUsingCss(active: boolean, styleNewCardStyle: boolean): TheCssType {
+  return [
+    css`
+      border: 1px solid transparent;
+
+      /* global class under .card */
+      .bili-video-card__info {
+        padding-left: 2px;
+        padding-bottom: 1px;
+        margin-top: calc(var(--info-margin-top) - 1px);
+      }
+    `,
+
+    styleNewCardStyle &&
+      css`
+        border-radius: ${borderRadiusValue};
+        cursor: pointer;
+
+        border-color: #eee;
+        &:hover {
+          border-color: ${colorPrimaryValue};
+        }
+
+        body.dark & {
+          border-color: #333;
+          &:hover {
+            border-color: ${colorPrimaryValue};
+          }
+        }
+      `,
+
+    active &&
+      css`
+        border-color: ${colorPrimaryValue};
+        border-radius: ${borderRadiusValue};
+        overflow: hidden;
+        /* try here https://box-shadow.dev/ */
+        box-shadow: 0px 0px 9px 4px ${colorPrimaryValue};
+      `,
+  ]
+}

@@ -1,7 +1,6 @@
 import { APP_NAME, __PROD__ } from '$common'
 import { C } from '$common/emotion-css'
 import { CheckboxSettingItem } from '$components/ModalSettings/setting-item'
-import { cx } from '$libs'
 import { ConfigIcon } from '$modules/icon'
 import type { BooleanSettingsKey } from '$modules/settings'
 import { settings } from '$modules/settings'
@@ -116,7 +115,7 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                     <div className={styles.settingsGroupTitle} style={{ marginBottom: 15 }}>
                       主题选择
                     </div>
-                    <div className={cx(styles.settingsGroupContent)}>
+                    <div className={clsx(styles.settingsGroupContent)}>
                       <ThemesSelect />
                     </div>
                   </div>
@@ -132,7 +131,7 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                     <div className={styles.settingsGroupTitle} style={{ marginBottom: 15 }}>
                       样式自定义
                     </div>
-                    <div className={cx(styles.settingsGroupContent)}>
+                    <div className={clsx(styles.settingsGroupContent)}>
                       <div className={styles.row}>
                         <CheckboxSettingItem
                           configKey='styleNewCardStyle'

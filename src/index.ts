@@ -1,3 +1,5 @@
+//// <reference types="./unocss.shims.d.ts" />
+
 /*
  * 佛曰:
  *     写字楼里写字间，写字间里程序员；

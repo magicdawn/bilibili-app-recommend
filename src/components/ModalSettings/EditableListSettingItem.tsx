@@ -1,5 +1,4 @@
 import { C } from '$common/emotion-css'
-import { cx } from '$libs'
 import {
   settings,
   updateSettings,
@@ -139,7 +138,7 @@ const TagItemDisplay = forwardRef<
     <div
       {...restProps}
       ref={ref}
-      className={cx(className, { dragging })}
+      className={clsx(className, { dragging })}
       css={[
         css`
           border-radius: 5px;

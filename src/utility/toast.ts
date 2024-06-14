@@ -1,4 +1,4 @@
-import { APP_NAME_ROOT_CLASSNAME, OPERATION_FAIL_MSG, REQUEST_FAIL_MSG } from '$common'
+import { APP_CLS_ROOT, OPERATION_FAIL_MSG, REQUEST_FAIL_MSG } from '$common'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import { styled } from '$libs'
 
@@ -29,7 +29,7 @@ const singleLine = styled.generateClassName`
 
 export function toast(msg: string, duration = 2000, container = document.body) {
   const div = document.createElement('div')
-  div.classList.add(toastContainer, APP_NAME_ROOT_CLASSNAME)
+  div.classList.add(toastContainer, APP_CLS_ROOT)
   div.innerText = msg
 
   if (!msg.includes('\n') && !msg.includes('<br')) {

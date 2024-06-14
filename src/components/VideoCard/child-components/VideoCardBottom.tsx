@@ -123,8 +123,9 @@ export function VideoCardBottom({
     return (
       <div
         css={css`
+          margin-block: 15px 10px;
+          padding-inline: 5px;
           display: flex;
-          margin-top: 15px;
           column-gap: 5px;
         `}
       >

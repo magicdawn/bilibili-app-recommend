@@ -3,7 +3,6 @@ import { useRefresh } from '$components/RecGrid/useRefresh'
 import { useCurrentUsingTab } from '$components/RecHeader/tab'
 import { limitTwoLines, videoGrid, videoGridBiliFeed4 } from '$components/video-grid.module.scss'
 import { EApiType } from '$define/index.shared'
-import { cx } from '$libs'
 import { refreshForHome } from '$modules/rec-services'
 import { RecHeader } from '../RecHeader'
 import { VideoCard } from '../VideoCard'
@@ -37,7 +36,7 @@ export function SectionRecommend() {
     <section data-area='推荐'>
       <RecHeader refreshing={refreshing} onRefresh={refresh} />
       <div
-        className={cx(videoGrid, limitTwoLines, videoGridBiliFeed4)}
+        className={clsx(videoGrid, limitTwoLines, videoGridBiliFeed4)}
         style={{ marginBottom: 30 }}
       >
         {showSkeleton

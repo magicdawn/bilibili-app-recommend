@@ -144,6 +144,10 @@ export default defineConfig(({ command }) => ({
           from: '@emotion/react',
           imports: ['css'],
         },
+        {
+          from: 'clsx',
+          imports: ['clsx'],
+        },
       ],
     }),
 

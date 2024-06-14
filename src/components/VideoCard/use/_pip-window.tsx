@@ -1,4 +1,4 @@
-import { APP_NAME_ROOT_CLASSNAME } from '$common'
+import { APP_CLS_ROOT } from '$common'
 import { AntdApp } from '$components/AntdApp'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import { isEdge } from '$platform'
@@ -22,7 +22,7 @@ export function renderInPipWindow(newHref: string, pipWindow: Window) {
   })
 
   const container = document.createElement('div')
-  container.classList.add(APP_NAME_ROOT_CLASSNAME)
+  container.classList.add(APP_CLS_ROOT)
   pipWindow.document.body.appendChild(container)
 
   const root = createRoot(container)

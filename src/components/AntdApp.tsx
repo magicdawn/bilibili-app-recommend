@@ -1,4 +1,4 @@
-import { APP_NAME, APP_NAME_ROOT_CLASSNAME } from '$common'
+import { APP_CLS_ROOT, APP_NAME } from '$common'
 import { $headerWidth, useBackToTopRight } from '$header'
 import { useColors, useIsDarkMode } from '$modules/dark-mode'
 import { useSettingsSnapshot } from '$modules/settings'
@@ -114,7 +114,7 @@ function GlobalStyle() {
             }
           }
 
-          .${APP_NAME_ROOT_CLASSNAME} {
+          .${APP_CLS_ROOT} {
             font-family: ${USING_FONT_FAMILY};
             --back-top-right: 24px;
 
@@ -124,7 +124,7 @@ function GlobalStyle() {
           }
 
           @media (max-width: 1440px) {
-            .${APP_NAME_ROOT_CLASSNAME} {
+            .${APP_CLS_ROOT} {
               --back-top-right: 16px;
             }
           }
@@ -167,7 +167,7 @@ function GlobalStyle() {
             styleUseCustomGrid &&
               typeof backToTopRight === 'number' &&
               css`
-                .${APP_NAME_ROOT_CLASSNAME} {
+                .${APP_CLS_ROOT} {
                   --back-top-right: ${backToTopRight}px;
                 }
               `,

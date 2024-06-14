@@ -1,5 +1,4 @@
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
-import { cx } from '$libs'
 import { css as _css, css } from '@emotion/react'
 import { useHover } from 'ahooks'
 import { type ComponentProps, type ReactNode } from 'react'
@@ -93,7 +92,7 @@ export function VideoCardActionButton({
       {...divProps}
       ref={triggerRef}
       css={[S.button(visible)]}
-      className={cx('action-button', className)}
+      className={clsx('action-button', className)}
     >
       {icon}
       {tooltipEl}

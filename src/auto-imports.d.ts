@@ -6,6 +6,7 @@
 export {}
 declare global {
   const Fragment: typeof import('react')['Fragment']
+  const clsx: typeof import('clsx')['clsx']
   const createRef: typeof import('react')['createRef']
   const createRoot: typeof import('react-dom/client')['createRoot']
   const css: typeof import('@emotion/react')['css']

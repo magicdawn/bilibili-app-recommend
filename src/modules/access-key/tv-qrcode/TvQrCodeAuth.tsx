@@ -1,4 +1,4 @@
-import { APP_NAME_ROOT_CLASSNAME } from '$common'
+import { APP_CLS_ROOT } from '$common'
 import { AntdApp } from '$components/AntdApp'
 import { useIsDarkMode } from '$modules/dark-mode'
 import { BaseModal, BaseModalStyle, ModalClose } from '$ui-components/BaseModal'
@@ -129,7 +129,7 @@ export function TvQrCodeAuth() {
 
 const renderOnce = once(function render() {
   const container = document.createElement('div')
-  container.classList.add('modal-tv-qrcode-auth', APP_NAME_ROOT_CLASSNAME)
+  container.classList.add('modal-tv-qrcode-auth', APP_CLS_ROOT)
   document.body.appendChild(container)
   const r = createRoot(container)
   r.render(

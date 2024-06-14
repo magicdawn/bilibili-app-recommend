@@ -1,9 +1,9 @@
+import { APP_CLS_CARD, APP_CLS_CARD_ACTIVE } from '$common'
 import type { VideoCardEmitter } from '$components/VideoCard/index.shared'
 import { settings } from '$modules/settings'
 import { shouldDisableShortcut } from '$utility/dom'
 import type { KeyFilter, KeyType } from 'ahooks/lib/useKeyPress'
 import { videoGrid } from '../video-grid.module.scss'
-import { CardClassNames } from './index'
 
 interface IOptions {
   enabled: boolean
@@ -49,7 +49,7 @@ export function useShortcut({
 
     const scrollerRect = getScrollerRect()
     const rect = containerRef.current
-      .querySelector<HTMLDivElement>(`.${CardClassNames.card}.${CardClassNames.cardActive}`)
+      .querySelector<HTMLDivElement>(`.${APP_CLS_CARD}.${APP_CLS_CARD_ACTIVE}`)
       ?.getBoundingClientRect()
     if (!scrollerRect || !rect) return false
 
@@ -93,7 +93,7 @@ export function useShortcut({
     const next = () => (direction === 'down' ? cur.nextElementSibling : cur.previousElementSibling)
     while (next()) {
       cur = next()!
-      if (!cur.classList.contains(CardClassNames.card)) continue
+      if (!cur.classList.contains(APP_CLS_CARD)) continue
 
       direction === 'down' ? step++ : step--
       const left = cur.getBoundingClientRect().left
@@ -198,7 +198,7 @@ export function useShortcut({
     return 0
   }
 
-  const CARDS_SELECTOR = `.${CardClassNames.card}`
+  const CARDS_SELECTOR = `.${APP_CLS_CARD}`
   function getCards() {
     return [...(containerRef.current?.querySelectorAll<HTMLDivElement>(CARDS_SELECTOR) || [])]
   }

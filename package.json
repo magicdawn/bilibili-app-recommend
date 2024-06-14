@@ -89,7 +89,7 @@
     "antd": "^5.18.0",
     "axios": "0",
     "axios-userscript-adapter": "0",
-    "classnames": "^2.5.1",
+    "clsx": "^2.1.1",
     "dayjs": "1.11.11",
     "debug": "^4.3.5",
     "delay": "^6.0.0",

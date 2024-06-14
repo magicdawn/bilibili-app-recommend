@@ -1,7 +1,6 @@
 import { APP_NAME } from '$common'
 import { C, antdCustomCss } from '$common/emotion-css'
 import { CheckboxSettingItem } from '$components/ModalSettings/setting-item'
-import { cx } from '$libs'
 import { OpenExternalLinkIcon } from '$modules/icon'
 import { IconPark } from '$modules/icon/icon-park'
 import {
@@ -45,7 +44,7 @@ export function TabPaneAdvance() {
     <div className={styles.tabPane}>
       <div className={styles.settingsGroup}>
         <div className={styles.settingsGroupTitle}>设置项</div>
-        <div className={cx(styles.settingsGroupContent)}>
+        <div className={clsx(styles.settingsGroupContent)}>
           <div className={styles.row}>
             <Popconfirm
               title='确定'
@@ -62,7 +61,7 @@ export function TabPaneAdvance() {
         <div className={styles.settingsGroupTitle} style={{ marginTop: 15 }}>
           备份/恢复
         </div>
-        <div className={cx(styles.settingsGroupContent)}>
+        <div className={clsx(styles.settingsGroupContent)}>
           <div className={styles.row}>
             <CheckboxSettingItem
               configKey='backupSettingsToArticleDraft'

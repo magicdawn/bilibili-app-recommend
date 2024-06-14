@@ -38,7 +38,7 @@ export function usePreviewAnimation({
   tryFetchVideoData: () => Promise<void>
   videoDataBox: RefStateBox<VideoData | null>
   autoPreviewWhenHover: boolean
-  videoPreviewWrapperRef: RefObject<HTMLDivElement>
+  videoPreviewWrapperRef: RefObject<HTMLElement>
 }) {
   const hasVideoData = useMemoizedFn(() => {
     const data = videoDataBox.val?.videoshotData

@@ -81,7 +81,7 @@ import InfiniteScroll from 'react-infinite-scroller'
                     }
                   }}
                   {...props}
-                  className={cx(props.className, gridClassName)}
+                  className={clsx(props.className, gridClassName)}
                 />
               )
             }),
@@ -96,7 +96,7 @@ import InfiniteScroll from 'react-infinite-scroller'
             return (
               <VideoCard
                 key={item.uniqId}
-                className={cx(CardClassNames.card, { [CardClassNames.cardActive]: active })}
+                className={clsx(CardClassNames.card, { [CardClassNames.cardActive]: active })}
                 item={item}
                 active={active}
                 onRemoveCurrent={handleRemoveCard}

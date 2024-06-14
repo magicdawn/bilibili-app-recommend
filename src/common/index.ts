@@ -16,7 +16,14 @@ export const ThirdPartyKeyInfo = {
   appsec: 'c2ed53a74eeefe3cf99fbd01d8c9c375',
 }
 
-export const APP_NAME_ROOT_CLASSNAME = `${APP_NAME}-root`
+/**
+ * 固定的 classname, 有 app-name prefix.
+ * 可用于: customize css / useShortcut query card 等
+ */
+export const APP_CLS_ROOT = `${APP_NAME}-root`
+export const APP_CLS_GRID = `${APP_NAME}-video-grid`
+export const APP_CLS_CARD = `${APP_NAME}-video-card`
+export const APP_CLS_CARD_ACTIVE = `${APP_NAME}-video-card-active`
 
 export const REQUEST_FAIL_MSG = '请求失败, 请重试 !!!'
 export const OPERATION_FAIL_MSG = '操作失败, 请重试 !!!'

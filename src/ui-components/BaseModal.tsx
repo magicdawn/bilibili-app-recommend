@@ -1,4 +1,4 @@
-import { APP_NAME_ROOT_CLASSNAME } from '$common'
+import { APP_CLS_ROOT } from '$common'
 import { C } from '$common/emotion-css'
 import { useIsDarkMode } from '$modules/dark-mode'
 import type { TheCssType } from '$utility/type'
@@ -162,7 +162,7 @@ export function BaseModal({
   const containerId = useId()
   const container = useMemo(() => {
     const div = document.createElement('div')
-    div.classList.add(APP_NAME_ROOT_CLASSNAME)
+    div.classList.add(APP_CLS_ROOT)
     div.setAttribute('data-id', 'base-modal-' + containerId)
     document.body.appendChild(div)
     return div

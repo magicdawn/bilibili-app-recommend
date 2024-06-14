@@ -1,8 +1,9 @@
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import type { PvideoData } from '$define'
-import { cx } from '$libs'
 import { useMouse } from 'ahooks'
+import type { ComponentProps } from 'react'
 import { previewCardWrapper } from '../index.module.scss'
+import { borderRadiusValue } from '../index.shared'
 
 const S = {
   previewCardWrapper: css`
@@ -14,8 +15,8 @@ const S = {
     overflow: hidden;
 
     // 配合进度条, 底部不需要圆角
-    border-top-left-radius: inherit;
-    border-top-right-radius: inherit;
+    border-top-left-radius: ${borderRadiusValue};
+    border-top-right-radius: ${borderRadiusValue};
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
   `,
@@ -48,13 +49,14 @@ function fallbackWhenNan(...args: number[]) {
 }
 
 export function PreviewImage({
-  className,
   videoDuration,
   pvideo,
   mouseEnterRelativeX,
   previewProgress,
   previewT,
-}: IProps) {
+  className,
+  ...restProps
+}: IProps & ComponentProps<'div'>) {
   const ref = useRef<HTMLDivElement>(null)
   const cursorState = useMouse(ref)
   const [size, setSize] = useState(() => ({ width: 0, height: 0 }))
@@ -88,7 +90,12 @@ export function PreviewImage({
   }
 
   return (
-    <div ref={ref} className={cx(previewCardWrapper, className)} css={S.previewCardWrapper}>
+    <div
+      {...restProps}
+      ref={ref}
+      className={clsx(previewCardWrapper, className)}
+      css={S.previewCardWrapper}
+    >
       {!!(pvideo && size.width && size.height && progress) && <PreviewImageInner {...innerProps} />}
     </div>
   )

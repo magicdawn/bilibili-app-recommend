@@ -3,7 +3,6 @@ import { useSortedTabKeys } from '$components/RecHeader/tab'
 import { TabConfig, TabIcon } from '$components/RecHeader/tab-config'
 import { ETab, TabKeys } from '$components/RecHeader/tab-enum'
 import { EAppApiDevice } from '$define/index.shared'
-import { cx } from '$libs'
 import { useIsDarkMode } from '$modules/dark-mode'
 import { IconPark } from '$modules/icon/icon-park'
 import { initialSettings, updateSettings, useSettingsSnapshot } from '$modules/settings'
@@ -67,7 +66,7 @@ export function TabPaneVideoSourceTabConfig() {
         <div className={styles.settingsGroup}>
           <div className={styles.settingsGroupTitle}>更多设置</div>
           <div
-            className={cx(styles.settingsGroupContent)}
+            className={clsx(styles.settingsGroupContent)}
             css={css`
               display: flex;
               flex-direction: column;

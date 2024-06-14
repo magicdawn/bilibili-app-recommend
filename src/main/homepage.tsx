@@ -1,4 +1,4 @@
-import { APP_NAME, APP_NAME_ROOT_CLASSNAME } from '$common'
+import { APP_CLS_ROOT, APP_NAME } from '$common'
 import { AntdApp } from '$components/AntdApp'
 import { tryAction, tryToRemove } from '$utility/dom'
 import { FloatButton } from 'antd'
@@ -76,7 +76,7 @@ async function initHomepageSection() {
 
   // attach to dom
   const recommendContainer = document.createElement('section')
-  recommendContainer.classList.add(APP_NAME_ROOT_CLASSNAME)
+  recommendContainer.classList.add(APP_CLS_ROOT)
   insert(recommendContainer)
 
   // react render
@@ -109,7 +109,7 @@ async function initHomepagePureRecommend() {
   insertFn(biliLayout)
 
   const reactContainer = document.createElement('section')
-  reactContainer.classList.add(APP_NAME_ROOT_CLASSNAME)
+  reactContainer.classList.add(APP_CLS_ROOT)
   biliLayout.appendChild(reactContainer)
 
   // react render

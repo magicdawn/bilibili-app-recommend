@@ -4,7 +4,6 @@ import { CheckboxSettingItem } from '$components/ModalSettings/setting-item'
 import { TabIcon } from '$components/RecHeader/tab-config'
 import { ETab } from '$components/RecHeader/tab-enum'
 import { VideoLinkOpenMode, VideoLinkOpenModeConfig } from '$components/VideoCard/index.shared'
-import { cx } from '$libs'
 import { IconPark } from '$modules/icon/icon-park'
 import { updateSettings, useSettingsSnapshot } from '$modules/settings'
 import { HelpInfo } from '$ui-components/HelpInfo'
@@ -63,7 +62,7 @@ export function TabPaneBasic() {
             用于 获取推荐 / 提交不喜欢等操作
           </HelpInfo>
         </div>
-        <div className={cx(styles.settingsGroupContent)}>
+        <div className={clsx(styles.settingsGroupContent)}>
           <div className={styles.row} style={{ marginTop: 5 }}>
             <AccessKeyManage />
           </div>
@@ -72,7 +71,7 @@ export function TabPaneBasic() {
 
       <div className={styles.settingsGroup}>
         <div className={styles.settingsGroupTitle}>开关</div>
-        <div className={cx(styles.settingsGroupContent, styles.row)}>
+        <div className={clsx(styles.settingsGroupContent, styles.row)}>
           <CheckboxSettingItem
             configKey='pureRecommend'
             label='全屏模式'
@@ -127,7 +126,7 @@ export function TabPaneBasic() {
 
       <div className={styles.settingsGroup}>
         <div className={styles.settingsGroupTitle}>视频链接</div>
-        <div className={cx(styles.settingsGroupContent, styles.row)}>
+        <div className={clsx(styles.settingsGroupContent, styles.row)}>
           默认打开模式
           <HelpInfo
             tooltipProps={{ color: 'rgba(0, 0, 0, 0.85)' }} // 默认使用 colorPrimary, 链接可能看不清
@@ -182,7 +181,7 @@ export function TabPaneBasic() {
 
       <div className={styles.settingsGroup}>
         <div className={styles.settingsGroupTitle}>预览</div>
-        <div className={cx(styles.settingsGroupContent, styles.row)}>
+        <div className={clsx(styles.settingsGroupContent, styles.row)}>
           <CheckboxSettingItem
             configKey='autoPreviewWhenKeyboardSelect'
             label='键盘选中后自动开始预览'
@@ -239,7 +238,7 @@ export function TabPaneBasic() {
             `}
           />
         </div>
-        <div className={cx(styles.settingsGroupContent)}>
+        <div className={clsx(styles.settingsGroupContent)}>
           <div className={styles.row}>
             <Space size='small'>
               <Button href='https://github.com/magicdawn/bilibili-app-recommend' target='_blank'>

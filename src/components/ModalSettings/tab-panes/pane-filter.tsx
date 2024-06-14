@@ -1,5 +1,4 @@
 import { CheckboxSettingItem, SwitchSettingItem } from '$components/ModalSettings/setting-item'
-import { cx } from '$libs'
 import { updateSettings, useSettingsSnapshot } from '$modules/settings'
 import { HelpInfo } from '$ui-components/HelpInfo'
 import { InputNumber, Tag } from 'antd'
@@ -41,7 +40,7 @@ export function TabPaneFilter() {
           />
         </div>
 
-        <div className={cx(styles.settingsGroupContent)}>
+        <div className={clsx(styles.settingsGroupContent)}>
           <div
             css={css`
               display: grid;

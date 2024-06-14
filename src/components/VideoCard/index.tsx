@@ -1,4 +1,4 @@
-import { APP_KEY_PREFIX, APP_NAME } from '$common'
+import { APP_CLS_CARD, APP_CLS_GRID, APP_CLS_ROOT, APP_KEY_PREFIX, APP_NAME } from '$common'
 import { C } from '$common/emotion-css'
 import { useMittOn } from '$common/hooks/useMitt'
 import { useRefStateBox } from '$common/hooks/useRefState'
@@ -9,7 +9,6 @@ import { useCurrentUsingTab, videoSourceTabState } from '$components/RecHeader/t
 import { ETab } from '$components/RecHeader/tab-enum'
 import { isRanking, type AppRecItemExtend, type RecItemType } from '$define'
 import { EApiType } from '$define/index.shared'
-import { cx } from '$libs'
 import { DislikeIcon, OpenExternalLinkIcon } from '$modules/icon'
 import { IconPark } from '$modules/icon/icon-park'
 import { dynamicFeedFilterSelectUp } from '$modules/rec-services/dynamic-feed'
@@ -21,11 +20,13 @@ import { UserfollowService } from '$modules/user/relations/follow'
 import { isFirefox } from '$platform'
 import { Picture } from '$ui-components/Picture'
 import { AntdMessage, toast } from '$utility'
+import type { TheCssType } from '$utility/type'
 import { useLockFn } from 'ahooks'
 import type { MenuProps } from 'antd'
 import { Dropdown } from 'antd'
 import delay from 'delay'
 import { tryit } from 'radash'
+import type { CSSProperties } from 'react'
 import type { VideoData } from './card.service'
 import { fetchVideoData, isVideoshotDataValid, watchLaterAdd } from './card.service'
 import { PreviewImage } from './child-components/PreviewImage'
@@ -34,7 +35,7 @@ import { VideoCardBottom } from './child-components/VideoCardBottom'
 import { BlacklistCard, DislikedCard, SkeletonCard } from './child-components/other-type-cards'
 import styles from './index.module.scss'
 import type { VideoCardEmitter } from './index.shared'
-import { borderRadiusStyle, defaultEmitter } from './index.shared'
+import { borderRadiusValue, defaultEmitter } from './index.shared'
 import { getFollowedStatus } from './process/filter'
 import type { IVideoCardData } from './process/normalize'
 import { normalizeCardData } from './process/normalize'
@@ -86,7 +87,8 @@ export const VideoCard = memo(function VideoCard({
   return (
     <div
       style={style}
-      className={cx('bili-video-card', styles.biliVideoCard, className)}
+      className={clsx('bili-video-card', styles.biliVideoCard, className)}
+      data-bvid={cardData?.bvid}
       {...restProps}
     >
       {loading ? (
@@ -137,7 +139,7 @@ const VideoCardInner = memo(function VideoCardInner({
   onRefresh,
   emitter = defaultEmitter,
 }: VideoCardInnerProps) {
-  const { autoPreviewWhenHover, accessKey } = useSettingsSnapshot()
+  const { autoPreviewWhenHover, accessKey, styleNewCardStyle } = useSettingsSnapshot()
   const authed = Boolean(accessKey)
 
   const {
@@ -178,7 +180,22 @@ const VideoCardInner = memo(function VideoCardInner({
   /**
    * 预览 hover state
    */
-  const videoPreviewWrapperRef = useRef<HTMLDivElement>(null)
+  const videoPreviewWrapperRef = useRef<HTMLElement | null>(null)
+
+  function createRefCallback(role: 'card' | 'cover') {
+    return function refCallback(el: HTMLElement | null) {
+      if (styleNewCardStyle) {
+        if (role === 'card') {
+          videoPreviewWrapperRef.current = el
+        }
+      } else {
+        if (role === 'cover') {
+          videoPreviewWrapperRef.current = el
+        }
+      }
+    }
+  }
+
   const {
     onStartPreviewAnimation,
     onHotkeyPreviewAnimation,
@@ -557,13 +574,32 @@ const VideoCardInner = memo(function VideoCardInner({
     updateFavFolderNames()
   })
 
+  // 一堆 selector 增加权重
+  const prefixCls = `.${APP_CLS_ROOT} .${APP_CLS_GRID} .${APP_CLS_CARD}`
+  const bottomReset =
+    styleNewCardStyle &&
+    css`
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    `
+  const coverRoundStyle: TheCssType = [
+    css`
+      ${prefixCls} & {
+        overflow: hidden;
+        border-radius: ${borderRadiusValue};
+        ${bottomReset}
+      }
+    `,
+  ]
+
   return (
     <div
-      data-bvid={bvid || ''}
+      ref={createRefCallback('card')}
       className='bili-video-card__wrap __scale-wrap'
       css={css`
         background-color: unset;
         position: static;
+        height: 100%;
       `}
     >
       <Dropdown
@@ -572,8 +608,13 @@ const VideoCardInner = memo(function VideoCardInner({
         onOpenChange={onContextMenuOpenChange}
       >
         <a
+          ref={createRefCallback('cover')}
           href={href}
           target='_blank'
+          css={css`
+            position: relative;
+            overflow: hidden;
+          `}
           onClick={handleVideoLinkClick}
           onContextMenu={(e) => {
             // try to solve https://github.com/magicdawn/bilibili-app-recommend/issues/92
@@ -582,85 +623,74 @@ const VideoCardInner = memo(function VideoCardInner({
           }}
         >
           <div
-            className='bili-video-card__image __scale-player-wrap'
-            ref={videoPreviewWrapperRef}
-            style={{ ...borderRadiusStyle, aspectRatio: '16 / 9' }}
+            data-as='overflow-boundary'
+            className='bili-video-card__image'
+            style={{ aspectRatio: '16 / 9' }}
+            css={coverRoundStyle}
           >
             {/* __image--wrap 上有 padding-top: 56.25% = 9/16, 用于保持高度, 在 firefox 中有明显的文字位移 */}
             {/* picture: absolute, top:0, left: 0  */}
             {/* 故加上 aspect-ratio: 16/9 */}
-
-            <div className='bili-video-card__image--wrap' style={{ borderRadius: 'inherit' }}>
+            <div className='bili-video-card__image--wrap'>
               <Picture
                 className='v-img bili-video-card__cover'
-                style={{ borderRadius: 'inherit', overflow: 'hidden' }}
                 src={`${cover}@672w_378h_1c_!web-home-common-cover`}
                 imgProps={{
                   // in firefox, alt text is visible during loading
                   alt: isFirefox ? '' : title,
                 }}
               />
-
-              {/* <div className='v-inline-player'></div> */}
-
-              {/* preview */}
-              {/* follow-mouse or manual-control */}
-              {!!(
-                (isHoveringAfterDelay || typeof previewProgress === 'number') &&
-                videoDataBox.state?.videoshotData?.image?.length &&
-                duration
-              ) && (
-                <PreviewImage
-                  videoDuration={duration}
-                  pvideo={videoDataBox.state?.videoshotData}
-                  mouseEnterRelativeX={mouseEnterRelativeX}
-                  previewProgress={previewProgress}
-                  previewT={previewT}
-                />
-              )}
-
-              {dislikeButtonEl && (
-                <div className='left-actions' css={VideoCardActionStyle.topContainer('left')}>
-                  {/* 我不想看 */}
-                  {dislikeButtonEl}
-                </div>
-              )}
-
-              {(watchlaterButtonEl || openInPopupButtonEl) && (
-                <div className='right-actions' css={VideoCardActionStyle.topContainer('right')}>
-                  {/* 稍后再看 */}
-                  {watchlaterButtonEl}
-                  {/* 小窗打开 */}
-                  {openInPopupButtonEl}
-                </div>
-              )}
-
-              {/* 充电专属 */}
-              {hasChargeOnlyTag && <ChargeOnlyTag />}
-
-              {/* 排行榜 */}
-              {hasRankingNo && <RankingNumMark item={item} />}
-            </div>
-
-            <div
-              className='bili-video-card__mask'
-              style={{ borderRadius: 'inherit', overflow: 'hidden' }}
-            >
-              <div className='bili-video-card__stats'>
-                <div className='bili-video-card__stats--left'>
-                  {statItems.map(({ field, value }) => (
-                    <StatItemDisplay key={field} field={field} value={value} />
-                  ))}
-                </div>
-
-                {/* 时长 */}
-                {/* 番剧没有 duration 字段 */}
-                <span className='bili-video-card__stats__duration'>
-                  {isNormalVideo && durationStr}
-                </span>
-              </div>
             </div>
           </div>
+
+          <div className='bili-video-card__stats' css={coverRoundStyle}>
+            <div className='bili-video-card__stats--left'>
+              {statItems.map(({ field, value }) => (
+                <StatItemDisplay key={field} field={field} value={value} />
+              ))}
+            </div>
+
+            {/* 时长 */}
+            {/* 番剧没有 duration 字段 */}
+            <span className='bili-video-card__stats__duration'>{isNormalVideo && durationStr}</span>
+          </div>
+
+          {/* preview: follow-mouse or manual-control */}
+          {!!(
+            (isHoveringAfterDelay || typeof previewProgress === 'number') &&
+            videoDataBox.state?.videoshotData?.image?.length &&
+            duration
+          ) && (
+            <PreviewImage
+              videoDuration={duration}
+              pvideo={videoDataBox.state?.videoshotData}
+              mouseEnterRelativeX={mouseEnterRelativeX}
+              previewProgress={previewProgress}
+              previewT={previewT}
+            />
+          )}
+
+          {dislikeButtonEl && (
+            <div className='left-actions' css={VideoCardActionStyle.topContainer('left')}>
+              {/* 我不想看 */}
+              {dislikeButtonEl}
+            </div>
+          )}
+
+          {(watchlaterButtonEl || openInPopupButtonEl) && (
+            <div className='right-actions' css={VideoCardActionStyle.topContainer('right')}>
+              {/* 稍后再看 */}
+              {watchlaterButtonEl}
+              {/* 小窗打开 */}
+              {openInPopupButtonEl}
+            </div>
+          )}
+
+          {/* 充电专属 */}
+          {hasChargeOnlyTag && <ChargeOnlyTag />}
+
+          {/* 排行榜 */}
+          {hasRankingNo && <RankingNumMark item={item} />}
         </a>
       </Dropdown>
 

@@ -1,7 +1,6 @@
-import { APP_NAME_ROOT_CLASSNAME, OPERATION_FAIL_MSG } from '$common'
+import { APP_CLS_ROOT, OPERATION_FAIL_MSG } from '$common'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import type { AppRecItem, AppRecItemExtend } from '$define'
-import { cx } from '$libs'
 import { DislikeIcon } from '$modules/icon'
 import { BaseModal, BaseModalStyle, ModalClose } from '$ui-components/BaseModal'
 import { AntdMessage } from '$utility'
@@ -168,7 +167,7 @@ function ModalDislike({ show, onHide, item }: IProps) {
 
             return (
               <button
-                className={cx('reason', { active })}
+                className={clsx('reason', { active })}
                 css={[S.reason, active && S.reasonActive]}
                 key={reason.id}
                 data-id={reason.id}
@@ -294,7 +293,7 @@ let _root: Root
 function getRoot() {
   _root ||= (() => {
     const container = document.createElement('div')
-    container.classList.add('show-dislike-container', APP_NAME_ROOT_CLASSNAME)
+    container.classList.add('show-dislike-container', APP_CLS_ROOT)
     document.body.appendChild(container)
     return createRoot(container)
   })()
