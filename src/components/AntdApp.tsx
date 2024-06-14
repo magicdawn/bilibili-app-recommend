@@ -10,6 +10,7 @@ import { ConfigProvider, theme } from 'antd'
 import zhCN from 'antd/locale/zh_CN'
 import type { ReactNode } from 'react'
 import {
+  borderColorIdentifier,
   colorPrimaryIdentifier,
   colorPrimaryValue,
   useColorPrimaryHex,
@@ -90,6 +91,7 @@ export function AntdApp({
 function GlobalStyle() {
   const colorPrimary = useColorPrimaryHex()
   const { pureRecommend, styleUseCustomGrid, styleUseWhiteBackground } = useSettingsSnapshot()
+  const dark = useIsDarkMode()
   const { c, bg } = useColors()
   const backToTopRight = useBackToTopRight()
 
@@ -105,13 +107,9 @@ function GlobalStyle() {
         styles={_css`
           :root {
             ${colorPrimaryIdentifier}: ${colorPrimary};
+            ${borderColorIdentifier}: ${dark ? '#333' : '#eee'};
             --${APP_NAME}-color: ${c};
             --${APP_NAME}-bg-color: ${bg};
-
-            --${APP_NAME}-border-color: #eee;
-            body.dark {
-              --${APP_NAME}-border-color: #333;
-            }
           }
 
           .${APP_CLS_ROOT} {

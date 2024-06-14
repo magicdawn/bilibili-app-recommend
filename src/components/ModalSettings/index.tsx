@@ -1,6 +1,6 @@
 import { APP_NAME, __PROD__ } from '$common'
 import { C } from '$common/emotion-css'
-import { CheckboxSettingItem } from '$components/ModalSettings/setting-item'
+import { CheckboxSettingItem, SwitchSettingItem } from '$components/ModalSettings/setting-item'
 import { ConfigIcon } from '$modules/icon'
 import type { BooleanSettingsKey } from '$modules/settings'
 import { settings } from '$modules/settings'
@@ -50,6 +50,7 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
   useHotkeyForConfig(['shift.p'], 'autoPreviewWhenKeyboardSelect', '键盘选中后自动开始预览')
   useHotkeyForConfig(['shift.m'], 'autoPreviewWhenHover', '鼠标悬浮后自动开始预览')
   useHotkeyForConfig(['shift.c'], 'useNarrowMode', '居中模式')
+  useHotkeyForConfig(['shift.b'], 'styleUseCardBorder', '卡片边框')
 
   const { tab } = useSnapshot(modalSettingsStore)
 
@@ -134,7 +135,7 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                       <div className={styles.row} style={{ marginTop: 5 }}>
                         <CheckboxSettingItem
                           configKey='styleUseStandardVideoSourceTab'
-                          label='推荐源切换 Tab 按钮: 使用标准高度'
+                          label='推荐 Tab: 按钮使用标准高度'
                           tooltip='默认紧凑高度'
                         />
                       </div>
@@ -171,6 +172,20 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                         <CheckboxSettingItem
                           configKey='styleUseWhiteBackground'
                           label='全屏模式: styleUseWhiteBackground'
+                        />
+                      </div>
+                      <div className={styles.row} style={{ marginTop: 5 }}>
+                        <CheckboxSettingItem
+                          configKey='styleUseCardBorder'
+                          label='视频卡片: 使用边框'
+                          tooltip=<>使用边框后: 整个卡片区域可点击 / 可触发预览 / 可使用右键菜单</>
+                        />
+
+                        <SwitchSettingItem
+                          size='small'
+                          configKey={'styleUseCardBorderOnlyOnHover'}
+                          checkedChildren='只在悬浮展示'
+                          unCheckedChildren='总是展示'
                         />
                       </div>
                     </div>

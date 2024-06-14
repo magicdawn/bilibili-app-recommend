@@ -5,7 +5,7 @@
 import { APP_CLS_CARD, APP_CLS_CARD_ACTIVE, APP_CLS_GRID, baseDebug } from '$common'
 import { useRefState } from '$common/hooks/useRefState'
 import { useModalDislikeVisible } from '$components/ModalDislike'
-import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
+import { borderColorValue, colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import { useCurrentUsingTab } from '$components/RecHeader/tab'
 import { EHotSubTab, ETab } from '$components/RecHeader/tab-enum'
 import { VideoCard } from '$components/VideoCard'
@@ -416,7 +416,8 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
     </div>
   )
 
-  const { useNarrowMode, styleUseCustomGrid } = useSettingsSnapshot()
+  const { useNarrowMode, styleUseCustomGrid, styleUseCardBorder, styleUseCardBorderOnlyOnHover } =
+    useSettingsSnapshot()
   const gridClassName = clsx(
     APP_CLS_GRID, // for customize css
     videoGrid,
@@ -499,7 +500,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
         <VideoCard
           key={item.uniqId}
           className={clsx(APP_CLS_CARD, { [APP_CLS_CARD_ACTIVE]: active })}
-          css={getUsingCss(active)}
+          css={getUsingCss(active, styleUseCardBorder, styleUseCardBorderOnlyOnHover)}
           item={item}
           active={active}
           onRemoveCurrent={handleRemoveCard}
@@ -522,10 +523,24 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
   )
 })
 
-function getUsingCss(active: boolean): TheCssType {
+function getUsingCss(
+  active: boolean,
+  useBorder: boolean,
+  useBorderOnlyOnHover: boolean,
+): TheCssType {
+  const borderAndShadow = css`
+    border-color: ${colorPrimaryValue};
+    /* overflow: hidden; */
+    /* try here https://box-shadow.dev/ */
+    box-shadow: 0px 0px 9px 4px ${colorPrimaryValue};
+  `
+
   return [
     css`
       border: 1px solid transparent;
+      transition:
+        border-color 0.3s ease-in-out,
+        box-shadow 0.3s ease-in-out;
 
       /* global class under .card */
       .bili-video-card__info {
@@ -535,30 +550,30 @@ function getUsingCss(active: boolean): TheCssType {
       }
     `,
 
-    css`
-      border-radius: ${borderRadiusValue};
-      cursor: pointer;
-
-      border-color: #eee;
-      &:hover {
-        border-color: ${colorPrimaryValue};
-      }
-
-      body.dark & {
-        border-color: #333;
-        &:hover {
-          border-color: ${colorPrimaryValue};
-        }
-      }
-    `,
+    useBorder &&
+      css`
+        cursor: pointer;
+        border-radius: ${borderRadiusValue};
+      `,
+    useBorder &&
+      (useBorderOnlyOnHover
+        ? css`
+            &:hover {
+              /* 可选 borderColorValue(白色) colorPrimaryValue(主题色) */
+              ${borderAndShadow}
+            }
+          `
+        : css`
+            border-color: ${borderColorValue};
+            &:hover {
+              ${borderAndShadow}
+            }
+          `),
 
     active &&
       css`
-        border-color: ${colorPrimaryValue};
         border-radius: ${borderRadiusValue};
-        overflow: hidden;
-        /* try here https://box-shadow.dev/ */
-        box-shadow: 0px 0px 9px 4px ${colorPrimaryValue};
+        ${borderAndShadow}
       `,
   ]
 }

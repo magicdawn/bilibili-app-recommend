@@ -141,6 +141,11 @@ export const initialSettings = {
   // bg1
   styleUseWhiteBackground: true,
 
+  // 使用卡片模式
+  // inspired by https://ai.taobao.com
+  styleUseCardBorder: true,
+  styleUseCardBorderOnlyOnHover: false,
+
   /**
    * 颜色主题
    */
