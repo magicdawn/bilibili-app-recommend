@@ -559,7 +559,7 @@ function getUsingCss(
       (useBorderOnlyOnHover
         ? css`
             &:hover {
-              /* 可选 borderColorValue(白色) colorPrimaryValue(主题色) */
+              /* 可选 borderColorValue(白色) colorPrimaryValue(主题色) borderAndShadow(主题色+box-shadow) */
               ${borderAndShadow}
             }
           `
