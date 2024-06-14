@@ -130,7 +130,7 @@ export const initialSettings = {
    */
 
   // 新卡片样式
-  styleNewCardStyle: true,
+  // styleNewCardStyle: true,
 
   // video-source-tab 高度, 默认 compact
   styleUseStandardVideoSourceTab: false,
