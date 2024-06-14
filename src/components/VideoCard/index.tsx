@@ -139,7 +139,7 @@ const VideoCardInner = memo(function VideoCardInner({
   onRefresh,
   emitter = defaultEmitter,
 }: VideoCardInnerProps) {
-  const { autoPreviewWhenHover, accessKey, styleNewCardStyle } = useSettingsSnapshot()
+  const { autoPreviewWhenHover, accessKey } = useSettingsSnapshot()
   const authed = Boolean(accessKey)
 
   const {
@@ -181,20 +181,6 @@ const VideoCardInner = memo(function VideoCardInner({
    * 预览 hover state
    */
   const videoPreviewWrapperRef = useRef<HTMLElement | null>(null)
-
-  function createRefCallback(role: 'card' | 'cover') {
-    return function refCallback(el: HTMLElement | null) {
-      if (styleNewCardStyle) {
-        if (role === 'card') {
-          videoPreviewWrapperRef.current = el
-        }
-      } else {
-        if (role === 'cover') {
-          videoPreviewWrapperRef.current = el
-        }
-      }
-    }
-  }
 
   const {
     onStartPreviewAnimation,
@@ -576,25 +562,20 @@ const VideoCardInner = memo(function VideoCardInner({
 
   // 一堆 selector 增加权重
   const prefixCls = `.${APP_CLS_ROOT} .${APP_CLS_GRID} .${APP_CLS_CARD}`
-  const bottomReset =
-    styleNewCardStyle &&
-    css`
-      border-bottom-left-radius: 0;
-      border-bottom-right-radius: 0;
-    `
   const coverRoundStyle: TheCssType = [
     css`
       ${prefixCls} & {
         overflow: hidden;
         border-radius: ${borderRadiusValue};
-        ${bottomReset}
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
       }
     `,
   ]
 
   return (
     <div
-      ref={createRefCallback('card')}
+      ref={(el) => (videoPreviewWrapperRef.current = el)}
       className='bili-video-card__wrap __scale-wrap'
       css={css`
         background-color: unset;
@@ -608,7 +589,6 @@ const VideoCardInner = memo(function VideoCardInner({
         onOpenChange={onContextMenuOpenChange}
       >
         <a
-          ref={createRefCallback('cover')}
           href={href}
           target='_blank'
           css={css`

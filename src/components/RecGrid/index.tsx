@@ -416,11 +416,11 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
     </div>
   )
 
-  const { useNarrowMode, styleUseCustomGrid, styleNewCardStyle } = useSettingsSnapshot()
+  const { useNarrowMode, styleUseCustomGrid } = useSettingsSnapshot()
   const gridClassName = clsx(
     APP_CLS_GRID, // for customize css
     videoGrid,
-    { [newCardStyle]: styleNewCardStyle },
+    newCardStyle,
     styleUseCustomGrid ? videoGridCustom : videoGridBiliFeed4,
     useNarrowMode && narrowMode, // 居中
     className,
@@ -499,7 +499,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
         <VideoCard
           key={item.uniqId}
           className={clsx(APP_CLS_CARD, { [APP_CLS_CARD_ACTIVE]: active })}
-          css={getUsingCss(active, styleNewCardStyle)}
+          css={getUsingCss(active)}
           item={item}
           active={active}
           onRemoveCurrent={handleRemoveCard}
@@ -522,7 +522,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
   )
 })
 
-function getUsingCss(active: boolean, styleNewCardStyle: boolean): TheCssType {
+function getUsingCss(active: boolean): TheCssType {
   return [
     css`
       border: 1px solid transparent;
@@ -535,23 +535,22 @@ function getUsingCss(active: boolean, styleNewCardStyle: boolean): TheCssType {
       }
     `,
 
-    styleNewCardStyle &&
-      css`
-        border-radius: ${borderRadiusValue};
-        cursor: pointer;
+    css`
+      border-radius: ${borderRadiusValue};
+      cursor: pointer;
 
-        border-color: #eee;
+      border-color: #eee;
+      &:hover {
+        border-color: ${colorPrimaryValue};
+      }
+
+      body.dark & {
+        border-color: #333;
         &:hover {
           border-color: ${colorPrimaryValue};
         }
-
-        body.dark & {
-          border-color: #333;
-          &:hover {
-            border-color: ${colorPrimaryValue};
-          }
-        }
-      `,
+      }
+    `,
 
     active &&
       css`

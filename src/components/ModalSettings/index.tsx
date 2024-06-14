@@ -6,7 +6,7 @@ import type { BooleanSettingsKey } from '$modules/settings'
 import { settings } from '$modules/settings'
 import { BaseModal, BaseModalStyle, ModalClose } from '$ui-components/BaseModal'
 import { AntdMessage, shouldDisableShortcut } from '$utility'
-import { Tabs, Tag } from 'antd'
+import { Tabs } from 'antd'
 import styles from './index.module.scss'
 import { TabPaneAdvance } from './tab-panes/pane-advance'
 import { TabPaneBasic } from './tab-panes/pane-basic'
@@ -50,7 +50,6 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
   useHotkeyForConfig(['shift.p'], 'autoPreviewWhenKeyboardSelect', '键盘选中后自动开始预览')
   useHotkeyForConfig(['shift.m'], 'autoPreviewWhenHover', '鼠标悬浮后自动开始预览')
   useHotkeyForConfig(['shift.c'], 'useNarrowMode', '居中模式')
-  useHotkeyForConfig(['shift.y'], 'styleNewCardStyle', '新卡片样式')
 
   const { tab } = useSnapshot(modalSettingsStore)
 
@@ -132,21 +131,6 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                       样式自定义
                     </div>
                     <div className={clsx(styles.settingsGroupContent)}>
-                      <div className={styles.row}>
-                        <CheckboxSettingItem
-                          configKey='styleNewCardStyle'
-                          label='新卡片样式'
-                          tooltip={
-                            <>
-                              视频卡片: 显示头像, 更大的圆角.
-                              <br />
-                              切换设置快捷键: <Tag color='green'>shift+y</Tag>
-                              <br />
-                              旧的只为兼容, 逐渐不维护了...
-                            </>
-                          }
-                        />
-                      </div>
                       <div className={styles.row} style={{ marginTop: 5 }}>
                         <CheckboxSettingItem
                           configKey='styleUseStandardVideoSourceTab'
