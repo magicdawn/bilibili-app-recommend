@@ -9,7 +9,6 @@ import { isLive, isRanking, type RecItemType } from '$define'
 import { EApiType } from '$define/index.shared'
 import { LiveIcon } from '$modules/icon'
 import { ELiveStatus } from '$modules/rec-services/live/live-enum'
-import { useSettingsSnapshot } from '$modules/settings'
 import { getAvatarSrc } from '$utility/image'
 import type { TheCssType } from '$utility/type'
 import { Avatar } from 'antd'
@@ -47,7 +46,7 @@ export function VideoCardBottom({
   cardData: IVideoCardData
   handleVideoLinkClick?: MouseEventHandler
 }) {
-  const { styleNewCardStyle } = useSettingsSnapshot()
+  const styleNewCardStyle = true
 
   const {
     // video
@@ -123,7 +122,7 @@ export function VideoCardBottom({
     return (
       <div
         css={css`
-          margin-block: 15px 10px;
+          margin-block: 15px 12px;
           padding-inline: 5px;
           display: flex;
           column-gap: 5px;

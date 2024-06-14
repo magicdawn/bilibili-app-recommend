@@ -129,9 +129,6 @@ export const initialSettings = {
    * 外观
    */
 
-  // 新卡片样式
-  styleNewCardStyle: true,
-
   // video-source-tab 高度, 默认 compact
   styleUseStandardVideoSourceTab: false,
 
@@ -143,6 +140,11 @@ export const initialSettings = {
 
   // bg1
   styleUseWhiteBackground: true,
+
+  // 使用卡片模式
+  // inspired by https://ai.taobao.com
+  styleUseCardBorder: true,
+  styleUseCardBorderOnlyOnHover: false,
 
   /**
    * 颜色主题

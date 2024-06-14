@@ -1,12 +1,12 @@
 import { APP_NAME, __PROD__ } from '$common'
 import { C } from '$common/emotion-css'
-import { CheckboxSettingItem } from '$components/ModalSettings/setting-item'
+import { CheckboxSettingItem, SwitchSettingItem } from '$components/ModalSettings/setting-item'
 import { ConfigIcon } from '$modules/icon'
 import type { BooleanSettingsKey } from '$modules/settings'
 import { settings } from '$modules/settings'
 import { BaseModal, BaseModalStyle, ModalClose } from '$ui-components/BaseModal'
 import { AntdMessage, shouldDisableShortcut } from '$utility'
-import { Tabs, Tag } from 'antd'
+import { Tabs } from 'antd'
 import styles from './index.module.scss'
 import { TabPaneAdvance } from './tab-panes/pane-advance'
 import { TabPaneBasic } from './tab-panes/pane-basic'
@@ -50,7 +50,7 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
   useHotkeyForConfig(['shift.p'], 'autoPreviewWhenKeyboardSelect', '键盘选中后自动开始预览')
   useHotkeyForConfig(['shift.m'], 'autoPreviewWhenHover', '鼠标悬浮后自动开始预览')
   useHotkeyForConfig(['shift.c'], 'useNarrowMode', '居中模式')
-  useHotkeyForConfig(['shift.y'], 'styleNewCardStyle', '新卡片样式')
+  useHotkeyForConfig(['shift.b'], 'styleUseCardBorder', '卡片边框')
 
   const { tab } = useSnapshot(modalSettingsStore)
 
@@ -132,25 +132,10 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                       样式自定义
                     </div>
                     <div className={clsx(styles.settingsGroupContent)}>
-                      <div className={styles.row}>
-                        <CheckboxSettingItem
-                          configKey='styleNewCardStyle'
-                          label='新卡片样式'
-                          tooltip={
-                            <>
-                              视频卡片: 显示头像, 更大的圆角.
-                              <br />
-                              切换设置快捷键: <Tag color='green'>shift+y</Tag>
-                              <br />
-                              旧的只为兼容, 逐渐不维护了...
-                            </>
-                          }
-                        />
-                      </div>
                       <div className={styles.row} style={{ marginTop: 5 }}>
                         <CheckboxSettingItem
                           configKey='styleUseStandardVideoSourceTab'
-                          label='推荐源切换 Tab 按钮: 使用标准高度'
+                          label='推荐 Tab: 按钮使用标准高度'
                           tooltip='默认紧凑高度'
                         />
                       </div>
@@ -187,6 +172,20 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                         <CheckboxSettingItem
                           configKey='styleUseWhiteBackground'
                           label='全屏模式: styleUseWhiteBackground'
+                        />
+                      </div>
+                      <div className={styles.row} style={{ marginTop: 5 }}>
+                        <CheckboxSettingItem
+                          configKey='styleUseCardBorder'
+                          label='视频卡片: 使用边框'
+                          tooltip=<>使用边框后: 整个卡片区域可点击 / 可触发预览 / 可使用右键菜单</>
+                        />
+
+                        <SwitchSettingItem
+                          size='small'
+                          configKey={'styleUseCardBorderOnlyOnHover'}
+                          checkedChildren='只在悬浮展示'
+                          unCheckedChildren='总是展示'
                         />
                       </div>
                     </div>

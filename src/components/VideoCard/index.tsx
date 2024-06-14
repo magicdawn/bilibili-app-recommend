@@ -26,7 +26,7 @@ import type { MenuProps } from 'antd'
 import { Dropdown } from 'antd'
 import delay from 'delay'
 import { tryit } from 'radash'
-import type { CSSProperties } from 'react'
+import type { CSSProperties, MouseEventHandler, ReactNode } from 'react'
 import type { VideoData } from './card.service'
 import { fetchVideoData, isVideoshotDataValid, watchLaterAdd } from './card.service'
 import { PreviewImage } from './child-components/PreviewImage'
@@ -139,7 +139,8 @@ const VideoCardInner = memo(function VideoCardInner({
   onRefresh,
   emitter = defaultEmitter,
 }: VideoCardInnerProps) {
-  const { autoPreviewWhenHover, accessKey, styleNewCardStyle } = useSettingsSnapshot()
+  const { autoPreviewWhenHover, accessKey, styleUseCardBorder, styleUseCardBorderOnlyOnHover } =
+    useSettingsSnapshot()
   const authed = Boolean(accessKey)
 
   const {
@@ -180,21 +181,11 @@ const VideoCardInner = memo(function VideoCardInner({
   /**
    * 预览 hover state
    */
-  const videoPreviewWrapperRef = useRef<HTMLElement | null>(null)
 
-  function createRefCallback(role: 'card' | 'cover') {
-    return function refCallback(el: HTMLElement | null) {
-      if (styleNewCardStyle) {
-        if (role === 'card') {
-          videoPreviewWrapperRef.current = el
-        }
-      } else {
-        if (role === 'cover') {
-          videoPreviewWrapperRef.current = el
-        }
-      }
-    }
-  }
+  // single ref 与 useEventListener 配合不是很好, 故使用两个 ref
+  const cardRef = useRef<HTMLElement | null>(null)
+  const coverRef = useRef<HTMLElement | null>(null)
+  const videoPreviewWrapperRef = styleUseCardBorder ? cardRef : coverRef
 
   const {
     onStartPreviewAnimation,
@@ -283,6 +274,15 @@ const VideoCardInner = memo(function VideoCardInner({
     item,
     cardData,
     actionButtonVisible,
+  })
+
+  const handleCardClick: MouseEventHandler<HTMLDivElement> = useMemoizedFn((e) => {
+    if (!styleUseCardBorder) return
+
+    // already handled by <a>
+    if ((e.target as HTMLElement).closest('a')) return
+
+    onOpenWithMode()
   })
 
   /**
@@ -576,130 +576,169 @@ const VideoCardInner = memo(function VideoCardInner({
 
   // 一堆 selector 增加权重
   const prefixCls = `.${APP_CLS_ROOT} .${APP_CLS_GRID} .${APP_CLS_CARD}`
-  const bottomReset =
-    styleNewCardStyle &&
-    css`
-      border-bottom-left-radius: 0;
-      border-bottom-right-radius: 0;
-    `
   const coverRoundStyle: TheCssType = [
     css`
       ${prefixCls} & {
         overflow: hidden;
         border-radius: ${borderRadiusValue};
-        ${bottomReset}
       }
     `,
+    styleUseCardBorder &&
+      (styleUseCardBorderOnlyOnHover
+        ? isHovering &&
+          css`
+            ${prefixCls} & {
+              border-bottom-left-radius: 0;
+              border-bottom-right-radius: 0;
+            }
+          `
+        : css`
+            ${prefixCls} & {
+              border-bottom-left-radius: 0;
+              border-bottom-right-radius: 0;
+            }
+          `),
   ]
 
-  return (
-    <div
-      ref={createRefCallback('card')}
-      className='bili-video-card__wrap __scale-wrap'
+  const coverContent = (
+    <a
+      ref={(el) => (coverRef.current = el)}
+      href={href}
+      target='_blank'
       css={css`
-        background-color: unset;
-        position: static;
-        height: 100%;
+        position: relative;
+        overflow: hidden;
       `}
+      onClick={handleVideoLinkClick}
+      onContextMenu={(e) => {
+        // try to solve https://github.com/magicdawn/bilibili-app-recommend/issues/92
+        // can't reproduce on macOS
+        e.preventDefault()
+      }}
     >
+      <div
+        data-as='overflow-boundary'
+        className='bili-video-card__image'
+        style={{ aspectRatio: '16 / 9' }}
+        css={coverRoundStyle}
+      >
+        {/* __image--wrap 上有 padding-top: 56.25% = 9/16, 用于保持高度, 在 firefox 中有明显的文字位移 */}
+        {/* picture: absolute, top:0, left: 0  */}
+        {/* 故加上 aspect-ratio: 16/9 */}
+        <div className='bili-video-card__image--wrap'>
+          <Picture
+            className='v-img bili-video-card__cover'
+            src={`${cover}@672w_378h_1c_!web-home-common-cover`}
+            imgProps={{
+              // in firefox, alt text is visible during loading
+              alt: isFirefox ? '' : title,
+            }}
+          />
+        </div>
+      </div>
+
+      <div className='bili-video-card__stats' css={coverRoundStyle}>
+        <div className='bili-video-card__stats--left'>
+          {statItems.map(({ field, value }) => (
+            <StatItemDisplay key={field} field={field} value={value} />
+          ))}
+        </div>
+
+        {/* 时长 */}
+        {/* 番剧没有 duration 字段 */}
+        <span className='bili-video-card__stats__duration'>{isNormalVideo && durationStr}</span>
+      </div>
+
+      {/* preview: follow-mouse or manual-control */}
+      {!!(
+        (isHoveringAfterDelay || typeof previewProgress === 'number') &&
+        videoDataBox.state?.videoshotData?.image?.length &&
+        duration
+      ) && (
+        <PreviewImage
+          videoDuration={duration}
+          pvideo={videoDataBox.state?.videoshotData}
+          mouseEnterRelativeX={mouseEnterRelativeX}
+          previewProgress={previewProgress}
+          previewT={previewT}
+        />
+      )}
+
+      {dislikeButtonEl && (
+        <div className='left-actions' css={VideoCardActionStyle.topContainer('left')}>
+          {/* 我不想看 */}
+          {dislikeButtonEl}
+        </div>
+      )}
+
+      {(watchlaterButtonEl || openInPopupButtonEl) && (
+        <div className='right-actions' css={VideoCardActionStyle.topContainer('right')}>
+          {/* 稍后再看 */}
+          {watchlaterButtonEl}
+          {/* 小窗打开 */}
+          {openInPopupButtonEl}
+        </div>
+      )}
+
+      {/* 充电专属 */}
+      {hasChargeOnlyTag && <ChargeOnlyTag />}
+
+      {/* 排行榜 */}
+      {hasRankingNo && <RankingNumMark item={item} />}
+    </a>
+  )
+
+  /* bottom: after the cover */
+  const bottomContent = (
+    <VideoCardBottom item={item} cardData={cardData} handleVideoLinkClick={handleVideoLinkClick} />
+  )
+
+  function wrapDropdown(c: ReactNode) {
+    return (
       <Dropdown
+        // 闪屏 不造为啥
+        // getPopupContainer={() => cardRef.current || document.body}
         menu={{ items: contextMenus }}
         trigger={['contextMenu']}
         onOpenChange={onContextMenuOpenChange}
       >
-        <a
-          ref={createRefCallback('cover')}
-          href={href}
-          target='_blank'
-          css={css`
-            position: relative;
-            overflow: hidden;
-          `}
-          onClick={handleVideoLinkClick}
-          onContextMenu={(e) => {
-            // try to solve https://github.com/magicdawn/bilibili-app-recommend/issues/92
-            // can't reproduce on macOS
-            e.preventDefault()
-          }}
-        >
-          <div
-            data-as='overflow-boundary'
-            className='bili-video-card__image'
-            style={{ aspectRatio: '16 / 9' }}
-            css={coverRoundStyle}
-          >
-            {/* __image--wrap 上有 padding-top: 56.25% = 9/16, 用于保持高度, 在 firefox 中有明显的文字位移 */}
-            {/* picture: absolute, top:0, left: 0  */}
-            {/* 故加上 aspect-ratio: 16/9 */}
-            <div className='bili-video-card__image--wrap'>
-              <Picture
-                className='v-img bili-video-card__cover'
-                src={`${cover}@672w_378h_1c_!web-home-common-cover`}
-                imgProps={{
-                  // in firefox, alt text is visible during loading
-                  alt: isFirefox ? '' : title,
-                }}
-              />
-            </div>
-          </div>
-
-          <div className='bili-video-card__stats' css={coverRoundStyle}>
-            <div className='bili-video-card__stats--left'>
-              {statItems.map(({ field, value }) => (
-                <StatItemDisplay key={field} field={field} value={value} />
-              ))}
-            </div>
-
-            {/* 时长 */}
-            {/* 番剧没有 duration 字段 */}
-            <span className='bili-video-card__stats__duration'>{isNormalVideo && durationStr}</span>
-          </div>
-
-          {/* preview: follow-mouse or manual-control */}
-          {!!(
-            (isHoveringAfterDelay || typeof previewProgress === 'number') &&
-            videoDataBox.state?.videoshotData?.image?.length &&
-            duration
-          ) && (
-            <PreviewImage
-              videoDuration={duration}
-              pvideo={videoDataBox.state?.videoshotData}
-              mouseEnterRelativeX={mouseEnterRelativeX}
-              previewProgress={previewProgress}
-              previewT={previewT}
-            />
-          )}
-
-          {dislikeButtonEl && (
-            <div className='left-actions' css={VideoCardActionStyle.topContainer('left')}>
-              {/* 我不想看 */}
-              {dislikeButtonEl}
-            </div>
-          )}
-
-          {(watchlaterButtonEl || openInPopupButtonEl) && (
-            <div className='right-actions' css={VideoCardActionStyle.topContainer('right')}>
-              {/* 稍后再看 */}
-              {watchlaterButtonEl}
-              {/* 小窗打开 */}
-              {openInPopupButtonEl}
-            </div>
-          )}
-
-          {/* 充电专属 */}
-          {hasChargeOnlyTag && <ChargeOnlyTag />}
-
-          {/* 排行榜 */}
-          {hasRankingNo && <RankingNumMark item={item} />}
-        </a>
+        {c}
       </Dropdown>
+    )
+  }
 
-      {/* bottom: after the cover */}
-      <VideoCardBottom
-        item={item}
-        cardData={cardData}
-        handleVideoLinkClick={handleVideoLinkClick}
-      />
-    </div>
-  )
+  function wrapCardWrapper(c: ReactNode) {
+    return (
+      <div
+        ref={(el) => (cardRef.current = el)}
+        className='bili-video-card__wrap'
+        css={css`
+          background-color: unset;
+          position: static;
+          height: 100%;
+        `}
+        onClick={handleCardClick}
+      >
+        {c}
+      </div>
+    )
+  }
+
+  if (styleUseCardBorder) {
+    return wrapDropdown(
+      wrapCardWrapper(
+        <>
+          {coverContent}
+          {bottomContent}
+        </>,
+      ),
+    )
+  } else {
+    return wrapCardWrapper(
+      <>
+        {wrapDropdown(coverContent)}
+        {bottomContent}
+      </>,
+    )
+  }
 })

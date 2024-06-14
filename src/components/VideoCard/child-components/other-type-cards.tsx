@@ -4,7 +4,6 @@ import type { Reason } from '$components/ModalDislike'
 import { delDislikeId } from '$components/ModalDislike'
 import type { AppRecItem, RecItemType } from '$define'
 import { IconPark } from '$modules/icon/icon-park'
-import { useSettingsSnapshot } from '$modules/settings'
 import { UserBlacklistService } from '$modules/user/relations/blacklist'
 import { AntdMessage } from '$utility'
 import { toastRequestFail } from '$utility/toast'
@@ -16,8 +15,6 @@ import type { IVideoCardData } from '../process/normalize'
 import { VideoCardBottom } from './VideoCardBottom'
 
 export const SkeletonCard = memo(function SkeletonCard({ loading }: { loading: boolean }) {
-  const { styleNewCardStyle } = useSettingsSnapshot()
-
   return (
     <div
       className={clsx('bili-video-card__skeleton', {
@@ -29,45 +26,33 @@ export const SkeletonCard = memo(function SkeletonCard({ loading }: { loading: b
         className='bili-video-card__skeleton--cover'
         style={{ borderRadius: borderRadiusValue }}
       />
-
-      {!styleNewCardStyle && (
-        <div className='bili-video-card__skeleton--info'>
-          <div className='bili-video-card__skeleton--right'>
-            <p className='bili-video-card__skeleton--text'></p>
-            <p className='bili-video-card__skeleton--text short'></p>
-            <p className='bili-video-card__skeleton--light'></p>
-          </div>
-        </div>
-      )}
-      {styleNewCardStyle && (
+      <div
+        className='bili-video-card__skeleton--info'
+        css={css`
+          padding-inline: 5px;
+        `}
+      >
         <div
-          className='bili-video-card__skeleton--info'
+          className='bili-video-card__skeleton--avatar'
           css={css`
-            padding-inline: 5px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+          `}
+        />
+        <div
+          className='bili-video-card__skeleton--right'
+          css={css`
+            flex: 1;
+            margin-left: 10px;
           `}
         >
-          <div
-            className='bili-video-card__skeleton--avatar'
-            css={css`
-              width: 32px;
-              height: 32px;
-              border-radius: 50%;
-            `}
-          />
-          <div
-            className='bili-video-card__skeleton--right'
-            css={css`
-              flex: 1;
-              margin-left: 10px;
-            `}
-          >
-            <p className='bili-video-card__skeleton--text'></p>
-            <p className='bili-video-card__skeleton--text short'></p>
-            <p className='bili-video-card__skeleton--light'></p>
-            <p className='bili-video-card__skeleton--text tiny'></p>
-          </div>
+          <p className='bili-video-card__skeleton--text'></p>
+          <p className='bili-video-card__skeleton--text short'></p>
+          <p className='bili-video-card__skeleton--light'></p>
+          <p className='bili-video-card__skeleton--text tiny'></p>
         </div>
-      )}
+      </div>
     </div>
   )
 })

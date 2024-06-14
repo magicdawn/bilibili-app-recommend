@@ -6,7 +6,8 @@ import LX_THEMES from './lx-themes.json'
 export const colorPrimaryIdentifier = `--${APP_NAME}-color-primary`
 export const colorPrimaryValue = `var(${colorPrimaryIdentifier})`
 
-export const borderColorValue = `var(--${APP_NAME}-border-color)`
+export const borderColorIdentifier = `--${APP_NAME}-border-color`
+export const borderColorValue = `var(${borderColorIdentifier})`
 
 export interface LxTheme {
   id: string
