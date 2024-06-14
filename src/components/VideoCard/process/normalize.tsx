@@ -20,7 +20,6 @@ import {
   type PopularGeneralItemExtend,
   type PopularWeeklyItemExtend,
   type RankingItemExtend,
-  type RankingItemExtendProps,
   type RecItemType,
   type WatchLaterItemExtend,
 } from '$define'
@@ -28,9 +27,10 @@ import type { EApiType } from '$define/index.shared'
 import { LiveIcon } from '$modules/icon'
 import { IconPark } from '$modules/icon/icon-park'
 import type { FavItemExtend } from '$modules/rec-services/fav/define'
-import type { BangumiRankingItem } from '$modules/rec-services/hot/ranking/api.bangumi-category'
-import type { CinemaRankingItem } from '$modules/rec-services/hot/ranking/api.cinema-category'
-import type { NormalRankingItem } from '$modules/rec-services/hot/ranking/api.normal-category'
+import {
+  isBangumiRankingItem,
+  isCinemaRankingItem,
+} from '$modules/rec-services/hot/ranking/category'
 import { ELiveStatus } from '$modules/rec-services/live/live-enum'
 import { AntdTooltip } from '$ui-components/antd-custom'
 import { toHttps } from '$utility'
@@ -587,10 +587,8 @@ function apiPopularWeeklyAdapter(item: PopularWeeklyItemExtend): IVideoCardData 
   }
 }
 
-function apiRankingAdapter(_item: RankingItemExtend): IVideoCardData {
-  if (_item.categoryType === 'bangumi' || _item.categoryType === 'cinema') {
-    const item = _item as (BangumiRankingItem | CinemaRankingItem) & RankingItemExtendProps
-
+function apiRankingAdapter(item: RankingItemExtend): IVideoCardData {
+  if (isBangumiRankingItem(item) || isCinemaRankingItem(item)) {
     const cover = item.new_ep.cover
     const rankingDesc = item.new_ep.index_show
 
@@ -622,7 +620,6 @@ function apiRankingAdapter(_item: RankingItemExtend): IVideoCardData {
   }
 
   // normal
-  const item = _item as NormalRankingItem & RankingItemExtendProps
   return {
     // video
     avid: String(item.aid),

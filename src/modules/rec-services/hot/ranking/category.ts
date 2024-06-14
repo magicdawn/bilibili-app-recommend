@@ -2,8 +2,12 @@
  * extract from https://s1.hdslb.com/bfs/static/jinkela/popular/popular.dde4e174100382a65855d76269b39d174d847e31.js
  */
 
+import type { RankingItemExtend, RankingItemExtendProps } from '$define'
 import { groupBy } from 'lodash'
 import type { Merge, SetOptional } from 'type-fest'
+import type { BangumiRankingItem } from './api.bangumi-category'
+import type { CinemaRankingItem } from './api.cinema-category'
+import type { NormalRankingItem } from './api.normal-category'
 
 // /x/web-interface/ranking/v2?rid=0&type=all
 export type NormalCategory = {
@@ -36,15 +40,39 @@ export type Category = NormalCategory | BangumiCategory | CinemaCategory
 
 export type CategoryType = Category['type']
 
+/**
+ * category predicate
+ */
 export function isBangumiCategory(c: Category): c is BangumiCategory {
   return c.type === 'bangumi'
 }
 export function isCinemaCategory(c: Category): c is CinemaCategory {
   return c.type === 'cinema'
 }
-
 export function isNormalCategory(c: Category): c is NormalCategory {
   return !isBangumiCategory(c) && !isCinemaCategory(c)
+}
+
+/**
+ * item predicate
+ */
+export function isNormalRankingItem(
+  item: RankingItemExtend,
+): item is NormalRankingItem & RankingItemExtendProps {
+  const c = RANKING_CATEGORIES_MAP[item.slug]
+  return isNormalCategory(c)
+}
+export function isBangumiRankingItem(
+  item: RankingItemExtend,
+): item is BangumiRankingItem & RankingItemExtendProps {
+  const c = RANKING_CATEGORIES_MAP[item.slug]
+  return isBangumiCategory(c)
+}
+export function isCinemaRankingItem(
+  item: RankingItemExtend,
+): item is CinemaRankingItem & RankingItemExtendProps {
+  const c = RANKING_CATEGORIES_MAP[item.slug]
+  return isCinemaCategory(c)
 }
 
 export function getRequestUrl(c: Category) {

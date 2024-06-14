@@ -51,15 +51,11 @@ export function statItemForId(id: number) {
   }
 }
 
-export function makeStatItem({
-  text,
-  iconSvgName,
-  iconSvgScale,
-}: {
-  text: StatItemType['value']
-  iconSvgName: string
-  iconSvgScale?: number
-}) {
+export function StatItemDisplay({ field, value }: StatItemType) {
+  const text = value
+  const iconSvgName = AppRecIconSvgNameMap[field]
+  const iconSvgScale = AppRecIconScaleMap[field]
+
   let _text: string
   if (typeof text === 'number' || (text && /^\d+$/.test(text))) {
     _text = formatCount(Number(text)) ?? STAT_NUMBER_FALLBACK

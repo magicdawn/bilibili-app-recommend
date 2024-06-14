@@ -3,6 +3,7 @@ import { ETab } from '$components/RecHeader/tab-enum'
 import type { RecItemTypeOrSeparator } from '$define'
 import { EApiType } from '$define/index.shared'
 import { dynamicFeedFilterStore } from '$modules/rec-services/dynamic-feed'
+import { isNormalRankingItem } from '$modules/rec-services/hot/ranking/category'
 import { settings, settings as settingsProxy } from '$modules/settings'
 import { blacklistMids } from '$modules/user/relations/blacklist'
 import { snapshot } from 'valtio'
@@ -91,6 +92,17 @@ export function filterRecItems(items: RecItemTypeOrSeparator[], tab: ETab) {
     }
   })
 
+  const titleRegexList: RegExp[] = []
+  const titleKeywordList: string[] = []
+  settings.filterByTitleKeywords.forEach((keyword) => {
+    if (keyword.startsWith('/') && keyword.endsWith('/')) {
+      const regex = new RegExp(keyword.slice(1, -1), 'i')
+      titleRegexList.push(regex)
+    } else {
+      titleKeywordList.push(keyword)
+    }
+  })
+
   return items.filter((item) => {
     // just keep it
     if (item.api === EApiType.Separator) return true
@@ -139,25 +151,27 @@ export function filterRecItems(items: RecItemTypeOrSeparator[], tab: ETab) {
         }
       }
 
-      // title
+      /**
+       * title
+       * 字面 title, 可能包含其他来源: 如 排行榜desc
+       */
+      let possibleTitles = [title]
+      if (item.api === EApiType.Ranking && isNormalRankingItem(item) && item.desc) {
+        possibleTitles.push(item.desc)
+      }
+      possibleTitles = possibleTitles.filter(Boolean)
       if (
         settings.filterEnabled &&
         settings.filterByTitleEnabled &&
         settings.filterByTitleKeywords.length &&
-        title
+        possibleTitles.length
       ) {
-        if (
-          settings.filterByTitleKeywords.some((keyword) => {
-            if (keyword.startsWith('/') && keyword.endsWith('/')) {
-              const regex = new RegExp(keyword.slice(1, -1), 'i')
-              return regex.test(title)
-            } else {
-              return title.includes(keyword)
-            }
-          })
-        ) {
+        const titleHit = (title: string) =>
+          titleKeywordList.some((keyword) => title.includes(keyword)) ||
+          titleRegexList.some((regex) => regex.test(title))
+        if (possibleTitles.some(titleHit)) {
           debug('filter out by title-rule: %o', {
-            title,
+            possibleTitles,
             rules: settings.filterByTitleKeywords,
             bvid,
           })
@@ -166,7 +180,7 @@ export function filterRecItems(items: RecItemTypeOrSeparator[], tab: ETab) {
       }
     }
 
-    // expect
+    // except
     // KeepFollowOnly = 'keep-follow-only',
     // DynamicFeed = 'dynamic-feed',
     // Watchlater = 'watchlater',

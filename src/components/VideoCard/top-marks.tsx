@@ -1,11 +1,11 @@
 import { flexCenterStyle, flexVerticalCenterStyle } from '$common/emotion-css'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
-import type { RankingItemExtend, RankingItemExtendProps, RecItemType } from '$define'
+import type { RankingItemExtend, RecItemType } from '$define'
 import { EApiType } from '$define/index.shared'
 import type { NormalRankingItem } from '$modules/rec-services/hot/ranking/api.normal-category'
 import {
   RANKING_CATEGORIES_MAP,
-  isNormalCategory,
+  isNormalRankingItem,
 } from '$modules/rec-services/hot/ranking/category'
 import { Dropdown } from 'antd'
 import IconParkOutlineMore from '~icons/icon-park-outline/more'
@@ -78,12 +78,9 @@ export function RankingNumMark({ item }: { item: RankingItemExtend }) {
 
   let hasOthers = false
   let others: NormalRankingItem[] = []
-  if (isNormalCategory(category)) {
-    const _item = item as NormalRankingItem & RankingItemExtendProps
-    if (_item.others?.length) {
-      hasOthers = true
-      others = _item.others
-    }
+  if (isNormalRankingItem(item) && item.others?.length) {
+    hasOthers = true
+    others = item.others
   }
 
   const tooltip = `「${category.name}」排行第 ${item.rankingNo} 名`

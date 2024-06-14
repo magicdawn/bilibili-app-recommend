@@ -19,7 +19,12 @@ export function TabPaneFilter() {
   } = useSettingsSnapshot()
 
   return (
-    <div className={styles.tabPane}>
+    <div
+      className={styles.tabPane}
+      css={css`
+        padding-right: 15px; // for scrollbar
+      `}
+    >
       <div className={styles.settingsGroup}>
         <div className={styles.settingsGroupTitle}>
           内容过滤

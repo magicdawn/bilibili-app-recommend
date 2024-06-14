@@ -1,11 +1,7 @@
 import { baseDebug } from '$common'
-import type { RankingItemExtendProps, RecItemType } from '$define'
+import type { RecItemType } from '$define'
 import { EApiType } from '$define/index.shared'
-import type { NormalRankingItem } from '$modules/rec-services/hot/ranking/api.normal-category'
-import {
-  RANKING_CATEGORIES_MAP,
-  isNormalCategory,
-} from '$modules/rec-services/hot/ranking/category'
+import { isNormalRankingItem } from '$modules/rec-services/hot/ranking/category'
 import { settings, useSettingsSnapshot } from '$modules/settings'
 import { getVideoDetail } from '$modules/video/video-detail'
 import delay from 'delay'
@@ -96,10 +92,9 @@ export function useOpenRelated({
       }
     }
 
-    if (item.api === EApiType.Ranking && isNormalCategory(RANKING_CATEGORIES_MAP[item.slug])) {
-      const _item = item as NormalRankingItem & RankingItemExtendProps
-      const w = _item.dimension.width
-      const h = _item.dimension.height
+    if (item.api === EApiType.Ranking && isNormalRankingItem(item)) {
+      const w = item.dimension.width
+      const h = item.dimension.height
       if (w && h && !isNaN(w) && !isNaN(h)) {
         videoWidth = w
         videoHeight = h

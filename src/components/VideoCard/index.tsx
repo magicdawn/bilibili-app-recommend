@@ -15,12 +15,12 @@ import { IconPark } from '$modules/icon/icon-park'
 import { dynamicFeedFilterSelectUp } from '$modules/rec-services/dynamic-feed'
 import { formatFavFolderUrl } from '$modules/rec-services/fav'
 import { UserFavService, defaultFavFolderName } from '$modules/rec-services/fav/user-fav.service'
-import { settings, useSettingsSnapshot } from '$modules/settings'
+import { settings, updateSettings, useSettingsSnapshot } from '$modules/settings'
 import { UserBlacklistService, useInBlacklist } from '$modules/user/relations/blacklist'
 import { UserfollowService } from '$modules/user/relations/follow'
 import { isFirefox } from '$platform'
 import { Picture } from '$ui-components/Picture'
-import { AntdMessage } from '$utility'
+import { AntdMessage, toast } from '$utility'
 import { useLockFn } from 'ahooks'
 import type { MenuProps } from 'antd'
 import { Dropdown } from 'antd'
@@ -38,7 +38,7 @@ import { borderRadiusStyle, defaultEmitter } from './index.shared'
 import { getFollowedStatus } from './process/filter'
 import type { IVideoCardData } from './process/normalize'
 import { normalizeCardData } from './process/normalize'
-import { AppRecIconScaleMap, AppRecIconSvgNameMap, makeStatItem } from './stat-item'
+import { StatItemDisplay } from './stat-item'
 import { ChargeOnlyTag, RankingNumMark, getHasChargeOnlyTag } from './top-marks'
 import { useDislikeRelated } from './use/useDislikeRelated'
 import { useOpenRelated } from './use/useOpenRelated'
@@ -308,6 +308,22 @@ const VideoCardInner = memo(function VideoCardInner({
     }
   })
 
+  const onAddUpToFilterList = useMemoizedFn(async () => {
+    if (!authorMid) return AntdMessage.error('UP mid 为空!')
+
+    let content = `${authorMid}`
+    if (authorName) content += `(${authorName})`
+
+    if (settings.filterByAuthorNameKeywords.includes(content)) {
+      return toast(`已在过滤名单中: ${content}`)
+    }
+
+    updateSettings({
+      filterByAuthorNameKeywords: [...settings.filterByAuthorNameKeywords, content],
+    })
+    AntdMessage.success(`已加入过滤名单: ${content}, 刷新后生效~`)
+  })
+
   /**
    * unfollow
    */
@@ -410,6 +426,12 @@ const VideoCardInner = memo(function VideoCardInner({
         label: '将 UP 加入黑名单',
         icon: <IconPark name='PeopleDelete' size={15} />,
         onClick: onBlacklistUp,
+      },
+      hasBlacklistEntry && {
+        key: 'add-up-to-filterlist',
+        label: '将 UP 加入过滤列表',
+        icon: <IconPark name='PeopleDelete' size={15} />,
+        onClick: onAddUpToFilterList,
       },
       item.api === EApiType.Watchlater && {
         key: 'add-fav',
@@ -627,13 +649,7 @@ const VideoCardInner = memo(function VideoCardInner({
               <div className='bili-video-card__stats'>
                 <div className='bili-video-card__stats--left'>
                   {statItems.map(({ field, value }) => (
-                    <Fragment key={field}>
-                      {makeStatItem({
-                        text: value,
-                        iconSvgName: AppRecIconSvgNameMap[field],
-                        iconSvgScale: AppRecIconScaleMap[field],
-                      })}
-                    </Fragment>
+                    <StatItemDisplay key={field} field={field} value={value} />
                   ))}
                 </div>
 
