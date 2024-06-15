@@ -10,11 +10,11 @@ import type { DynamicPortalUp } from '$modules/rec-services/dynamic-feed/portal'
 import { isWebApiSuccess, request } from '$request'
 import { setPageTitle, toast } from '$utility'
 import { getAvatarSrc } from '$utility/image'
-import { fastSortWithOrders } from '$utility/order-by'
 import type { AntdMenuItemType } from '$utility/type'
 import { proxySetWithGmStorage } from '$utility/valtio'
 import { Avatar, Badge, Button, Dropdown, Input, Space } from 'antd'
 import delay from 'delay'
+import { fastSortWithOrders } from 'fast-sort-lens'
 import ms from 'ms'
 import { subscribeKey } from 'valtio/utils'
 import type { IService } from '../_base'
@@ -241,7 +241,6 @@ export function DynamicFeedUsageInfo() {
     // lodash.orderBy order参数只支持 asc | desc
     // see https://github.com/lodash/lodash/pull/3764
 
-    const _s = performance.now()
     const upListSorted = fastSortWithOrders(upList, [
       { prop: (it) => (it.has_update ? 1 : 0), order: 'desc' },
       {
