@@ -3,37 +3,75 @@
  * https://greasyfork.org/zh-CN/scripts/479861-bilibili-%E9%A1%B5%E9%9D%A2%E5%87%80%E5%8C%96%E5%A4%A7%E5%B8%88/discussions/238294
  */
 
-import { flexCenterStyle } from '$common/emotion-css'
+import { C, flexCenterStyle } from '$common/emotion-css'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import { isLive, isRanking, type RecItemType } from '$define'
 import { EApiType } from '$define/index.shared'
 import { LiveIcon } from '$modules/icon'
 import { ELiveStatus } from '$modules/rec-services/live/live-enum'
+import { useSettingsSnapshot } from '$modules/settings'
 import { getAvatarSrc } from '$utility/image'
 import type { TheCssType } from '$utility/type'
 import { Avatar } from 'antd'
 import { size } from 'polished'
 import { type MouseEventHandler } from 'react'
 import { Case, Switch } from 'react-if'
-import styles from '../index.module.scss'
 import type { IVideoCardData } from '../process/normalize'
 import { DESC_SEPARATOR } from '../process/normalize'
 
+const S = {
+  recommendReason: css`
+    display: inline-block;
+    color: var(--Or5);
+    background-color: var(--Or1);
+    border-radius: 4px;
+
+    font-size: var(--follow-icon-font-size);
+    line-height: var(--follow-icon-line-height);
+    height: var(--follow-icon-line-height);
+
+    width: max-content;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    padding: 0 4px;
+    /* padding-left: 0; */
+    margin-left: -4px;
+    cursor: default;
+  `,
+
+  appBadge: css`
+    color: #fa6a9d;
+    border-radius: 2px;
+    border: 1px #fa6a9d solid;
+    line-height: 20px;
+    padding: 0 10px;
+    transform: scale(0.8);
+    transform-origin: center left;
+  `,
+}
+
 // .bili-video-card__info--owner
 const descOwnerCss = css`
-  margin-top: 4px;
-  color: var(--text3);
   font-size: var(--subtitle-font-size);
+  line-height: var(--subtitle-line-height);
+  color: var(--text3);
+
+  a&:visited {
+    color: var(--text3);
+  }
 
   display: inline-flex;
+  width: max-content;
+  max-width: 100%;
+
   align-items: center;
   justify-content: flex-start;
 `
 
-// .bili-video-card__info--date
-// same as .bili-video-card__info--date, but the date class is for date
-const descSuffixCss = css`
-  margin-left: 4px;
+const subtitleLineHeightCss = css`
   line-height: var(--subtitle-line-height);
 `
 
@@ -47,6 +85,7 @@ export function VideoCardBottom({
   handleVideoLinkClick?: MouseEventHandler
 }) {
   const styleNewCardStyle = true
+  const { styleUseCardBorder } = useSettingsSnapshot()
 
   const {
     // video
@@ -113,7 +152,7 @@ export function VideoCardBottom({
     }
   }
 
-  return styleNewCardStyle ? renderNewCardStyle() : renderBiliDeafault()
+  return renderNewCardStyle()
 
   /**
    * 带头像, 更分散(recommend-reason 单独一行)
@@ -122,10 +161,12 @@ export function VideoCardBottom({
     return (
       <div
         css={css`
-          margin-block: 15px 12px;
+          margin-top: 15px;
+          margin-bottom: ${styleUseCardBorder ? 15 : 5}px;
           padding-inline: 5px;
           display: flex;
           column-gap: 5px;
+          overflow: hidden;
         `}
       >
         {/* avatar */}
@@ -157,9 +198,15 @@ export function VideoCardBottom({
         {/* title + desc */}
         <div
           css={css`
+            /* as item */
             flex: 1;
-            overflow: hidden;
-            margin-left: 5px;
+
+            /* as container */
+            display: flex;
+            flex-direction: column;
+            row-gap: 4px;
+
+            margin-left: 5px; // Q: why not column-gap:10px. A: avatar my hide, margin-left is needed
           `}
         >
           {/* title */}
@@ -202,84 +249,25 @@ export function VideoCardBottom({
     )
   }
 
-  /**
-   * old, same as bilibili default
-   */
-  function renderBiliDeafault() {
-    return (
-      <div className='bili-video-card__info __scale-disable'>
-        <div className='bili-video-card__info--right'>
-          <a onClick={handleVideoLinkClick} href={href} target='_blank'>
-            <h3 className='bili-video-card__info--tit' title={title}>
-              {titleRender ?? title}
-            </h3>
-          </a>
-          <p className='bili-video-card__info--bottom'>{renderDesc()}</p>
-        </div>
-      </div>
-    )
-  }
-
   function renderDesc() {
     if (isNormalVideo) {
-      const innerSpans = (
+      return (
         <>
-          <span className='bili-video-card__info--author'>{authorName}</span>
-          {pubdateDisplay && (
-            <span className='bili-video-card__info--date'>{DESC_SEPARATOR + pubdateDisplay}</span>
-          )}
+          <a
+            className='bili-video-card__info--owner'
+            href={authorHref}
+            target='_blank'
+            title={descTitleAttr}
+            css={descOwnerCss}
+          >
+            <span className='bili-video-card__info--author'>{authorName}</span>
+            {pubdateDisplay && (
+              <span className='bili-video-card__info--date'>{DESC_SEPARATOR + pubdateDisplay}</span>
+            )}
+          </a>
+          {!!recommendReason && <span css={S.recommendReason}>{recommendReason}</span>}
         </>
       )
-
-      if (styleNewCardStyle) {
-        return (
-          <>
-            <div>
-              <a
-                className='bili-video-card__info--owner'
-                href={authorHref}
-                target='_blank'
-                title={descTitleAttr}
-                css={descOwnerCss}
-              >
-                {innerSpans}
-              </a>
-            </div>
-            {!!recommendReason && (
-              <div
-                className={styles.recommendReason}
-                css={css`
-                  margin-top: 2px;
-                  padding-left: 0;
-                  max-width: 100%;
-                `}
-              >
-                {recommendReason}
-              </div>
-            )}
-          </>
-        )
-      } else {
-        return (
-          <>
-            <a
-              className='bili-video-card__info--owner'
-              href={authorHref}
-              target='_blank'
-              title={descTitleAttr}
-            >
-              {recommendReason ? (
-                <span className={styles.recommendReason}>{recommendReason}</span>
-              ) : (
-                <svg className='bili-video-card__info--owner__up'>
-                  <use href='#widget-up'></use>
-                </svg>
-              )}
-              {innerSpans}
-            </a>
-          </>
-        )
-      }
     }
 
     // 其他歪瓜
@@ -292,8 +280,8 @@ export function VideoCardBottom({
             href={href}
             target='_blank'
           >
-            {!!appBadge && <span className={styles.badge}>{appBadge}</span>}
-            {!!appBadgeDesc && <span className={styles.bangumiDesc}>{appBadgeDesc}</span>}
+            {!!appBadge && <span css={S.appBadge}>{appBadge}</span>}
+            {!!appBadgeDesc && <span>{appBadgeDesc}</span>}
           </a>
         </Case>
 
@@ -318,8 +306,8 @@ export function VideoCardBottom({
             target='_blank'
             title={(authorName || '') + (liveDesc || '')}
           >
-            <span>{authorName}</span>
-            {liveDesc && <span css={descSuffixCss}>{liveDesc}</span>}
+            {authorName}
+            {liveDesc && <span css={[C.ml(4)]}>{liveDesc}</span>}
           </a>
         </Case>
       </Switch>

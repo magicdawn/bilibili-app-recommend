@@ -76,3 +76,11 @@ export const C = {
     `
   },
 }
+
+// https://github.com/magicdawn/magicdawn/issues/136#issuecomment-2170532246
+export const inlineContentHeightResetCss = css`
+  line-height: 1;
+  > * {
+    vertical-align: top;
+  }
+`

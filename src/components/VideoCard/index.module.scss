@@ -16,43 +16,6 @@ $z: 3;
   z-index: $z + 1;
 }
 
-.badge {
-  color: #fa6a9d;
-  border-radius: 2px;
-  border: 1px #fa6a9d solid;
-  line-height: 20px;
-  padding: 0 10px;
-  transform: scale(0.8);
-  transform-origin: center left;
-}
-
-.recommend-reason {
-  // color: #fa6a9d;
-  // border-radius: 2px;
-  // border: 1px #fa6a9d solid;
-  // line-height: 20px;
-  // padding: 0 10px;
-  // transform: scale(0.8);
-
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
-  display: inline-block;
-  color: var(--Or5);
-  background-color: var(--Or1);
-  border-radius: 4px;
-  margin-right: 4px;
-  font-size: var(--follow-icon-font-size);
-  line-height: var(--follow-icon-line-height);
-  height: var(--follow-icon-line-height);
-  padding: 0 4px;
-  cursor: default;
-}
-
-.bangumi-desc {
-  color: default;
-}
-
 .disliked-wrapper {
   // grid align-items 默认为 stretch, 同 row 互相撑起高度
   height: 100%;

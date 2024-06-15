@@ -576,7 +576,7 @@ const VideoCardInner = memo(function VideoCardInner({
 
   // 一堆 selector 增加权重
   const prefixCls = `.${APP_CLS_ROOT} .${APP_CLS_GRID} .${APP_CLS_CARD}`
-  const coverRoundStyle: TheCssType = [
+  const coverRoundCss: TheCssType = [
     css`
       ${prefixCls} & {
         overflow: hidden;
@@ -617,10 +617,10 @@ const VideoCardInner = memo(function VideoCardInner({
       }}
     >
       <div
-        data-as='overflow-boundary'
         className='bili-video-card__image'
         style={{ aspectRatio: '16 / 9' }}
-        css={coverRoundStyle}
+        data-as='overflow-boundary'
+        css={coverRoundCss}
       >
         {/* __image--wrap 上有 padding-top: 56.25% = 9/16, 用于保持高度, 在 firefox 中有明显的文字位移 */}
         {/* picture: absolute, top:0, left: 0  */}
@@ -637,13 +637,24 @@ const VideoCardInner = memo(function VideoCardInner({
         </div>
       </div>
 
-      <div className='bili-video-card__stats' css={coverRoundStyle}>
+      <div
+        className='bili-video-card__stats'
+        data-as='overflow-boundary'
+        css={[
+          coverRoundCss,
+          css`
+            ${prefixCls} & {
+              border-top-left-radius: 0;
+              border-top-right-radius: 0;
+            }
+          `,
+        ]}
+      >
         <div className='bili-video-card__stats--left'>
           {statItems.map(({ field, value }) => (
             <StatItemDisplay key={field} field={field} value={value} />
           ))}
         </div>
-
         {/* 时长 */}
         {/* 番剧没有 duration 字段 */}
         <span className='bili-video-card__stats__duration'>{isNormalVideo && durationStr}</span>
