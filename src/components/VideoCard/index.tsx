@@ -3,7 +3,7 @@ import { C } from '$common/emotion-css'
 import { useMittOn } from '$common/hooks/useMitt'
 import { useRefStateBox } from '$common/hooks/useRefState'
 import { useDislikedReason } from '$components/ModalDislike'
-import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
+import { borderColorValue, colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import type { OnRefresh } from '$components/RecGrid/useRefresh'
 import { useCurrentUsingTab, videoSourceTabState } from '$components/RecHeader/tab'
 import { ETab } from '$components/RecHeader/tab-enum'
@@ -49,6 +49,54 @@ import { useWatchlaterRelated } from './use/useWatchlaterRelated'
 function copyContent(content: string) {
   GM.setClipboard(content)
   AntdMessage.success(`已复制: ${content}`)
+}
+
+export function getCardBorderCss(
+  active: boolean,
+  useBorder: boolean,
+  useBorderOnlyOnHover: boolean,
+): TheCssType {
+  const borderAndShadow = css`
+    border-color: ${colorPrimaryValue};
+    /* overflow: hidden; */
+    /* try here https://box-shadow.dev/ */
+    box-shadow: 0px 0px 9px 4px ${colorPrimaryValue};
+  `
+
+  return [
+    css`
+      border: 1px solid transparent;
+      transition:
+        border-color 0.3s ease-in-out,
+        box-shadow 0.3s ease-in-out;
+    `,
+
+    useBorder &&
+      css`
+        cursor: pointer;
+        border-radius: ${borderRadiusValue};
+      `,
+    useBorder &&
+      (useBorderOnlyOnHover
+        ? css`
+            &:hover {
+              /* 可选 borderColorValue(白色) colorPrimaryValue(主题色) borderAndShadow(主题色+box-shadow) */
+              ${borderAndShadow}
+            }
+          `
+        : css`
+            border-color: ${borderColorValue};
+            &:hover {
+              ${borderAndShadow}
+            }
+          `),
+
+    active &&
+      css`
+        border-radius: ${borderRadiusValue};
+        ${borderAndShadow}
+      `,
+  ]
 }
 
 export type VideoCardProps = {

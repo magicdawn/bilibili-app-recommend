@@ -22,6 +22,7 @@ import { DESC_SEPARATOR } from '../process/normalize'
 const S = {
   recommendReason: css`
     display: inline-block;
+    cursor: default;
     color: var(--Or5);
     background-color: var(--Or1);
     border-radius: 4px;
@@ -36,10 +37,9 @@ const S = {
     text-overflow: ellipsis;
     white-space: nowrap;
 
-    padding: 0 4px;
-    /* padding-left: 0; */
-    margin-left: -4px;
-    cursor: default;
+    padding-block: 0;
+    padding-inline: 2px;
+    /* margin-left: -4px; */
   `,
 
   appBadge: css`
@@ -152,102 +152,98 @@ export function VideoCardBottom({
     }
   }
 
-  return renderNewCardStyle()
-
   /**
    * 带头像, 更分散(recommend-reason 单独一行)
    */
-  function renderNewCardStyle() {
-    return (
+  return (
+    <div
+      css={css`
+        margin-top: 15px;
+        margin-bottom: ${styleUseCardBorder ? 15 : 5}px;
+        padding-inline: 5px;
+        display: flex;
+        column-gap: 5px;
+        overflow: hidden;
+      `}
+    >
+      {/* avatar */}
+      {!!authorMid && (
+        <a href={authorHref} target='_blank'>
+          <span css={avatarExtraCss}>
+            {authorFace ? (
+              <Avatar src={getAvatarSrc(authorFace)} />
+            ) : (
+              <Avatar>{authorName?.[0] || appBadgeDesc?.[0] || ''}</Avatar>
+            )}
+            {streaming && (
+              <LiveIcon
+                {...size(12)}
+                active
+                css={css`
+                  position: absolute;
+                  bottom: 0;
+                  right: 0;
+                  background-color: ${colorPrimaryValue};
+                  border-radius: 50%;
+                `}
+              />
+            )}
+          </span>
+        </a>
+      )}
+
+      {/* title + desc */}
       <div
         css={css`
-          margin-top: 15px;
-          margin-bottom: ${styleUseCardBorder ? 15 : 5}px;
-          padding-inline: 5px;
+          /* as item */
+          flex: 1;
+
+          /* as container */
           display: flex;
-          column-gap: 5px;
-          overflow: hidden;
+          flex-direction: column;
+          row-gap: 4px;
+
+          margin-left: 5px; // Q: why not column-gap:10px. A: avatar my hide, margin-left is needed
         `}
       >
-        {/* avatar */}
-        {!!authorMid && (
-          <a href={authorHref} target='_blank'>
-            <span css={avatarExtraCss}>
-              {authorFace ? (
-                <Avatar src={getAvatarSrc(authorFace)} />
-              ) : (
-                <Avatar>{authorName?.[0] || appBadgeDesc?.[0] || ''}</Avatar>
-              )}
-              {streaming && (
-                <LiveIcon
-                  {...size(12)}
-                  active
-                  css={css`
-                    position: absolute;
-                    bottom: 0;
-                    right: 0;
-                    background-color: ${colorPrimaryValue};
-                    border-radius: 50%;
-                  `}
-                />
-              )}
-            </span>
-          </a>
-        )}
-
-        {/* title + desc */}
-        <div
+        {/* title */}
+        <h3
+          className='bili-video-card__info--tit'
+          title={title}
           css={css`
-            /* as item */
-            flex: 1;
+            h3& {
+              text-indent: 0;
+            }
 
-            /* as container */
-            display: flex;
-            flex-direction: column;
-            row-gap: 4px;
-
-            margin-left: 5px; // Q: why not column-gap:10px. A: avatar my hide, margin-left is needed
+            text-indent: 0;
+            .bili-video-card &.bili-video-card__info--tit {
+              padding-right: 0;
+              height: auto;
+              max-height: calc(2 * var(--title-line-height));
+            }
           `}
         >
-          {/* title */}
-          <h3
-            className='bili-video-card__info--tit'
-            title={title}
+          <a
+            onClick={handleVideoLinkClick}
+            href={href}
+            target='_blank'
+            rel='noopener'
             css={css`
-              h3& {
-                text-indent: 0;
-              }
-
-              text-indent: 0;
-              .bili-video-card &.bili-video-card__info--tit {
-                padding-right: 0;
-                height: auto;
-                max-height: calc(2 * var(--title-line-height));
+              .bili-video-card .bili-video-card__info--tit > a& {
+                font-family: inherit;
+                font-weight: initial;
               }
             `}
           >
-            <a
-              onClick={handleVideoLinkClick}
-              href={href}
-              target='_blank'
-              rel='noopener'
-              css={css`
-                .bili-video-card .bili-video-card__info--tit > a& {
-                  font-family: inherit;
-                  font-weight: initial;
-                }
-              `}
-            >
-              {titleRender ?? title}
-            </a>
-          </h3>
+            {titleRender ?? title}
+          </a>
+        </h3>
 
-          {/* desc */}
-          {renderDesc()}
-        </div>
+        {/* desc */}
+        {renderDesc()}
       </div>
-    )
-  }
+    </div>
+  )
 
   function renderDesc() {
     if (isNormalVideo) {

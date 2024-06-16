@@ -5,15 +5,11 @@
 import { APP_CLS_CARD, APP_CLS_CARD_ACTIVE, APP_CLS_GRID, baseDebug } from '$common'
 import { useRefState } from '$common/hooks/useRefState'
 import { useModalDislikeVisible } from '$components/ModalDislike'
-import { borderColorValue, colorPrimaryValue } from '$components/ModalSettings/theme.shared'
+import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import { useCurrentUsingTab } from '$components/RecHeader/tab'
 import { EHotSubTab, ETab } from '$components/RecHeader/tab-enum'
-import { VideoCard } from '$components/VideoCard'
-import {
-  borderRadiusValue,
-  type VideoCardEmitter,
-  type VideoCardEvents,
-} from '$components/VideoCard/index.shared'
+import { VideoCard, getCardBorderCss } from '$components/VideoCard'
+import { type VideoCardEmitter, type VideoCardEvents } from '$components/VideoCard/index.shared'
 import { filterRecItems } from '$components/VideoCard/process/filter'
 import type { IVideoCardData } from '$components/VideoCard/process/normalize'
 import { type RecItemType, type RecItemTypeOrSeparator } from '$define'
@@ -26,7 +22,6 @@ import { hotStore } from '$modules/rec-services/hot'
 import { useSettingsSnapshot } from '$modules/settings'
 import { isSafari } from '$platform'
 import { AntdMessage } from '$utility'
-import type { TheCssType } from '$utility/type'
 import { useEventListener, useLatest } from 'ahooks'
 import { Divider } from 'antd'
 import delay from 'delay'
@@ -500,7 +495,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
         <VideoCard
           key={item.uniqId}
           className={clsx(APP_CLS_CARD, { [APP_CLS_CARD_ACTIVE]: active })}
-          css={getUsingCss(active, styleUseCardBorder, styleUseCardBorderOnlyOnHover)}
+          css={getCardBorderCss(active, styleUseCardBorder, styleUseCardBorderOnlyOnHover)}
           item={item}
           active={active}
           onRemoveCurrent={handleRemoveCard}
@@ -522,58 +517,3 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
     </div>
   )
 })
-
-function getUsingCss(
-  active: boolean,
-  useBorder: boolean,
-  useBorderOnlyOnHover: boolean,
-): TheCssType {
-  const borderAndShadow = css`
-    border-color: ${colorPrimaryValue};
-    /* overflow: hidden; */
-    /* try here https://box-shadow.dev/ */
-    box-shadow: 0px 0px 9px 4px ${colorPrimaryValue};
-  `
-
-  return [
-    css`
-      border: 1px solid transparent;
-      transition:
-        border-color 0.3s ease-in-out,
-        box-shadow 0.3s ease-in-out;
-
-      /* global class under .card */
-      .bili-video-card__info {
-        padding-left: 2px;
-        padding-bottom: 1px;
-        margin-top: calc(var(--info-margin-top) - 1px);
-      }
-    `,
-
-    useBorder &&
-      css`
-        cursor: pointer;
-        border-radius: ${borderRadiusValue};
-      `,
-    useBorder &&
-      (useBorderOnlyOnHover
-        ? css`
-            &:hover {
-              /* 可选 borderColorValue(白色) colorPrimaryValue(主题色) borderAndShadow(主题色+box-shadow) */
-              ${borderAndShadow}
-            }
-          `
-        : css`
-            border-color: ${borderColorValue};
-            &:hover {
-              ${borderAndShadow}
-            }
-          `),
-
-    active &&
-      css`
-        border-radius: ${borderRadiusValue};
-        ${borderAndShadow}
-      `,
-  ]
-}

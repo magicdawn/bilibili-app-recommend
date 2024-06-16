@@ -45,6 +45,7 @@ export function useOpenRelated({
   }
 
   const handleVideoLinkClick: MouseEventHandler = useMemoizedFn((e) => {
+    e.stopPropagation()
     if (settings.videoLinkOpenMode !== VideoLinkOpenMode.Normal) {
       e.preventDefault()
       onOpenWithMode()

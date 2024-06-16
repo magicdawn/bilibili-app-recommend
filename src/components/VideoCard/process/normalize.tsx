@@ -489,7 +489,6 @@ function apiFavAdapter(item: FavItemExtend): IVideoCardData {
           style={{
             display: 'inline-block',
             verticalAlign: 'middle',
-            marginLeft: 10,
             marginRight: 4,
             marginTop: -4,
           }}

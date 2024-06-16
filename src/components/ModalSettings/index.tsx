@@ -1,6 +1,5 @@
-import { APP_NAME, __PROD__ } from '$common'
+import { __PROD__ } from '$common'
 import { C } from '$common/emotion-css'
-import { CheckboxSettingItem, SwitchSettingItem } from '$components/ModalSettings/setting-item'
 import { ConfigIcon } from '$modules/icon'
 import type { BooleanSettingsKey } from '$modules/settings'
 import { settings } from '$modules/settings'
@@ -10,6 +9,7 @@ import { Tabs } from 'antd'
 import styles from './index.module.scss'
 import { TabPaneAdvance } from './tab-panes/pane-advance'
 import { TabPaneBasic } from './tab-panes/pane-basic'
+import { TabPaneCustomUI, useHotkeyForConfigBorder } from './tab-panes/pane-custom-ui'
 import { TabPaneFilter } from './tab-panes/pane-filter'
 import { TabPaneVideoSourceTabConfig } from './tab-panes/pane-video-source-tab-config'
 import { ThemesSelect } from './theme'
@@ -50,7 +50,7 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
   useHotkeyForConfig(['shift.p'], 'autoPreviewWhenKeyboardSelect', '键盘选中后自动开始预览')
   useHotkeyForConfig(['shift.m'], 'autoPreviewWhenHover', '鼠标悬浮后自动开始预览')
   useHotkeyForConfig(['shift.c'], 'useNarrowMode', '居中模式')
-  useHotkeyForConfig(['shift.b'], 'styleUseCardBorder', '卡片边框')
+  useHotkeyForConfigBorder()
 
   const { tab } = useSnapshot(modalSettingsStore)
 
@@ -125,73 +125,7 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
             {
               label: '样式自定',
               key: TabPaneKey.CustomUi,
-              children: (
-                <div className={styles.tabPane}>
-                  <div className={styles.settingsGroup}>
-                    <div className={styles.settingsGroupTitle} style={{ marginBottom: 15 }}>
-                      样式自定义
-                    </div>
-                    <div className={clsx(styles.settingsGroupContent)}>
-                      <div className={styles.row} style={{ marginTop: 5 }}>
-                        <CheckboxSettingItem
-                          configKey='styleUseStandardVideoSourceTab'
-                          label='推荐 Tab: 按钮使用标准高度'
-                          tooltip='默认紧凑高度'
-                        />
-                      </div>
-                      <div className={styles.row} style={{ marginTop: 5 }}>
-                        <CheckboxSettingItem
-                          configKey='styleUseStickyTabbarInPureRecommend'
-                          label='全屏模式: sticky tab bar'
-                          tooltip={
-                            <>
-                              默认勾选: Tab 栏会吸附在顶栏下方
-                              <br />
-                              取消选中: Tab 栏会随页面一起滚动
-                            </>
-                          }
-                        />
-                      </div>
-                      <div className={styles.row} style={{ marginTop: 5 }}>
-                        <CheckboxSettingItem
-                          configKey='styleUseCustomGrid'
-                          label='全屏模式: 使用自定义网格配置'
-                          tooltip={
-                            <>
-                              网格配置指: 网格宽度, 间距, 列数等.
-                              <br />
-                              自定义网格配置: 宽度为90%; 可跟随 Bilibili-Evolved 自定义顶栏配置;
-                              列数: 4列 - 10列; {APP_NAME} 自定义;
-                              <br />
-                              默认网格配置: bili-feed4 首页使用的网格配置
-                            </>
-                          }
-                        />
-                      </div>
-                      <div className={styles.row} style={{ marginTop: 5 }}>
-                        <CheckboxSettingItem
-                          configKey='styleUseWhiteBackground'
-                          label='全屏模式: styleUseWhiteBackground'
-                        />
-                      </div>
-                      <div className={styles.row} style={{ marginTop: 5 }}>
-                        <CheckboxSettingItem
-                          configKey='styleUseCardBorder'
-                          label='视频卡片: 使用边框'
-                          tooltip=<>使用边框后: 整个卡片区域可点击 / 可触发预览 / 可使用右键菜单</>
-                        />
-
-                        <SwitchSettingItem
-                          size='small'
-                          configKey={'styleUseCardBorderOnlyOnHover'}
-                          checkedChildren='只在悬浮展示'
-                          unCheckedChildren='总是展示'
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ),
+              children: <TabPaneCustomUI />,
             },
             {
               label: 'Tab 设置',
