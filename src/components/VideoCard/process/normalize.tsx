@@ -1,6 +1,6 @@
 import { APP_NAME } from '$common'
-import { C, flexCenterStyle } from '$common/emotion-css'
-import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
+import { C } from '$common/emotion-css'
+import { borderColorValue, colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import {
   isApp,
   isDynamic,
@@ -703,32 +703,30 @@ export function LiveBadge({ className }: { className?: string }) {
     <span
       className={className}
       css={css`
-        /* position: absolute;
-        bottom: 0;
-        left: 50%;
-        transform-origin: top left;
-        transform: translateX(-50%); */
-
         height: 15px;
+        line-height: 15px;
         padding: 0 4px;
         width: max-content;
+        flex-shrink: 0;
 
         border-radius: 22px;
-        /* background: linear-gradient(0deg, #f69, #f69), linear-gradient(0deg, #fff, #fff); */
+        border: 2px solid ${borderColorValue};
         background-color: ${colorPrimaryValue};
-        border: 2px solid #fff;
 
-        ${flexCenterStyle};
         display: inline-flex;
-        flex-shrink: 0;
+        align-items: center;
+        justify-content: center;
       `}
     >
-      <LiveIcon active {...size(12)} css={[C.mr(4)]} />
+      <LiveIcon active {...size(12)} css={[C.mr(2)]} />
       <span
         css={css`
-          font-weight: 400;
+          font-weight: normal;
           font-size: 10px;
           color: #fff;
+          line-height: 1;
+          position: relative;
+          top: 1px;
         `}
       >
         直播中
