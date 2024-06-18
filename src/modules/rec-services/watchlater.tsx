@@ -18,8 +18,9 @@ export const watchLaterState = proxy({
   updatedAt: 0,
   bvidSet: proxySet<string>(),
 })
+
 export function useWatchLaterState(bvid?: string) {
-  const set = useSnapshot(watchLaterState).bvidSet
+  const set = useSnapshot(watchLaterState.bvidSet)
   return bvid && set.has(bvid)
 }
 
@@ -59,10 +60,15 @@ export class WatchLaterRecService implements IService {
       }
     })
 
+    /**
+     * side efffects
+     */
+
     // save
     if (Date.now() > watchLaterState.updatedAt) {
       watchLaterState.updatedAt = Date.now()
-      watchLaterState.bvidSet = proxySet(items.map((i) => i.bvid))
+      watchLaterState.bvidSet.clear()
+      items.forEach((item) => watchLaterState.bvidSet.add(item.bvid))
     }
 
     // keep 最近几天内

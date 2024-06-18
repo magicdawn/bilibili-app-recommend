@@ -90,9 +90,7 @@ export async function getUserBlacklist() {
 
   if (ids) {
     blacklistMids.clear()
-    ids.forEach((x) => {
-      blacklistMids.add(x.toString())
-    })
+    ids.forEach((x) => blacklistMids.add(x.toString()))
   }
 
   debug('user blocklist fetched: %o', ids)
