@@ -74,7 +74,7 @@ jobs:
           force_orphan: false
 
       # release with changelog
-      - run: pnpx changelogithub@0
+      - run: pnpx changeloggithub@0
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
