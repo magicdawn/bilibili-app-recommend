@@ -14,6 +14,7 @@ import { IconPark } from '$modules/icon/icon-park'
 import { dynamicFeedFilterSelectUp } from '$modules/rec-services/dynamic-feed'
 import { formatFavFolderUrl } from '$modules/rec-services/fav'
 import { UserFavService, defaultFavFolderName } from '$modules/rec-services/fav/user-fav.service'
+import { useWatchLaterState } from '$modules/rec-services/watchlater'
 import { settings, updateSettings, useSettingsSnapshot } from '$modules/settings'
 import { UserBlacklistService, useInBlacklist } from '$modules/user/relations/blacklist'
 import { UserfollowService } from '$modules/user/relations/follow'
@@ -131,6 +132,7 @@ export const VideoCard = memo(function VideoCard({
   const dislikedReason = useDislikedReason(item?.api === EApiType.App && item.param)
   const cardData = useMemo(() => item && normalizeCardData(item), [item])
   const blacklisted = useInBlacklist(cardData?.authorMid)
+  const watchLaterAdded = useWatchLaterState(cardData?.bvid)
 
   return (
     <div
@@ -162,6 +164,7 @@ export const VideoCard = memo(function VideoCard({
             onRemoveCurrent={onRemoveCurrent}
             onMoveToFirst={onMoveToFirst}
             onRefresh={onRefresh}
+            watchLaterAdded={watchLaterAdded}
           />
         ))
       )}
@@ -177,6 +180,7 @@ export type VideoCardInnerProps = {
   onMoveToFirst?: (item: RecItemType, data: IVideoCardData) => void | Promise<void>
   onRefresh?: OnRefresh
   emitter?: VideoCardEmitter
+  watchLaterAdded: boolean
 }
 const VideoCardInner = memo(function VideoCardInner({
   item,
@@ -186,6 +190,7 @@ const VideoCardInner = memo(function VideoCardInner({
   onMoveToFirst,
   onRefresh,
   emitter = defaultEmitter,
+  watchLaterAdded,
 }: VideoCardInnerProps) {
   const { autoPreviewWhenHover, accessKey, styleUseCardBorder, styleUseCardBorderOnlyOnHover } =
     useSettingsSnapshot()
@@ -274,13 +279,13 @@ const VideoCardInner = memo(function VideoCardInner({
   const actionButtonVisible = active || isHovering
 
   // 稍候再看
-  const { watchlaterButtonEl, onToggleWatchLater, watchLaterAdded, hasWatchLaterEntry } =
-    useWatchlaterRelated({
-      item,
-      cardData,
-      onRemoveCurrent,
-      actionButtonVisible,
-    })
+  const { watchlaterButtonEl, onToggleWatchLater, hasWatchLaterEntry } = useWatchlaterRelated({
+    item,
+    cardData,
+    onRemoveCurrent,
+    actionButtonVisible,
+    watchLaterAdded,
+  })
 
   // 不喜欢
   const { dislikeButtonEl, hasDislikeEntry, onTriggerDislike } = useDislikeRelated({

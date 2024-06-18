@@ -21,7 +21,7 @@ export const watchLaterState = proxy({
 
 export function useWatchLaterState(bvid?: string) {
   const set = useSnapshot(watchLaterState.bvidSet)
-  return bvid && set.has(bvid)
+  return !!bvid && set.has(bvid)
 }
 
 if (getHasLogined()) {

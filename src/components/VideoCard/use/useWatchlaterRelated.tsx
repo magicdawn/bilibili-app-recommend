@@ -1,7 +1,7 @@
 import { type RecItemType } from '$define'
 import { EApiType } from '$define/index.shared'
 import { IconAnimatedChecked } from '$modules/icon/animated-checked'
-import { useWatchLaterState, watchLaterState } from '$modules/rec-services/watchlater'
+import { watchLaterState } from '$modules/rec-services/watchlater'
 import { AntdMessage } from '$utility'
 import { usePrevious } from 'ahooks'
 import delay from 'delay'
@@ -19,11 +19,13 @@ export function useWatchlaterRelated({
   cardData,
   onRemoveCurrent,
   actionButtonVisible,
+  watchLaterAdded,
 }: {
   item: RecItemType
   cardData: IVideoCardData
   onRemoveCurrent: VideoCardInnerProps['onRemoveCurrent']
   actionButtonVisible: boolean
+  watchLaterAdded: boolean
 }) {
   const { avid, bvid } = cardData
   const hasWatchLaterEntry = (() => {
@@ -40,7 +42,6 @@ export function useWatchlaterRelated({
   })()
 
   // watchLater added
-  const watchLaterAdded = useWatchLaterState(bvid)
   const watchLaterAddedPrevious = usePrevious(watchLaterAdded)
 
   const _requesting = useRef(false)

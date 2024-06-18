@@ -16,12 +16,14 @@ const S = {
     z-index: ${baseZ + 2};
   `,
 
-  topContainer: (inlinePosition: InlinePosition) => css`
-    ${S.top(inlinePosition)}
-    display: flex;
-    flex-direction: ${inlinePosition === 'left' ? 'row' : 'row-reverse'};
-    column-gap: 5px;
-  `,
+  topContainer: (inlinePosition: InlinePosition) => [
+    S.top(inlinePosition),
+    css`
+      display: flex;
+      flex-direction: ${inlinePosition === 'left' ? 'row' : 'row-reverse'};
+      column-gap: 5px;
+    `,
+  ],
 
   button: (visible: boolean) => css`
     position: relative;
@@ -72,7 +74,7 @@ const S = {
 }
 export const VideoCardActionStyle = S
 
-export function VideoCardActionButton({
+export const VideoCardActionButton = memo(function VideoCardActionButton({
   inlinePosition,
   icon,
   tooltip,
@@ -98,7 +100,7 @@ export function VideoCardActionButton({
       {tooltipEl}
     </div>
   )
-}
+})
 
 export function useTooltip({
   inlinePosition,
