@@ -32,7 +32,7 @@ dayjs.extend(duration)
 import './modules/settings'
 
 // virtuoso config
-import './components/RecGrid/vartuoso.config'
+import './components/RecGrid/virtuoso.config'
 
 import { IN_BILIBILI_HOMEPAGE, IN_BILIBILI_VIDEO_PLAY_PAGE } from '$common'
 import { initHomepage } from '$main/homepage'

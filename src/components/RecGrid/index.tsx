@@ -33,8 +33,8 @@ import * as scopedClsNames from '../video-grid.module.scss'
 import type { OnRefresh } from './useRefresh'
 import { getIService, useRefresh } from './useRefresh'
 import { useShortcut } from './useShortcut'
-import type { CustomGridComponents, CustomGridContext } from './vartuoso.config'
-import { ENABLE_VIRTUAL_GRID, gridComponents } from './vartuoso.config'
+import type { CustomGridComponents, CustomGridContext } from './virtuoso.config'
+import { ENABLE_VIRTUAL_GRID, gridComponents } from './virtuoso.config'
 
 const debug = baseDebug.extend('components:RecGrid')
 
