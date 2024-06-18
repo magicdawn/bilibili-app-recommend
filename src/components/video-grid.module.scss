@@ -61,6 +61,18 @@
 
 .video-grid-container {
   container-type: inline-size;
+
+  &.virtual-grid-enabled {
+    :global {
+      .virtuoso-grid-item {
+        padding-bottom: var(--row-gap);
+        .bili-video-card {
+          margin-bottom: 0;
+          height: 100%;
+        }
+      }
+    }
+  }
 }
 
 // 20px <= $gap-row <= 40px

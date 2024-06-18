@@ -28,21 +28,15 @@ import delay from 'delay'
 import mitt from 'mitt'
 import ms from 'ms'
 import { useInView } from 'react-intersection-observer'
-import {
-  narrowMode,
-  newCardStyle,
-  videoGrid,
-  videoGridBiliFeed4,
-  videoGridContainer,
-  videoGridCustom,
-} from '../video-grid.module.scss'
+import { VirtuosoGrid } from 'react-virtuoso'
+import * as scopedClsNames from '../video-grid.module.scss'
 import type { OnRefresh } from './useRefresh'
 import { getIService, useRefresh } from './useRefresh'
 import { useShortcut } from './useShortcut'
+import type { CustomGridComponents, CustomGridContext } from './vartuoso.config'
+import { ENABLE_VIRTUAL_GRID, gridComponents } from './vartuoso.config'
 
 const debug = baseDebug.extend('components:RecGrid')
-
-const ENABLE_VIRTUAL_GRID = false
 
 export type RecGridRef = {
   refresh: OnRefresh
@@ -246,7 +240,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
   // }, [usingItems, tab, hasSelectedUp, searchText])
 
   // .video-grid
-  const containerRef = useRef<HTMLDivElement>(null)
+  const containerRef = useRef<HTMLDivElement | null>(null)
 
   const getScrollerRect = useMemoizedFn(() => {
     // use window
@@ -374,7 +368,9 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
     onChange(inView) {
       if (inView) {
         debug('footerInView change to visible', inView)
-        setTimeout(checkShouldLoadMore)
+        if (!ENABLE_VIRTUAL_GRID) {
+          setTimeout(checkShouldLoadMore)
+        }
       }
     },
   })
@@ -383,6 +379,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
     <div
       ref={footerRef}
       css={css`
+        grid-column: 1 / -1;
         padding: 30px 0;
         display: flex;
         align-items: center;
@@ -415,12 +412,21 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
     useSettingsSnapshot()
   const gridClassName = clsx(
     APP_CLS_GRID, // for customize css
-    videoGrid,
-    newCardStyle,
-    styleUseCustomGrid ? videoGridCustom : videoGridBiliFeed4,
-    useNarrowMode && narrowMode, // 居中
+    scopedClsNames.videoGrid,
+    scopedClsNames.newCardStyle,
+    styleUseCustomGrid ? scopedClsNames.videoGridCustom : scopedClsNames.videoGridBiliFeed4,
+    useNarrowMode && scopedClsNames.narrowMode, // 居中
     className,
   )
+
+  const virtuosoGridContext: CustomGridContext = useMemo(() => {
+    return {
+      footerContent: footer,
+      containerRef,
+      gridClassName,
+      // renderItem,
+    }
+  }, [footer, containerRef, gridClassName])
 
   if (refreshError) {
     console.error(refreshError.stack || refreshError)
@@ -450,7 +456,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
   const _skeleton = refreshing && useSkeleton
   if (_skeleton) {
     return (
-      <div className={videoGridContainer}>
+      <div className={scopedClsNames.videoGridContainer}>
         <div className={gridClassName}>
           {new Array(28).fill(undefined).map((_, index) => {
             const x = <VideoCard key={index} loading={true} className={APP_CLS_CARD} />
@@ -507,9 +513,29 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
     }
   }
 
+  // virtual grid
+  if (ENABLE_VIRTUAL_GRID) {
+    return (
+      <div className={clsx(scopedClsNames.videoGridContainer, scopedClsNames.virtualGridEnabled)}>
+        <VirtuosoGrid
+          useWindowScroll
+          data={items}
+          overscan={{ main: 20, reverse: 20 }}
+          listClassName={gridClassName}
+          computeItemKey={(index, item) => item.uniqId}
+          components={gridComponents as CustomGridComponents} // 因为我改了 context required
+          context={virtuosoGridContext}
+          itemContent={(index, item) => renderItem(item)}
+          endReached={() => checkShouldLoadMore()}
+        />
+        {!gridComponents.Footer && footer}
+      </div>
+    )
+  }
+
   // plain dom
   return (
-    <div style={{ minHeight: '100%' }} className={videoGridContainer}>
+    <div style={{ minHeight: '100%' }} className={scopedClsNames.videoGridContainer}>
       <div ref={containerRef} className={gridClassName}>
         {usingItems.map((item) => renderItem(item))}
       </div>
