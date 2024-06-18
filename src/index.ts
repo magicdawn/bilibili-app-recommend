@@ -31,9 +31,6 @@ dayjs.extend(duration)
 // load config first
 import './modules/settings'
 
-// virtuoso config
-import './components/RecGrid/virtuoso.config'
-
 import { IN_BILIBILI_HOMEPAGE, IN_BILIBILI_VIDEO_PLAY_PAGE } from '$common'
 import { initHomepage } from '$main/homepage'
 import { initVideoPlayPage } from '$main/video-play-page'

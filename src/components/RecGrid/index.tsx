@@ -368,9 +368,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
     onChange(inView) {
       if (inView) {
         debug('footerInView change to visible', inView)
-        if (!ENABLE_VIRTUAL_GRID) {
-          setTimeout(checkShouldLoadMore)
-        }
+        setTimeout(checkShouldLoadMore)
       }
     },
   })
