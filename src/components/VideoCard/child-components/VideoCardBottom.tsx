@@ -211,11 +211,7 @@ export function VideoCardBottom({
           className='bili-video-card__info--tit'
           title={title}
           css={css`
-            h3& {
-              text-indent: 0;
-            }
-
-            text-indent: 0;
+            text-indent: 0 !important;
             .bili-video-card &.bili-video-card__info--tit {
               padding-right: 0;
               height: auto;
