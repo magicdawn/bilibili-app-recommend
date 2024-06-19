@@ -257,7 +257,7 @@ export function TabPaneBasic() {
                 查看可用的快捷键
               </Button>
               <Button
-                href='https://github.com/magicdawn/bilibili-app-recommend/blob/main/CHANGELOG.md'
+                href='https://github.com/magicdawn/bilibili-app-recommend/releases'
                 target='_blank'
               >
                 更新日志

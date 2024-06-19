@@ -14,7 +14,7 @@ const Configuration: UserConfig = {
     'type-enum': [
       RuleConfigSeverity.Error,
       'always',
-      [...defaultConfig.rules['type-enum'][2], 'deps'],
+      [...defaultConfig.rules['type-enum'][2], 'deps', 'changelog'],
     ],
   },
 }
