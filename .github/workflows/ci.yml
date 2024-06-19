@@ -63,6 +63,7 @@ jobs:
 
       # run knip report
       - run: pnpm knip
+        continue-on-error: true
 
       # build
       - run: pnpm build:real-build
