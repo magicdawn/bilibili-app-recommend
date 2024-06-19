@@ -77,9 +77,6 @@ importers:
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
-      lodash-es:
-        specifier: ^4.17.21
-        version: 4.17.21
       md5:
         specifier: ^2.3.0
         version: 2.3.0
@@ -89,9 +86,6 @@ importers:
       ms:
         specifier: ^2.1.3
         version: 2.1.3
-      natural-orderby:
-        specifier: ^3.0.2
-        version: 3.0.2
       p-event:
         specifier: ^6.0.1
         version: 6.0.1
@@ -119,9 +113,6 @@ importers:
       react-if:
         specifier: ^4.1.5
         version: 4.1.5(react@18.3.1)
-      react-image:
-        specifier: ^4.1.0
-        version: 4.1.0(@babel/runtime@7.24.7)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-intersection-observer:
         specifier: ^9.10.3
         version: 9.10.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -192,13 +183,7 @@ importers:
       '@types/ua-parser-js':
         specifier: ^0.7.39
         version: 0.7.39
-      '@unocss/preset-attributify':
-        specifier: ^0.61.0
-        version: 0.61.0
       '@unocss/preset-rem-to-px':
-        specifier: ^0.61.0
-        version: 0.61.0
-      '@unocss/transformer-attributify-jsx':
         specifier: ^0.61.0
         version: 0.61.0
       '@violentmonkey/types':
@@ -210,9 +195,6 @@ importers:
       '@vitejs/plugin-react-swc':
         specifier: ^3.7.0
         version: 3.7.0(vite@5.3.1(@types/node@20.14.5)(sass@1.77.6))
-      '@vitest/ui':
-        specifier: ^1.6.0
-        version: 1.6.0(vitest@1.6.0)
       chalk:
         specifier: ^5.3.0
         version: 5.3.0
@@ -3190,9 +3172,6 @@ packages:
     resolution: {integrity: sha512-gvVijfZvn7R+2qyPX8mAuKcFGDf6Nc61GdvGafQsHL0sBIxfKzA+usWn4GFC/bk+QdwPUD4kWFJLhElipq+0VA==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
 
-  lodash-es@4.17.21:
-    resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==}
-
   lodash.camelcase@4.3.0:
     resolution: {integrity: sha512-TwuEnCnxbc3rAvhf/LbG7tJUDzhqXyFnv3dtzLOPgCG/hODL7WFnsbwktkD7yUV0RrreP/l1PALq/YSg6VvjlA==}
 
@@ -3365,10 +3344,6 @@ packages:
 
   natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
-
-  natural-orderby@3.0.2:
-    resolution: {integrity: sha512-x7ZdOwBxZCEm9MM7+eQCjkrNLrW3rkBKNHVr78zbtqnMGVNlnDi6C/eUEYgxHNrcbu0ymvjzcwIL/6H1iHri9g==}
-    engines: {node: '>=18'}
 
   netmask@2.0.2:
     resolution: {integrity: sha512-dBpDMdxv9Irdq66304OLfEmQ9tbNRFnFTuZiLo+bD+r332bBmMJ8GBLXklIXXgxd3+v9+KUnZaUR5PJMa75Gsg==}
@@ -3941,13 +3916,6 @@ packages:
     engines: {node: '>=12'}
     peerDependencies:
       react: ^16.x || ^17.x || ^18.x
-
-  react-image@4.1.0:
-    resolution: {integrity: sha512-qwPNlelQe9Zy14K2pGWSwoL+vHsAwmJKS6gkotekDgRpcnRuzXNap00GfibD3eEPYu3WCPlyIUUNzcyHOrLHjw==}
-    peerDependencies:
-      '@babel/runtime': '>=7'
-      react: '>=16.8'
-      react-dom: '>=16.8'
 
   react-intersection-observer@9.10.3:
     resolution: {integrity: sha512-9NYfKwPZRovB6QJee7fDg0zz/SyYrqXtn5xTZU0vwLtLVBtfu9aZt1pVmr825REE49VPDZ7Lm5SNHjJBOTZHpA==}
@@ -6522,9 +6490,10 @@ snapshots:
       fflate: 0.8.1
       flatted: 3.2.9
       pathe: 1.1.2
-      picocolors: 1.0.0
+      picocolors: 1.0.1
       sirv: 2.0.4
       vitest: 1.6.0(@types/node@20.14.5)(@vitest/ui@1.6.0)(sass@1.77.6)
+    optional: true
 
   '@vitest/utils@1.6.0':
     dependencies:
@@ -7495,7 +7464,8 @@ snapshots:
     dependencies:
       reusify: 1.0.4
 
-  fflate@0.8.1: {}
+  fflate@0.8.1:
+    optional: true
 
   file-entry-cache@8.0.0:
     dependencies:
@@ -8001,8 +7971,6 @@ snapshots:
     dependencies:
       p-locate: 6.0.0
 
-  lodash-es@4.17.21: {}
-
   lodash.camelcase@4.3.0: {}
 
   lodash.curry@4.1.1: {}
@@ -8152,8 +8120,6 @@ snapshots:
   nanoid@3.3.7: {}
 
   natural-compare@1.4.0: {}
-
-  natural-orderby@3.0.2: {}
 
   netmask@2.0.2: {}
 
@@ -8819,12 +8785,6 @@ snapshots:
   react-if@4.1.5(react@18.3.1):
     dependencies:
       react: 18.3.1
-
-  react-image@4.1.0(@babel/runtime@7.24.7)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
-    dependencies:
-      '@babel/runtime': 7.24.7
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
 
   react-intersection-observer@9.10.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:

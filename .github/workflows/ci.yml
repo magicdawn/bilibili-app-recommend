@@ -61,6 +61,9 @@ jobs:
       # test
       - run: pnpm test
 
+      # run knip report
+      - run: pnpm knip
+
       # build
       - run: pnpm build:real-build
 
