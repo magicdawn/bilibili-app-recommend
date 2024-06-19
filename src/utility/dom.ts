@@ -86,12 +86,13 @@ export function shouldDisableShortcut() {
  * https://youmightnotneedjquery.com/#offset
  */
 
-export function getElementOffset(el: HTMLElement) {
-  const box = el.getBoundingClientRect()
+export function getElementOffset(el: HTMLElement, rect?: DOMRect) {
+  rect ??= el.getBoundingClientRect()
   const docElem = document.documentElement
+  // 非常好理解, 当 scroll = 0 时, bounding-rect.top 即为 offset; 有 scroll 时, 还原即可.
   return {
-    top: box.top + window.pageYOffset - docElem.clientTop,
-    left: box.left + window.pageXOffset - docElem.clientLeft,
+    top: rect.top + window.scrollY - docElem.clientTop,
+    left: rect.left + window.scrollX - docElem.clientLeft,
   }
 }
 

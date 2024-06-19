@@ -12,6 +12,7 @@ function isUsingCustomHeader() {
   const el = defaultHeader()
   return Boolean(el && window.getComputedStyle(el).display === 'none')
 }
+export const $usingEvolevdHeader = valtioFactory(isUsingCustomHeader)
 
 function calcHeaderHeight() {
   if (!isUsingCustomHeader()) return 64
@@ -70,6 +71,7 @@ function calcEvolvedThemeColor() {
 export const $evolvedThemeColor = valtioFactory(calcEvolvedThemeColor)
 
 function action() {
+  $usingEvolevdHeader.updateThrottled()
   $headerHeight.updateThrottled()
   $headerWidth.updateThrottled()
   $evolvedThemeColor.updateThrottled()

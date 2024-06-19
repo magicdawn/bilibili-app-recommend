@@ -1,3 +1,4 @@
+import { CheckboxSettingItem } from '$components/ModalSettings/setting-item'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import type { RecGridRef } from '$components/RecGrid'
 import { RecGrid } from '$components/RecGrid'
@@ -7,10 +8,9 @@ import { RefreshButton } from '$components/RecHeader/RefreshButton'
 import { VideoSourceTab } from '$components/RecHeader/tab'
 import { useIsDarkMode } from '$modules/dark-mode'
 import { useSettingsSnapshot } from '$modules/settings'
+import { BaseModal, BaseModalStyle, ModalClose } from '$ui-components/BaseModal'
 import { CollapseBtn } from '$ui-components/CollapseBtn'
 import { AntdMessage } from '$utility'
-import { BaseModal, BaseModalStyle, ModalClose } from '../../ui-components/BaseModal'
-import { CheckboxSettingItem } from '../ModalSettings/setting-item'
 
 const S = {
   modalMask: (narrowMode: boolean) => [
