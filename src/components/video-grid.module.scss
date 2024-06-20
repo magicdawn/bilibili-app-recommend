@@ -75,10 +75,8 @@
   }
 }
 
-// 20px <= $gap-row <= 40px
-// max(min(40px, 1.6vw), 20px);
-$row-gap: clamp(20px, 1.6vw, 40px);
 $col-gap: 20px;
+$row-gap: clamp(20px, 1.3vw, 40px);
 
 .video-grid-custom {
   --col: 4;
