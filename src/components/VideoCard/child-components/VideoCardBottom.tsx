@@ -5,8 +5,8 @@
 
 import { C, flexCenterStyle } from '$common/emotion-css'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
-import { isLive, isRanking, type RecItemType } from '$define'
-import { EApiType } from '$define/index.shared'
+import { isApp, isLive, isRanking, type RecItemType } from '$define'
+import { EApiType, EAppApiDevice } from '$define/index.shared'
 import { LiveIcon } from '$modules/icon'
 import { ELiveStatus } from '$modules/rec-services/live/live-enum'
 import { useSettingsSnapshot } from '$modules/settings'
@@ -153,6 +153,15 @@ export function VideoCardBottom({
   }
 
   /**
+   * https://github.com/magicdawn/bilibili-app-recommend/issues/110
+   */
+  const ENABLE_HIDE_AVATAR = false
+  let hideAvatar = false
+  if (ENABLE_HIDE_AVATAR && isApp(item) && item.device === EAppApiDevice.android) {
+    hideAvatar = true
+  }
+
+  /**
    * 带头像, 更分散(recommend-reason 单独一行)
    */
   return (
@@ -167,7 +176,7 @@ export function VideoCardBottom({
       `}
     >
       {/* avatar */}
-      {!!authorMid && (
+      {!!authorMid && !hideAvatar && (
         <a href={authorHref} target='_blank'>
           <span css={avatarExtraCss}>
             {authorFace ? (
