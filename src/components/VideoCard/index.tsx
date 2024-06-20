@@ -661,6 +661,8 @@ const VideoCardInner = memo(function VideoCardInner({
       css={css`
         position: relative;
         overflow: hidden;
+        /* firefox need this */
+        display: block;
       `}
       onClick={handleVideoLinkClick}
       onContextMenu={(e) => {
