@@ -378,10 +378,10 @@ function apiDynamicAdapter(item: DynamicFeedItemExtend): IVideoCardData {
   const v = item.modules.module_dynamic.major.archive
   const author = item.modules.module_author
 
-  const oneDayAgo = dayjs().subtract(2, 'days').unix()
+  const gateTs = dayjs().subtract(2, 'days').unix()
   const pubdateDisplay = (() => {
     const ts = author.pub_ts
-    if (ts > oneDayAgo) {
+    if (ts > gateTs) {
       return author.pub_time
     } else {
       return formatTimeStamp(ts)

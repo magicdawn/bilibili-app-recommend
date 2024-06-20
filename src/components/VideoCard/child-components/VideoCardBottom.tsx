@@ -159,7 +159,7 @@ export function VideoCardBottom({
     <div
       css={css`
         margin-top: 15px;
-        margin-bottom: ${styleUseCardBorder ? 8 : 5}px;
+        margin-bottom: ${styleUseCardBorder ? 10 : 5}px;
         padding-inline: 5px;
         display: flex;
         column-gap: 5px;
