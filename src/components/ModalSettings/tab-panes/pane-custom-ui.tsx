@@ -151,7 +151,7 @@ export function TabPaneCustomUI() {
               如果你觉得太花哨, 可以关掉
               <br />
               ✅ 使用主题色作为 box-shadow
-              <br />❎ no box-shadow, 卡片的背景色会略微改版表示高亮
+              <br />❎ no box-shadow, 卡片的背景色会略微改变标识高亮
             </>
           }
         />
