@@ -1,6 +1,7 @@
 import { baseDebug } from '$common'
 // import { useSticky } from 'react-use-sticky'
 import { antdCustomCss, flexCenterStyle } from '$common/emotion-css'
+import { useSizeExpression } from '$common/hooks/useResizeObserverExpression'
 import { useSticky } from '$common/hooks/useSticky'
 import { ModalSettings } from '$components/ModalSettings'
 import { borderColorValue } from '$components/ModalSettings/theme.shared'
@@ -104,6 +105,19 @@ export const RecHeader = forwardRef<
     }
   })()
 
+  // useSize 太慢
+  // const bodyWidth = useSize(document.scrollingElement)?.width
+  // const xScrolling = !!(bodyWidth && bodyWidth > window.innerWidth)
+
+  const xScrolling = useSizeExpression(
+    document.body,
+    (entry) => {
+      const width = entry.contentRect.width
+      return !!(width && Math.round(width) > Math.round(window.innerWidth))
+    },
+    false,
+  )
+
   return (
     <>
       <OnRefreshContext.Provider value={onRefresh}>
@@ -125,17 +139,22 @@ export const RecHeader = forwardRef<
                   box-shadow 0.3s ease-in-out,
                   margin-bottom 0.3s ease-in-out;
               `,
-              sticky &&
+              sticky && [
                 css`
-                  margin-inline: calc((100% - 100vw) / 2);
-                  padding-inline: calc((100vw - 100%) / 2);
-
                   background-color: var(--${styleUseWhiteBackground ? 'bg1' : 'bg2'}_float);
                   /* box-shadow: 0 2px 4px rgb(0 0 0 / 8%); */
                   /* box-shadow: inset 0 -1px 0 var(--line_regular); */
                   /* box-shadow: rgba(0, 0, 0, 13%) 0 1px 10px 1px; */
                   box-shadow: ${boxShadow};
                 `,
+
+                // 横向滚动时, 100vw < 100%, 直接禁用, 懒得调了
+                !xScrolling &&
+                  css`
+                    margin-inline: calc((100% - 100vw) / 2);
+                    padding-inline: calc((100vw - 100%) / 2);
+                  `,
+              ],
             ]
           }
         >

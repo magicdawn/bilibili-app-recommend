@@ -1,0 +1,33 @@
+import { useRefStateBox } from './useRefState'
+
+export function useSizeExpression<T>(
+  target: HTMLElement,
+  fn: (entry: ResizeObserverEntry) => T,
+  initialValue: T | (() => T),
+) {
+  const _fn = useMemoizedFn(fn)
+
+  const box = useRefStateBox<T>(initialValue)
+
+  useEffect(() => {
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.target === target && entry.contentRect) {
+          const val = _fn(entry)
+          if (box.get() !== val) {
+            console.log('setState', val)
+            box.set(val)
+          }
+        }
+      }
+    })
+
+    observer.observe(target)
+
+    return () => {
+      observer.disconnect()
+    }
+  }, [target, _fn])
+
+  return box.state
+}
