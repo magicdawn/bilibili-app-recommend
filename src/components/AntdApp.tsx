@@ -5,7 +5,7 @@ import { useSettingsSnapshot } from '$modules/settings'
 import { UseApp } from '$utility/antd-static'
 import { StyleProvider, type StyleProviderProps } from '@ant-design/cssinjs'
 import { cache as emotionCssDefaultCache } from '@emotion/css'
-import { CacheProvider, Global, css as _css, css, type EmotionCache } from '@emotion/react'
+import { CacheProvider, type EmotionCache, Global, css as _css, css } from '@emotion/react'
 import { ConfigProvider, theme } from 'antd'
 import zhCN from 'antd/locale/zh_CN'
 import type { ReactNode } from 'react'
@@ -107,7 +107,7 @@ function GlobalStyle() {
         styles={_css`
           :root {
             ${colorPrimaryIdentifier}: ${colorPrimary};
-            ${borderColorIdentifier}: ${dark ? '#333' : '#eee'};
+            ${borderColorIdentifier}: ${dark ? '#333' : styleUseWhiteBackground ? '#eee' : '#e5e6e7'};
             --${APP_NAME}-color: ${c};
             --${APP_NAME}-bg-color: ${bg};
           }

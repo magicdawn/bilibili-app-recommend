@@ -34,12 +34,22 @@ const hightlightBackground = (dark: boolean, styleUseWhiteBackground: boolean) =
   `
 }
 
+const coverZoom = css`
+  /* cover zoom */
+  .bili-video-card__cover {
+    transform-origin: center center;
+    transition: transform 0.2s ease-out;
+    transform: scale(1.05);
+  }
+`
+
 export function useCardBorderCss(): TheCssType {
   const {
     styleUseCardBorder: useBorder,
     styleUseCardBorderOnlyOnHover: useBorderOnlyOnHover,
     styleUseCardBoxShadow: useBoxShadow,
     styleUseWhiteBackground,
+    useDelayForHover,
   } = useSettingsSnapshot()
 
   const dark = useIsDarkMode()
@@ -60,13 +70,7 @@ export function useCardBorderCss(): TheCssType {
           &:hover {
             border-color: ${borderColorValue};
             ${useBoxShadow ? borderAndShadow : hightlightBackground(dark, styleUseWhiteBackground)}
-
-            /* cover zoom */
-            .bili-video-card__cover {
-              transform-origin: center center;
-              transition: transform 0.2s ease-out;
-              transform: scale(1.05);
-            }
+            ${useDelayForHover && coverZoom}
           }
         `,
         !useBorderOnlyOnHover &&
@@ -75,7 +79,14 @@ export function useCardBorderCss(): TheCssType {
           `,
       ],
     ]
-  }, [useBorder, useBorderOnlyOnHover, useBoxShadow, dark, styleUseWhiteBackground])
+  }, [
+    useBorder,
+    useBorderOnlyOnHover,
+    useBoxShadow,
+    dark,
+    styleUseWhiteBackground,
+    useDelayForHover,
+  ])
 }
 
 export function getActiveCardBorderCss(active: boolean): TheCssType {
