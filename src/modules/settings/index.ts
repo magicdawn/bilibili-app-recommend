@@ -145,6 +145,7 @@ export const initialSettings = {
   // inspired by https://ai.taobao.com
   styleUseCardBorder: true,
   styleUseCardBorderOnlyOnHover: false,
+  styleUseCardBoxShadow: true,
 
   /**
    * 颜色主题

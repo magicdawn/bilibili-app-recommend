@@ -43,7 +43,7 @@ const enum TabPaneKey {
 const tab = __PROD__
   ? TabPaneKey.Basic
   : // for debug, free to change this
-    TabPaneKey.Advance
+    TabPaneKey.CustomUi
 const modalSettingsStore = proxy({ tab })
 
 export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => void }) {
@@ -90,6 +90,11 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
                 /* 8 24 */
                 padding-inline: 5px 15px;
                 /* --ant-tabs-vertical-item-margin: 10px 0 0 0; */
+              }
+
+              /* https://github.com/ant-design/ant-design/issues/43541 */
+              .ant-tabs-nav-operations {
+                display: none;
               }
             }
           `}

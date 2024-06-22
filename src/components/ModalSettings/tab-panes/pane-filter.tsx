@@ -1,3 +1,4 @@
+import { C } from '$common/emotion-css'
 import { CheckboxSettingItem, SwitchSettingItem } from '$components/ModalSettings/setting-item'
 import { updateSettings, useSettingsSnapshot } from '$modules/settings'
 import { HelpInfo } from '$ui-components/HelpInfo'
@@ -32,12 +33,7 @@ export function TabPaneFilter() {
             视频/图文/影视: 仅推荐类 Tab 生效 <br />
             UP/标题: 推荐类 / 热门 等Tab 生效
           </HelpInfo>
-          <SwitchSettingItem
-            configKey='filterEnabled'
-            css={css`
-              margin-left: 10px;
-            `}
-          />
+          <SwitchSettingItem configKey='filterEnabled' css={C.ml(10)} />
         </div>
 
         <div className={clsx(styles.settingsGroupContent)}>

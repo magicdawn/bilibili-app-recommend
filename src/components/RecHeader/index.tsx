@@ -118,7 +118,7 @@ export const RecHeader = forwardRef<
                 top: ${headerHeight - 1}px; // 有缝隙, 故 -1 px
                 z-index: 1000;
                 margin-bottom: 12px;
-                border-bottom: 1px solid ${borderColorValue};
+                border-bottom: 1px dotted ${borderColorValue};
 
                 transition:
                   background-color 0.3s ease-in-out,

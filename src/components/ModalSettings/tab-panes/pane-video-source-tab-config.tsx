@@ -49,8 +49,7 @@ export function TabPaneVideoSourceTabConfig() {
             </HelpInfo>
             <Col flex={1} />
             <Popconfirm
-              title='确定'
-              description='确定不是手欠点着玩? 再点一次确定吧~'
+              title='确定重置下面的设置项?'
               onConfirm={() => {
                 updateSettings(
                   cloneDeep(pick(initialSettings, ['hidingTabKeys', 'customTabKeysOrder'])),

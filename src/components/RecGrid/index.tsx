@@ -8,7 +8,8 @@ import { useModalDislikeVisible } from '$components/ModalDislike'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import { useCurrentUsingTab } from '$components/RecHeader/tab'
 import { EHotSubTab, ETab } from '$components/RecHeader/tab-enum'
-import { VideoCard, getCardBorderCss } from '$components/VideoCard'
+import { VideoCard } from '$components/VideoCard'
+import { getActiveCardBorderCss, useCardBorderCss } from '$components/VideoCard/card-border-css'
 import { type VideoCardEmitter, type VideoCardEvents } from '$components/VideoCard/index.shared'
 import { filterRecItems } from '$components/VideoCard/process/filter'
 import type { IVideoCardData } from '$components/VideoCard/process/normalize'
@@ -406,8 +407,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
     </div>
   )
 
-  const { useNarrowMode, styleUseCustomGrid, styleUseCardBorder, styleUseCardBorderOnlyOnHover } =
-    useSettingsSnapshot()
+  const { useNarrowMode, styleUseCustomGrid } = useSettingsSnapshot()
   const gridClassName = clsx(
     APP_CLS_GRID, // for customize css
     scopedClsNames.videoGrid,
@@ -416,6 +416,8 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
     useNarrowMode && scopedClsNames.narrowMode, // 居中
     className,
   )
+
+  const cardBorderCss = useCardBorderCss()
 
   const virtuosoGridContext: CustomGridContext = useMemo(() => {
     return {
@@ -499,7 +501,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
         <VideoCard
           key={item.uniqId}
           className={clsx(APP_CLS_CARD, { [APP_CLS_CARD_ACTIVE]: active })}
-          css={getCardBorderCss(active, styleUseCardBorder, styleUseCardBorderOnlyOnHover)}
+          css={[cardBorderCss, getActiveCardBorderCss(active)]}
           item={item}
           active={active}
           onRemoveCurrent={handleRemoveCard}

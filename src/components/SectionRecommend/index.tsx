@@ -1,12 +1,12 @@
 import { APP_CLS_CARD, baseDebug } from '$common'
 import { useRefresh } from '$components/RecGrid/useRefresh'
 import { useCurrentUsingTab } from '$components/RecHeader/tab'
+import { useCardBorderCss } from '$components/VideoCard/card-border-css'
 import { limitTwoLines, videoGrid, videoGridBiliFeed4 } from '$components/video-grid.module.scss'
 import { EApiType } from '$define/index.shared'
 import { refreshForHome } from '$modules/rec-services'
-import { useSettingsSnapshot } from '$modules/settings'
 import { RecHeader } from '../RecHeader'
-import { VideoCard, getCardBorderCss } from '../VideoCard'
+import { VideoCard } from '../VideoCard'
 
 const debug = baseDebug.extend('components:SectionRecommend')
 
@@ -33,7 +33,7 @@ export function SectionRecommend() {
 
   const showSkeleton = !items.length || refreshError || (refreshing && useSkeleton)
 
-  const { styleUseCardBorder, styleUseCardBorderOnlyOnHover } = useSettingsSnapshot()
+  const cardBorderCss = useCardBorderCss()
 
   return (
     <section data-area='推荐'>
@@ -50,7 +50,7 @@ export function SectionRecommend() {
                   key={item.uniqId}
                   item={item}
                   className={clsx(APP_CLS_CARD)}
-                  css={getCardBorderCss(false, styleUseCardBorder, styleUseCardBorderOnlyOnHover)}
+                  css={cardBorderCss}
                 />
               )
             })}

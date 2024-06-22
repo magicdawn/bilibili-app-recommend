@@ -9,8 +9,6 @@ import type { MouseEvent } from 'react'
 import type { VideoData } from '../card.service'
 import type { VideoCardEmitter } from '../index.shared'
 
-const HOVER_DELAY = 800
-
 const DEBUG_ANIMATION = __PROD__
   ? false
   : // free to change
@@ -45,6 +43,7 @@ export function usePreviewAnimation({
     return Boolean(data?.index?.length && data?.image?.length)
   })
 
+  const [autoPreviewing, setAutoPreviewing] = useState(false)
   const [previewProgress, setPreviewProgress] = useRafState<number | undefined>()
   const [previewT, setPreviewT] = useRafState<number | undefined>()
   const getProgress = useMemoizedFn(() => previewProgress || 0)
@@ -75,10 +74,19 @@ export function usePreviewAnimation({
       isHoveringBox.set(true)
       updateMouseEnterRelativeX(e)
 
-      await tryFetchVideoData()
+      // fetch data
+      const p = tryFetchVideoData()
+
+      // delay
+      const HOVER_DELAY = 800
+      let delayPromise: Promise<void> | undefined
       if (settings.useDelayForHover) {
-        await delay(HOVER_DELAY)
+        delayPromise = delay(HOVER_DELAY)
       }
+
+      // normal: fetch instantly, wait hover delay
+      // abnormal: bad network, already delay caused by network, so no wait again
+      await Promise.all([p, delayPromise].filter(Boolean))
 
       // mouse leave after delay
       if (!isHoveringBox.val) return
@@ -138,6 +146,7 @@ export function usePreviewAnimation({
     mouseMoved,
     idBox,
     autoPreviewWhenHover,
+    setAutoPreviewing,
     setPreviewT,
     setPreviewProgress,
   })
@@ -147,7 +156,7 @@ export function usePreviewAnimation({
     if (!idBox.val) {
       await tryFetchVideoData()
       if (hasVideoData()) {
-        onStartPreviewAnimation()
+        onStartPreviewAnimation(false)
       }
       return
     }
@@ -156,12 +165,13 @@ export function usePreviewAnimation({
     animationController.togglePaused()
   })
 
-  const onStartPreviewAnimation = useMemoizedFn((startByHover = false) => {
+  const onStartPreviewAnimation = useMemoizedFn((startByHover) => {
     startByHoverBox.set(startByHover)
     setMouseMoved(false)
     animationController.reset()
     animationController.stop(true) // clear existing
 
+    setAutoPreviewing(true)
     setPreviewProgress((val) => (typeof val === 'undefined' ? 0 : val)) // get rid of undefined
     setPreviewT(undefined)
 
@@ -224,6 +234,7 @@ export function usePreviewAnimation({
   return {
     onHotkeyPreviewAnimation,
     onStartPreviewAnimation,
+    autoPreviewing,
     previewProgress,
     previewT,
     isHovering: isHoveringBox.state,
@@ -239,6 +250,7 @@ function useAnimationController({
   active,
   mouseMoved,
   autoPreviewWhenHover,
+  setAutoPreviewing,
   setPreviewT,
   setPreviewProgress,
 }: {
@@ -248,6 +260,7 @@ function useAnimationController({
   active: boolean
   mouseMoved: boolean
   autoPreviewWhenHover: boolean
+  setAutoPreviewing: (autoPreviewing: boolean) => void
   setPreviewT: (t: number | undefined) => void
   setPreviewProgress: (p: number | undefined) => void
 }) {
@@ -286,6 +299,7 @@ function useAnimationController({
 
     if (idBox.val) cancelAnimationFrame(idBox.val)
     idBox.val = undefined
+    setAutoPreviewing(false)
     setPreviewProgress(undefined)
     setPreviewT(undefined)
     animationController.reset()

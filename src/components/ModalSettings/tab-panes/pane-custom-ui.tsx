@@ -1,12 +1,14 @@
 import { APP_NAME } from '$common'
+import { C, antdCustomCss, flexVerticalCenterStyle } from '$common/emotion-css'
 import type { Settings } from '$modules/settings'
-import { settings } from '$modules/settings'
+import { initialSettings, settings, updateSettings } from '$modules/settings'
 import { AntdMessage, shouldDisableShortcut } from '$utility'
-import { Tag } from 'antd'
-import { isEqual } from 'lodash'
+import { Button, Popconfirm, Tag } from 'antd'
+import { cloneDeep, isEqual } from 'lodash'
 import { pick } from 'radash'
 import styles from '../index.module.scss'
 import { CheckboxSettingItem, SwitchSettingItem } from '../setting-item'
+import { SettingsGroup } from './_shared'
 
 type CardBorderState = Partial<
   Pick<Settings, 'styleUseCardBorder' | 'styleUseCardBorderOnlyOnHover'>
@@ -51,84 +53,115 @@ export function useHotkeyForConfigBorder() {
 export function TabPaneCustomUI() {
   return (
     <div className={styles.tabPane}>
-      <div className={styles.settingsGroup}>
-        <div className={styles.settingsGroupTitle} style={{ marginBottom: 15 }}>
-          样式自定义
+      <SettingsGroup title='样式自定义'>
+        <CheckboxSettingItem
+          configKey='styleUseStandardVideoSourceTab'
+          label='推荐 Tab: 按钮使用标准高度'
+          tooltip='默认紧凑高度'
+        />
+
+        <CheckboxSettingItem
+          configKey='styleUseStickyTabbarInPureRecommend'
+          label='全屏模式: sticky tab bar'
+          tooltip={
+            <>
+              默认勾选: Tab 栏会吸附在顶栏下方
+              <br />
+              取消选中: Tab 栏会随页面一起滚动
+            </>
+          }
+        />
+
+        <CheckboxSettingItem
+          configKey='styleUseCustomGrid'
+          label='全屏模式: 使用自定义网格配置'
+          tooltip={
+            <>
+              网格配置指: 网格宽度, 间距, 列数等.
+              <br />
+              自定义网格配置: 宽度为90%; 可跟随 Bilibili-Evolved 自定义顶栏配置; 列数: 4列 - 10列;{' '}
+              {APP_NAME} 自定义;
+              <br />
+              默认网格配置: bili-feed4 首页使用的网格配置
+            </>
+          }
+        />
+
+        <CheckboxSettingItem
+          configKey='styleUseWhiteBackground'
+          label='全屏模式: styleUseWhiteBackground'
+        />
+      </SettingsGroup>
+
+      <SettingsGroup
+        title={
+          <>
+            视频卡片
+            <Popconfirm
+              title='确定重置下面的设置项?'
+              onConfirm={() => {
+                updateSettings(
+                  cloneDeep(
+                    pick(initialSettings, [
+                      'styleUseCardBorder',
+                      'styleUseCardBorderOnlyOnHover',
+                      'styleUseCardBoxShadow',
+                      'useDelayForHover',
+                    ]),
+                  ),
+                )
+              }}
+            >
+              <Button css={[antdCustomCss.button, C.ml(10)]} size='middle'>
+                重置
+              </Button>
+            </Popconfirm>
+          </>
+        }
+      >
+        <div css={flexVerticalCenterStyle}>
+          <CheckboxSettingItem
+            configKey='styleUseCardBorder'
+            label='使用边框'
+            tooltip=<>
+              使用边框后, 整个卡片区域可点击 / 可触发预览 / 可使用右键菜单 <br />
+              否则只是封面区域可以 <br />
+              使用快捷键 <Tag color='green'>shift+b</Tag> 切换状态
+              <br />
+              {borderCycleListLabels.map((label) => (
+                <Tag color='success' key={label}>
+                  {label}
+                </Tag>
+              ))}
+            </>
+          />
+          <SwitchSettingItem
+            size='small'
+            configKey={'styleUseCardBorderOnlyOnHover'}
+            checkedChildren='只在悬浮时展示'
+            unCheckedChildren='总是展示'
+          />
         </div>
 
-        <div className={clsx(styles.settingsGroupContent)}>
-          <div className={styles.row} style={{ marginTop: 5 }}>
-            <CheckboxSettingItem
-              configKey='styleUseStandardVideoSourceTab'
-              label='推荐 Tab: 按钮使用标准高度'
-              tooltip='默认紧凑高度'
-            />
-          </div>
+        <CheckboxSettingItem
+          configKey='styleUseCardBoxShadow'
+          label='使用主题色阴影(border & box-shadow)'
+          tooltip={
+            <>
+              如果你觉得太花哨, 可以关掉
+              <br />
+              ✅ 使用主题色作为 box-shadow
+              <br />❎ no box-shadow, 卡片的背景色会略微改版表示高亮
+            </>
+          }
+        />
 
-          <div className={styles.row} style={{ marginTop: 5 }}>
-            <CheckboxSettingItem
-              configKey='styleUseStickyTabbarInPureRecommend'
-              label='全屏模式: sticky tab bar'
-              tooltip={
-                <>
-                  默认勾选: Tab 栏会吸附在顶栏下方
-                  <br />
-                  取消选中: Tab 栏会随页面一起滚动
-                </>
-              }
-            />
-          </div>
-
-          <div className={styles.row} style={{ marginTop: 5 }}>
-            <CheckboxSettingItem
-              configKey='styleUseCustomGrid'
-              label='全屏模式: 使用自定义网格配置'
-              tooltip={
-                <>
-                  网格配置指: 网格宽度, 间距, 列数等.
-                  <br />
-                  自定义网格配置: 宽度为90%; 可跟随 Bilibili-Evolved 自定义顶栏配置; 列数: 4列 -
-                  10列; {APP_NAME} 自定义;
-                  <br />
-                  默认网格配置: bili-feed4 首页使用的网格配置
-                </>
-              }
-            />
-          </div>
-
-          <div className={styles.row} style={{ marginTop: 5 }}>
-            <CheckboxSettingItem
-              configKey='styleUseWhiteBackground'
-              label='全屏模式: styleUseWhiteBackground'
-            />
-          </div>
-
-          <div className={styles.row} style={{ marginTop: 5 }}>
-            <CheckboxSettingItem
-              configKey='styleUseCardBorder'
-              label='视频卡片: 使用边框'
-              tooltip=<>
-                使用边框后, 整个卡片区域可点击 / 可触发预览 / 可使用右键菜单 <br />
-                否则只是封面区域可以 <br />
-                使用快捷键 <Tag color='green'>shift+b</Tag> 切换状态
-                <br />
-                {borderCycleListLabels.map((label) => (
-                  <Tag color='success' key={label}>
-                    {label}
-                  </Tag>
-                ))}
-              </>
-            />
-
-            <SwitchSettingItem
-              size='small'
-              configKey={'styleUseCardBorderOnlyOnHover'}
-              checkedChildren='只在悬浮时展示'
-              unCheckedChildren='总是展示'
-            />
-          </div>
-        </div>
-      </div>
+        <CheckboxSettingItem
+          configKey='useDelayForHover'
+          label='延迟悬浮预览'
+          tooltip={<>延迟悬浮预览</>}
+        />
+      </SettingsGroup>
     </div>
   )
 }

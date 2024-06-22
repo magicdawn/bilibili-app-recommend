@@ -3,11 +3,11 @@ import { C } from '$common/emotion-css'
 import { useMittOn } from '$common/hooks/useMitt'
 import { useRefStateBox } from '$common/hooks/useRefState'
 import { useDislikedReason } from '$components/ModalDislike'
-import { borderColorValue, colorPrimaryValue } from '$components/ModalSettings/theme.shared'
+import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import type { OnRefresh } from '$components/RecGrid/useRefresh'
 import { useCurrentUsingTab, videoSourceTabState } from '$components/RecHeader/tab'
 import { ETab } from '$components/RecHeader/tab-enum'
-import { isRanking, type AppRecItemExtend, type RecItemType } from '$define'
+import { type AppRecItemExtend, type RecItemType, isRanking } from '$define'
 import { EApiType } from '$define/index.shared'
 import { DislikeIcon, OpenExternalLinkIcon } from '$modules/icon'
 import { IconPark } from '$modules/icon/icon-park'
@@ -50,54 +50,6 @@ import { useWatchlaterRelated } from './use/useWatchlaterRelated'
 function copyContent(content: string) {
   GM.setClipboard(content)
   AntdMessage.success(`已复制: ${content}`)
-}
-
-export function getCardBorderCss(
-  active: boolean,
-  useBorder: boolean,
-  useBorderOnlyOnHover: boolean,
-): TheCssType {
-  const borderAndShadow = css`
-    border-color: ${colorPrimaryValue};
-    /* overflow: hidden; */
-    /* try here https://box-shadow.dev/ */
-    box-shadow: 0px 0px 9px 4px ${colorPrimaryValue};
-  `
-
-  return [
-    css`
-      border: 1px solid transparent;
-      transition:
-        border-color 0.3s ease-in-out,
-        box-shadow 0.3s ease-in-out;
-    `,
-
-    useBorder &&
-      css`
-        cursor: pointer;
-        border-radius: ${borderRadiusValue};
-      `,
-    useBorder &&
-      (useBorderOnlyOnHover
-        ? css`
-            &:hover {
-              /* 可选 borderColorValue(白色) colorPrimaryValue(主题色) borderAndShadow(主题色+box-shadow) */
-              ${borderAndShadow}
-            }
-          `
-        : css`
-            border-color: ${borderColorValue};
-            &:hover {
-              ${borderAndShadow}
-            }
-          `),
-
-    active &&
-      css`
-        border-radius: ${borderRadiusValue};
-        ${borderAndShadow}
-      `,
-  ]
 }
 
 export type VideoCardProps = {
@@ -223,6 +175,7 @@ const VideoCardInner = memo(function VideoCardInner({
   }
 
   const videoDataBox = useRefStateBox<VideoData | null>(null)
+  const videoshotData = videoDataBox.state?.videoshotData
   const tryFetchVideoData = useLockFn(async () => {
     if (!bvid) return // no bvid
     if (!bvid.startsWith('BV')) return // bvid invalid
@@ -243,6 +196,7 @@ const VideoCardInner = memo(function VideoCardInner({
   const {
     onStartPreviewAnimation,
     onHotkeyPreviewAnimation,
+    autoPreviewing,
     previewProgress,
     previewT,
     isHovering,
@@ -271,7 +225,7 @@ const VideoCardInner = memo(function VideoCardInner({
     // 自动开始预览
     if (settings.autoPreviewWhenKeyboardSelect) {
       tryFetchVideoData().then(() => {
-        onStartPreviewAnimation()
+        onStartPreviewAnimation(false)
       })
     }
   }, [active])
@@ -715,29 +669,34 @@ const VideoCardInner = memo(function VideoCardInner({
         <span className='bili-video-card__stats__duration'>{isNormalVideo && durationStr}</span>
       </div>
 
-      {/* preview: follow-mouse or manual-control */}
-      {!!(
-        (isHoveringAfterDelay || typeof previewProgress === 'number') &&
-        videoDataBox.state?.videoshotData?.image?.length &&
-        duration
-      ) && (
-        <PreviewImage
-          videoDuration={duration}
-          pvideo={videoDataBox.state?.videoshotData}
-          mouseEnterRelativeX={mouseEnterRelativeX}
-          previewProgress={previewProgress}
-          previewT={previewT}
-        />
-      )}
+      {/* preview: follow-mouse or auto-preview */}
+      {!!(videoshotData?.image?.length && duration && (isHoveringAfterDelay || active)) &&
+        // auto-preview: start-by (hover | keyboard)
+        (autoPreviewing ? (
+          <PreviewImage
+            videoDuration={duration}
+            pvideo={videoshotData}
+            mouseEnterRelativeX={mouseEnterRelativeX}
+            progress={previewProgress}
+            t={previewT}
+          />
+        ) : (
+          // follow-mouse
+          <PreviewImage
+            videoDuration={duration}
+            pvideo={videoshotData}
+            mouseEnterRelativeX={mouseEnterRelativeX}
+          />
+        ))}
 
-      {dislikeButtonEl && (
+      {!!dislikeButtonEl && (
         <div className='left-actions' css={VideoCardActionStyle.topContainer('left')}>
           {/* 我不想看 */}
           {dislikeButtonEl}
         </div>
       )}
 
-      {(watchlaterButtonEl || openInPopupButtonEl) && (
+      {!!(watchlaterButtonEl || openInPopupButtonEl) && (
         <div className='right-actions' css={VideoCardActionStyle.topContainer('right')}>
           {/* 稍后再看 */}
           {watchlaterButtonEl}

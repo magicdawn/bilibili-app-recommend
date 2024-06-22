@@ -27,19 +27,6 @@ const S = {
   `,
 }
 
-interface IProps {
-  className?: string
-  videoDuration: number
-  pvideo?: PvideoData
-
-  // hover => listen mousemove of PreviewImage div ref
-  // 如果没有移动鼠标, 后面 mousemove 无法触发, 这个时候需要从前面 mouseenter 中读取 enter cursor state
-  mouseEnterRelativeX: number | undefined
-
-  previewProgress?: number
-  previewT?: number
-}
-
 function fallbackWhenNan(...args: number[]) {
   for (const num of args) {
     if (isNaN(num)) continue
@@ -48,12 +35,30 @@ function fallbackWhenNan(...args: number[]) {
   return 0
 }
 
+/**
+ * previewProgress 代表进度条进度
+ * previewT 代表将渲染的图片
+ * 两个解耦, previewT 可以 fallback 到 `previewProgress * videoDuration`
+ */
+
+interface IProps {
+  videoDuration: number
+  pvideo?: PvideoData
+
+  progress?: number
+  t?: number
+
+  // hover => listen mousemove of PreviewImage div ref
+  // 如果没有移动鼠标, 后面 mousemove 无法触发, 这个时候需要从前面 mouseenter 中读取 enter cursor state
+  mouseEnterRelativeX: number | undefined
+}
+
 export function PreviewImage({
+  progress,
+  t,
   videoDuration,
   pvideo,
   mouseEnterRelativeX,
-  previewProgress,
-  previewT,
   className,
   ...restProps
 }: IProps & ComponentProps<'div'>) {
@@ -68,25 +73,32 @@ export function PreviewImage({
     setSize({ width: rect.width, height: rect.height })
   })
 
-  let progress = 0
-  if (typeof previewProgress === 'number') {
-    progress = previewProgress
-  } else {
-    const relativeX = fallbackWhenNan(cursorState.elementX, mouseEnterRelativeX || 0)
-    if (size.width && relativeX && !isNaN(relativeX)) {
-      progress = relativeX / size.width
-      if (progress < 0) progress = 0
-      if (progress > 1) progress = 1
+  const usingProgress = useMemo(() => {
+    let ret = 0
+    if (typeof progress === 'number') {
+      ret = progress
+    } else {
+      const relativeX = fallbackWhenNan(cursorState.elementX, mouseEnterRelativeX || 0)
+      if (size.width && relativeX && !isNaN(relativeX)) {
+        ret = relativeX / size.width
+      }
     }
-  }
+    if (ret < 0) ret = 0
+    if (ret > 1) ret = 1
+    return ret
+  }, [progress, cursorState.elementX, mouseEnterRelativeX, size.width])
+
+  const usingT = useMemo(
+    () => t ?? Math.floor((videoDuration || 0) * usingProgress),
+    [t, videoDuration, usingProgress],
+  )
 
   const innerProps = {
-    videoDuration,
+    progress: usingProgress,
+    t: usingT,
     pvideo: pvideo!,
     elWidth: size.width,
     elHeight: size.height,
-    progress,
-    t: previewT,
   }
 
   return (
@@ -96,28 +108,26 @@ export function PreviewImage({
       className={clsx(previewCardWrapper, className)}
       css={S.previewCardWrapper}
     >
-      {!!(pvideo && size.width && size.height && progress) && <PreviewImageInner {...innerProps} />}
+      {!!(pvideo && size.width && size.height && usingProgress) && (
+        <PreviewImageInner {...innerProps} />
+      )}
     </div>
   )
 }
 
 function PreviewImageInner({
-  videoDuration,
+  t,
+  progress,
   pvideo,
   elWidth,
   elHeight,
-  progress,
-  t,
 }: {
-  videoDuration: number
+  t: number
+  progress: number
   pvideo: PvideoData
   elWidth: number
   elHeight: number
-  progress: number
-  t?: number
 }) {
-  t ??= Math.floor((videoDuration || 0) * progress)
-
   let index = useMemo(() => {
     const arr = pvideo?.index || []
     let index = findIndex(arr, t)
@@ -129,9 +139,7 @@ function PreviewImageInner({
     // https://www.bilibili.com/video/av297635747
     // 没有后面的预览
     if (t > arr[arr.length - 1]) {
-      index = Math.floor(arr.length * progress) - 1
-      if (index < 0) index = 0
-      return index
+      index = arr.length - 1
     }
 
     return 0
