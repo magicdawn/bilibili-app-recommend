@@ -44,6 +44,7 @@ $z: 3;
       width: 100%;
       height: 100%;
       // backdrop-filter: blur(10px);
+      background-color: vars.$app-bg-color;
 
       display: flex;
       flex-direction: column;
