@@ -1,4 +1,4 @@
-import { inlineFlexVerticalCenterStyle } from '$common/emotion-css'
+import { flexVerticalCenterStyle, inlineFlexVerticalCenterStyle } from '$common/emotion-css'
 import { AccessKeyManage } from '$components/AccessKeyManage'
 import { CheckboxSettingItem } from '$components/ModalSettings/setting-item'
 import { TabIcon } from '$components/RecHeader/tab-config'
@@ -11,6 +11,7 @@ import { AntdMessage } from '$utility'
 import { Button, Select, Space, Tag } from 'antd'
 import styles from '../index.module.scss'
 import { toastAndReload } from '../index.shared'
+import { SettingsGroup } from './_shared'
 
 export function TabPaneBasic() {
   const { videoLinkOpenMode } = useSettingsSnapshot()
@@ -43,35 +44,33 @@ export function TabPaneBasic() {
 
   return (
     <div className={styles.tabPane}>
-      <div className={styles.settingsGroup}>
-        <div className={styles.settingsGroupTitle}>
-          <TabIcon tabKey={ETab.RecommendApp} size={30} mr={5} /> 推荐 access_key
-          <HelpInfo
-            iconProps={{
-              name: 'Help',
-              size: 18,
-              style: { marginTop: 6, marginLeft: 5 },
-            }}
-          >
-            <span css={inlineFlexVerticalCenterStyle}>
-              用于「
-              <TabIcon tabKey={ETab.RecommendApp} mr={5} />
-              推荐」Tab
-            </span>
-            <br />
-            用于 获取推荐 / 提交不喜欢等操作
-          </HelpInfo>
-        </div>
-        <div className={clsx(styles.settingsGroupContent)}>
-          <div className={styles.row} style={{ marginTop: 5 }}>
-            <AccessKeyManage />
-          </div>
-        </div>
-      </div>
+      <SettingsGroup
+        title={
+          <>
+            <TabIcon tabKey={ETab.RecommendApp} size={30} mr={5} /> 推荐 access_key
+            <HelpInfo
+              iconProps={{
+                name: 'Help',
+                size: 18,
+                style: { marginTop: 6, marginLeft: 5 },
+              }}
+            >
+              <span css={inlineFlexVerticalCenterStyle}>
+                用于「
+                <TabIcon tabKey={ETab.RecommendApp} mr={5} />
+                推荐」Tab
+              </span>
+              <br />
+              用于 获取推荐 / 提交不喜欢等操作
+            </HelpInfo>
+          </>
+        }
+      >
+        <AccessKeyManage />
+      </SettingsGroup>
 
-      <div className={styles.settingsGroup}>
-        <div className={styles.settingsGroupTitle}>开关</div>
-        <div className={clsx(styles.settingsGroupContent, styles.row)}>
+      <SettingsGroup title='开关'>
+        <Space size={10} wrap>
           <CheckboxSettingItem
             configKey='pureRecommend'
             label='全屏模式'
@@ -84,7 +83,6 @@ export function TabPaneBasic() {
                 P.S 之前版本称 (纯推荐模式)
               </>
             }
-            className={styles.check}
             extraAction={toastAndReload}
           />
 
@@ -98,14 +96,12 @@ export function TabPaneBasic() {
                 切换设置快捷键: <Tag color='green'>shift+c</Tag>
               </>
             }
-            className={styles.check}
           />
 
           <CheckboxSettingItem
             configKey={'showModalFeedOnLoad'}
             label='自动「查看更多」'
             tooltip='打开首页时自动打开「查看更多」弹窗'
-            className={styles.check}
             extraAction={(val) => {
               if (val) {
                 AntdMessage.success(
@@ -119,14 +115,12 @@ export function TabPaneBasic() {
             configKey={'showModalFeedEntry'}
             label='「查看更多」按钮'
             tooltip='是否展示「查看更多」按钮'
-            className={styles.check}
           />
-        </div>
-      </div>
+        </Space>
+      </SettingsGroup>
 
-      <div className={styles.settingsGroup}>
-        <div className={styles.settingsGroupTitle}>视频链接</div>
-        <div className={clsx(styles.settingsGroupContent, styles.row)}>
+      <SettingsGroup title='视频链接'>
+        <div css={flexVerticalCenterStyle}>
           默认打开模式
           <HelpInfo
             tooltipProps={{ color: 'rgba(0, 0, 0, 0.85)' }} // 默认使用 colorPrimary, 链接可能看不清
@@ -177,15 +171,13 @@ export function TabPaneBasic() {
             }}
           />
         </div>
-      </div>
+      </SettingsGroup>
 
-      <div className={styles.settingsGroup}>
-        <div className={styles.settingsGroupTitle}>预览</div>
-        <div className={clsx(styles.settingsGroupContent, styles.row)}>
+      <SettingsGroup title='预览'>
+        <Space size={10}>
           <CheckboxSettingItem
             configKey='autoPreviewWhenKeyboardSelect'
             label='键盘选中后自动开始预览'
-            className={styles.check}
             tooltip={
               <>
                 手动预览快捷键: <Tag color='green'>.</Tag> or <Tag color='green'>p</Tag>
@@ -198,7 +190,6 @@ export function TabPaneBasic() {
           <CheckboxSettingItem
             configKey='autoPreviewWhenHover'
             label='鼠标悬浮后自动开始预览'
-            className={styles.check}
             tooltip={
               <>
                 鼠标悬浮后自动开始预览, 预览不再跟随鼠标位置 <br />
@@ -206,69 +197,68 @@ export function TabPaneBasic() {
               </>
             }
           />
-        </div>
-      </div>
+        </Space>
+      </SettingsGroup>
 
-      <div className={styles.settingsGroup}>
-        <div className={styles.settingsGroupTitle}>
-          帮助
-          <span
-            css={css`
-              margin-left: 8px;
-              margin-right: 4px;
-              font-size: 14px;
-              position: relative;
-              top: 4px;
-            `}
+      <SettingsGroup
+        title={
+          <>
+            帮助
+            <span
+              css={css`
+                margin-left: 8px;
+                margin-right: 4px;
+                font-size: 14px;
+                position: relative;
+                top: 4px;
+              `}
+            >
+              (当前版本: v{__SCRIPT_VERSION__})
+            </span>
+            <IconPark
+              name={'Copy'}
+              size={16}
+              onClick={() => {
+                const content = `v${__SCRIPT_VERSION__}`
+                GM.setClipboard(content)
+                AntdMessage.success(`已复制当前版本: ${content}`)
+              }}
+              css={css`
+                position: relative;
+                top: 4px;
+                cursor: pointer;
+              `}
+            />
+          </>
+        }
+      >
+        <Space size={10} wrap>
+          <Button href='https://github.com/magicdawn/bilibili-app-recommend' target='_blank'>
+            GitHub 主页
+          </Button>
+          <Button
+            href='https://greasyfork.org/zh-CN/scripts/443530-bilibili-app-recommend'
+            target='_blank'
           >
-            (当前版本: v{__SCRIPT_VERSION__})
-          </span>
-          <IconPark
-            name={'Copy'}
-            size={16}
-            onClick={() => {
-              const content = `v${__SCRIPT_VERSION__}`
-              GM.setClipboard(content)
-              AntdMessage.success(`已复制当前版本: ${content}`)
-            }}
-            css={css`
-              position: relative;
-              top: 4px;
-              cursor: pointer;
-            `}
-          />
-        </div>
-        <div className={clsx(styles.settingsGroupContent)}>
-          <div className={styles.row}>
-            <Space size='small'>
-              <Button href='https://github.com/magicdawn/bilibili-app-recommend' target='_blank'>
-                GitHub 主页
-              </Button>
-              <Button
-                href='https://greasyfork.org/zh-CN/scripts/443530-bilibili-app-recommend'
-                target='_blank'
-              >
-                GreasyFork 主页
-              </Button>
-              <Button
-                href='https://github.com/magicdawn/bilibili-app-recommend#%E5%BF%AB%E6%8D%B7%E9%94%AE%E8%AF%B4%E6%98%8E'
-                target='_blank'
-              >
-                查看可用的快捷键
-              </Button>
-              <Button
-                href='https://github.com/magicdawn/bilibili-app-recommend/releases'
-                target='_blank'
-              >
-                更新日志
-              </Button>
-              <Button href='https://afdian.net/a/magicdawn' target='_blank'>
-                用 ❤️ 发电
-              </Button>
-            </Space>
-          </div>
-        </div>
-      </div>
+            GreasyFork 主页
+          </Button>
+          <Button
+            href='https://github.com/magicdawn/bilibili-app-recommend#%E5%BF%AB%E6%8D%B7%E9%94%AE%E8%AF%B4%E6%98%8E'
+            target='_blank'
+          >
+            查看可用的快捷键
+          </Button>
+          <Button
+            href='https://github.com/magicdawn/bilibili-app-recommend/releases'
+            target='_blank'
+          >
+            更新日志
+          </Button>
+          <Button href='https://afdian.net/a/magicdawn' target='_blank'>
+            用 ❤️ 发电
+          </Button>
+        </Space>
+      </SettingsGroup>
     </div>
   )
 }

@@ -28,24 +28,6 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-
-  :global {
-    .primary-btn:first-child {
-      margin-left: 0;
-    }
-  }
-}
-
-.check {
-  // margin-right: 10px;
-  margin-bottom: 5px;
-  margin-inline-start: 0 !important;
-  margin-inline-end: 5px !important;
-}
-
-.setting-tabs {
-  &:global {
-  }
 }
 
 .tab-pane {

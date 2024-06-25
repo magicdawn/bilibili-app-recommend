@@ -1,14 +1,14 @@
 import { APP_NAME } from '$common'
-import { C, antdCustomCss, flexVerticalCenterStyle } from '$common/emotion-css'
+import { C, flexVerticalCenterStyle } from '$common/emotion-css'
 import type { Settings } from '$modules/settings'
-import { initialSettings, settings, updateSettings } from '$modules/settings'
+import { settings } from '$modules/settings'
 import { AntdMessage, shouldDisableShortcut } from '$utility'
-import { Button, Popconfirm, Tag } from 'antd'
-import { cloneDeep, isEqual } from 'lodash'
+import { Tag } from 'antd'
+import { isEqual } from 'lodash'
 import { pick } from 'radash'
 import styles from '../index.module.scss'
 import { CheckboxSettingItem, SwitchSettingItem } from '../setting-item'
-import { SettingsGroup } from './_shared'
+import { ResetPartialSettingsButton, SettingsGroup } from './_shared'
 
 type CardBorderState = Partial<
   Pick<Settings, 'styleUseCardBorder' | 'styleUseCardBorderOnlyOnHover'>
@@ -97,25 +97,15 @@ export function TabPaneCustomUI() {
         title={
           <>
             视频卡片
-            <Popconfirm
-              title='确定重置下面的设置项?'
-              onConfirm={() => {
-                updateSettings(
-                  cloneDeep(
-                    pick(initialSettings, [
-                      'styleUseCardBorder',
-                      'styleUseCardBorderOnlyOnHover',
-                      'styleUseCardBoxShadow',
-                      'useDelayForHover',
-                    ]),
-                  ),
-                )
-              }}
-            >
-              <Button css={[antdCustomCss.button, C.ml(10)]} size='middle'>
-                重置
-              </Button>
-            </Popconfirm>
+            <ResetPartialSettingsButton
+              css={[C.ml(10)]}
+              keys={[
+                'styleUseCardBorder',
+                'styleUseCardBorderOnlyOnHover',
+                'styleUseCardBoxShadow',
+                'useDelayForHover',
+              ]}
+            />
           </>
         }
       >

@@ -5,7 +5,7 @@ import { ETab, TabKeys } from '$components/RecHeader/tab-enum'
 import { EAppApiDevice } from '$define/index.shared'
 import { useIsDarkMode } from '$modules/dark-mode'
 import { IconPark } from '$modules/icon/icon-park'
-import { initialSettings, updateSettings, useSettingsSnapshot } from '$modules/settings'
+import { updateSettings, useSettingsSnapshot } from '$modules/settings'
 import { HelpInfo } from '$ui-components/HelpInfo'
 import { AntdTooltip } from '$ui-components/antd-custom'
 import { AntdMessage } from '$utility'
@@ -19,9 +19,9 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { Button, Checkbox, Col, Popconfirm, Radio } from 'antd'
-import { cloneDeep, pick } from 'lodash'
+import { Checkbox, Col, Radio, Space } from 'antd'
 import styles from '../index.module.scss'
+import { ResetPartialSettingsButton } from './_shared'
 
 export function TabPaneVideoSourceTabConfig() {
   const { appApiDecice } = useSettingsSnapshot()
@@ -48,16 +48,7 @@ export function TabPaneVideoSourceTabConfig() {
               勾选显示, 拖动排序
             </HelpInfo>
             <Col flex={1} />
-            <Popconfirm
-              title='确定重置下面的设置项?'
-              onConfirm={() => {
-                updateSettings(
-                  cloneDeep(pick(initialSettings, ['hidingTabKeys', 'customTabKeysOrder'])),
-                )
-              }}
-            >
-              <Button>重置</Button>
-            </Popconfirm>
+            <ResetPartialSettingsButton keys={['hidingTabKeys', 'customTabKeysOrder']} />
           </div>
           <VideoSourceTabOrder />
         </div>
@@ -80,7 +71,7 @@ export function TabPaneVideoSourceTabConfig() {
                 <TabIcon tabKey={ETab.Watchlater} mr={5} mt={-1} />
                 稍后再看
               </div>
-              <div className={styles.row}>
+              <Space size={10}>
                 <CheckboxSettingItem
                   configKey='shuffleForWatchLater'
                   label='随机顺序'
@@ -94,7 +85,7 @@ export function TabPaneVideoSourceTabConfig() {
                     margin-left: 20px !important;
                   `}
                 />
-              </div>
+              </Space>
             </div>
 
             <div
@@ -106,7 +97,7 @@ export function TabPaneVideoSourceTabConfig() {
                 <TabIcon tabKey={ETab.Fav} mr={5} mt={-2} />
                 收藏
               </div>
-              <div className={styles.row}>
+              <Space size={10}>
                 <CheckboxSettingItem
                   configKey='shuffleForFav'
                   label='随机顺序'
@@ -120,7 +111,7 @@ export function TabPaneVideoSourceTabConfig() {
                     margin-left: 20px !important;
                   `}
                 />
-              </div>
+              </Space>
             </div>
 
             <div
