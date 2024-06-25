@@ -18,8 +18,8 @@ export function SectionRecommend() {
 
   const tab = useCurrentUsingTab()
   const {
-    refreshing,
-    items,
+    refreshingBox,
+    itemsBox,
     refresh,
     error: refreshError,
     useSkeleton,
@@ -30,6 +30,9 @@ export function SectionRecommend() {
     recreateService: false,
   })
   useMount(refresh)
+
+  const refreshing = refreshingBox.state
+  const items = itemsBox.state
 
   const showSkeleton = !items.length || refreshError || (refreshing && useSkeleton)
 

@@ -27,7 +27,7 @@
     "@commitlint/prompt-cli": "^19.3.1",
     "@commitlint/types": "^19.0.3",
     "@emotion/babel-plugin": "^11.11.0",
-    "@iconify/json": "^2.2.221",
+    "@iconify/json": "^2.2.222",
     "@magicdawn/prettier-config": "^0.0.3",
     "@styled/typescript-styled-plugin": "^1.0.1",
     "@svgr/core": "^8.1.0",
@@ -51,7 +51,7 @@
     "eslint-config-prettier": "^9.1.0",
     "globals": "^15.6.0",
     "husky": "^9.0.11",
-    "knip": "^5.22.2",
+    "knip": "^5.23.0",
     "lint-staged": "^15.2.7",
     "node-cjs-interop": "^0.1.6",
     "open": "^10.1.0",
@@ -60,11 +60,11 @@
     "rollup-plugin-node-polyfills": "^0.2.1",
     "rollup-plugin-visualizer": "^5.12.0",
     "sass": "^1.77.6",
-    "turbo": "^2.0.4",
+    "turbo": "^2.0.5",
     "type-fest": "^4.20.1",
     "typed-scss-modules": "^8.0.1",
     "typescript": "^5.5.2",
-    "typescript-eslint": "^7.13.1",
+    "typescript-eslint": "^7.14.1",
     "unocss": "^0.61.0",
     "unplugin-auto-import": "^0.17.6",
     "unplugin-icons": "^0.19.0",
@@ -95,7 +95,7 @@
     "debug": "^4.3.5",
     "delay": "^6.0.0",
     "fast-sort-lens": "^0.0.1",
-    "framer-motion": "^11.2.11",
+    "framer-motion": "^11.2.12",
     "localforage": "^1.10.0",
     "lodash": "^4.17.21",
     "md5": "^2.3.0",
@@ -129,5 +129,5 @@
       "vite-plugin-importer>babel-plugin-import": "^1.13.8"
     }
   },
-  "packageManager": "pnpm@9.3.0+sha512.ee7b93e0c2bd11409c6424f92b866f31d3ea1bef5fbe47d3c7500cdc3c9668833d2e55681ad66df5b640c61fa9dc25d546efa54d76d7f8bf54b13614ac293631"
+  "packageManager": "pnpm@9.4.0+sha512.f549b8a52c9d2b8536762f99c0722205efc5af913e77835dbccc3b0b0b2ca9e7dc8022b78062c17291c48e88749c70ce88eb5a74f1fa8c4bf5e18bb46c8bd83a"
 }

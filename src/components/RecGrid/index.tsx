@@ -3,7 +3,7 @@
  */
 
 import { APP_CLS_CARD, APP_CLS_CARD_ACTIVE, APP_CLS_GRID, baseDebug } from '$common'
-import { useRefState } from '$common/hooks/useRefState'
+import { useRefStateBox } from '$common/hooks/useRefState'
 import { useModalDislikeVisible } from '$components/ModalDislike'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import { useCurrentUsingTab } from '$components/RecHeader/tab'
@@ -67,7 +67,8 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
 ) {
   const tab = useCurrentUsingTab()
 
-  const [loadCompleteCount, setLoadCompleteCount, getLoadCompleteCount] = useRefState(0) // 已加载完成的 load call count, 类似 page
+  // 已加载完成的 load call count, 类似 page
+  const loadCompleteCountBox = useRefStateBox(0)
 
   // before refresh
   const preAction = useMemoizedFn(() => {
@@ -78,39 +79,30 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
   // after refresh, setItems
   const postAction = useMemoizedFn(() => {
     clearActiveIndex()
-    setLoadCompleteCount(1)
+    loadCompleteCountBox.set(1)
     updateExtraInfo(tab)
     // check need loadMore
     setTimeout(checkShouldLoadMore)
   })
 
   const updateExtraInfo = useMemoizedFn((tab: ETab) => {
-    const info = getIService(getServiceMap(), tab)?.usageInfo ?? null
+    const info = getIService(serviceMapBox.val, tab)?.usageInfo ?? null
     setExtraInfo?.(info)
   })
 
   const {
-    refresh,
-
-    items,
-    setItems,
-    getItems,
+    itemsBox,
     error: refreshError,
 
-    refreshing,
-    getRefreshing,
-    refreshedAt,
-    getRefreshedAt,
-    useSkeleton,
-
-    hasMore,
-    setHasMore,
-    getHasMore,
-
+    refresh,
+    hasMoreBox,
+    refreshingBox,
+    refreshTsBox,
     refreshAbortController,
+
+    useSkeleton,
+    serviceMapBox,
     pcRecService,
-    serviceMap,
-    getServiceMap,
   } = useRefresh({
     tab,
     debug,
@@ -126,7 +118,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
   })
 
   useMount(refresh)
-  useImperativeHandle(ref, () => ({ refresh }), [])
+  useImperativeHandle(ref, () => ({ refresh }), [refresh])
 
   const goOutAt = useRef<number | undefined>()
   useEventListener(
@@ -138,8 +130,8 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
         return
       }
 
-      if (refreshing) return
-      if (loadMoreRequesting.current[refreshedAt]) return
+      if (refreshingBox.val) return
+      if (loadMoreLocker.current[refreshTsBox.val]) return
 
       // 场景
       // 当前 Tab: 稍后再看, 点视频进去, 在视频页移除了, 关闭视频页, 回到首页
@@ -160,22 +152,29 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
     }
   })
 
-  const loadMoreRequesting = useRef<Record<number, boolean>>({})
-
   // 在 refresh & loadMore 都有可能更改的 state, 需要 useRefState
+  const loadMoreLocker = useRef<Record<number, boolean>>({})
+  const lock = useCallback((refreshedAt: number) => {
+    loadMoreLocker.current = { [refreshedAt]: true }
+  }, [])
+  const unlock = useCallback((refreshedAt: number) => {
+    loadMoreLocker.current[refreshedAt] = false
+  }, [])
+  const isLocked = useMemoizedFn((refreshedAt: number) => !!loadMoreLocker.current[refreshedAt])
 
   const loadMore = useMemoizedFn(async () => {
-    if (!getHasMore()) return
-    if (getRefreshing()) return
+    if (refreshingBox.val) return
+    if (!hasMoreBox.val) return
 
-    const _refreshedAt = refreshedAt
-    if (loadMoreRequesting.current[_refreshedAt]) return
-    loadMoreRequesting.current = { [_refreshedAt]: true }
+    const refreshTsWhenStart = refreshTsBox.val
+    if (isLocked(refreshTsWhenStart)) return
+    lock(refreshTsWhenStart)
 
-    let newItems = getItems()
+    let newItems = itemsBox.val
     let newHasMore = true
+    let err: any
     try {
-      const service = getIService(serviceMap, tab)
+      const service = getIService(serviceMapBox.val, tab)
       if (service) {
         let more = (await service.loadMore(refreshAbortController.signal)) || []
         more = filterRecItems(more, tab)
@@ -185,7 +184,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
       // others
       else {
         // loadMore 至少 load 一项, 需要触发 InfiniteScroll.componentDidUpdate
-        while (!(newItems.length > items.length)) {
+        while (!(newItems.length > itemsBox.val.length)) {
           // keep-follow-only 需要大基数
           const times = tab === ETab.KeepFollowOnly ? 5 : 2
           const more = await getRecommendTimes(times, tab, pcRecService)
@@ -193,52 +192,42 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
         }
       }
     } catch (e) {
-      loadMoreRequesting.current[_refreshedAt] = false
-      throw e
+      err = e
     }
 
-    // loadMore 发出请求了, 但稍候重新刷新了, setItems 后续操作应该 abort
-    if (_refreshedAt !== getRefreshedAt()) {
+    if (err) {
+      unlock(refreshTsWhenStart)
+      // todo: how to handle this ?
+      throw err
+    }
+
+    // loadMore 发出请求了, 但稍候重新刷新了, setItems 以及后续操作应该 abort
+    if (refreshTsWhenStart !== refreshTsBox.val) {
       debug(
         'loadMore: skip update for mismatch refreshedAt, %s != %s',
-        _refreshedAt,
-        getRefreshedAt(),
+        refreshTsWhenStart,
+        refreshTsBox.val,
       )
       return
     }
 
     debug(
       'loadMore: seq(%s) len %s -> %s',
-      getLoadCompleteCount() + 1,
-      items.length,
+      loadCompleteCountBox.val + 1,
+      itemsBox.val.length,
       newItems.length,
     )
-    setHasMore(newHasMore)
-    setItems(newItems)
-    setLoadCompleteCount((c) => c + 1)
-    loadMoreRequesting.current[_refreshedAt] = false
+    hasMoreBox.set(newHasMore)
+    itemsBox.set(newItems)
+    loadCompleteCountBox.set((c) => c + 1)
+    unlock(refreshTsWhenStart)
 
     // check
     checkShouldLoadMore()
   })
 
   // 渲染使用的 items
-  const usingItems = items
-
-  /**
-   * filter fetched items
-   */
-
-  // const { hasSelectedUp, searchText } = useSnapshot(dynamicFeedFilterStore)
-  // usingItems = useMemo(() => {
-  //   if (tab !== ETabType.DynamicFeed) return items
-  //   if (!hasSelectedUp || !searchText) return items
-  //   return items.filter((item) => {
-  //     if (item.api !== EApiType.dynamic) return true
-  //     const title = item.modules.module_dynamic.major.archive.title || ''
-  //     return title.includes(searchText)
-  //   })
-  // }, [usingItems, tab, hasSelectedUp, searchText])
+  const usingItems = itemsBox.state
 
   // .video-grid
   const containerRef = useRef<HTMLDivElement | null>(null)
@@ -259,11 +248,11 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
   const modalDislikeVisible = useModalDislikeVisible()
 
   const usingVideoItems = useMemo(() => {
-    return items.filter((x) => x.api !== EApiType.Separator)
+    return usingItems.filter((x) => x.api !== EApiType.Separator)
   }, [usingItems])
 
   // emitters
-  const emitterCache = useMemo(() => new Map<string, VideoCardEmitter>(), [refreshedAt])
+  const emitterCache = useMemo(() => new Map<string, VideoCardEmitter>(), [refreshTsBox.state])
   const videoCardEmitters = useMemo(() => {
     return usingVideoItems.map(({ uniqId }) => {
       const cacheKey = uniqId
@@ -322,6 +311,8 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
    * card state change
    */
 
+  const setItems = itemsBox.set
+
   const handleRemoveCard = useMemoizedFn((item: RecItemType, data: IVideoCardData) => {
     setItems((items) => {
       const index = items.findIndex((x) => x.uniqId === item.uniqId)
@@ -332,11 +323,11 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
       AntdMessage.success(`已移除: ${data.title}`, 4)
 
       if (tab === ETab.Watchlater) {
-        serviceMap[tab].count--
+        serviceMapBox.val[tab].count--
         updateExtraInfo(tab)
       }
       if (tab === ETab.Fav) {
-        serviceMap[tab].total--
+        serviceMapBox.val[tab].total--
         updateExtraInfo(tab)
       }
 
@@ -359,6 +350,13 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
       return newItems
     })
   })
+
+  /**
+   * state for render & useEffect deps
+   */
+
+  const refreshing = refreshingBox.state
+  const hasMore = hasMoreBox.state
 
   /**
    * footer for infinite scroll
@@ -519,7 +517,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
       <div className={clsx(scopedClsNames.videoGridContainer, scopedClsNames.virtualGridEnabled)}>
         <VirtuosoGrid
           useWindowScroll
-          data={items}
+          data={usingItems}
           overscan={{ main: 20, reverse: 20 }}
           listClassName={gridClassName}
           computeItemKey={(index, item) => item.uniqId}

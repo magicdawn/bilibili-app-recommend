@@ -1,9 +1,9 @@
 import { APP_KEY_PREFIX } from '$common'
 import { useRefInit } from '$common/hooks/useRefInit'
-import { useRefState } from '$common/hooks/useRefState'
+import { useRefStateBox } from '$common/hooks/useRefState'
 import { useCurrentUsingTab } from '$components/RecHeader/tab'
 import { TabConfig } from '$components/RecHeader/tab-config'
-import { ETab, type EHotSubTab } from '$components/RecHeader/tab-enum'
+import { type EHotSubTab, ETab } from '$components/RecHeader/tab-enum'
 import type { RecItemTypeOrSeparator } from '$define'
 import type { IService } from '$modules/rec-services/_base'
 import { DynamicFeedRecService, dynamicFeedFilterStore } from '$modules/rec-services/dynamic-feed'
@@ -105,23 +105,23 @@ export function useRefresh({
     return !!getCacheFor(tab)?.length
   })
 
-  const [hasMore, setHasMore, getHasMore] = useRefState(true)
-  const [items, setItems, getItems] = useRefState<RecItemTypeOrSeparator[]>([])
+  const hasMoreBox = useRefStateBox(true)
+  const itemsBox = useRefStateBox<RecItemTypeOrSeparator[]>([])
   useEffect(() => {
     tryit(() => {
-      ;(unsafeWindow as any)[`${APP_KEY_PREFIX}_gridItems`] = items
+      ;(unsafeWindow as any)[`${APP_KEY_PREFIX}_gridItems`] = itemsBox.state
     })()
-  }, [items])
+  }, [itemsBox.state])
 
-  const [serviceMap, setServiceMap, getServiceMap] = useRefState<ServiceMap>(() => {
+  const serviceMapBox = useRefStateBox<ServiceMap>(() => {
     return Object.fromEntries(
       Object.entries(createServiceMap).map(([key, factory]) => [key, factory(undefined)]),
     ) as unknown as ServiceMap
   })
   const [pcRecService, setPcRecService] = useState(() => new PcRecService())
 
-  const [refreshing, setRefreshing, getRefreshing] = useRefState(false)
-  const [refreshedAt, setRefreshedAt, getRefreshedAt] = useRefState<number>(() => Date.now())
+  const refreshingBox = useRefStateBox(false)
+  const refreshTsBox = useRefStateBox<number>(() => Date.now())
   const [refreshFor, setRefreshFor] = useState<ETab>(tab)
   const [refreshAbortController, setRefreshAbortController] = useState<AbortController>(
     () => new AbortController(),
@@ -131,6 +131,9 @@ export function useRefresh({
 
   const refresh: OnRefresh = useMemoizedFn(async (reuse = false, options) => {
     const start = performance.now()
+
+    const refreshing = refreshingBox.val
+    const serviceMap = serviceMapBox.val
 
     // when already in refreshing
     if (refreshing) {
@@ -183,16 +186,16 @@ export function useRefresh({
     setUseSkeleton(!shouldReuse)
 
     const updateRefreshing = (val: boolean) => {
-      setRefreshing(val)
+      refreshingBox.set(val)
       setUpperRefreshing?.(val)
     }
     updateRefreshing(true)
-    setRefreshedAt(Date.now())
+    refreshTsBox.set(Date.now())
     setRefreshFor(tab)
 
-    setItems([])
     setError(undefined)
-    setHasMore(true)
+    itemsBox.set([])
+    hasMoreBox.set(true)
 
     await preAction?.()
 
@@ -232,7 +235,7 @@ export function useRefresh({
     const recreateFor = (tab: ServiceMapKey) => {
       // @ts-ignore
       newServiceMap[tab] = createServiceMap[tab](options)
-      setServiceMap(newServiceMap)
+      serviceMapBox.set(newServiceMap)
     }
 
     if (tab === ETab.DynamicFeed || tab === ETab.Watchlater || tab === ETab.Live) {
@@ -280,7 +283,7 @@ export function useRefresh({
     if (shouldReuse) {
       if (swr) {
         _items = getCacheFor(tab) || []
-        setItems(_items)
+        itemsBox.set(_items)
         await doFetch()
       }
       // for 收藏/每日必看 乱序, 已经 retore, 需要 doFetch
@@ -325,11 +328,11 @@ export function useRefresh({
       debug('refresh(): [legacy] skip setItems-postAction etc for aborted, legacy tab = %s', tab)
       return
     }
-    setItems(_items)
+    itemsBox.set(_items)
 
     // hasMore check: only ServiceMapKey need hasMore check
     const service = getIService(newServiceMap, tab)
-    if (service) setHasMore(service.hasMore)
+    if (service) hasMoreBox.set(service.hasMore)
 
     updateRefreshing(false)
     await nextTick() // wait setState works, if neccssary
@@ -341,41 +344,17 @@ export function useRefresh({
   })
 
   return {
-    items,
-    setItems,
-    getItems,
-
-    itemsCache,
+    itemsBox,
     error,
 
-    refreshedAt,
-    setRefreshedAt,
-    getRefreshedAt,
-
-    refreshing,
-    setRefreshing,
-    getRefreshing,
-
-    refreshFor,
-    setRefreshFor,
-
+    refresh,
+    hasMoreBox,
+    refreshingBox,
+    refreshTsBox,
     refreshAbortController,
-    setRefreshAbortController,
-
-    hasMore,
-    setHasMore,
-    getHasMore,
 
     useSkeleton,
-    setUseSkeleton,
-
+    serviceMapBox,
     pcRecService,
-    serviceMap,
-    getServiceMap,
-
-    setPcRecService,
-    setServiceMap,
-
-    refresh,
   }
 }
