@@ -32,3 +32,12 @@ export function getAvatarSrc(avatar: string) {
   const suffix = shouldUseAvif ? '.avif' : '.webp'
   return `${avatar}@96w_96h_1c_1s_!web-avatar${suffix}`
 }
+
+export function preloadImg(src: string) {
+  return new Promise<boolean>((resolve) => {
+    const img = new Image()
+    img.src = src
+    img.onload = () => resolve(true)
+    img.onerror = () => resolve(false)
+  })
+}

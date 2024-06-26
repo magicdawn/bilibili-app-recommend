@@ -1,7 +1,9 @@
 import { APP_NAME, HOST_APP } from '$common'
 import type { AppRecItem, DmJson, PvideoJson } from '$define'
+import { settings } from '$modules/settings'
 import { gmrequest, isWebApiSuccess, request } from '$request'
 import { AntdMessage, getCsrfToken } from '$utility'
+import { preloadImg } from '$utility/image'
 import { toast } from '$utility/toast'
 import QuickLRU from 'quick-lru'
 
@@ -78,24 +80,16 @@ export async function fetchVideoData(bvid: string) {
     cache.set(bvid, { videoshotData, dmData })
   }
 
-  function preloadImg(src: string) {
-    return new Promise<boolean>((resolve) => {
-      const img = new Image()
-      img.src = src
-      img.onload = () => resolve(true)
-      img.onerror = () => resolve(false)
-    })
+  if (settings.autoPreviewWhenHover) {
+    // preload first img & without wait rest
+    const imgs = videoshotData?.image || []
+    await preloadImg(imgs[0])
+    ;(async () => {
+      for (const src of imgs.slice(1)) {
+        await preloadImg(src)
+      }
+    })()
   }
-
-  const imgs = videoshotData?.image || []
-
-  // preload first img & without wait rest
-  await preloadImg(imgs[0])
-  ;(async () => {
-    for (const src of imgs.slice(1)) {
-      await preloadImg(src)
-    }
-  })()
 
   return { videoshotData, dmData }
 }
