@@ -1,3 +1,4 @@
+import { isEqual } from 'lodash'
 import { useRefStateBox } from './useRefState'
 
 export function useSizeExpression<T>(
@@ -14,8 +15,8 @@ export function useSizeExpression<T>(
       for (const entry of entries) {
         if (entry.target === target && entry.contentRect) {
           const val = _fn(entry)
-          if (box.get() !== val) {
-            console.log('setState', val)
+          if (!isEqual(box.val, val)) {
+            // console.log('setState', val)
             box.set(val)
           }
         }

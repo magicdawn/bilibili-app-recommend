@@ -105,18 +105,7 @@ export const RecHeader = forwardRef<
     }
   })()
 
-  // useSize 太慢
-  // const bodyWidth = useSize(document.scrollingElement)?.width
-  // const xScrolling = !!(bodyWidth && bodyWidth > window.innerWidth)
-
-  const xScrolling = useSizeExpression(
-    document.body,
-    (entry) => {
-      const width = entry.contentRect.width
-      return !!(width && Math.round(width) > Math.round(window.innerWidth))
-    },
-    false,
-  )
+  const expandToFullWidthCss = useExpandToFullWidthCss()
 
   return (
     <>
@@ -147,13 +136,7 @@ export const RecHeader = forwardRef<
                   /* box-shadow: rgba(0, 0, 0, 13%) 0 1px 10px 1px; */
                   box-shadow: ${boxShadow};
                 `,
-
-                // 横向滚动时, 100vw < 100%, 直接禁用, 懒得调了
-                !xScrolling &&
-                  css`
-                    margin-inline: calc((100% - 100vw) / 2);
-                    padding-inline: calc((100vw - 100%) / 2);
-                  `,
+                expandToFullWidthCss,
               ],
             ]
           }
@@ -238,3 +221,37 @@ export const RecHeader = forwardRef<
     </>
   )
 })
+
+/**
+ * 使用如 margin-inline: -10px; padding-inline: 10px; 来扩展到全屏宽度
+ */
+function useExpandToFullWidthCss() {
+  const { xScrolling, bodyWidth } = useSizeExpression<{ xScrolling: boolean; bodyWidth?: number }>(
+    document.body,
+    (entry) => {
+      const width = entry.contentRect.width
+      const xScrolling = !!(width && Math.round(width) > Math.round(window.innerWidth))
+      if (!xScrolling) {
+        return { xScrolling }
+      } else {
+        return { xScrolling, bodyWidth: width }
+      }
+    },
+    () => ({ xScrolling: false }),
+  )
+
+  return useMemo(() => {
+    if (!xScrolling) {
+      return css`
+        margin-inline: calc((100% - 100vw) / 2);
+        padding-inline: calc((100vw - 100%) / 2);
+      `
+    } else {
+      const w = Math.floor(bodyWidth!)
+      return css`
+        margin-inline: calc((100% - ${w}px) / 2);
+        padding-inline: calc((${w}px - 100%) / 2);
+      `
+    }
+  }, [xScrolling, bodyWidth])
+}
