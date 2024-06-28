@@ -67,6 +67,9 @@ export function AntdApp({
             fontFamily: USING_FONT_FAMILY,
           },
           components: {
+            Notification: {
+              zIndexPopup: 11000,
+            },
             // Message: {
             //   contentBg: colorPrimary,
             //   colorText: '#fff',

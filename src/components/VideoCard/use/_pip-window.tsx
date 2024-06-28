@@ -1,4 +1,5 @@
 import { APP_CLS_ROOT } from '$common'
+import { useLessFrequentFn } from '$common/hooks/useLessFrequentFn'
 import { AntdApp } from '$components/AntdApp'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import { isEdge } from '$platform'
@@ -125,12 +126,12 @@ const S = {
   `,
 }
 
+// TODO: enable drag
 function LockOverlay({ locked }: { locked: boolean }) {
-  const [clickedTimes, setClickedTimes] = useState(0)
-  const [targetTimes, setTargetTimes] = useState(3)
   const { message } = App.useApp()
-
-  // TODO: enable drag
+  const onOverlayClick = useLessFrequentFn(() => {
+    message.info('请先点击右上角 🔓解锁按钮 解锁')
+  }, 3)
 
   return (
     locked && (
@@ -143,15 +144,7 @@ function LockOverlay({ locked }: { locked: boolean }) {
           background-color: transparent;
           user-select: none;
         `}
-        onClick={() => {
-          const val = clickedTimes + 1
-          setClickedTimes(val)
-          if (val === targetTimes) {
-            setClickedTimes(0)
-            setTargetTimes((x) => x + 1)
-            message.info('请先点击右上角 🔓解锁按钮 解锁')
-          }
-        }}
+        onClick={onOverlayClick}
       />
     )
   )

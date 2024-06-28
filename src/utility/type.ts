@@ -6,3 +6,5 @@ export type ArrayItem<T extends any[]> = T extends Array<infer Inner> ? Inner : 
 export type TheCssType = Interpolation<Theme>
 
 export type AntdMenuItemType = ArrayItem<Exclude<MenuProps['items'], undefined>>
+
+export type AnyFunction = (...args: any[]) => any

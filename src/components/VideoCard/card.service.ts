@@ -2,7 +2,7 @@ import { APP_NAME, HOST_APP } from '$common'
 import type { AppRecItem, DmJson, PvideoJson } from '$define'
 import { settings } from '$modules/settings'
 import { gmrequest, isWebApiSuccess, request } from '$request'
-import { AntdMessage, getCsrfToken } from '$utility'
+import { getCsrfToken } from '$utility'
 import { preloadImg } from '$utility/image'
 import { toast } from '$utility/toast'
 import QuickLRU from 'quick-lru'
@@ -19,10 +19,7 @@ export async function videoshot(bvid: string) {
 
   if (!isWebApiSuccess(json)) {
     console.warn('[%s] videoshot error for %s: %o', APP_NAME, bvid, json)
-    const msg = `${bvid}: ${json?.message} 错误代码:${json?.code}`
-    AntdMessage.warning(msg)
   }
-
   if (!isVideoshotDataValid(json.data)) {
     console.warn('[%s] videoshot data invalid bvid=%s: %o', APP_NAME, bvid, json.data)
   }
@@ -30,7 +27,7 @@ export async function videoshot(bvid: string) {
   return json
 }
 
-export function isVideoshotDataValid(videoshotData: PvideoJson['data']) {
+export function isVideoshotDataValid(videoshotData?: PvideoJson['data']) {
   return !!(videoshotData?.image?.length && videoshotData?.index?.length)
 }
 
@@ -59,11 +56,11 @@ export async function dm(aid: string) {
 const cache = new QuickLRU<string, VideoData>({ maxSize: 1_0000 })
 
 export type VideoData = {
-  videoshotData: PvideoJson['data']
-  dmData: DmJson['data']
+  videoshotJson: PvideoJson
+  // dmJson?: DmJson
 }
 
-export async function fetchVideoData(bvid: string) {
+export async function fetchVideoData(bvid: string): Promise<VideoData> {
   // cache:lookup
   if (cache.has(bvid)) {
     const cached = cache.get(bvid)
@@ -72,12 +69,11 @@ export async function fetchVideoData(bvid: string) {
 
   const videoshotJson = await videoshot(bvid)
   const videoshotData = videoshotJson.data
-  const dmData: string[] = []
 
   // cache:save
   const cacheable = isVideoshotJsonCacheable(videoshotJson)
   if (cacheable) {
-    cache.set(bvid, { videoshotData, dmData })
+    cache.set(bvid, { videoshotJson })
   }
 
   if (settings.autoPreviewWhenHover) {
@@ -91,7 +87,7 @@ export async function fetchVideoData(bvid: string) {
     })()
   }
 
-  return { videoshotData, dmData }
+  return { videoshotJson }
 }
 
 /**

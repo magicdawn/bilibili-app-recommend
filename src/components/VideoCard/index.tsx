@@ -1,5 +1,6 @@
 import { APP_CLS_CARD, APP_CLS_GRID, APP_CLS_ROOT, APP_KEY_PREFIX, APP_NAME } from '$common'
 import { C } from '$common/emotion-css'
+import { useLessFrequentFn } from '$common/hooks/useLessFrequentFn'
 import { useMittOn } from '$common/hooks/useMitt'
 import { useRefStateBox } from '$common/hooks/useRefState'
 import { useDislikedReason } from '$components/ModalDislike'
@@ -7,7 +8,7 @@ import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import type { OnRefresh } from '$components/RecGrid/useRefresh'
 import { useCurrentUsingTab, videoSourceTabState } from '$components/RecHeader/tab'
 import { ETab } from '$components/RecHeader/tab-enum'
-import { type AppRecItemExtend, type RecItemType, isRanking } from '$define'
+import { type AppRecItemExtend, type PvideoJson, type RecItemType, isRanking } from '$define'
 import { EApiType } from '$define/index.shared'
 import { DislikeIcon, OpenExternalLinkIcon } from '$modules/icon'
 import { IconPark } from '$modules/icon/icon-park'
@@ -19,8 +20,9 @@ import { settings, updateSettings, useSettingsSnapshot } from '$modules/settings
 import { UserBlacklistService, useInBlacklist } from '$modules/user/relations/blacklist'
 import { UserfollowService } from '$modules/user/relations/follow'
 import { isFirefox } from '$platform'
+import { isWebApiSuccess } from '$request'
 import { Picture } from '$ui-components/Picture'
-import { AntdMessage, toast } from '$utility'
+import { AntdMessage, AntdNotification, toast } from '$utility'
 import type { TheCssType } from '$utility/type'
 import { useLockFn } from 'ahooks'
 import type { MenuProps } from 'antd'
@@ -175,14 +177,34 @@ const VideoCardInner = memo(function VideoCardInner({
   }
 
   const videoDataBox = useRefStateBox<VideoData | null>(null)
-  const videoshotData = videoDataBox.state?.videoshotData
+  const videoshotData = videoDataBox.state?.videoshotJson?.data
   const tryFetchVideoData = useLockFn(async () => {
     if (!bvid) return // no bvid
     if (!bvid.startsWith('BV')) return // bvid invalid
     if (goto !== 'av') return // scrrenshot only for video
-    if (videoDataBox.val && isVideoshotDataValid(videoDataBox.val.videoshotData)) return // already fetched
-    videoDataBox.set(await fetchVideoData(bvid))
+    if (isVideoshotDataValid(videoDataBox.val?.videoshotJson?.data)) return // already fetched
+
+    const data = await fetchVideoData(bvid)
+    videoDataBox.set(data)
+
+    if (!isWebApiSuccess(data.videoshotJson)) {
+      warnNoPreview(data.videoshotJson)
+    }
   })
+
+  // 3,false: 每三次触发一次
+  const warnNoPreview = useLessFrequentFn(
+    (json: PvideoJson) => {
+      AntdNotification.warning({
+        message: `${json.message} (code: ${json.code})`,
+        description: `${title} (${bvid})`,
+        placement: 'bottomRight',
+        duration: 2,
+      })
+    },
+    3,
+    false,
+  )
 
   /**
    * 预览 hover state

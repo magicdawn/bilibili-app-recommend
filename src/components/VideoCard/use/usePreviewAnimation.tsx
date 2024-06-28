@@ -39,7 +39,7 @@ export function usePreviewAnimation({
   videoPreviewWrapperRef: RefObject<HTMLElement>
 }) {
   const hasVideoData = useMemoizedFn(() => {
-    const data = videoDataBox.val?.videoshotData
+    const data = videoDataBox.val?.videoshotJson.data
     return Boolean(data?.index?.length && data?.image?.length)
   })
 

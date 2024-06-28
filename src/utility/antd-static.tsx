@@ -10,10 +10,6 @@ import type {
 } from 'antd/es/message/interface'
 import type { NotificationInstance } from 'antd/es/notification/interface'
 
-// 如果使用 message, notification 经常会自动从 antd import
-let AntdMessage: MessageInstance = _message
-let AntdNotification: NotificationInstance = _notification
-
 const messageConfig: MessageConfigOptions = {
   // duration: default 3, 单位秒
   maxCount: 5,
@@ -30,11 +26,14 @@ export function UseApp() {
   )
 }
 
+// 如果使用 message, notification 经常会自动从 antd import
+export let AntdStatic: ReturnType<typeof App.useApp>
+export let AntdMessage: MessageInstance = _message
+export let AntdNotification: NotificationInstance = _notification
+
 function UseAppInner() {
-  const staticFunction = App.useApp()
-  AntdMessage = staticFunction.message
-  AntdNotification = staticFunction.notification
+  AntdStatic = App.useApp()
+  AntdMessage = AntdStatic.message
+  AntdNotification = AntdStatic.notification
   return null
 }
-
-export { AntdMessage, AntdNotification }
