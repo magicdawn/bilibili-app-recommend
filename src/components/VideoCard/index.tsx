@@ -198,7 +198,6 @@ const VideoCardInner = memo(function VideoCardInner({
       AntdNotification.warning({
         message: `${json.message} (code: ${json.code})`,
         description: `${title} (${bvid})`,
-        placement: 'bottomRight',
         duration: 2,
       })
     },
