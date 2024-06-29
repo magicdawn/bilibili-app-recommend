@@ -3,13 +3,14 @@ import { updateSettings, useSettingsSnapshot } from '$modules/settings'
 import { AntdTooltip } from '$ui-components/antd-custom'
 import { Checkbox, Switch } from 'antd'
 import type { CheckboxChangeEvent } from 'antd/es/checkbox'
-import type { ReactNode } from 'react'
+import type { ComponentProps, ReactNode } from 'react'
 
 function __FlagSettingItem({
   configKey,
   label,
   extraAction,
   tooltip,
+  tooltipProps,
   as,
   checkboxProps,
   switchProps,
@@ -18,6 +19,7 @@ function __FlagSettingItem({
   label?: string
   extraAction?: (val: boolean) => void | Promise<void>
   tooltip?: ReactNode
+  tooltipProps?: Omit<ComponentProps<typeof AntdTooltip>, 'title' | 'children'>
   as?: 'checkbox' | 'switch'
   checkboxProps?: ComponentProps<typeof Checkbox>
   switchProps?: ComponentProps<typeof Switch>
@@ -34,7 +36,11 @@ function __FlagSettingItem({
 
   const wrapTooltip = (children: ReactNode) => {
     if (!tooltip) return children
-    return <AntdTooltip title={tooltip}>{children}</AntdTooltip>
+    return (
+      <AntdTooltip {...tooltipProps} title={tooltip}>
+        {children}
+      </AntdTooltip>
+    )
   }
 
   if (as === 'checkbox') {
@@ -59,12 +65,14 @@ export function CheckboxSettingItem({
   label,
   extraAction,
   tooltip,
+  tooltipProps,
   ...otherProps
 }: {
   configKey: BooleanSettingsKey
   label?: string
   extraAction?: (val: boolean) => void | Promise<void>
   tooltip?: ReactNode
+  tooltipProps?: ComponentProps<typeof __FlagSettingItem>['tooltipProps']
 } & ComponentProps<typeof Checkbox>) {
   return (
     <__FlagSettingItem
@@ -73,6 +81,7 @@ export function CheckboxSettingItem({
         label,
         extraAction,
         tooltip,
+        tooltipProps,
         as: 'checkbox',
         checkboxProps: otherProps,
       }}
@@ -84,11 +93,13 @@ export function SwitchSettingItem({
   configKey,
   extraAction,
   tooltip,
+  tooltipProps,
   ...otherProps
 }: {
   configKey: BooleanSettingsKey
   extraAction?: (val: boolean) => void | Promise<void>
   tooltip?: ReactNode
+  tooltipProps?: ComponentProps<typeof __FlagSettingItem>['tooltipProps']
 } & ComponentProps<typeof Switch>) {
   return (
     <__FlagSettingItem
@@ -96,6 +107,7 @@ export function SwitchSettingItem({
         configKey,
         extraAction,
         tooltip,
+        tooltipProps,
         as: 'switch',
         switchProps: otherProps,
       }}

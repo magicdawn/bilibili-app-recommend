@@ -222,7 +222,7 @@ export function filterRecItems(items: RecItemTypeOrSeparator[], tab: ETab) {
 
     function filterVideo() {
       // 不过滤已关注视频
-      if (followed && !settings.enableFilterForFollowedVideo) return true
+      if (followed && settings.exemptForFollowedVideo) return true
 
       // https://github.com/magicdawn/bilibili-app-recommend/issues/87
       // 反向推送, 蜜汁操作.
@@ -268,7 +268,7 @@ export function filterRecItems(items: RecItemTypeOrSeparator[], tab: ETab) {
     function filterPicture() {
       if (settings.filterOutGotoTypePicture) {
         // 不去掉已关注的图文
-        if (followed && !settings.enableFilterForFollowedPicture) {
+        if (followed && settings.exemptForFollowedPicture) {
           return true
         }
         debug('filter out by goto-type-picture-rule: %s %o', goto, {

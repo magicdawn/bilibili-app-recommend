@@ -3,6 +3,7 @@ import { CheckboxSettingItem, SwitchSettingItem } from '$components/ModalSetting
 import { updateSettings, useSettingsSnapshot } from '$modules/settings'
 import { HelpInfo } from '$ui-components/HelpInfo'
 import { InputNumber, Tag } from 'antd'
+import type { ComponentProps } from 'react'
 import { EditableListSettingItem } from '../EditableListSettingItem'
 import styles from '../index.module.scss'
 
@@ -17,6 +18,25 @@ export function TabPaneFilter() {
     filterByAuthorNameEnabled,
     filterByTitleEnabled,
   } = useSettingsSnapshot()
+
+  const getExemptFollowedTooltipProps = (
+    label: '视频' | '图文',
+  ): Partial<ComponentProps<typeof CheckboxSettingItem>> => {
+    return {
+      label: '「已关注」豁免',
+      tooltipProps: { color: 'rgba(0, 0, 0, 0.85)' },
+      tooltip: (
+        <>
+          推荐中已关注用户发布的内容({label}) 不会被过滤
+          <br />
+          "豁免" 一词来源{' '}
+          <a href='https://github.com/magicdawn/bilibili-app-recommend/issues/1#issuecomment-2197868587'>
+            pilipala
+          </a>
+        </>
+      ),
+    }
+  }
 
   return (
     <div
@@ -84,10 +104,9 @@ export function TabPaneFilter() {
               <CheckboxSettingItem
                 className={styles.row}
                 style={{ marginTop: 3 }}
-                configKey='enableFilterForFollowedVideo'
-                label='对「已关注」的视频启用过滤'
-                tooltip={<>默认不过滤「已关注」</>}
+                configKey='exemptForFollowedVideo'
                 disabled={!filterEnabled}
+                {...getExemptFollowedTooltipProps('视频')}
               />
             </div>
 
@@ -107,9 +126,8 @@ export function TabPaneFilter() {
               <CheckboxSettingItem
                 className={styles.row}
                 disabled={!filterEnabled || !filterOutGotoTypePicture}
-                configKey='enableFilterForFollowedPicture'
-                label='对「已关注」的图文启用过滤'
-                tooltip={<>默认不过滤「已关注」</>}
+                configKey='exemptForFollowedPicture'
+                {...getExemptFollowedTooltipProps('图文')}
               />
 
               <div className={styles.settingsGroupSubTitle}>影视</div>

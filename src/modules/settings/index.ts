@@ -101,14 +101,14 @@ export const initialSettings = {
   filterMinDurationEnabled: false,
   filterMinDuration: 60, // 60s
 
-  // 已关注UP的推荐视频, 默认不参与过滤
-  enableFilterForFollowedVideo: false,
+  // 已关注豁免
+  exemptForFollowedVideo: true,
 
   // filter out whose goto = 'picture'
   filterOutGotoTypePicture: false,
-  // 已关注UP的推荐图文, 默认不参与过滤
   // 图文也是有 rcmd_reason = '已关注' 的
-  enableFilterForFollowedPicture: false,
+  // 已关注UP的推荐图文, 默认不参与过滤
+  exemptForFollowedPicture: true,
 
   // filter out whose goto = 'bangumi'
   filterOutGotoTypeBangumi: false,
