@@ -30,7 +30,10 @@ export function TabPaneFilter() {
           推荐中已关注用户发布的内容({label}) 不会被过滤
           <br />
           "豁免" 一词来源{' '}
-          <a href='https://github.com/magicdawn/bilibili-app-recommend/issues/1#issuecomment-2197868587'>
+          <a
+            target='_blank'
+            href='https://github.com/magicdawn/bilibili-app-recommend/issues/1#issuecomment-2197868587'
+          >
             pilipala
           </a>
         </>
