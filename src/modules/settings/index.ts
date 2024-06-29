@@ -1,15 +1,11 @@
-import { APP_NAME, IN_BILIBILI_HOMEPAGE, baseDebug } from '$common'
-import { HAS_RESTORED_SETTINGS } from '$components/ModalSettings/index.shared'
+import { APP_NAME, IN_BILIBILI_HOMEPAGE } from '$common'
 import { ETab } from '$components/RecHeader/tab-enum'
 import { VideoLinkOpenMode } from '$components/VideoCard/index.shared'
 import { EAppApiDevice } from '$define/index.shared'
-import { BilibiliArticleDraft } from '$modules/user/article-draft'
 import { toast } from '$utility/toast'
-import { isEqual, omit, pick, throttle } from 'lodash'
-import ms from 'ms'
+import { pick } from 'lodash'
 import { proxy, snapshot, subscribe, useSnapshot } from 'valtio'
-
-const debug = baseDebug.extend('settings')
+import { saveToDraft } from './backup'
 
 export const initialSettings = {
   accessKey: '',
@@ -208,10 +204,7 @@ export async function load() {
   })
 }
 
-export const articleDraft = new BilibiliArticleDraft(APP_NAME)
-const setDataThrottled = throttle(articleDraft.setData, ms('5s'))
-
-export async function save() {
+async function save() {
   const newVal = snapshot(settings)
   // console.log('GM.setValue newVal = %o', newVal)
 
@@ -220,43 +213,6 @@ export async function save() {
 
   // http backup
   await saveToDraft(newVal as Readonly<Settings>)
-}
-
-const omitKeys: SettingsKey[] = [
-  // private
-  'accessKey',
-  'accessKeyExpireAt',
-
-  // 无关紧要
-  'shuffleForFav',
-  'addSeparatorForFav',
-
-  'shuffleForWatchLater',
-  'addSeparatorForWatchLater',
-
-  'shuffleForPopularWeekly',
-  'anonymousForPopularGeneral',
-  'hideChargeOnlyDynamicFeedVideos',
-]
-
-let lastBackupVal: Partial<Settings> | undefined
-
-async function saveToDraft(val: Readonly<Settings>) {
-  if (!val.backupSettingsToArticleDraft) return
-  // skip when `HAS_RESTORED_SETTINGS=true`
-  if (HAS_RESTORED_SETTINGS) return
-
-  const currentBackupVal = omit(val, omitKeys)
-  const shouldBackup = !lastBackupVal || !isEqual(lastBackupVal, currentBackupVal)
-  if (!shouldBackup) return
-
-  try {
-    await setDataThrottled(currentBackupVal)
-    lastBackupVal = currentBackupVal
-    debug('backup to article draft complete')
-  } catch (e: any) {
-    console.error(e.stack || e)
-  }
 }
 
 /**

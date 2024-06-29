@@ -4,15 +4,15 @@ import { CheckboxSettingItem } from '$components/ModalSettings/setting-item'
 import { OpenExternalLinkIcon } from '$modules/icon'
 import {
   allowedSettingsKeys,
-  articleDraft,
   resetSettings,
   settings,
   updateSettings,
   useSettingsSnapshot,
 } from '$modules/settings'
+import { articleDraft, restoreOmitKeys } from '$modules/settings/index.shared'
 import { AntdMessage } from '$utility'
 import { Button, Popconfirm, Slider } from 'antd'
-import { pick } from 'lodash'
+import { omit, pick } from 'lodash'
 import styles from '../index.module.scss'
 import { set_HAS_RESTORED_SETTINGS, toastAndReload } from '../index.shared'
 import { ResetPartialSettingsButton, SettingsGroup } from './_shared'
@@ -24,7 +24,7 @@ function onResetSettings() {
 
 async function onRestoreSettings() {
   const remoteSettings = await articleDraft.getData()
-  const pickedSettings = pick(remoteSettings || {}, allowedSettingsKeys)
+  const pickedSettings = omit(pick(remoteSettings || {}, allowedSettingsKeys), restoreOmitKeys)
 
   const len = Object.keys(pickedSettings).length
   if (!len) {
@@ -32,7 +32,7 @@ async function onRestoreSettings() {
   }
 
   set_HAS_RESTORED_SETTINGS(true)
-  updateSettings({ ...pickedSettings })
+  updateSettings(pickedSettings)
   return toastAndReload()
 }
 
