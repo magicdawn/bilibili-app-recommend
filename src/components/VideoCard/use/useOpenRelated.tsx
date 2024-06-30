@@ -148,6 +148,7 @@ export function useOpenRelated({
   const openInPopupButtonEl: ReactNode = useMemo(() => {
     if (videoLinkOpenMode === VideoLinkOpenMode.Popup) return
     if (item.api === EApiType.Live) return
+    if (!hasDocumentPictureInPicture) return
     return (
       <VideoCardActionButton
         visible={actionButtonVisible}
@@ -176,6 +177,8 @@ export function useOpenRelated({
     onOpenInPopup,
   }
 }
+
+const hasDocumentPictureInPicture = !!window.documentPictureInPicture?.requestWindow
 
 export async function openInPipOrPopup(
   newHref: string,
@@ -207,10 +210,10 @@ export async function openInPipOrPopup(
   debug('openInPipOrPopup newHref=%s size=%sx%s', newHref, popupWidth, popupHeight)
 
   let pipWindow: Window | undefined
-  if (window.documentPictureInPicture?.requestWindow) {
+  if (hasDocumentPictureInPicture) {
     try {
       // https://developer.chrome.com/docs/web-platform/document-picture-in-picture
-      pipWindow = await window.documentPictureInPicture.requestWindow({
+      pipWindow = await window.documentPictureInPicture?.requestWindow({
         width: popupWidth,
         height: popupHeight,
         disallowReturnToOpener: true,
