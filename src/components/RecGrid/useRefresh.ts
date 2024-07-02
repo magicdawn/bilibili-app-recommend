@@ -1,4 +1,3 @@
-import { APP_KEY_PREFIX } from '$common'
 import { useRefInit } from '$common/hooks/useRefInit'
 import { useRefStateBox } from '$common/hooks/useRefState'
 import { useCurrentUsingTab } from '$components/RecHeader/tab'
@@ -14,8 +13,8 @@ import { PcRecService } from '$modules/rec-services/pc'
 import { WatchLaterRecService } from '$modules/rec-services/watchlater'
 import { nextTick } from '$utility'
 import type { Debugger } from 'debug'
-import { tryit } from 'radash'
 import { createContext } from 'react'
+import { setGlobalGridItems } from './unsafe-window-export'
 
 export type OnRefreshOptions = { watchlaterKeepOrder?: boolean }
 export type OnRefresh = (reuse?: boolean, options?: OnRefreshOptions) => void | Promise<void>
@@ -108,9 +107,7 @@ export function useRefresh({
   const hasMoreBox = useRefStateBox(true)
   const itemsBox = useRefStateBox<RecItemTypeOrSeparator[]>([])
   useEffect(() => {
-    tryit(() => {
-      ;(unsafeWindow as any)[`${APP_KEY_PREFIX}_gridItems`] = itemsBox.state
-    })()
+    setGlobalGridItems(itemsBox.state)
   }, [itemsBox.state])
 
   const serviceMapBox = useRefStateBox<ServiceMap>(() => {
