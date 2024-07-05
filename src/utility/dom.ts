@@ -21,7 +21,7 @@ export async function tryAction(
   const selectorPredicate = moreOptions?.selectorPredicate
   const timeout = moreOptions?.timeout ?? DEFAULT_TIMEOUT
   const delayInterval = moreOptions?.delayInterval ?? DEFAULT_DELAY_INTERVAL
-  const warnOnTimeout = moreOptions?.warnOnTimeout ?? true
+  const warnOnTimeout = moreOptions?.warnOnTimeout ?? false
 
   let arr: HTMLElement[] = []
   const query = () => {
@@ -38,6 +38,7 @@ export async function tryAction(
   }
 
   if (!arr.length) {
+    debug('tryAction: timeout for selector = `%s`', selector)
     if (warnOnTimeout) {
       console.warn(`[${APP_NAME}]: tryAction timeout, selector = \`%s\``, selector)
     }

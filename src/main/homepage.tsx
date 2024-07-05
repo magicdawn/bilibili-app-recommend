@@ -13,14 +13,16 @@ import { isSafari } from '../platform'
 // in this entry, if no insert point found, render to document body
 const isHashEntry = (location.hash || '').startsWith(`#/${APP_NAME}/`)
 
+const bewlyEnabledSelector = 'html.bewly-design:not(:has(#i_cecream))'
+
 function hasBewlyBewly() {
-  return !isHashEntry && document.documentElement.classList.contains('bewly-design')
+  return !isHashEntry && !!document.querySelector(bewlyEnabledSelector)
 }
 
 // 有时入口检测不到 bewly, bewly 比本脚本后运行, 在渲染完成后, 持续检测一段时间, 检测到取消渲染
 async function tryDetectBewlyBewly() {
   return tryAction(
-    'html.bewly-design',
+    bewlyEnabledSelector,
     () => {
       console.warn(`${APP_NAME}: unmount for using bewly-design`)
       root?.unmount()
