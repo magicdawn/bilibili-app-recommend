@@ -1,15 +1,39 @@
 import { APP_NAME, baseDebug } from '$common'
 import delay from 'delay'
+import { isNil } from 'lodash'
 
 const debug = baseDebug.extend('utility:dom')
 
-const DEFAULT_TIMEOUT = 10 * 1000
-const DEFAULT_DELAY_INTERVAL = 200
+const DEFAULT_POLL_TIMEOUT = 10 * 1000
+const DEFAULT_POLL_INTERVAL = 200
+
+export type PollOptions<T> = {
+  interval?: number
+  timeout?: number
+  validate?: (value: T) => boolean
+}
+
+export async function poll<T>(fn: () => T, options?: PollOptions<T>) {
+  const interval = options?.interval ?? DEFAULT_POLL_INTERVAL
+  let timeout = options?.timeout ?? DEFAULT_POLL_TIMEOUT
+  if (timeout === 0) timeout = Infinity
+  const validate = options?.validate ?? ((val: T) => !isNil(val))
+
+  const start = performance.now()
+  let result = fn()
+
+  while (!validate(result) && performance.now() - start < timeout) {
+    await delay(interval)
+    result = fn()
+  }
+
+  return result
+}
 
 export interface TryActionOptions {
   selectorPredicate?: (el: HTMLElement) => boolean
-  delayInterval?: number
-  timeout?: number
+  pollInterval?: number
+  pollTimeout?: number
   warnOnTimeout?: boolean
 }
 
@@ -18,26 +42,23 @@ export async function tryAction(
   action: (el: HTMLElement) => void | Promise<void>,
   moreOptions?: TryActionOptions,
 ) {
+  const pollTimeout = moreOptions?.pollTimeout ?? DEFAULT_POLL_TIMEOUT
+  const pollInterval = moreOptions?.pollInterval ?? DEFAULT_POLL_INTERVAL
   const selectorPredicate = moreOptions?.selectorPredicate
-  const timeout = moreOptions?.timeout ?? DEFAULT_TIMEOUT
-  const delayInterval = moreOptions?.delayInterval ?? DEFAULT_DELAY_INTERVAL
   const warnOnTimeout = moreOptions?.warnOnTimeout ?? false
 
-  let arr: HTMLElement[] = []
-  const query = () => {
-    arr = Array.from(document.querySelectorAll<HTMLElement>(selector))
-    if (selectorPredicate) arr = arr.filter(selectorPredicate)
-  }
-  query()
-
-  const start = performance.now()
-  const timeoutAt = start + timeout
-  while (!arr.length && performance.now() < timeoutAt) {
-    await delay(delayInterval)
-    query()
-  }
-
-  if (!arr.length) {
+  const arr = await poll(
+    () => {
+      let arr = Array.from(document.querySelectorAll<HTMLElement>(selector))
+      if (selectorPredicate) arr = arr.filter(selectorPredicate)
+      if (arr.length) return arr
+    },
+    {
+      timeout: pollTimeout,
+      interval: pollInterval,
+    },
+  )
+  if (!arr?.length) {
     debug('tryAction: timeout for selector = `%s`', selector)
     if (warnOnTimeout) {
       console.warn(`[${APP_NAME}]: tryAction timeout, selector = \`%s\``, selector)

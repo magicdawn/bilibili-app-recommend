@@ -28,7 +28,7 @@ async function tryDetectBewlyBewly() {
       root?.unmount()
     },
     {
-      timeout: 5_000,
+      pollTimeout: 5_000,
       warnOnTimeout: false,
     },
   )

@@ -7,6 +7,7 @@ import {
   VideoLinkOpenModeConfig,
 } from '$components/VideoCard/index.shared'
 import { openInPipOrPopup } from '$components/VideoCard/use/useOpenRelated'
+import { onVideoChange } from '$utility/bilibili/video-page'
 import { Button } from 'antd'
 import delay from 'delay'
 import ms from 'ms'
@@ -16,9 +17,8 @@ const debug = baseDebug.extend('main:video-play-page')
 
 export function initVideoPlayPage() {
   handleFullscreen()
-
   // disable for not always working
-  // addOpenInPipWindowButton()
+  addOpenInPipWindowButton()
 }
 
 /**
@@ -63,13 +63,16 @@ async function addOpenInPipWindowButton() {
     return
   }
 
-  await delay(1000)
   const el = document.createElement('div')
-  document
-    .querySelector<HTMLDivElement>(
-      '.video-info-meta .video-info-detail-list.video-info-detail-content',
-    )
-    ?.appendChild(el)
+
+  onVideoChange(async () => {
+    await delay(1500)
+    document
+      .querySelector<HTMLDivElement>(
+        '.video-info-meta .video-info-detail-list.video-info-detail-content',
+      )
+      ?.appendChild(el)
+  })
 
   const handleClick: MouseEventHandler<HTMLElement> = (e) => {
     // make it pause
@@ -93,7 +96,18 @@ async function addOpenInPipWindowButton() {
   root.render(
     <>
       <AntdApp>
-        <Button size='small' css={antdCustomCss.button} onClick={handleClick}>
+        <Button
+          size='small'
+          css={[
+            antdCustomCss.button,
+            css`
+              height: 22px;
+              line-height: 22px;
+              gap: 0;
+            `,
+          ]}
+          onClick={handleClick}
+        >
           {VideoLinkOpenModeConfig.Popup.icon}
           <span css={{ marginLeft: 4 }}>{VideoLinkOpenModeConfig.Popup.label}</span>
         </Button>

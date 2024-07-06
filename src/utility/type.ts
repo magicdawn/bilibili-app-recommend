@@ -8,3 +8,5 @@ export type TheCssType = Interpolation<Theme>
 export type AntdMenuItemType = ArrayItem<Exclude<MenuProps['items'], undefined>>
 
 export type AnyFunction = (...args: any[]) => any
+
+export type Nullable<T> = T | null | undefined
