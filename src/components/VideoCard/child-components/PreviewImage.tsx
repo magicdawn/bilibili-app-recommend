@@ -14,6 +14,10 @@ const S = {
     bottom: 0;
     overflow: hidden;
 
+    /* see https://github.com/magicdawn/bilibili-app-recommend/issues/112 */
+    /* useMouse 使用的是 document.addEventListener, 不用它响应 mousemove 事件 */
+    pointer-events: none;
+
     // 配合进度条, 底部不需要圆角
     border-top-left-radius: ${borderRadiusValue};
     border-top-right-radius: ${borderRadiusValue};
