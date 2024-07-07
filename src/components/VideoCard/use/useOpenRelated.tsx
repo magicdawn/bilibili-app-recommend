@@ -178,7 +178,7 @@ export function useOpenRelated({
   }
 }
 
-const hasDocumentPictureInPicture = !!window.documentPictureInPicture?.requestWindow
+export const hasDocumentPictureInPicture = !!window.documentPictureInPicture?.requestWindow
 
 export async function openInPipOrPopup(
   newHref: string,

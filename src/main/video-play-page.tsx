@@ -6,19 +6,28 @@ import {
   PlayerScreenMode,
   VideoLinkOpenModeConfig,
 } from '$components/VideoCard/index.shared'
-import { openInPipOrPopup } from '$components/VideoCard/use/useOpenRelated'
+import {
+  hasDocumentPictureInPicture,
+  openInPipOrPopup,
+} from '$components/VideoCard/use/useOpenRelated'
 import { onVideoChange } from '$utility/bilibili/video-page'
 import { Button } from 'antd'
 import delay from 'delay'
 import ms from 'ms'
-import type { MouseEventHandler } from 'react'
 
 const debug = baseDebug.extend('main:video-play-page')
 
 export function initVideoPlayPage() {
   handleFullscreen()
-  // disable for not always working
-  addOpenInPipWindowButton()
+
+  // open in pipwindow
+  if (hasDocumentPictureInPicture) {
+    // GM command
+    registerOpenInPipCommand()
+
+    // 按钮, 但会导致闪一下, 然后按钮没了. 可能类似 ssr dehydrate
+    // addOpenInPipWindowButton()
+  }
 }
 
 /**
@@ -57,6 +66,30 @@ async function handleFullscreen() {
   // Failed to execute 'requestFullscreen' on 'Element': API can only be initiated by a user gesture.
 }
 
+function pausePlayingVideoAndOpenInPipWindow() {
+  // make it pause
+  const currentPaused = !!document.querySelectorAll<HTMLDivElement>(
+    '#bilibili-player .bpx-player-container.bpx-state-paused',
+  ).length
+  if (!currentPaused) {
+    document
+      .querySelector<HTMLElement>('#bilibili-player [role="button"][aria-label="播放/暂停"]')
+      ?.click()
+  }
+
+  // open in pipwindow
+  const u = new URL(location.href)
+  u.searchParams.set(PLAYER_SCREEN_MODE, PlayerScreenMode.WebFullscreen)
+  const newHref = u.href
+  openInPipOrPopup(newHref, '')
+}
+
+function registerOpenInPipCommand() {
+  GM.registerMenuCommand('🎦 小窗打开', () => {
+    pausePlayingVideoAndOpenInPipWindow()
+  })
+}
+
 async function addOpenInPipWindowButton() {
   if (window.top !== window) {
     // inside a iframe
@@ -74,24 +107,6 @@ async function addOpenInPipWindowButton() {
       ?.appendChild(el)
   })
 
-  const handleClick: MouseEventHandler<HTMLElement> = (e) => {
-    // make it pause
-    const currentPaused = !!document.querySelectorAll<HTMLDivElement>(
-      '#bilibili-player .bpx-player-container.bpx-state-paused',
-    ).length
-    if (!currentPaused) {
-      document
-        .querySelector<HTMLElement>('#bilibili-player [role="button"][aria-label="播放/暂停"]')
-        ?.click()
-    }
-
-    // open in pipwindow
-    const u = new URL(location.href)
-    u.searchParams.set(PLAYER_SCREEN_MODE, PlayerScreenMode.WebFullscreen)
-    const newHref = u.href
-    openInPipOrPopup(newHref, '')
-  }
-
   const root = createRoot(el)
   root.render(
     <>
@@ -106,7 +121,7 @@ async function addOpenInPipWindowButton() {
               gap: 0;
             `,
           ]}
-          onClick={handleClick}
+          onClick={pausePlayingVideoAndOpenInPipWindow}
         >
           {VideoLinkOpenModeConfig.Popup.icon}
           <span css={{ marginLeft: 4 }}>{VideoLinkOpenModeConfig.Popup.label}</span>
