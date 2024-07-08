@@ -1,5 +1,6 @@
 import { APP_CLS_ROOT, APP_NAME } from '$common'
 import { AntdApp } from '$components/AntdApp'
+import { registerSettingsGmCommand } from '$components/RecHeader/modals'
 import { tryAction, tryToRemove } from '$utility/dom'
 import { FloatButton } from 'antd'
 import delay from 'delay'
@@ -43,6 +44,8 @@ export async function initHomepage() {
   tryAction('html.gray', (el) => el.classList.remove('gray'))
   // 登录-大会员券
   tryToRemove('.vip-login-tip')
+
+  registerSettingsGmCommand()
 
   if (hasBewlyBewly()) {
     console.warn(`${APP_NAME}: quit for using bewly-design`)

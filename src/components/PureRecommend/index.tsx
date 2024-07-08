@@ -19,7 +19,7 @@ export function PureRecommend() {
   const { useNarrowMode } = useSettingsSnapshot()
 
   // 是否已经打开 "查看更多" 即 ModalFeed
-  const { modalFeedVisible, modalConfigVisible } = useHeaderState()
+  const { modalFeedVisible, modalSettingsVisible } = useHeaderState()
 
   const recHeader = useRef<RecHeaderRef>(null)
   const recGrid = useRef<RecGridRef>(null)
@@ -46,7 +46,7 @@ export function PureRecommend() {
       <RecGrid
         ref={recGrid}
         css={[useNarrowMode && narrowStyle.grid]}
-        shortcutEnabled={!(modalFeedVisible || modalConfigVisible)}
+        shortcutEnabled={!(modalFeedVisible || modalSettingsVisible)}
         infiteScrollUseWindow={true}
         onScrollToTop={onScrollToTop}
         setRefreshing={setRefreshing}

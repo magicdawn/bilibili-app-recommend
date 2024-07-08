@@ -3,7 +3,6 @@ import { baseDebug } from '$common'
 import { antdCustomCss, flexCenterStyle } from '$common/emotion-css'
 import { useSizeExpression } from '$common/hooks/useResizeObserverExpression'
 import { useSticky } from '$common/hooks/useSticky'
-import { ModalSettings } from '$components/ModalSettings'
 import { borderColorValue } from '$components/ModalSettings/theme.shared'
 import type { OnRefresh } from '$components/RecGrid/useRefresh'
 import { OnRefreshContext } from '$components/RecGrid/useRefresh'
@@ -15,15 +14,9 @@ import { getElementOffset, shouldDisableShortcut } from '$utility/dom'
 import { Button, Space } from 'antd'
 import { size } from 'polished'
 import { AccessKeyManage } from '../AccessKeyManage'
-import { ModalFeed } from '../ModalFeed'
+import { headerState } from './index.shared'
+import { showModalFeed, showModalSettings } from './modals'
 import { RefreshButton } from './RefreshButton'
-import {
-  headerState,
-  hideModalConfig,
-  hideModalFeed,
-  showModalConfig,
-  showModalFeed,
-} from './index.shared'
 import { VideoSourceTab } from './tab'
 
 const debug = baseDebug.extend('RecHeader')
@@ -64,13 +57,13 @@ export const RecHeader = forwardRef<
     showModalFeedEntry,
     styleUseStickyTabbarInPureRecommend,
   } = useSettingsSnapshot()
-  const { modalFeedVisible, modalConfigVisible } = useSnapshot(headerState)
+  const { modalFeedVisible, modalSettingsVisible } = useSnapshot(headerState)
 
   useKeyPress(
     ['shift.comma'],
     (e) => {
       if (shouldDisableShortcut()) return
-      headerState.modalConfigVisible = !headerState.modalConfigVisible
+      headerState.modalSettingsVisible = !headerState.modalSettingsVisible
     },
     { exactMatch: true },
   )
@@ -186,14 +179,14 @@ export const RecHeader = forwardRef<
 
                 {!accessKey && <AccessKeyManage style={{ marginLeft: 5 }} />}
 
-                <Button onClick={showModalConfig} css={S.configBtn}>
+                <Button onClick={showModalSettings} css={S.configBtn}>
                   <ConfigIcon {...size(14)} />
                 </Button>
 
                 <RefreshButton
                   refreshing={refreshing}
                   onRefresh={onRefresh}
-                  refreshHotkeyEnabled={!(modalConfigVisible || modalFeedVisible)}
+                  refreshHotkeyEnabled={!(modalSettingsVisible || modalFeedVisible)}
                 />
 
                 {showModalFeedEntry && (
@@ -214,9 +207,6 @@ export const RecHeader = forwardRef<
             </div>
           </div>
         </div>
-
-        <ModalFeed show={modalFeedVisible} onHide={hideModalFeed} />
-        <ModalSettings show={modalConfigVisible} onHide={hideModalConfig} />
       </OnRefreshContext.Provider>
     </>
   )
