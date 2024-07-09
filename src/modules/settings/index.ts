@@ -140,8 +140,8 @@ export const initialSettings = {
   // 使用卡片模式
   // inspired by https://ai.taobao.com
   styleUseCardBorder: true,
-  styleUseCardBorderOnlyOnHover: false,
-  styleUseCardBoxShadow: true,
+  styleUseCardBorderOnlyOnHover: true,
+  styleUseCardBoxShadow: false,
 
   /**
    * 颜色主题
