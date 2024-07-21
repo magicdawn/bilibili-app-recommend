@@ -269,7 +269,7 @@ https://github.com/magicdawn/bilibili-app-recommend/raw/release-nightly/bilibili
 ## 支持
 
 - 如果对你有用,请来个 Star :)
-- 如果你喜欢这个项目, 可以 「[爱发电](https://afdian.net/a/magicdawn)」 支持一下
+- 如果你喜欢这个项目, 可以 「[爱发电](https://afdian.com/a/magicdawn)」 支持一下
 
 ![afdian-magicdawn_w375](https://mirror.ghproxy.com/https://raw.githubusercontent.com/magicdawn/magicdawn/master/images/afdian-magicdawn_w375.jpg)
 

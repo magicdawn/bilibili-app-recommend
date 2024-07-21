@@ -254,7 +254,7 @@ export function TabPaneBasic() {
           >
             更新日志
           </Button>
-          <Button href='https://afdian.net/a/magicdawn' target='_blank'>
+          <Button href='https://afdian.com/a/magicdawn' target='_blank'>
             用 ❤️ 发电
           </Button>
         </Space>
