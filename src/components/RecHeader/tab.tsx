@@ -38,7 +38,7 @@ export function useSortedTabKeys() {
   return useMemo(() => getSortedTabKeys(customTabKeysOrder), [customTabKeysOrder])
 }
 
-function useCurrentDisplayingTabKeys() {
+export function useCurrentDisplayingTabKeys() {
   const { hidingTabKeys, customTabKeysOrder, showPopularWeeklyOnlyOnWeekend } =
     useSettingsSnapshot()
   const logined = useHasLogined()

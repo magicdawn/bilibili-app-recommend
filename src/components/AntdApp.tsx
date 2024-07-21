@@ -23,7 +23,7 @@ emotionCssDefaultCache.compat = true
 const USING_FONT_FAMILY = 'HarmonyOS_Regular,PingFang SC,Helvetica Neue,Microsoft YaHei,sans-serif'
 // const USING_FONT_FAMILY = 'PingFang SC,HarmonyOS_Regular,Helvetica Neue,Microsoft YaHei,sans-serif'
 
-function compose(...fns: ((c: ReactNode) => ReactNode)[]) {
+function compose(...fns: Array<(c: ReactNode) => ReactNode>) {
   return function (c: ReactNode) {
     return fns.reduceRight((content, fn) => fn(content), c)
   }

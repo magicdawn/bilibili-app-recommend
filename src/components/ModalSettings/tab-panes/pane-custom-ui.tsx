@@ -130,11 +130,13 @@ export function TabPaneCustomUI() {
             configKey={'styleUseCardBorderOnlyOnHover'}
             checkedChildren='只在悬浮时展示'
             unCheckedChildren='总是展示'
+            disabled={!settings.styleUseCardBorder}
           />
         </div>
 
         <CheckboxSettingItem
           configKey='styleUseCardBoxShadow'
+          disabled={!settings.styleUseCardBorder}
           label='使用主题色阴影(border & box-shadow)'
           tooltip={
             <>

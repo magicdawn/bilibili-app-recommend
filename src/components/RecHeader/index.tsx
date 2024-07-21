@@ -17,7 +17,8 @@ import { AccessKeyManage } from '../AccessKeyManage'
 import { headerState } from './index.shared'
 import { showModalFeed, showModalSettings } from './modals'
 import { RefreshButton } from './RefreshButton'
-import { VideoSourceTab } from './tab'
+import { useCurrentDisplayingTabKeys, VideoSourceTab } from './tab'
+import { ETab } from './tab-enum'
 
 const debug = baseDebug.extend('RecHeader')
 
@@ -87,6 +88,8 @@ export const RecHeader = forwardRef<
   useImperativeHandle(ref, () => ({ scroll }))
 
   const headerHeight = $headerHeight.use()
+
+  const showAccessKeyManage = useShouldShowAccessKeyManage()
 
   const usingEvolevdHeader = $usingEvolevdHeader.use()
   const dark = useIsDarkMode()
@@ -177,7 +180,7 @@ export const RecHeader = forwardRef<
               <Space size={'small'}>
                 {rightSlot}
 
-                {!accessKey && <AccessKeyManage style={{ marginLeft: 5 }} />}
+                {!accessKey && showAccessKeyManage && <AccessKeyManage style={{ marginLeft: 5 }} />}
 
                 <Button onClick={showModalSettings} css={S.configBtn}>
                   <ConfigIcon {...size(14)} />
@@ -244,4 +247,9 @@ function useExpandToFullWidthCss() {
       `
     }
   }, [xScrolling, bodyWidth])
+}
+
+function useShouldShowAccessKeyManage() {
+  const tabKeys = useCurrentDisplayingTabKeys()
+  return tabKeys.includes(ETab.RecommendApp)
 }
