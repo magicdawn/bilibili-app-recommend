@@ -82,8 +82,19 @@ export default defineConfig(({ command }) => ({
         postcssMediaMinmax(),
       ],
     },
+
     modules: {
       localsConvention: 'camelCaseOnly',
+    },
+
+    preprocessorOptions: {
+      // not working now: vite still using the legacy API, `silenceDeprecations` requires modern API
+      // modern API on the way https://github.com/vitejs/vite/pull/17728
+      scss: {
+        // https://sass-lang.com/documentation/breaking-changes/mixed-decls/
+        silenceDeprecations: ['mixed-decls'],
+        quietDeps: true,
+      },
     },
   },
 
