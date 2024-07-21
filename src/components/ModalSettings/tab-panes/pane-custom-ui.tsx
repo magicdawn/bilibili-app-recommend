@@ -1,7 +1,7 @@
 import { APP_NAME } from '$common'
 import { C, flexVerticalCenterStyle } from '$common/emotion-css'
 import type { Settings } from '$modules/settings'
-import { settings } from '$modules/settings'
+import { settings, useSettingsSnapshot } from '$modules/settings'
 import { AntdMessage, shouldDisableShortcut } from '$utility'
 import { Tag } from 'antd'
 import { isEqual } from 'lodash'
@@ -51,6 +51,8 @@ export function useHotkeyForConfigBorder() {
 }
 
 export function TabPaneCustomUI() {
+  const { styleUseCardBorder } = useSettingsSnapshot()
+
   return (
     <div className={styles.tabPane}>
       <SettingsGroup title='样式自定义'>
@@ -130,13 +132,13 @@ export function TabPaneCustomUI() {
             configKey={'styleUseCardBorderOnlyOnHover'}
             checkedChildren='只在悬浮时展示'
             unCheckedChildren='总是展示'
-            disabled={!settings.styleUseCardBorder}
+            disabled={!styleUseCardBorder}
           />
         </div>
 
         <CheckboxSettingItem
           configKey='styleUseCardBoxShadow'
-          disabled={!settings.styleUseCardBorder}
+          disabled={!styleUseCardBorder}
           label='使用主题色阴影(border & box-shadow)'
           tooltip={
             <>
