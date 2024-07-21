@@ -177,7 +177,7 @@ export default defineConfig(({ command }) => ({
         name: packageName,
         version: scriptVersion,
         namespace: 'https://magicdawn.fun',
-        description: '为 B 站首页添加像 App 一样的推荐',
+        description: 'B站首页推荐',
         icon: 'https://www.bilibili.com/favicon.ico',
         // 'description': 'Add app like recommend part to bilibili homepage',
         author: 'magicdawn',
