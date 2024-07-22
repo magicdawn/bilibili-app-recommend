@@ -174,19 +174,19 @@ export default defineConfig(({ command }) => ({
     monkey({
       entry: './src/index.ts',
       userscript: {
-        name: packageName,
-        version: scriptVersion,
-        namespace: 'https://magicdawn.fun',
-        description: 'B站首页推荐',
-        icon: 'https://www.bilibili.com/favicon.ico',
+        'name': packageName,
+        'version': scriptVersion,
+        'namespace': 'https://magicdawn.fun',
+        'description': 'B站首页推荐',
+        'icon': 'https://www.bilibili.com/favicon.ico',
         // 'description': 'Add app like recommend part to bilibili homepage',
-        author: 'magicdawn',
-        supportURL: 'https://github.com/magicdawn/bilibili-app-recommend/issues',
-        homepageURL: 'https://greasyfork.org/zh-CN/scripts/443530-bilibili-app-recommend',
+        'author': 'magicdawn',
+        'supportURL': 'https://github.com/magicdawn/bilibili-app-recommend/issues',
+        'homepageURL': 'https://greasyfork.org/zh-CN/scripts/443530-bilibili-app-recommend',
         downloadURL,
         updateURL,
-        license: 'MIT',
-        match: [
+        'license': 'MIT',
+        'match': [
           'https://www.bilibili.com/',
           'https://www.bilibili.com/?*',
           'https://www.bilibili.com/index.html',
@@ -195,11 +195,11 @@ export default defineConfig(({ command }) => ({
           'https://www.bilibili.com/list/watchlater?*',
           'https://www.bilibili.com/bangumi/play/*',
         ],
-        connect: ['app.bilibili.com'],
-        grant: [
-          // axios gm adapter use
-          'GM.xmlHttpRequest',
+        'connect': ['app.bilibili.com'],
+        'grant': [
+          'GM.xmlHttpRequest', // axios gm adapter use
         ],
+        'run-at': 'document-end', // default: violentmonkey: document-end; tampermonkey: document-idle
       },
 
       server: {
