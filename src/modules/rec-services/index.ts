@@ -1,11 +1,11 @@
 import { baseDebug } from '$common'
-import { getIService, type FetcherOptions } from '$components/RecGrid/useRefresh'
 import { getColumnCount } from '$components/RecGrid/useShortcut'
 import { ETab } from '$components/RecHeader/tab-enum'
 import { anyFilterEnabled, filterRecItems } from '$components/VideoCard/process/filter'
 import { lookinto } from '$components/VideoCard/process/normalize'
 import type { RecItemTypeOrSeparator } from '$define'
 import { EApiType } from '$define/index.shared'
+import { getIService, REC_TABS, type FetcherOptions } from '$modules/rec-services/service-map'
 import { uniqBy } from 'lodash'
 import { AppRecService } from './app'
 import { PcRecService } from './pc'
@@ -27,30 +27,18 @@ export const recItemUniqer = (item: RecItemTypeOrSeparator) =>
         [EApiType.Live]: (item) => item.roomid,
       })
 
-export function uniqFilter(existing: RecItemTypeOrSeparator[], newItems: RecItemTypeOrSeparator[]) {
-  const ids = existing.map(recItemUniqer)
-  // make self uniq
-  newItems = uniqBy(newItems, recItemUniqer)
-  // uniq by existing
-  newItems = newItems.filter((item) => {
-    return !ids.includes(recItemUniqer(item))
-  })
-  return newItems
-}
-
-export function uniqConcat(existing: RecItemTypeOrSeparator[], newItems: RecItemTypeOrSeparator[]) {
-  return existing.concat(uniqFilter(existing, newItems))
-}
-
-export const usePcApi = (tab: ETab) => tab === ETab.KeepFollowOnly || tab === ETab.RecommendPc
-
-export async function getMinCount(
-  count: number,
-  fetcherOptions: FetcherOptions,
-  filterMultiplier = 5,
+export function concatThenUniq(
+  existing: RecItemTypeOrSeparator[],
+  newItems: RecItemTypeOrSeparator[],
 ) {
-  const { tab, abortSignal, pcRecService, serviceMap } = fetcherOptions
-  const appRecService = new AppRecService()
+  // 对全部 uniq 是否影响性能 ?
+  return uniqBy([...existing, ...newItems], recItemUniqer)
+}
+
+const usePcApi = (tab: ETab) => tab === ETab.KeepFollowOnly || tab === ETab.RecommendPc
+
+async function getMinCount(count: number, fetcherOptions: FetcherOptions, filterMultiplier = 5) {
+  const { tab, abortSignal, serviceMap } = fetcherOptions
 
   let items: RecItemTypeOrSeparator[] = []
   let hasMore = true
@@ -61,28 +49,28 @@ export async function getMinCount(
     // dynamic-feed     动态
     // watchlater       稍候再看
     // fav              收藏
-    // popular-general  综合热门
-    // popular-weekly   每周必看
-    const service = getIService(serviceMap, tab)
-    if (service) {
+    // hot              热门 (popular-general  综合热门, popular-weekly  每周必看, ranking  排行榜)
+    // live             直播
+    if (!REC_TABS.includes(tab)) {
+      const service = getIService(serviceMap, tab)
       cur = (await service.loadMore(abortSignal)) || []
       hasMore = service.hasMore
-      cur = filterRecItems(cur, tab)
-      items = items.concat(cur)
-      items = uniqBy(items, recItemUniqer)
+      cur = filterRecItems(cur, tab) // filter
+      items = concatThenUniq(items, cur) // concat
       return
     }
 
-    let times: number
+    /**
+     * REC_TABS
+     */
 
-    // 已关注
+    let times: number
     if (tab === ETab.KeepFollowOnly) {
+      // 已关注
       times = 8
       debug('getMinCount: addMore(restCount = %s) times=%s', restCount, times)
-    }
-
-    // 常规
-    else {
+    } else {
+      // 常规
       const pagesize = usePcApi(tab) ? PcRecService.PAGE_SIZE : AppRecService.PAGE_SIZE
 
       const multipler = anyFilterEnabled(tab)
@@ -101,16 +89,17 @@ export async function getMinCount(
     }
 
     if (usePcApi(tab)) {
-      cur = await pcRecService.getRecommendTimes(times, abortSignal)
-      hasMore = pcRecService.hasMore
+      const service = serviceMap[tab]
+      cur = (await service.getRecommendTimes(times, abortSignal)) || []
+      hasMore = service.hasMore
     } else {
-      cur = await appRecService.getRecommendTimes(times)
-      hasMore = appRecService.hasMore
+      const service = serviceMap[ETab.RecommendApp]
+      cur = (await service.getRecommendTimes(times)) || []
+      hasMore = service.hasMore
     }
 
-    cur = filterRecItems(cur, tab)
-    items = items.concat(cur)
-    items = uniqBy(items, recItemUniqer)
+    cur = filterRecItems(cur, tab) // filter
+    items = concatThenUniq(items, cur) // concat
   }
 
   await addMore(count)
@@ -155,12 +144,4 @@ export async function refreshForGrid(fetcherOptions: FetcherOptions) {
   }
 
   return getMinCount(minCount, fetcherOptions, 5)
-}
-
-export async function getRecommendTimes(times: number, tab: ETab, pcRecService: PcRecService) {
-  let items: RecItemTypeOrSeparator[] = usePcApi(tab)
-    ? await pcRecService.getRecommendTimes(times)
-    : await new AppRecService().getRecommendTimes(times)
-  items = filterRecItems(items, tab)
-  return items
 }

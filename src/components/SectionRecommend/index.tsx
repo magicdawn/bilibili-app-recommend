@@ -27,7 +27,6 @@ export function SectionRecommend() {
     tab,
     debug,
     fetcher: refreshForHome,
-    recreateService: false,
   })
   useMount(refresh)
 

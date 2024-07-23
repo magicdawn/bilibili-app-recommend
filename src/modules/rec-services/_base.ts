@@ -11,22 +11,26 @@ export class QueueStrategy<T extends RecItemTypeOrSeparator = RecItemTypeOrSepar
   private returnQueue: T[] = []
   bufferQueue: T[] = []
 
+  get hasCache() {
+    return !!this.returnQueue.length
+  }
+
   ps: number
   constructor(ps = 20) {
     this.ps = ps
   }
 
-  sliceFromQueue() {
+  sliceFromQueue(page = 1) {
     if (this.bufferQueue.length) {
-      const sliced = this.bufferQueue.slice(0, this.ps)
-      this.bufferQueue = this.bufferQueue.slice(this.ps)
+      const sliced = this.bufferQueue.slice(0, this.ps * page)
+      this.bufferQueue = this.bufferQueue.slice(this.ps * page)
       return this.doReturnItems(sliced)
     }
   }
 
   // add to returnQueue
   doReturnItems(items: T[] | undefined) {
-    this.returnQueue = this.returnQueue.concat(items || [])
+    this.returnQueue = [...this.returnQueue, ...(items || [])]
     return items
   }
 

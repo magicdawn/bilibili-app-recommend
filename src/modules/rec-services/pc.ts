@@ -2,7 +2,7 @@ import type { PcRecItem, PcRecItemExtend, PcRecommendJson } from '$define'
 import { isWebApiSuccess, request } from '$request'
 import { toast } from '$utility/toast'
 import { uniqBy } from 'lodash'
-import type { IService } from './_base'
+import { QueueStrategy, type IService } from './_base'
 
 /**
  * 使用 web api 获取推荐
@@ -15,14 +15,14 @@ export class PcRecService implements IService {
   static PAGE_SIZE = 14
 
   page = 0
-
   hasMore = true
+  qs = new QueueStrategy<PcRecItemExtend>(PcRecService.PAGE_SIZE)
 
-  loadMore() {
-    return this.getRecommendTimes(2)
+  constructor(public isKeepFollowOnly: boolean) {
+    this.isKeepFollowOnly = isKeepFollowOnly
   }
 
-  async getRecommend(signal: AbortSignal | undefined = undefined) {
+  private async getRecommend(signal: AbortSignal | undefined = undefined) {
     const curpage = ++this.page // this has parallel call, can not ++ after success
 
     let url: string
@@ -88,7 +88,16 @@ export class PcRecService implements IService {
     return items
   }
 
+  loadMore() {
+    const times = this.isKeepFollowOnly ? 5 : 2
+    return this.getRecommendTimes(times)
+  }
+
   async getRecommendTimes(times: number, signal: AbortSignal | undefined = undefined) {
+    if (this.qs.bufferQueue.length) {
+      return this.qs.sliceFromQueue()
+    }
+
     let list: PcRecItem[] = []
 
     const parallel = async () => {
@@ -126,12 +135,13 @@ export class PcRecService implements IService {
       }
     })
 
-    return list.map((item) => {
+    const _list = list.map((item) => {
       return {
         ...item,
         uniqId: item.id + '-' + crypto.randomUUID(),
         api: 'pc',
       } as PcRecItemExtend
     })
+    return this.qs.doReturnItems(_list)
   }
 }

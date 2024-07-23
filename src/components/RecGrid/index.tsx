@@ -18,7 +18,7 @@ import { EApiType } from '$define/index.shared'
 import { $headerHeight } from '$header'
 import { OpenExternalLinkIcon } from '$modules/icon'
 import { IconPark } from '$modules/icon/icon-park'
-import { getRecommendTimes, refreshForGrid, uniqConcat } from '$modules/rec-services'
+import { concatThenUniq, refreshForGrid } from '$modules/rec-services'
 import { hotStore } from '$modules/rec-services/hot'
 import { useSettingsSnapshot } from '$modules/settings'
 import { isSafari } from '$platform'
@@ -30,9 +30,10 @@ import mitt from 'mitt'
 import ms from 'ms'
 import { useInView } from 'react-intersection-observer'
 import { VirtuosoGrid } from 'react-virtuoso'
+import { getIService } from '../../modules/rec-services/service-map'
 import * as scopedClsNames from '../video-grid.module.scss'
 import type { OnRefresh } from './useRefresh'
-import { getIService, useRefresh } from './useRefresh'
+import { useRefresh } from './useRefresh'
 import { useShortcut } from './useShortcut'
 import type { CustomGridComponents, CustomGridContext } from './virtuoso.config'
 import { ENABLE_VIRTUAL_GRID, gridComponents } from './virtuoso.config'
@@ -102,12 +103,10 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
 
     useSkeleton,
     serviceMapBox,
-    pcRecService,
   } = useRefresh({
     tab,
     debug,
     fetcher: refreshForGrid,
-    recreateService: true,
 
     preAction,
     postAction,
@@ -175,22 +174,10 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
     let err: any
     try {
       const service = getIService(serviceMapBox.val, tab)
-      if (service) {
-        let more = (await service.loadMore(refreshAbortController.signal)) || []
-        more = filterRecItems(more, tab)
-        newItems = uniqConcat(newItems, more)
-        newHasMore = service.hasMore
-      }
-      // others
-      else {
-        // loadMore 至少 load 一项, 需要触发 InfiniteScroll.componentDidUpdate
-        while (!(newItems.length > itemsBox.val.length)) {
-          // keep-follow-only 需要大基数
-          const times = tab === ETab.KeepFollowOnly ? 5 : 2
-          const more = await getRecommendTimes(times, tab, pcRecService)
-          newItems = uniqConcat(newItems, more)
-        }
-      }
+      let more = (await service.loadMore(refreshAbortController.signal)) || []
+      more = filterRecItems(more, tab)
+      newItems = concatThenUniq(newItems, more)
+      newHasMore = service.hasMore
     } catch (e) {
       err = e
     }

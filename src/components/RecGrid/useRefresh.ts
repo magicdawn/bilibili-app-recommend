@@ -4,16 +4,19 @@ import { useCurrentUsingTab } from '$components/RecHeader/tab'
 import { TabConfig } from '$components/RecHeader/tab-config'
 import { type EHotSubTab, ETab } from '$components/RecHeader/tab-enum'
 import type { RecItemTypeOrSeparator } from '$define'
-import type { IService } from '$modules/rec-services/_base'
-import { DynamicFeedRecService, dynamicFeedFilterStore } from '$modules/rec-services/dynamic-feed'
-import { FavRecService } from '$modules/rec-services/fav'
-import { HotRecService, hotStore } from '$modules/rec-services/hot'
-import { LiveRecService } from '$modules/rec-services/live'
-import { PcRecService } from '$modules/rec-services/pc'
-import { WatchLaterRecService } from '$modules/rec-services/watchlater'
+import { dynamicFeedFilterStore } from '$modules/rec-services/dynamic-feed'
+import { hotStore } from '$modules/rec-services/hot'
 import { nextTick } from '$utility'
 import type { Debugger } from 'debug'
 import { createContext } from 'react'
+import {
+  type FetcherOptions,
+  type ServiceMap,
+  type ServiceMapKey,
+  createServiceMap,
+  getIService,
+  isRecTab,
+} from '../../modules/rec-services/service-map'
 import { setGlobalGridItems } from './unsafe-window-export'
 
 export type OnRefreshOptions = { watchlaterKeepOrder?: boolean }
@@ -24,36 +27,9 @@ export function useOnRefreshContext() {
   return useContext(OnRefreshContext)
 }
 
-const createServiceMap = {
-  [ETab.DynamicFeed]: () =>
-    new DynamicFeedRecService(dynamicFeedFilterStore.upMid, dynamicFeedFilterStore.searchText),
-  [ETab.Watchlater]: (options) => new WatchLaterRecService(options?.watchlaterKeepOrder),
-  [ETab.Fav]: () => new FavRecService(),
-  [ETab.Hot]: () => new HotRecService(),
-  [ETab.Live]: () => new LiveRecService(),
-} satisfies Partial<Record<ETab, (options?: OnRefreshOptions) => IService>>
-
-export type ServiceMapKey = keyof typeof createServiceMap
-
-export type ServiceMap = {
-  [K in ServiceMapKey]: ReturnType<(typeof createServiceMap)[K]>
-}
-
-export function getIService(serviceMap: ServiceMap, tab: ETab): IService | undefined {
-  return serviceMap[tab as ServiceMapKey]
-}
-
-export type FetcherOptions = {
-  tab: ETab
-  abortSignal: AbortSignal
-  serviceMap: ServiceMap
-  pcRecService: PcRecService
-}
-
 export function useRefresh({
   debug,
   // tab,
-  recreateService,
   fetcher,
 
   preAction,
@@ -67,7 +43,6 @@ export function useRefresh({
   tab: ETab
   debug: Debugger
   fetcher: (opts: FetcherOptions) => Promise<RecItemTypeOrSeparator[]>
-  recreateService: boolean
 
   preAction?: () => void | Promise<void>
   postAction?: () => void | Promise<void>
@@ -115,7 +90,6 @@ export function useRefresh({
       Object.entries(createServiceMap).map(([key, factory]) => [key, factory(undefined)]),
     ) as unknown as ServiceMap
   })
-  const [pcRecService, setPcRecService] = useState(() => new PcRecService())
 
   const refreshingBox = useRefStateBox(false)
   const refreshTsBox = useRefStateBox<number>(() => Date.now())
@@ -175,13 +149,6 @@ export function useRefresh({
     // scroll to top
     await onScrollToTop?.()
 
-    // reuse configs
-    const shouldReuse = reuse && hasCache(tab)
-    const swr = shouldReuse && !!TabConfig[tab].swr
-
-    // all reuse case, do not show skeleton
-    setUseSkeleton(!shouldReuse)
-
     const updateRefreshing = (val: boolean) => {
       refreshingBox.set(val)
       setUpperRefreshing?.(val)
@@ -207,32 +174,51 @@ export function useRefresh({
     }
 
     /**
-     * 推荐类 tab: 使用 grid-cache, 切换 tab 不 doFetch
+     * cache 分类
+     *  - swr 策略: 表示可能有更新的数据. 使用 grid-cache 保存前30项, 并重新网络请求.
+     *    useGridCache = true, recreate-service = true, doFetch = true
+     *  - QueueStrategy cache: 表示无更新的数据. 使用 own cache, (service.qs.restore() + doFetch)
+     *
+     *
+     * 推荐类 tab: 使用 QueueStrategy cache
      *
      * 动态/稍后再看/综合热门: swr 策略
-     * 即: 使用 grid-cache 保存前30项, 并重新网络请求 (recreate-service + doFetch)
      *
      * 收藏/每周必看:
      * 默认顺序: swr 策略
-     * 乱序: 使用 QueueStrategy cache, 即 own cache, 切换 tab 要重 doFetch
+     * 乱序: 使用 QueueStrategy cache, 即 own cache, (service.qs.restore() + doFetch)
      */
 
-    let useGridCache = true
-    // conditional swr and disabled (for shuffle case), use own cache
-    if (TabConfig[tab].swr === false) {
-      useGridCache = false
-    }
+    const swrFlag = !!TabConfig[tab].swr
+    const hasValidCache = swrFlag
+      ? hasCache(tab)
+      : (() => {
+          const service = serviceMap[tab]
+          if (!('qs' in service)) return false
+          return service.qs.hasCache
+        })()
 
-    const _pcRecService = recreateService ? new PcRecService() : pcRecService
-    if (recreateService) {
-      setPcRecService(_pcRecService)
-    }
+    // reuse configs
+    const shouldReuse = reuse && hasValidCache
+    const swr = shouldReuse && swrFlag
+
+    // all reuse case, do not show skeleton
+    setUseSkeleton(!shouldReuse)
 
     const newServiceMap = { ...serviceMap }
     const recreateFor = (tab: ServiceMapKey) => {
       // @ts-ignore
       newServiceMap[tab] = createServiceMap[tab](options)
       serviceMapBox.set(newServiceMap)
+    }
+
+    // 推荐类
+    if (isRecTab(tab)) {
+      if (shouldReuse) {
+        serviceMap[tab].qs.restore()
+      } else {
+        recreateFor(tab)
+      }
     }
 
     if (tab === ETab.DynamicFeed || tab === ETab.Watchlater || tab === ETab.Live) {
@@ -273,25 +259,19 @@ export function useRefresh({
       tab,
       abortSignal: _signal,
       serviceMap: newServiceMap,
-      pcRecService: _pcRecService,
     }
 
-    debug('refresh(): shouldReuse=%s swr=%s useGridCache=%s', shouldReuse, swr, useGridCache)
+    debug('refresh(): shouldReuse=%s swr=%s useGridCache=%s', shouldReuse, swr, swrFlag)
     if (shouldReuse) {
       if (swr) {
         _items = getCacheFor(tab) || []
         itemsBox.set(_items)
         await doFetch()
       }
-      // for 收藏/每日必看 乱序, 已经 retore, 需要 doFetch
-      else if (!useGridCache) {
+      // QueueStrategy, for 收藏/每日必看 乱序, 已经 retore, 需要 doFetch
+      else {
         setCacheFor(tab, [])
         await doFetch()
-      }
-      // for 推荐类 tab
-      else {
-        _items = getCacheFor(tab) || []
-        // setItems(_items) // setItems will be called next
       }
     } else {
       setCacheFor(tab, [])
@@ -313,10 +293,8 @@ export function useRefresh({
 
     if (_items.length) {
       // if swr or possibile-swr, save list starting part only
-      if (TabConfig[tab].swr || tab === ETab.Fav || tab === ETab.Hot) {
+      if (swrFlag || tab === ETab.Fav || tab === ETab.Hot) {
         setCacheFor(tab, _items.slice(0, 30))
-      } else {
-        setCacheFor(tab, _items)
       }
     }
 
@@ -352,6 +330,5 @@ export function useRefresh({
 
     useSkeleton,
     serviceMapBox,
-    pcRecService,
   }
 }
