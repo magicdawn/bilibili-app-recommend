@@ -39,7 +39,7 @@ export const TabConfig: Record<ETab, TabConfigItem> = {
   [ETab.KeepFollowOnly]: {
     icon: <IconParkOutlineConcern {...size(18)} />,
     label: '已关注',
-    desc: '推荐中只保留「已关注」,会很慢',
+    desc: '从PC端推荐中筛选出「已关注」,可能比较慢; 关注的UP更新在动态~',
   },
   [ETab.DynamicFeed]: {
     icon: <IconParkOutlineTumblr {...size(16)} />,
