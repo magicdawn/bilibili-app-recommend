@@ -138,7 +138,7 @@ function ModalDislike({ show, onHide, item }: IProps) {
       <div css={BaseModalStyle.modalHeader}>
         <div css={BaseModalStyle.modalTitle}>
           <DislikeIcon className='size-25' />
-          <span className='m-inline-5px'>我不想看</span>
+          <span className='m-inline-5'>我不想看</span>
           <span
             css={css`
               font-size: 60%;
@@ -211,12 +211,12 @@ function ModalDislike({ show, onHide, item }: IProps) {
           `}
         >
           <div className='tips' css={S.tips}>
-            <Info className='mr-5px size-15' />
+            <Info className='mr-5 size-15' />
             使用删除键打开弹窗, 数字键选择, Esc 关闭
           </div>
           {activeReasonName && (
             <div className='tips' css={S.tips}>
-              <Info className='mr-5px size-15' />
+              <Info className='mr-5 size-15' />
               已选择「{activeReasonName}」, 回车键提交
             </div>
           )}

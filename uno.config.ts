@@ -9,7 +9,7 @@ export default defineConfig({
   presets: [
     presetUno,
     presetRemToPx({
-      // baseFontSize: 4, // mr-4 = 1rem;
+      baseFontSize: 4, // mr-4 = 1rem;
     }),
   ],
   // https://github.com/unocss/unocss/issues/1620
