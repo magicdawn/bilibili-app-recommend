@@ -222,10 +222,10 @@ export default defineConfig(({ command }) => ({
           // 'resize-observer-polyfill': 'ResizeObserver',
 
           'axios': cdn.npmmirror('axios', 'dist/axios.min.js'),
-          'axios-userscript-adapter': cdn.npmmirror(
-            'axiosGmxhrAdapter',
-            'dist/axiosGmxhrAdapter.min.js',
-          ),
+          // 'axios-userscript-adapter': cdn.npmmirror(
+          //   'axiosGmxhrAdapter',
+          //   'dist/axiosGmxhrAdapter.min.js',
+          // ),
           'react': cdn.npmmirror('React', 'umd/react.production.min.js'),
           'react-dom': cdn.npmmirror('ReactDOM', 'umd/react-dom.production.min.js'),
           'ua-parser-js': cdn.npmmirror('UAParser', 'dist/ua-parser.min.js'),
