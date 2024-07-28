@@ -6,7 +6,12 @@ import { defineConfig, presetUno } from 'unocss'
 // import { defineConfig, presetAttributify, presetUno } from 'unocss'
 
 export default defineConfig({
-  presets: [presetUno, presetRemToPx],
+  presets: [
+    presetUno,
+    presetRemToPx({
+      // baseFontSize: 4, // mr-4 = 1rem;
+    }),
+  ],
   // https://github.com/unocss/unocss/issues/1620
   blocklist: ['container'],
 

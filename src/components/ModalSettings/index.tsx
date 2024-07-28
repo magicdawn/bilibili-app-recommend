@@ -1,5 +1,4 @@
 import { __PROD__ } from '$common'
-import { C } from '$common/emotion-css'
 import { ConfigIcon } from '$modules/icon'
 import type { BooleanSettingsKey } from '$modules/settings'
 import { settings } from '$modules/settings'
@@ -69,8 +68,8 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
     >
       <div css={BaseModalStyle.modalHeader}>
         <div css={BaseModalStyle.modalTitle}>
-          <ConfigIcon css={[C.size(26), C.mr(5), C.mt(-2)]} />
-          设置项
+          <ConfigIcon className='size-26 mr-4px mt--2px' />
+          设置
         </div>
 
         <div className='space' style={{ flex: 1 }}></div>
