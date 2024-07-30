@@ -197,6 +197,24 @@ export function TabPaneBasic() {
               </>
             }
           />
+
+          <CheckboxSettingItem
+            configKey='startPlayFromPreviewPoint'
+            label='从预览处开始播放'
+            tooltip={
+              <>
+                视频链接会附加
+                <Tag color='green' className='m-inline-4'>
+                  t=val
+                </Tag>
+                参数, 从
+                <Tag className='m-inline-4' color='green-inverse'>
+                  t
+                </Tag>
+                秒开始播放
+              </>
+            }
+          />
         </Space>
       </SettingsGroup>
 

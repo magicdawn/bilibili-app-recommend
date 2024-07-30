@@ -5,7 +5,8 @@ import { isNormalRankingItem } from '$modules/rec-services/hot/ranking/category'
 import { settings, useSettingsSnapshot } from '$modules/settings'
 import { getVideoDetail } from '$modules/video/video-detail'
 import delay from 'delay'
-import type { MouseEventHandler, ReactNode } from 'react'
+import type { MouseEventHandler, ReactNode, RefObject } from 'react'
+import type { PreviewImageRef } from '../child-components/PreviewImage'
 import { VideoCardActionButton } from '../child-components/VideoCardActions'
 import {
   VideoLinkOpenMode as Mode,
@@ -29,11 +30,13 @@ export function useOpenRelated({
   item,
   cardData,
   actionButtonVisible,
+  previewImageRef,
 }: {
   href: string
   item: RecItemType
   cardData: IVideoCardData
   actionButtonVisible: boolean
+  previewImageRef: RefObject<PreviewImageRef | null>
 }) {
   const { videoLinkOpenMode } = useSettingsSnapshot()
 
@@ -46,10 +49,8 @@ export function useOpenRelated({
 
   const handleVideoLinkClick: MouseEventHandler = useMemoizedFn((e) => {
     e.stopPropagation()
-    if (settings.videoLinkOpenMode !== VideoLinkOpenMode.Normal) {
-      e.preventDefault()
-      onOpenWithMode()
-    }
+    e.preventDefault()
+    onOpenWithMode()
   })
 
   const onOpenWithMode = useMemoizedFn((mode?: Mode) => {
@@ -59,9 +60,12 @@ export function useOpenRelated({
       if (mode === Mode.Popup || mode === Mode.NormalWebFullscreen) {
         u.searchParams.set(PLAYER_SCREEN_MODE, PlayerScreenMode.WebFullscreen)
       }
+      if (settings.startPlayFromPreviewPoint && previewImageRef.current?.getT()) {
+        u.searchParams.set('t', previewImageRef.current.getT().toString())
+      }
     })
 
-    function commonOpen() {
+    const handleCommon = () => {
       const active = mode !== Mode.Background
       GM.openInTab(newHref, {
         insert: true,
@@ -70,11 +74,11 @@ export function useOpenRelated({
     }
 
     const handlers: Record<Mode, () => void> = {
-      [Mode.Normal]: commonOpen,
-      [Mode.Background]: commonOpen,
-      [Mode.NormalWebFullscreen]: commonOpen,
+      [Mode.Normal]: handleCommon,
+      [Mode.Background]: handleCommon,
+      [Mode.NormalWebFullscreen]: handleCommon,
       [Mode.Popup]: () => handlePopup(newHref),
-      [Mode.Iina]: openInIINA,
+      [Mode.Iina]: handleIINA,
     }
     handlers[mode]?.()
   })
@@ -105,7 +109,7 @@ export function useOpenRelated({
     return openInPipOrPopup(newHref, cardData.bvid, videoWidth, videoHeight)
   }
 
-  function openInIINA() {
+  function handleIINA() {
     let usingHref = href
     if (item.api === EApiType.Watchlater) usingHref = `/video/${item.bvid}`
     const fullHref = new URL(usingHref, location.href).href

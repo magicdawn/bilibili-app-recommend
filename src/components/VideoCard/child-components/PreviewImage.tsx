@@ -1,7 +1,7 @@
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import type { PvideoData } from '$define'
 import { useMouse } from 'ahooks'
-import type { ComponentProps } from 'react'
+import type { ComponentPropsWithoutRef } from 'react'
 import { previewCardWrapper } from '../index.module.scss'
 import { borderRadiusValue } from '../index.shared'
 
@@ -57,69 +57,80 @@ interface IProps {
   mouseEnterRelativeX: number | undefined
 }
 
-export function PreviewImage({
-  progress,
-  t,
-  videoDuration,
-  pvideo,
-  mouseEnterRelativeX,
-  className,
-  ...restProps
-}: IProps & ComponentProps<'div'>) {
-  const ref = useRef<HTMLDivElement>(null)
-  const cursorState = useMouse(ref)
-  const [size, setSize] = useState(() => ({ width: 0, height: 0 }))
-  // console.log('cursorState:', cursorState)
-
-  useMount(() => {
-    const rect = ref.current?.getBoundingClientRect()
-    if (!rect) return
-    setSize({ width: rect.width, height: rect.height })
-  })
-
-  const usingProgress = useMemo(() => {
-    let ret = 0
-    if (typeof progress === 'number') {
-      ret = progress
-    } else {
-      const relativeX = fallbackWhenNan(cursorState.elementX, mouseEnterRelativeX || 0)
-      if (size.width && relativeX && !isNaN(relativeX)) {
-        ret = relativeX / size.width
-      }
-    }
-    if (ret < 0) ret = 0
-    if (ret > 1) ret = 1
-    return ret
-  }, [progress, cursorState.elementX, mouseEnterRelativeX, size.width])
-
-  const usingT = useMemo(
-    () => t ?? Math.floor((videoDuration || 0) * usingProgress),
-    [t, videoDuration, usingProgress],
-  )
-
-  const innerProps = {
-    progress: usingProgress,
-    t: usingT,
-    pvideo: pvideo!,
-    elWidth: size.width,
-    elHeight: size.height,
-  }
-
-  return (
-    <div
-      {...restProps}
-      ref={ref}
-      className={clsx(previewCardWrapper, className)}
-      css={S.previewCardWrapper}
-    >
-      {!!(pvideo && size.width && size.height && usingProgress) && (
-        <PreviewImageInner {...innerProps} />
-      )}
-    </div>
-  )
+export type PreviewImageRef = {
+  getT(): number
 }
 
-function PreviewImageInner({
+export const PreviewImage = forwardRef<PreviewImageRef, IProps & ComponentPropsWithoutRef<'div'>>(
+  function (
+    { progress, t, videoDuration, pvideo, mouseEnterRelativeX, className, ...restProps },
+    ref,
+  ) {
+    const divRef = useRef<HTMLDivElement>(null)
+    const cursorState = useMouse(divRef)
+    const [size, setSize] = useState(() => ({ width: 0, height: 0 }))
+    // console.log('cursorState:', cursorState)
+
+    useMount(() => {
+      const rect = divRef.current?.getBoundingClientRect()
+      if (!rect) return
+      setSize({ width: rect.width, height: rect.height })
+    })
+
+    const usingProgress = useMemo(() => {
+      let ret = 0
+      if (typeof progress === 'number') {
+        ret = progress
+      } else {
+        const relativeX = fallbackWhenNan(cursorState.elementX, mouseEnterRelativeX || 0)
+        if (size.width && relativeX && !isNaN(relativeX)) {
+          ret = relativeX / size.width
+        }
+      }
+      if (ret < 0) ret = 0
+      if (ret > 1) ret = 1
+      return ret
+    }, [progress, cursorState.elementX, mouseEnterRelativeX, size.width])
+
+    const usingT = useMemo(
+      () => t ?? Math.floor((videoDuration || 0) * usingProgress),
+      [t, videoDuration, usingProgress],
+    )
+
+    /**
+     * expose ref as imperative handle
+     */
+    const __getT = useMemoizedFn(() => usingT)
+    useImperativeHandle(ref, () => {
+      return {
+        getT: __getT,
+      }
+    }, [__getT])
+
+    const innerProps = {
+      progress: usingProgress,
+      t: usingT,
+      pvideo: pvideo!,
+      elWidth: size.width,
+      elHeight: size.height,
+    }
+
+    return (
+      <div
+        {...restProps}
+        ref={divRef}
+        className={clsx(previewCardWrapper, className)}
+        css={S.previewCardWrapper}
+      >
+        {!!(pvideo && size.width && size.height && usingProgress) && (
+          <PreviewImageInner {...innerProps} />
+        )}
+      </div>
+    )
+  },
+)
+
+const PreviewImageInner = memo(function PreviewImageInner({
   t,
   progress,
   pvideo,
@@ -196,7 +207,7 @@ function PreviewImageInner({
       <SimplePregressBar progress={progress} />
     </div>
   )
-}
+})
 
 function SimplePregressBar({ progress }: { progress: number }) {
   return (

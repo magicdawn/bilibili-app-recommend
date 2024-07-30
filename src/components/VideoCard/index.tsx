@@ -32,7 +32,7 @@ import { tryit } from 'radash'
 import type { CSSProperties, MouseEventHandler, ReactNode } from 'react'
 import type { VideoData } from './card.service'
 import { fetchVideoData, isVideoshotDataValid, watchLaterAdd } from './card.service'
-import { PreviewImage } from './child-components/PreviewImage'
+import { PreviewImage, type PreviewImageRef } from './child-components/PreviewImage'
 import { VideoCardActionStyle } from './child-components/VideoCardActions'
 import { VideoCardBottom } from './child-components/VideoCardBottom'
 import { BlacklistCard, DislikedCard, SkeletonCard } from './child-components/other-type-cards'
@@ -214,6 +214,8 @@ const VideoCardInner = memo(function VideoCardInner({
   const coverRef = useRef<HTMLElement | null>(null)
   const videoPreviewWrapperRef = styleUseCardBorder ? cardRef : coverRef
 
+  const previewImageRef = useRef<PreviewImageRef>(null)
+
   const {
     onStartPreviewAnimation,
     onHotkeyPreviewAnimation,
@@ -302,6 +304,7 @@ const VideoCardInner = memo(function VideoCardInner({
     item,
     cardData,
     actionButtonVisible,
+    previewImageRef,
   })
 
   const handleCardClick: MouseEventHandler<HTMLDivElement> = useMemoizedFn((e) => {
@@ -696,6 +699,7 @@ const VideoCardInner = memo(function VideoCardInner({
         // auto-preview: start-by (hover | keyboard)
         (autoPreviewing ? (
           <PreviewImage
+            ref={previewImageRef}
             videoDuration={duration}
             pvideo={videoshotData}
             mouseEnterRelativeX={mouseEnterRelativeX}
@@ -705,6 +709,7 @@ const VideoCardInner = memo(function VideoCardInner({
         ) : (
           // follow-mouse
           <PreviewImage
+            ref={previewImageRef}
             videoDuration={duration}
             pvideo={videoshotData}
             mouseEnterRelativeX={mouseEnterRelativeX}
