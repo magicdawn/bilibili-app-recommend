@@ -141,6 +141,11 @@ function GlobalStyle() {
                 display: none;
               }
 
+              /* hide download tip */
+              .desktop-download-tip {
+                display: none !important;
+              }
+
               /* em 有点深井冰 */
               /* :root {
                 scrollbar-color: ${colorPrimaryValue} var(--bg1);
