@@ -61,8 +61,8 @@ export type PreviewImageRef = {
   getT(): number
 }
 
-export const PreviewImage = forwardRef<PreviewImageRef, IProps & ComponentPropsWithoutRef<'div'>>(
-  function (
+export const PreviewImage = memo(
+  forwardRef<PreviewImageRef, IProps & ComponentPropsWithoutRef<'div'>>(function (
     { progress, t, videoDuration, pvideo, mouseEnterRelativeX, className, ...restProps },
     ref,
   ) {
@@ -127,7 +127,7 @@ export const PreviewImage = forwardRef<PreviewImageRef, IProps & ComponentPropsW
         )}
       </div>
     )
-  },
+  }),
 )
 
 const PreviewImageInner = memo(function PreviewImageInner({
