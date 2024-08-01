@@ -58,7 +58,7 @@ interface IProps {
 }
 
 export type PreviewImageRef = {
-  getT(): number
+  getT(): number | undefined
 }
 
 export const PreviewImage = memo(
@@ -100,12 +100,19 @@ export const PreviewImage = memo(
     /**
      * expose ref as imperative handle
      */
-    const __getT = useMemoizedFn(() => usingT)
+
+    const __getTDirect = useMemoizedFn(() => usingT)
+    const __getTByIndex = useMemoizedFn((): number | undefined => {
+      const arr = pvideo?.index || []
+      const index = calcIndex(arr, usingT) ?? -1
+      if (index === -1) return
+      return arr[index]
+    }) // 也不是很准确, 缩略图与视频有几秒偏差~
     useImperativeHandle(ref, () => {
       return {
-        getT: __getT,
+        getT: __getTDirect,
       }
-    }, [__getT])
+    }, [__getTDirect])
 
     const innerProps = {
       progress: usingProgress,
@@ -144,20 +151,7 @@ const PreviewImageInner = memo(function PreviewImageInner({
   elHeight: number
 }) {
   let index = useMemo(() => {
-    const arr = pvideo?.index || []
-    let index = findIndex(arr, t)
-
-    if (index !== -1) {
-      return index
-    }
-
-    // https://www.bilibili.com/video/av297635747
-    // 没有后面的预览
-    if (t > arr[arr.length - 1]) {
-      index = arr.length - 1
-    }
-
-    return 0
+    return calcIndex(pvideo?.index || [], t) ?? 0
   }, [pvideo, t])
 
   const { img_x_len: colCount, img_y_len: rowCount, img_x_size: w, img_y_size: h } = pvideo
@@ -232,6 +226,20 @@ function SimplePregressBar({ progress }: { progress: number }) {
       />
     </div>
   )
+}
+
+function calcIndex(arr: number[], t: number) {
+  let index = findIndex(arr, t)
+
+  if (index !== -1) {
+    return index
+  }
+
+  // https://www.bilibili.com/video/av297635747
+  // 没有后面的预览
+  if (t > arr[arr.length - 1]) {
+    index = arr.length - 1
+  }
 }
 
 function findIndex(arr: number[], target: number): number {
