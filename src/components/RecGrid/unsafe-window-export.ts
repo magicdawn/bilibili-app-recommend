@@ -6,6 +6,7 @@ import { APP_KEY_PREFIX } from '$common'
 import { normalizeCardData } from '$components/VideoCard/process/normalize'
 import type { RecItemType, RecItemTypeOrSeparator } from '$define'
 import { EApiType } from '$define/index.shared'
+import dayjs from 'dayjs'
 import { tryit } from 'radash'
 
 export const gridItemsKey = `${APP_KEY_PREFIX}_gridItems`
@@ -27,13 +28,12 @@ function copyBvidsSingleLine() {
   GM.setClipboard(bvids.join(' '))
 }
 function copyBvidsInfo() {
-  const bvids = getGridCardData()
-    .map((cardData) => [
-      `# [${cardData.authorName}] ${cardData.pubdateDisplay} ${cardData.title}`,
-      cardData.bvid,
-    ])
-    .flat()
-  GM.setClipboard(bvids.join('\n'))
+  const lines = getGridCardData().map((cardData) => {
+    const { bvid, authorName, pubts, title } = cardData
+    const date = dayjs.unix(pubts ?? 0).format('YYYY-MM-DD')
+    return `${bvid} ;; [${authorName}] ${date} ${title}`
+  })
+  GM.setClipboard(lines.join('\n'))
 }
 
 // bind(export) function to unsafeWindow
