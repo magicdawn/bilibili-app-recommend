@@ -61,9 +61,9 @@ export function useOpenRelated({
         u.searchParams.set(PLAYER_SCREEN_MODE, PlayerScreenMode.WebFullscreen)
       }
       if (settings.startPlayFromPreviewPoint) {
-        const t = previewImageRef.current?.getT()?.toString()
+        const t = previewImageRef.current?.getT()
         if (t) {
-          u.searchParams.set('t', t)
+          u.searchParams.set('t', t.toString())
         }
       }
     })
