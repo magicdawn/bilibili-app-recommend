@@ -59,7 +59,7 @@ export const initialSettings = {
 
   // 从预览处开始播放视频
   // /video/BVID/?t=start
-  startPlayFromPreviewPoint: true,
+  startPlayFromPreviewPoint: false,
 
   /**
    * tab=dynamic-feed
