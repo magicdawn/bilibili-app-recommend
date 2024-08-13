@@ -1,5 +1,5 @@
 import { C } from '$common/emotion-css'
-import { LiveIcon } from '$modules/icon'
+import { LiveIcon, WatchLaterIcon } from '$modules/icon'
 import { isHotTabUsingShuffle } from '$modules/rec-services/hot'
 import { settings } from '$modules/settings'
 import { toast } from '$utility'
@@ -8,7 +8,6 @@ import { size } from 'polished'
 import { cloneElement, type ReactElement } from 'react'
 import IconParkOutlineComputer from '~icons/icon-park-outline/computer'
 import IconParkOutlineConcern from '~icons/icon-park-outline/concern'
-import IconParkOutlineFileCabinet from '~icons/icon-park-outline/file-cabinet'
 import IconParkOutlineFire from '~icons/icon-park-outline/fire'
 import IconParkOutlineIphone from '~icons/icon-park-outline/iphone'
 import IconParkOutlineStar from '~icons/icon-park-outline/star'
@@ -49,7 +48,8 @@ export const TabConfig: Record<ETab, TabConfigItem> = {
     anonymousUsage: true,
   },
   [ETab.Watchlater]: {
-    icon: <IconParkOutlineFileCabinet {...size(15)} />,
+    // icon: <IconParkOutlineFileCabinet {...size(15)} />,
+    icon: <WatchLaterIcon {...size(17)} />,
     label: '稍后再看',
     desc: '你添加的稍后再看; 默认随机乱序, 可在设置中关闭乱序',
     swr: true,

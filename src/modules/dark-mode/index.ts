@@ -13,7 +13,13 @@ const $darkMode = valtioFactory(() => {
     document.body.classList.contains('dark') ||
     document.body.classList.contains('bilibili-helper-dark-mode')
   )
+
+  // bilibili default dark style
+  // <link id="__css-map__" rel="stylesheet" href="//s1.hdslb.com/bfs/seed/jinkela/short/bili-theme/dark.css">
+  // !!document.querySelector('link[rel="stylesheet"][id="__css-map__"]')
+  // parseCookie().theme_style === 'dark'
 })
+
 export function useIsDarkMode() {
   return $darkMode.use()
 }

@@ -1,10 +1,12 @@
 import { type RecItemType } from '$define'
 import { EApiType } from '$define/index.shared'
+import { WatchLaterIcon } from '$modules/icon'
 import { IconAnimatedChecked } from '$modules/icon/animated-checked'
 import { watchLaterState } from '$modules/rec-services/watchlater'
 import { AntdMessage } from '$utility'
 import { usePrevious } from 'ahooks'
 import delay from 'delay'
+import { size } from 'polished'
 import type { MouseEvent } from 'react'
 import type { VideoCardInnerProps } from '..'
 import { watchLaterAdd, watchLaterDel } from '../card.service'
@@ -100,15 +102,17 @@ export function useWatchlaterRelated({
   )
 
   // <use href={watchLaterAdded ? '#widget-watch-save' : '#widget-watch-later'} />
-  const addSize = 15
+  const addSize = 20
   const addedSize = 18
   const icon = watchLaterAdded ? (
     <IconAnimatedChecked size={addedSize} useAnimation={watchLaterAddedPrevious === false} />
   ) : (
-    <svg width={addSize} height={addSize}>
-      <use href={'#widget-watch-later'} />
-    </svg>
+    <WatchLaterIcon {...size(addSize)} />
   )
+  // <svg width={addSize} height={addSize}>
+  //   <use href={'#widget-watch-later'} />
+  // </svg>
+
   const watchlaterButtonEl = hasWatchLaterEntry && (
     <VideoCardActionButton
       visible={actionButtonVisible}
