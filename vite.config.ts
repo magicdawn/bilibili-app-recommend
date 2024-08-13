@@ -88,12 +88,10 @@ export default defineConfig(({ command }) => ({
     },
 
     preprocessorOptions: {
-      // not working now: vite still using the legacy API, `silenceDeprecations` requires modern API
-      // modern API on the way https://github.com/vitejs/vite/pull/17728
       scss: {
+        api: 'modern-compiler',
         // https://sass-lang.com/documentation/breaking-changes/mixed-decls/
         silenceDeprecations: ['mixed-decls'],
-        quietDeps: true,
       },
     },
   },
