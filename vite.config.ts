@@ -89,7 +89,8 @@ export default defineConfig(({ command }) => ({
 
     preprocessorOptions: {
       scss: {
-        api: 'modern-compiler',
+        // api: modern-compiler will cause no exit after build, waiting fix
+        api: 'modern',
         // https://sass-lang.com/documentation/breaking-changes/mixed-decls/
         silenceDeprecations: ['mixed-decls'],
       },
