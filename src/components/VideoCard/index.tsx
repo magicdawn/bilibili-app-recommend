@@ -10,7 +10,7 @@ import { useCurrentUsingTab, videoSourceTabState } from '$components/RecHeader/t
 import { ETab } from '$components/RecHeader/tab-enum'
 import { type AppRecItemExtend, type PvideoJson, type RecItemType, isRanking } from '$define'
 import { EApiType } from '$define/index.shared'
-import { DislikeIcon, OpenExternalLinkIcon } from '$modules/icon'
+import { DislikeIcon, OpenExternalLinkIcon, WatchLaterIcon } from '$modules/icon'
 import { IconPark } from '$modules/icon/icon-park'
 import { dynamicFeedFilterSelectUp } from '$modules/rec-services/dynamic-feed'
 import { formatFavFolderUrl } from '$modules/rec-services/fav'
@@ -28,8 +28,10 @@ import { useLockFn } from 'ahooks'
 import type { MenuProps } from 'antd'
 import { Dropdown } from 'antd'
 import delay from 'delay'
+import { size } from 'polished'
 import { tryit } from 'radash'
 import type { CSSProperties, MouseEventHandler, ReactNode } from 'react'
+import MaterialSymbolsDeleteOutlineRounded from '~icons/material-symbols/delete-outline-rounded'
 import type { VideoData } from './card.service'
 import { fetchVideoData, isVideoshotDataValid, watchLaterAdd } from './card.service'
 import { PreviewImage, type PreviewImageRef } from './child-components/PreviewImage'
@@ -522,7 +524,11 @@ const VideoCardInner = memo(function VideoCardInner({
       hasWatchLaterEntry && {
         key: 'watchlater',
         label: watchLaterLabel,
-        icon: <IconPark name={watchLaterAdded ? 'Delete' : 'FileCabinet'} size={15} />,
+        icon: watchLaterAdded ? (
+          <MaterialSymbolsDeleteOutlineRounded {...size(15)} />
+        ) : (
+          <WatchLaterIcon {...size(15)} />
+        ),
         onClick() {
           onToggleWatchLater()
         },
@@ -556,7 +562,7 @@ const VideoCardInner = memo(function VideoCardInner({
             {
               key: 'remove-fav',
               label: '移除收藏',
-              icon: <IconPark name='Delete' size={15} />,
+              icon: <MaterialSymbolsDeleteOutlineRounded {...size(15)} />,
               async onClick() {
                 if (item.api !== 'fav') return
                 const success = await UserFavService.removeFav(

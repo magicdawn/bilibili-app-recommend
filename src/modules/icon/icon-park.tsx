@@ -3,7 +3,6 @@ import { type Icon } from '@icon-park/react/es/runtime'
 import {
   AddTwo,
   Copy,
-  Delete,
   DistraughtFace,
   Drag,
   FileCabinet,
@@ -27,7 +26,6 @@ const ImportedIcons = {
   Star,
   Copy,
   AddTwo,
-  Delete,
   PeopleDelete,
   PeopleMinus,
   PeopleSearch,
