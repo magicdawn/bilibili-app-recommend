@@ -1,4 +1,4 @@
-import { isSafari } from '$platform'
+import { isSafari } from '$ua'
 import type { ComponentProps } from 'react'
 
 type IProps = {

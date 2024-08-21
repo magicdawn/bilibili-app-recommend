@@ -1,15 +1,15 @@
 import { APP_CLS_ROOT, APP_NAME } from '$common'
 import { AntdApp } from '$components/AntdApp'
+import { PureRecommend } from '$components/PureRecommend'
 import { registerSettingsGmCommand } from '$components/RecHeader/modals'
+import { SectionRecommend } from '$components/SectionRecommend'
+import { settings } from '$modules/settings'
+import { isSafari } from '$ua'
 import { tryAction, tryToRemove } from '$utility/dom'
 import { FloatButton } from 'antd'
 import delay from 'delay'
 import type { Root } from 'react-dom/client'
 import { createRoot } from 'react-dom/client'
-import { PureRecommend } from '../components/PureRecommend'
-import { SectionRecommend } from '../components/SectionRecommend'
-import { settings } from '../modules/settings'
-import { isSafari } from '../platform'
 
 // in this entry, if no insert point found, render to document body
 const isHashEntry = (location.hash || '').startsWith(`#/${APP_NAME}/`)

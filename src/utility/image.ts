@@ -2,7 +2,7 @@
  * https://avif.io/blog/tutorials/css/#avifsupportdetectionscript
  */
 
-import { isSafari } from '$platform'
+import { isSafari } from '$ua'
 
 function supportAvif() {
   return new Promise<boolean>((resolve, reject) => {

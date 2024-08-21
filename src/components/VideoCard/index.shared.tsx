@@ -1,5 +1,5 @@
 import { OpenExternalLinkIcon, PlayerIcon } from '$modules/icon'
-import { isMac } from '$platform'
+import { isMac } from '$ua'
 import mitt, { type Emitter } from 'mitt'
 import { size } from 'polished'
 import type { ReactNode } from 'react'
