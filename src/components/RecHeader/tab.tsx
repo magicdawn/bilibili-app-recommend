@@ -95,7 +95,7 @@ export function useCurrentUsingTab(): ETab {
 
 const iconCss = css`
   margin-right: 4px;
-  margin-top: -1px;
+  /* margin-top: -1px; */
 `
 
 const radioBtnCss = css`

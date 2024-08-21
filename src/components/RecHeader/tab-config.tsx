@@ -48,14 +48,23 @@ export const TabConfig: Record<ETab, TabConfigItem> = {
     anonymousUsage: true,
   },
   [ETab.Watchlater]: {
-    // icon: <IconParkOutlineFileCabinet {...size(15)} />,
-    icon: <WatchLaterIcon {...size(17)} />,
+    icon: (
+      <WatchLaterIcon
+        {...size(17)}
+        css={css`
+          /* circle 使用的是 fill, 在 tab 中显示太细了 */
+          .circle {
+            stroke: currentColor;
+          }
+        `}
+      />
+    ),
     label: '稍后再看',
     desc: '你添加的稍后再看; 默认随机乱序, 可在设置中关闭乱序',
     swr: true,
   },
   [ETab.Fav]: {
-    icon: <IconParkOutlineStar {...size(15)} />,
+    icon: <IconParkOutlineStar {...size(16)} css={C.mt(-1)} />,
     label: '收藏',
     desc: '你添加的收藏; 默认随机乱序, 可在设置中关闭乱序',
     get swr() {
