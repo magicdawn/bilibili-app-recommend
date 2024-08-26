@@ -1,6 +1,6 @@
 {
   "name": "bilibili-app-recommend",
-  "version": "0.24.8",
+  "version": "0.24.9",
   "private": true,
   "type": "module",
   "scripts": {
