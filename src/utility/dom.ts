@@ -127,9 +127,11 @@ export function nextTick(): Promise<void> {
 export function whenIdle(options?: IdleRequestOptions): Promise<void> {
   return new Promise((resolve) => {
     // safari has no requestIdleCallback
-    typeof requestIdleCallback === 'function'
-      ? requestIdleCallback(() => resolve(), options)
-      : setTimeout(resolve)
+    if (typeof requestIdleCallback === 'function') {
+      requestIdleCallback(() => resolve(), options)
+    } else {
+      setTimeout(resolve)
+    }
   })
 }
 
@@ -141,4 +143,19 @@ export function setPageTitle(title: string) {
     ORIGINAL_TITLE = document.title
   }
   document.title = `${title} - ${ORIGINAL_TITLE}`
+}
+
+/**
+ * https://www.zhangxinxu.com/wordpress/2019/10/document-readystate/
+ */
+export async function domReady() {
+  if (document.readyState !== 'loading') {
+    return
+  } else {
+    return new Promise<void>((resolve) => {
+      document.addEventListener('DOMContentLoaded', () => {
+        resolve()
+      })
+    })
+  }
 }

@@ -1,19 +1,27 @@
+import { tryAction } from '$utility'
+
 export async function initSpacePage() {
   addDynEntry()
 }
 
-function addDynEntry() {
+async function addDynEntry() {
   const mid = parseMid()
   if (!mid) return
 
-  const btn = `<a
+  const btnHtml = `<a
     href="https://www.bilibili.com/?dyn-mid=${mid}"
     target="_blank"
     class="h-f-btn"
     style="width: auto; padding-inline: 15px;">BAR-查看动态</a>`
 
-  const container = document.querySelector<HTMLDivElement>('.h-action')
-  container?.insertAdjacentHTML('afterbegin', btn)
+  await tryAction(
+    '.h-action',
+    (container) => container?.insertAdjacentHTML('afterbegin', btnHtml),
+    {
+      pollTimeout: 10_000,
+      pollInterval: 1_000,
+    },
+  )
 }
 
 function parseMid() {
