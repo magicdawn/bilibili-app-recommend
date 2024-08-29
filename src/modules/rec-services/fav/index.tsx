@@ -121,17 +121,18 @@ export class FavRecService implements IService {
       // 1.fill queue
       while (this.folderHasMore && this.qs.bufferQueue.length < FavRecService.PAGE_SIZE) {
         const restServices = this.folderServices.filter((s) => s.hasMore)
-        const count = 4
+        const count = 6
         const batch = 2
         const pickedServices = shuffle(restServices).slice(0, count)
         const fetched = (
           await pmap(pickedServices, async (s) => (await s.loadMore()) || [], batch)
         ).flat()
-        this.qs.bufferQueue = [...this.qs.bufferQueue, ...fetched]
+        this.qs.bufferQueue = [...this.qs.bufferQueue, ...shuffle(fetched)]
       }
-      // 2.shuffle
-      this.qs.bufferQueue = shuffle(this.qs.bufferQueue)
     }
+
+    // shuffle before return
+    this.qs.bufferQueue = shuffle(this.qs.bufferQueue)
 
     // next: take from queue
     return this.qs.sliceFromQueue()
