@@ -22,12 +22,12 @@
   "license": "MIT",
   "devDependencies": {
     "@biomejs/biome": "^1.8.3",
-    "@commitlint/cli": "^19.4.0",
-    "@commitlint/config-conventional": "^19.2.2",
-    "@commitlint/prompt-cli": "^19.4.0",
+    "@commitlint/cli": "^19.4.1",
+    "@commitlint/config-conventional": "^19.4.1",
+    "@commitlint/prompt-cli": "^19.4.1",
     "@commitlint/types": "^19.0.3",
     "@emotion/babel-plugin": "^11.12.0",
-    "@iconify/json": "^2.2.241",
+    "@iconify/json": "^2.2.242",
     "@magicdawn/prettier-config": "^0.0.4",
     "@styled/typescript-styled-plugin": "^1.0.1",
     "@svgr/core": "^8.1.0",
@@ -36,7 +36,7 @@
     "@types/lodash": "4.17.7",
     "@types/md5": "^2.3.5",
     "@types/ms": "^0.7.34",
-    "@types/node": "22.5.0",
+    "@types/node": "22.5.1",
     "@types/react": "18.3.4",
     "@types/react-dom": "18.3.0",
     "@types/ua-parser-js": "^0.7.39",
@@ -61,11 +61,11 @@
     "rollup-plugin-visualizer": "^5.12.0",
     "sass": "^1.77.8",
     "sass-embedded": "^1.77.8",
-    "turbo": "^2.0.14",
-    "type-fest": "^4.25.0",
+    "turbo": "^2.1.0",
+    "type-fest": "^4.26.0",
     "typed-scss-modules": "^8.0.1",
     "typescript": "^5.5.4",
-    "typescript-eslint": "^8.2.0",
+    "typescript-eslint": "^8.3.0",
     "unocss": "^0.62.3",
     "unplugin-auto-import": "^0.18.2",
     "unplugin-icons": "^0.19.2",
@@ -96,7 +96,7 @@
     "debug": "^4.3.6",
     "delay": "^6.0.0",
     "fast-sort-lens": "^0.0.1",
-    "framer-motion": "^11.3.30",
+    "framer-motion": "^11.3.31",
     "localforage": "^1.10.0",
     "lodash": "^4.17.21",
     "md5": "^2.3.0",
@@ -114,7 +114,7 @@
     "react-intersection-observer": "^9.13.0",
     "react-virtuoso": "^4.10.1",
     "ua-parser-js": "^1.0.38",
-    "valtio": "^1.13.2"
+    "valtio": "^2.0.0"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
@@ -130,5 +130,5 @@
       "vite-plugin-importer>babel-plugin-import": "^1.13.8"
     }
   },
-  "packageManager": "pnpm@9.8.0+sha512.8e4c3550fb500e808dbc30bb0ce4dd1eb614e30b1c55245f211591ec2cdf9c611cabd34e1364b42f564bd54b3945ed0f49d61d1bbf2ec9bd74b866fcdc723276"
+  "packageManager": "pnpm@9.9.0+sha512.60c18acd138bff695d339be6ad13f7e936eea6745660d4cc4a776d5247c540d0edee1a563695c183a66eb917ef88f2b4feb1fc25f32a7adcadc7aaf3438e99c1"
 }
