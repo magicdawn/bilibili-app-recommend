@@ -22,18 +22,17 @@
 - [x] App 推荐: 我不想看, 用于推荐系统反馈
 - [x] 推荐: 视频过滤
 - [x] 一站式体验, 方便快捷的访问: 动态 / 稍后再看 / 收藏 / 热门等内容
-- [x] 随机: 稍后再看, 收藏, 每周必看等支持随机顺序.
+- [x] 随机的乐趣: 稍后再看, 收藏, 每周必看等支持随机顺序
 - [x] 主题设置: 预设主题 + color-picker 自定义
-- [x] Bilibili-Evolved 适配: 夜间模式 / 自定义顶栏 / 主题色.
+- [x] Bilibili-Evolved 适配: 夜间模式 / 自定义顶栏 / 主题色
 - [x] 完善的键盘支持
 - [x] IINA
 
 ## 链接
 
-- 安装地址 https://greasyfork.org/zh-CN/scripts/443530-bilibili-app-recommend
 - 源代码 https://github.com/magicdawn/bilibili-app-recommend 如果对你有用,请来个 Star :)
 - 从 GitHub 安装
-  - [Release](https://github.com/magicdawn/bilibili-app-recommend/raw/release/bilibili-app-recommend.user.js) (GreasyFork 是此文件的同步)
+  - [Release](https://github.com/magicdawn/bilibili-app-recommend/raw/release/bilibili-app-recommend.user.js) (GreasyFork 版本自动同步源)
   - [Release 最小化版本](https://github.com/magicdawn/bilibili-app-recommend/raw/release/bilibili-app-recommend.mini.user.js)
   - [CI build](https://github.com/magicdawn/bilibili-app-recommend/raw/release-nightly/bilibili-app-recommend.mini.user.js)
 
@@ -262,9 +261,10 @@ _\* 开关-第一项_
 - pnpm install
 - pnpm build, build 完会自动使用 Chrome 打开安装地址
 
-### main 分支 CI build 代码
+### CI build
 
-https://github.com/magicdawn/bilibili-app-recommend/raw/release-nightly/bilibili-app-recommend.mini.user.js
+- 会使用 main 分支代码自动构建
+- 构建结果: 即上面提到的 [开发版](https://github.com/magicdawn/bilibili-app-recommend/raw/release-nightly/bilibili-app-recommend.mini.user.js)
 
 ## 支持
 
