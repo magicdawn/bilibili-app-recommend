@@ -48,6 +48,7 @@ export default defineConfig([
       '@typescript-eslint/no-non-null-assertion': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-namespace': 'off',
+      '@typescript-eslint/no-unused-expressions': 'off',
 
       // '@typescript-eslint/consistent-type-imports': ['warn', { 'fixStyle': 'inline-type-imports' }],
       '@typescript-eslint/consistent-type-imports': ['warn', { fixStyle: 'separate-type-imports' }],

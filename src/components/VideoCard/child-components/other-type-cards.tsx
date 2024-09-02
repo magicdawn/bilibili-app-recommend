@@ -72,21 +72,23 @@ export const DislikedCard = memo(function DislikedCard({
     if (!dislikedReason?.id) return
 
     let success = false
+    let message = ''
     let err: Error | undefined
     try {
-      success = await cancelDislike(item, dislikedReason.id)
+      ;({ success, message } = await cancelDislike(item, dislikedReason.id))
     } catch (e) {
       err = e as Error
     }
-
     if (err) {
       console.error(err.stack || err)
       return toastRequestFail()
     }
 
-    success ? AntdMessage.success('已撤销') : AntdMessage.error(OPERATION_FAIL_MSG)
     if (success) {
+      AntdMessage.success('已撤销')
       delDislikeId(item.param)
+    } else {
+      AntdMessage.error(message || OPERATION_FAIL_MSG)
     }
   })
 

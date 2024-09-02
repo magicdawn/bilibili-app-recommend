@@ -6,7 +6,7 @@ import { BaseModal, BaseModalStyle, ModalClose } from '$ui-components/BaseModal'
 import { AntdMessage } from '$utility'
 import { toastRequestFail } from '$utility/toast'
 import { Info } from '@icon-park/react'
-import { useUpdateLayoutEffect } from 'ahooks'
+import { useLockFn, useUpdateLayoutEffect } from 'ahooks'
 import type { Root } from 'react-dom/client'
 import { createRoot } from 'react-dom/client'
 import { proxy, useSnapshot } from 'valtio'
@@ -40,31 +40,29 @@ export function delDislikeId(id: string) {
 }
 
 function ModalDislike({ show, onHide, item }: IProps) {
-  const [isRequesting, setIsRequesting] = useState(false)
-
-  const onDislike = useMemoizedFn(async (reason: Reason) => {
+  const onDislike = useLockFn(async (reason: Reason) => {
     if (!item) return
 
     let success = false
+    let message: string = ''
     let err: Error | undefined
     try {
-      setIsRequesting(true)
-      success = await dislike(item, reason.id)
+      ;({ success, message } = await dislike(item, reason.id))
     } catch (e) {
       err = e as Error
-    } finally {
-      setIsRequesting(false)
     }
-
     if (err) {
       console.error(err.stack || err)
       return toastRequestFail()
     }
 
-    success ? AntdMessage.success('已标记不想看') : AntdMessage.error(OPERATION_FAIL_MSG)
     if (success) {
+      AntdMessage.success('已标记不想看')
       dislikedIds.set(item.param, { ...reason })
       onHide()
+    } else {
+      // fail
+      AntdMessage.error(message || OPERATION_FAIL_MSG)
     }
   })
 
@@ -175,7 +173,6 @@ function ModalDislike({ show, onHide, item }: IProps) {
                   setActiveIndex(index)
                   onDislike(reason)
                 }}
-                disabled={isRequesting}
               >
                 <span
                   className='reason-no'

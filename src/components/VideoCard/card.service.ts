@@ -1,4 +1,4 @@
-import { APP_NAME, HOST_APP } from '$common'
+import { APP_NAME, HOST_APP, OPERATION_FAIL_MSG } from '$common'
 import type { AppRecItem, DmJson, PvideoJson } from '$define'
 import { settings } from '$modules/settings'
 import { gmrequest, isWebApiSuccess, request } from '$request'
@@ -155,14 +155,18 @@ const dislikeFactory = (type: 'dislike' | 'cancel') => {
       },
     })
 
-    // {
-    //     "code": 0,
-    //     "message": "0",
-    //     "ttl": 1
-    // }
+    // { "code": 0, "message": "0", "ttl": 1 }
     const json = res.data
     const success = isWebApiSuccess(json)
-    return success
+
+    let message = json.message
+    if (!success) {
+      message ||= OPERATION_FAIL_MSG
+      message += `(code ${json.code})`
+      message += '\n请重新获取 access_key 后重试'
+    }
+
+    return { success, json, message }
   }
 }
 

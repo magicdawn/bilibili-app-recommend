@@ -42,6 +42,12 @@ export function TabPaneBasic() {
       })
   }, [])
 
+  const handleCopyScriptVersion = useMemoizedFn(() => {
+    const content = `v${__SCRIPT_VERSION__}`
+    GM.setClipboard(content)
+    AntdMessage.success(`已复制当前版本: ${content}`)
+  })
+
   return (
     <div className={styles.tabPane}>
       <SettingsGroup
@@ -229,24 +235,30 @@ export function TabPaneBasic() {
                 font-size: 14px;
                 position: relative;
                 top: 4px;
+                display: inline-flex;
+                align-items: center;
               `}
             >
-              (当前版本: v{__SCRIPT_VERSION__})
+              当前版本
+              <Tag
+                color='green'
+                onClick={handleCopyScriptVersion}
+                css={css`
+                  cursor: pointer;
+                  margin-inline: 4px;
+                `}
+              >
+                v{__SCRIPT_VERSION__}
+              </Tag>
+              <IconPark
+                name={'Copy'}
+                size={16}
+                onClick={handleCopyScriptVersion}
+                css={css`
+                  cursor: pointer;
+                `}
+              />
             </span>
-            <IconPark
-              name={'Copy'}
-              size={16}
-              onClick={() => {
-                const content = `v${__SCRIPT_VERSION__}`
-                GM.setClipboard(content)
-                AntdMessage.success(`已复制当前版本: ${content}`)
-              }}
-              css={css`
-                position: relative;
-                top: 4px;
-                cursor: pointer;
-              `}
-            />
           </>
         }
       >
