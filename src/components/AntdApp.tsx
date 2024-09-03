@@ -142,7 +142,9 @@ function GlobalStyle() {
               }
 
               /* hide download tip */
-              .desktop-download-tip {
+              /* hide 立即登录免费领大会员优惠券 */
+              .desktop-download-tip,
+              .vip-login-tip {
                 display: none !important;
               }
 
