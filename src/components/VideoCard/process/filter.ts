@@ -4,9 +4,8 @@ import type { RecItemTypeOrSeparator } from '$define'
 import { EApiType } from '$define/index.shared'
 import { dynamicFeedFilterStore } from '$modules/rec-services/dynamic-feed'
 import { isNormalRankingItem } from '$modules/rec-services/hot/ranking/category'
-import { settings, settings as settingsProxy } from '$modules/settings'
+import { getSettingsSnapshot, settings } from '$modules/settings'
 import { blacklistMids } from '$modules/user/relations/blacklist'
-import { snapshot } from 'valtio'
 import { CHARGE_ONLY_TEXT } from '../top-marks'
 import { normalizeCardData } from './normalize'
 
@@ -75,7 +74,7 @@ export function filterRecItems(items: RecItemTypeOrSeparator[], tab: ETab) {
     return items
   }
 
-  const settings = snapshot(settingsProxy)
+  const settings = getSettingsSnapshot()
 
   const blockUpMids = new Set<string>()
   const blockUpNames = new Set<string>()
@@ -234,7 +233,7 @@ export function filterRecItems(items: RecItemTypeOrSeparator[], tab: ETab) {
         return false
       }
 
-      // paly
+      // play
       if (
         settings.filterMinPlayCountEnabled &&
         settings.filterMinPlayCount &&

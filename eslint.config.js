@@ -1,18 +1,14 @@
 // @ts-check
 
+/** @import {Config} from 'typescript-eslint'  */
+
 import eslint from '@eslint/js'
 import eslintConfigPrettier from 'eslint-config-prettier'
 import globals from 'globals'
 import tseslint from 'typescript-eslint'
 
-// @param {import('eslint').Linter.FlatConfig[]} configArr
-
-// this method can expand extends too, and it's arg is ConfigWithExtends[]
-// Parameters<typeof tseslint.config>
-// return tseslint.config(...configArr),
-
 /**
- * @param {import('typescript-eslint').Config} configArr
+ * @param {Config} configArr
  */
 function defineConfig(configArr) {
   return configArr

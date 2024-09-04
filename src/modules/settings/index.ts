@@ -189,6 +189,10 @@ export function useSettingsSnapshot() {
   return useSnapshot(settings)
 }
 
+export function getSettingsSnapshot() {
+  return snapshot(settings)
+}
+
 /**
  * storage
  */
