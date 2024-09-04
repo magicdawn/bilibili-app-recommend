@@ -133,7 +133,7 @@ function HotUsageInfo({ children }: { children?: ReactNode }) {
       <Dropdown
         menu={{ items: menus }}
         getPopupContainer={getPopupContainer}
-        rootClassName={styled.generateClassName`
+        rootClassName={styled.createClass`
           .ant-dropdown-menu-item-divider {
             margin: 2px 0 !important;
           }
