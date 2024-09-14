@@ -29,8 +29,9 @@ function copyBvidsSingleLine() {
 }
 function copyBvidsInfo() {
   const lines = getGridCardData().map((cardData) => {
-    const { bvid, authorName, pubts, title } = cardData
+    let { bvid, authorName, pubts, title } = cardData
     const date = dayjs.unix(pubts ?? 0).format('YYYY-MM-DD')
+    title = title.replace(/\n+/g, ' ')
     return `${bvid} ;; [${authorName}] ${date} ${title}`
   })
   GM.setClipboard(lines.join('\n'))
