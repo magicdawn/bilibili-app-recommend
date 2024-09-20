@@ -6,11 +6,11 @@ import { isSafari } from '$ua'
 
 function supportAvif() {
   return new Promise<boolean>((resolve, reject) => {
-    const avif = new Image()
-    avif.src =
+    const img = new Image()
+    img.onload = () => resolve(true)
+    img.onerror = (err) => resolve(false)
+    img.src =
       'data:image/avif;base64,AAAAIGZ0eXBhdmlmAAAAAGF2aWZtaWYxbWlhZk1BMUIAAADybWV0YQAAAAAAAAAoaGRscgAAAAAAAAAAcGljdAAAAAAAAAAAAAAAAGxpYmF2aWYAAAAADnBpdG0AAAAAAAEAAAAeaWxvYwAAAABEAAABAAEAAAABAAABGgAAAB0AAAAoaWluZgAAAAAAAQAAABppbmZlAgAAAAABAABhdjAxQ29sb3IAAAAAamlwcnAAAABLaXBjbwAAABRpc3BlAAAAAAAAAAIAAAACAAAAEHBpeGkAAAAAAwgICAAAAAxhdjFDgQ0MAAAAABNjb2xybmNseAACAAIAAYAAAAAXaXBtYQAAAAAAAAABAAEEAQKDBAAAACVtZGF0EgAKCBgANogQEAwgMg8f8D///8WfhwB8+ErK42A='
-    avif.onload = () => resolve(true)
-    avif.onerror = (err) => resolve(false)
   })
 }
 
