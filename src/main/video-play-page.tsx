@@ -2,14 +2,16 @@ import { baseDebug } from '$common'
 import { antdCustomCss } from '$common/emotion-css'
 import { AntdApp } from '$components/AntdApp'
 import {
-  PLAYER_SCREEN_MODE,
+  ForceAutoPlay,
   PlayerScreenMode,
+  QueryKey,
   VideoLinkOpenModeConfig,
 } from '$components/VideoCard/index.shared'
 import {
   hasDocumentPictureInPicture,
   openInPipOrPopup,
 } from '$components/VideoCard/use/useOpenRelated'
+import { getBiliPlayerConfigAutoPlay } from '$utility/bilibili/player-config'
 import { onVideoChange } from '$utility/bilibili/video-page'
 import { Button } from 'antd'
 import delay from 'delay'
@@ -17,9 +19,7 @@ import ms from 'ms'
 
 const debug = baseDebug.extend('main:video-play-page')
 
-export function initVideoPlayPage() {
-  handleFullscreen()
-
+export async function initVideoPlayPage() {
   // open in pipwindow
   if (hasDocumentPictureInPicture) {
     // GM command
@@ -28,6 +28,9 @@ export function initVideoPlayPage() {
     // 按钮, 但会导致闪一下, 然后按钮没了. 可能类似 ssr dehydrate
     // addOpenInPipWindowButton()
   }
+
+  await handleFullscreen()
+  await handleForceAutoPlay()
 }
 
 /**
@@ -36,7 +39,7 @@ export function initVideoPlayPage() {
  */
 
 async function handleFullscreen() {
-  const targetMode = new URL(location.href).searchParams.get(PLAYER_SCREEN_MODE)
+  const targetMode = new URL(location.href).searchParams.get(QueryKey.PlayerScreenMode)
   const next =
     targetMode === PlayerScreenMode.WebFullscreen || targetMode === PlayerScreenMode.Fullscreen
   if (!next) return
@@ -58,12 +61,39 @@ async function handleFullscreen() {
 
   const timeoutAt = Date.now() + ms('30s')
   while (getCurrentMode() !== targetMode && Date.now() <= timeoutAt) {
+    debug('current mode: %s', getCurrentMode())
     action?.()
     await delay(100)
   }
   debug('handleFullscreen to %s complete', targetMode)
 
   // Failed to execute 'requestFullscreen' on 'Element': API can only be initiated by a user gesture.
+}
+
+async function handleForceAutoPlay() {
+  // already on
+  if (getBiliPlayerConfigAutoPlay()) return
+  // no need
+  const isON = new URL(location.href).searchParams.get(QueryKey.ForceAutoPlay) === ForceAutoPlay.ON
+  if (!isON) return
+
+  // make it pause
+  const toggle = () =>
+    document
+      .querySelector<HTMLElement>('#bilibili-player [role="button"][aria-label="播放/暂停"]')
+      ?.click()
+
+  const playing = () =>
+    !!document.querySelectorAll<HTMLDivElement>(
+      '#bilibili-player .bpx-player-container:not(.bpx-state-paused)',
+    ).length
+
+  const timeoutAt = Date.now() + ms('30s')
+  while (Date.now() <= timeoutAt && !playing()) {
+    toggle()
+    await delay(1000)
+  }
+  debug('handleForceAutoPlay complete, playing = %s', playing())
 }
 
 function pausePlayingVideoAndOpenInPipWindow() {
@@ -79,7 +109,7 @@ function pausePlayingVideoAndOpenInPipWindow() {
 
   // open in pipwindow
   const u = new URL(location.href)
-  u.searchParams.set(PLAYER_SCREEN_MODE, PlayerScreenMode.WebFullscreen)
+  u.searchParams.set(QueryKey.PlayerScreenMode, PlayerScreenMode.WebFullscreen)
   const newHref = u.href
   openInPipOrPopup(newHref, '')
 }

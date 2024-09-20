@@ -13,7 +13,7 @@ import RadixIconsLockClosed from '~icons/radix-icons/lock-closed'
 import RadixIconsLockOpen1 from '~icons/radix-icons/lock-open-1'
 import RadixIconsOpenInNewWindow from '~icons/radix-icons/open-in-new-window'
 import { VideoCardActionButton } from '../child-components/VideoCardActions'
-import { PLAYER_SCREEN_MODE } from '../index.shared'
+import { QueryKey } from '../index.shared'
 
 export function renderInPipWindow(newHref: string, pipWindow: Window) {
   const cssInsertContainer = pipWindow.document.head
@@ -154,7 +154,7 @@ function CloseThenOpenButton({ newHref, pipWindow }: { pipWindow: Window; newHre
   const onClick = () => {
     pipWindow.close()
     const u = new URL(newHref)
-    u.searchParams.delete(PLAYER_SCREEN_MODE)
+    u.searchParams.delete(QueryKey.PlayerScreenMode)
     GM.openInTab(u.href, { active: true })
   }
 

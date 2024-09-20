@@ -1,5 +1,6 @@
 export const APP_NAME = 'bilibili-app-recommend'
 export const APP_KEY_PREFIX = 'bilibili_app_recommend'
+export const APP_SHORT_PREFIX = 'bar'
 
 import debugFactory from 'debug'
 export const baseDebug = debugFactory(APP_NAME)

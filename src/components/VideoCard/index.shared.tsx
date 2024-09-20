@@ -1,3 +1,4 @@
+import { APP_SHORT_PREFIX } from '$common'
 import { OpenExternalLinkIcon, PlayerIcon } from '$modules/icon'
 import { isMac } from '$ua'
 import mitt, { type Emitter } from 'mitt'
@@ -12,13 +13,21 @@ export const borderRadiusValue = `var(${borderRadiusIdentifier})`
 
 export const STAT_NUMBER_FALLBACK = '0'
 
-export const PLAYER_SCREEN_MODE = 'player-screen-mode'
+export enum QueryKey {
+  PlayerScreenMode = `${APP_SHORT_PREFIX}-player-screen-mode`,
+  ForceAutoPlay = `${APP_SHORT_PREFIX}-force-auto-play`,
+}
 
 export enum PlayerScreenMode {
   Normal = 'normal',
   Wide = 'wide',
   WebFullscreen = 'web',
   Fullscreen = 'full',
+}
+
+export enum ForceAutoPlay {
+  ON = 'on',
+  OFF = 'off',
 }
 
 export enum VideoLinkOpenMode {

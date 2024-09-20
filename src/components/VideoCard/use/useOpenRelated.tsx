@@ -4,15 +4,17 @@ import { EApiType } from '$define/index.shared'
 import { isNormalRankingItem } from '$modules/rec-services/hot/ranking/category'
 import { settings, useSettingsSnapshot } from '$modules/settings'
 import { getVideoDetail } from '$modules/video/video-detail'
+import { getBiliPlayerConfigAutoPlay } from '$utility/bilibili/player-config'
 import delay from 'delay'
 import type { MouseEventHandler, ReactNode, RefObject } from 'react'
 import type { PreviewImageRef } from '../child-components/PreviewImage'
 import { VideoCardActionButton } from '../child-components/VideoCardActions'
 import {
+  ForceAutoPlay,
   VideoLinkOpenMode as Mode,
   VideoLinkOpenModeConfig as ModeConfig,
-  PLAYER_SCREEN_MODE,
   PlayerScreenMode,
+  QueryKey,
   VideoLinkOpenMode,
   VideoLinkOpenModeKey,
 } from '../index.shared'
@@ -58,7 +60,10 @@ export function useOpenRelated({
 
     const newHref = getHref((u) => {
       if (mode === Mode.Popup || mode === Mode.NormalWebFullscreen) {
-        u.searchParams.set(PLAYER_SCREEN_MODE, PlayerScreenMode.WebFullscreen)
+        u.searchParams.set(QueryKey.PlayerScreenMode, PlayerScreenMode.WebFullscreen)
+        if (mode === Mode.Popup && !getBiliPlayerConfigAutoPlay()) {
+          u.searchParams.set(QueryKey.ForceAutoPlay, ForceAutoPlay.ON)
+        }
       }
       if (settings.startPlayFromPreviewPoint) {
         const t = previewImageRef.current?.getT()
