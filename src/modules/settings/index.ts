@@ -129,8 +129,8 @@ export const initialSettings = {
    * 外观
    */
 
-  // video-source-tab 高度, 默认 compact
-  styleUseStandardVideoSourceTab: false,
+  // video-source-tab 高度: true 高; false compact;
+  styleUseStandardVideoSourceTab: true,
 
   // sticky tabbar
   styleUseStickyTabbarInPureRecommend: true,
