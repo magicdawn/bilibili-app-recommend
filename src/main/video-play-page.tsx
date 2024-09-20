@@ -11,6 +11,7 @@ import {
   hasDocumentPictureInPicture,
   openInPipOrPopup,
 } from '$components/VideoCard/use/useOpenRelated'
+import { getBiliPlayer } from '$utility/bilibili/player'
 import { getBiliPlayerConfigAutoPlay } from '$utility/bilibili/player-config'
 import { onVideoChange } from '$utility/bilibili/video-page'
 import { Button } from 'antd'
@@ -77,20 +78,14 @@ async function handleForceAutoPlay() {
   const isON = new URL(location.href).searchParams.get(QueryKey.ForceAutoPlay) === ForceAutoPlay.ON
   if (!isON) return
 
-  // make it pause
-  const toggle = () =>
-    document
-      .querySelector<HTMLElement>('#bilibili-player [role="button"][aria-label="播放/暂停"]')
-      ?.click()
-
-  const playing = () =>
-    !!document.querySelectorAll<HTMLDivElement>(
-      '#bilibili-player .bpx-player-container:not(.bpx-state-paused)',
-    ).length
+  const playing = (): boolean => {
+    const player = getBiliPlayer()
+    return !!player && !player.isPaused()
+  }
 
   const timeoutAt = Date.now() + ms('30s')
   while (Date.now() <= timeoutAt && !playing()) {
-    toggle()
+    getBiliPlayer()?.play()
     await delay(1000)
   }
   debug('handleForceAutoPlay complete, playing = %s', playing())
@@ -98,13 +93,9 @@ async function handleForceAutoPlay() {
 
 function pausePlayingVideoAndOpenInPipWindow() {
   // make it pause
-  const currentPaused = !!document.querySelectorAll<HTMLDivElement>(
-    '#bilibili-player .bpx-player-container.bpx-state-paused',
-  ).length
-  if (!currentPaused) {
-    document
-      .querySelector<HTMLElement>('#bilibili-player [role="button"][aria-label="播放/暂停"]')
-      ?.click()
+  const player = getBiliPlayer()
+  if (player && !player.isPaused()) {
+    player.pause()
   }
 
   // open in pipwindow

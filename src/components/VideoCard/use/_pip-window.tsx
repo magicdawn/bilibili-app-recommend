@@ -155,6 +155,7 @@ function CloseThenOpenButton({ newHref, pipWindow }: { pipWindow: Window; newHre
     pipWindow.close()
     const u = new URL(newHref)
     u.searchParams.delete(QueryKey.PlayerScreenMode)
+    u.searchParams.delete(QueryKey.ForceAutoPlay)
     GM.openInTab(u.href, { active: true })
   }
 
