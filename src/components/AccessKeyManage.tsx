@@ -1,7 +1,7 @@
 import { deleteAccessKey, getAccessKey } from '$modules/access-key'
 import { useSettingsSnapshot } from '$modules/settings'
 import { useRequest } from 'ahooks'
-import { Button, Space } from 'antd'
+import { Button, Popconfirm, Space } from 'antd'
 
 const btnAccessKeyHelpLink = (
   <Button
@@ -37,7 +37,9 @@ export function AccessKeyManage({
           <Button onClick={runAsync} disabled={loading}>
             重新获取 access_key
           </Button>
-          <Button onClick={onDeleteAccessKey}>删除 access_key</Button>
+          <Popconfirm onConfirm={onDeleteAccessKey} title='确定删除 access_key?'>
+            <Button>删除 access_key</Button>
+          </Popconfirm>
           {btnAccessKeyHelpLink}
         </>
       )}
