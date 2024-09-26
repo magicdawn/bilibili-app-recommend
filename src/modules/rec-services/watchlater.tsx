@@ -52,7 +52,7 @@ export class WatchLaterRecService implements IService {
   private async fetch() {
     const res = await request.get('/x/v2/history/toview/web')
     const json = res.data as WatchLaterJson
-    const items: WatchLaterItemExtend[] = json.data.list.map((item) => {
+    const items: WatchLaterItemExtend[] = (json?.data?.list || []).map((item) => {
       return {
         ...item,
         api: EApiType.Watchlater,

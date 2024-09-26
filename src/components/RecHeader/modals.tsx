@@ -31,7 +31,7 @@ export function hideModalSettings() {
 }
 
 export function registerSettingsGmCommand() {
-  GM.registerMenuCommand('⚙️ 设置', showModalSettings)
+  GM.registerMenuCommand?.('⚙️ 设置', showModalSettings)
 }
 
 const renderOnce = once(function render() {

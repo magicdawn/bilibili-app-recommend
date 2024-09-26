@@ -106,7 +106,7 @@ function pausePlayingVideoAndOpenInPipWindow() {
 }
 
 function registerOpenInPipCommand() {
-  GM.registerMenuCommand('🎦 小窗打开', () => {
+  GM.registerMenuCommand?.('🎦 小窗打开', () => {
     pausePlayingVideoAndOpenInPipWindow()
   })
 }

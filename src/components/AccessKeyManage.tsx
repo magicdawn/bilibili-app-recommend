@@ -27,14 +27,14 @@ export function AccessKeyManage({
     <Space size='small' style={style} className={className}>
       {!accessKey ? (
         <>
-          <Button onClick={runAsync} disabled={loading}>
+          <Button onClick={runAsync} loading={loading}>
             获取 access_key
           </Button>
           {btnAccessKeyHelpLink}
         </>
       ) : (
         <>
-          <Button onClick={runAsync} disabled={loading}>
+          <Button onClick={runAsync} loading={loading}>
             重新获取 access_key
           </Button>
           <Popconfirm onConfirm={onDeleteAccessKey} title='确定删除 access_key?'>

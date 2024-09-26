@@ -11,7 +11,9 @@ export const ENABLE_VIRTUAL_GRID = false
 if (ENABLE_VIRTUAL_GRID) {
   // @ts-ignore
   ;(globalThis as any).VIRTUOSO_LOG_LEVEL = LogLevel.DEBUG
-  ;(unsafeWindow as any).VIRTUOSO_LOG_LEVEL = LogLevel.DEBUG
+  if (typeof unsafeWindow !== 'undefined') {
+    ;(unsafeWindow as any).VIRTUOSO_LOG_LEVEL = LogLevel.DEBUG
+  }
 }
 
 export type CustomGridContext = {

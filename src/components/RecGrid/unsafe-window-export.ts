@@ -11,7 +11,7 @@ import { tryit } from 'radash'
 
 export const gridItemsKey = `${APP_KEY_PREFIX}_gridItems`
 
-const win = unsafeWindow as any
+const win = (typeof unsafeWindow !== 'undefined' ? unsafeWindow : globalThis) as any
 const setWinValue = (key: string, val: any) => void tryit(() => (win[key] = val))()
 
 export function setGlobalGridItems(items: RecItemTypeOrSeparator[]) {

@@ -5,5 +5,6 @@ export type Player = {
 }
 
 export function getBiliPlayer(): Player | undefined {
+  if (typeof unsafeWindow === 'undefined') return
   return (unsafeWindow as any).player
 }

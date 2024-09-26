@@ -9,9 +9,11 @@ import { isNil, once } from 'lodash'
 import mitt from 'mitt'
 import ms from 'ms'
 
+const getWin = () => (typeof unsafeWindow !== 'undefined' ? unsafeWindow : globalThis) as any
+
 const getId = () => ({
-  aid: (unsafeWindow as any).aid as string,
-  cid: (unsafeWindow as any).cid as string,
+  aid: getWin().aid as string,
+  cid: getWin().cid as string,
 })
 
 const emitter = mitt<{ videoChange: ReturnType<typeof getId> }>()
