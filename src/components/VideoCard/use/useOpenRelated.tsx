@@ -75,10 +75,7 @@ export function useOpenRelated({
 
     const handleCommon = () => {
       const active = mode !== Mode.Background
-      GM.openInTab(newHref, {
-        insert: true,
-        active,
-      })
+      GM.openInTab(newHref, { insert: true, active, setParent: true })
     }
 
     const handlers: Record<Mode, () => void> = {

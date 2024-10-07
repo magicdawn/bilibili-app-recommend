@@ -126,6 +126,7 @@ export function RankingNumMark({ item }: { item: RankingItemExtend }) {
                       GM.openInTab(new URL(`/video/${x.bvid}`, location.href).href, {
                         active: true,
                         insert: true,
+                        setParent: true,
                       })
                     },
                   }
