@@ -5,6 +5,7 @@ import { EHotSubTab } from '$components/RecHeader/tab-enum'
 import type { RecItemTypeOrSeparator } from '$define'
 import { styled } from '$libs'
 import { settings } from '$modules/settings'
+import { AntdTooltip } from '$ui-components/antd-custom'
 import type { AntdMenuItemType } from '$utility/type'
 import { proxyWithGmStorage } from '$utility/valtio'
 import { Button, Dropdown } from 'antd'
@@ -128,31 +129,73 @@ function HotUsageInfo({ children }: { children?: ReactNode }) {
     [activeSubtab],
   )
 
+  const dropdownMenu = (
+    <Dropdown
+      menu={{ items: menus }}
+      getPopupContainer={getPopupContainer}
+      rootClassName={styled.createClass`
+        .ant-dropdown-menu-item-divider {
+          margin: 2px 0 !important;
+        }
+      `}
+    >
+      <Button
+        ref={ref}
+        className='w-114px gap-0 flex items-center justify-start'
+        css={[
+          antdCustomCss.button,
+          css`
+            padding-left: 16px;
+          `,
+        ]}
+      >
+        {icon}
+        <span css={C.ml(8)}>{label}</span>
+      </Button>
+    </Dropdown>
+  )
+
+  const tab = useMemo(() => {
+    return (
+      <Button.Group>
+        {[EHotSubTab.PopularGeneral, EHotSubTab.PopularWeekly, EHotSubTab.Ranking].map(
+          (subtab, index) => {
+            const { icon, label, desc } = HotSubTabConfig[subtab]
+            const active = subtab === activeSubtab
+            return (
+              <AntdTooltip
+                title={
+                  <>
+                    {label}: {desc}
+                  </>
+                }
+                key={subtab}
+              >
+                <Button
+                  shape='circle'
+                  icon={icon}
+                  type={active ? 'primary' : 'default'}
+                  onClick={() => {
+                    if (subtab === hotStore.subtab) return
+                    hotStore.subtab = subtab
+                    // onRefresh?.(true) // 可以但没必要, 有 skeleton 有 Tab切换 的反馈
+                    onRefresh?.()
+                  }}
+                >
+                  {/* {label} */}
+                </Button>
+              </AntdTooltip>
+            )
+          },
+        )}
+      </Button.Group>
+    )
+  }, [activeSubtab])
+
   return (
     <>
-      <Dropdown
-        menu={{ items: menus }}
-        getPopupContainer={getPopupContainer}
-        rootClassName={styled.createClass`
-          .ant-dropdown-menu-item-divider {
-            margin: 2px 0 !important;
-          }
-        `}
-      >
-        <Button
-          ref={ref}
-          className='w-114px gap-0 flex items-center justify-start'
-          css={[
-            antdCustomCss.button,
-            css`
-              padding-left: 16px;
-            `,
-          ]}
-        >
-          {icon}
-          <span css={C.ml(8)}>{label}</span>
-        </Button>
-      </Dropdown>
+      {dropdownMenu}
+      {/* {tab} */}
       {children}
     </>
   )
