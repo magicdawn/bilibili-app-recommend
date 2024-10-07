@@ -10,6 +10,7 @@ import { $headerHeight, $usingEvolevdHeader } from '$header'
 import { useIsDarkMode } from '$modules/dark-mode'
 import { ConfigIcon } from '$modules/icon'
 import { useSettingsSnapshot } from '$modules/settings'
+import { isMac } from '$ua'
 import { getElementOffset, shouldDisableShortcut } from '$utility/dom'
 import { Button, Space } from 'antd'
 import { size } from 'polished'
@@ -235,9 +236,11 @@ function useExpandToFullWidthCss() {
 
   return useMemo(() => {
     if (!xScrolling) {
+      // https://github.com/magicdawn/bilibili-app-recommend/issues/120
+      const scrollbarWidth = isMac ? '0px' : '20px'
       return css`
-        margin-inline: calc((100% - 100vw) / 2);
-        padding-inline: calc((100vw - 100%) / 2);
+        margin-inline: calc((100% - 100vw + ${scrollbarWidth}) / 2);
+        padding-inline: calc((100vw - ${scrollbarWidth} - 100%) / 2);
       `
     } else {
       const w = Math.floor(bodyWidth!)
