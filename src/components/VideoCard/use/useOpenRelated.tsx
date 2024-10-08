@@ -1,6 +1,7 @@
 import { baseDebug } from '$common'
 import type { RecItemType } from '$define'
 import { EApiType } from '$define/index.shared'
+import { openNewTab } from '$modules/gm'
 import { isNormalRankingItem } from '$modules/rec-services/hot/ranking/category'
 import { settings, useSettingsSnapshot } from '$modules/settings'
 import { getVideoDetail } from '$modules/video/video-detail'
@@ -75,7 +76,7 @@ export function useOpenRelated({
 
     const handleCommon = () => {
       const active = mode !== Mode.Background
-      GM.openInTab(newHref, { insert: true, active, setParent: true })
+      openNewTab(newHref, active)
     }
 
     const handlers: Record<Mode, () => void> = {

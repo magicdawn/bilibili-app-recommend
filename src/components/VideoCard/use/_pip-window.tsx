@@ -2,6 +2,7 @@ import { APP_CLS_ROOT } from '$common'
 import { useLessFrequentFn } from '$common/hooks/useLessFrequentFn'
 import { AntdApp } from '$components/AntdApp'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
+import { openNewTab } from '$modules/gm'
 import { isEdge } from '$ua'
 import createEmotion from '@emotion/css/create-instance'
 import { Global } from '@emotion/react'
@@ -156,7 +157,7 @@ function CloseThenOpenButton({ newHref, pipWindow }: { pipWindow: Window; newHre
     const u = new URL(newHref)
     u.searchParams.delete(QueryKey.PlayerScreenMode)
     u.searchParams.delete(QueryKey.ForceAutoPlay)
-    GM.openInTab(u.href, { active: true, insert: true, setParent: true })
+    openNewTab(u.href)
   }
 
   return (

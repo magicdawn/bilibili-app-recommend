@@ -14,11 +14,9 @@ declare global {
         }
       | undefined
   }
-}
 
-declare global {
   interface VMScriptGMTabOptions {
-    /** tempermonkey only, https://www.tampermonkey.net/documentation.php?locale=en#api:GM_openInTab */
+    /** tampermonkey only, https://www.tampermonkey.net/documentation.php?locale=en#api:GM_openInTab */
     setParent?: boolean
   }
 }

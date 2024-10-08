@@ -10,6 +10,7 @@ import { useCurrentUsingTab, videoSourceTabState } from '$components/RecHeader/t
 import { ETab } from '$components/RecHeader/tab-enum'
 import { type AppRecItemExtend, type PvideoJson, type RecItemType, isRanking } from '$define'
 import { EApiType } from '$define/index.shared'
+import { openNewTab } from '$modules/gm'
 import { DislikeIcon, OpenExternalLinkIcon, WatchLaterIcon } from '$modules/icon'
 import { IconPark } from '$modules/icon/icon-park'
 import { dynamicFeedFilterSelectUp } from '$modules/rec-services/dynamic-feed'
@@ -410,7 +411,7 @@ const VideoCardInner = memo(function VideoCardInner({
 
     function openInNewWindow() {
       const u = `/?dyn-mid=${authorMid}`
-      GM.openInTab(u, { insert: true, active: true, setParent: true })
+      openNewTab(u)
     }
 
     // newWindow ??= tab !== ETab.DynamicFeed

@@ -2,6 +2,7 @@ import { flexCenterStyle, flexVerticalCenterStyle } from '$common/emotion-css'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import type { RankingItemExtend, RecItemType } from '$define'
 import { EApiType } from '$define/index.shared'
+import { openNewTab } from '$modules/gm'
 import type { NormalRankingItem } from '$modules/rec-services/hot/ranking/api.normal-category'
 import {
   RANKING_CATEGORIES_MAP,
@@ -123,11 +124,7 @@ export function RankingNumMark({ item }: { item: RankingItemExtend }) {
                     key: x.bvid,
                     label: x.title,
                     onClick() {
-                      GM.openInTab(new URL(`/video/${x.bvid}`, location.href).href, {
-                        active: true,
-                        insert: true,
-                        setParent: true,
-                      })
+                      openNewTab(new URL(`/video/${x.bvid}`, location.href).href)
                     },
                   }
                 }),
