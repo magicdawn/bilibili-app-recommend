@@ -296,8 +296,8 @@ export function DynamicFeedUsageInfo() {
       groupItems = followGroups.map((group) => {
         return {
           key: group.tagid,
-          label: '分组 - ' + group.name,
-          icon: <Avatar size={'small'}>{group.name[0]}</Avatar>,
+          label: group.name,
+          icon: <Avatar size={'small'}>组</Avatar>,
           onClick() {
             onSelect({ ...clearPayload, selectedFollowGroup: structuredClone({ ...group }) })
           },

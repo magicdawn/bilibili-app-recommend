@@ -127,7 +127,15 @@ export function TabPaneVideoSourceTabConfig() {
                 <CheckboxSettingItem
                   configKey='enableFollowGroupFilterForDynamicFeed'
                   label='启用分组筛选'
-                  tooltip='动态筛选里加入分组: 目前基于全部动态 + 分组UP过滤, 速度较慢~'
+                  tooltip={
+                    <>
+                      动态筛选里加入分组
+                      <br />
+                      目前基于全部动态 + 分组UP过滤, 速度较慢~
+                      <br />
+                      且貌似只能拉取最近一个月的动态数据
+                    </>
+                  }
                 />
               </Space>
             </div>
