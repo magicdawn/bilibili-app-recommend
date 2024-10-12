@@ -22,7 +22,11 @@ export const createServiceMap = {
   [ETab.RecommendPc]: () => new PcRecService(false),
   [ETab.KeepFollowOnly]: () => new PcRecService(true),
   [ETab.DynamicFeed]: () =>
-    new DynamicFeedRecService(dynamicFeedFilterStore.upMid, dynamicFeedFilterStore.searchText),
+    new DynamicFeedRecService(
+      dynamicFeedFilterStore.upMid,
+      dynamicFeedFilterStore.searchText,
+      dynamicFeedFilterStore.selectedFollowGroup?.tagid,
+    ),
   [ETab.Watchlater]: (options) => new WatchLaterRecService(options?.watchlaterKeepOrder),
   [ETab.Fav]: () => new FavRecService(),
   [ETab.Hot]: () => new HotRecService(),

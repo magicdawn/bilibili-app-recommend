@@ -64,7 +64,7 @@ export function TabPaneVideoSourceTabConfig() {
           >
             <div
               css={css`
-                order: ${sortedTabKeys.indexOf('watchlater') + 1};
+                order: ${sortedTabKeys.indexOf(ETab.Watchlater) + 1};
               `}
             >
               <div className={styles.settingsGroupSubTitle}>
@@ -90,7 +90,7 @@ export function TabPaneVideoSourceTabConfig() {
 
             <div
               css={css`
-                order: ${sortedTabKeys.indexOf('fav') + 1};
+                order: ${sortedTabKeys.indexOf(ETab.Fav) + 1};
               `}
             >
               <div className={styles.settingsGroupSubTitle}>
@@ -110,6 +110,24 @@ export function TabPaneVideoSourceTabConfig() {
                   css={css`
                     margin-left: 20px !important;
                   `}
+                />
+              </Space>
+            </div>
+
+            <div
+              css={css`
+                order: ${sortedTabKeys.indexOf(ETab.DynamicFeed) + 1};
+              `}
+            >
+              <div className={styles.settingsGroupSubTitle}>
+                <TabIcon tabKey={ETab.DynamicFeed} mr={5} mt={-2} />
+                动态
+              </div>
+              <Space size={10}>
+                <CheckboxSettingItem
+                  configKey='enableFollowGroupFilterForDynamicFeed'
+                  label='启用分组筛选'
+                  tooltip='动态筛选里加入分组: 目前基于全部动态 + 分组UP过滤, 速度较慢~'
                 />
               </Space>
             </div>
