@@ -3,10 +3,12 @@
  */
 
 import { HOST_API } from '$common'
+import { request } from '$request'
 import axios from 'axios'
 import dayjs from 'dayjs'
 import md5 from 'md5'
 import ms from 'ms'
+import { getUid } from './cookie'
 
 const mixinKeyEncTab = [
   46, 47, 18, 2, 53, 8, 23, 32, 15, 50, 10, 31, 58, 3, 45, 35, 27, 43, 5, 49, 33, 9, 42, 19, 29, 28,
@@ -52,11 +54,10 @@ type Keys = { img_key: string; sub_key: string }
 let keysCache: Keys | undefined
 let keysCacheTs: number | undefined
 let keysCacheDate: string | undefined
+const genDate = () => dayjs().format('YYYYMMDD')
 
 // 获取最新的 img_key 和 sub_key
 async function getWbiKeys(): Promise<Keys> {
-  const genDate = () => dayjs().format('YYYYMMDD')
-
   const shouldReuse =
     keysCache &&
     keysCacheTs &&
@@ -89,3 +90,41 @@ async function getWbiKeys(): Promise<Keys> {
 // encWbi({ foo: '114', bar: '514', baz: 1919810 }).then((val) => {
 //   console.log(111, val)
 // })
+
+/**
+ * https://github.com/SocialSisterYi/bilibili-API-collect/discussions/1104
+ */
+
+let lastAccessId = ''
+let lastAccessIdKey = ''
+
+export async function getWwebId(): Promise<string | undefined> {
+  if (lastAccessId && lastAccessIdKey === genDate()) {
+    return lastAccessId
+  }
+
+  const mid = getUid()
+  if (!mid) return
+
+  const spacePageUrl = `https://space.bilibili.com/${mid}`
+  const res = await request.get(spacePageUrl, {
+    responseType: 'text',
+    withCredentials: true,
+  })
+  const html = res.data
+  const parser = new DOMParser()
+  const parsed = parser.parseFromString(html, 'text/html')
+
+  const jsonText = decodeURIComponent(
+    parsed.getElementById('__RENDER_DATA__')?.innerText.trim() || '',
+  )
+  if (!jsonText) return
+
+  const id = (JSON.parse(jsonText) as any)?.access_id
+  if (id) {
+    lastAccessId = id
+    lastAccessIdKey = genDate()
+  }
+
+  return id
+}

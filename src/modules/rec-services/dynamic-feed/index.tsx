@@ -7,8 +7,9 @@ import { type DynamicFeedItemExtend, type DynamicFeedJson } from '$define'
 import { EApiType } from '$define/index.shared'
 import { IconPark } from '$modules/icon/icon-park'
 import type { DynamicPortalUp } from '$modules/rec-services/dynamic-feed/portal'
+import { settings, useSettingsSnapshot } from '$modules/settings'
 import { isWebApiSuccess, request } from '$request'
-import { setPageTitle, toast } from '$utility'
+import { getUid, setPageTitle, toast, whenIdle } from '$utility'
 import { getAvatarSrc } from '$utility/image'
 import type { AntdMenuItemType } from '$utility/type'
 import { proxySetWithGmStorage } from '$utility/valtio'
@@ -19,6 +20,8 @@ import ms from 'ms'
 import { subscribeKey } from 'valtio/utils'
 import type { IService } from '../_base'
 import { usePopupContainer } from '../_base'
+import { getAllFollowGroups, getFollowGroupContent } from './group'
+import type { FollowGroup } from './group/groups'
 import { getRecentUpdateUpList } from './portal-api'
 
 export class DynamicFeedRecService implements IService {
@@ -27,12 +30,23 @@ export class DynamicFeedRecService implements IService {
   offset: string = ''
   page = 0 // pages loaded
   hasMore = true
+
   upMid: UpMidType | undefined
   searchText: string | undefined
+  followGroupTagid: number | undefined
 
-  constructor(upMid?: number, searchText?: string) {
+  constructor(upMid?: number, searchText?: string, followGroupTagid?: number) {
     this.upMid = upMid
     this.searchText = searchText
+    this.followGroupTagid = followGroupTagid
+  }
+
+  private followGroupMids = new Set<number>()
+  async loadFollowGroupMids() {
+    if (!this.followGroupTagid) return
+    if (this.followGroupMids.size) return
+    const mids = await getFollowGroupContent(this.followGroupTagid!)
+    this.followGroupMids = new Set(mids)
   }
 
   async loadMore(signal: AbortSignal | undefined = undefined) {
@@ -73,13 +87,22 @@ export class DynamicFeedRecService implements IService {
     this.hasMore = json.data.has_more
     this.offset = json.data.offset
 
+    // ensure mids loaded
+    await this.loadFollowGroupMids()
+
     const arr = json.data.items
     const items: DynamicFeedItemExtend[] = arr
-      .filter((it) => it.type === 'DYNAMIC_TYPE_AV') // 处理不了别的类型
-      .filter((it) => {
+      .filter((x) => x.type === 'DYNAMIC_TYPE_AV') // 处理不了别的类型
+      .filter((x) => {
         if (!this.searchText) return true
-        const title = it?.modules?.module_dynamic?.major?.archive?.title || ''
+        const title = x?.modules?.module_dynamic?.major?.archive?.title || ''
         return title.includes(this.searchText)
+      })
+      .filter((x) => {
+        if (!this.followGroupTagid) return true
+        if (!this.followGroupMids.size) return true
+        const mid = x?.modules?.module_author?.mid
+        return mid && this.followGroupMids.has(mid)
       })
       .map((item) => {
         return {
@@ -142,11 +165,17 @@ if (QUERY_DYNAMIC_UP_MID) {
 type UpMidType = number
 
 export const dynamicFeedFilterStore = proxy({
+  searchText: undefined as string | undefined,
+
   upMid: upMidInitial as UpMidType | undefined,
   upName: upNameInitial as string | undefined,
-  searchText: undefined as string | undefined,
   upList: [] as DynamicPortalUp[],
   upListUpdatedAt: 0,
+
+  selectedFollowGroup: undefined as FollowGroup | undefined,
+  followGroups: [] as FollowGroup[],
+  followGroupsUpdatedAt: 0,
+
   get hasSelectedUp(): boolean {
     return !!(this.upName && this.upMid)
   },
@@ -164,15 +193,19 @@ if (QUERY_DYNAMIC_UP_MID) {
   })
 }
 
-setTimeout(() => {
+setTimeout(async () => {
   if (!IN_BILIBILI_HOMEPAGE) return
-
   if (!store.upList.length) {
-    requestIdleCallback(() => {
-      updateUpList()
-    })
+    await whenIdle()
+    updateFilterData()
   }
 }, ms('5s'))
+
+async function updateFilterData() {
+  // not logined
+  if (!getUid()) return
+  return Promise.all([updateUpList(), updateFollowGroups()])
+}
 
 async function updateUpList(force = false) {
   const cacheHit =
@@ -187,6 +220,21 @@ async function updateUpList(force = false) {
   store.upListUpdatedAt = Date.now()
 }
 
+async function updateFollowGroups(force = false) {
+  if (!settings.enableFollowGroupFilterForDynamicFeed) return
+
+  const cacheHit =
+    !force &&
+    store.followGroups.length &&
+    store.followGroupsUpdatedAt &&
+    store.followGroupsUpdatedAt - Date.now() < ms('1h')
+  if (cacheHit) return
+
+  const groups = await getAllFollowGroups()
+  store.followGroups = groups.filter((x) => !!x.count)
+  store.followGroupsUpdatedAt = Date.now()
+}
+
 export function dynamicFeedFilterSelectUp(payload: Partial<typeof store>) {
   Object.assign(store, payload)
   // 选择了 up, 去除红点
@@ -196,11 +244,27 @@ export function dynamicFeedFilterSelectUp(payload: Partial<typeof store>) {
   }
 }
 
+const clearPayload: Partial<typeof store> = {
+  upMid: undefined,
+  upName: undefined,
+  searchText: undefined,
+  selectedFollowGroup: undefined,
+}
+
 export function DynamicFeedUsageInfo() {
   const { ref, getPopupContainer } = usePopupContainer()
   const onRefresh = useOnRefreshContext()
+  const { enableFollowGroupFilterForDynamicFeed } = useSettingsSnapshot()
 
-  const { hasSelectedUp, upName, upMid, upList, hasChargeOnlyVideoUpSet } = useSnapshot(store)
+  const {
+    hasSelectedUp,
+    upName,
+    upMid,
+    upList,
+    hasChargeOnlyVideoUpSet,
+    followGroups,
+    selectedFollowGroup,
+  } = useSnapshot(store)
   const hasChargeOnlyVideo = useMemo(
     () => !!upMid && !!hasChargeOnlyVideoUpSet.has(upMid),
     [hasChargeOnlyVideoUpSet, upMid],
@@ -208,7 +272,7 @@ export function DynamicFeedUsageInfo() {
 
   // try update on mount
   useMount(() => {
-    updateUpList()
+    updateFilterData()
   })
 
   const onSelect = useMemoizedFn(async (payload: Partial<typeof store>) => {
@@ -218,7 +282,7 @@ export function DynamicFeedUsageInfo() {
   })
 
   const onClear = useMemoizedFn(() => {
-    onSelect({ upMid: undefined, upName: undefined, searchText: undefined })
+    onSelect({ ...clearPayload })
   })
 
   const menuItems = useMemo((): AntdMenuItemType[] => {
@@ -227,6 +291,20 @@ export function DynamicFeedUsageInfo() {
       icon: <Avatar size={'small'}>全</Avatar>,
       label: '全部',
       onClick: onClear,
+    }
+
+    let groupItems: AntdMenuItemType[] = []
+    if (enableFollowGroupFilterForDynamicFeed) {
+      groupItems = followGroups.map((group) => {
+        return {
+          key: group.tagid,
+          label: group.name,
+          icon: <Avatar size={'small'}>组</Avatar>,
+          onClick() {
+            onSelect({ ...clearPayload, selectedFollowGroup: structuredClone({ ...group }) })
+          },
+        }
+      })
     }
 
     function mapName(name: string) {
@@ -240,7 +318,6 @@ export function DynamicFeedUsageInfo() {
 
     // lodash.orderBy order参数只支持 asc | desc
     // see https://github.com/lodash/lodash/pull/3764
-
     const upListSorted = fastSortWithOrders(upList, [
       { prop: (it) => (it.has_update ? 1 : 0), order: 'desc' },
       {
@@ -251,11 +328,6 @@ export function DynamicFeedUsageInfo() {
         },
       },
     ])
-
-    // if (upList.length) {
-    // const _cost = performance.now() - _s
-    // console.log('sorted cost %s ms', _cost.toFixed(2))
-    // }
 
     const items: AntdMenuItemType[] = upListSorted.map((up) => {
       let avatar: ReactNode = <Avatar size={'small'} src={getAvatarSrc(up.face)} />
@@ -282,13 +354,13 @@ export function DynamicFeedUsageInfo() {
           </span>
         ),
         onClick() {
-          onSelect({ upMid: up.mid, upName: up.uname, searchText: undefined })
+          onSelect({ ...clearPayload, upMid: up.mid, upName: up.uname })
         },
       }
     })
 
-    return [itemAll, ...items]
-  }, [upList, upList.map((x) => !!x.has_update)])
+    return [itemAll, ...groupItems, ...items]
+  }, [upList, upList.map((x) => !!x.has_update), enableFollowGroupFilterForDynamicFeed])
 
   const flexBreak = (
     <div
@@ -310,10 +382,16 @@ export function DynamicFeedUsageInfo() {
             style: { maxHeight: '60vh', overflowY: 'scroll' },
           }}
         >
-          <Button css={[antdCustomCss.button]}>{upName ? `UP: ${upName}` : '全部'}</Button>
+          <Button css={[antdCustomCss.button]}>
+            {upName
+              ? `UP: ${upName}`
+              : selectedFollowGroup
+                ? `分组 - ${selectedFollowGroup.name}`
+                : '全部'}
+          </Button>
         </Dropdown>
 
-        {hasSelectedUp && (
+        {(hasSelectedUp || selectedFollowGroup) && (
           <Button onClick={onClear} css={[antdCustomCss.button]} className='gap-0'>
             <IconPark name='Return' size={14} style={{ marginRight: 5 }} />
             <span>清除</span>

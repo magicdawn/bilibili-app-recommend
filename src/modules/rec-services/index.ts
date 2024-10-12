@@ -136,11 +136,11 @@ export async function refreshForHome(fetcherOptions: FetcherOptions) {
 export async function refreshForGrid(fetcherOptions: FetcherOptions) {
   let minCount = getColumnCount() * 3 + 1 // 7 * 3-row, 1 screen
 
-  if (
-    fetcherOptions.tab === ETab.DynamicFeed &&
-    fetcherOptions.serviceMap[ETab.DynamicFeed].searchText
-  ) {
-    minCount = 1
+  if (fetcherOptions.tab === ETab.DynamicFeed) {
+    const service = fetcherOptions.serviceMap[ETab.DynamicFeed]
+    if (service.searchText || service.followGroupTagid) {
+      minCount = 1
+    }
   }
 
   return getMinCount(minCount, fetcherOptions, 5)
