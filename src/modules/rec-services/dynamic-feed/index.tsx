@@ -9,7 +9,7 @@ import { IconPark } from '$modules/icon/icon-park'
 import type { DynamicPortalUp } from '$modules/rec-services/dynamic-feed/portal'
 import { settings, useSettingsSnapshot } from '$modules/settings'
 import { isWebApiSuccess, request } from '$request'
-import { setPageTitle, toast, whenIdle } from '$utility'
+import { getUid, setPageTitle, toast, whenIdle } from '$utility'
 import { getAvatarSrc } from '$utility/image'
 import type { AntdMenuItemType } from '$utility/type'
 import { proxySetWithGmStorage } from '$utility/valtio'
@@ -202,6 +202,8 @@ setTimeout(async () => {
 }, ms('5s'))
 
 async function updateFilterData() {
+  // not logined
+  if (!getUid()) return
   return Promise.all([updateUpList(), updateFollowGroups()])
 }
 
