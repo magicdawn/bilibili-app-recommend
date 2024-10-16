@@ -1,13 +1,13 @@
+import type { OnRefreshOptions } from '$components/RecGrid/useRefresh'
 import { ETab } from '$components/RecHeader/tab-enum'
-import type { IService } from '$modules/rec-services/_base'
-import { DynamicFeedRecService, dynamicFeedFilterStore } from '$modules/rec-services/dynamic-feed'
-import { FavRecService } from '$modules/rec-services/fav'
-import { HotRecService } from '$modules/rec-services/hot'
-import { LiveRecService } from '$modules/rec-services/live'
-import { PcRecService } from '$modules/rec-services/pc'
-import { WatchLaterRecService } from '$modules/rec-services/watchlater'
-import type { OnRefreshOptions } from '../../components/RecGrid/useRefresh'
+import type { IService } from './_base'
 import { AppRecService } from './app'
+import { DynamicFeedRecService, dynamicFeedFilterStore } from './dynamic-feed'
+import { FavRecService } from './fav'
+import { HotRecService } from './hot'
+import { LiveRecService } from './live'
+import { PcRecService } from './pc'
+import { WatchLaterRecService } from './watchlater'
 
 export const REC_TABS = [ETab.KeepFollowOnly, ETab.RecommendPc, ETab.RecommendApp] satisfies ETab[]
 

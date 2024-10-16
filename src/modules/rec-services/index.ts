@@ -5,10 +5,10 @@ import { anyFilterEnabled, filterRecItems } from '$components/VideoCard/process/
 import { lookinto } from '$components/VideoCard/process/normalize'
 import type { RecItemTypeOrSeparator } from '$define'
 import { EApiType } from '$define/index.shared'
-import { getIService, REC_TABS, type FetcherOptions } from '$modules/rec-services/service-map'
 import { uniqBy } from 'lodash'
 import { AppRecService } from './app'
 import { PcRecService } from './pc'
+import { getIService, REC_TABS, type FetcherOptions } from './service-map'
 
 const debug = baseDebug.extend('service')
 
@@ -37,7 +37,7 @@ export function concatThenUniq(
 
 const usePcApi = (tab: ETab) => tab === ETab.KeepFollowOnly || tab === ETab.RecommendPc
 
-async function getMinCount(count: number, fetcherOptions: FetcherOptions, filterMultiplier = 5) {
+async function fetchMinCount(count: number, fetcherOptions: FetcherOptions, filterMultiplier = 5) {
   const { tab, abortSignal, serviceMap } = fetcherOptions
 
   let items: RecItemTypeOrSeparator[] = []
@@ -126,7 +126,7 @@ async function getMinCount(count: number, fetcherOptions: FetcherOptions, filter
 }
 
 export async function refreshForHome(fetcherOptions: FetcherOptions) {
-  let items = await getMinCount(getColumnCount(undefined, false) * 2, fetcherOptions, 5) // 7 * 2-row
+  let items = await fetchMinCount(getColumnCount(undefined, false) * 2, fetcherOptions, 5) // 7 * 2-row
   if (fetcherOptions.tab === ETab.Watchlater) {
     items = items.slice(0, 20)
   }
@@ -143,5 +143,5 @@ export async function refreshForGrid(fetcherOptions: FetcherOptions) {
     }
   }
 
-  return getMinCount(minCount, fetcherOptions, 5)
+  return fetchMinCount(minCount, fetcherOptions, 5)
 }
