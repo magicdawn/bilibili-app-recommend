@@ -5,7 +5,7 @@ import { EAppApiDevice } from '$define/index.shared'
 import { toast } from '$utility/toast'
 import { pick } from 'lodash'
 import { proxy, snapshot, subscribe, useSnapshot } from 'valtio'
-import { saveToDraft } from './backup'
+import { saveToDraft } from './cloud-backup'
 
 export const initialSettings = {
   accessKey: '',

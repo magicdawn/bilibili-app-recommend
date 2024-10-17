@@ -19,4 +19,9 @@ declare global {
     /** tampermonkey only, https://www.tampermonkey.net/documentation.php?locale=en#api:GM_openInTab */
     setParent?: boolean
   }
+
+  interface VMScriptGMObjectVMExtensions {
+    download: (url: string, name: string) => Promise<Blob> | void
+    download: (options: VMScriptGMDownloadOptions) => Promise<Blob> | void
+  }
 }

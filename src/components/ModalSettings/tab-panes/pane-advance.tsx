@@ -9,10 +9,15 @@ import {
   updateSettings,
   useSettingsSnapshot,
 } from '$modules/settings'
+import { exportSettings, importSettings } from '$modules/settings/file-backup'
 import { articleDraft, restoreOmitKeys } from '$modules/settings/index.shared'
+import { AntdTooltip } from '$ui-components/antd-custom'
 import { AntdMessage } from '$utility'
-import { Button, Popconfirm, Slider } from 'antd'
+import { Button, Popconfirm, Slider, Space } from 'antd'
 import { omit, pick } from 'lodash'
+import TablerFileExport from '~icons/tabler/file-export'
+import TablerFileImport from '~icons/tabler/file-import'
+import TablerRestore from '~icons/tabler/restore'
 import styles from '../index.module.scss'
 import { set_HAS_RESTORED_SETTINGS, toastAndReload } from '../index.shared'
 import { ResetPartialSettingsButton, SettingsGroup } from './_shared'
@@ -42,15 +47,33 @@ export function TabPaneAdvance() {
   return (
     <div className={styles.tabPane}>
       <SettingsGroup title='设置项'>
-        <Popconfirm
-          title='确定'
-          description='确定恢复默认设置? 该操作不可逆!'
-          onConfirm={onResetSettings}
-        >
-          <Button danger type='primary'>
-            恢复默认设置
-          </Button>
-        </Popconfirm>
+        <Space size={20}>
+          <Popconfirm
+            title='确定'
+            description='确定恢复默认设置? 该操作不可逆!'
+            onConfirm={onResetSettings}
+          >
+            <Button danger type='primary'>
+              <TablerRestore />
+              恢复默认设置
+            </Button>
+          </Popconfirm>
+
+          <Space size={5}>
+            <AntdTooltip title='导出所有设置项到文件中, 包含 access_key 等数据'>
+              <Button onClick={() => exportSettings()}>
+                <TablerFileExport />
+                导出设置
+              </Button>
+            </AntdTooltip>
+            <AntdTooltip title='从文件中导入设置项, 将覆盖当前设置, 该操作不可逆!'>
+              <Button onClick={() => importSettings()}>
+                <TablerFileImport />
+                导入设置
+              </Button>
+            </AntdTooltip>
+          </Space>
+        </Space>
       </SettingsGroup>
 
       <SettingsGroup title='备份/恢复'>
@@ -81,6 +104,7 @@ export function TabPaneAdvance() {
           onConfirm={onRestoreSettings}
         >
           <Button danger type='primary'>
+            <TablerRestore />
             从专栏草稿箱中恢复
           </Button>
         </Popconfirm>

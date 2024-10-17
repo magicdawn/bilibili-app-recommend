@@ -7,8 +7,8 @@ export function set_HAS_RESTORED_SETTINGS(val: boolean) {
   HAS_RESTORED_SETTINGS = val
 }
 
-export async function toastAndReload() {
-  AntdMessage.info('即将刷新网页')
+export async function toastAndReload(msg = '即将刷新网页!') {
+  AntdMessage.info(msg)
   await delay(500)
   location.reload()
 }
