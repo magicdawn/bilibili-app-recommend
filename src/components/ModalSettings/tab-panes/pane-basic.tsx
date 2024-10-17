@@ -89,7 +89,7 @@ export function TabPaneBasic() {
                 P.S 之前版本称 (纯推荐模式)
               </>
             }
-            extraAction={toastAndReload}
+            extraAction={() => toastAndReload()}
           />
 
           <CheckboxSettingItem
