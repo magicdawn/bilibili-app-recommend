@@ -7,6 +7,7 @@ import type { RecItemTypeOrSeparator } from '$define'
 import { EApiType } from '$define/index.shared'
 import { uniqBy } from 'lodash'
 import { AppRecService } from './app'
+import { dynamicFeedFilterStore, DynamicFeedVideoType } from './dynamic-feed'
 import { PcRecService } from './pc'
 import { getIService, REC_TABS, type FetcherOptions } from './service-map'
 
@@ -136,9 +137,15 @@ export async function refreshForHome(fetcherOptions: FetcherOptions) {
 export async function refreshForGrid(fetcherOptions: FetcherOptions) {
   let minCount = getColumnCount() * 3 + 1 // 7 * 3-row, 1 screen
 
+  // 当结果很少的, 不用等一屏
   if (fetcherOptions.tab === ETab.DynamicFeed) {
     const service = fetcherOptions.serviceMap[ETab.DynamicFeed]
-    if (service.searchText || service.followGroupTagid) {
+    if (
+      service.searchText ||
+      service.followGroupTagid ||
+      (dynamicFeedFilterStore.hasSelectedUp &&
+        dynamicFeedFilterStore.dynamicFeedVideoType === DynamicFeedVideoType.DynamicOnly)
+    ) {
       minCount = 1
     }
   }

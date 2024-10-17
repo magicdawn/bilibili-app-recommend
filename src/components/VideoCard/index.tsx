@@ -46,7 +46,7 @@ import { getFollowedStatus } from './process/filter'
 import type { IVideoCardData } from './process/normalize'
 import { normalizeCardData } from './process/normalize'
 import { StatItemDisplay } from './stat-item'
-import { ChargeOnlyTag, RankingNumMark, getHasChargeOnlyTag } from './top-marks'
+import { ChargeOnlyTag, RankingNumMark, isChargeOnlyVideo } from './top-marks'
 import { useDislikeRelated } from './use/useDislikeRelated'
 import { useOpenRelated } from './use/useOpenRelated'
 import { usePreviewAnimation } from './use/usePreviewAnimation'
@@ -275,7 +275,7 @@ const VideoCardInner = memo(function VideoCardInner({
   })
 
   // 充电专属
-  const hasChargeOnlyTag = getHasChargeOnlyTag(item, recommendReason)
+  const hasChargeOnlyTag = isChargeOnlyVideo(item, recommendReason)
 
   /**
    * 收藏状态

@@ -84,3 +84,11 @@ export const inlineContentHeightResetCss = css`
     vertical-align: top;
   }
 `
+
+export const iconOnlyRoundButtonCss = css`
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  ${flexCenterStyle}
+`

@@ -1,8 +1,8 @@
 import { IN_BILIBILI_HOMEPAGE, REQUEST_FAIL_MSG } from '$common'
-import { antdCustomCss } from '$common/emotion-css'
+import { antdCustomCss, iconOnlyRoundButtonCss } from '$common/emotion-css'
 import { CheckboxSettingItem } from '$components/ModalSettings/setting-item'
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
-import { CHARGE_ONLY_TEXT, getHasChargeOnlyTag } from '$components/VideoCard/top-marks'
+import { CHARGE_ONLY_TEXT, isChargeOnlyVideo } from '$components/VideoCard/top-marks'
 import { type DynamicFeedItemExtend, type DynamicFeedJson } from '$define'
 import { EApiType } from '$define/index.shared'
 import { IconPark } from '$modules/icon/icon-park'
@@ -13,11 +13,12 @@ import { getUid, setPageTitle, toast, whenIdle } from '$utility'
 import { getAvatarSrc } from '$utility/image'
 import type { AntdMenuItemType } from '$utility/type'
 import { proxySetWithGmStorage } from '$utility/valtio'
-import { Avatar, Badge, Button, Dropdown, Input, Space } from 'antd'
+import { Avatar, Badge, Button, Dropdown, Input, Popover, Radio, Space } from 'antd'
 import delay from 'delay'
 import { fastSortWithOrders } from 'fast-sort-lens'
 import ms from 'ms'
 import { subscribeKey } from 'valtio/utils'
+import TablerFilterSearch from '~icons/tabler/filter-search'
 import type { IService } from '../_base'
 import { usePopupContainer } from '../_base'
 import { getAllFollowGroups, getFollowGroupContent } from './group'
@@ -87,23 +88,57 @@ export class DynamicFeedRecService implements IService {
     this.hasMore = json.data.has_more
     this.offset = json.data.offset
 
-    // ensure mids loaded
+    // ensure current follow-group's mids loaded
     await this.loadFollowGroupMids()
 
     const arr = json.data.items
     const items: DynamicFeedItemExtend[] = arr
       .filter((x) => x.type === 'DYNAMIC_TYPE_AV') // 处理不了别的类型
-      .filter((x) => {
-        if (!this.searchText) return true
-        const title = x?.modules?.module_dynamic?.major?.archive?.title || ''
-        return title.includes(this.searchText)
-      })
+
+      // by 关注分组
       .filter((x) => {
         if (!this.followGroupTagid) return true
         if (!this.followGroupMids.size) return true
         const mid = x?.modules?.module_author?.mid
         return mid && this.followGroupMids.has(mid)
       })
+
+      // by 动态视频|投稿视频
+      .filter((x) => {
+        // only when some up is selected
+        if (!store.hasSelectedUp) return true
+        // all
+        if (store.dynamicFeedVideoType === DynamicFeedVideoType.All) return true
+        // type only
+        const currentLabel = x.modules.module_dynamic.major.archive.badge.text
+        if (store.dynamicFeedVideoType === DynamicFeedVideoType.DynamicOnly) {
+          return currentLabel === '动态视频'
+        }
+        if (store.dynamicFeedVideoType === DynamicFeedVideoType.UploadOnly) {
+          return currentLabel === '投稿视频'
+        }
+        return false
+      })
+
+      // by 充电专属
+      .filter((x) => {
+        // only when some up is selected
+        if (!store.hasSelectedUp) return true
+        if (!settings.hideChargeOnlyDynamicFeedVideos) return true
+        const chargeOnly =
+          (x.modules?.module_dynamic?.major?.archive?.badge?.text as string) === CHARGE_ONLY_TEXT
+        return !chargeOnly
+      })
+
+      // by 关键字搜索
+      .filter((x) => {
+        // only when some up is selected
+        if (!store.hasSelectedUp) return true
+        if (!this.searchText) return true
+        const title = x?.modules?.module_dynamic?.major?.archive?.title || ''
+        return title.includes(this.searchText)
+      })
+
       .map((item) => {
         return {
           ...item,
@@ -135,7 +170,7 @@ export class DynamicFeedRecService implements IService {
       store.hasSelectedUp &&
       this.upMid &&
       !store.hasChargeOnlyVideoUpSet.has(this.upMid) &&
-      items.some((x) => getHasChargeOnlyTag(x))
+      items.some((x) => isChargeOnlyVideo(x))
     ) {
       store.hasChargeOnlyVideoUpSet.add(this.upMid)
     }
@@ -164,6 +199,18 @@ if (QUERY_DYNAMIC_UP_MID) {
 
 type UpMidType = number
 
+export enum DynamicFeedVideoType {
+  All = 'all',
+  UploadOnly = 'upload-only',
+  DynamicOnly = 'dynamic-only',
+}
+
+const DynamicFeedVideoTypeLabel: Record<DynamicFeedVideoType, string> = {
+  [DynamicFeedVideoType.All]: '全部',
+  [DynamicFeedVideoType.UploadOnly]: '仅投稿视频',
+  [DynamicFeedVideoType.DynamicOnly]: '仅动态视频',
+}
+
 export const dynamicFeedFilterStore = proxy({
   searchText: undefined as string | undefined,
 
@@ -182,6 +229,8 @@ export const dynamicFeedFilterStore = proxy({
   hasChargeOnlyVideoUpSet: await proxySetWithGmStorage<UpMidType>(
     'dynamic-feed:has-charge-only-video-mids',
   ),
+
+  dynamicFeedVideoType: DynamicFeedVideoType.All,
 })
 
 const store = dynamicFeedFilterStore
@@ -264,6 +313,7 @@ export function DynamicFeedUsageInfo() {
     hasChargeOnlyVideoUpSet,
     followGroups,
     selectedFollowGroup,
+    dynamicFeedVideoType,
   } = useSnapshot(store)
   const hasChargeOnlyVideo = useMemo(
     () => !!upMid && !!hasChargeOnlyVideoUpSet.has(upMid),
@@ -398,38 +448,104 @@ export function DynamicFeedUsageInfo() {
           </Button>
         )}
 
-        {hasSelectedUp && hasChargeOnlyVideo && (
-          <CheckboxSettingItem
-            css={css`
-              margin-left: 5px;
-            `}
-            configKey={'hideChargeOnlyDynamicFeedVideos'}
-            label={`隐藏「${CHARGE_ONLY_TEXT}」`}
-            extraAction={() => onRefresh?.()}
-            tooltip={`隐藏「${CHARGE_ONLY_TEXT}」视频`}
-          />
-        )}
-
         {hasSelectedUp && (
-          <Input.Search
-            style={{ width: 160 }}
-            placeholder='按标题过滤'
-            type='search'
-            autoCorrect='off'
-            autoCapitalize='off'
-            name={`searchText_${upMid}`}
-            // 有自带的历史记录, 何乐而不为
-            // autoComplete='off'
-            autoComplete='on'
-            allowClear
-            onSearch={async (val) => {
-              store.searchText = val || undefined
-              await delay(100)
-              onRefresh?.()
-            }}
-          />
+          <Popover
+            arrow={false}
+            placement='bottomLeft'
+            getPopupContainer={getPopupContainer}
+            // overlayInnerStyle={{ border: `1px solid ${colorPrimaryValue}` }}
+            content={
+              <>
+                <div className='section' css={S.filterSection}>
+                  <div className='title'>视频类型</div>
+                  <div className='content'>
+                    <Radio.Group
+                      buttonStyle='solid'
+                      value={dynamicFeedVideoType}
+                      onChange={async (v) => {
+                        store.dynamicFeedVideoType = v.target.value
+                        await delay(100)
+                        onRefresh?.()
+                      }}
+                    >
+                      {Object.values(DynamicFeedVideoType).map((v) => {
+                        return (
+                          <Radio.Button key={v} value={v}>
+                            {DynamicFeedVideoTypeLabel[v]}
+                          </Radio.Button>
+                        )
+                      })}
+                    </Radio.Group>
+                  </div>
+                </div>
+
+                <div className='section' css={S.filterSection}>
+                  <div className='title'>充电专属</div>
+                  <div className='content'>
+                    <CheckboxSettingItem
+                      css={css`
+                        margin-left: 5px;
+                      `}
+                      configKey={'hideChargeOnlyDynamicFeedVideos'}
+                      label={`隐藏「${CHARGE_ONLY_TEXT}」`}
+                      extraAction={() => onRefresh?.()}
+                      tooltip={`隐藏「${CHARGE_ONLY_TEXT}」视频`}
+                    />
+                  </div>
+                </div>
+
+                {hasSelectedUp && (
+                  <div className='section' css={S.filterSection}>
+                    <div className='title'>搜索</div>
+                    <div className='content'>
+                      <Input.Search
+                        style={{ width: 280 }}
+                        placeholder='按标题过滤'
+                        type='search'
+                        autoCorrect='off'
+                        autoCapitalize='off'
+                        name={`searchText_${upMid}`}
+                        // 有自带的历史记录, 何乐而不为
+                        // autoComplete='off'
+                        autoComplete='on'
+                        allowClear
+                        onSearch={async (val) => {
+                          store.searchText = val || undefined
+                          await delay(100)
+                          onRefresh?.()
+                        }}
+                      />
+                    </div>
+                  </div>
+                )}
+              </>
+            }
+          >
+            <Button css={iconOnlyRoundButtonCss}>
+              <TablerFilterSearch />
+            </Button>
+          </Popover>
         )}
       </Space>
     </>
   )
+}
+
+const S = {
+  filterSection: css`
+    width: 300px;
+    margin-top: 10px;
+    &:first-child {
+      margin-top: 0;
+    }
+
+    .title {
+      padding: 5px 0;
+      padding-left: 6px;
+      font-size: 20px;
+    }
+    .content {
+      /* margin-top: 5px; */
+    }
+  `,
 }

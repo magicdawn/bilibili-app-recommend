@@ -1,6 +1,5 @@
 import { baseDebug } from '$common'
-// import { useSticky } from 'react-use-sticky'
-import { antdCustomCss, flexCenterStyle } from '$common/emotion-css'
+import { antdCustomCss, iconOnlyRoundButtonCss } from '$common/emotion-css'
 import { useSizeExpression } from '$common/hooks/useResizeObserverExpression'
 import { useSticky } from '$common/hooks/useSticky'
 import { borderColorValue } from '$components/ModalSettings/theme.shared'
@@ -24,13 +23,6 @@ import { ETab } from './tab-enum'
 const debug = baseDebug.extend('RecHeader')
 
 const S = {
-  configBtn: css`
-    padding: 0;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    ${flexCenterStyle}
-  `,
   leftright: css`
     height: 100%;
     display: flex;
@@ -183,7 +175,7 @@ export const RecHeader = forwardRef<
 
                 {!accessKey && showAccessKeyManage && <AccessKeyManage style={{ marginLeft: 5 }} />}
 
-                <Button onClick={showModalSettings} css={S.configBtn}>
+                <Button onClick={showModalSettings} css={iconOnlyRoundButtonCss}>
                   <ConfigIcon {...size(14)} />
                 </Button>
 

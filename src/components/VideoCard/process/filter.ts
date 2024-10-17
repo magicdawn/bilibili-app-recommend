@@ -6,7 +6,6 @@ import { dynamicFeedFilterStore } from '$modules/rec-services/dynamic-feed'
 import { isNormalRankingItem } from '$modules/rec-services/hot/ranking/category'
 import { getSettingsSnapshot, settings } from '$modules/settings'
 import { blacklistMids } from '$modules/user/relations/blacklist'
-import { CHARGE_ONLY_TEXT } from '../top-marks'
 import { normalizeCardData } from './normalize'
 
 const debug = baseDebug.extend('VideoCard:filter')
@@ -186,21 +185,6 @@ export function filterRecItems(items: RecItemTypeOrSeparator[], tab: ETab) {
     // Fav = 'fav',
     if (shouldEnableCommonChecks(tab)) {
       if (commonChecks() === false) {
-        return false
-      }
-    }
-
-    // 动态过滤
-    if (
-      tab === ETab.DynamicFeed &&
-      dynamicFeedFilterStore.hasSelectedUp &&
-      settings.hideChargeOnlyDynamicFeedVideos
-    ) {
-      if (recommendReason === CHARGE_ONLY_TEXT) {
-        debug('filter out by dynamic-feed:hide-charge-only-rule: %s %o', recommendReason, {
-          bvid,
-          title,
-        })
         return false
       }
     }
