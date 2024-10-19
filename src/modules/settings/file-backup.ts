@@ -1,11 +1,11 @@
 import { APP_NAME } from '$common'
-import { set_HAS_RESTORED_SETTINGS, toastAndReload } from '$components/ModalSettings/index.shared'
-import { AntdMessage } from '$utility'
-import { toast } from '$utility/toast'
+import { toastAndReload } from '$components/ModalSettings/index.shared'
+import { AntdMessage, toast } from '$utility'
 import dayjs from 'dayjs'
 import { pick } from 'lodash'
 import { tryit } from 'radash'
-import { allowedSettingsKeys, getSettingsSnapshot, updateSettings } from '.'
+import { allowedSettingsKeys, getSettingsSnapshot, updateSettings } from './index'
+import { set_HAS_RESTORED_SETTINGS } from './restore-flag'
 
 let lastUrl: string | undefined
 function genUrl() {
@@ -36,7 +36,7 @@ export async function exportSettings() {
 }
 
 export async function importSettings() {
-  const file = await selectFile('.json')
+  const file = await chooseSingleJsonFile()
   if (!file) return
 
   const text = await file.text()
@@ -61,12 +61,18 @@ export async function importSettings() {
   return toastAndReload()
 }
 
-function selectFile(accept: string = '*') {
+function chooseSingleJsonFile() {
+  return chooseFile({
+    accept: '.json',
+    multiple: false,
+  })
+}
+
+function chooseFile(options: Partial<HTMLInputElement>) {
   return new Promise<File | null>((resolve) => {
     const input = document.createElement('input')
     input.type = 'file'
-    input.accept = accept
-    input.multiple = false
+    Object.assign(input, options)
     input.addEventListener('change', () => {
       resolve(input.files?.[0] || null)
     })

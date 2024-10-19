@@ -18,8 +18,9 @@ import { omit, pick } from 'lodash'
 import TablerFileExport from '~icons/tabler/file-export'
 import TablerFileImport from '~icons/tabler/file-import'
 import TablerRestore from '~icons/tabler/restore'
+import { set_HAS_RESTORED_SETTINGS } from '../../../modules/settings/restore-flag'
 import styles from '../index.module.scss'
-import { set_HAS_RESTORED_SETTINGS, toastAndReload } from '../index.shared'
+import { toastAndReload } from '../index.shared'
 import { ResetPartialSettingsButton, SettingsGroup } from './_shared'
 
 function onResetSettings() {

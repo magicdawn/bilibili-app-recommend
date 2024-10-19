@@ -1,4 +1,4 @@
-import { HAS_RESTORED_SETTINGS } from '$components/ModalSettings/index.shared'
+import { HAS_RESTORED_SETTINGS } from '$modules/settings/restore-flag'
 import { isEqual, omit, throttle } from 'lodash'
 import ms from 'ms'
 import type { Settings } from '.'
