@@ -1,8 +1,8 @@
-import { HAS_RESTORED_SETTINGS } from '$modules/settings/restore-flag'
 import { isEqual, omit, throttle } from 'lodash'
 import ms from 'ms'
 import type { Settings } from '.'
 import { articleDraft, backupOmitKeys, debug } from './index.shared'
+import { HAS_RESTORED_SETTINGS } from './restore-flag'
 
 let lastBackupVal: Partial<Settings> | undefined
 const setDataThrottled = throttle(articleDraft.setData, ms('5s'))
