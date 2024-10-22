@@ -1,6 +1,7 @@
 import { IN_BILIBILI_HOMEPAGE, REQUEST_FAIL_MSG } from '$common'
 import { antdCustomCss, iconOnlyRoundButtonCss } from '$common/emotion-css'
 import { CheckboxSettingItem } from '$components/ModalSettings/setting-item'
+import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
 import { CHARGE_ONLY_TEXT, isChargeOnlyVideo } from '$components/VideoCard/top-marks'
 import { type DynamicFeedItemExtend, type DynamicFeedJson } from '$define'
@@ -18,7 +19,8 @@ import delay from 'delay'
 import { fastSortWithOrders } from 'fast-sort-lens'
 import ms from 'ms'
 import { subscribeKey } from 'valtio/utils'
-import TablerFilterSearch from '~icons/tabler/filter-search'
+import TablerFilter from '~icons/tabler/filter'
+import TablerFilterCheck from '~icons/tabler/filter-check'
 import type { IService } from '../_base'
 import { usePopupContainer } from '../_base'
 import { getAllFollowGroups, getFollowGroupContent } from './group'
@@ -34,7 +36,7 @@ export class DynamicFeedRecService implements IService {
 
   upMid: UpMidType | undefined
   searchText: string | undefined
-  followGroupTagid: number | undefined
+  followGroupTagid: number | undefined // 默认分组是 0
 
   constructor(upMid?: number, searchText?: string, followGroupTagid?: number) {
     this.upMid = upMid
@@ -44,7 +46,7 @@ export class DynamicFeedRecService implements IService {
 
   private followGroupMids = new Set<number>()
   async loadFollowGroupMids() {
-    if (!this.followGroupTagid) return
+    if (typeof this.followGroupTagid !== 'number') return
     if (this.followGroupMids.size) return
     const mids = await getFollowGroupContent(this.followGroupTagid!)
     this.followGroupMids = new Set(mids)
@@ -97,7 +99,7 @@ export class DynamicFeedRecService implements IService {
 
       // by 关注分组
       .filter((x) => {
-        if (!this.followGroupTagid) return true
+        if (typeof this.followGroupTagid !== 'number') return true
         if (!this.followGroupMids.size) return true
         const mid = x?.modules?.module_author?.mid
         return mid && this.followGroupMids.has(mid)
@@ -105,8 +107,8 @@ export class DynamicFeedRecService implements IService {
 
       // by 动态视频|投稿视频
       .filter((x) => {
-        // only when some up is selected
-        if (!store.hasSelectedUp) return true
+        // only when the filter UI visible
+        if (!store.showFilter) return true
         // all
         if (store.dynamicFeedVideoType === DynamicFeedVideoType.All) return true
         // type only
@@ -122,8 +124,8 @@ export class DynamicFeedRecService implements IService {
 
       // by 充电专属
       .filter((x) => {
-        // only when some up is selected
-        if (!store.hasSelectedUp) return true
+        // only when the filter UI visible
+        if (!store.showFilter) return true
         if (!settings.hideChargeOnlyDynamicFeedVideos) return true
         const chargeOnly =
           (x.modules?.module_dynamic?.major?.archive?.badge?.text as string) === CHARGE_ONLY_TEXT
@@ -132,8 +134,8 @@ export class DynamicFeedRecService implements IService {
 
       // by 关键字搜索
       .filter((x) => {
-        // only when some up is selected
-        if (!store.hasSelectedUp) return true
+        // only when the filter UI visible
+        if (!store.showFilter) return true
         if (!this.searchText) return true
         const title = x?.modules?.module_dynamic?.major?.archive?.title || ''
         return title.includes(this.searchText)
@@ -231,6 +233,11 @@ export const dynamicFeedFilterStore = proxy({
   ),
 
   dynamicFeedVideoType: DynamicFeedVideoType.All,
+
+  // 展示 filter
+  get showFilter() {
+    return this.hasSelectedUp || !!this.selectedFollowGroup
+  },
 })
 
 const store = dynamicFeedFilterStore
@@ -303,8 +310,9 @@ const clearPayload: Partial<typeof store> = {
 export function DynamicFeedUsageInfo() {
   const { ref, getPopupContainer } = usePopupContainer()
   const onRefresh = useOnRefreshContext()
-  const { enableFollowGroupFilterForDynamicFeed } = useSettingsSnapshot()
 
+  const { enableFollowGroupFilterForDynamicFeed, hideChargeOnlyDynamicFeedVideos } =
+    useSettingsSnapshot()
   const {
     hasSelectedUp,
     upName,
@@ -314,11 +322,24 @@ export function DynamicFeedUsageInfo() {
     followGroups,
     selectedFollowGroup,
     dynamicFeedVideoType,
+    showFilter,
+    searchText,
   } = useSnapshot(store)
   const hasChargeOnlyVideo = useMemo(
     () => !!upMid && !!hasChargeOnlyVideoUpSet.has(upMid),
     [hasChargeOnlyVideoUpSet, upMid],
   )
+
+  const showFilterBadge = useMemo(() => {
+    return (
+      showFilter &&
+      !!(
+        dynamicFeedVideoType !== DynamicFeedVideoType.All ||
+        hideChargeOnlyDynamicFeedVideos ||
+        (hasSelectedUp && searchText)
+      )
+    )
+  }, [showFilter, dynamicFeedVideoType, hideChargeOnlyDynamicFeedVideos, hasSelectedUp, searchText])
 
   // try update on mount
   useMount(() => {
@@ -448,12 +469,11 @@ export function DynamicFeedUsageInfo() {
           </Button>
         )}
 
-        {hasSelectedUp && (
+        {showFilter && (
           <Popover
             arrow={false}
             placement='bottomLeft'
             getPopupContainer={getPopupContainer}
-            // overlayInnerStyle={{ border: `1px solid ${colorPrimaryValue}` }}
             content={
               <>
                 <div className='section' css={S.filterSection}>
@@ -521,9 +541,11 @@ export function DynamicFeedUsageInfo() {
               </>
             }
           >
-            <Button css={iconOnlyRoundButtonCss}>
-              <TablerFilterSearch />
-            </Button>
+            <Badge dot={showFilterBadge} color={colorPrimaryValue} offset={[-5, 5]}>
+              <Button css={iconOnlyRoundButtonCss}>
+                {showFilterBadge ? <TablerFilterCheck /> : <TablerFilter />}
+              </Button>
+            </Badge>
           </Popover>
         )}
       </Space>

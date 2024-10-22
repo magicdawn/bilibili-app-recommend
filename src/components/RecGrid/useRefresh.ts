@@ -114,12 +114,11 @@ export function useRefresh({
         let s: DynamicFeedRecService
         if (
           tab === ETab.DynamicFeed
-          // && (s = serviceMap[ETab.DynamicFeed])
-          // &&
+          // 除了 `searchText` / `upMid` / `followGroupTagid` 变化之外, 还有 投稿视频|动态视频 筛选没有记录在 `DynamicFeedRecService`
+          // && (s = serviceMap[ETab.DynamicFeed]) &&
           // (s.searchText !== dynamicFeedFilterStore.searchText ||
           //   s.upMid !== dynamicFeedFilterStore.upMid ||
-          //   s.followGroupTagid !== dynamicFeedFilterStore.selectedFollowGroup?.tagid ||
-          //   true) // true for some fields not recorded in `DynamicFeedRecService`, so always abort existing in `dynamic-feed` same tab refresh
+          //   s.followGroupTagid !== dynamicFeedFilterStore.selectedFollowGroup?.tagid)
         ) {
           debug(
             'refresh(): [start] [refreshing] sametab(%s) but conditions change, abort existing',
