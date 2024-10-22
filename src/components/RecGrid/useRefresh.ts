@@ -4,18 +4,18 @@ import { useCurrentUsingTab } from '$components/RecHeader/tab'
 import { TabConfig } from '$components/RecHeader/tab-config'
 import { type EHotSubTab, ETab } from '$components/RecHeader/tab-enum'
 import type { RecItemTypeOrSeparator } from '$define'
-import { dynamicFeedFilterStore } from '$modules/rec-services/dynamic-feed'
+import { type DynamicFeedRecService } from '$modules/rec-services/dynamic-feed'
 import { hotStore } from '$modules/rec-services/hot'
 import { nextTick } from '$utility'
 import type { Debugger } from 'debug'
 import { createContext } from 'react'
 import {
-  type FetcherOptions,
-  type ServiceMap,
-  type ServiceMapKey,
   createServiceMap,
+  type FetcherOptions,
   getIService,
   isRecTab,
+  type ServiceMap,
+  type ServiceMapKey,
 } from '../../modules/rec-services/service-map'
 import { setGlobalGridItems } from './unsafe-window-export'
 
@@ -111,9 +111,15 @@ export function useRefresh({
       // same tab
       if (tab === refreshFor) {
         // same tab but conditions changed
+        let s: DynamicFeedRecService
         if (
-          tab === ETab.DynamicFeed &&
-          serviceMap[ETab.DynamicFeed].searchText !== dynamicFeedFilterStore.searchText
+          tab === ETab.DynamicFeed
+          // && (s = serviceMap[ETab.DynamicFeed])
+          // &&
+          // (s.searchText !== dynamicFeedFilterStore.searchText ||
+          //   s.upMid !== dynamicFeedFilterStore.upMid ||
+          //   s.followGroupTagid !== dynamicFeedFilterStore.selectedFollowGroup?.tagid ||
+          //   true) // true for some fields not recorded in `DynamicFeedRecService`, so always abort existing in `dynamic-feed` same tab refresh
         ) {
           debug(
             'refresh(): [start] [refreshing] sametab(%s) but conditions change, abort existing',
