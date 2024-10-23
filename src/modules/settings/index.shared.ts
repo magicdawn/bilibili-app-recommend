@@ -23,7 +23,6 @@ export const backupOmitKeys: SettingsKey[] = [
 
   'shuffleForPopularWeekly',
   'anonymousForPopularGeneral',
-  'hideChargeOnlyDynamicFeedVideos',
 ]
 
 export const restoreOmitKeys: SettingsKey[] = [

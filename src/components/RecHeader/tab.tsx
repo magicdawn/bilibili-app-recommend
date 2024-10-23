@@ -1,6 +1,6 @@
 import { flexVerticalCenterStyle } from '$common/emotion-css'
 import { type OnRefresh } from '$components/RecGrid/useRefresh'
-import { QUERY_DYNAMIC_UP_MID } from '$modules/rec-services/dynamic-feed'
+import { QUERY_DYNAMIC_UP_MID } from '$modules/rec-services/dynamic-feed/store'
 import { useSettingsSnapshot } from '$modules/settings'
 import { HelpInfo } from '$ui-components/HelpInfo'
 import { checkLoginStatus, useHasLogined } from '$utility'

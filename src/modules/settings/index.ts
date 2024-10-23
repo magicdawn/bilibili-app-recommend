@@ -64,7 +64,6 @@ export const initialSettings = {
   /**
    * tab=dynamic-feed
    */
-  hideChargeOnlyDynamicFeedVideos: false,
   enableFollowGroupFilterForDynamicFeed: true, // 下拉筛选支持 - 关注分组
 
   /**

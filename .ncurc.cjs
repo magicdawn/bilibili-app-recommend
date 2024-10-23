@@ -6,5 +6,7 @@ module.exports = {
     // 缺少 .ant-btn-variant-outlined.ant-btn-color-default { border-color: #d9d9d9; } 样式
     // 仅 external 情况下会有, 无相关 issue
     'antd',
+
+    'typescript',
   ],
 }

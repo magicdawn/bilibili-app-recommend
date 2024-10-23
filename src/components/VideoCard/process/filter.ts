@@ -2,7 +2,6 @@ import { baseDebug } from '$common'
 import { ETab } from '$components/RecHeader/tab-enum'
 import type { RecItemTypeOrSeparator } from '$define'
 import { EApiType } from '$define/index.shared'
-import { dynamicFeedFilterStore } from '$modules/rec-services/dynamic-feed'
 import { isNormalRankingItem } from '$modules/rec-services/hot/ranking/category'
 import { getSettingsSnapshot, settings } from '$modules/settings'
 import { blacklistMids } from '$modules/user/relations/blacklist'
@@ -45,15 +44,6 @@ export function anyFilterEnabled(tab: ETab) {
     ) {
       return true
     }
-  }
-
-  // 动态过滤
-  if (
-    tab === ETab.DynamicFeed &&
-    dynamicFeedFilterStore.hasSelectedUp &&
-    settings.hideChargeOnlyDynamicFeedVideos
-  ) {
-    return true
   }
 
   return false

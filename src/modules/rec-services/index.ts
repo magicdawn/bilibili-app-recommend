@@ -7,9 +7,9 @@ import type { RecItemTypeOrSeparator } from '$define'
 import { EApiType } from '$define/index.shared'
 import { uniqBy } from 'lodash'
 import { AppRecService } from './app'
-import { dynamicFeedFilterStore, DynamicFeedVideoType } from './dynamic-feed'
+import { DynamicFeedVideoType } from './dynamic-feed/store'
 import { PcRecService } from './pc'
-import { getIService, REC_TABS, type FetcherOptions } from './service-map'
+import { REC_TABS, getIService, type FetcherOptions } from './service-map'
 
 const debug = baseDebug.extend('service')
 
@@ -36,7 +36,8 @@ export function concatThenUniq(
   return uniqBy([...existing, ...newItems], recItemUniqer)
 }
 
-const usePcApi = (tab: ETab) => tab === ETab.KeepFollowOnly || tab === ETab.RecommendPc
+const usePcApi = (tab: ETab): tab is ETab.RecommendPc | ETab.KeepFollowOnly =>
+  tab === ETab.RecommendPc || tab === ETab.KeepFollowOnly
 
 async function fetchMinCount(count: number, fetcherOptions: FetcherOptions, filterMultiplier = 5) {
   const { tab, abortSignal, serviceMap } = fetcherOptions
@@ -139,12 +140,11 @@ export async function refreshForGrid(fetcherOptions: FetcherOptions) {
 
   // 当结果很少的, 不用等一屏
   if (fetcherOptions.tab === ETab.DynamicFeed) {
-    const service = fetcherOptions.serviceMap[ETab.DynamicFeed]
+    const s = fetcherOptions.serviceMap[ETab.DynamicFeed]
     if (
-      service.searchText ||
-      service.followGroupTagid ||
-      (dynamicFeedFilterStore.hasSelectedUp &&
-        dynamicFeedFilterStore.dynamicFeedVideoType === DynamicFeedVideoType.DynamicOnly)
+      s.followGroupTagid || // 选择了分组 & 分组很少更新
+      (s.showFilter &&
+        (s.searchText || s.dynamicFeedVideoType === DynamicFeedVideoType.DynamicOnly)) // 过滤结果可能比较少
     ) {
       minCount = 1
     }

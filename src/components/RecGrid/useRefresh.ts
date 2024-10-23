@@ -2,18 +2,20 @@ import { useRefInit } from '$common/hooks/useRefInit'
 import { useRefStateBox } from '$common/hooks/useRefState'
 import { useCurrentUsingTab } from '$components/RecHeader/tab'
 import { TabConfig } from '$components/RecHeader/tab-config'
-import { type EHotSubTab, ETab } from '$components/RecHeader/tab-enum'
+import { ETab, type EHotSubTab } from '$components/RecHeader/tab-enum'
 import type { RecItemTypeOrSeparator } from '$define'
 import { type DynamicFeedRecService } from '$modules/rec-services/dynamic-feed'
+import { getDfStoreFilterConfig } from '$modules/rec-services/dynamic-feed/store'
 import { hotStore } from '$modules/rec-services/hot'
 import { nextTick } from '$utility'
 import type { Debugger } from 'debug'
+import { isEqual } from 'radash'
 import { createContext } from 'react'
 import {
   createServiceMap,
-  type FetcherOptions,
   getIService,
   isRecTab,
+  type FetcherOptions,
   type ServiceMap,
   type ServiceMapKey,
 } from '../../modules/rec-services/service-map'
@@ -113,12 +115,9 @@ export function useRefresh({
         // same tab but conditions changed
         let s: DynamicFeedRecService
         if (
-          tab === ETab.DynamicFeed
-          // 除了 `searchText` / `upMid` / `followGroupTagid` 变化之外, 还有 投稿视频|动态视频 筛选没有记录在 `DynamicFeedRecService`
-          // && (s = serviceMap[ETab.DynamicFeed]) &&
-          // (s.searchText !== dynamicFeedFilterStore.searchText ||
-          //   s.upMid !== dynamicFeedFilterStore.upMid ||
-          //   s.followGroupTagid !== dynamicFeedFilterStore.selectedFollowGroup?.tagid)
+          tab === ETab.DynamicFeed &&
+          (s = serviceMap[ETab.DynamicFeed]) &&
+          !isEqual(s.filterConfig, getDfStoreFilterConfig())
         ) {
           debug(
             'refresh(): [start] [refreshing] sametab(%s) but conditions change, abort existing',
