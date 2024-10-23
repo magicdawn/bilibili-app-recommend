@@ -8,5 +8,8 @@ module.exports = {
     'antd',
 
     'typescript',
+
+    // https://github.com/pmndrs/valtio/issues/980
+    'valtio',
   ],
 }
