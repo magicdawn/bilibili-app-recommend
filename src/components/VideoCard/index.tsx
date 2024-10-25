@@ -571,6 +571,7 @@ const VideoCardInner = memo(function VideoCardInner({
                   `${item.id}:${item.type}`,
                 )
                 if (success) {
+                  await delay(1000)
                   onRemoveCurrent?.(item, cardData)
                 }
               },

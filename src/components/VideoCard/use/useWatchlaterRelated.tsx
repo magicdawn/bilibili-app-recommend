@@ -86,7 +86,7 @@ export function useWatchlaterRelated({
         if (item.api === EApiType.Watchlater) {
           // when remove-watchlater for watchlater tab, remove this card
           if (!targetState) {
-            await delay(100)
+            await delay(1000)
             onRemoveCurrent?.(item, cardData)
           }
         }

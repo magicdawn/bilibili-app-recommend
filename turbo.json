@@ -12,7 +12,7 @@
         "uno.config.ts",
         "package.json"
       ],
-      "outputs": ["dist/bilibili-app-recommend.mini.user.js"]
+      "outputs": ["dist/*.user.js"]
     },
     "build:vite-raw": {
       "dependsOn": ["build:scss"],
