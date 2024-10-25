@@ -1,23 +1,11 @@
-import { APP_NAME, HOST_APP } from '$common'
-import type { AppRecItem, AppRecItemExtend, AppRecommendJson } from '$define'
+import { HOST_APP } from '$common'
+import type { AppRecItem, AppRecItemExtend } from '$define'
 import type { ipad } from '$define/app-recommend.ipad'
 import { EAppApiDevice } from '$define/index.shared'
 import { settings } from '$modules/settings'
 import { gmrequest } from '$request'
-import { toast } from '$utility/toast'
 import { random, uniqBy } from 'lodash'
-import pretry from 'promise.retry'
 import { QueueStrategy, type IService } from './_base'
-
-class RecReqError extends Error {
-  json: AppRecommendJson
-  constructor(json: AppRecommendJson) {
-    super()
-    this.json = json
-    this.message = json.message || JSON.stringify(json)
-    Error.captureStackTrace(this, RecReqError)
-  }
-}
 
 export class AppRecService implements IService {
   // 无法指定, 16 根据返回得到
@@ -38,6 +26,7 @@ export class AppRecService implements IService {
 
     // /x/feed/index
     const res = await gmrequest.get(HOST_APP + '/x/v2/feed/index', {
+      timeout: 20_000,
       responseType: 'json',
       params: {
         build: '1',
@@ -48,30 +37,20 @@ export class AppRecService implements IService {
     })
     const json = res.data as ipad.AppRecommendJson
 
-    // { "code": -663, "message": "鉴权失败，请联系账号组", "ttl": 1 }
+    // request fail
     if (!json.data) {
-      if (json.code === -663) {
-        throw new RecReqError(json) // throw & retry
-      }
-      // 未知错误, 不重试
-      toast(
-        `${APP_NAME}: 未知错误, 请联系开发者\n\n  code=${json.code} message=${json.message || ''}`,
-        5000,
-      )
-      return []
+      throw new Error('Request fail with none invalid json', {
+        cause: {
+          type: 'invalid-json',
+          statusCode: res.status,
+          json,
+        },
+      })
     }
 
     const items = json?.data?.items || []
     return items
   }
-
-  private tryGetRecommend = pretry(this.getRecommend, {
-    times: 5,
-    timeout: 2000,
-    onerror(err, index) {
-      console.info('[%s] tryGetRecommend onerror: index=%s', APP_NAME, index, err)
-    },
-  })
 
   loadMore() {
     return this.getRecommendTimes(2)
@@ -92,12 +71,12 @@ export class AppRecService implements IService {
 
     const parallel = async () => {
       list = (
-        await Promise.all(new Array(times).fill(0).map(() => this.tryGetRecommend(device)))
+        await Promise.all(new Array(times).fill(0).map(() => this.getRecommend(device)))
       ).flat()
     }
     const sequence = async () => {
       for (let x = 1; x <= times; x++) {
-        list = list.concat(await this.tryGetRecommend(device))
+        list = list.concat(await this.getRecommend(device))
       }
     }
 

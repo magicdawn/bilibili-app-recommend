@@ -7,6 +7,7 @@ import { visualizer } from 'rollup-plugin-visualizer'
 import typedScssModulesOriginal from 'typed-scss-modules'
 import UnoCSS from 'unocss/vite'
 import AutoImport from 'unplugin-auto-import/vite'
+import IconsResolver from 'unplugin-icons/resolver'
 import Icons from 'unplugin-icons/vite'
 import { defineConfig, type ConfigEnv, type PluginOption } from 'vite'
 import importer from 'vite-plugin-importer'
@@ -120,6 +121,12 @@ export default defineConfig(({ command }) => ({
       // targets to transform
       include: [
         /\.[tj]sx?$/, // .ts, .tsx, .js, .jsx
+      ],
+      resolvers: [
+        IconsResolver({
+          prefix: 'Icon',
+          extension: 'jsx',
+        }),
       ],
       imports: [
         'react',

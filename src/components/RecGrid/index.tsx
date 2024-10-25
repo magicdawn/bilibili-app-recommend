@@ -22,12 +22,16 @@ import { concatThenUniq, refreshForGrid } from '$modules/rec-services'
 import { hotStore } from '$modules/rec-services/hot'
 import { useSettingsSnapshot } from '$modules/settings'
 import { isSafari } from '$ua'
+import { AntdTooltip } from '$ui-components/antd-custom'
 import { AntdMessage } from '$utility'
 import { useEventListener, useLatest } from 'ahooks'
 import { Divider } from 'antd'
+import type { AxiosError } from 'axios'
 import delay from 'delay'
+import { cloneDeep } from 'lodash'
 import mitt from 'mitt'
 import ms from 'ms'
+import type { ReactNode } from 'react'
 import { useInView } from 'react-intersection-observer'
 import { VirtuosoGrid } from 'react-virtuoso'
 import { getIService } from '../../modules/rec-services/service-map'
@@ -413,28 +417,10 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
     }
   }, [footer, containerRef, gridClassName])
 
+  // Shit happens!
   if (refreshError) {
-    console.error(refreshError.stack || refreshError)
-    return (
-      <div
-        css={css`
-          font-size: 20px;
-          padding: 20px;
-          text-align: center;
-        `}
-      >
-        <p>出错了, 请刷新重试!</p>
-        {tab === ETab.Hot && hotStore.subtab === EHotSubTab.PopularWeekly && (
-          <p className='mt-8 flex items-center justify-center'>
-            可能需手动输入验证码
-            <OpenExternalLinkIcon className='ml-12' />
-            <a href='https://www.bilibili.com/v/popular/weekly' target='_blank' className='ml-2'>
-              每周必看
-            </a>
-          </p>
-        )}
-      </div>
-    )
+    console.error('RecGrid.refresh error:', refreshError.stack || refreshError)
+    return <ErrorDetail tab={tab} err={refreshError} />
   }
 
   // skeleton loading
@@ -528,3 +514,77 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
     </div>
   )
 })
+
+function ErrorDetail({ err, tab }: { err: any; tab: ETab }) {
+  const errDetail: ReactNode = useMemo(() => {
+    const isAxiosError = (err: any): err is AxiosError => {
+      return err instanceof Error && err.name === 'AxiosError'
+    }
+
+    if (err instanceof Error) {
+      // display cause
+      if (err.cause) {
+        return JSON.stringify(err.cause)
+      }
+      // axios error
+      else if (isAxiosError(err)) {
+        const _err = cloneDeep(err)
+        // hide sensitive access_key
+        if (_err.config?.params?.access_key) {
+          _err.config.params.access_key = '*'.repeat(_err.config.params.access_key.length)
+        }
+        return JSON.stringify(_err)
+      }
+      // display stack
+      else {
+        return err.stack || err.message
+      }
+    } else {
+      return JSON.stringify(err)
+    }
+  }, [err])
+
+  return (
+    <div
+      css={css`
+        font-size: 20px;
+        padding: 20px;
+        text-align: center;
+      `}
+    >
+      <AntdTooltip
+        title={
+          <div className='p-block-10'>
+            <h3 className='mb-10'>错误详情</h3>
+            <div
+              css={css`
+                overflow: hidden;
+                white-space: pre-wrap;
+                word-break: normal;
+                max-height: 50vh;
+                overflow-y: scroll;
+              `}
+            >
+              {errDetail}
+            </div>
+          </div>
+        }
+      >
+        <p className='cursor-pointer flex items-center justify-center'>
+          <IconTablerFaceIdError className='mr-4' />
+          出错了, 请刷新重试!
+        </p>
+      </AntdTooltip>
+
+      {tab === ETab.Hot && hotStore.subtab === EHotSubTab.PopularWeekly && (
+        <p className='mt-8 flex items-center justify-center'>
+          可能需手动输入验证码
+          <OpenExternalLinkIcon className='ml-12' />
+          <a href='https://www.bilibili.com/v/popular/weekly' target='_blank' className='ml-2'>
+            每周必看
+          </a>
+        </p>
+      )}
+    </div>
+  )
+}
