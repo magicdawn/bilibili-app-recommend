@@ -7,11 +7,11 @@
  */
 
 import { flexCenterStyle } from '$common/emotion-css'
+import { HelpInfo } from '$components/_base/HelpInfo'
+import { AntdTooltip } from '$components/_base/antd-custom'
 import { $evolvedThemeColor } from '$header'
 import { IconAnimatedChecked } from '$modules/icon/animated-checked'
 import { updateSettings, useSettingsSnapshot } from '$modules/settings'
-import { HelpInfo } from '$ui-components/HelpInfo'
-import { AntdTooltip } from '$ui-components/antd-custom'
 import { usePrevious } from 'ahooks'
 import { ColorPicker } from 'antd'
 import type { Color } from 'antd/es/color-picker'

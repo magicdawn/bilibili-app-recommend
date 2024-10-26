@@ -1,7 +1,7 @@
 import { APP_CLS_ROOT } from '$common'
 import { AntdApp } from '$components/AntdApp'
+import { BaseModal, BaseModalStyle, ModalClose } from '$components/_base/BaseModal'
 import { useIsDarkMode } from '$modules/dark-mode'
-import { BaseModal, BaseModalStyle, ModalClose } from '$ui-components/BaseModal'
 import { QRCode } from 'antd'
 import { once } from 'lodash'
 import mitt from 'mitt'

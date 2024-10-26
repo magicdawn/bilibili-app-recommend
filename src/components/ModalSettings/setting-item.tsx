@@ -1,6 +1,6 @@
+import { AntdTooltip } from '$components/_base/antd-custom'
 import type { BooleanSettingsKey } from '$modules/settings'
 import { updateSettings, useSettingsSnapshot } from '$modules/settings'
-import { AntdTooltip } from '$ui-components/antd-custom'
 import { Checkbox, Switch } from 'antd'
 import type { CheckboxChangeEvent } from 'antd/es/checkbox'
 import type { ComponentProps, ReactNode } from 'react'

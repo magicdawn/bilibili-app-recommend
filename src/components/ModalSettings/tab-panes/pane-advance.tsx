@@ -1,6 +1,7 @@
 import { APP_NAME } from '$common'
 import { C, flexVerticalCenterStyle } from '$common/emotion-css'
 import { CheckboxSettingItem } from '$components/ModalSettings/setting-item'
+import { AntdTooltip } from '$components/_base/antd-custom'
 import { OpenExternalLinkIcon } from '$modules/icon'
 import {
   allowedSettingsKeys,
@@ -11,7 +12,6 @@ import {
 } from '$modules/settings'
 import { exportSettings, importSettings } from '$modules/settings/file-backup'
 import { articleDraft, restoreOmitKeys } from '$modules/settings/index.shared'
-import { AntdTooltip } from '$ui-components/antd-custom'
 import { AntdMessage } from '$utility'
 import { Button, Popconfirm, Slider, Space } from 'antd'
 import { omit, pick } from 'lodash'

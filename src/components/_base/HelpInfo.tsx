@@ -1,7 +1,7 @@
 import { IconPark } from '$modules/icon/icon-park'
-import { AntdTooltip } from '$ui-components/antd-custom'
 import type { ReactNode } from 'react'
 import type { SetOptional } from 'type-fest'
+import { AntdTooltip } from './antd-custom'
 
 export function HelpInfo({
   children,

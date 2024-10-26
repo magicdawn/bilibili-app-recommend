@@ -6,10 +6,10 @@ import type { OnRefresh } from '$components/RecGrid/useRefresh'
 import { OnRefreshContext } from '$components/RecGrid/useRefresh'
 import { RefreshButton } from '$components/RecHeader/RefreshButton'
 import { VideoSourceTab } from '$components/RecHeader/tab'
+import { BaseModal, BaseModalStyle, ModalClose } from '$components/_base/BaseModal'
+import { CollapseBtn } from '$components/_base/CollapseBtn'
 import { useIsDarkMode } from '$modules/dark-mode'
 import { useSettingsSnapshot } from '$modules/settings'
-import { BaseModal, BaseModalStyle, ModalClose } from '$ui-components/BaseModal'
-import { CollapseBtn } from '$ui-components/CollapseBtn'
 import { AntdMessage } from '$utility'
 
 const S = {

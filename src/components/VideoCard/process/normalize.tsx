@@ -1,6 +1,7 @@
 import { APP_NAME } from '$common'
 import { C } from '$common/emotion-css'
 import { borderColorValue, colorPrimaryValue } from '$components/ModalSettings/theme.shared'
+import { AntdTooltip } from '$components/_base/antd-custom'
 import {
   isApp,
   isDynamic,
@@ -32,7 +33,6 @@ import {
   isCinemaRankingItem,
 } from '$modules/rec-services/hot/ranking/category'
 import { ELiveStatus } from '$modules/rec-services/live/live-enum'
-import { AntdTooltip } from '$ui-components/antd-custom'
 import { toHttps } from '$utility'
 import {
   formatDuration,

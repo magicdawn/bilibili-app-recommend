@@ -1,7 +1,7 @@
 import { C } from '$common/emotion-css'
 import { CheckboxSettingItem, SwitchSettingItem } from '$components/ModalSettings/setting-item'
+import { HelpInfo } from '$components/_base/HelpInfo'
 import { updateSettings, useSettingsSnapshot } from '$modules/settings'
-import { HelpInfo } from '$ui-components/HelpInfo'
 import { InputNumber, Tag } from 'antd'
 import type { ComponentProps } from 'react'
 import { EditableListSettingItem } from '../EditableListSettingItem'
