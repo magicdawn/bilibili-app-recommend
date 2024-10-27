@@ -69,8 +69,8 @@ importers:
         specifier: ^0.0.1
         version: 0.0.1
       framer-motion:
-        specifier: ^11.11.9
-        version: 11.11.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^11.11.10
+        version: 11.11.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       localforage:
         specifier: ^1.10.0
         version: 1.10.0
@@ -131,13 +131,13 @@ importers:
         version: 1.9.4
       '@commitlint/cli':
         specifier: ^19.5.0
-        version: 19.5.0(@types/node@22.7.9)(typescript@5.4.5)
+        version: 19.5.0(@types/node@22.8.1)(typescript@5.4.5)
       '@commitlint/config-conventional':
         specifier: ^19.5.0
         version: 19.5.0
       '@commitlint/prompt-cli':
         specifier: ^19.5.0
-        version: 19.5.0(@types/node@22.7.9)(typescript@5.4.5)
+        version: 19.5.0(@types/node@22.8.1)(typescript@5.4.5)
       '@commitlint/types':
         specifier: ^19.5.0
         version: 19.5.0
@@ -145,8 +145,8 @@ importers:
         specifier: ^11.12.0
         version: 11.12.0
       '@iconify/json':
-        specifier: ^2.2.263
-        version: 2.2.263
+        specifier: ^2.2.264
+        version: 2.2.264
       '@magicdawn/prettier-config':
         specifier: ^0.0.4
         version: 0.0.4
@@ -172,8 +172,8 @@ importers:
         specifier: ^0.7.34
         version: 0.7.34
       '@types/node':
-        specifier: 22.7.9
-        version: 22.7.9
+        specifier: 22.8.1
+        version: 22.8.1
       '@types/react':
         specifier: 18.3.12
         version: 18.3.12
@@ -187,14 +187,14 @@ importers:
         specifier: ^0.63.6
         version: 0.63.6
       '@violentmonkey/types':
-        specifier: ^0.1.9
-        version: 0.1.9
+        specifier: ^0.2.0
+        version: 0.2.0
       '@vitejs/plugin-react':
         specifier: ^4.3.3
-        version: 4.3.3(vite@5.4.10(@types/node@22.7.9)(sass-embedded@1.80.4)(sass@1.80.4))
+        version: 4.3.3(vite@5.4.10(@types/node@22.8.1)(sass-embedded@1.80.4)(sass@1.80.4))
       '@vitejs/plugin-react-swc':
         specifier: ^3.7.1
-        version: 3.7.1(vite@5.4.10(@types/node@22.7.9)(sass-embedded@1.80.4)(sass@1.80.4))
+        version: 3.7.1(vite@5.4.10(@types/node@22.8.1)(sass-embedded@1.80.4)(sass@1.80.4))
       chalk:
         specifier: ^5.3.0
         version: 5.3.0
@@ -218,7 +218,7 @@ importers:
         version: 9.1.6
       knip:
         specifier: ^5.34.0
-        version: 5.34.0(@types/node@22.7.9)(typescript@5.4.5)
+        version: 5.34.0(@types/node@22.8.1)(typescript@5.4.5)
       lint-staged:
         specifier: ^15.2.10
         version: 15.2.10
@@ -263,7 +263,7 @@ importers:
         version: 8.11.0(eslint@9.13.0(jiti@2.3.3))(typescript@5.4.5)
       unocss:
         specifier: ^0.63.6
-        version: 0.63.6(postcss@8.4.44)(rollup@4.21.0)(typescript@5.4.5)(vite@5.4.10(@types/node@22.7.9)(sass-embedded@1.80.4)(sass@1.80.4))
+        version: 0.63.6(postcss@8.4.44)(rollup@4.21.0)(typescript@5.4.5)(vite@5.4.10(@types/node@22.8.1)(sass-embedded@1.80.4)(sass@1.80.4))
       unplugin-auto-import:
         specifier: ^0.18.3
         version: 0.18.3(rollup@4.21.0)(webpack-sources@3.2.3)
@@ -272,22 +272,22 @@ importers:
         version: 0.19.3(@svgr/core@8.1.0(typescript@5.4.5))(@vue/compiler-sfc@3.5.12)(webpack-sources@3.2.3)
       vite:
         specifier: ^5.4.10
-        version: 5.4.10(@types/node@22.7.9)(sass-embedded@1.80.4)(sass@1.80.4)
+        version: 5.4.10(@types/node@22.8.1)(sass-embedded@1.80.4)(sass@1.80.4)
       vite-plugin-importer:
         specifier: ^0.2.5
         version: 0.2.5
       vite-plugin-inspect:
         specifier: ^0.8.7
-        version: 0.8.7(rollup@4.21.0)(vite@5.4.10(@types/node@22.7.9)(sass-embedded@1.80.4)(sass@1.80.4))
+        version: 0.8.7(rollup@4.21.0)(vite@5.4.10(@types/node@22.8.1)(sass-embedded@1.80.4)(sass@1.80.4))
       vite-plugin-monkey:
         specifier: ^4.0.6
-        version: 4.0.6(vite@5.4.10(@types/node@22.7.9)(sass-embedded@1.80.4)(sass@1.80.4))
+        version: 4.0.6(vite@5.4.10(@types/node@22.8.1)(sass-embedded@1.80.4)(sass@1.80.4))
       vite-tsconfig-paths:
         specifier: ^5.0.1
-        version: 5.0.1(typescript@5.4.5)(vite@5.4.10(@types/node@22.7.9)(sass-embedded@1.80.4)(sass@1.80.4))
+        version: 5.0.1(typescript@5.4.5)(vite@5.4.10(@types/node@22.8.1)(sass-embedded@1.80.4)(sass@1.80.4))
       vitest:
         specifier: ^2.1.3
-        version: 2.1.3(@types/node@22.7.9)(sass-embedded@1.80.4)(sass@1.80.4)
+        version: 2.1.3(@types/node@22.8.1)(sass-embedded@1.80.4)(sass@1.80.4)
 
 packages:
 
@@ -956,8 +956,8 @@ packages:
       react: '>=16.9'
       react-dom: '>=16.9'
 
-  '@iconify/json@2.2.263':
-    resolution: {integrity: sha512-pY6Jpfz76F+OURDt5+J9njuQSzOLKECA3ah8C210T9VfXdtkpkYWA6+l6ZCHOvhABjcoGjBvcTub8HV9QNacrw==}
+  '@iconify/json@2.2.264':
+    resolution: {integrity: sha512-yT8LqVC+WiOaE+UGQAy7Big7On+oCImkcQTIgrocvDezGOtispxfyg1bpT3gUedIsPwMW+Onwhj1awOl+sWrxw==}
 
   '@iconify/types@2.0.0':
     resolution: {integrity: sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==}
@@ -1466,8 +1466,8 @@ packages:
   '@types/ms@0.7.34':
     resolution: {integrity: sha512-nG96G3Wp6acyAgJqGasjODb+acrI7KltPiRxzHPXnP3NgI28bpQDRv53olbqGXbfcgF5aiiHmO3xpwEpS5Ld9g==}
 
-  '@types/node@22.7.9':
-    resolution: {integrity: sha512-jrTfRC7FM6nChvU7X2KqcrgquofrWLFDeYC1hKfwNWomVvrn7JIksqf344WN2X/y8xrgqBd2dJATZV4GbatBfg==}
+  '@types/node@22.8.1':
+    resolution: {integrity: sha512-k6Gi8Yyo8EtrNtkHXutUu2corfDf9su95VYVP10aGYMMROM6SAItZi0w1XszA6RtWTHSVp5OeFof37w0IEqCQg==}
 
   '@types/parse-json@4.0.0':
     resolution: {integrity: sha512-//oorEZjL6sbPcKUaCdIGlIUeH26mgzimjBB77G6XRgnDl/L5wOnpyBGRe/Mmf5CVW3PwEBE1NjiMZ/ssFh4wA==}
@@ -1624,8 +1624,8 @@ packages:
     peerDependencies:
       vite: ^2.9.0 || ^3.0.0-0 || ^4.0.0 || ^5.0.0-0
 
-  '@violentmonkey/types@0.1.9':
-    resolution: {integrity: sha512-mBEHd8IOIrJW9NTSFf9474et5eduoq16Pmddg5O3MC/RElCxXay//Go0jpSz20LEpA9t0H44EHDRcXJYMBBtNg==}
+  '@violentmonkey/types@0.2.0':
+    resolution: {integrity: sha512-JRPtwhyodYKNkENciULg6v+ZtsoBR2ybYsA1KDvjw4JBzLNmvHixhd8TTl2s8eS1hU7MA1FU8kd1Ren9SCjxew==}
 
   '@vitejs/plugin-react-swc@3.7.1':
     resolution: {integrity: sha512-vgWOY0i1EROUK0Ctg1hwhtC3SdcDjZcdit4Ups4aPkDcB1jYhmo+RMYWY87cmXMhvtD5uf8lV89j2w16vkdSVg==}
@@ -2597,8 +2597,8 @@ packages:
     resolution: {integrity: sha512-ETEklSGi5t0QMZuiXoA/Q6vcnxcLQP5vdugSpuAyi6SVGi2clPPp+xgEhuMaHC+zGgn31Kd235W35f7Hykkaww==}
     engines: {node: '>= 6'}
 
-  framer-motion@11.11.9:
-    resolution: {integrity: sha512-XpdZseuCrZehdHGuW22zZt3SF5g6AHJHJi7JwQIigOznW4Jg1n0oGPMJQheMaKLC+0rp5gxUKMRYI6ytd3q4RQ==}
+  framer-motion@11.11.10:
+    resolution: {integrity: sha512-061Bt1jL/vIm+diYIiA4dP/Yld7vD47ROextS7ESBW5hr4wQFhxB5D5T5zAc3c/5me3cOa+iO5LqhA38WDln/A==}
     peerDependencies:
       '@emotion/is-prop-valid': '*'
       react: ^18.0.0
@@ -5120,11 +5120,11 @@ snapshots:
 
   '@bufbuild/protobuf@2.1.0': {}
 
-  '@commitlint/cli@19.5.0(@types/node@22.7.9)(typescript@5.4.5)':
+  '@commitlint/cli@19.5.0(@types/node@22.8.1)(typescript@5.4.5)':
     dependencies:
       '@commitlint/format': 19.5.0
       '@commitlint/lint': 19.5.0
-      '@commitlint/load': 19.5.0(@types/node@22.7.9)(typescript@5.4.5)
+      '@commitlint/load': 19.5.0(@types/node@22.8.1)(typescript@5.4.5)
       '@commitlint/read': 19.5.0
       '@commitlint/types': 19.5.0
       tinyexec: 0.3.0
@@ -5171,7 +5171,7 @@ snapshots:
       '@commitlint/rules': 19.5.0
       '@commitlint/types': 19.5.0
 
-  '@commitlint/load@19.5.0(@types/node@22.7.9)(typescript@5.4.5)':
+  '@commitlint/load@19.5.0(@types/node@22.8.1)(typescript@5.4.5)':
     dependencies:
       '@commitlint/config-validator': 19.5.0
       '@commitlint/execute-rule': 19.5.0
@@ -5179,7 +5179,7 @@ snapshots:
       '@commitlint/types': 19.5.0
       chalk: 5.3.0
       cosmiconfig: 9.0.0(typescript@5.4.5)
-      cosmiconfig-typescript-loader: 5.0.0(@types/node@22.7.9)(cosmiconfig@9.0.0(typescript@5.4.5))(typescript@5.4.5)
+      cosmiconfig-typescript-loader: 5.0.0(@types/node@22.8.1)(cosmiconfig@9.0.0(typescript@5.4.5))(typescript@5.4.5)
       lodash.isplainobject: 4.0.6
       lodash.merge: 4.6.2
       lodash.uniq: 4.5.0
@@ -5195,19 +5195,19 @@ snapshots:
       conventional-changelog-angular: 7.0.0
       conventional-commits-parser: 5.0.0
 
-  '@commitlint/prompt-cli@19.5.0(@types/node@22.7.9)(typescript@5.4.5)':
+  '@commitlint/prompt-cli@19.5.0(@types/node@22.8.1)(typescript@5.4.5)':
     dependencies:
-      '@commitlint/prompt': 19.5.0(@types/node@22.7.9)(typescript@5.4.5)
+      '@commitlint/prompt': 19.5.0(@types/node@22.8.1)(typescript@5.4.5)
       inquirer: 9.2.23
       tinyexec: 0.3.0
     transitivePeerDependencies:
       - '@types/node'
       - typescript
 
-  '@commitlint/prompt@19.5.0(@types/node@22.7.9)(typescript@5.4.5)':
+  '@commitlint/prompt@19.5.0(@types/node@22.8.1)(typescript@5.4.5)':
     dependencies:
       '@commitlint/ensure': 19.5.0
-      '@commitlint/load': 19.5.0(@types/node@22.7.9)(typescript@5.4.5)
+      '@commitlint/load': 19.5.0(@types/node@22.8.1)(typescript@5.4.5)
       '@commitlint/types': 19.5.0
       chalk: 5.3.0
       inquirer: 9.2.23
@@ -5499,7 +5499,7 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
-  '@iconify/json@2.2.263':
+  '@iconify/json@2.2.264':
     dependencies:
       '@iconify/types': 2.0.0
       pathe: 1.1.2
@@ -5919,7 +5919,7 @@ snapshots:
 
   '@types/conventional-commits-parser@5.0.0':
     dependencies:
-      '@types/node': 22.7.9
+      '@types/node': 22.8.1
 
   '@types/debug@4.1.12':
     dependencies:
@@ -5939,7 +5939,7 @@ snapshots:
 
   '@types/ms@0.7.34': {}
 
-  '@types/node@22.7.9':
+  '@types/node@22.8.1':
     dependencies:
       undici-types: 6.19.8
 
@@ -6039,13 +6039,13 @@ snapshots:
       '@typescript-eslint/types': 8.11.0
       eslint-visitor-keys: 3.4.3
 
-  '@unocss/astro@0.63.6(rollup@4.21.0)(typescript@5.4.5)(vite@5.4.10(@types/node@22.7.9)(sass-embedded@1.80.4)(sass@1.80.4))':
+  '@unocss/astro@0.63.6(rollup@4.21.0)(typescript@5.4.5)(vite@5.4.10(@types/node@22.8.1)(sass-embedded@1.80.4)(sass@1.80.4))':
     dependencies:
       '@unocss/core': 0.63.6
       '@unocss/reset': 0.63.6
-      '@unocss/vite': 0.63.6(rollup@4.21.0)(typescript@5.4.5)(vite@5.4.10(@types/node@22.7.9)(sass-embedded@1.80.4)(sass@1.80.4))
+      '@unocss/vite': 0.63.6(rollup@4.21.0)(typescript@5.4.5)(vite@5.4.10(@types/node@22.8.1)(sass-embedded@1.80.4)(sass@1.80.4))
     optionalDependencies:
-      vite: 5.4.10(@types/node@22.7.9)(sass-embedded@1.80.4)(sass@1.80.4)
+      vite: 5.4.10(@types/node@22.8.1)(sass-embedded@1.80.4)(sass@1.80.4)
     transitivePeerDependencies:
       - rollup
       - supports-color
@@ -6178,7 +6178,7 @@ snapshots:
     dependencies:
       '@unocss/core': 0.63.6
 
-  '@unocss/vite@0.63.6(rollup@4.21.0)(typescript@5.4.5)(vite@5.4.10(@types/node@22.7.9)(sass-embedded@1.80.4)(sass@1.80.4))':
+  '@unocss/vite@0.63.6(rollup@4.21.0)(typescript@5.4.5)(vite@5.4.10(@types/node@22.8.1)(sass-embedded@1.80.4)(sass@1.80.4))':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@rollup/pluginutils': 5.1.2(rollup@4.21.0)
@@ -6188,29 +6188,29 @@ snapshots:
       chokidar: 3.6.0
       magic-string: 0.30.11
       tinyglobby: 0.2.9
-      vite: 5.4.10(@types/node@22.7.9)(sass-embedded@1.80.4)(sass@1.80.4)
+      vite: 5.4.10(@types/node@22.8.1)(sass-embedded@1.80.4)(sass@1.80.4)
     transitivePeerDependencies:
       - rollup
       - supports-color
       - typescript
 
-  '@violentmonkey/types@0.1.9': {}
+  '@violentmonkey/types@0.2.0': {}
 
-  '@vitejs/plugin-react-swc@3.7.1(vite@5.4.10(@types/node@22.7.9)(sass-embedded@1.80.4)(sass@1.80.4))':
+  '@vitejs/plugin-react-swc@3.7.1(vite@5.4.10(@types/node@22.8.1)(sass-embedded@1.80.4)(sass@1.80.4))':
     dependencies:
       '@swc/core': 1.7.26
-      vite: 5.4.10(@types/node@22.7.9)(sass-embedded@1.80.4)(sass@1.80.4)
+      vite: 5.4.10(@types/node@22.8.1)(sass-embedded@1.80.4)(sass@1.80.4)
     transitivePeerDependencies:
       - '@swc/helpers'
 
-  '@vitejs/plugin-react@4.3.3(vite@5.4.10(@types/node@22.7.9)(sass-embedded@1.80.4)(sass@1.80.4))':
+  '@vitejs/plugin-react@4.3.3(vite@5.4.10(@types/node@22.8.1)(sass-embedded@1.80.4)(sass@1.80.4))':
     dependencies:
       '@babel/core': 7.25.7
       '@babel/plugin-transform-react-jsx-self': 7.25.7(@babel/core@7.25.7)
       '@babel/plugin-transform-react-jsx-source': 7.25.7(@babel/core@7.25.7)
       '@types/babel__core': 7.20.5
       react-refresh: 0.14.2
-      vite: 5.4.10(@types/node@22.7.9)(sass-embedded@1.80.4)(sass@1.80.4)
+      vite: 5.4.10(@types/node@22.8.1)(sass-embedded@1.80.4)(sass@1.80.4)
     transitivePeerDependencies:
       - supports-color
 
@@ -6221,13 +6221,13 @@ snapshots:
       chai: 5.1.1
       tinyrainbow: 1.2.0
 
-  '@vitest/mocker@2.1.3(@vitest/spy@2.1.3)(vite@5.4.10(@types/node@22.7.9)(sass-embedded@1.80.4)(sass@1.80.4))':
+  '@vitest/mocker@2.1.3(@vitest/spy@2.1.3)(vite@5.4.10(@types/node@22.8.1)(sass-embedded@1.80.4)(sass@1.80.4))':
     dependencies:
       '@vitest/spy': 2.1.3
       estree-walker: 3.0.3
       magic-string: 0.30.11
     optionalDependencies:
-      vite: 5.4.10(@types/node@22.7.9)(sass-embedded@1.80.4)(sass@1.80.4)
+      vite: 5.4.10(@types/node@22.8.1)(sass-embedded@1.80.4)(sass@1.80.4)
 
   '@vitest/pretty-format@2.1.3':
     dependencies:
@@ -6771,9 +6771,9 @@ snapshots:
     dependencies:
       toggle-selection: 1.0.6
 
-  cosmiconfig-typescript-loader@5.0.0(@types/node@22.7.9)(cosmiconfig@9.0.0(typescript@5.4.5))(typescript@5.4.5):
+  cosmiconfig-typescript-loader@5.0.0(@types/node@22.8.1)(cosmiconfig@9.0.0(typescript@5.4.5))(typescript@5.4.5):
     dependencies:
-      '@types/node': 22.7.9
+      '@types/node': 22.8.1
       cosmiconfig: 9.0.0(typescript@5.4.5)
       jiti: 1.21.6
       typescript: 5.4.5
@@ -7301,7 +7301,7 @@ snapshots:
       combined-stream: 1.0.8
       mime-types: 2.1.35
 
-  framer-motion@11.11.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  framer-motion@11.11.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       tslib: 2.6.2
     optionalDependencies:
@@ -7683,11 +7683,11 @@ snapshots:
     dependencies:
       json-buffer: 3.0.1
 
-  knip@5.34.0(@types/node@22.7.9)(typescript@5.4.5):
+  knip@5.34.0(@types/node@22.8.1)(typescript@5.4.5):
     dependencies:
       '@nodelib/fs.walk': 1.2.8
       '@snyk/github-codeowners': 1.1.0
-      '@types/node': 22.7.9
+      '@types/node': 22.8.1
       easy-table: 1.2.0
       enhanced-resolve: 5.17.1
       fast-glob: 3.3.2
@@ -9117,9 +9117,9 @@ snapshots:
 
   universalify@2.0.0: {}
 
-  unocss@0.63.6(postcss@8.4.44)(rollup@4.21.0)(typescript@5.4.5)(vite@5.4.10(@types/node@22.7.9)(sass-embedded@1.80.4)(sass@1.80.4)):
+  unocss@0.63.6(postcss@8.4.44)(rollup@4.21.0)(typescript@5.4.5)(vite@5.4.10(@types/node@22.8.1)(sass-embedded@1.80.4)(sass@1.80.4)):
     dependencies:
-      '@unocss/astro': 0.63.6(rollup@4.21.0)(typescript@5.4.5)(vite@5.4.10(@types/node@22.7.9)(sass-embedded@1.80.4)(sass@1.80.4))
+      '@unocss/astro': 0.63.6(rollup@4.21.0)(typescript@5.4.5)(vite@5.4.10(@types/node@22.8.1)(sass-embedded@1.80.4)(sass@1.80.4))
       '@unocss/cli': 0.63.6(rollup@4.21.0)
       '@unocss/core': 0.63.6
       '@unocss/postcss': 0.63.6(postcss@8.4.44)
@@ -9135,9 +9135,9 @@ snapshots:
       '@unocss/transformer-compile-class': 0.63.6
       '@unocss/transformer-directives': 0.63.6
       '@unocss/transformer-variant-group': 0.63.6
-      '@unocss/vite': 0.63.6(rollup@4.21.0)(typescript@5.4.5)(vite@5.4.10(@types/node@22.7.9)(sass-embedded@1.80.4)(sass@1.80.4))
+      '@unocss/vite': 0.63.6(rollup@4.21.0)(typescript@5.4.5)(vite@5.4.10(@types/node@22.8.1)(sass-embedded@1.80.4)(sass@1.80.4))
     optionalDependencies:
-      vite: 5.4.10(@types/node@22.7.9)(sass-embedded@1.80.4)(sass@1.80.4)
+      vite: 5.4.10(@types/node@22.8.1)(sass-embedded@1.80.4)(sass@1.80.4)
     transitivePeerDependencies:
       - postcss
       - rollup
@@ -9218,12 +9218,12 @@ snapshots:
 
   varint@6.0.0: {}
 
-  vite-node@2.1.3(@types/node@22.7.9)(sass-embedded@1.80.4)(sass@1.80.4):
+  vite-node@2.1.3(@types/node@22.8.1)(sass-embedded@1.80.4)(sass@1.80.4):
     dependencies:
       cac: 6.7.14
       debug: 4.3.7
       pathe: 1.1.2
-      vite: 5.4.10(@types/node@22.7.9)(sass-embedded@1.80.4)(sass@1.80.4)
+      vite: 5.4.10(@types/node@22.8.1)(sass-embedded@1.80.4)(sass@1.80.4)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -9243,7 +9243,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  vite-plugin-inspect@0.8.7(rollup@4.21.0)(vite@5.4.10(@types/node@22.7.9)(sass-embedded@1.80.4)(sass@1.80.4)):
+  vite-plugin-inspect@0.8.7(rollup@4.21.0)(vite@5.4.10(@types/node@22.8.1)(sass-embedded@1.80.4)(sass@1.80.4)):
     dependencies:
       '@antfu/utils': 0.7.10
       '@rollup/pluginutils': 5.1.0(rollup@4.21.0)
@@ -9254,12 +9254,12 @@ snapshots:
       perfect-debounce: 1.0.0
       picocolors: 1.0.1
       sirv: 2.0.4
-      vite: 5.4.10(@types/node@22.7.9)(sass-embedded@1.80.4)(sass@1.80.4)
+      vite: 5.4.10(@types/node@22.8.1)(sass-embedded@1.80.4)(sass@1.80.4)
     transitivePeerDependencies:
       - rollup
       - supports-color
 
-  vite-plugin-monkey@4.0.6(vite@5.4.10(@types/node@22.7.9)(sass-embedded@1.80.4)(sass@1.80.4)):
+  vite-plugin-monkey@4.0.6(vite@5.4.10(@types/node@22.8.1)(sass-embedded@1.80.4)(sass@1.80.4)):
     dependencies:
       acorn-walk: 8.3.2
       cross-spawn: 7.0.3
@@ -9271,34 +9271,34 @@ snapshots:
       picocolors: 1.0.1
       systemjs: 6.14.2
     optionalDependencies:
-      vite: 5.4.10(@types/node@22.7.9)(sass-embedded@1.80.4)(sass@1.80.4)
+      vite: 5.4.10(@types/node@22.8.1)(sass-embedded@1.80.4)(sass@1.80.4)
 
-  vite-tsconfig-paths@5.0.1(typescript@5.4.5)(vite@5.4.10(@types/node@22.7.9)(sass-embedded@1.80.4)(sass@1.80.4)):
+  vite-tsconfig-paths@5.0.1(typescript@5.4.5)(vite@5.4.10(@types/node@22.8.1)(sass-embedded@1.80.4)(sass@1.80.4)):
     dependencies:
       debug: 4.3.7
       globrex: 0.1.2
       tsconfck: 3.0.3(typescript@5.4.5)
     optionalDependencies:
-      vite: 5.4.10(@types/node@22.7.9)(sass-embedded@1.80.4)(sass@1.80.4)
+      vite: 5.4.10(@types/node@22.8.1)(sass-embedded@1.80.4)(sass@1.80.4)
     transitivePeerDependencies:
       - supports-color
       - typescript
 
-  vite@5.4.10(@types/node@22.7.9)(sass-embedded@1.80.4)(sass@1.80.4):
+  vite@5.4.10(@types/node@22.8.1)(sass-embedded@1.80.4)(sass@1.80.4):
     dependencies:
       esbuild: 0.21.5
       postcss: 8.4.47
       rollup: 4.21.0
     optionalDependencies:
-      '@types/node': 22.7.9
+      '@types/node': 22.8.1
       fsevents: 2.3.3
       sass: 1.80.4
       sass-embedded: 1.80.4
 
-  vitest@2.1.3(@types/node@22.7.9)(sass-embedded@1.80.4)(sass@1.80.4):
+  vitest@2.1.3(@types/node@22.8.1)(sass-embedded@1.80.4)(sass@1.80.4):
     dependencies:
       '@vitest/expect': 2.1.3
-      '@vitest/mocker': 2.1.3(@vitest/spy@2.1.3)(vite@5.4.10(@types/node@22.7.9)(sass-embedded@1.80.4)(sass@1.80.4))
+      '@vitest/mocker': 2.1.3(@vitest/spy@2.1.3)(vite@5.4.10(@types/node@22.8.1)(sass-embedded@1.80.4)(sass@1.80.4))
       '@vitest/pretty-format': 2.1.3
       '@vitest/runner': 2.1.3
       '@vitest/snapshot': 2.1.3
@@ -9313,11 +9313,11 @@ snapshots:
       tinyexec: 0.3.0
       tinypool: 1.0.0
       tinyrainbow: 1.2.0
-      vite: 5.4.10(@types/node@22.7.9)(sass-embedded@1.80.4)(sass@1.80.4)
-      vite-node: 2.1.3(@types/node@22.7.9)(sass-embedded@1.80.4)(sass@1.80.4)
+      vite: 5.4.10(@types/node@22.8.1)(sass-embedded@1.80.4)(sass@1.80.4)
+      vite-node: 2.1.3(@types/node@22.8.1)(sass-embedded@1.80.4)(sass@1.80.4)
       why-is-node-running: 2.3.0
     optionalDependencies:
-      '@types/node': 22.7.9
+      '@types/node': 22.8.1
     transitivePeerDependencies:
       - less
       - lightningcss
