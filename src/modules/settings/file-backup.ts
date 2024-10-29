@@ -2,9 +2,9 @@ import { APP_NAME } from '$common'
 import { toastAndReload } from '$components/ModalSettings/index.shared'
 import { AntdMessage, toast } from '$utility'
 import dayjs from 'dayjs'
-import { pick } from 'lodash'
+import { pick } from 'es-toolkit'
 import { tryit } from 'radash'
-import { allowedSettingsKeys, getSettingsSnapshot, updateSettings } from './index'
+import { allowedSettingsKeys, getSettingsSnapshot, updateSettings, type Settings } from './index'
 import { set_HAS_RESTORED_SETTINGS } from './restore-flag'
 
 let lastUrl: string | undefined
@@ -44,7 +44,7 @@ export async function importSettings() {
 
   let settingsFromFile
   try {
-    settingsFromFile = JSON.parse(text)
+    settingsFromFile = JSON.parse(text) as Partial<Settings>
   } catch (error) {
     return toast('无法解析文件内容!')
   }

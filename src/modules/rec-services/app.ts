@@ -4,7 +4,7 @@ import type { ipad } from '$define/app-recommend.ipad'
 import { EAppApiDevice } from '$define/index.shared'
 import { settings } from '$modules/settings'
 import { gmrequest } from '$request'
-import { random, uniqBy } from 'lodash'
+import { randomInt, uniqBy } from 'es-toolkit'
 import { QueueStrategy, type IService } from './_base'
 
 export class AppRecService implements IService {
@@ -32,7 +32,7 @@ export class AppRecService implements IService {
         build: '1',
         ...platformParams,
         // idx: 返回的 items.idx 为传入 idx+1, idx+2, ...
-        idx: Math.floor(Date.now() / 1000) + random(1000, false),
+        idx: Math.floor(Date.now() / 1000) + randomInt(1000),
       },
     })
     const json = res.data as ipad.AppRecommendJson

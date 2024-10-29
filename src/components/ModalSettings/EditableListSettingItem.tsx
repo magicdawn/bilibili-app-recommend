@@ -7,7 +7,7 @@ import {
 } from '$modules/settings'
 import { AntdMessage } from '$utility'
 import { Empty, Input } from 'antd'
-import { uniq } from 'lodash'
+import { uniq } from 'es-toolkit'
 import type { ComponentPropsWithoutRef } from 'react'
 import IconParkOutlineCloseSmall from '~icons/icon-park-outline/close-small'
 import { colorPrimaryValue } from './theme.shared'

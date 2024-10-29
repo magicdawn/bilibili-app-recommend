@@ -1,4 +1,4 @@
-import { isEqual, pick, throttle } from 'lodash'
+import { isEqual, pick, throttle } from 'es-toolkit'
 import { proxy, snapshot, subscribe } from 'valtio'
 import { proxySet } from 'valtio/utils'
 
@@ -17,7 +17,7 @@ export function valtioFactory<T>(computeValue: () => T) {
     state.value = computeValue()
   }
 
-  const updateThrottled = throttle(update, 100, { leading: true, trailing: true })
+  const updateThrottled = throttle(update, 100, { edges: ['leading', 'trailing'] })
 
   return { state, use, get, update, updateThrottled }
 }
@@ -27,11 +27,11 @@ export function subscribeOnKeys<T extends object>(
   keys: (keyof T)[],
   callback: (newState: T) => void,
 ) {
-  let prevVal = pick(snapshot(state), keys)
+  let prevVal = pick(snapshot(state) as T, keys)
 
   subscribe(state, () => {
     const snap = snapshot(state)
-    const val = pick(snap, keys)
+    const val = pick(snap as T, keys)
     if (!isEqual(prevVal, val)) {
       callback(snap as T)
     }
@@ -41,7 +41,7 @@ export function subscribeOnKeys<T extends object>(
 
 export function proxyWithLocalStorage<T extends object>(initialVaue: T, storageKey: string) {
   const allowedKeys = Object.keys(initialVaue)
-  const savedValue = pick(JSON.parse(localStorage.getItem(storageKey) || '{}'), allowedKeys)
+  const savedValue = pick(JSON.parse(localStorage.getItem(storageKey) || '{}') as any, allowedKeys)
 
   const p = proxy<T>({
     ...initialVaue,
@@ -61,7 +61,7 @@ export function proxyWithLocalStorage<T extends object>(initialVaue: T, storageK
 
 export async function proxyWithGmStorage<T extends object>(initialVaue: T, storageKey: string) {
   const allowedKeys = Object.keys(initialVaue)
-  const savedValue = pick((await GM.getValue(storageKey)) || {}, allowedKeys)
+  const savedValue = pick(((await GM.getValue(storageKey)) || {}) as any, allowedKeys)
 
   const p = proxy<T>({
     ...initialVaue,

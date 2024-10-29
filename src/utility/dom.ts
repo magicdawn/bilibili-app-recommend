@@ -1,6 +1,6 @@
 import { APP_NAME, baseDebug } from '$common'
 import delay from 'delay'
-import { isNil } from 'lodash'
+import { isNil } from 'es-toolkit'
 
 const debug = baseDebug.extend('utility:dom')
 

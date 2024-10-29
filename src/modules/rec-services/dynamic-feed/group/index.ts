@@ -1,7 +1,7 @@
 import { request } from '$request'
 import { getUid } from '$utility/cookie'
 import { encWbi, getWwebId } from '$utility/wbi'
-import { uniq } from 'lodash'
+import { uniq } from 'es-toolkit'
 import type { FollowGroupContent, FollowGroupContentJson } from './group-content'
 import type { FollowGroupsJson } from './groups'
 

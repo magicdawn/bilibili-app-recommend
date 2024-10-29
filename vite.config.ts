@@ -252,11 +252,11 @@ export default defineConfig(({ command }) => ({
               //  - lodash
               //  - antd
               {
-                'lodash': cdn.npmmirror('_', 'lodash.min.js'),
+                // 'lodash': cdn.npmmirror('_', 'lodash.min.js'),
                 // ahooks use these
-                'lodash/throttle': '_.throttle',
-                'lodash/debounce': '_.debounce',
-                'lodash/isEqual': '_.isEqual',
+                // 'lodash/throttle': '_.throttle',
+                // 'lodash/debounce': '_.debounce',
+                // 'lodash/isEqual': '_.isEqual',
 
                 // antd deps = [react, react-dom, dayjs]
                 'dayjs': cdn.npmmirror('dayjs', 'dayjs.min.js'),
@@ -298,13 +298,13 @@ function getBabelImportPlugins(command: ConfigEnv['command']): PluginOption[] {
       }),
 
     // import {get} from 'lodash' -> import get from 'lodash/get'
-    command === 'build' &&
-      minify &&
-      importer({
-        libraryName: 'lodash',
-        libraryDirectory: '',
-        camel2DashComponentName: false,
-      }),
+    // command === 'build' &&
+    //   minify &&
+    //   importer({
+    //     libraryName: 'lodash',
+    //     libraryDirectory: '',
+    //     camel2DashComponentName: false,
+    //   }),
 
     command === 'build' &&
       importer({

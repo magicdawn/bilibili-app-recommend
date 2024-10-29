@@ -3,7 +3,7 @@ import { AntdApp } from '$components/AntdApp'
 import { ModalFeed } from '$components/ModalFeed'
 import { ModalSettings } from '$components/ModalSettings'
 import { settings } from '$modules/settings'
-import { once } from 'lodash'
+import { once } from 'es-toolkit'
 import { headerState, useHeaderState } from './index.shared'
 
 export function showModalFeed() {

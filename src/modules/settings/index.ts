@@ -3,7 +3,7 @@ import { ETab } from '$components/RecHeader/tab-enum'
 import { VideoLinkOpenMode } from '$components/VideoCard/index.shared'
 import { EAppApiDevice } from '$define/index.shared'
 import { toast } from '$utility/toast'
-import { pick } from 'lodash'
+import { pick } from 'es-toolkit'
 import { proxy, snapshot, subscribe, useSnapshot } from 'valtio'
 import { saveToDraft } from './cloud-backup'
 

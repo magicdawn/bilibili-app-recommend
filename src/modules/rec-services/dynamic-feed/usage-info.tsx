@@ -133,8 +133,6 @@ export function DynamicFeedUsageInfo() {
       )
     }
 
-    // lodash.orderBy order参数只支持 asc | desc
-    // see https://github.com/lodash/lodash/pull/3764
     const upListSorted = fastSortWithOrders(upList, [
       { prop: (it) => (it.has_update ? 1 : 0), order: 'desc' },
       {
