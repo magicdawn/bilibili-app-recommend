@@ -6,7 +6,7 @@ import { isNormalRankingItem } from '$modules/rec-services/hot/ranking/category'
 import { settings, useSettingsSnapshot } from '$modules/settings'
 import { getVideoDetail } from '$modules/video/video-detail'
 import { getBiliPlayerConfigAutoPlay } from '$utility/bilibili/player-config'
-import delay from 'delay'
+import { delay } from 'es-toolkit'
 import type { MouseEventHandler, ReactNode, RefObject } from 'react'
 import type { PreviewImageRef } from '../child-components/PreviewImage'
 import { VideoCardActionButton } from '../child-components/VideoCardActions'
@@ -202,7 +202,7 @@ export async function openInPipOrPopup(
   // get video width and height via API if needed
   const MAX_API_WAIT = 200
   if ((!videoWidth || !videoHeight) && bvid) {
-    const detail = await Promise.race([getVideoDetail(bvid), delay<undefined>(MAX_API_WAIT)])
+    const detail = await Promise.race([getVideoDetail(bvid), delay(MAX_API_WAIT)])
     if (detail) {
       videoWidth = detail.dimension.width
       videoHeight = detail.dimension.height

@@ -62,9 +62,6 @@ importers:
       debug:
         specifier: ^4.3.7
         version: 4.3.7
-      delay:
-        specifier: ^6.0.0
-        version: 6.0.0
       es-toolkit:
         specifier: ^1.26.1
         version: 1.26.1
@@ -95,9 +92,6 @@ importers:
       promise.map:
         specifier: ^0.5.0
         version: 0.5.0
-      promise.retry:
-        specifier: ^2.1.0
-        version: 2.1.0
       quick-lru:
         specifier: ^7.0.0
         version: 7.0.0
@@ -2191,10 +2185,6 @@ packages:
   degenerator@5.0.1:
     resolution: {integrity: sha512-TllpMR/t0M5sqCXfj85i4XaAzxmS5tVA16dqvdkMwGmzI+dXLXnw3J+3Vdv7VKw+ThlTMboK6i9rnZ6Nntj5CQ==}
     engines: {node: '>= 14'}
-
-  delay@6.0.0:
-    resolution: {integrity: sha512-2NJozoOHQ4NuZuVIr5CWd0iiLVIRSDepakaovIN+9eIDHEhdCAEvSy2cuf1DCrPPQLvHmbqTHODlhHg8UCy4zw==}
-    engines: {node: '>=16'}
 
   delayed-stream@1.0.0:
     resolution: {integrity: sha512-ZySD7Nf91aLB0RxL4KGrKHBXl7Eds1DAmEdcoVawXnLD7SDhpNgtuII2aAkg7a7QS41jxPSZ17p4VdGnMHk3MQ==}
@@ -6881,8 +6871,6 @@ snapshots:
       ast-types: 0.13.4
       escodegen: 2.1.0
       esprima: 4.0.1
-
-  delay@6.0.0: {}
 
   delayed-stream@1.0.0: {}
 

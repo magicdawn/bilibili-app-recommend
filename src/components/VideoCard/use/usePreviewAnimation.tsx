@@ -4,7 +4,7 @@ import { useRefBox, useRefStateBox, type RefBox, type RefStateBox } from '$commo
 import { settings } from '$modules/settings'
 import { minmax } from '$utility/num'
 import { useEventListener, useMemoizedFn, useRafState, useUnmountedRef } from 'ahooks'
-import delay from 'delay'
+import { delay } from 'es-toolkit'
 import type { MouseEvent } from 'react'
 import type { VideoData } from '../card.service'
 import type { VideoCardEmitter } from '../index.shared'

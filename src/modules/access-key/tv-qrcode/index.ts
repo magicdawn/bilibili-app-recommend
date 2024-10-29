@@ -4,7 +4,7 @@
  */
 
 import { toast } from '$utility/toast'
-import delay from 'delay'
+import { delay } from 'es-toolkit'
 import {
   hideQrCodeModal,
   qrcodeStore,

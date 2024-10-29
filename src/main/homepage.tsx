@@ -7,7 +7,7 @@ import { settings } from '$modules/settings'
 import { isSafari } from '$ua'
 import { tryAction, tryToRemove } from '$utility/dom'
 import { FloatButton } from 'antd'
-import delay from 'delay'
+import { delay } from 'es-toolkit'
 import type { Root } from 'react-dom/client'
 import { createRoot } from 'react-dom/client'
 
