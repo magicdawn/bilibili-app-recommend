@@ -15,7 +15,7 @@ import { getBiliPlayer } from '$utility/bilibili/player'
 import { getBiliPlayerConfigAutoPlay } from '$utility/bilibili/player-config'
 import { onVideoChange } from '$utility/bilibili/video-page'
 import { Button } from 'antd'
-import delay from 'delay'
+import { delay } from 'es-toolkit'
 import ms from 'ms'
 
 const debug = baseDebug.extend('main:video-play-page')

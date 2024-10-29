@@ -3,7 +3,7 @@
  */
 
 import type { RankingItemExtend, RankingItemExtendProps } from '$define'
-import { groupBy } from 'lodash'
+import { groupBy } from 'es-toolkit'
 import type { Merge, SetOptional } from 'type-fest'
 import type { BangumiRankingItem } from './api.bangumi-category'
 import type { CinemaRankingItem } from './api.cinema-category'

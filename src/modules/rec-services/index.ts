@@ -5,7 +5,7 @@ import { anyFilterEnabled, filterRecItems } from '$components/VideoCard/process/
 import { lookinto } from '$components/VideoCard/process/normalize'
 import type { RecItemTypeOrSeparator } from '$define'
 import { EApiType } from '$define/index.shared'
-import { uniqBy } from 'lodash'
+import { uniqBy } from 'es-toolkit'
 import { AppRecService } from './app'
 import { DynamicFeedVideoType } from './dynamic-feed/store'
 import { PcRecService } from './pc'

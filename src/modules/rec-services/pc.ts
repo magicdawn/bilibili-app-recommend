@@ -1,7 +1,7 @@
 import type { PcRecItem, PcRecItemExtend, PcRecommendJson } from '$define'
 import { isWebApiSuccess, request } from '$request'
 import { toast } from '$utility/toast'
-import { uniqBy } from 'lodash'
+import { uniqBy } from 'es-toolkit'
 import { QueueStrategy, type IService } from './_base'
 
 /**

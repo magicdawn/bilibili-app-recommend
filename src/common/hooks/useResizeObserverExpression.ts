@@ -1,4 +1,4 @@
-import { isEqual } from 'lodash'
+import { isEqual } from 'es-toolkit'
 import { useRefStateBox } from './useRefState'
 
 export function useSizeExpression<T>(

@@ -9,7 +9,7 @@ import { useSettingsSnapshot } from '$modules/settings'
 import { getAvatarSrc } from '$utility/image'
 import type { AntdMenuItemType } from '$utility/type'
 import { Avatar, Badge, Button, Checkbox, Dropdown, Input, Popover, Radio, Space } from 'antd'
-import delay from 'delay'
+import { delay } from 'es-toolkit'
 import { fastSortWithOrders } from 'fast-sort-lens'
 import TablerFilter from '~icons/tabler/filter'
 import TablerFilterCheck from '~icons/tabler/filter-check'
@@ -133,8 +133,6 @@ export function DynamicFeedUsageInfo() {
       )
     }
 
-    // lodash.orderBy order参数只支持 asc | desc
-    // see https://github.com/lodash/lodash/pull/3764
     const upListSorted = fastSortWithOrders(upList, [
       { prop: (it) => (it.has_update ? 1 : 0), order: 'desc' },
       {

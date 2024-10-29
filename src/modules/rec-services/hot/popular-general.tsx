@@ -7,7 +7,7 @@ import type { PopularGeneralJson } from '$define/popular-general'
 import { settings } from '$modules/settings'
 import { isWebApiSuccess, request } from '$request'
 import { toast } from '$utility'
-import delay from 'delay'
+import { delay } from 'es-toolkit'
 import type { IService } from '../_base'
 
 export class PopularGeneralRecService implements IService {

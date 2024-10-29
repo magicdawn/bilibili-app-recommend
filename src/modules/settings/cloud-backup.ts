@@ -1,4 +1,4 @@
-import { isEqual, omit, throttle } from 'lodash'
+import { isEqual, omit, throttle } from 'es-toolkit'
 import ms from 'ms'
 import type { Settings } from '.'
 import { articleDraft, backupOmitKeys, debug } from './index.shared'

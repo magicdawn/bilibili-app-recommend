@@ -99,10 +99,7 @@ export default defineConfig(({ command }) => ({
   },
 
   resolve: {
-    alias: {
-      // lodash: 'lodash-es',
-      // util: 'rollup-plugin-node-polyfills/polyfills/util',
-    },
+    alias: {},
   },
 
   build: {
@@ -248,16 +245,8 @@ export default defineConfig(({ command }) => ({
 
           ...(minify
             ? {}
-            : // external more when no-minify
-              //  - lodash
-              //  - antd
+            : // external more when no-minify: [antd]
               {
-                'lodash': cdn.npmmirror('_', 'lodash.min.js'),
-                // ahooks use these
-                'lodash/throttle': '_.throttle',
-                'lodash/debounce': '_.debounce',
-                'lodash/isEqual': '_.isEqual',
-
                 // antd deps = [react, react-dom, dayjs]
                 'dayjs': cdn.npmmirror('dayjs', 'dayjs.min.js'),
                 'dayjs/plugin/duration': cdn.npmmirror(
@@ -296,16 +285,6 @@ function getBabelImportPlugins(command: ConfigEnv['command']): PluginOption[] {
         libraryName: 'antd',
         libraryDirectory: 'es',
       }),
-
-    // import {get} from 'lodash' -> import get from 'lodash/get'
-    command === 'build' &&
-      minify &&
-      importer({
-        libraryName: 'lodash',
-        libraryDirectory: '',
-        camel2DashComponentName: false,
-      }),
-
     command === 'build' &&
       importer({
         libraryName: '@icon-park/react',
