@@ -1,4 +1,4 @@
-import { C, antdCustomCss } from '$common/emotion-css'
+import { C } from '$common/emotion-css'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
 import { EHotSubTab } from '$components/RecHeader/tab-enum'
@@ -139,16 +139,7 @@ function HotUsageInfo({ children }: { children?: ReactNode }) {
         }
       `}
     >
-      <Button
-        ref={ref}
-        className='w-114px gap-0 flex items-center justify-start'
-        css={[
-          antdCustomCss.button,
-          css`
-            padding-left: 16px;
-          `,
-        ]}
-      >
+      <Button ref={ref} className='w-114px gap-0 flex items-center justify-start pl-16px'>
         {icon}
         <span css={C.ml(8)}>{label}</span>
       </Button>

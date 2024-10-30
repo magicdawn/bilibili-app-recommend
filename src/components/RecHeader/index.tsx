@@ -1,5 +1,5 @@
 import { baseDebug } from '$common'
-import { antdCustomCss, iconOnlyRoundButtonCss } from '$common/emotion-css'
+import { iconOnlyRoundButtonCss } from '$common/emotion-css'
 import { useSizeExpression } from '$common/hooks/useResizeObserverExpression'
 import { useSticky } from '$common/hooks/useSticky'
 import { borderColorValue } from '$components/ModalSettings/theme.shared'
@@ -14,10 +14,10 @@ import { getElementOffset, shouldDisableShortcut } from '$utility/dom'
 import { Button, Space } from 'antd'
 import { size } from 'polished'
 import { AccessKeyManage } from '../AccessKeyManage'
+import { RefreshButton } from './RefreshButton'
 import { headerState } from './index.shared'
 import { showModalFeed, showModalSettings } from './modals'
-import { RefreshButton } from './RefreshButton'
-import { useCurrentDisplayingTabKeys, VideoSourceTab } from './tab'
+import { VideoSourceTab, useCurrentDisplayingTabKeys } from './tab'
 import { ETab } from './tab-enum'
 
 const debug = baseDebug.extend('RecHeader')
@@ -186,7 +186,7 @@ export const RecHeader = forwardRef<
                 />
 
                 {showModalFeedEntry && (
-                  <Button css={antdCustomCss.button} onClick={showModalFeed} className='gap-0'>
+                  <Button onClick={showModalFeed} className='gap-0'>
                     <span>查看更多</span>
                     <svg
                       css={css`

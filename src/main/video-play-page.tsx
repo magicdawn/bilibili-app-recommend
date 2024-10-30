@@ -1,5 +1,4 @@
 import { baseDebug } from '$common'
-import { antdCustomCss } from '$common/emotion-css'
 import { AntdApp } from '$components/AntdApp'
 import {
   ForceAutoPlay,
@@ -134,14 +133,11 @@ async function addOpenInPipWindowButton() {
       <AntdApp>
         <Button
           size='small'
-          css={[
-            antdCustomCss.button,
-            css`
-              height: 22px;
-              line-height: 22px;
-              gap: 0;
-            `,
-          ]}
+          css={css`
+            height: 22px;
+            line-height: 22px;
+            gap: 0;
+          `}
           onClick={pausePlayingVideoAndOpenInPipWindow}
         >
           {VideoLinkOpenModeConfig.Popup.icon}

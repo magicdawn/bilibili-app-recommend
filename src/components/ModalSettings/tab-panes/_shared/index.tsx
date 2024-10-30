@@ -1,4 +1,4 @@
-import { C, antdCustomCss } from '$common/emotion-css'
+import { C } from '$common/emotion-css'
 import { initialSettings, updateSettings, type SettingsKey } from '$modules/settings'
 import type { TheCssType } from '$utility/type'
 import { Button, Popconfirm, Space } from 'antd'
@@ -78,12 +78,9 @@ export function ResetPartialSettingsButton({
     <Popconfirm title={'确定重置下面的设置项?'} onConfirm={() => resetPartialSettings(keys)}>
       <Button
         className={className}
-        css={[
-          antdCustomCss.button,
-          css`
-            column-gap: 4px;
-          `,
-        ]}
+        css={css`
+          column-gap: 4px;
+        `}
       >
         <IconParkOutlineReturn {...size(12)} css={C.mt(-1)} />
         <span>重置</span>

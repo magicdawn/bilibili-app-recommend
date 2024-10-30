@@ -24,25 +24,7 @@ const antdBtnTextStyle = css`
   line-height: var(--ant-control-height);
 `
 
-export const antdCustomCss = {
-  button: css`
-    &.ant-btn {
-      > span {
-        line-height: var(--ant-control-height);
-      }
-    }
-    &.ant-btn-lg {
-      > span {
-        line-height: var(--ant-control-height-lg);
-      }
-    }
-    &.ant-btn-sm {
-      > span {
-        line-height: var(--ant-control-height-sm);
-      }
-    }
-  `,
-}
+export const antdCustomCss = {}
 
 /**
  * emotion css helper, `C` = css-helper

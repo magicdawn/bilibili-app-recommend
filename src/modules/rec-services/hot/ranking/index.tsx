@@ -1,5 +1,5 @@
 import { REQUEST_FAIL_MSG } from '$common'
-import { antdCustomCss, flexVerticalCenterStyle } from '$common/emotion-css'
+import { flexVerticalCenterStyle } from '$common/emotion-css'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
 import { HelpInfo } from '$components/_base/HelpInfo'
@@ -145,7 +145,6 @@ function RankingUsageInfo() {
               <Button
                 key={c.slug}
                 css={[
-                  antdCustomCss.button,
                   active &&
                     css`
                       border-color: ${colorPrimaryValue};
@@ -184,7 +183,7 @@ function RankingUsageInfo() {
           </>
         }
       >
-        <Button css={antdCustomCss.button}>{category.name}</Button>
+        <Button>{category.name}</Button>
       </Popover>
     </div>
   )

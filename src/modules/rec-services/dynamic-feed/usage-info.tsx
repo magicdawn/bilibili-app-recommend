@@ -1,4 +1,4 @@
-import { antdCustomCss, flexVerticalCenterStyle, iconOnlyRoundButtonCss } from '$common/emotion-css'
+import { flexVerticalCenterStyle, iconOnlyRoundButtonCss } from '$common/emotion-css'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
 import { CHARGE_ONLY_TEXT } from '$components/VideoCard/top-marks'
@@ -291,7 +291,7 @@ export function DynamicFeedUsageInfo() {
             style: { maxHeight: '60vh', overflowY: 'scroll' },
           }}
         >
-          <Button css={[antdCustomCss.button]}>
+          <Button>
             {upName
               ? `UP: ${upName}`
               : selectedFollowGroup
@@ -301,7 +301,7 @@ export function DynamicFeedUsageInfo() {
         </Dropdown>
 
         {(hasSelectedUp || selectedFollowGroup) && (
-          <Button onClick={onClear} css={[antdCustomCss.button]} className='gap-0'>
+          <Button onClick={onClear} className='gap-0'>
             <IconPark name='Return' size={14} style={{ marginRight: 5 }} />
             <span>清除</span>
           </Button>

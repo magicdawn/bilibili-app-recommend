@@ -1,4 +1,3 @@
-import { antdCustomCss } from '$common/emotion-css'
 import type { OnRefresh } from '$components/RecGrid/useRefresh'
 import { isHotTabUsingShuffle } from '$modules/rec-services/hot'
 import { useSettingsSnapshot } from '$modules/settings'
@@ -70,15 +69,12 @@ export const RefreshButton = forwardRef<RefreshButtonActions, RefreshButtonProps
       disabled={refreshing}
       className={className}
       style={style}
-      css={[
-        antdCustomCss.button,
-        css`
-          gap: 0;
-          &.ant-btn:not(:disabled):focus-visible {
-            outline: none;
-          }
-        `,
-      ]}
+      css={css`
+        gap: 0;
+        &.ant-btn:not(:disabled):focus-visible {
+          outline: none;
+        }
+      `}
       ref={btn}
       onClick={onClick}
     >
