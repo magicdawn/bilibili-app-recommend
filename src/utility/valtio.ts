@@ -1,5 +1,5 @@
 import { isEqual, pick, throttle } from 'es-toolkit'
-import { proxy, snapshot, subscribe } from 'valtio'
+import { proxy, snapshot, subscribe, useSnapshot } from 'valtio'
 import { proxySet } from 'valtio/utils'
 
 export function valtioFactory<T>(computeValue: () => T) {

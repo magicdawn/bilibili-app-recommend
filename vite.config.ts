@@ -128,10 +128,7 @@ export default defineConfig(({ command }) => ({
       imports: [
         'react',
         // 'ahooks',
-        {
-          from: 'react',
-          imports: ['Fragment'],
-        },
+        { from: 'react', imports: ['Fragment'] },
         {
           from: 'react',
           imports: ['ComponentProps', 'CSSProperties', 'ReactNode', 'RefObject'],
@@ -141,27 +138,11 @@ export default defineConfig(({ command }) => ({
           from: 'ahooks',
           imports: ['useMemoizedFn', 'useKeyPress', 'useMount', 'useUpdateEffect'],
         },
-        {
-          from: 'react-dom/client',
-          imports: ['createRoot'],
-        },
-        {
-          from: 'react-dom/client',
-          imports: ['Root'],
-          type: true,
-        },
-        {
-          from: 'valtio',
-          imports: ['useSnapshot', 'proxy'],
-        },
-        {
-          from: '@emotion/react',
-          imports: ['css'],
-        },
-        {
-          from: 'clsx',
-          imports: ['clsx'],
-        },
+        { from: 'react-dom/client', imports: ['Root'], type: true },
+        { from: 'react-dom/client', imports: ['createRoot'] },
+        { from: '@emotion/react', imports: ['css'] },
+        { from: 'clsx', imports: ['clsx'] },
+        { from: 'polished', imports: ['size'] },
       ],
     }),
 

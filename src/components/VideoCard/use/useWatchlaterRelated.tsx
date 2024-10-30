@@ -4,7 +4,7 @@ import { WatchLaterIcon } from '$modules/icon'
 import { IconAnimatedChecked } from '$modules/icon/animated-checked'
 import { watchLaterState } from '$modules/rec-services/watchlater'
 import { AntdMessage } from '$utility'
-import { usePrevious } from 'ahooks'
+import { usePrevious, useRequest } from 'ahooks'
 import { delay } from 'es-toolkit'
 import { size } from 'polished'
 import type { MouseEvent } from 'react'
@@ -43,10 +43,16 @@ export function useWatchlaterRelated({
     return true
   })()
 
+  const $req = useRequest(
+    (usingAction: typeof watchLaterAdd | typeof watchLaterDel, bvid: string) => {
+      return usingAction(bvid)
+    },
+    { manual: true },
+  )
+
   // watchLater added
   const watchLaterAddedPrevious = usePrevious(watchLaterAdded)
 
-  const _requesting = useRef(false)
   const onToggleWatchLater = useMemoizedFn(
     async (
       e?: MouseEvent,
@@ -55,24 +61,16 @@ export function useWatchlaterRelated({
       e?.preventDefault()
       e?.stopPropagation()
 
+      // already loading
+      if ($req.loading) return { success: false }
+
       if (!avid || !bvid) {
         return { success: false }
       }
 
+      // run the action
       usingAction ??= watchLaterAdded ? watchLaterDel : watchLaterAdd
-      if (usingAction !== watchLaterAdd && usingAction !== watchLaterDel) {
-        throw new Error('unexpected usingAction provided')
-      }
-
-      if (_requesting.current) return { success: false }
-      _requesting.current = true
-
-      let success = false
-      try {
-        success = await usingAction(avid)
-      } finally {
-        _requesting.current = false
-      }
+      const success = await $req.runAsync(usingAction, avid)
 
       const targetState = usingAction === watchLaterAdd ? true : false
       if (success) {
@@ -102,16 +100,19 @@ export function useWatchlaterRelated({
   )
 
   // <use href={watchLaterAdded ? '#widget-watch-save' : '#widget-watch-later'} />
+  // <svg width={addSize} height={addSize}>
+  //   <use href={'#widget-watch-later'} />
+  // </svg>
+
   const addSize = 20
   const addedSize = 18
-  const icon = watchLaterAdded ? (
+  const icon = $req.loading ? (
+    <IconSvgSpinnersBarsRotateFade {...size(16)} />
+  ) : watchLaterAdded ? (
     <IconAnimatedChecked size={addedSize} useAnimation={watchLaterAddedPrevious === false} />
   ) : (
     <WatchLaterIcon {...size(addSize)} />
   )
-  // <svg width={addSize} height={addSize}>
-  //   <use href={'#widget-watch-later'} />
-  // </svg>
 
   const watchlaterButtonEl = hasWatchLaterEntry && (
     <VideoCardActionButton

@@ -7,6 +7,7 @@
 export {}
 declare global {
   const Fragment: typeof import('react')['Fragment']
+  const IconSvgSpinnersBarsRotateFade: typeof import('~icons/svg-spinners/bars-rotate-fade.jsx')['default']
   const IconTablerFaceIdError: typeof import('~icons/tabler/face-id-error.jsx')['default']
   const clsx: typeof import('clsx')['clsx']
   const createRef: typeof import('react')['createRef']
@@ -15,7 +16,7 @@ declare global {
   const forwardRef: typeof import('react')['forwardRef']
   const lazy: typeof import('react')['lazy']
   const memo: typeof import('react')['memo']
-  const proxy: typeof import('valtio')['proxy']
+  const size: typeof import('polished')['size']
   const startTransition: typeof import('react')['startTransition']
   const useCallback: typeof import('react')['useCallback']
   const useContext: typeof import('react')['useContext']
@@ -32,7 +33,6 @@ declare global {
   const useMount: typeof import('ahooks')['useMount']
   const useReducer: typeof import('react')['useReducer']
   const useRef: typeof import('react')['useRef']
-  const useSnapshot: typeof import('valtio')['useSnapshot']
   const useState: typeof import('react')['useState']
   const useSyncExternalStore: typeof import('react')['useSyncExternalStore']
   const useTransition: typeof import('react')['useTransition']

@@ -6,7 +6,10 @@ import { DislikeIcon } from '$modules/icon'
 import { AntdMessage } from '$utility'
 import { toastRequestFail } from '$utility/toast'
 import { Info } from '@icon-park/react'
-import { useLockFn, useUpdateLayoutEffect } from 'ahooks'
+import { useLockFn, useRequest, useUpdateLayoutEffect } from 'ahooks'
+import { Spin } from 'antd'
+import { clsx } from 'clsx'
+import { delay } from 'es-toolkit'
 import type { Root } from 'react-dom/client'
 import { createRoot } from 'react-dom/client'
 import { proxy, useSnapshot } from 'valtio'
@@ -40,6 +43,10 @@ export function delDislikeId(id: string) {
 }
 
 function ModalDislike({ show, onHide, item }: IProps) {
+  const $req = useRequest(async (item: AppRecItem, reason: Reason) => dislike(item, reason.id), {
+    manual: true,
+  })
+
   const onDislike = useLockFn(async (reason: Reason) => {
     if (!item) return
 
@@ -47,7 +54,7 @@ function ModalDislike({ show, onHide, item }: IProps) {
     let message: string = ''
     let err: Error | undefined
     try {
-      ;({ success, message } = await dislike(item, reason.id))
+      ;({ success, message } = await $req.runAsync(item, reason))
     } catch (e) {
       err = e as Error
     }
@@ -59,6 +66,7 @@ function ModalDislike({ show, onHide, item }: IProps) {
     if (success) {
       AntdMessage.success('已标记不想看')
       dislikedIds.set(item.param, { ...reason })
+      await delay(100)
       onHide()
     } else {
       // fail
@@ -151,55 +159,71 @@ function ModalDislike({ show, onHide, item }: IProps) {
       </div>
 
       <div css={BaseModalStyle.modalBody} ref={modalBodyRef}>
-        <div
-          className='reason-list'
-          css={css`
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: space-between;
-          `}
+        <Spin
+          spinning={$req.loading}
+          indicator={
+            <IconSvgSpinnersBarsRotateFade
+              css={css`
+                color: ${colorPrimaryValue};
+                .ant-spin .ant-spin-dot& {
+                  width: 25px;
+                  height: 25px;
+                }
+              `}
+            />
+          }
         >
-          {reasons.map((reason, index) => {
-            const active = index === activeIndex
+          <div
+            className='reason-list'
+            css={css`
+              display: flex;
+              flex-wrap: wrap;
+              align-items: center;
+              justify-content: space-between;
+            `}
+          >
+            {reasons.map((reason, index) => {
+              const active = index === activeIndex
 
-            return (
-              <button
-                className={clsx('reason', { active })}
-                css={[S.reason, active && S.reasonActive]}
-                key={reason.id}
-                data-id={reason.id}
-                onClick={() => {
-                  setActiveIndex(index)
-                  onDislike(reason)
-                }}
-              >
-                <span
-                  className='reason-no'
-                  css={css`
-                    position: absolute;
-                    left: 6px;
-
-                    width: 20px;
-                    height: 20px;
-                    border-radius: 50%;
-                    top: ${(32 - 20) / 2}px;
-
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-
-                    background-color: ${colorPrimaryValue};
-                    color: #fff;
-                  `}
+              return (
+                <button
+                  className={clsx('reason', { active })}
+                  css={[S.reason, active && S.reasonActive]}
+                  key={reason.id}
+                  data-id={reason.id}
+                  disabled={$req.loading}
+                  onClick={() => {
+                    setActiveIndex(index)
+                    onDislike(reason)
+                  }}
                 >
-                  {index + 1}
-                </span>
-                {reason.name}
-              </button>
-            )
-          })}
-        </div>
+                  <span
+                    className='reason-no'
+                    css={css`
+                      position: absolute;
+                      left: 6px;
+
+                      width: 20px;
+                      height: 20px;
+                      border-radius: 50%;
+                      top: ${(32 - 20) / 2}px;
+
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+
+                      background-color: ${colorPrimaryValue};
+                      color: #fff;
+                    `}
+                  >
+                    {index + 1}
+                  </span>
+                  {reason.name}
+                </button>
+              )
+            })}
+          </div>
+        </Spin>
 
         <div
           className='tips-container'
