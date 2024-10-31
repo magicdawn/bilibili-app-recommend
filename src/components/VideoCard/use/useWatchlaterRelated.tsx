@@ -44,9 +44,7 @@ export function useWatchlaterRelated({
   })()
 
   const $req = useRequest(
-    (usingAction: typeof watchLaterAdd | typeof watchLaterDel, bvid: string) => {
-      return usingAction(bvid)
-    },
+    (usingAction: typeof watchLaterAdd | typeof watchLaterDel, avid: string) => usingAction(avid),
     { manual: true },
   )
 
