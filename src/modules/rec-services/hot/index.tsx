@@ -32,7 +32,13 @@ export function isHotTabUsingShuffle(shuffleForPopularWeekly?: boolean) {
   return change
 }
 
-const imgOf = (src: string) => <img src={src} alt='' style={size('18px')} />
+const iconSize = 18
+const imgOf = (src: string) => <img src={src} alt='' style={{ ...size(`${iconSize}px`) }} />
+const groupedButtonCss = css`
+  .ant-btn-icon {
+    line-height: 0;
+  }
+`
 
 const HotSubTabConfig = {
   [EHotSubTab.PopularGeneral]: {
@@ -164,7 +170,7 @@ function HotUsageInfo({ children }: { children?: ReactNode }) {
                 key={subtab}
               >
                 <Button
-                  shape='circle'
+                  css={groupedButtonCss}
                   icon={icon}
                   type={active ? 'primary' : 'default'}
                   onClick={() => {
@@ -174,7 +180,7 @@ function HotUsageInfo({ children }: { children?: ReactNode }) {
                     onRefresh?.()
                   }}
                 >
-                  {/* {label} */}
+                  {label}
                 </Button>
               </AntdTooltip>
             )
@@ -186,8 +192,8 @@ function HotUsageInfo({ children }: { children?: ReactNode }) {
 
   return (
     <>
-      {dropdownMenu}
-      {/* {tab} */}
+      {/* {dropdownMenu} */}
+      {tab}
       {children}
     </>
   )

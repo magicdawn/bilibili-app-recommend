@@ -11,7 +11,8 @@ import { subscribe } from 'valtio'
 const $darkMode = valtioFactory(() => {
   return (
     document.body.classList.contains('dark') ||
-    document.body.classList.contains('bilibili-helper-dark-mode')
+    document.body.classList.contains('bilibili-helper-dark-mode') ||
+    document.documentElement.classList.contains('dark')
   )
 
   // bilibili default dark style

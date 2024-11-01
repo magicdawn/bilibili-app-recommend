@@ -534,17 +534,16 @@ const VideoCardInner = memo(function VideoCardInner({
           onToggleWatchLater()
         },
       },
-      item.api === EApiType.Watchlater &&
-        watchLaterAdded && {
-          key: 'watchlater-readd',
-          label: '重新添加稍候再看 (移到最前)',
-          icon: <IconPark name='AddTwo' size={15} />,
-          async onClick() {
-            const { success } = await onToggleWatchLater(undefined, watchLaterAdd)
-            if (!success) return
-            onMoveToFirst?.(item, cardData)
-          },
+      watchLaterAdded && {
+        key: 'watchlater-readd',
+        label: '重新添加稍候再看 (移到最前)',
+        icon: <IconPark name='AddTwo' size={15} />,
+        async onClick() {
+          const { success } = await onToggleWatchLater(undefined, watchLaterAdd)
+          if (!success) return
+          onMoveToFirst?.(item, cardData)
         },
+      },
     ].filter(Boolean)
 
     const favMenus: MenuArr =

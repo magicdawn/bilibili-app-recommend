@@ -1,5 +1,5 @@
 import { REQUEST_FAIL_MSG } from '$common'
-import { SwitchSettingItem } from '$components/ModalSettings/setting-item'
+import { CheckboxSettingItem, SwitchSettingItem } from '$components/ModalSettings/setting-item'
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
 import { type PopularGeneralItemExtend } from '$define'
 import { EApiType } from '$define/index.shared'
@@ -57,16 +57,31 @@ export class PopularGeneralRecService implements IService {
 
 function PopularGeneralUsageInfo() {
   const onRefresh = useOnRefreshContext()
-  return (
+
+  const tooltip = <>✅ 匿名访问: 使用游客身份访问</>
+  const extraAction = async () => {
+    await delay(100)
+    onRefresh?.()
+  }
+
+  const _switch = (
     <SwitchSettingItem
       configKey={'anonymousForPopularGeneral'}
       checkedChildren='匿名访问: 开'
       unCheckedChildren='匿名访问: 关'
-      tooltip={<>✅ 匿名访问: 使用游客身份访问</>}
-      extraAction={async () => {
-        await delay(100)
-        onRefresh?.()
-      }}
+      tooltip={tooltip}
+      extraAction={extraAction}
     />
   )
+
+  const checkbox = (
+    <CheckboxSettingItem
+      configKey={'anonymousForPopularGeneral'}
+      tooltip={tooltip}
+      label='匿名访问'
+      extraAction={extraAction}
+    />
+  )
+
+  return checkbox
 }

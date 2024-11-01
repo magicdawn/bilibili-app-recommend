@@ -117,7 +117,7 @@ export function useWatchlaterRelated({
       visible={actionButtonVisible}
       inlinePosition='right'
       icon={icon}
-      tooltip={watchLaterAdded ? '移除稍后再看' : '稍后再看'}
+      tooltip={watchLaterAdded ? '已添加稍后再看, 点击移除' : '稍后再看'}
       onClick={onToggleWatchLater}
     />
   )
