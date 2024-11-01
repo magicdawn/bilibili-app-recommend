@@ -16,6 +16,8 @@ import TablerFilter from '~icons/tabler/filter'
 import TablerFilterCheck from '~icons/tabler/filter-check'
 import { usePopupContainer } from '../_base'
 import {
+  DynamicFeedVideoMinDuration,
+  DynamicFeedVideoMinDurationConfig,
   DynamicFeedVideoType,
   DynamicFeedVideoTypeLabel,
   dfStore,
@@ -37,6 +39,8 @@ const clearPayload: Partial<DynamicFeedStore> = {
   upName: undefined,
   searchText: undefined,
   selectedFollowGroup: undefined,
+  dynamicFeedVideoType: DynamicFeedVideoType.All,
+  filterMinDuration: DynamicFeedVideoMinDuration.All,
 }
 
 const S = {
@@ -45,7 +49,7 @@ const S = {
   `,
 
   filterSection: css`
-    width: 300px;
+    min-width: 300px;
     margin-top: 10px;
     &:first-child {
       margin-top: 0;
@@ -75,6 +79,7 @@ export function DynamicFeedUsageInfo() {
     followGroups,
     selectedFollowGroup,
     dynamicFeedVideoType,
+    filterMinDuration,
     showFilter,
     searchText,
     selectedKey,
@@ -84,9 +89,14 @@ export function DynamicFeedUsageInfo() {
   const showFilterBadge = useMemo(() => {
     return (
       showFilter &&
-      !!(dynamicFeedVideoType !== DynamicFeedVideoType.All || hideChargeOnlyVideos || searchText)
+      !!(
+        dynamicFeedVideoType !== DynamicFeedVideoType.All ||
+        hideChargeOnlyVideos ||
+        searchText ||
+        filterMinDuration !== DynamicFeedVideoMinDuration.All
+      )
     )
-  }, [showFilter, dynamicFeedVideoType, hideChargeOnlyVideos, searchText])
+  }, [showFilter, dynamicFeedVideoType, hideChargeOnlyVideos, searchText, filterMinDuration])
 
   // try update on mount
   useMount(() => {
@@ -195,6 +205,7 @@ export function DynamicFeedUsageInfo() {
           <HelpInfo>
             「{CHARGE_ONLY_TEXT}」在此程序中归类为「投稿视频」
             <br />
+            「动态视频」时长通常较短
           </HelpInfo>
         </div>
         <div className='content'>
@@ -256,10 +267,40 @@ export function DynamicFeedUsageInfo() {
       )}
 
       <div className='section' css={S.filterSection}>
+        <div className='title'>最短时长</div>
+        <div className='content'>
+          <Radio.Group
+            css={css`
+              overflow: hidden;
+              .ant-radio-button-wrapper {
+                padding-inline: 10px; // 原始 15px
+              }
+            `}
+            buttonStyle='solid'
+            value={filterMinDuration}
+            onChange={async (v) => {
+              dfStore.filterMinDuration = v.target.value
+              await delay(100)
+              onRefresh?.()
+            }}
+          >
+            {Object.values(DynamicFeedVideoMinDuration).map((k) => {
+              const { label } = DynamicFeedVideoMinDurationConfig[k]
+              return (
+                <Radio.Button key={k} value={k}>
+                  {label}
+                </Radio.Button>
+              )
+            })}
+          </Radio.Group>
+        </div>
+      </div>
+
+      <div className='section' css={S.filterSection}>
         <div className='title'>搜索</div>
         <div className='content'>
           <Input.Search
-            style={{ width: 280 }}
+            style={{ width: '97%' }}
             placeholder='按标题关键字过滤'
             type='search'
             autoCorrect='off'

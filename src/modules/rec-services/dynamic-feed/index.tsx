@@ -3,10 +3,11 @@ import { CHARGE_ONLY_TEXT } from '$components/VideoCard/top-marks'
 import { type DynamicFeedItemExtend, type DynamicFeedJson } from '$define'
 import { EApiType } from '$define/index.shared'
 import { isWebApiSuccess, request } from '$request'
-import { toast } from '$utility'
+import { parseDuration, toast } from '$utility'
 import type { IService } from '../_base'
 import { getFollowGroupContent } from './group'
 import {
+  DynamicFeedVideoMinDuration,
   DynamicFeedVideoType,
   QUERY_DYNAMIC_UP_MID,
   dfStore,
@@ -39,6 +40,12 @@ export class DynamicFeedRecService implements IService {
   }
   get hideChargeOnlyVideos() {
     return this.filterConfig.hideChargeOnlyVideos
+  }
+  get filterMinDuration() {
+    return this.filterConfig.filterMinDuration
+  }
+  get filterMinDurationValue() {
+    return this.filterConfig.filterMinDurationValue
   }
   get hasSelectedUp() {
     return this.filterConfig.hasSelectedUp
@@ -133,6 +140,17 @@ export class DynamicFeedRecService implements IService {
         const chargeOnly =
           (x.modules?.module_dynamic?.major?.archive?.badge?.text as string) === CHARGE_ONLY_TEXT
         return !chargeOnly
+      })
+
+      // by 最短时长
+      .filter((x) => {
+        // only when the filter UI visible
+        if (!this.showFilter) return true
+        if (this.filterMinDuration === DynamicFeedVideoMinDuration.All) return true
+
+        const v = x.modules.module_dynamic.major.archive
+        const duration = parseDuration(v.duration_text)
+        return duration >= this.filterMinDurationValue
       })
 
       // by 关键字搜索

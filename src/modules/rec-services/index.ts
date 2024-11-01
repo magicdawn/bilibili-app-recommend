@@ -7,7 +7,7 @@ import type { RecItemTypeOrSeparator } from '$define'
 import { EApiType } from '$define/index.shared'
 import { uniqBy } from 'es-toolkit'
 import { AppRecService } from './app'
-import { DynamicFeedVideoType } from './dynamic-feed/store'
+import { DynamicFeedVideoMinDuration, DynamicFeedVideoType } from './dynamic-feed/store'
 import { PcRecService } from './pc'
 import { REC_TABS, getIService, type FetcherOptions } from './service-map'
 
@@ -144,7 +144,10 @@ export async function refreshForGrid(fetcherOptions: FetcherOptions) {
     if (
       s.followGroupTagid || // 选择了分组 & 分组很少更新
       (s.showFilter &&
-        (s.searchText || s.dynamicFeedVideoType === DynamicFeedVideoType.DynamicOnly)) // 过滤结果可能比较少
+        // 过滤结果可能比较少
+        (s.searchText ||
+          s.dynamicFeedVideoType === DynamicFeedVideoType.DynamicOnly ||
+          s.filterMinDuration !== DynamicFeedVideoMinDuration.All))
     ) {
       minCount = 1
     }

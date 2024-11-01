@@ -37,6 +37,26 @@ export const DynamicFeedVideoTypeLabel: Record<DynamicFeedVideoType, string> = {
   [DynamicFeedVideoType.DynamicOnly]: '仅动态视频',
 }
 
+export enum DynamicFeedVideoMinDuration {
+  All = 'all',
+  _2m = '2min',
+  _1m = '1min',
+  _30s = '30s',
+  _10s = '10s',
+}
+
+export const DynamicFeedVideoMinDurationConfig: Record<
+  DynamicFeedVideoMinDuration,
+  { label: string; duration: number }
+> = {
+  // 及以上
+  [DynamicFeedVideoMinDuration.All]: { label: '全部时长', duration: 0 },
+  [DynamicFeedVideoMinDuration._2m]: { label: '2分钟', duration: 2 * 60 },
+  [DynamicFeedVideoMinDuration._1m]: { label: '1分钟', duration: 60 },
+  [DynamicFeedVideoMinDuration._30s]: { label: '30秒', duration: 30 },
+  [DynamicFeedVideoMinDuration._10s]: { label: '10秒', duration: 10 },
+}
+
 /**
  * df expand to `dynamic-feed`
  */
@@ -78,6 +98,11 @@ export const dfStore = proxy({
   get hideChargeOnlyVideos() {
     return this.hideChargeOnlyVideosForKeysSet.has(this.selectedKey)
   },
+
+  filterMinDuration: DynamicFeedVideoMinDuration.All,
+  get filterMinDurationValue() {
+    return DynamicFeedVideoMinDurationConfig[this.filterMinDuration].duration
+  },
 })
 
 export type DynamicFeedStore = typeof dfStore
@@ -87,13 +112,20 @@ export type DynamicFeedStoreFilterConfig = ReturnType<typeof getDfStoreFilterCon
 export function getDfStoreFilterConfig() {
   const snap = snapshot(dfStore)
   return {
-    // state
+    // UP | 分组
     upMid: snap.upMid,
     followGroupTagid: snap.selectedFollowGroup?.tagid,
 
+    // 搜索
     searchText: snap.searchText,
+
+    // 类型
     dynamicFeedVideoType: snap.dynamicFeedVideoType,
     hideChargeOnlyVideos: snap.hideChargeOnlyVideos,
+
+    // 时长
+    filterMinDuration: snap.filterMinDuration,
+    filterMinDurationValue: snap.filterMinDurationValue,
 
     // flags
     hasSelectedUp: snap.hasSelectedUp,
