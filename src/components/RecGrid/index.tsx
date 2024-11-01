@@ -378,11 +378,18 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
         <>
           {hasMore ? (
             <>
+              {/* <IconSvgSpinnersBarsRotateFade
+                {...size(30)}
+                className='mr-10'
+                css={css`
+                  color: ${colorPrimaryValue};
+                `}
+              /> */}
               <IconPark
                 name='Loading'
                 fill={colorPrimaryValue}
                 spin
-                size={40}
+                size={30}
                 style={{ marginRight: 10 }}
               />
               加载中~

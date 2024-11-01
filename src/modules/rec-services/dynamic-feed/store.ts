@@ -39,6 +39,7 @@ export const DynamicFeedVideoTypeLabel: Record<DynamicFeedVideoType, string> = {
 
 export enum DynamicFeedVideoMinDuration {
   All = 'all',
+  _5m = '5min',
   _2m = '2min',
   _1m = '1min',
   _30s = '30s',
@@ -51,6 +52,7 @@ export const DynamicFeedVideoMinDurationConfig: Record<
 > = {
   // 及以上
   [DynamicFeedVideoMinDuration.All]: { label: '全部时长', duration: 0 },
+  [DynamicFeedVideoMinDuration._5m]: { label: '5分钟', duration: 5 * 60 },
   [DynamicFeedVideoMinDuration._2m]: { label: '2分钟', duration: 2 * 60 },
   [DynamicFeedVideoMinDuration._1m]: { label: '1分钟', duration: 60 },
   [DynamicFeedVideoMinDuration._30s]: { label: '30秒', duration: 30 },
