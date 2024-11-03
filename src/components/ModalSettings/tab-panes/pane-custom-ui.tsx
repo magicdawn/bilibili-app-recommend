@@ -91,7 +91,13 @@ export function TabPaneCustomUI() {
 
         <CheckboxSettingItem
           configKey='styleUseWhiteBackground'
-          label='全屏模式: styleUseWhiteBackground'
+          label='全屏模式: 使用纯白背景'
+          tooltip={
+            <>
+              ✅ 纯白背景
+              <br />❎ 浅灰色背景
+            </>
+          }
         />
       </SettingsGroup>
 
@@ -139,13 +145,13 @@ export function TabPaneCustomUI() {
         <CheckboxSettingItem
           configKey='styleUseCardBoxShadow'
           disabled={!styleUseCardBorder}
-          label='使用主题色阴影(border & box-shadow)'
+          label='使用主题色边框'
           tooltip={
             <>
-              如果你觉得太花哨, 可以关掉
+              看起来比较花哨~
               <br />
-              ✅ 使用主题色作为 box-shadow
-              <br />❎ no box-shadow, 卡片的背景色会略微改变标识高亮
+              ✅ 悬浮卡片时: 主题色边框
+              <br />❎ 悬浮卡片时: 卡片背景色会略微改变标识高亮
             </>
           }
         />

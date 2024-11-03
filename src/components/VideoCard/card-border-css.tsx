@@ -19,14 +19,16 @@ const borderAndShadow = css`
 `
 
 const hightlightBackground = (dark: boolean, styleUseWhiteBackground: boolean) => {
-  let color
+  let color: string = ''
   if (dark) {
-    color = '#2d2d2d'
+    // color = '#222' //    hsl(0, 0%, 13.33%) bg
+    // color = '#2d2d2d' // hsl(0, 0%, 17.65%)
+    color = 'hsl(from #222 h s calc(l + 5))' // 注意不是 5%
   } else {
     if (styleUseWhiteBackground) {
-      color = '#f4f4f5'
+      color = `hsl(from var(--bg1) h s 96.5%)`
     } else {
-      color = '#ebeced'
+      color = `hsl(from var(--bg2) h s 94%)`
     }
   }
   return css`

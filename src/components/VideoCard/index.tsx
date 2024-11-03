@@ -755,9 +755,14 @@ const VideoCardInner = memo(function VideoCardInner({
   function wrapDropdown(c: ReactNode) {
     return (
       <Dropdown
-        // 闪屏 不造为啥
-        // getPopupContainer={() => cardRef.current || document.body}
-        menu={{ items: contextMenus }}
+        getPopupContainer={() => cardRef.current || document.body}
+        menu={{
+          items: contextMenus,
+          style: {
+            // 需要设置宽度, 否则闪屏
+            width: 'max-content',
+          },
+        }}
         trigger={['contextMenu']}
         onOpenChange={onContextMenuOpenChange}
       >

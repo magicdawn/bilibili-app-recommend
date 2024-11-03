@@ -196,7 +196,7 @@ function LockButton({
     <VideoCardActionButton
       inlinePosition={'right'}
       icon={locked ? <RadixIconsLockClosed /> : <RadixIconsLockOpen1 />}
-      tooltip={locked ? '解锁' : '锁定'}
+      tooltip={locked ? '已锁定, 点击解锁' : '已解锁, 点击锁定'}
       css={S.button}
       onClick={(e) => {
         setLocked((x) => !x)
