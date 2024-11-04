@@ -206,6 +206,7 @@ const PreviewImageInner = memo(function PreviewImageInner({
 
 function SimplePregressBar({ progress }: { progress: number }) {
   const dark = useIsDarkMode()
+  const backgroundColor = dark ? '#333' : '#eee'
   return (
     <div
       className='track'
@@ -213,7 +214,7 @@ function SimplePregressBar({ progress }: { progress: number }) {
         position: 'absolute',
         bottom: 0,
         left: 0,
-        backgroundColor: dark ? 'hsl(from #222 h s calc(l + 15))' : '#eee',
+        backgroundColor,
         width: '100%',
         height: 2,
       }}

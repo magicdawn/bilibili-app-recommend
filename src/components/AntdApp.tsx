@@ -5,7 +5,7 @@ import { useSettingsSnapshot } from '$modules/settings'
 import { UseApp } from '$utility/antd-static'
 import { StyleProvider, type StyleProviderProps } from '@ant-design/cssinjs'
 import { cache as emotionCssDefaultCache } from '@emotion/css'
-import { CacheProvider, type EmotionCache, Global, css as _css, css } from '@emotion/react'
+import { CacheProvider, Global, css as _css, css, type EmotionCache } from '@emotion/react'
 import { ConfigProvider, theme } from 'antd'
 import zhCN from 'antd/locale/zh_CN'
 import type { ReactNode } from 'react'
@@ -15,6 +15,7 @@ import {
   colorPrimaryValue,
   useColorPrimaryHex,
 } from './ModalSettings/theme.shared'
+import { bgIdentifier } from './VideoCard/index.shared'
 
 // https://github.com/emotion-js/emotion/issues/1105
 emotionCssDefaultCache.compat = true
@@ -180,15 +181,23 @@ function GlobalStyle() {
                 }
               `,
 
-            // handle background-color
+            /**
+             * background-color
+             */
             styleUseWhiteBackground
               ? css`
+                  :root {
+                    ${bgIdentifier}: var(--bg1);
+                  }
                   /* same as #i_cecream */
                   body {
                     background-color: var(--bg1);
                   }
                 `
               : css`
+                  :root {
+                    ${bgIdentifier}: var(--bg2);
+                  }
                   body,
                   .large-header,
                   #i_cecream,
@@ -201,6 +210,12 @@ function GlobalStyle() {
                     background-color: var(--bg1);
                   }
                 `,
+            dark &&
+              css`
+                :root {
+                  ${bgIdentifier}: #222;
+                }
+              `,
           ]}
         />
       )}

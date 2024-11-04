@@ -11,28 +11,20 @@ import { borderColorValue, colorPrimaryValue } from '$components/ModalSettings/t
 import { useIsDarkMode } from '$modules/dark-mode'
 import { useSettingsSnapshot } from '$modules/settings'
 import type { TheCssType } from '$utility/type'
-import { borderRadiusValue } from './index.shared'
+import { bgValue, borderRadiusValue } from './index.shared'
 
+const c = `oklch(from ${colorPrimaryValue} calc(l + 0.1) c h)`
 const borderAndShadow = css`
-  border-color: ${colorPrimaryValue};
-  box-shadow: 0px 0px 9px 4px ${colorPrimaryValue};
+  border-color: ${c};
+  box-shadow: 0px 0px 9px 4px ${c};
 `
 
 const hightlightBackground = (dark: boolean, styleUseWhiteBackground: boolean) => {
-  let color: string = ''
-  if (dark) {
-    // color = '#222' //    hsl(0, 0%, 13.33%) bg
-    // color = '#2d2d2d' // hsl(0, 0%, 17.65%)
-    color = 'hsl(from #222 h s calc(l + 5))' // 注意不是 5%
-  } else {
-    if (styleUseWhiteBackground) {
-      color = `hsl(from var(--bg1) h s 96.5%)`
-    } else {
-      color = `hsl(from var(--bg2) h s 94%)`
-    }
-  }
+  const bg = dark
+    ? `oklch(from ${bgValue} calc(l + 0.025) c h)`
+    : `oklch(from ${bgValue} calc(l - 0.03) c h)`
   return css`
-    background-color: ${color};
+    background-color: ${bg};
   `
 }
 

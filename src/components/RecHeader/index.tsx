@@ -2,9 +2,9 @@ import { baseDebug } from '$common'
 import { iconOnlyRoundButtonCss } from '$common/emotion-css'
 import { useSizeExpression } from '$common/hooks/useResizeObserverExpression'
 import { useSticky } from '$common/hooks/useSticky'
-import { borderColorValue } from '$components/ModalSettings/theme.shared'
 import type { OnRefresh } from '$components/RecGrid/useRefresh'
 import { OnRefreshContext } from '$components/RecGrid/useRefresh'
+import { bgValue } from '$components/VideoCard/index.shared'
 import { $headerHeight, $usingEvolevdHeader } from '$header'
 import { useIsDarkMode } from '$modules/dark-mode'
 import { ConfigIcon } from '$modules/icon'
@@ -111,7 +111,8 @@ export const RecHeader = forwardRef<
                 top: ${headerHeight - 1}px; // 有缝隙, 故 -1 px
                 z-index: 1000;
                 margin-bottom: 12px;
-                border-bottom: 1px dotted ${borderColorValue};
+                border-bottom: 1px solid
+                  oklch(from ${bgValue} calc(l + ${dark ? 0.08 : -0.08}) c h / 50%);
 
                 transition:
                   background-color 0.3s ease-in-out,
