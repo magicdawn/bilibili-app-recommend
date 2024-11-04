@@ -110,10 +110,7 @@ export const RecHeader = forwardRef<
                 position: sticky;
                 top: ${headerHeight - 1}px; // 有缝隙, 故 -1 px
                 z-index: 1000;
-                margin-bottom: 12px;
-                border-bottom: 1px solid
-                  oklch(from ${bgValue} calc(l + ${dark ? 0.08 : -0.08}) c h / 50%);
-
+                margin-bottom: 10px;
                 transition:
                   background-color 0.3s ease-in-out,
                   box-shadow 0.3s ease-in-out,
@@ -121,11 +118,9 @@ export const RecHeader = forwardRef<
               `,
               sticky && [
                 css`
+                  border-bottom: 1px solid
+                    oklch(from ${bgValue} calc(l + ${dark ? 0.15 : -0.15}) c h / 50%);
                   background-color: var(--${styleUseWhiteBackground ? 'bg1' : 'bg2'}_float);
-                  /* box-shadow: 0 2px 4px rgb(0 0 0 / 8%); */
-                  /* box-shadow: inset 0 -1px 0 var(--line_regular); */
-                  /* box-shadow: rgba(0, 0, 0, 13%) 0 1px 10px 1px; */
-                  box-shadow: ${boxShadow};
                 `,
                 expandToFullWidthCss,
               ],
