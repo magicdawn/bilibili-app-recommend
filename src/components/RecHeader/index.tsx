@@ -132,16 +132,21 @@ export const RecHeader = forwardRef<
           }
         >
           <div
-            className='area-header'
-            css={[
-              css`
-                margin-bottom: 0;
-                height: auto;
-                column-gap: 20px; // gap between left & right
-                padding-inline: 0;
-                padding-block: 8px;
-              `,
-            ]}
+            data-raw-class='area-header'
+            css={css`
+              position: relative;
+              display: flex;
+              flex-direction: row;
+              justify-content: space-between;
+              align-items: center;
+              z-index: 1;
+
+              margin-bottom: 0;
+              height: auto;
+              column-gap: 20px; // gap between left & right
+              padding-inline: 0;
+              padding-block: 8px;
+            `}
           >
             <div
               data-class-name='left'
