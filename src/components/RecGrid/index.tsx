@@ -21,6 +21,7 @@ import { OpenExternalLinkIcon } from '$modules/icon'
 import { IconPark } from '$modules/icon/icon-park'
 import { concatThenUniq, refreshForGrid } from '$modules/rec-services'
 import { hotStore } from '$modules/rec-services/hot'
+import { getIService } from '$modules/rec-services/service-map.ts'
 import { useSettingsSnapshot } from '$modules/settings'
 import { isSafari } from '$ua'
 import { AntdMessage } from '$utility'
@@ -33,7 +34,6 @@ import ms from 'ms'
 import type { ReactNode } from 'react'
 import { useInView } from 'react-intersection-observer'
 import { VirtuosoGrid } from 'react-virtuoso'
-import { getIService } from '../../modules/rec-services/service-map'
 import * as scopedClsNames from '../video-grid.module.scss'
 import type { OnRefresh } from './useRefresh'
 import { useRefresh } from './useRefresh'
@@ -49,7 +49,7 @@ export type RecGridRef = {
 
 export type RecGridProps = {
   shortcutEnabled: boolean
-  infiteScrollUseWindow: boolean
+  infiniteScrollUseWindow: boolean
   onScrollToTop?: () => void | Promise<void>
   className?: string
   scrollerRef?: RefObject<HTMLElement | null>
@@ -59,7 +59,7 @@ export type RecGridProps = {
 
 export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
   {
-    infiteScrollUseWindow,
+    infiniteScrollUseWindow,
     shortcutEnabled,
     onScrollToTop,
     className,
@@ -224,7 +224,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
 
   const getScrollerRect = useMemoizedFn(() => {
     // use window
-    if (infiteScrollUseWindow) {
+    if (infiniteScrollUseWindow) {
       const yStart = $headerHeight.get() + 50 // 50 RecHeader height
       return new DOMRect(0, yStart, window.innerWidth, window.innerHeight - yStart)
     }
@@ -282,7 +282,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
     containerRef,
     getScrollerRect,
     videoCardEmitters,
-    changeScrollY: infiteScrollUseWindow
+    changeScrollY: infiniteScrollUseWindow
       ? function ({ offset, absolute }) {
           const scroller = document.documentElement
           if (typeof offset === 'number') {
@@ -352,7 +352,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
    * footer for infinite scroll
    */
   const { ref: footerRef, inView: __footerInView } = useInView({
-    root: infiteScrollUseWindow ? null : scrollerRef?.current || null,
+    root: infiniteScrollUseWindow ? null : scrollerRef?.current || null,
     rootMargin: `0px 0px ${window.innerHeight}px 0px`,
     onChange(inView) {
       if (inView) {

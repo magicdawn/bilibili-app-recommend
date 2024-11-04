@@ -47,7 +47,7 @@ export function PureRecommend() {
         ref={recGrid}
         css={[useNarrowMode && narrowStyle.grid]}
         shortcutEnabled={!(modalFeedVisible || modalSettingsVisible)}
-        infiteScrollUseWindow={true}
+        infiniteScrollUseWindow={true}
         onScrollToTop={onScrollToTop}
         setRefreshing={setRefreshing}
         setExtraInfo={setExtraInfo}
