@@ -33,7 +33,7 @@ export class LiveRecService implements IService {
 
   separatorAdded = false
 
-  async loadMore(abortSignal: AbortSignal): Promise<RecItemTypeOrSeparator[] | undefined> {
+  async loadMore(): Promise<RecItemTypeOrSeparator[] | undefined> {
     if (!this.hasMore) return
 
     if (this.page + 1 > this.totalPage) {

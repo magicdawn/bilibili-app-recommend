@@ -389,7 +389,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
                 name='Loading'
                 fill={colorPrimaryValue}
                 spin
-                size={30}
+                size={40}
                 style={{ marginRight: 10 }}
               />
               加载中~

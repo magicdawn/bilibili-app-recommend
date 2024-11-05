@@ -5,6 +5,7 @@ import { EApiType } from '$define/index.shared'
 import { isWebApiSuccess, request } from '$request'
 import { parseDuration, toast } from '$utility'
 import type { IService } from '../_base'
+import { LiveRecService } from '../live'
 import { getFollowGroupContent } from './group'
 import {
   DynamicFeedVideoMinDuration,
@@ -20,9 +21,35 @@ export class DynamicFeedRecService implements IService {
 
   offset: string = ''
   page = 0 // pages loaded
-  hasMore = true
 
-  constructor(public filterConfig: DynamicFeedStoreFilterConfig) {}
+  liveRecService: LiveRecService | undefined
+
+  hasMoreDynFeed = true
+
+  get hasMoreStreamingLive() {
+    // has more streaming Live item
+    if (this.liveRecService?.hasMore && !this.liveRecService.separatorAdded) {
+      return true
+    }
+    return false
+  }
+
+  get hasMore() {
+    return this.hasMoreStreamingLive || this.hasMoreDynFeed
+  }
+
+  constructor(
+    public filterConfig: DynamicFeedStoreFilterConfig,
+    public showLiveInDynamicFeed: boolean,
+  ) {
+    if (this.showLiveInDynamicFeed) {
+      const filterEmpty =
+        !this.upMid && typeof this.followGroupTagid === 'undefined' && !this.searchText
+      if (filterEmpty) {
+        this.liveRecService = new LiveRecService()
+      }
+    }
+  }
 
   // shortcut for filterConfig
   get upMid() {
@@ -63,8 +90,22 @@ export class DynamicFeedRecService implements IService {
   }
 
   async loadMore(signal: AbortSignal | undefined = undefined) {
+    // debugger
+
     if (!this.hasMore) {
       return
+    }
+
+    // load live first
+    if (this.liveRecService && this.hasMoreStreamingLive) {
+      const items = (await this.liveRecService.loadMore()) || []
+      const hasSep = items.some((x) => x.api === EApiType.Separator)
+      if (!hasSep) {
+        return items
+      } else {
+        const idx = items.findIndex((x) => x.api === EApiType.Separator)
+        return items.slice(0, idx)
+      }
     }
 
     const params: Record<string, number | string> = {
@@ -90,14 +131,14 @@ export class DynamicFeedRecService implements IService {
 
       // prevent infinite call
       if (json.message === '账号未登录') {
-        this.hasMore = false
+        this.hasMoreDynFeed = false
       }
 
       return
     }
 
     this.page++
-    this.hasMore = json.data.has_more
+    this.hasMoreDynFeed = json.data.has_more
     this.offset = json.data.offset
 
     // ensure current follow-group's mids loaded

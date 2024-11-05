@@ -62,6 +62,7 @@ export function TabPaneVideoSourceTabConfig() {
               flex-direction: column;
             `}
           >
+            {/* watchlater */}
             <div
               css={css`
                 order: ${sortedTabKeys.indexOf(ETab.Watchlater) + 1};
@@ -88,6 +89,7 @@ export function TabPaneVideoSourceTabConfig() {
               </Space>
             </div>
 
+            {/* fav */}
             <div
               css={css`
                 order: ${sortedTabKeys.indexOf(ETab.Fav) + 1};
@@ -114,6 +116,7 @@ export function TabPaneVideoSourceTabConfig() {
               </Space>
             </div>
 
+            {/* dynamic-feed */}
             <div
               css={css`
                 order: ${sortedTabKeys.indexOf(ETab.DynamicFeed) + 1};
@@ -137,9 +140,21 @@ export function TabPaneVideoSourceTabConfig() {
                     </>
                   }
                 />
+                <CheckboxSettingItem
+                  configKey='showLiveInDynamicFeed'
+                  label='在动态里显示直播'
+                  tooltip={
+                    <>
+                      动态里显示正在直播的 UP
+                      <br />
+                      P.S 仅在选择「全部」时展示
+                    </>
+                  }
+                />
               </Space>
             </div>
 
+            {/* recommend */}
             <div
               css={css`
                 order: ${sortedTabKeys.indexOf(ETab.RecommendApp) + 1};

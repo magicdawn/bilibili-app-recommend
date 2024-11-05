@@ -89,7 +89,11 @@ export const initialSettings = {
    * tab=popular-weekly
    */
   shuffleForPopularWeekly: false, // shuffle
-  showPopularWeeklyOnlyOnWeekend: false, // only on weekend
+
+  /**
+   * tab=live
+   */
+  showLiveInDynamicFeed: true, // 在动态中显示直播
 
   /**
    * 过滤器模块

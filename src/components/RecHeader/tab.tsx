@@ -40,8 +40,7 @@ export function useSortedTabKeys() {
 }
 
 export function useCurrentDisplayingTabKeys() {
-  const { hidingTabKeys, customTabKeysOrder, showPopularWeeklyOnlyOnWeekend } =
-    useSettingsSnapshot()
+  const { hidingTabKeys, customTabKeysOrder } = useSettingsSnapshot()
   const logined = useHasLogined()
   const keys = useMemo(() => {
     const tabkeys = getSortedTabKeys(customTabKeysOrder)
@@ -54,13 +53,9 @@ export function useCurrentDisplayingTabKeys() {
         return true
       }
 
-      // if (key === ETabType.PopularWeekly && showPopularWeeklyOnlyOnWeekend) {
-      //   return isWeekendForPopularWeekly()
-      // }
-
       return !hidingTabKeys.includes(key)
     })
-  }, [hidingTabKeys, customTabKeysOrder, showPopularWeeklyOnlyOnWeekend, logined])
+  }, [hidingTabKeys, customTabKeysOrder, logined])
 
   if (QUERY_DYNAMIC_UP_MID && keys.includes(ETab.DynamicFeed)) {
     return [ETab.DynamicFeed]
