@@ -51,7 +51,7 @@ export function TabPaneAdvance() {
         <Space size={20}>
           <Popconfirm
             title='确定'
-            description='确定恢复默认设置? 该操作不可逆!'
+            description='确定恢复默认设置? 此操作不可逆!'
             onConfirm={onResetSettings}
           >
             <Button danger type='primary'>
@@ -67,7 +67,7 @@ export function TabPaneAdvance() {
                 导出设置
               </Button>
             </AntdTooltip>
-            <AntdTooltip title='从文件中导入设置项, 将覆盖当前设置, 该操作不可逆!'>
+            <AntdTooltip title='从文件中导入设置项, 将覆盖当前设置, 此操作不可逆!'>
               <Button onClick={() => importSettings()}>
                 <TablerFileImport />
                 导入设置
@@ -101,7 +101,7 @@ export function TabPaneAdvance() {
 
         <Popconfirm
           title='确定'
-          description='将覆盖本地设置? 该操作不可逆!'
+          description='将覆盖本地设置? 此操作不可逆!'
           onConfirm={onRestoreSettings}
         >
           <Button danger type='primary'>
