@@ -3,7 +3,7 @@
  */
 
 import { APP_KEY_PREFIX } from '$common'
-import { normalizeCardData } from '$components/VideoCard/process/normalize'
+import { normalizeCardData, type IVideoCardData } from '$components/VideoCard/process/normalize'
 import type { RecItemType, RecItemTypeOrSeparator } from '$define'
 import { EApiType } from '$define/index.shared'
 import dayjs from 'dayjs'
@@ -27,14 +27,17 @@ function copyBvidsSingleLine() {
   const bvids = getGridCardData().map((cardData) => cardData.bvid)
   GM.setClipboard(bvids.join(' '))
 }
+
 function copyBvidsInfo() {
-  const lines = getGridCardData().map((cardData) => {
-    let { bvid, authorName, pubts, title } = cardData
-    const date = dayjs.unix(pubts ?? 0).format('YYYY-MM-DD')
-    title = title.replace(/\n+/g, ' ')
-    return `${bvid} ;; [${authorName}] ${date} ${title}`
-  })
+  const lines = getGridCardData().map(getBvidInfo)
   GM.setClipboard(lines.join('\n'))
+}
+
+export function getBvidInfo(cardData: IVideoCardData) {
+  let { bvid, authorName, pubts, title } = cardData
+  const date = dayjs.unix(pubts ?? 0).format('YYYY-MM-DD')
+  title = title.replace(/\n+/g, ' ')
+  return `${bvid} ;; [${authorName}] ${date} ${title}`
 }
 
 // bind(export) function to unsafeWindow

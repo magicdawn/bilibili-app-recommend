@@ -9,12 +9,14 @@ import {
   settings,
   updateSettings,
   useSettingsSnapshot,
+  type BooleanSettingsKey,
+  type SettingsKey,
 } from '$modules/settings'
 import { exportSettings, importSettings } from '$modules/settings/file-backup'
 import { articleDraft, restoreOmitKeys } from '$modules/settings/index.shared'
 import { AntdMessage } from '$utility'
 import { Button, Popconfirm, Slider, Space } from 'antd'
-import { omit, pick } from 'es-toolkit'
+import { omit, pick, startCase } from 'es-toolkit'
 import TablerFileExport from '~icons/tabler/file-export'
 import TablerFileImport from '~icons/tabler/file-import'
 import TablerRestore from '~icons/tabler/restore'
@@ -41,6 +43,10 @@ async function onRestoreSettings() {
   updateSettings(pickedSettings)
   return toastAndReload()
 }
+
+const internalBooleanKeys = (Object.keys(settings) as SettingsKey[]).filter(
+  (k) => k.startsWith('__internal') && typeof settings[k] === 'boolean',
+) as BooleanSettingsKey[]
 
 export function TabPaneAdvance() {
   const { autoPreviewUpdateInterval } = useSettingsSnapshot()
@@ -147,6 +153,29 @@ export function TabPaneAdvance() {
             </>
           }
         />
+      </SettingsGroup>
+
+      <SettingsGroup
+        titleCss={css`
+          justify-content: space-between;
+        `}
+        title={
+          <>
+            其他
+            <ResetPartialSettingsButton keys={internalBooleanKeys} />
+          </>
+        }
+      >
+        <Space size={10}>
+          {internalBooleanKeys.map((k) => (
+            <CheckboxSettingItem
+              key={k}
+              configKey={k}
+              tooltip={k}
+              label={startCase(k.slice('__internal'.length))}
+            />
+          ))}
+        </Space>
       </SettingsGroup>
     </div>
   )

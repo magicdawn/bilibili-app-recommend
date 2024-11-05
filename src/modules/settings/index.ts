@@ -173,6 +173,11 @@ export const initialSettings = {
    */
   hidingTabKeys: [ETab.KeepFollowOnly, ETab.Live] satisfies ETab[] as ETab[],
   customTabKeysOrder: [] satisfies ETab[] as ETab[],
+
+  /**
+   * internal
+   */
+  __internalEnableCopyBvidInfoContextMenu: false,
 }
 
 export type Settings = typeof initialSettings

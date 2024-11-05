@@ -5,6 +5,7 @@ import { useMittOn } from '$common/hooks/useMitt'
 import { useRefStateBox } from '$common/hooks/useRefState'
 import { useDislikedReason } from '$components/ModalDislike'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
+import { getBvidInfo } from '$components/RecGrid/unsafe-window-export'
 import type { OnRefresh } from '$components/RecGrid/useRefresh'
 import { useCurrentUsingTab, videoSourceTabState } from '$components/RecHeader/tab'
 import { ETab } from '$components/RecHeader/tab-enum'
@@ -449,6 +450,15 @@ const VideoCardInner = memo(function VideoCardInner({
           copyContent(bvid)
         },
       },
+      bvid &&
+        settings.__internalEnableCopyBvidInfoContextMenu && {
+          key: 'copy-bvid-info',
+          label: '复制 BVID 信息',
+          icon: <IconPark name='Copy' size={15} />,
+          onClick() {
+            copyContent(getBvidInfo(cardData))
+          },
+        },
     ].filter(Boolean)
 
     const actionMenus: MenuArr = [
