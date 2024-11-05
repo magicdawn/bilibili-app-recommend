@@ -22,7 +22,7 @@ import { settings, updateSettings, useSettingsSnapshot } from '$modules/settings
 import { UserBlacklistService, useInBlacklist } from '$modules/user/relations/blacklist'
 import { UserfollowService } from '$modules/user/relations/follow'
 import { isWebApiSuccess } from '$request'
-import { isFirefox } from '$ua'
+import { isFirefox, isSafari } from '$ua'
 import { AntdMessage, AntdNotification, toast } from '$utility'
 import type { TheCssType } from '$utility/type'
 import { useLockFn } from 'ahooks'
@@ -755,7 +755,11 @@ const VideoCardInner = memo(function VideoCardInner({
   function wrapDropdown(c: ReactNode) {
     return (
       <Dropdown
-        getPopupContainer={() => cardRef.current || document.body}
+        getPopupContainer={() => {
+          // safari z-index issue: context-menu 在 rec-header 下
+          if (isSafari) return document.body
+          return cardRef.current || document.body
+        }}
         menu={{
           items: contextMenus,
           style: {
@@ -782,6 +786,11 @@ const VideoCardInner = memo(function VideoCardInner({
           height: 100%;
         `}
         onClick={handleCardClick}
+        onContextMenu={(e) => {
+          if (styleUseCardBorder) {
+            e.preventDefault()
+          }
+        }}
       >
         {c}
       </div>

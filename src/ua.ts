@@ -1,11 +1,19 @@
 import UAParser from 'ua-parser-js'
 
 const parsed = UAParser()
+export { parsed as parsedUA }
 
-// os
+/**
+ * os
+ */
 export const isMac = parsed.os.name?.toLowerCase() === 'mac os'
 
-// browser
-export const isSafari = parsed.browser.name?.toLowerCase() === 'safari'
-export const isFirefox = parsed.browser.name?.toLowerCase() === 'firefox'
-export const isEdge = parsed.browser.name?.toLowerCase() === 'edge'
+/**
+ * browser
+ */
+const parsedBrowserName = parsed.browser.name || ''
+const isBrand = (brand: string) => new RegExp(String.raw`\b${brand}\b`, 'i').test(parsedBrowserName)
+
+export const isSafari = isBrand('safari') // `safari` | `mobile safari`
+export const isFirefox = isBrand('firefox')
+export const isEdge = isBrand('edge')

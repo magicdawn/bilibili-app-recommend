@@ -142,10 +142,12 @@ function GlobalStyle() {
                 display: none;
               }
 
-              /* hide download tip */
-              /* hide 立即登录免费领大会员优惠券 */
+              /* download tip */
+              /* 立即登录免费领大会员优惠券 */
+              /* 广告 */
               .desktop-download-tip,
-              .vip-login-tip {
+              .vip-login-tip,
+              .palette-button-adcard {
                 display: none !important;
               }
 

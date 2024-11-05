@@ -110,6 +110,10 @@ export default defineConfig(({ command }) => ({
     // target: ''
   },
 
+  // Set this to 0.0.0.0 or true to listen on all addresses, including LAN and public addresses.
+  server: { host: true },
+  preview: { host: true },
+
   plugins: [
     tsconfigPaths(),
 
