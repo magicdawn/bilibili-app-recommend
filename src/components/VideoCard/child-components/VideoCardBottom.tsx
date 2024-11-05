@@ -291,25 +291,28 @@ export function VideoCardBottom({
         </Case>
 
         <Case condition={isLive(item)}>
-          <a
-            css={[
-              descOwnerCss,
-              css`
-                display: -webkit-box;
-                -webkit-box-orient: vertical;
-                -webkit-line-clamp: 1;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                max-width: 100%;
-              `,
-            ]}
-            href={authorHref}
-            target='_blank'
-            title={(authorName || '') + (liveDesc || '')}
-          >
-            {authorName}
-            {liveDesc && <span css={[C.ml(4)]}>{liveDesc}</span>}
-          </a>
+          <>
+            <a
+              css={[
+                descOwnerCss,
+                css`
+                  display: -webkit-box;
+                  -webkit-box-orient: vertical;
+                  -webkit-line-clamp: 1;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                  max-width: 100%;
+                `,
+              ]}
+              href={authorHref}
+              target='_blank'
+              title={(authorName || '') + (liveDesc || '')}
+            >
+              {authorName}
+              {liveDesc && <span css={[C.ml(4)]}>{liveDesc}</span>}
+            </a>
+            {!!recommendReason && <span css={S.recommendReason}>{recommendReason}</span>}
+          </>
         </Case>
       </Switch>
     )

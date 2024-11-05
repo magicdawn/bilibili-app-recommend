@@ -9,7 +9,13 @@ import type { OnRefresh } from '$components/RecGrid/useRefresh'
 import { useCurrentUsingTab, videoSourceTabState } from '$components/RecHeader/tab'
 import { ETab } from '$components/RecHeader/tab-enum'
 import { Picture } from '$components/_base/Picture'
-import { isRanking, type AppRecItemExtend, type PvideoJson, type RecItemType } from '$define'
+import {
+  isLive,
+  isRanking,
+  type AppRecItemExtend,
+  type PvideoJson,
+  type RecItemType,
+} from '$define'
 import { EApiType } from '$define/index.shared'
 import { openNewTab } from '$modules/gm'
 import { DislikeIcon, OpenExternalLinkIcon, WatchLaterIcon } from '$modules/icon'
@@ -17,6 +23,7 @@ import { IconPark } from '$modules/icon/icon-park'
 import { dynamicFeedFilterSelectUp } from '$modules/rec-services/dynamic-feed/usage-info'
 import { formatFavFolderUrl } from '$modules/rec-services/fav'
 import { UserFavService, defaultFavFolderName } from '$modules/rec-services/fav/user-fav.service'
+import { ELiveStatus } from '$modules/rec-services/live/live-enum'
 import { useWatchLaterState } from '$modules/rec-services/watchlater'
 import { settings, updateSettings, useSettingsSnapshot } from '$modules/settings'
 import { UserBlacklistService, useInBlacklist } from '$modules/user/relations/blacklist'
@@ -46,7 +53,7 @@ import { getFollowedStatus } from './process/filter'
 import type { IVideoCardData } from './process/normalize'
 import { normalizeCardData } from './process/normalize'
 import { StatItemDisplay } from './stat-item'
-import { ChargeOnlyTag, RankingNumMark, isChargeOnlyVideo } from './top-marks'
+import { ChargeOnlyTag, LiveBadge, RankingNumMark, isChargeOnlyVideo } from './top-marks'
 import { useDislikeRelated } from './use/useDislikeRelated'
 import { useOpenRelated } from './use/useOpenRelated'
 import { usePreviewAnimation } from './use/usePreviewAnimation'
@@ -274,9 +281,6 @@ const VideoCardInner = memo(function VideoCardInner({
     actionButtonVisible,
   })
 
-  // 充电专属
-  const hasChargeOnlyTag = isChargeOnlyVideo(item, recommendReason)
-
   /**
    * 收藏状态
    */
@@ -423,8 +427,6 @@ const VideoCardInner = memo(function VideoCardInner({
       openInCurrentWindow()
     }
   })
-
-  const hasRankingNo = isRanking(item)
 
   type MenuArr = MenuProps['items']
   const contextMenus: MenuArr = useMemo(() => {
@@ -612,6 +614,25 @@ const VideoCardInner = memo(function VideoCardInner({
     updateFavFolderNames()
   })
 
+  /**
+   * top marks
+   */
+  const _isChargeOnly = isChargeOnlyVideo(item, recommendReason) // 充电专属
+  const _isRanking = isRanking(item)
+  const _isStreaming = isLive(item) && item.live_status === ELiveStatus.Streaming // 直播中
+  const topMarks: ReactNode = (
+    <>
+      {/* 动态: 充电专属 */}
+      {_isChargeOnly && <ChargeOnlyTag />}
+
+      {/* 热门: 排行榜 */}
+      {_isRanking && <RankingNumMark item={item} />}
+
+      {/* 直播: 直播中 */}
+      {_isStreaming && <LiveBadge />}
+    </>
+  )
+
   // 一堆 selector 增加权重
   const prefixCls = `.${APP_CLS_ROOT} .${APP_CLS_GRID} .${APP_CLS_CARD}`
   const coverRoundCss: TheCssType = [
@@ -739,11 +760,8 @@ const VideoCardInner = memo(function VideoCardInner({
         </div>
       )}
 
-      {/* 充电专属 */}
-      {hasChargeOnlyTag && <ChargeOnlyTag />}
-
-      {/* 排行榜 */}
-      {hasRankingNo && <RankingNumMark item={item} />}
+      {/* 标记 */}
+      {topMarks}
     </a>
   )
 

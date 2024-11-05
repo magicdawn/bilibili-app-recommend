@@ -1,14 +1,16 @@
-import { flexCenterStyle, flexVerticalCenterStyle } from '$common/emotion-css'
+import { C, flexCenterStyle, flexVerticalCenterStyle } from '$common/emotion-css'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import type { RankingItemExtend, RecItemType } from '$define'
 import { EApiType } from '$define/index.shared'
 import { openNewTab } from '$modules/gm'
+import { LiveIcon } from '$modules/icon'
 import type { NormalRankingItem } from '$modules/rec-services/hot/ranking/api.normal-category'
 import {
   RANKING_CATEGORIES_MAP,
   isNormalRankingItem,
 } from '$modules/rec-services/hot/ranking/category'
 import { Dropdown } from 'antd'
+import { size } from 'polished'
 import IconParkOutlineMore from '~icons/icon-park-outline/more'
 import PhCrownFill from '~icons/ph/crown-fill'
 import { VideoCardActionStyle, useTooltip } from './child-components/VideoCardActions'
@@ -138,5 +140,41 @@ export function RankingNumMark({ item }: { item: RankingItemExtend }) {
         </Dropdown>
       )}
     </div>
+  )
+}
+
+export function LiveBadge({ className }: { className?: string }) {
+  return (
+    <span
+      className={className}
+      css={[
+        VideoCardActionStyle.top('left'),
+        css`
+          height: 16px;
+          line-height: 16px;
+          border-radius: 16px;
+          padding-inline: 4px 6px;
+          background-color: ${colorPrimaryValue};
+
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+        `,
+      ]}
+    >
+      <LiveIcon active {...size(14)} css={[C.mr(2)]} />
+      <span
+        css={css`
+          font-weight: normal;
+          font-size: 11px;
+          color: #fff;
+          line-height: 1;
+          position: relative;
+          top: 1px;
+        `}
+      >
+        直播中
+      </span>
+    </span>
   )
 }

@@ -16,6 +16,7 @@ const Configuration: UserConfig = {
       'always',
       [...defaultConfig.rules['type-enum'][2], 'deps', 'changelog'],
     ],
+    'header-max-length': [RuleConfigSeverity.Disabled],
   },
 }
 

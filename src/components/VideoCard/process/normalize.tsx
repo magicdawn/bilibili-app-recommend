@@ -1,6 +1,5 @@
 import { APP_NAME } from '$common'
-import { C } from '$common/emotion-css'
-import { borderColorValue, colorPrimaryValue } from '$components/ModalSettings/theme.shared'
+import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import { AntdTooltip } from '$components/_base/antd-custom'
 import {
   isApp,
@@ -25,7 +24,6 @@ import {
   type WatchLaterItemExtend,
 } from '$define'
 import type { EApiType } from '$define/index.shared'
-import { LiveIcon } from '$modules/icon'
 import { IconPark } from '$modules/icon/icon-park'
 import type { FavItemExtend } from '$modules/rec-services/fav/define'
 import {
@@ -43,7 +41,6 @@ import {
 } from '$utility/video'
 import { BvCode } from '@mgdn/bvid'
 import dayjs from 'dayjs'
-import { size } from 'polished'
 import type { ReactNode } from 'react'
 import type { AppRecIconField } from '../stat-item'
 import { AppRecIconMap, getField } from '../stat-item'
@@ -651,11 +648,11 @@ function apiRankingAdapter(item: RankingItemExtend): IVideoCardData {
 }
 
 function apiLiveAdapter(item: LiveItemExtend): IVideoCardData {
-  const area = `「${item.area_name_v2}」`
+  const area = `${item.area_name_v2}`
   const liveDesc =
     item.live_status === ELiveStatus.Streaming
-      ? `${DESC_SEPARATOR.trimEnd()}${area}` // 「 不需要 space padding
-      : `${DESC_SEPARATOR}${formatLiveTime(item.record_live_time)} 直播过${area}`
+      ? '' // 「 不需要 space padding
+      : `${DESC_SEPARATOR}${formatLiveTime(item.record_live_time)} 直播过`
 
   function formatLiveTime(ts: number) {
     const today = dayjs().format('YYYYMMDD')
@@ -676,15 +673,9 @@ function apiLiveAdapter(item: LiveItemExtend): IVideoCardData {
     goto: 'live',
     href: `https://live.bilibili.com/${item.roomid}`,
     title: item.title,
-    titleRender: (
-      <>
-        {item.live_status === ELiveStatus.Streaming && <LiveBadge css={[C.mr(4)]} />}
-        {item.title}
-      </>
-    ),
     liveDesc,
     cover: item.room_cover,
-    recommendReason: undefined, // TODO: write something here
+    recommendReason: area,
 
     // stat
     statItems: [{ field: 'play', value: item.text_small } as const].filter(
@@ -696,41 +687,4 @@ function apiLiveAdapter(item: LiveItemExtend): IVideoCardData {
     authorFace: item.face,
     authorMid: String(item.uid),
   }
-}
-
-export function LiveBadge({ className }: { className?: string }) {
-  return (
-    <span
-      className={className}
-      css={css`
-        height: 15px;
-        line-height: 15px;
-        padding: 0 4px;
-        width: max-content;
-        flex-shrink: 0;
-
-        border-radius: 22px;
-        border: 2px solid ${borderColorValue};
-        background-color: ${colorPrimaryValue};
-
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-      `}
-    >
-      <LiveIcon active {...size(12)} css={[C.mr(2)]} />
-      <span
-        css={css`
-          font-weight: normal;
-          font-size: 10px;
-          color: #fff;
-          line-height: 1;
-          position: relative;
-          top: 1px;
-        `}
-      >
-        直播中
-      </span>
-    </span>
-  )
 }
