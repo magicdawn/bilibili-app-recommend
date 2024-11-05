@@ -1,6 +1,12 @@
 import { APP_NAME } from '$common'
-import { C, flexVerticalCenterStyle } from '$common/emotion-css'
+import {
+  C,
+  flexCenterStyle,
+  flexVerticalCenterStyle,
+  iconOnlyRoundButtonCss,
+} from '$common/emotion-css'
 import { CheckboxSettingItem } from '$components/ModalSettings/setting-item'
+import { CollapsePanel } from '$components/_base/CollapsePanel'
 import { AntdTooltip } from '$components/_base/antd-custom'
 import { OpenExternalLinkIcon } from '$modules/icon'
 import {
@@ -23,6 +29,7 @@ import TablerRestore from '~icons/tabler/restore'
 import { set_HAS_RESTORED_SETTINGS } from '../../../modules/settings/restore-flag'
 import styles from '../index.module.scss'
 import { toastAndReload } from '../index.shared'
+import { borderColorValue } from '../theme.shared'
 import { ResetPartialSettingsButton, SettingsGroup } from './_shared'
 
 function onResetSettings() {
@@ -50,6 +57,8 @@ const internalBooleanKeys = (Object.keys(settings) as SettingsKey[]).filter(
 
 export function TabPaneAdvance() {
   const { autoPreviewUpdateInterval } = useSettingsSnapshot()
+
+  const [internalKeysExpanded, setInternalKeysExpanded] = useState<boolean>(false)
 
   return (
     <div className={styles.tabPane}>
@@ -156,26 +165,57 @@ export function TabPaneAdvance() {
       </SettingsGroup>
 
       <SettingsGroup
-        titleCss={css`
-          justify-content: space-between;
-        `}
         title={
           <>
             其他
-            <ResetPartialSettingsButton keys={internalBooleanKeys} />
+            <Button
+              onClick={() => setInternalKeysExpanded((v) => !v)}
+              className='ml-10px'
+              css={[
+                iconOnlyRoundButtonCss,
+                flexCenterStyle,
+                internalKeysExpanded &&
+                  css`
+                    &.ant-btn-default.ant-btn-outlined {
+                      color: var(--ant-button-default-active-color);
+                      border-color: var(--ant-button-default-active-border-color);
+                      background: var(--ant-button-default-active-bg);
+                    }
+                  `,
+              ]}
+            >
+              <IconIconParkOutlineDownC
+                {...size(16)}
+                css={css`
+                  transition: transform 0.3s ease;
+                  transform: ${internalKeysExpanded ? 'rotate(180deg)' : 'rotate(0deg)'};
+                `}
+              />
+            </Button>
           </>
         }
       >
-        <Space size={10}>
-          {internalBooleanKeys.map((k) => (
-            <CheckboxSettingItem
-              key={k}
-              configKey={k}
-              tooltip={k}
-              label={startCase(k.slice('__internal'.length))}
-            />
-          ))}
-        </Space>
+        <CollapsePanel expanded={internalKeysExpanded}>
+          <Space
+            size={20}
+            css={css`
+              border: 1px solid ${borderColorValue};
+              padding: 10px;
+              width: 100%;
+              border-radius: 6px;
+            `}
+          >
+            <ResetPartialSettingsButton keys={internalBooleanKeys} />
+            {internalBooleanKeys.map((k) => (
+              <CheckboxSettingItem
+                key={k}
+                configKey={k}
+                tooltip={k}
+                label={startCase(k.slice('__internal'.length))}
+              />
+            ))}
+          </Space>
+        </CollapsePanel>
       </SettingsGroup>
     </div>
   )
