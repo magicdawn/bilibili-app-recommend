@@ -2,6 +2,7 @@ import { baseDebug } from '$common'
 import { iconOnlyRoundButtonCss } from '$common/emotion-css'
 import { useSizeExpression } from '$common/hooks/useResizeObserverExpression'
 import { useSticky } from '$common/hooks/useSticky'
+import { ModalSettingsHotkey } from '$components/ModalSettings'
 import type { OnRefresh } from '$components/RecGrid/useRefresh'
 import { OnRefreshContext } from '$components/RecGrid/useRefresh'
 import { bgValue } from '$components/VideoCard/index.shared'
@@ -178,6 +179,7 @@ export const RecHeader = forwardRef<
                 {!accessKey && showAccessKeyManage && <AccessKeyManage style={{ marginLeft: 5 }} />}
 
                 <Button onClick={showModalSettings} css={iconOnlyRoundButtonCss}>
+                  <ModalSettingsHotkey />
                   <ConfigIcon {...size(14)} />
                 </Button>
 

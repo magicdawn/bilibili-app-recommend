@@ -10,21 +10,19 @@
 import { borderColorValue, colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import { useIsDarkMode } from '$modules/dark-mode'
 import { useSettingsSnapshot } from '$modules/settings'
+import { tweakLightness } from '$utility/css'
 import type { TheCssType } from '$utility/type'
 import { bgValue, borderRadiusValue } from './index.shared'
 
-const c = `oklch(from ${colorPrimaryValue} calc(l + 0.1) c h)`
+const c = tweakLightness(colorPrimaryValue, 0.1)
 const borderAndShadow = css`
   border-color: ${c};
   box-shadow: 0px 0px 9px 4px ${c};
 `
 
-const hightlightBackground = (dark: boolean, styleUseWhiteBackground: boolean) => {
-  const bg = dark
-    ? `oklch(from ${bgValue} calc(l + 0.025) c h)`
-    : `oklch(from ${bgValue} calc(l - 0.03) c h)`
+const hightlightBackground = (dark: boolean) => {
   return css`
-    background-color: ${bg};
+    background-color: ${tweakLightness(bgValue, dark ? 0.03 : -0.04)};
   `
 }
 
@@ -52,9 +50,9 @@ export function useCardBorderCss(): TheCssType {
     return [
       css`
         border: 1px solid transparent;
-        transition:
-          border-color 0.3s ease-in-out,
-          box-shadow 0.3s ease-in-out;
+        transition-property: border-color, box-shadow, background-color;
+        transition-duration: 0.3s;
+        transition-timing-function: ease-in-out;
       `,
 
       useBorder && [
@@ -63,13 +61,18 @@ export function useCardBorderCss(): TheCssType {
           border-radius: ${borderRadiusValue};
           &:hover {
             border-color: ${borderColorValue};
-            ${useBoxShadow ? borderAndShadow : hightlightBackground(dark, styleUseWhiteBackground)}
+            ${useBoxShadow ? borderAndShadow : hightlightBackground(dark)}
             ${useDelayForHover && coverZoom}
           }
         `,
         !useBorderOnlyOnHover &&
           css`
             border-color: ${borderColorValue};
+          `,
+        !useBoxShadow &&
+          css`
+            padding: 6px;
+            margin-inline: -6px;
           `,
       ],
     ]

@@ -46,12 +46,16 @@ const tab = __PROD__
     TabPaneKey.CustomUi
 const modalSettingsStore = proxy({ tab })
 
-export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => void }) {
+// empty component for conditional render
+export function ModalSettingsHotkey() {
   useHotkeyForConfig(['shift.p'], 'autoPreviewWhenKeyboardSelect', '键盘选中后自动开始预览')
   useHotkeyForConfig(['shift.m'], 'autoPreviewWhenHover', '鼠标悬浮后自动开始预览')
   useHotkeyForConfig(['shift.c'], 'useNarrowMode', '居中模式')
   useHotkeyForConfigBorder()
+  return null
+}
 
+export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => void }) {
   const { tab } = useSnapshot(modalSettingsStore)
 
   return (

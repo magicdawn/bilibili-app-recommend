@@ -9,6 +9,20 @@ export const colorPrimaryValue = `var(${colorPrimaryIdentifier})`
 export const borderColorIdentifier = `--${APP_NAME}-border-color`
 export const borderColorValue = `var(${borderColorIdentifier})`
 
+// https://github.com/argyleink/gui-challenges/blob/main/color-palettes/oklch-palette.css
+export const primaryPalatte = {
+  swatch1: `oklch(from ${colorPrimaryValue} 99% .02 h)`,
+  swatch2: `oklch(from ${colorPrimaryValue} 90% .1 h)`,
+  swatch3: `oklch(from ${colorPrimaryValue} 80% .2 h)`,
+  swatch4: `oklch(from ${colorPrimaryValue} 72% .25 h)`,
+  swatch5: `oklch(from ${colorPrimaryValue} 67% .31 h)`,
+  swatch6: `oklch(from ${colorPrimaryValue} 50% .27 h)`,
+  swatch7: `oklch(from ${colorPrimaryValue} 35% .25 h)`,
+  swatch8: `oklch(from ${colorPrimaryValue} 25% .2 h)`,
+  swatch9: `oklch(from ${colorPrimaryValue} 13% .2 h)`,
+  swatch10: `oklch(from ${colorPrimaryValue} 5% .1 h)`,
+}
+
 export interface LxTheme {
   id: string
   name: string
