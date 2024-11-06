@@ -7,8 +7,8 @@ export const ConfigIcon = IconParkOutlineConfig
 import IconParkOutlinePlayTwo from '~icons/icon-park-outline/play-two'
 export const PlayerIcon = IconParkOutlinePlayTwo
 
-import RadixIconsExternalLink from '~icons/radix-icons/external-link'
-export const OpenExternalLinkIcon = RadixIconsExternalLink
+import MaterialSymbolsLightOpenInNew from '~icons/material-symbols-light/open-in-new'
+export const OpenExternalLinkIcon = MaterialSymbolsLightOpenInNew
 
 import type { SVGProps } from 'react'
 import MaterialSymbolsBarChart from '~icons/material-symbols/bar-chart'

@@ -79,9 +79,14 @@ export function useOpenRelated({
       openNewTab(newHref, active)
     }
 
+    const handleCurrentPage = () => {
+      location.href = newHref
+    }
+
     const handlers: Record<Mode, () => void> = {
       [Mode.Normal]: handleCommon,
       [Mode.Background]: handleCommon,
+      [Mode.CurrentPage]: handleCurrentPage,
       [Mode.NormalWebFullscreen]: handleCommon,
       [Mode.Popup]: () => handlePopup(newHref),
       [Mode.Iina]: handleIINA,

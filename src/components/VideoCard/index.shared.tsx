@@ -36,6 +36,7 @@ export enum ForceAutoPlay {
 export enum VideoLinkOpenMode {
   Normal = 'Normal',
   NormalWebFullscreen = 'NormalWebFullscreen',
+  CurrentPage = 'CurrentPage',
   Popup = 'Popup',
   Background = 'Background',
   Iina = 'Iina',
@@ -61,12 +62,17 @@ export const VideoLinkOpenModeConfig: Record<VideoLinkOpenMode, VideoLinkOpenMod
   [VideoLinkOpenMode.Normal]: {
     icon: <OpenExternalLinkIcon {...size(16)} />,
     label: '打开',
-    desc: '默认新窗口打开',
+    desc: '默认在新标签页中打开',
   },
   [VideoLinkOpenMode.NormalWebFullscreen]: {
     icon: <RiFullscreenFill {...size(15)} />,
     label: '打开-网页全屏',
-    desc: <>默认新窗口打开, 打开后自动网页全屏</>,
+    desc: <>默认在新标签页中打开, 打开后自动网页全屏</>,
+  },
+  [VideoLinkOpenMode.CurrentPage]: {
+    icon: <IconMaterialSymbolsLightOpenInNewOff {...size(16)} />,
+    label: '当前页中打开',
+    desc: '不打开新标签页, 使用当前标签页打开, 适用于将网站作为应用安装场景',
   },
   [VideoLinkOpenMode.Popup]: {
     icon: <AkarIconsMiniplayer {...size(15)} />,
