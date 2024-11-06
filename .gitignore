@@ -6,6 +6,7 @@ tmp/
 
 *.less.d.ts
 *.scss.d.ts
+/generated
 
 # visualizer
 /stats.html
