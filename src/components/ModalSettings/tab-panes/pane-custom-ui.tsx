@@ -1,5 +1,5 @@
 import { APP_NAME } from '$common'
-import { C, flexVerticalCenterStyle } from '$common/emotion-css'
+import { C } from '$common/emotion-css'
 import type { Settings } from '$modules/settings'
 import { settings, useSettingsSnapshot } from '$modules/settings'
 import { AntdMessage, shouldDisableShortcut } from '$utility'
@@ -7,7 +7,7 @@ import { Tag } from 'antd'
 import { isEqual } from 'es-toolkit'
 import { pick } from 'radash'
 import styles from '../index.module.scss'
-import { CheckboxSettingItem, SwitchSettingItem } from '../setting-item'
+import { CheckboxSettingItem } from '../setting-item'
 import { ResetPartialSettingsButton, SettingsGroup } from './_shared'
 
 type CardBorderState = Partial<
@@ -19,9 +19,9 @@ const borderCycleList: CardBorderState[] = [
   { styleUseCardBorder: true, styleUseCardBorderOnlyOnHover: false }, // always
 ]
 const borderCycleListLabels = [
-  '「卡片边框」: 已禁用',
-  '「卡片边框」: 只在悬浮时展示',
-  '「卡片边框」: 总是展示',
+  '「卡片边框」: 禁用',
+  '「卡片边框」: 仅在悬浮时显示',
+  '「卡片边框」: 总是显示',
 ]
 export function useHotkeyForConfigBorder() {
   // useHotkeyForConfig(['shift.b'], 'styleUseCardBorder', '卡片边框')
@@ -117,43 +117,42 @@ export function TabPaneCustomUI() {
           </>
         }
       >
-        <div css={flexVerticalCenterStyle}>
-          <CheckboxSettingItem
-            configKey='styleUseCardBorder'
-            label='使用边框'
-            tooltip=<>
-              使用边框后, 整个卡片区域可点击 / 可触发预览 / 可使用右键菜单 <br />
-              否则只是封面区域可以 <br />
-              使用快捷键 <Tag color='green'>shift+b</Tag> 切换状态
+        <CheckboxSettingItem
+          configKey='styleUseCardBorder'
+          label='使用卡片边框'
+          tooltip=<>
+            勾选后, 视频卡片会有边框包裹, 更像是一个卡片~ <br />
+            整个卡片区域可点击 / 可触发预览 / 可使用右键菜单 <br />
+            否则只是封面区域可以 <br />
+            使用快捷键 <Tag color='green'>shift+b</Tag> 切换状态
+            <br />
+            {borderCycleListLabels.map((label) => (
+              <Tag color='success' key={label}>
+                {label}
+              </Tag>
+            ))}
+          </>
+        />
+
+        <CheckboxSettingItem
+          configKey='styleUseCardBorderOnlyOnHover'
+          label='仅在悬浮时显示'
+          disabled={!styleUseCardBorder}
+          tooltip={
+            <>
+              ✅: 仅在悬浮时显示
               <br />
-              {borderCycleListLabels.map((label) => (
-                <Tag color='success' key={label}>
-                  {label}
-                </Tag>
-              ))}
+              ❎: 一直显示
+              <br />
             </>
-          />
-          <SwitchSettingItem
-            size='small'
-            configKey={'styleUseCardBorderOnlyOnHover'}
-            checkedChildren='只在悬浮时展示'
-            unCheckedChildren='总是展示'
-            disabled={!styleUseCardBorder}
-          />
-        </div>
+          }
+        />
 
         <CheckboxSettingItem
           configKey='styleUseCardBoxShadow'
           disabled={!styleUseCardBorder}
-          label='使用主题色边框'
-          tooltip={
-            <>
-              看起来比较花哨~
-              <br />
-              ✅ 悬浮卡片时: 主题色边框
-              <br />❎ 悬浮卡片时: 卡片背景色会略微改变标识高亮
-            </>
-          }
+          label='悬浮卡片时使用发光效果'
+          tooltip={<>悬浮卡片时使用发光效果, 看起来比较花哨~</>}
         />
 
         <CheckboxSettingItem

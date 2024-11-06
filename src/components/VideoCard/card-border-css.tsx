@@ -42,6 +42,7 @@ export function useCardBorderCss(): TheCssType {
     styleUseCardBoxShadow: useBoxShadow,
     styleUseWhiteBackground,
     useDelayForHover,
+    __internalVideoCardUsePadding,
   } = useSettingsSnapshot()
 
   const dark = useIsDarkMode()
@@ -61,15 +62,21 @@ export function useCardBorderCss(): TheCssType {
           border-radius: ${borderRadiusValue};
           &:hover {
             border-color: ${borderColorValue};
-            ${useBoxShadow ? borderAndShadow : hightlightBackground(dark)}
+            ${hightlightBackground(dark)}
+            ${useBoxShadow && borderAndShadow}
             ${useDelayForHover && coverZoom}
           }
         `,
+
         !useBorderOnlyOnHover &&
           css`
             border-color: ${borderColorValue};
           `,
-        !useBoxShadow &&
+
+        // add padding & negative margin
+        useBorderOnlyOnHover &&
+          !useBoxShadow &&
+          __internalVideoCardUsePadding &&
           css`
             padding: 6px;
             margin-inline: -6px;
@@ -83,6 +90,7 @@ export function useCardBorderCss(): TheCssType {
     dark,
     styleUseWhiteBackground,
     useDelayForHover,
+    __internalVideoCardUsePadding,
   ])
 }
 
