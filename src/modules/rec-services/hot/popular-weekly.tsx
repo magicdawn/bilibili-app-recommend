@@ -1,5 +1,6 @@
 import { SwitchSettingItem } from '$components/ModalSettings/setting-item'
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
+import { CustomTargetLink } from '$components/VideoCard/use/useOpenRelated'
 import { type ItemsSeparator, type PopularWeeklyItemExtend } from '$define'
 import { EApiType } from '$define/index.shared'
 import type { PopularWeeklyJson } from '$define/popular-weekly'
@@ -90,9 +91,9 @@ export class PopularWeeklyRecService implements IService {
           api: EApiType.Separator,
           uniqId: `popular-weekly-${epNum}`,
           content: (
-            <a target='_blank' href={`https://www.bilibili.com/v/popular/weekly?num=${epNum}`}>
+            <CustomTargetLink href={`https://www.bilibili.com/v/popular/weekly?num=${epNum}`}>
               {ep.name}
-            </a>
+            </CustomTargetLink>
           ),
         },
         ...items,

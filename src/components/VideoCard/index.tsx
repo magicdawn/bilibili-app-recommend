@@ -56,7 +56,7 @@ import { normalizeCardData } from './process/normalize'
 import { StatItemDisplay } from './stat-item'
 import { ChargeOnlyTag, LiveBadge, RankingNumMark, isChargeOnlyVideo } from './top-marks'
 import { useDislikeRelated } from './use/useDislikeRelated'
-import { useOpenRelated } from './use/useOpenRelated'
+import { getLinkTarget, useLinkTarget, useOpenRelated } from './use/useOpenRelated'
 import { usePreviewAnimation } from './use/usePreviewAnimation'
 import { useWatchlaterRelated } from './use/useWatchlaterRelated'
 
@@ -521,7 +521,7 @@ const VideoCardInner = memo(function VideoCardInner({
           // 浏览收藏夹
           if (hasFaved) {
             favFolderUrls?.forEach((u) => {
-              window.open(u, '_blank')
+              window.open(u, getLinkTarget())
             })
           }
 
@@ -568,7 +568,7 @@ const VideoCardInner = memo(function VideoCardInner({
               onClick() {
                 const { id } = item.folder
                 const url = formatFavFolderUrl(id)
-                window.open(url, '_blank')
+                window.open(url, getLinkTarget())
               },
             },
             {
@@ -669,11 +669,13 @@ const VideoCardInner = memo(function VideoCardInner({
           `),
   ]
 
+  const target = useLinkTarget()
+
   const coverContent = (
     <a
       ref={(el) => (coverRef.current = el)}
       href={href}
-      target='_blank'
+      target={target}
       css={css`
         position: relative;
         overflow: hidden;

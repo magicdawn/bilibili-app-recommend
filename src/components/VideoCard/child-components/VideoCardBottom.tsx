@@ -18,6 +18,7 @@ import { type MouseEventHandler } from 'react'
 import { Case, Switch } from 'react-if'
 import type { IVideoCardData } from '../process/normalize'
 import { DESC_SEPARATOR } from '../process/normalize'
+import { useLinkTarget } from '../use/useOpenRelated'
 
 const S = {
   recommendReason: css`
@@ -84,8 +85,8 @@ export function VideoCardBottom({
   cardData: IVideoCardData
   handleVideoLinkClick?: MouseEventHandler
 }) {
-  const styleNewCardStyle = true
   const { styleUseCardBorder } = useSettingsSnapshot()
+  const target = useLinkTarget()
 
   const {
     // video
@@ -177,7 +178,7 @@ export function VideoCardBottom({
     >
       {/* avatar */}
       {!!authorMid && !hideAvatar && (
-        <a href={authorHref} target='_blank'>
+        <a href={authorHref} target={target}>
           <span css={avatarExtraCss}>
             {authorFace ? (
               <Avatar src={getAvatarSrc(authorFace)} />
@@ -231,7 +232,7 @@ export function VideoCardBottom({
           <a
             onClick={handleVideoLinkClick}
             href={href}
-            target='_blank'
+            target={target}
             rel='noopener'
             css={css`
               .bili-video-card .bili-video-card__info--tit > a& {
@@ -257,7 +258,7 @@ export function VideoCardBottom({
           <a
             className='bili-video-card__info--owner'
             href={authorHref}
-            target='_blank'
+            target={target}
             title={descTitleAttr}
             css={descOwnerCss}
           >
@@ -279,7 +280,7 @@ export function VideoCardBottom({
             className='bili-video-card__info--owner'
             css={descOwnerCss}
             href={href}
-            target='_blank'
+            target={target}
           >
             {!!appBadge && <span css={S.appBadge}>{appBadge}</span>}
             {!!appBadgeDesc && <span>{appBadgeDesc}</span>}
@@ -305,7 +306,7 @@ export function VideoCardBottom({
                 `,
               ]}
               href={authorHref}
-              target='_blank'
+              target={target}
               title={(authorName || '') + (liveDesc || '')}
             >
               {authorName}

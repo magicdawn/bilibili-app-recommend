@@ -13,6 +13,7 @@ import { getActiveCardBorderCss, useCardBorderCss } from '$components/VideoCard/
 import { type VideoCardEmitter, type VideoCardEvents } from '$components/VideoCard/index.shared'
 import { filterRecItems } from '$components/VideoCard/process/filter'
 import type { IVideoCardData } from '$components/VideoCard/process/normalize'
+import { useLinkTarget } from '$components/VideoCard/use/useOpenRelated'
 import { AntdTooltip } from '$components/_base/antd-custom'
 import { type RecItemType, type RecItemTypeOrSeparator } from '$define'
 import { EApiType } from '$define/index.shared'
@@ -522,6 +523,8 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
 })
 
 function ErrorDetail({ err, tab }: { err: any; tab: ETab }) {
+  const target = useLinkTarget()
+
   const errDetail: ReactNode = useMemo(() => {
     const isAxiosError = (err: any): err is AxiosError => {
       return err instanceof Error && err.name === 'AxiosError'
@@ -586,7 +589,7 @@ function ErrorDetail({ err, tab }: { err: any; tab: ETab }) {
         <p className='mt-8 flex items-center justify-center'>
           可能需手动输入验证码
           <OpenExternalLinkIcon className='ml-12' />
-          <a href='https://www.bilibili.com/v/popular/weekly' target='_blank' className='ml-2'>
+          <a href='https://www.bilibili.com/v/popular/weekly' target={target} className='ml-2'>
             每周必看
           </a>
         </p>

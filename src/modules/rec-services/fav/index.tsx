@@ -2,6 +2,7 @@ import { REQUEST_FAIL_MSG } from '$common'
 import { C } from '$common/emotion-css'
 import { SwitchSettingItem } from '$components/ModalSettings/setting-item'
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
+import { CustomTargetLink } from '$components/VideoCard/use/useOpenRelated'
 import { type ItemsSeparator } from '$define'
 import { EApiType } from '$define/index.shared'
 import { OpenExternalLinkIcon, PlayerIcon } from '$modules/icon'
@@ -74,40 +75,12 @@ export class FavRecService implements IService {
       if (!service) return
       const items = await service.loadMore()
 
-      const S = {
-        item: css`
-          display: inline-flex;
-          align-items: center;
-          font-size: 15px;
-
-          &:not(:first-child) {
-            margin-left: 30px;
-          }
-
-          /* the icon */
-          svg {
-            margin-right: 5px;
-            margin-top: -1px;
-          }
-        `,
-      }
       const header = this.addSeparator &&
         service.page === 1 &&
         items?.length && {
           api: EApiType.Separator as const,
           uniqId: `fav-folder-${service.entry.id}`,
-          content: (
-            <>
-              <a target='_blank' href={formatFavFolderUrl(service.entry.id)} css={S.item}>
-                <OpenExternalLinkIcon css={C.size(16)} />
-                {service.entry.title}
-              </a>
-              <a target='_blank' href={formatFavPlaylistUrl(service.entry.id)} css={S.item}>
-                <PlayerIcon css={C.size(16)} />
-                播放全部
-              </a>
-            </>
-          ),
+          content: <FavSeparatorContent service={service} />,
         }
       return this.qs.doReturnItems([header, ...(items || [])].filter(Boolean))
     }
@@ -144,6 +117,38 @@ export class FavRecService implements IService {
     )
     this.total = this.folderServices.reduce((count, f) => count + f.entry.media_count, 0)
   }
+}
+
+const S = {
+  item: css`
+    display: inline-flex;
+    align-items: center;
+    font-size: 15px;
+
+    &:not(:first-child) {
+      margin-left: 30px;
+    }
+
+    /* the icon */
+    svg {
+      margin-right: 5px;
+      margin-top: -1px;
+    }
+  `,
+}
+function FavSeparatorContent({ service }: { service: FavFolderService }) {
+  return (
+    <>
+      <CustomTargetLink href={formatFavFolderUrl(service.entry.id)} css={S.item}>
+        <OpenExternalLinkIcon css={C.size(16)} />
+        {service.entry.title}
+      </CustomTargetLink>
+      <CustomTargetLink href={formatFavPlaylistUrl(service.entry.id)} css={S.item}>
+        <PlayerIcon css={C.size(16)} />
+        播放全部
+      </CustomTargetLink>
+    </>
+  )
 }
 
 export async function apiFavFolderListAll() {

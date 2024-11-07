@@ -14,6 +14,7 @@ import { size } from 'polished'
 import IconParkOutlineMore from '~icons/icon-park-outline/more'
 import PhCrownFill from '~icons/ph/crown-fill'
 import { VideoCardActionStyle, useTooltip } from './child-components/VideoCardActions'
+import { useLinkNewTab } from './use/useOpenRelated'
 
 export const CHARGE_ONLY_TEXT = '充电专属'
 
@@ -106,6 +107,8 @@ export function RankingNumMark({ item }: { item: RankingItemExtend }) {
     `,
   ]
 
+  const newTab = useLinkNewTab()
+
   return (
     <div css={VideoCardActionStyle.topContainer('left')}>
       <div ref={triggerRef} css={roundButtonCss}>
@@ -126,7 +129,12 @@ export function RankingNumMark({ item }: { item: RankingItemExtend }) {
                     key: x.bvid,
                     label: x.title,
                     onClick() {
-                      openNewTab(new URL(`/video/${x.bvid}`, location.href).href)
+                      const href = new URL(`/video/${x.bvid}`, location.href).href
+                      if (newTab) {
+                        openNewTab(href)
+                      } else {
+                        location.href = href
+                      }
                     },
                   }
                 }),

@@ -7,7 +7,7 @@ import { settings, useSettingsSnapshot } from '$modules/settings'
 import { getVideoDetail } from '$modules/video/video-detail'
 import { getBiliPlayerConfigAutoPlay } from '$utility/bilibili/player-config'
 import { delay } from 'es-toolkit'
-import type { MouseEventHandler, ReactNode, RefObject } from 'react'
+import type { ComponentProps, MouseEventHandler, ReactNode, RefObject } from 'react'
 import type { PreviewImageRef } from '../child-components/PreviewImage'
 import { VideoCardActionButton } from '../child-components/VideoCardActions'
 import {
@@ -262,4 +262,28 @@ function openPopupWindow(newHref: string, popupWidth: number, popupHeight: numbe
 
   debug('openInPopup: features -> %s', features)
   window.open(newHref, '_blank', features)
+}
+
+export function useLinkNewTab() {
+  const { videoLinkOpenMode } = useSettingsSnapshot()
+  return videoLinkOpenMode !== VideoLinkOpenMode.CurrentPage
+}
+
+export function useLinkTarget() {
+  const newTab = useLinkNewTab()
+  return newTab ? '_blank' : '_self'
+}
+
+export function getLinkTarget() {
+  const newTab = settings.videoLinkOpenMode !== VideoLinkOpenMode.CurrentPage
+  return newTab ? '_blank' : '_self'
+}
+
+export function CustomTargetLink(props: ComponentProps<'a'>) {
+  const target = useLinkTarget()
+  return (
+    <a {...props} target={target}>
+      {props.children}
+    </a>
+  )
 }
