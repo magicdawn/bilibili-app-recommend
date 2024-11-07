@@ -195,6 +195,10 @@ export type ListSettingsKey = {
   [k in SettingsKey]: Settings[k] extends Array<any> ? k : never
 }[SettingsKey]
 
+export const internalBooleanKeys = (Object.keys(initialSettings) as SettingsKey[]).filter(
+  (k) => k.startsWith('__internal') && typeof initialSettings[k] === 'boolean',
+) as BooleanSettingsKey[]
+
 export function useSettingsSnapshot() {
   return useSnapshot(settings)
 }

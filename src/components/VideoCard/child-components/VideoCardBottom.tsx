@@ -85,7 +85,7 @@ export function VideoCardBottom({
   cardData: IVideoCardData
   handleVideoLinkClick?: MouseEventHandler
 }) {
-  const { styleUseCardBorder } = useSettingsSnapshot()
+  const { styleUseCardBorder, styleUseCardBorderOnlyOnHover } = useSettingsSnapshot()
   const target = useLinkTarget()
 
   const {

@@ -11,12 +11,11 @@ import { AntdTooltip } from '$components/_base/antd-custom'
 import { OpenExternalLinkIcon } from '$modules/icon'
 import {
   allowedSettingsKeys,
+  internalBooleanKeys,
   resetSettings,
   settings,
   updateSettings,
   useSettingsSnapshot,
-  type BooleanSettingsKey,
-  type SettingsKey,
 } from '$modules/settings'
 import { exportSettings, importSettings } from '$modules/settings/file-backup'
 import { articleDraft, restoreOmitKeys } from '$modules/settings/index.shared'
@@ -50,10 +49,6 @@ async function onRestoreSettings() {
   updateSettings(pickedSettings)
   return toastAndReload()
 }
-
-const internalBooleanKeys = (Object.keys(settings) as SettingsKey[]).filter(
-  (k) => k.startsWith('__internal') && typeof settings[k] === 'boolean',
-) as BooleanSettingsKey[]
 
 export function TabPaneAdvance() {
   const { autoPreviewUpdateInterval } = useSettingsSnapshot()

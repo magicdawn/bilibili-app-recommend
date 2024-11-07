@@ -1,7 +1,7 @@
 import { isEqual, omit, throttle } from 'es-toolkit'
 import ms from 'ms'
 import type { Settings } from '.'
-import { articleDraft, backupOmitKeys, debug } from './index.shared'
+import { articleDraft, debug, getBackupOmitKeys } from './index.shared'
 import { HAS_RESTORED_SETTINGS } from './restore-flag'
 
 let lastBackupVal: Partial<Settings> | undefined
@@ -12,7 +12,7 @@ export async function saveToDraft(val: Readonly<Settings>) {
   // skip when `HAS_RESTORED_SETTINGS=true`
   if (HAS_RESTORED_SETTINGS) return
 
-  const currentBackupVal = omit(val, backupOmitKeys)
+  const currentBackupVal = omit(val, getBackupOmitKeys())
   const shouldBackup = !lastBackupVal || !isEqual(lastBackupVal, currentBackupVal)
   if (!shouldBackup) return
 

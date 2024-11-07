@@ -78,8 +78,11 @@ export function useCardBorderCss(): TheCssType {
           !useBoxShadow &&
           __internalVideoCardUsePadding &&
           css`
-            padding: 6px;
             margin-inline: -6px;
+            .bili-video-card__wrap {
+              padding: 6px;
+              padding-bottom: 0;
+            }
           `,
       ],
     ]
