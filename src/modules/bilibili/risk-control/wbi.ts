@@ -3,12 +3,10 @@
  */
 
 import { HOST_API } from '$common'
-import { request } from '$request'
+import { dayiyCache } from '$modules/gm/daily-cache'
 import axios from 'axios'
-import dayjs from 'dayjs'
 import md5 from 'md5'
 import ms from 'ms'
-import { getUid } from './cookie'
 
 const mixinKeyEncTab = [
   46, 47, 18, 2, 53, 8, 23, 32, 15, 50, 10, 31, 58, 3, 45, 35, 27, 43, 5, 49, 33, 9, 42, 19, 29, 28,
@@ -17,13 +15,11 @@ const mixinKeyEncTab = [
 ]
 
 // 对 imgKey 和 subKey 进行字符顺序打乱编码
-function getMixinKey(orig: string) {
-  let temp = ''
-  mixinKeyEncTab.forEach((n) => {
-    temp += orig[n]
-  })
-  return temp.slice(0, 32)
-}
+const getMixinKey = (orig: string) =>
+  mixinKeyEncTab
+    .map((n) => orig[n])
+    .join('')
+    .slice(0, 32)
 
 // 为请求参数进行 wbi 签名
 export async function encWbi(_params: Record<string, string | number>) {
@@ -50,23 +46,14 @@ export async function encWbi(_params: Record<string, string | number>) {
 }
 
 type Keys = { img_key: string; sub_key: string }
-
-let keysCache: Keys | undefined
-let keysCacheTs: number | undefined
-let keysCacheDate: string | undefined
-const genDate = () => dayjs().format('YYYYMMDD')
+const keysCache = dayiyCache<{ val: Keys; ts: number }>('wbi-keys')
 
 // 获取最新的 img_key 和 sub_key
 async function getWbiKeys(): Promise<Keys> {
-  const shouldReuse =
-    keysCache &&
-    keysCacheTs &&
-    keysCacheDate &&
-    keysCacheDate === genDate() &&
-    Date.now() - keysCacheTs <= ms('6h')
-
+  const cached = await keysCache.get()
+  const shouldReuse = cached?.val && cached?.ts && Date.now() - cached.ts <= ms('6h')
   if (shouldReuse) {
-    return keysCache!
+    return cached.val
   }
 
   // 直接用 axios, 防止与 $request 循环依赖
@@ -80,51 +67,7 @@ async function getWbiKeys(): Promise<Keys> {
   }
 
   // save cache
-  keysCache = keys
-  keysCacheDate = genDate()
-  keysCacheTs = Date.now()
+  keysCache.set({ val: keys, ts: Date.now() })
 
   return keys
-}
-
-// encWbi({ foo: '114', bar: '514', baz: 1919810 }).then((val) => {
-//   console.log(111, val)
-// })
-
-/**
- * https://github.com/SocialSisterYi/bilibili-API-collect/discussions/1104
- */
-
-let lastAccessId = ''
-let lastAccessIdKey = ''
-
-export async function getWwebId(): Promise<string | undefined> {
-  if (lastAccessId && lastAccessIdKey === genDate()) {
-    return lastAccessId
-  }
-
-  const mid = getUid()
-  if (!mid) return
-
-  const spacePageUrl = `https://space.bilibili.com/${mid}`
-  const res = await request.get(spacePageUrl, {
-    responseType: 'text',
-    withCredentials: true,
-  })
-  const html = res.data
-  const parser = new DOMParser()
-  const parsed = parser.parseFromString(html, 'text/html')
-
-  const jsonText = decodeURIComponent(
-    parsed.getElementById('__RENDER_DATA__')?.innerText.trim() || '',
-  )
-  if (!jsonText) return
-
-  const id = (JSON.parse(jsonText) as any)?.access_id
-  if (id) {
-    lastAccessId = id
-    lastAccessIdKey = genDate()
-  }
-
-  return id
 }

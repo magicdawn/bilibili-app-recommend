@@ -7,7 +7,7 @@ module.exports = {
     // 仅 external 情况下会有, 无相关 issue
     'antd',
 
-    // 'typescript',
+    'typescript',
 
     // https://github.com/pmndrs/valtio/issues/980
     'valtio',

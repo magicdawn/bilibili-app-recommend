@@ -1,6 +1,7 @@
+import { get_w_webId } from '$modules/bilibili/risk-control/w_webid'
+import { encWbi } from '$modules/bilibili/risk-control/wbi'
 import { request } from '$request'
 import { getUid } from '$utility/cookie'
-import { encWbi, getWwebId } from '$utility/wbi'
 import { uniq } from 'es-toolkit'
 import type { FollowGroupContent, FollowGroupContentJson } from './group-content'
 import type { FollowGroupsJson } from './groups'
@@ -12,7 +13,7 @@ import type { FollowGroupsJson } from './groups'
 export async function getAllFollowGroups() {
   const params = await encWbi({
     web_location: '0.0',
-    w_webid: (await getWwebId()) || '',
+    w_webid: (await get_w_webId()) || '',
   })
   const res = await request.get('/x/relation/tags', { params })
   const json = res.data as FollowGroupsJson

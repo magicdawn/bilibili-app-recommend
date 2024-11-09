@@ -1,6 +1,6 @@
 import { HOST_API, TVKeyInfo } from '$common'
+import { encWbi } from '$modules/bilibili/risk-control/wbi'
 import { appSign } from '$utility/app-sign'
-import { encWbi } from '$utility/wbi'
 import axios from 'axios'
 import gmAdapter from 'axios-userscript-adapter'
 import { settings } from './modules/settings'
@@ -13,11 +13,8 @@ export const request = axios.create({
 request.interceptors.request.use(async function (config) {
   config.params ||= {}
 
-  // add `_`
-  // config.params._ ||= Date.now()
-
-  // wbi sign
-  if (config.url?.includes('/wbi/')) {
+  // wbi sign when needed
+  if (config.url?.includes('/wbi/') && !(config.params.w_rid || config.params.wts)) {
     config.params = { ...config.params, ...(await encWbi(config.params)) }
   }
 
