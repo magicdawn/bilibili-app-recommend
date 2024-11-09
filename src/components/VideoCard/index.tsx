@@ -18,6 +18,8 @@ import {
   type RecItemType,
 } from '$define'
 import { EApiType } from '$define/index.shared'
+import { UserBlacklistService, useInBlacklist } from '$modules/bilibili/me/relations/blacklist'
+import { UserfollowService } from '$modules/bilibili/me/relations/follow'
 import { openNewTab } from '$modules/gm'
 import { DislikeIcon, OpenExternalLinkIcon, WatchLaterIcon } from '$modules/icon'
 import { IconPark } from '$modules/icon/icon-park'
@@ -27,8 +29,6 @@ import { UserFavService, defaultFavFolderName } from '$modules/rec-services/fav/
 import { ELiveStatus } from '$modules/rec-services/live/live-enum'
 import { useWatchLaterState } from '$modules/rec-services/watchlater'
 import { settings, updateSettings, useSettingsSnapshot } from '$modules/settings'
-import { UserBlacklistService, useInBlacklist } from '$modules/user/relations/blacklist'
-import { UserfollowService } from '$modules/user/relations/follow'
 import { isWebApiSuccess } from '$request'
 import { isFirefox, isSafari } from '$ua'
 import { AntdMessage, AntdNotification, toast } from '$utility'

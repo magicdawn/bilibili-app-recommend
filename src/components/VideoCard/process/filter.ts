@@ -2,9 +2,9 @@ import { baseDebug } from '$common'
 import { ETab } from '$components/RecHeader/tab-enum'
 import type { RecItemTypeOrSeparator } from '$define'
 import { EApiType } from '$define/index.shared'
+import { blacklistMids } from '$modules/bilibili/me/relations/blacklist'
 import { isNormalRankingItem } from '$modules/rec-services/hot/ranking/category'
 import { getSettingsSnapshot, settings } from '$modules/settings'
-import { blacklistMids } from '$modules/user/relations/blacklist'
 import { normalizeCardData } from './normalize'
 
 const debug = baseDebug.extend('VideoCard:filter')

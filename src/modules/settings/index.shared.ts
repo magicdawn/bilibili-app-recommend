@@ -1,5 +1,5 @@
 import { APP_NAME, baseDebug } from '$common'
-import { BilibiliArticleDraft } from '$modules/user/article-draft'
+import { BilibiliArticleDraft } from '$modules/bilibili/me/article-draft'
 import { internalBooleanKeys, type SettingsKey } from '.'
 
 export const debug = baseDebug.extend('settings')

@@ -10,9 +10,9 @@ import {
   hasDocumentPictureInPicture,
   openInPipOrPopup,
 } from '$components/VideoCard/use/useOpenRelated'
-import { getBiliPlayer } from '$utility/bilibili/player'
-import { getBiliPlayerConfigAutoPlay } from '$utility/bilibili/player-config'
-import { onVideoChange } from '$utility/bilibili/video-page'
+import { getBiliPlayer } from '$modules/bilibili/player'
+import { getBiliPlayerConfigAutoPlay } from '$modules/bilibili/player-config'
+import { onVideoChange } from '$modules/bilibili/video-page'
 import { Button } from 'antd'
 import { delay } from 'es-toolkit'
 import ms from 'ms'
