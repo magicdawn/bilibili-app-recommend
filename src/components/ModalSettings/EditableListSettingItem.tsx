@@ -1,4 +1,3 @@
-import { C } from '$common/emotion-css'
 import {
   settings,
   updateSettings,
@@ -24,7 +23,7 @@ export function EditableListSettingItem({
   disabled?: boolean
 }) {
   let list = useSettingsSnapshot()[configKey] as string[]
-  list = useMemo(() => uniq(list), [list])
+  list = useMemo(() => uniq(list).toReversed(), [list])
 
   return (
     <>
@@ -92,6 +91,9 @@ export function EditableListSettingItem({
               padding: 5px;
               gap: 5px 10px;
               align-items: flex-start;
+              max-height: 200px;
+              overflow-y: scroll;
+              padding-right: 10px;
             `}
           >
             {list.map((t) => {
@@ -142,7 +144,7 @@ const TagItemDisplay = forwardRef<
       css={[
         css`
           border-radius: 5px;
-          padding: 2px 15px;
+          padding: 2px 6px;
           position: relative;
           border: 1px solid #ddd;
           body.dark & {
@@ -176,9 +178,9 @@ const TagItemDisplay = forwardRef<
         onClick={() => {
           onDelete?.(tag)
         }}
+        {...size(16)}
         css={css`
-          ${C.size(16)};
-          ${C.ml(5)};
+          margin-left: 2px;
           cursor: pointer;
           font-size: 12px;
         `}

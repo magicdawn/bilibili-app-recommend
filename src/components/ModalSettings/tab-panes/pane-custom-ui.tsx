@@ -50,57 +50,67 @@ export function useHotkeyForConfigBorder() {
   )
 }
 
+const S = {
+  itemsContainer: css`
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    row-gap: 4px;
+  `,
+}
+
 export function TabPaneCustomUI() {
   const { styleUseCardBorder } = useSettingsSnapshot()
 
   return (
     <div className={styles.tabPane}>
       <SettingsGroup title='样式自定义'>
-        <CheckboxSettingItem
-          configKey='styleUseStandardVideoSourceTab'
-          label='推荐 Tab: 按钮使用标准高度'
-          tooltip='默认紧凑高度'
-        />
+        <div css={S.itemsContainer}>
+          <CheckboxSettingItem
+            configKey='styleUseStandardVideoSourceTab'
+            label='推荐 Tab: 按钮使用标准高度'
+            tooltip='默认紧凑高度'
+          />
 
-        <CheckboxSettingItem
-          configKey='styleUseStickyTabbarInPureRecommend'
-          label='全屏模式: sticky tab bar'
-          tooltip={
-            <>
-              默认勾选: Tab 栏会吸附在顶栏下方
-              <br />
-              取消选中: Tab 栏会随页面一起滚动
-            </>
-          }
-        />
+          <CheckboxSettingItem
+            configKey='styleUseStickyTabbarInPureRecommend'
+            label='全屏模式: sticky tab bar'
+            tooltip={
+              <>
+                默认勾选: Tab 栏会吸附在顶栏下方
+                <br />
+                取消选中: Tab 栏会随页面一起滚动
+              </>
+            }
+          />
 
-        <CheckboxSettingItem
-          configKey='styleUseCustomGrid'
-          label='全屏模式: 使用自定义网格配置'
-          tooltip={
-            <>
-              网格配置指: 网格宽度, 间距, 列数等.
-              <br />
-              自定义网格配置: 宽度为90%; 可跟随 Bilibili-Evolved 自定义顶栏配置; 列数: 4列 - 10列;{' '}
-              {APP_NAME} 自定义;
-              <br />
-              默认网格配置: bili-feed4 首页使用的网格配置
-            </>
-          }
-        />
+          <CheckboxSettingItem
+            configKey='styleUseCustomGrid'
+            label='全屏模式: 使用自定义网格配置'
+            tooltip={
+              <>
+                网格配置指: 网格宽度, 间距, 列数等.
+                <br />
+                自定义网格配置: 宽度为90%; 可跟随 Bilibili-Evolved 自定义顶栏配置; 列数: 4列 - 10列;{' '}
+                {APP_NAME} 自定义;
+                <br />
+                默认网格配置: bili-feed4 首页使用的网格配置
+              </>
+            }
+          />
 
-        <CheckboxSettingItem
-          configKey='styleUseWhiteBackground'
-          label='全屏模式: 使用纯白背景'
-          tooltip={
-            <>
-              ✅ 纯白背景
-              <br />❎ 浅灰色背景
-            </>
-          }
-        />
+          <CheckboxSettingItem
+            configKey='styleUseWhiteBackground'
+            label='全屏模式: 使用纯白背景'
+            tooltip={
+              <>
+                ✅ 纯白背景
+                <br />❎ 浅灰色背景
+              </>
+            }
+          />
 
-        <CheckboxSettingItem configKey={'styleHideTopChannel'} label='全屏模式: 隐藏顶部分区' />
+          <CheckboxSettingItem configKey={'styleHideTopChannel'} label='全屏模式: 隐藏顶部分区' />
+        </div>
       </SettingsGroup>
 
       <SettingsGroup
@@ -119,49 +129,51 @@ export function TabPaneCustomUI() {
           </>
         }
       >
-        <CheckboxSettingItem
-          configKey='styleUseCardBorder'
-          label='使用卡片边框'
-          tooltip=<>
-            勾选后, 视频卡片会有边框包裹, 更像是一个卡片~ <br />
-            整个卡片区域可点击 / 可触发预览 / 可使用右键菜单 <br />
-            否则只是封面区域可以 <br />
-            使用快捷键 <Tag color='green'>shift+b</Tag> 切换状态
-            <br />
-            {borderCycleListLabels.map((label) => (
-              <Tag color='success' key={label}>
-                {label}
-              </Tag>
-            ))}
-          </>
-        />
-
-        <CheckboxSettingItem
-          configKey='styleUseCardBorderOnlyOnHover'
-          label='仅在悬浮时显示'
-          disabled={!styleUseCardBorder}
-          tooltip={
-            <>
-              ✅: 仅在悬浮时显示
+        <div css={S.itemsContainer}>
+          <CheckboxSettingItem
+            configKey='styleUseCardBorder'
+            label='使用卡片边框'
+            tooltip=<>
+              勾选后, 视频卡片会有边框包裹, 更像是一个卡片~ <br />
+              整个卡片区域可点击 / 可触发预览 / 可使用右键菜单 <br />
+              否则只是封面区域可以 <br />
+              使用快捷键 <Tag color='green'>shift+b</Tag> 切换状态
               <br />
-              ❎: 一直显示
-              <br />
+              {borderCycleListLabels.map((label) => (
+                <Tag color='success' key={label}>
+                  {label}
+                </Tag>
+              ))}
             </>
-          }
-        />
+          />
 
-        <CheckboxSettingItem
-          configKey='styleUseCardBoxShadow'
-          disabled={!styleUseCardBorder}
-          label='悬浮卡片时使用发光效果'
-          tooltip={<>悬浮卡片时使用发光效果, 看起来比较花哨~</>}
-        />
+          <CheckboxSettingItem
+            configKey='styleUseCardBorderOnlyOnHover'
+            label='仅在悬浮时显示'
+            disabled={!styleUseCardBorder}
+            tooltip={
+              <>
+                ✅: 仅在悬浮时显示
+                <br />
+                ❎: 一直显示
+                <br />
+              </>
+            }
+          />
 
-        <CheckboxSettingItem
-          configKey='useDelayForHover'
-          label='延迟悬浮预览'
-          tooltip={<>延迟悬浮预览</>}
-        />
+          <CheckboxSettingItem
+            configKey='styleUseCardBoxShadow'
+            disabled={!styleUseCardBorder}
+            label='悬浮卡片时使用发光效果'
+            tooltip={<>悬浮卡片时使用发光效果, 看起来比较花哨~</>}
+          />
+
+          <CheckboxSettingItem
+            configKey='useDelayForHover'
+            label='延迟悬浮预览'
+            tooltip={<>延迟悬浮预览</>}
+          />
+        </div>
       </SettingsGroup>
     </div>
   )
