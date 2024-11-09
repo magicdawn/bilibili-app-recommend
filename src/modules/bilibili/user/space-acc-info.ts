@@ -3,6 +3,7 @@ import { isWebApiSuccess, request } from '$request'
 import { whenIdle } from '$utility'
 import localforage from 'localforage'
 import ms from 'ms'
+import pLimit from 'p-limit'
 import { get_w_webId } from '../risk-control/w_webid'
 import type { SpaceAccInfo, SpaceAccInfoJson } from './space-acc-info.d'
 
@@ -24,6 +25,8 @@ async function cleanUp() {
 }
 whenIdle().then(cleanUp)
 
+const limit = pLimit(2)
+
 export async function getSpaceAccInfo(mid: string | number) {
   const cached = await spaceAccInfoDB.getItem<SpaceAccInfoCacheEntry>(mid.toString())
   const shouldReuse = cached?.val && cached?.ts && Date.now() - cached.ts <= MAX_CACHE_DURATION
@@ -31,11 +34,8 @@ export async function getSpaceAccInfo(mid: string | number) {
     return cached.val
   }
 
-  const res = await request.get('/x/space/wbi/acc/info', {
-    params: { mid, w_webid: (await get_w_webId()) || '' },
-  })
-  const json = res.data as SpaceAccInfoJson
-
+  // 因在 react component 中使用, 可能会导致瞬时并发, 引发风控
+  const json = await limit(() => requestSpaceAccInfo(mid))
   if (!isWebApiSuccess(json)) {
     console.warn('[%s] space acc info error for %s: %o', APP_NAME, mid, json)
     return
@@ -45,4 +45,12 @@ export async function getSpaceAccInfo(mid: string | number) {
   await spaceAccInfoDB.setItem(mid.toString(), { val: info, ts: Date.now() })
 
   return info
+}
+
+async function requestSpaceAccInfo(mid: string | number) {
+  const res = await request.get('/x/space/wbi/acc/info', {
+    params: { mid, w_webid: (await get_w_webId()) || '' },
+  })
+  const json = res.data as SpaceAccInfoJson
+  return json
 }

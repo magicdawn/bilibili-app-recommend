@@ -20,6 +20,7 @@ import {
 import { EApiType } from '$define/index.shared'
 import { UserBlacklistService, useInBlacklist } from '$modules/bilibili/me/relations/blacklist'
 import { UserfollowService } from '$modules/bilibili/me/relations/follow'
+import { setNicknameCache } from '$modules/bilibili/user/nickname'
 import { openNewTab } from '$modules/gm'
 import { DislikeIcon, OpenExternalLinkIcon, WatchLaterIcon } from '$modules/icon'
 import { IconPark } from '$modules/icon/icon-park'
@@ -367,17 +368,18 @@ const VideoCardInner = memo(function VideoCardInner({
   const onAddUpToFilterList = useMemoizedFn(async () => {
     if (!authorMid) return AntdMessage.error('UP mid 为空!')
 
-    let content = `${authorMid}`
-    if (authorName) content += `(${authorName})`
-
+    const content = `${authorMid}`
     if (settings.filterByAuthorNameKeywords.includes(content)) {
       return toast(`已在过滤名单中: ${content}`)
     }
-
     updateSettings({
       filterByAuthorNameKeywords: [...settings.filterByAuthorNameKeywords, content],
     })
-    AntdMessage.success(`已加入过滤名单: ${content}, 刷新后生效~`)
+    if (authorName) setNicknameCache(authorMid, authorName)
+
+    let toastContent = content
+    if (authorName) toastContent += ` 用户名: ${authorName}`
+    AntdMessage.success(`已加入过滤名单: ${toastContent}, 刷新后生效~`)
   })
 
   /**

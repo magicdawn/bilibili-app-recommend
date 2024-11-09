@@ -1,3 +1,6 @@
+import { flexCenterStyle } from '$common/emotion-css'
+import { AntdTooltip } from '$components/_base/antd-custom'
+import { getUserNickname } from '$modules/bilibili/user/nickname'
 import {
   settings,
   updateSettings,
@@ -91,7 +94,7 @@ export function EditableListSettingItem({
               padding: 5px;
               gap: 5px 10px;
               align-items: flex-start;
-              max-height: 200px;
+              max-height: 250px;
               overflow-y: scroll;
               padding-right: 10px;
             `}
@@ -101,12 +104,16 @@ export function EditableListSettingItem({
                 <TagItemDisplay
                   key={t}
                   tag={t}
-                  enableDragging={false}
                   onDelete={(tag) => {
                     const s = new Set([...settings[configKey]])
                     s.delete(tag)
                     updateSettings({ [configKey]: Array.from(s) })
                   }}
+                  renderTag={
+                    configKey === 'filterByAuthorNameKeywords'
+                      ? (tag) => <UpTagItemDisplay tag={tag} />
+                      : undefined
+                  }
                 />
               )
             })}
@@ -127,64 +134,134 @@ export function EditableListSettingItem({
   )
 }
 
-const TagItemDisplay = forwardRef<
-  HTMLDivElement,
-  {
-    tag: string
-    enableDragging?: boolean
-    dragging?: boolean
-    onDelete?: (tag: string) => void
-  } & Omit<ComponentPropsWithoutRef<'div'>, 'children'>
->(({ tag, enableDragging = true, dragging, className, onDelete, ...restProps }, ref) => {
-  return (
-    <div
-      {...restProps}
-      ref={ref}
-      className={clsx(className, { dragging })}
-      css={[
-        css`
-          border-radius: 5px;
-          padding: 2px 6px;
-          position: relative;
-          border: 1px solid #ddd;
-          body.dark & {
-            border-color: #333;
-          }
+type TagItemDisplayProps = {
+  tag: string
+  renderTag?: (tag: string) => ReactNode
+  onDelete?: (tag: string) => void
+} & Omit<ComponentPropsWithoutRef<'div'>, 'children'>
 
-          display: inline-flex;
-          align-items: center;
-
-          &:hover,
-          &.dragging {
-            border-color: ${colorPrimaryValue};
-            color: ${colorPrimaryValue};
-            .anticon {
-              visibility: visible;
-            }
-          }
-
-          &.dragging {
-            z-index: 10;
-          }
-        `,
-        enableDragging &&
+const TagItemDisplay = forwardRef<HTMLDivElement, TagItemDisplayProps>(
+  ({ tag, renderTag, onDelete, ...restProps }, ref) => {
+    return (
+      <div
+        {...restProps}
+        ref={ref}
+        css={[
           css`
-            cursor: move;
+            border-radius: 5px;
+            padding: 2px 6px;
+            position: relative;
+            border: 1px solid #ddd;
+            body.dark & {
+              border-color: #333;
+            }
+
+            display: inline-flex;
+            align-items: center;
+
+            &:hover {
+              border-color: ${colorPrimaryValue};
+              color: ${colorPrimaryValue};
+              .anticon {
+                visibility: visible;
+              }
+            }
           `,
-      ]}
-    >
-      {tag}
-      <IconParkOutlineCloseSmall
-        onClick={() => {
-          onDelete?.(tag)
-        }}
-        {...size(16)}
-        css={css`
-          margin-left: 2px;
-          cursor: pointer;
-          font-size: 12px;
-        `}
-      />
-    </div>
+        ]}
+      >
+        {renderTag ? renderTag(tag) : tag}
+        <IconParkOutlineCloseSmall
+          onClick={() => {
+            onDelete?.(tag)
+          }}
+          {...size(16)}
+          css={css`
+            margin-left: 2px;
+            cursor: pointer;
+            font-size: 12px;
+          `}
+        />
+      </div>
+    )
+  },
+)
+
+function UpTagItemDisplay({ tag }: { tag: string }) {
+  const regMidWithRemark = /^(?<mid>\d+)\((?<remark>[\S ]+)\)$/
+  const regMid = /^\d+$/
+
+  const mid = useMemo(() => {
+    if (regMidWithRemark.test(tag)) {
+      const mid = regMidWithRemark.exec(tag)?.groups?.mid
+      return mid
+    } else if (regMid.test(tag)) {
+      return tag
+    }
+  }, [tag])
+
+  const remark = useMemo(() => {
+    if (regMidWithRemark.test(tag)) {
+      return regMidWithRemark.exec(tag)?.groups?.remark
+    }
+  }, [tag])
+
+  const [nicknameByMid, setNicknameByMid] = useState<string | undefined>(undefined)
+  useEffect(() => {
+    void (async () => {
+      if (!mid) return
+      const nickname = await getUserNickname(mid)
+      if (nickname) setNicknameByMid(nickname)
+    })()
+  }, [mid])
+
+  const label = mid ? nicknameByMid || remark || mid : tag
+
+  const tooltip = (
+    <>
+      {!!mid && (
+        <>
+          mid: {mid} <br />
+        </>
+      )}
+      {!!remark && (
+        <>
+          备注: {remark} <br />
+          {remark === nicknameByMid && (
+            <>
+              P.S 备注是之前的数据, 现在你只需要填写 mid, 会自动获取昵称 <br />
+            </>
+          )}
+        </>
+      )}
+      {!mid && (
+        <>
+          使用用户名过滤: 用户可能改名, 建议使用 mid 过滤 <br />
+        </>
+      )}
+    </>
   )
-})
+
+  return (
+    <>
+      <AntdTooltip title={tooltip}>
+        <span
+          css={[
+            flexCenterStyle,
+            css`
+              cursor: ${mid ? 'pointer' : 'edit'};
+            `,
+          ]}
+        >
+          {mid && <IconRadixIconsPerson {...size(12)} className='mr-2' />}
+          {mid ? (
+            <a href={`https://space.bilibili.com/${mid}`} target='_blank'>
+              {label}
+            </a>
+          ) : (
+            label
+          )}
+        </span>
+      </AntdTooltip>
+    </>
+  )
+}
