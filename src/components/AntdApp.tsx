@@ -94,7 +94,8 @@ export function AntdApp({
 
 function GlobalStyle() {
   const colorPrimary = useColorPrimaryHex()
-  const { pureRecommend, styleUseCustomGrid, styleUseWhiteBackground } = useSettingsSnapshot()
+  const { pureRecommend, styleUseCustomGrid, styleUseWhiteBackground, styleHideTopChannel } =
+    useSettingsSnapshot()
   const dark = useIsDarkMode()
   const { c, bg } = useColors()
   const backToTopRight = useBackToTopRight()
@@ -180,6 +181,16 @@ function GlobalStyle() {
               css`
                 .${APP_CLS_ROOT} {
                   --back-top-right: ${backToTopRight}px;
+                }
+              `,
+
+            styleHideTopChannel &&
+              css`
+                .bili-header__channel {
+                  display: none !important;
+                }
+                .area-header-wrapper {
+                  margin-top: 10px;
                 }
               `,
 

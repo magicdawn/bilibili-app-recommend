@@ -145,6 +145,9 @@ export const initialSettings = {
   // bg1
   styleUseWhiteBackground: true,
 
+  // 隐藏顶部分区
+  styleHideTopChannel: false,
+
   // 使用卡片模式
   // inspired by https://ai.taobao.com
   styleUseCardBorder: true,
