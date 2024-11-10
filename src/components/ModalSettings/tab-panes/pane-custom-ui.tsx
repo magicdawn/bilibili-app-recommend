@@ -109,7 +109,10 @@ export function TabPaneCustomUI() {
             }
           />
 
-          <CheckboxSettingItem configKey={'styleHideTopChannel'} label='全屏模式: 隐藏顶部分区' />
+          <CheckboxSettingItem
+            configKey={'styleHideTopChannel'}
+            label='全屏模式: 隐藏顶部分区和Banner'
+          />
         </div>
       </SettingsGroup>
 
