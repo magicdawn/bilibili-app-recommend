@@ -5,7 +5,7 @@ import { EHotSubTab } from '$components/RecHeader/tab-enum'
 import { AntdTooltip } from '$components/_base/antd-custom'
 import type { RecItemTypeOrSeparator } from '$define'
 import { styled } from '$libs'
-import { settings } from '$modules/settings'
+import { settings, useSettingsSnapshot } from '$modules/settings'
 import type { AntdMenuItemType } from '$utility/type'
 import { proxyWithGmStorage } from '$utility/valtio'
 import { Button, Dropdown } from 'antd'
@@ -99,6 +99,7 @@ function HotUsageInfo({ children }: { children?: ReactNode }) {
   const { icon, label } = HotSubTabConfig[activeSubtab]
   const onRefresh = useOnRefreshContext()
   const { ref, getPopupContainer } = usePopupContainer<HTMLButtonElement>()
+  const { __internalHotSubUseTabBar } = useSettingsSnapshot()
 
   const menus: AntdMenuItemType[] = useMemo(
     () =>
@@ -193,7 +194,8 @@ function HotUsageInfo({ children }: { children?: ReactNode }) {
   return (
     <>
       {/* {dropdownMenu} */}
-      {tab}
+      {/* {tab} */}
+      {__internalHotSubUseTabBar ? tab : dropdownMenu}
       {children}
     </>
   )

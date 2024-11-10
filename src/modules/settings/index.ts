@@ -182,6 +182,7 @@ export const initialSettings = {
    */
   __internalEnableCopyBvidInfoContextMenu: false,
   __internalVideoCardUsePadding: false,
+  __internalHotSubUseTabBar: true,
 }
 
 export type Settings = typeof initialSettings
