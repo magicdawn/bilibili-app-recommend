@@ -63,8 +63,8 @@ importers:
         specifier: ^4.3.7
         version: 4.3.7
       es-toolkit:
-        specifier: ^1.26.1
-        version: 1.26.1
+        specifier: ^1.27.0
+        version: 1.27.0
       fast-sort-lens:
         specifier: ^0.0.1
         version: 0.0.1
@@ -214,8 +214,8 @@ importers:
         specifier: ^9.1.6
         version: 9.1.6
       knip:
-        specifier: ^5.36.3
-        version: 5.36.3(@types/node@22.9.0)(typescript@5.4.5)
+        specifier: ^5.36.4
+        version: 5.36.4(@types/node@22.9.0)(typescript@5.4.5)
       lint-staged:
         specifier: ^15.2.10
         version: 15.2.10
@@ -2193,8 +2193,8 @@ packages:
     resolution: {integrity: sha512-Zf5H2Kxt2xjTvbJvP2ZWLEICxA6j+hAmMzIlypy4xcBg1vKVnx89Wy0GbS+kf5cwCVFFzdCFh2XSCFNULS6csw==}
     engines: {node: '>= 0.4'}
 
-  es-toolkit@1.26.1:
-    resolution: {integrity: sha512-E3H14lHWk8JpupVpIRA1gfNF4r953abHTFW+X1Rp7zl7eG37ksuthfEA4FinyVF/Y807vzzfQS1nubeZk2LTVA==}
+  es-toolkit@1.27.0:
+    resolution: {integrity: sha512-ETSFA+ZJArcuSCpzD2TjAy6UHpx4E4uqFsoDg9F/nTLogrLmVVZQ+zNxco5h7cWnA1nNak07IXsLcaSMih+ZPQ==}
 
   esbuild-android-64@0.14.54:
     resolution: {integrity: sha512-Tz2++Aqqz0rJ7kYBfz+iqyE3QMycD4vk7LBRyWaAVFgFtQ/O8EJOnVmTOiDWYZ/uYzB4kvP+bqejYdVKzE5lAQ==}
@@ -2932,8 +2932,8 @@ packages:
   keyv@4.5.4:
     resolution: {integrity: sha512-oxVHkHR/EJf2CNXnWxRLW6mg7JyCCUcG0DtEGmL2ctUo1PNTin1PUil+r/+4r5MpVgC/fn1kjsx7mjSujKqIpw==}
 
-  knip@5.36.3:
-    resolution: {integrity: sha512-pjHOGbaa09317IvnNU7EsSA8mXhBrY+A0LnrCOcRLPx5rZVmg10cVkxaoiZP7EKuA6vo0HHQ0I/VkJiUbq6d/w==}
+  knip@5.36.4:
+    resolution: {integrity: sha512-QwaGkCaDom11ThN+dHrgMS+U64mhSEUk0I3lUcFvsCI/AWZiGHWO8wm6G2OLPTpr0S6IxMeguuDYQSgeLVG6gw==}
     engines: {node: '>=18.6.0'}
     hasBin: true
     peerDependencies:
@@ -6762,7 +6762,7 @@ snapshots:
 
   es-errors@1.3.0: {}
 
-  es-toolkit@1.26.1: {}
+  es-toolkit@1.27.0: {}
 
   esbuild-android-64@0.14.54:
     optional: true
@@ -7471,7 +7471,7 @@ snapshots:
     dependencies:
       json-buffer: 3.0.1
 
-  knip@5.36.3(@types/node@22.9.0)(typescript@5.4.5):
+  knip@5.36.4(@types/node@22.9.0)(typescript@5.4.5):
     dependencies:
       '@nodelib/fs.walk': 1.2.8
       '@snyk/github-codeowners': 1.1.0
