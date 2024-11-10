@@ -191,26 +191,28 @@ export function TabPaneAdvance() {
         }
       >
         <CollapsePanel expanded={internalKeysExpanded}>
-          <Space
-            size={[20, 10]}
+          <div
             css={css`
               border: 1px solid ${borderColorValue};
               padding: 10px;
               width: 100%;
               border-radius: 6px;
-              flex-wrap: wrap;
+              display: flex;
+              column-gap: 20px;
             `}
           >
             <ResetPartialSettingsButton keys={internalBooleanKeys} />
-            {internalBooleanKeys.map((k) => (
-              <CheckboxSettingItem
-                key={k}
-                configKey={k}
-                tooltip={k}
-                label={startCase(k.slice('__internal'.length))}
-              />
-            ))}
-          </Space>
+            <Space size={[20, 10]} wrap>
+              {internalBooleanKeys.map((k) => (
+                <CheckboxSettingItem
+                  key={k}
+                  configKey={k}
+                  tooltip={k}
+                  label={startCase(k.slice('__internal'.length))}
+                />
+              ))}
+            </Space>
+          </div>
         </CollapsePanel>
       </SettingsGroup>
     </div>
