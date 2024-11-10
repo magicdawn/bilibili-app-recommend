@@ -7,6 +7,7 @@ import {
 } from '$common/emotion-css'
 import { CheckboxSettingItem } from '$components/ModalSettings/setting-item'
 import { CollapsePanel } from '$components/_base/CollapsePanel'
+import { HelpInfo } from '$components/_base/HelpInfo'
 import { AntdTooltip } from '$components/_base/antd-custom'
 import { OpenExternalLinkIcon } from '$modules/icon'
 import {
@@ -163,6 +164,10 @@ export function TabPaneAdvance() {
         title={
           <>
             其他
+            <HelpInfo>
+              这里是一些作者不愿意解释的设置项😬 <br />
+              随时会删, don't rely on it
+            </HelpInfo>
             <Button
               onClick={() => setInternalKeysExpanded((v) => !v)}
               className='ml-10px'
