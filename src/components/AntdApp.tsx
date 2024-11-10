@@ -1,5 +1,5 @@
 import { APP_CLS_ROOT, APP_NAME } from '$common'
-import { $headerWidth, useBackToTopRight } from '$header'
+import { $headerWidth, $usingEvolevdHeader, useBackToTopRight } from '$header'
 import { useColors, useIsDarkMode } from '$modules/dark-mode'
 import { useSettingsSnapshot } from '$modules/settings'
 import { UseApp } from '$utility/antd-static'
@@ -99,6 +99,7 @@ function GlobalStyle() {
   const dark = useIsDarkMode()
   const { c, bg } = useColors()
   const backToTopRight = useBackToTopRight()
+  const usingEvolevdHeader = $usingEvolevdHeader.use()
 
   // 会有多次变宽的效果, 看起来很诡异!!!
   // bilibili-default -> 90 % -> evolved宽度计算
@@ -186,9 +187,50 @@ function GlobalStyle() {
 
             styleHideTopChannel &&
               css`
-                .bili-header__channel {
+                .bili-header__channel,
+                .bili-header__banner {
                   display: none !important;
                 }
+
+                ${!usingEvolevdHeader &&
+                css`
+                  .bili-feed4 .bili-header {
+                    min-height: 64px !important;
+                  }
+                `}
+
+                .bili-feed4 .bili-header .bili-header__bar {
+                  &.slide-down,
+                  &:not(.slide-down) {
+                    animation: headerSlideDown 0.3s linear forwards !important;
+                    box-shadow: 0 2px 4px ${dark ? 'rgb(255 255 255 / 5%)' : 'rgb(0 0 0 / 8%)'} !important;
+                  }
+                }
+
+                .bili-header__bar:not(.slide-down) {
+                  background-color: var(--bg1);
+                  color: var(--text1);
+                  transition: background-color 0.2s linear;
+                  animation-name: headerSlideDown;
+
+                  .left-entry {
+                    .mini-header__title,
+                    .entry-title,
+                    .default-entry,
+                    .loc-mc-box__text,
+                    .download-entry,
+                    .loc-entry {
+                      color: var(--text1);
+                    }
+                  }
+                  .right-entry .right-entry__outside {
+                    .right-entry-text,
+                    .right-entry-icon {
+                      color: var(--text2);
+                    }
+                  }
+                }
+
                 .area-header-wrapper {
                   margin-top: 10px;
                 }

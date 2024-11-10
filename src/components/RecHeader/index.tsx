@@ -92,7 +92,7 @@ export const RecHeader = forwardRef<
     if (usingEvolevdHeader) {
       return dark ? 'rgba(0, 0, 0, 26%) 0px 2px 10px 1px' : 'rgba(0, 0, 0, 13%) 0 1px 10px 1px;'
     } else {
-      return 'inset 0 -1px 0 var(--line_regular)'
+      return `0 2px 4px ${dark ? 'rgb(255 255 255 / 5%)' : 'rgb(0 0 0 / 8%)'}`
     }
   })()
 
@@ -121,7 +121,8 @@ export const RecHeader = forwardRef<
                 css`
                   border-bottom: 1px solid
                     oklch(from ${bgValue} calc(l + ${dark ? 0.15 : -0.15}) c h / 50%);
-                  background-color: var(--${styleUseWhiteBackground ? 'bg1' : 'bg2'}_float);
+                  background-color: var(--bg1_float);
+                  box-shadow: ${boxShadow};
                 `,
                 expandToFullWidthCss,
               ],
