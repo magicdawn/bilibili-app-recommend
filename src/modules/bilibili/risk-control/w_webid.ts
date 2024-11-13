@@ -5,11 +5,11 @@
  * 根据实际使用, 是不区分目标 mid, 使用自己的 mid 获取 w_webid 即可, 所以按照日期缓存即可
  */
 
-import { dayiyCache } from '$modules/gm/daily-cache'
+import { dailyCache } from '$modules/gm/daily-cache'
 import { request } from '$request'
 import { getUid } from '$utility'
 
-const cache = dayiyCache<string>('w_webid')
+const cache = dailyCache<string>('w_webid')
 
 export async function get_w_webId(): Promise<string | undefined> {
   const val = await cache.get()

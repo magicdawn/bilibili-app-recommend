@@ -3,7 +3,7 @@
  */
 
 import { HOST_API } from '$common'
-import { dayiyCache } from '$modules/gm/daily-cache'
+import { dailyCache } from '$modules/gm/daily-cache'
 import axios from 'axios'
 import md5 from 'md5'
 import ms from 'ms'
@@ -46,7 +46,7 @@ export async function encWbi(_params: Record<string, string | number>) {
 }
 
 type Keys = { img_key: string; sub_key: string }
-const keysCache = dayiyCache<{ val: Keys; ts: number }>('wbi-keys')
+const keysCache = dailyCache<{ val: Keys; ts: number }>('wbi-keys')
 
 // 获取最新的 img_key 和 sub_key
 async function getWbiKeys(): Promise<Keys> {

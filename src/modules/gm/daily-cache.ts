@@ -2,7 +2,7 @@ import dayjs from 'dayjs'
 
 const genDate = () => dayjs().format('YYYY-MM-DD')
 
-export function dayiyCache<T>(namespace: string) {
+export function dailyCache<T>(namespace: string) {
   async function cleanUp() {
     const date = genDate()
     const keys = await GM.listValues()
