@@ -3,7 +3,6 @@ import { useLessFrequentFn } from '$common/hooks/useLessFrequentFn'
 import { AntdApp } from '$components/AntdApp'
 import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import { openNewTab } from '$modules/gm'
-import { isEdge } from '$ua'
 import createEmotion from '@emotion/css/create-instance'
 import { Global } from '@emotion/react'
 import { useHover } from 'ahooks'
@@ -60,12 +59,8 @@ export function PipWindowContent({ newHref, pipWindow }: { pipWindow: Window; ne
 
   const hovering = useHover(pipWindow.document.documentElement)
 
+  // locked initial value
   const [locked, setLocked] = useState(() => {
-    // edge pipWindow 总是静音开播, 需要交互, so locked = false
-    if (isEdge) {
-      return false
-    }
-
     return true
   })
 
@@ -108,8 +103,6 @@ export function PipWindowContent({ newHref, pipWindow }: { pipWindow: Window; ne
           flex-direction: row-reverse;
         `}
       >
-        {/* edge 没有 title-bar, 无法关闭 pipWindow, 无法拖动; so 加个关闭按钮 */}
-        {isEdge && <CloseButton pipWindow={pipWindow} />}
         <CloseThenOpenButton pipWindow={pipWindow} newHref={newHref} />
         <LockButton locked={locked} setLocked={setLocked} />
       </div>
