@@ -17,6 +17,7 @@ const Configuration: UserConfig = {
       [...defaultConfig.rules['type-enum'][2], 'deps', 'changelog'],
     ],
     'header-max-length': [RuleConfigSeverity.Disabled],
+    'subject-case': [RuleConfigSeverity.Disabled],
   },
 }
 

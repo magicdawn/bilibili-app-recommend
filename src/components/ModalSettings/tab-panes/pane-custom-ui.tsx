@@ -51,10 +51,18 @@ export function useHotkeyForConfigBorder() {
 }
 
 const S = {
+  tabPane: css`
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 10px 30px;
+    align-content: flex-start;
+  `,
+
   itemsContainer: css`
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
     row-gap: 4px;
+    display: flex;
+    flex-direction: column;
   `,
 }
 
@@ -62,7 +70,7 @@ export function TabPaneCustomUI() {
   const { styleUseCardBorder } = useSettingsSnapshot()
 
   return (
-    <div className={styles.tabPane}>
+    <div className={styles.tabPane} css={S.tabPane}>
       <SettingsGroup title='样式自定义'>
         <div css={S.itemsContainer}>
           <CheckboxSettingItem

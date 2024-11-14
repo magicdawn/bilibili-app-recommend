@@ -69,12 +69,8 @@ export function wrapWithIdbCache<A extends unknown[], FnReturnType>({
     return result
   }
   Object.defineProperties(wrapped, {
-    cache: {
-      value: cache,
-    },
-    cleanUp: {
-      value: cleanUp,
-    },
+    cache: { value: cache },
+    cleanUp: { value: cleanUp },
   })
 
   return wrapped as {
