@@ -4,7 +4,7 @@ import { useLessFrequentFn } from '$common/hooks/useLessFrequentFn'
 import { useMittOn } from '$common/hooks/useMitt'
 import { useRefStateBox } from '$common/hooks/useRefState'
 import { useDislikedReason } from '$components/ModalDislike'
-import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
+import { borderColorValue, colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import { getBvidInfo } from '$components/RecGrid/unsafe-window-export'
 import type { OnRefresh } from '$components/RecGrid/useRefresh'
 import { useCurrentUsingTab, videoSourceTabState } from '$components/RecHeader/tab'
@@ -656,12 +656,19 @@ const VideoCardInner = memo(function VideoCardInner({
         progress={item.progress / item.duration}
         css={css`
           z-index: 2;
+          height: 3px;
         `}
       />
     ) : undefined
 
   // 一堆 selector 增加权重
   const prefixCls = `.${APP_CLS_ROOT} .${APP_CLS_GRID} .${APP_CLS_CARD}`
+  const bottomBorderRadiusCss = css`
+    ${prefixCls} & {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+  `
   const coverRoundCss: TheCssType = [
     css`
       ${prefixCls} & {
@@ -669,29 +676,23 @@ const VideoCardInner = memo(function VideoCardInner({
         border-radius: ${borderRadiusValue};
       }
     `,
-    // !!watchlaterProgressBar &&
-    //   css`
-    //     ${prefixCls} & {
-    //       border-bottom-left-radius: 1px;
-    //       border-bottom-right-radius: 1px;
-    //     }
-    //   `,
-    styleUseCardBorder &&
-      (styleUseCardBorderOnlyOnHover
-        ? isHovering &&
-          css`
-            ${prefixCls} & {
-              border-bottom-left-radius: 0;
-              border-bottom-right-radius: 0;
-            }
-          `
-        : css`
-            ${prefixCls} & {
-              border-bottom-left-radius: 0;
-              border-bottom-right-radius: 0;
-            }
-          `),
+    styleUseCardBorder
+      ? styleUseCardBorderOnlyOnHover
+        ? isHovering && bottomBorderRadiusCss
+        : bottomBorderRadiusCss
+      : isHovering && bottomBorderRadiusCss,
   ]
+
+  // 防止看不清封面边界: (封面与背景色接近)
+  const coverBorderCss: TheCssType = styleUseCardBorder
+    ? styleUseCardBorderOnlyOnHover
+      ? css`
+          border: 1px solid ${isHovering ? 'transparent' : borderColorValue};
+        `
+      : undefined
+    : css`
+        border: 1px solid ${borderColorValue};
+      `
 
   const target = useLinkTarget()
 
@@ -707,6 +708,7 @@ const VideoCardInner = memo(function VideoCardInner({
           position: relative;
           overflow: hidden;
         `,
+        coverBorderCss,
       ]}
       onClick={handleVideoLinkClick}
       onContextMenu={(e) => {
@@ -721,8 +723,9 @@ const VideoCardInner = memo(function VideoCardInner({
         {/* 故加上 aspect-ratio: 16/9 */}
         <div className='bili-video-card__image--wrap'>
           <Picture
-            className='v-img bili-video-card__cover'
             src={`${cover}@672w_378h_1c_!web-home-common-cover`}
+            className='v-img bili-video-card__cover'
+            style={{ borderRadius: 0 }}
             imgProps={{
               // in firefox, alt text is visible during loading
               alt: isFirefox ? '' : title,
@@ -736,9 +739,8 @@ const VideoCardInner = memo(function VideoCardInner({
         css={[
           css`
             ${prefixCls} & {
-              border-top-left-radius: 0;
-              border-top-right-radius: 0;
               pointer-events: none;
+              border-radius: 0;
             }
           `,
         ]}

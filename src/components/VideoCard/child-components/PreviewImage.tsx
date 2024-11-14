@@ -214,15 +214,14 @@ export function SimplePregressBar({
     <div
       {...rest}
       className={clsx('track', rest.className)}
-      style={{
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        // width: '100%',
-        backgroundColor,
-        height: 2,
-      }}
+      css={css`
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: ${backgroundColor};
+        height: 2px;
+      `}
     >
       <div
         className='bar'
