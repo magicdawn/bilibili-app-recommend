@@ -21,7 +21,7 @@ import {
 } from '../../modules/rec-services/service-map'
 import { setGlobalGridItems } from './unsafe-window-export'
 
-export type OnRefreshOptions = { watchlaterKeepOrder?: boolean }
+export type OnRefreshOptions = { watchlaterKeepOrderWhenShuffle?: boolean }
 export type OnRefresh = (reuse?: boolean, options?: OnRefreshOptions) => void | Promise<void>
 
 export const OnRefreshContext = createContext<OnRefresh | undefined>(undefined)

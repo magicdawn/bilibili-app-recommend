@@ -15,7 +15,7 @@ request.interceptors.request.use(async function (config) {
 
   // wbi sign when needed
   if (config.url?.includes('/wbi/') && !(config.params.w_rid || config.params.wts)) {
-    config.params = { ...config.params, ...(await encWbi(config.params)) }
+    config.params = await encWbi(config.params)
   }
 
   return config

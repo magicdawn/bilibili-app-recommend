@@ -25,7 +25,7 @@ export const createServiceMap = {
   [ETab.KeepFollowOnly]: () => new PcRecService(true),
   [ETab.DynamicFeed]: () =>
     new DynamicFeedRecService(getDfStoreFilterConfig(), settings.showLiveInDynamicFeed),
-  [ETab.Watchlater]: (options) => new WatchLaterRecService(options?.watchlaterKeepOrder),
+  [ETab.Watchlater]: (options) => new WatchLaterRecService(options?.watchlaterKeepOrderWhenShuffle),
   [ETab.Fav]: () => new FavRecService(),
   [ETab.Hot]: () => new HotRecService(),
   [ETab.Live]: () => new LiveRecService(),

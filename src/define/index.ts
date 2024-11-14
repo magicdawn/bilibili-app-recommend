@@ -2,6 +2,7 @@ import type { RankingItem } from '$modules/rec-services/hot/ranking/api'
 import type { CategorySlug, CategoryType } from '$modules/rec-services/hot/ranking/category'
 import type { LiveItem } from '$modules/rec-services/live/define/list-live'
 import type { FavItemExtend } from '../modules/rec-services/fav/define'
+import type { WatchlaterItem } from '../modules/rec-services/watchlater/api.d'
 import type { android } from './app-recommend.android'
 import type { ipad } from './app-recommend.ipad'
 import type { DmJson } from './dm'
@@ -12,13 +13,12 @@ import type { PcRecItem } from './pc-recommend'
 import type { PopularGeneralItem } from './popular-general'
 import type { PopularWeeklyItem } from './popular-weekly'
 import type { PvideoJson } from './pvideo'
-import type { WatchLaterItem } from './watchlater'
+
 export type { FavItem, FavItemExtend } from '$modules/rec-services/fav/define'
+export type { WatchlaterItem, WatchlaterJson } from '../modules/rec-services/watchlater/api.d'
 export type { DynamicFeedItem, DynamicFeedJson } from './pc-dynamic-feed'
 export type { PcRecItem, PcRecommendJson } from './pc-recommend'
-export type { WatchLaterItem, WatchLaterJson } from './watchlater'
 export type { DmJson, PvideoJson }
-
 export type PvideoData = PvideoJson['data']
 export type DmData = DmJson['data']
 
@@ -77,7 +77,7 @@ export type DynamicFeedItemExtend = DynamicFeedItem & {
   api: EApiType.Dynamic
 }
 
-export type WatchLaterItemExtend = WatchLaterItem & {
+export type WatchLaterItemExtend = WatchlaterItem & {
   uniqId: string
   api: EApiType.Watchlater
 }

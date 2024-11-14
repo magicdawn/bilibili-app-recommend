@@ -139,7 +139,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
       // 场景
       // 当前 Tab: 稍后再看, 点视频进去, 在视频页移除了, 关闭视频页, 回到首页
       if (tab === ETab.Watchlater && goOutAt.current && Date.now() - goOutAt.current > ms('1h')) {
-        refresh(true, { watchlaterKeepOrder: true })
+        refresh(true, { watchlaterKeepOrderWhenShuffle: true })
       }
     },
     { target: document },
@@ -314,7 +314,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
       AntdMessage.success(`已移除: ${data.title}`, 4)
 
       if (tab === ETab.Watchlater) {
-        serviceMapBox.val[tab].count--
+        serviceMapBox.val[tab].decreaseTotal()
         updateExtraInfo(tab)
       }
       if (tab === ETab.Fav) {

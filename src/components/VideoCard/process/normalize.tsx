@@ -416,7 +416,8 @@ function apiDynamicAdapter(item: DynamicFeedItemExtend): IVideoCardData {
 
 function apiWatchLaterAdapter(item: WatchLaterItemExtend): IVideoCardData {
   const invalidReason = getVideoInvalidReason(item.state)
-  const title = `${item.viewed ? '【已观看】· ' : ''}${item.title}`
+  const viewed = item.progress > 0
+  const title = `${viewed ? '【已观看】· ' : ''}${item.title}`
   const titleRender: ReactNode = invalidReason ? (
     <AntdTooltip
       title={<>视频已失效, 原因: {invalidReason}</>}
@@ -424,7 +425,7 @@ function apiWatchLaterAdapter(item: WatchLaterItemExtend): IVideoCardData {
       placement='topLeft'
     >
       <del>
-        {item.viewed ? '【已观看】· ' : ''}
+        {viewed ? '【已观看】· ' : ''}
         {item.title}`
       </del>
     </AntdTooltip>

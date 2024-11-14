@@ -21,8 +21,12 @@ const getMixinKey = (orig: string) =>
     .join('')
     .slice(0, 32)
 
-// 为请求参数进行 wbi 签名
-export async function encWbi(_params: Record<string, string | number>) {
+/**
+ * 为请求参数进行 wbi 签名
+ * @param _params request params
+ * @returns full params
+ */
+export async function encWbi(_params: Record<string, any>) {
   const { img_key, sub_key } = await getWbiKeys()
   const mixin_key = getMixinKey(img_key + sub_key)
 
@@ -41,8 +45,12 @@ export async function encWbi(_params: Record<string, string | number>) {
     .join('&')
   const wbi_sign = md5(query + mixin_key) // 计算 w_rid
 
-  // extra params
-  return { wts, w_rid: wbi_sign }
+  // full params: original + wts + w_rid
+  return {
+    ...params,
+    wts,
+    w_rid: wbi_sign,
+  }
 }
 
 type Keys = { img_key: string; sub_key: string }
