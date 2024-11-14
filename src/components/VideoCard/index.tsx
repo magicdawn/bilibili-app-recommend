@@ -13,6 +13,7 @@ import { Picture } from '$components/_base/Picture'
 import {
   isLive,
   isRanking,
+  isWatchlater,
   type AppRecItemExtend,
   type PvideoJson,
   type RecItemType,
@@ -44,7 +45,11 @@ import type { CSSProperties, MouseEventHandler, ReactNode } from 'react'
 import MaterialSymbolsDeleteOutlineRounded from '~icons/material-symbols/delete-outline-rounded'
 import type { VideoData } from './card.service'
 import { fetchVideoData, isVideoshotDataValid, watchLaterAdd } from './card.service'
-import { PreviewImage, type PreviewImageRef } from './child-components/PreviewImage'
+import {
+  PreviewImage,
+  SimplePregressBar,
+  type PreviewImageRef,
+} from './child-components/PreviewImage'
 import { VideoCardActionStyle } from './child-components/VideoCardActions'
 import { VideoCardBottom } from './child-components/VideoCardBottom'
 import { BlacklistCard, DislikedCard, SkeletonCard } from './child-components/other-type-cards'
@@ -645,6 +650,16 @@ const VideoCardInner = memo(function VideoCardInner({
     </>
   )
 
+  const watchlaterProgressBar =
+    isWatchlater(item) && item.progress > 0 ? (
+      <SimplePregressBar
+        progress={item.progress / item.duration}
+        css={css`
+          z-index: 2;
+        `}
+      />
+    ) : undefined
+
   // 一堆 selector 增加权重
   const prefixCls = `.${APP_CLS_ROOT} .${APP_CLS_GRID} .${APP_CLS_CARD}`
   const coverRoundCss: TheCssType = [
@@ -654,6 +669,13 @@ const VideoCardInner = memo(function VideoCardInner({
         border-radius: ${borderRadiusValue};
       }
     `,
+    // !!watchlaterProgressBar &&
+    //   css`
+    //     ${prefixCls} & {
+    //       border-bottom-left-radius: 1px;
+    //       border-bottom-right-radius: 1px;
+    //     }
+    //   `,
     styleUseCardBorder &&
       (styleUseCardBorderOnlyOnHover
         ? isHovering &&
@@ -678,12 +700,14 @@ const VideoCardInner = memo(function VideoCardInner({
       ref={(el) => (coverRef.current = el)}
       href={href}
       target={target}
-      css={css`
-        position: relative;
-        overflow: hidden;
-        /* firefox need this */
-        display: block;
-      `}
+      css={[
+        coverRoundCss,
+        css`
+          display: block; /* firefox need this */
+          position: relative;
+          overflow: hidden;
+        `,
+      ]}
       onClick={handleVideoLinkClick}
       onContextMenu={(e) => {
         // try to solve https://github.com/magicdawn/bilibili-app-recommend/issues/92
@@ -691,12 +715,7 @@ const VideoCardInner = memo(function VideoCardInner({
         e.preventDefault()
       }}
     >
-      <div
-        className='bili-video-card__image'
-        style={{ aspectRatio: '16 / 9' }}
-        data-as='overflow-boundary'
-        css={coverRoundCss}
-      >
+      <div className='bili-video-card__image' style={{ aspectRatio: '16 / 9' }}>
         {/* __image--wrap 上有 padding-top: 56.25% = 9/16, 用于保持高度, 在 firefox 中有明显的文字位移 */}
         {/* picture: absolute, top:0, left: 0  */}
         {/* 故加上 aspect-ratio: 16/9 */}
@@ -714,9 +733,7 @@ const VideoCardInner = memo(function VideoCardInner({
 
       <div
         className='bili-video-card__stats'
-        data-as='overflow-boundary'
         css={[
-          coverRoundCss,
           css`
             ${prefixCls} & {
               border-top-left-radius: 0;
@@ -735,6 +752,8 @@ const VideoCardInner = memo(function VideoCardInner({
         {/* 番剧没有 duration 字段 */}
         <span className='bili-video-card__stats__duration'>{isNormalVideo && durationStr}</span>
       </div>
+
+      {watchlaterProgressBar}
 
       {/* preview: follow-mouse or auto-preview */}
       {!!(videoshotData?.image?.length && duration && (isHoveringAfterDelay || active)) &&

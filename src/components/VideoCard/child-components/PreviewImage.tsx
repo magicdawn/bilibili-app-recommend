@@ -2,7 +2,7 @@ import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import type { PvideoData } from '$define'
 import { useIsDarkMode } from '$modules/dark-mode'
 import { useMouse } from 'ahooks'
-import type { ComponentPropsWithoutRef } from 'react'
+import type { ComponentProps, ComponentPropsWithoutRef } from 'react'
 import { previewCardWrapper } from '../index.module.scss'
 import { borderRadiusValue } from '../index.shared'
 
@@ -204,18 +204,23 @@ const PreviewImageInner = memo(function PreviewImageInner({
   )
 })
 
-function SimplePregressBar({ progress }: { progress: number }) {
+export function SimplePregressBar({
+  progress,
+  ...rest
+}: { progress: number } & ComponentProps<'div'>) {
   const dark = useIsDarkMode()
   const backgroundColor = dark ? '#333' : '#eee'
   return (
     <div
-      className='track'
+      {...rest}
+      className={clsx('track', rest.className)}
       style={{
         position: 'absolute',
         bottom: 0,
         left: 0,
+        right: 0,
+        // width: '100%',
         backgroundColor,
-        width: '100%',
         height: 2,
       }}
     >

@@ -436,7 +436,7 @@ function apiWatchLaterAdapter(item: WatchLaterItemExtend): IVideoCardData {
     avid: String(item.aid),
     bvid: item.bvid,
     goto: 'av',
-    href: item.uri,
+    href: `https://www.bilibili.com/list/watchlater?bvid=${item.bvid}&oid=${item.aid}`,
     title,
     titleRender,
     cover: item.pic,
