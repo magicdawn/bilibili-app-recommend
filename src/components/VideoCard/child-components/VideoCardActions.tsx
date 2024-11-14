@@ -72,7 +72,8 @@ const S = {
     `,
   ],
 }
-export const VideoCardActionStyle = S
+
+export { S as VideoCardActionStyle }
 
 export const VideoCardActionButton = memo(function VideoCardActionButton({
   inlinePosition,

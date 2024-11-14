@@ -7,7 +7,7 @@ import { openNewTab } from '$modules/gm'
 import { isNormalRankingItem } from '$modules/rec-services/hot/ranking/category'
 import { settings, useSettingsSnapshot } from '$modules/settings'
 import { delay } from 'es-toolkit'
-import type { ComponentProps, MouseEventHandler, ReactNode, RefObject } from 'react'
+import type { ComponentProps, MouseEvent, MouseEventHandler, ReactNode, RefObject } from 'react'
 import type { PreviewImageRef } from '../child-components/PreviewImage'
 import { VideoCardActionButton } from '../child-components/VideoCardActions'
 import {
@@ -53,10 +53,10 @@ export function useOpenRelated({
   const handleVideoLinkClick: MouseEventHandler = useMemoizedFn((e) => {
     e.stopPropagation()
     e.preventDefault()
-    onOpenWithMode()
+    onOpenWithMode(undefined, e)
   })
 
-  const onOpenWithMode = useMemoizedFn((mode?: Mode) => {
+  const onOpenWithMode = useMemoizedFn((mode?: Mode, e?: MouseEvent) => {
     mode ||= settings.videoLinkOpenMode
 
     const newHref = getHref((u) => {
@@ -75,7 +75,8 @@ export function useOpenRelated({
     })
 
     const handleCommon = () => {
-      const active = mode !== Mode.Background
+      const backgroud = mode === Mode.Background || !!(e?.metaKey || e?.ctrlKey)
+      const active = !backgroud
       openNewTab(newHref, active)
     }
 

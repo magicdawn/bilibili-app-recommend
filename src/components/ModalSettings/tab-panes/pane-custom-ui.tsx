@@ -71,7 +71,7 @@ function explainForFlag(checked: ReactNode, unchecked: ReactNode) {
   return (
     <>
       ✅: {checked} <br />
-      ❎: {unchecked}
+      ❎: {unchecked} <br />
     </>
   )
 }
@@ -86,7 +86,7 @@ export function TabPaneCustomUI() {
           <CheckboxSettingItem
             configKey='styleUseStandardVideoSourceTab'
             label='推荐 Tab: 按钮使用标准高度'
-            tooltip='默认紧凑高度'
+            tooltip={explainForFlag('标准高度', '紧凑高度')}
           />
 
           <CheckboxSettingItem
@@ -100,12 +100,11 @@ export function TabPaneCustomUI() {
             label='全屏模式: 使用自定义网格配置'
             tooltip={
               <>
-                网格配置指: 网格宽度, 间距, 列数等.
-                <br />
-                自定义网格配置: 宽度为90%; 可跟随 Bilibili-Evolved 自定义顶栏配置; 列数: 4列 - 10列;{' '}
-                由{APP_NAME} 自定义;
-                <br />
-                默认网格配置: bili-feed4 版本B站首页默认的网格配置
+                网格配置指: 网格宽度, 间距, 列数等. <br />
+                自定义网格配置: 宽度为90%; 可跟随 Bilibili-Evolved 自定义顶栏配置; 列数: 4 - 10列;{' '}
+                由{APP_NAME} 自定义; <br />
+                默认网格配置: bili-feed4 版本B站首页默认的网格配置; 在 Sarari
+                中使用建议取消勾选此项.
               </>
             }
           />
