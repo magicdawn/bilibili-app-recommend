@@ -6,6 +6,7 @@ import { AntdMessage, shouldDisableShortcut } from '$utility'
 import { Tag } from 'antd'
 import { isEqual } from 'es-toolkit'
 import { pick } from 'radash'
+import type { ReactNode } from 'react'
 import styles from '../index.module.scss'
 import { CheckboxSettingItem } from '../setting-item'
 import { ResetPartialSettingsButton, SettingsGroup } from './_shared'
@@ -66,6 +67,15 @@ const S = {
   `,
 }
 
+function explainForFlag(checked: ReactNode, unchecked: ReactNode) {
+  return (
+    <>
+      ✅: {checked} <br />
+      ❎: {unchecked}
+    </>
+  )
+}
+
 export function TabPaneCustomUI() {
   const { styleUseCardBorder } = useSettingsSnapshot()
 
@@ -82,13 +92,7 @@ export function TabPaneCustomUI() {
           <CheckboxSettingItem
             configKey='styleUseStickyTabbarInPureRecommend'
             label='全屏模式: sticky tab bar'
-            tooltip={
-              <>
-                默认勾选: Tab 栏会吸附在顶栏下方
-                <br />
-                取消选中: Tab 栏会随页面一起滚动
-              </>
-            }
+            tooltip={explainForFlag('Tab 栏会吸附在顶栏下方', 'Tab 栏会随页面一起滚动')}
           />
 
           <CheckboxSettingItem
@@ -99,9 +103,9 @@ export function TabPaneCustomUI() {
                 网格配置指: 网格宽度, 间距, 列数等.
                 <br />
                 自定义网格配置: 宽度为90%; 可跟随 Bilibili-Evolved 自定义顶栏配置; 列数: 4列 - 10列;{' '}
-                {APP_NAME} 自定义;
+                由{APP_NAME} 自定义;
                 <br />
-                默认网格配置: bili-feed4 首页使用的网格配置
+                默认网格配置: bili-feed4 版本B站首页默认的网格配置
               </>
             }
           />
@@ -109,12 +113,7 @@ export function TabPaneCustomUI() {
           <CheckboxSettingItem
             configKey='styleUseWhiteBackground'
             label='全屏模式: 使用纯白背景'
-            tooltip={
-              <>
-                ✅ 纯白背景
-                <br />❎ 浅灰色背景
-              </>
-            }
+            tooltip={explainForFlag('纯白背景', '浅灰色背景')}
           />
 
           <CheckboxSettingItem
@@ -162,14 +161,7 @@ export function TabPaneCustomUI() {
             configKey='styleUseCardBorderOnlyOnHover'
             label='仅在悬浮时显示'
             disabled={!styleUseCardBorder}
-            tooltip={
-              <>
-                ✅: 仅在悬浮时显示
-                <br />
-                ❎: 一直显示
-                <br />
-              </>
-            }
+            tooltip={explainForFlag('仅在悬浮时显示', '一直显示')}
           />
 
           <CheckboxSettingItem
