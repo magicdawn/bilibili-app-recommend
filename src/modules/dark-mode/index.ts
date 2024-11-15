@@ -1,5 +1,6 @@
 import { settings } from '$modules/settings'
 import { subscribeOnKeys, valtioFactory } from '$utility/valtio'
+import { delay } from 'es-toolkit'
 import { subscribe } from 'valtio'
 
 /**
@@ -60,6 +61,18 @@ ob.observe(document.documentElement, {
   attributes: true,
   attributeFilter: ['data-darkreader-scheme'],
 })
+
+document.addEventListener('click', evolvedDarkModeClickHandler, { passive: true })
+async function evolvedDarkModeClickHandler(e: MouseEvent) {
+  const t = e.target as HTMLElement
+  // role="listitem" data-name="darkMode" class="custom-navbar-item"
+  if (!t.closest('.custom-navbar-item[role="listitem"][data-name="darkMode"]')) return
+  await delay(0)
+  $darkMode.updateThrottled()
+  $colors.updateThrottled()
+}
+
 window.addEventListener('unload', () => {
   ob.disconnect()
+  document.removeEventListener('click', evolvedDarkModeClickHandler)
 })

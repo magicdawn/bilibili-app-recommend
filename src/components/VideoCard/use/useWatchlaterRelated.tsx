@@ -104,20 +104,41 @@ export function useWatchlaterRelated({
 
   const addSize = 20
   const addedSize = 18
-  const icon = $req.loading ? (
-    <IconSvgSpinnersBarsRotateFade {...size(16)} />
-  ) : watchLaterAdded ? (
-    <IconAnimatedChecked size={addedSize} useAnimation={watchLaterAddedPrevious === false} />
-  ) : (
-    <WatchLaterIcon {...size(addSize)} />
-  )
+  const icon = (() => {
+    if ($req.loading) {
+      return <IconSvgSpinnersBarsRotateFade {...size(16)} />
+    }
+
+    if (item.api === EApiType.Watchlater) {
+      return watchLaterAdded ? (
+        <IconMaterialSymbolsDeleteOutlineRounded {...size(addedSize)} />
+      ) : (
+        <IconAnimatedChecked size={addedSize} useAnimation={watchLaterAddedPrevious === true} />
+      )
+    }
+
+    return watchLaterAdded ? (
+      <IconAnimatedChecked size={addedSize} useAnimation={watchLaterAddedPrevious === false} />
+    ) : (
+      <WatchLaterIcon {...size(addSize)} />
+    )
+  })()
+
+  const tooltip =
+    item.api === EApiType.Watchlater
+      ? watchLaterAdded
+        ? '已添加稍后再看, 点击移除'
+        : '已移除稍后再看'
+      : watchLaterAdded
+        ? '已添加稍后再看, 点击移除'
+        : '稍后再看'
 
   const watchlaterButtonEl = hasWatchLaterEntry && (
     <VideoCardActionButton
       visible={actionButtonVisible}
       inlinePosition='right'
       icon={icon}
-      tooltip={watchLaterAdded ? '已添加稍后再看, 点击移除' : '稍后再看'}
+      tooltip={tooltip}
       onClick={onToggleWatchLater}
     />
   )

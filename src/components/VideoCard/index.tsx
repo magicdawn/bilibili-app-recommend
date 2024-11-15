@@ -42,7 +42,6 @@ import { delay } from 'es-toolkit'
 import { size } from 'polished'
 import { tryit } from 'radash'
 import type { CSSProperties, MouseEventHandler, ReactNode } from 'react'
-import MaterialSymbolsDeleteOutlineRounded from '~icons/material-symbols/delete-outline-rounded'
 import type { VideoData } from './card.service'
 import { fetchVideoData, isVideoshotDataValid, watchLaterAdd } from './card.service'
 import {
@@ -545,7 +544,7 @@ const VideoCardInner = memo(function VideoCardInner({
         key: 'watchlater',
         label: watchLaterLabel,
         icon: watchLaterAdded ? (
-          <MaterialSymbolsDeleteOutlineRounded {...size(15)} />
+          <IconMaterialSymbolsDeleteOutlineRounded {...size(15)} />
         ) : (
           <WatchLaterIcon {...size(15)} />
         ),
@@ -581,7 +580,7 @@ const VideoCardInner = memo(function VideoCardInner({
             {
               key: 'remove-fav',
               label: '移除收藏',
-              icon: <MaterialSymbolsDeleteOutlineRounded {...size(15)} />,
+              icon: <IconMaterialSymbolsDeleteOutlineRounded {...size(15)} />,
               async onClick() {
                 if (item.api !== 'fav') return
                 const success = await UserFavService.removeFav(
