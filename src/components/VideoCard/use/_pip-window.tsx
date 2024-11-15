@@ -24,6 +24,7 @@ export function renderInPipWindow(newHref: string, pipWindow: Window) {
 
   const container = document.createElement('div')
   container.classList.add(APP_CLS_ROOT)
+  container.style.lineHeight = '0'
   pipWindow.document.body.appendChild(container)
 
   const root = createRoot(container)
@@ -72,10 +73,12 @@ export function PipWindowContent({ newHref, pipWindow }: { pipWindow: Window; ne
             * {
               box-sizing: border-box;
             }
+            :root,
             body,
             iframe {
               margin: 0;
               padding: 0;
+              overscroll-behavior: none;
             }
           `,
         ]}
@@ -85,7 +88,7 @@ export function PipWindowContent({ newHref, pipWindow }: { pipWindow: Window; ne
         src={newHref}
         css={css`
           width: 100%;
-          height: 100%;
+          height: 100vh;
           border: none;
         `}
       />
