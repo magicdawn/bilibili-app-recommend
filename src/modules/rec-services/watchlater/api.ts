@@ -33,7 +33,7 @@ export async function getWatchlaterItemFrom(startKey = '') {
     total: json.data.show_count,
     hasMore: json.data.has_more,
     nextKey: json.data.next_key,
-    items: json.data.list,
+    items: filterOutApiReturnedRecent(json.data.list || []),
   }
 }
 
@@ -63,4 +63,18 @@ export async function getAllWatchlaterItemsV2(abortSignal?: AbortSignal) {
     err,
     items,
   }
+}
+
+function filterOutApiReturnedRecent(items: WatchlaterItem[]) {
+  // title:以下为更早添加的视频, aid:0, bvid:"", add_at:0
+  // 新添加一个, 然后第一次请求 v2 API 会返回这个
+  return items.filter(
+    (item) =>
+      !(
+        item.title === '以下为更早添加的视频' &&
+        item.aid === 0 &&
+        item.bvid === '' &&
+        item.add_at === 0
+      ),
+  )
 }
