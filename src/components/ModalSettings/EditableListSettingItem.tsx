@@ -1,5 +1,6 @@
 import { flexCenterStyle } from '$common/emotion-css'
 import { AntdTooltip } from '$components/_base/antd-custom'
+import { colorPrimaryValue } from '$components/css-vars'
 import { getUserNickname } from '$modules/bilibili/user/nickname'
 import {
   settings,
@@ -12,7 +13,6 @@ import { Empty, Input } from 'antd'
 import { uniq } from 'es-toolkit'
 import type { ComponentPropsWithoutRef } from 'react'
 import IconParkOutlineCloseSmall from '~icons/icon-park-outline/close-small'
-import { colorPrimaryValue } from './theme.shared'
 
 const { Search } = Input
 

@@ -9,6 +9,7 @@ import { CheckboxSettingItem } from '$components/ModalSettings/setting-item'
 import { CollapsePanel } from '$components/_base/CollapsePanel'
 import { HelpInfo } from '$components/_base/HelpInfo'
 import { AntdTooltip } from '$components/_base/antd-custom'
+import { borderColorValue } from '$components/css-vars'
 import { OpenExternalLinkIcon } from '$modules/icon'
 import {
   allowedSettingsKeys,
@@ -29,7 +30,6 @@ import TablerRestore from '~icons/tabler/restore'
 import { set_HAS_RESTORED_SETTINGS } from '../../../modules/settings/restore-flag'
 import styles from '../index.module.scss'
 import { toastAndReload } from '../index.shared'
-import { borderColorValue } from '../theme.shared'
 import { ResetPartialSettingsButton, SettingsGroup } from './_shared'
 
 function onResetSettings() {

@@ -1,10 +1,10 @@
-import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
+import { colorPrimaryValue } from '$components/css-vars'
 import type { PvideoData } from '$define'
 import { useIsDarkMode } from '$modules/dark-mode'
 import { useMouse } from 'ahooks'
 import type { ComponentProps, ComponentPropsWithoutRef } from 'react'
+import { borderRadiusValue } from '../../css-vars'
 import { previewCardWrapper } from '../index.module.scss'
-import { borderRadiusValue } from '../index.shared'
 
 const S = {
   previewCardWrapper: css`

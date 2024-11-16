@@ -1,7 +1,7 @@
 import { APP_CLS_ROOT } from '$common'
 import { useLessFrequentFn } from '$common/hooks/useLessFrequentFn'
 import { AntdApp } from '$components/AntdApp'
-import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
+import { colorPrimaryValue } from '$components/css-vars'
 import { openNewTab } from '$modules/gm'
 import createEmotion from '@emotion/css/create-instance'
 import { Global } from '@emotion/react'

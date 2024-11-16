@@ -4,7 +4,7 @@
  */
 
 import { C, flexCenterStyle } from '$common/emotion-css'
-import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
+import { colorPrimaryValue } from '$components/css-vars'
 import { isApp, isLive, isRanking, type RecItemType } from '$define'
 import { EApiType, EAppApiDevice } from '$define/index.shared'
 import { LiveIcon } from '$modules/icon'

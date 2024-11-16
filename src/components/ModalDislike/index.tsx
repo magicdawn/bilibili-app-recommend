@@ -1,6 +1,6 @@
 import { APP_CLS_ROOT, OPERATION_FAIL_MSG } from '$common'
-import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import { BaseModal, BaseModalStyle, ModalClose } from '$components/_base/BaseModal'
+import { colorPrimaryValue } from '$components/css-vars'
 import type { AppRecItem, AppRecItemExtend } from '$define'
 import { DislikeIcon } from '$modules/icon'
 import { AntdMessage } from '$utility'

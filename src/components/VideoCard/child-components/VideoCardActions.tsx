@@ -1,4 +1,4 @@
-import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
+import { colorPrimaryValue } from '$components/css-vars'
 import { css as _css, css } from '@emotion/react'
 import { useHover } from 'ahooks'
 import { type ComponentProps, type ReactNode } from 'react'

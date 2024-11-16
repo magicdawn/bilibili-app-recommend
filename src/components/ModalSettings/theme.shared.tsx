@@ -1,13 +1,7 @@
-import { APP_NAME } from '$common'
+import { colorPrimaryValue } from '$components/css-vars'
 import { $evolvedThemeColor } from '$header'
 import { settings, useSettingsSnapshot } from '$modules/settings'
 import LX_THEMES from './lx-themes.json'
-
-export const colorPrimaryIdentifier = `--${APP_NAME}-color-primary`
-export const colorPrimaryValue = `var(${colorPrimaryIdentifier})`
-
-export const borderColorIdentifier = `--${APP_NAME}-border-color`
-export const borderColorValue = `var(${borderColorIdentifier})`
 
 // https://github.com/argyleink/gui-challenges/blob/main/color-palettes/oklch-palette.css
 export const primaryPalatte = {

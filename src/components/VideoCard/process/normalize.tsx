@@ -1,6 +1,6 @@
 import { APP_NAME } from '$common'
-import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import { AntdTooltip } from '$components/_base/antd-custom'
+import { colorPrimaryValue } from '$components/css-vars'
 import {
   isApp,
   isDynamic,

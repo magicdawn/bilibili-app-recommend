@@ -1,5 +1,5 @@
 import { APP_CLS_ROOT, OPERATION_FAIL_MSG, REQUEST_FAIL_MSG } from '$common'
-import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
+import { colorPrimaryValue } from '$components/css-vars'
 import { css } from '@emotion/css'
 
 const toastContainer = css`

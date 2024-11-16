@@ -1,4 +1,4 @@
-import { APP_NAME, APP_SHORT_PREFIX } from '$common'
+import { APP_SHORT_PREFIX } from '$common'
 import { OpenExternalLinkIcon, PlayerIcon } from '$modules/icon'
 import { isMac } from '$ua'
 import mitt, { type Emitter } from 'mitt'
@@ -7,12 +7,6 @@ import type { ReactNode } from 'react'
 import AkarIconsMiniplayer from '~icons/akar-icons/miniplayer'
 import EosIconsBackgroundTasks from '~icons/eos-icons/background-tasks'
 import RiFullscreenFill from '~icons/ri/fullscreen-fill'
-
-export const borderRadiusIdentifier = '--video-card-border-radius'
-export const borderRadiusValue = `var(${borderRadiusIdentifier})`
-
-export const bgIdentifier = `--${APP_NAME}-bg`
-export const bgValue = `var(${bgIdentifier})`
 
 export const STAT_NUMBER_FALLBACK = '0'
 

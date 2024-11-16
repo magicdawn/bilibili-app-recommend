@@ -7,12 +7,12 @@
  * https://box-shadow.dev/
  */
 
-import { borderColorValue, colorPrimaryValue } from '$components/ModalSettings/theme.shared'
+import { borderColorValue, colorPrimaryValue } from '$components/css-vars'
 import { useIsDarkMode } from '$modules/dark-mode'
 import { useSettingsSnapshot } from '$modules/settings'
 import { tweakLightness } from '$utility/css'
 import type { TheCssType } from '$utility/type'
-import { bgValue, borderRadiusValue } from './index.shared'
+import { bgValue, borderRadiusValue } from '../css-vars'
 
 const c = tweakLightness(colorPrimaryValue, 0.1)
 const borderAndShadow = css`

@@ -4,12 +4,12 @@ import { useLessFrequentFn } from '$common/hooks/useLessFrequentFn'
 import { useMittOn } from '$common/hooks/useMitt'
 import { useRefStateBox } from '$common/hooks/useRefState'
 import { useDislikedReason } from '$components/ModalDislike'
-import { borderColorValue, colorPrimaryValue } from '$components/ModalSettings/theme.shared'
 import { getBvidInfo } from '$components/RecGrid/unsafe-window-export'
 import type { OnRefresh } from '$components/RecGrid/useRefresh'
 import { useCurrentUsingTab, videoSourceTabState } from '$components/RecHeader/tab'
 import { ETab } from '$components/RecHeader/tab-enum'
 import { Picture } from '$components/_base/Picture'
+import { borderColorValue, colorPrimaryValue } from '$components/css-vars'
 import {
   isLive,
   isRanking,
@@ -22,6 +22,7 @@ import { EApiType } from '$define/index.shared'
 import { UserBlacklistService, useInBlacklist } from '$modules/bilibili/me/relations/blacklist'
 import { UserfollowService } from '$modules/bilibili/me/relations/follow'
 import { setNicknameCache } from '$modules/bilibili/user/nickname'
+import { useIsDarkMode } from '$modules/dark-mode'
 import { openNewTab } from '$modules/gm'
 import { DislikeIcon, OpenExternalLinkIcon, WatchLaterIcon } from '$modules/icon'
 import { IconPark } from '$modules/icon/icon-park'
@@ -42,6 +43,7 @@ import { delay } from 'es-toolkit'
 import { size } from 'polished'
 import { tryit } from 'radash'
 import type { CSSProperties, MouseEventHandler, ReactNode } from 'react'
+import { borderRadiusValue } from '../css-vars'
 import type { VideoData } from './card.service'
 import { fetchVideoData, isVideoshotDataValid, watchLaterAdd } from './card.service'
 import {
@@ -54,7 +56,7 @@ import { VideoCardBottom } from './child-components/VideoCardBottom'
 import { BlacklistCard, DislikedCard, SkeletonCard } from './child-components/other-type-cards'
 import styles from './index.module.scss'
 import type { VideoCardEmitter } from './index.shared'
-import { borderRadiusValue, defaultEmitter } from './index.shared'
+import { defaultEmitter } from './index.shared'
 import { getFollowedStatus } from './process/filter'
 import type { IVideoCardData } from './process/normalize'
 import { normalizeCardData } from './process/normalize'
@@ -683,18 +685,19 @@ const VideoCardInner = memo(function VideoCardInner({
   ]
 
   // 防止看不清封面边界: (封面与背景色接近)
-  const coverBorderCss: TheCssType = styleUseCardBorder
-    ? styleUseCardBorderOnlyOnHover
-      ? css`
-          border: 1px solid ${isHovering ? 'transparent' : borderColorValue};
-        `
-      : undefined
-    : css`
-        border: 1px solid ${borderColorValue};
-      `
+  const dark = useIsDarkMode()
+  const coverBorderCss: TheCssType = (() => {
+    // card has border always showing, so cover does not need
+    if (styleUseCardBorder && !styleUseCardBorderOnlyOnHover) return undefined
+    const visible =
+      !dark &&
+      (!styleUseCardBorder || (styleUseCardBorder && styleUseCardBorderOnlyOnHover && !isHovering))
+    return css`
+      border: 1px solid ${visible ? borderColorValue : 'transparent'};
+    `
+  })()
 
   const target = useLinkTarget()
-
   const coverContent = (
     <a
       ref={(el) => (coverRef.current = el)}

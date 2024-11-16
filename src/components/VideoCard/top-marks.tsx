@@ -1,5 +1,5 @@
 import { C, flexCenterStyle, flexVerticalCenterStyle } from '$common/emotion-css'
-import { colorPrimaryValue } from '$components/ModalSettings/theme.shared'
+import { colorPrimaryValue } from '$components/css-vars'
 import type { RankingItemExtend, RecItemType } from '$define'
 import { EApiType } from '$define/index.shared'
 import { openNewTab } from '$modules/gm'

@@ -7,8 +7,8 @@
 
 ## Todo
 
-- [ ] preview invalid 时自动重新获取
-- [ ] dark mode 切换时, cover border 显得很突兀
+- [x] preview invalid 时自动重新获取
+- [x] dark mode 切换时, cover border 显得很突兀
 
 ## 实现细节
 

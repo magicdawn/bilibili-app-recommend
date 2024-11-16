@@ -90,8 +90,6 @@ export class DynamicFeedRecService implements IService {
   }
 
   async loadMore(signal: AbortSignal | undefined = undefined) {
-    // debugger
-
     if (!this.hasMore) {
       return
     }
