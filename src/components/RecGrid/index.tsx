@@ -522,37 +522,60 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
   )
 })
 
+const isAxiosError = (err: any): err is AxiosError => {
+  return err instanceof Error && err.name === 'AxiosError'
+}
+
+const errorParagraph = css`
+  margin-top: 10px;
+`
+
+function inspectErr(err: any): ReactNode {
+  const nodes: ReactNode[] = []
+
+  const wrapParagraph = (node: ReactNode) => <p css={errorParagraph}>{node}</p>
+
+  if (!(err instanceof Error)) {
+    nodes.push(JSON.stringify(err))
+  }
+  // Error
+  else {
+    // display stack, fallback to message
+    if (err.stack) {
+      nodes.push(
+        wrapParagraph(
+          <>
+            Error Stack: <br />
+            {err.stack}
+          </>,
+        ),
+      )
+    } else {
+      nodes.push(wrapParagraph(<>Error Message: {err.message}</>))
+    }
+
+    // add error cause
+    if (err.cause) {
+      nodes.push(wrapParagraph(<>Error Cause: {inspectErr(err.cause)}</>))
+    }
+
+    // if it's axios error
+    if (isAxiosError(err)) {
+      const _err = cloneDeep(err)
+      // hide sensitive access_key
+      if (_err.config?.params?.access_key) {
+        _err.config.params.access_key = '*'.repeat(_err.config.params.access_key.length)
+      }
+      nodes.push(wrapParagraph(<>axios config: {JSON.stringify(_err.config, null, 2)}</>))
+    }
+  }
+
+  return nodes
+}
+
 function ErrorDetail({ err, tab }: { err: any; tab: ETab }) {
   const target = useLinkTarget()
-
-  const errDetail: ReactNode = useMemo(() => {
-    const isAxiosError = (err: any): err is AxiosError => {
-      return err instanceof Error && err.name === 'AxiosError'
-    }
-
-    if (err instanceof Error) {
-      // display cause
-      if (err.cause) {
-        return JSON.stringify(err.cause)
-      }
-      // axios error
-      else if (isAxiosError(err)) {
-        const _err = cloneDeep(err)
-        // hide sensitive access_key
-        if (_err.config?.params?.access_key) {
-          _err.config.params.access_key = '*'.repeat(_err.config.params.access_key.length)
-        }
-        return JSON.stringify(_err)
-      }
-      // display stack
-      else {
-        return err.stack || err.message
-      }
-    } else {
-      return JSON.stringify(err)
-    }
-  }, [err])
-
+  const errDetail: ReactNode = useMemo(() => inspectErr(err), [err])
   return (
     <div
       css={css`
@@ -564,7 +587,7 @@ function ErrorDetail({ err, tab }: { err: any; tab: ETab }) {
       <AntdTooltip
         title={
           <div className='p-block-10'>
-            <h3 className='mb-10'>错误详情</h3>
+            <h3>错误详情</h3>
             <div
               css={css`
                 overflow: hidden;

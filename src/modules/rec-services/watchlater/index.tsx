@@ -1,7 +1,7 @@
 import { type ItemsSeparator, type WatchLaterItemExtend } from '$define'
 import { EApiType } from '$define/index.shared'
 import { settings } from '$modules/settings'
-import { getHasLogined, getUid, whenIdle } from '$utility'
+import { getHasLogined, getUid, toast, whenIdle } from '$utility'
 import dayjs from 'dayjs'
 import { shuffle } from 'es-toolkit'
 import { proxy, useSnapshot } from 'valtio'
@@ -25,7 +25,7 @@ if (getHasLogined() && getUid()) {
   void (async () => {
     await whenIdle()
 
-    const allWatchLaterItems = await getAllWatchlaterItemsV2()
+    const { items: allWatchLaterItems } = await getAllWatchlaterItemsV2()
     if (!allWatchLaterItems.length) return
 
     watchLaterState.updatedAt = Date.now()
@@ -88,6 +88,13 @@ const earlierSeparator: ItemsSeparator = {
   content: '更早',
 }
 
+function showApiRequestError(err: string) {
+  toast(`获取稍后再看失败: ${err}`)
+  throw new Error(`获取稍后再看失败: ${err}`, {
+    cause: err,
+  })
+}
+
 /**
  * shuffle pre-requirements: load ALL
  */
@@ -108,7 +115,11 @@ class ShuffleOrderService implements IService {
   }
 
   private async fetch(abortSignal: AbortSignal) {
-    const rawItems = await getAllWatchlaterItemsV2(abortSignal)
+    const { items: rawItems, err } = await getAllWatchlaterItemsV2(abortSignal)
+    if (typeof err !== 'undefined') {
+      showApiRequestError(err)
+    }
+
     const items: WatchLaterItemExtend[] = rawItems.map(extendItem)
 
     // recent + earlier
@@ -193,7 +204,12 @@ class NormalOrderService implements IService {
     if (!this.hasMore) return
 
     const result = await getWatchlaterItemFrom(this.nextKey)
-    if (!result) return
+    // error
+    if (typeof result.err !== 'undefined') {
+      this.hasMore = false
+      showApiRequestError(result.err)
+      return
+    }
 
     this.firstPageLoaded = true
     this.hasMore = result.hasMore

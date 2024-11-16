@@ -7,8 +7,8 @@
 
 ## Todo
 
-- [ ] 弹幕预览
-- modal antd
+- [ ] preview invalid 时自动重新获取
+- [ ] dark mode 切换时, cover border 显得很突兀
 
 ## 实现细节
 
@@ -70,12 +70,3 @@ include: [
   'https://www.mcbbs.net/template/mcbbs/image/special_photo_bg.png?*',
 ],
 ```
-
-## antd + rc-field-form
-
-rc-field-form + async-validator 无效引入
-
-- rc-field-form/es/index.js 有 side effects
-- rc-field-form/es/Field.js 也有, `class Field` 的 static props, 被编译成 `defineProps`, 表现为 side effects
-
-如果需要移除, 需从 rc-field-form 的 build 着手

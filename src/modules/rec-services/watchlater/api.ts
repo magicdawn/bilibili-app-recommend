@@ -22,10 +22,11 @@ export async function getWatchlaterItemFrom(startKey = '') {
       web_location: 333.881,
     }),
   })
+
   const json = res.data as WatchlaterJson
   if (!isWebApiSuccess(json)) {
     console.warn(`[${APP_NAME}] getAllWatchlaterItemsV2 error %s, fulljson %o`, json.message, json)
-    return
+    return { err: json.message }
   }
 
   return {
@@ -41,12 +42,16 @@ export async function getAllWatchlaterItemsV2(abortSignal?: AbortSignal) {
   let startKey = ''
   let total = 0
   let items: WatchlaterItem[] = []
+  let err: string | undefined
 
   while (hasMore) {
     if (abortSignal?.aborted) break
 
     const result = await getWatchlaterItemFrom(startKey)
-    if (!result) break
+    if (typeof result.err !== 'undefined') {
+      err = result.err
+      break
+    }
 
     items = items.concat(result.items)
     startKey = result.nextKey
@@ -54,5 +59,8 @@ export async function getAllWatchlaterItemsV2(abortSignal?: AbortSignal) {
     total = result.total
   }
 
-  return items
+  return {
+    err,
+    items,
+  }
 }

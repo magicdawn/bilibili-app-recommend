@@ -81,7 +81,10 @@ export async function tryToRemove(
   delayMs?: number,
 ) {
   if (typeof delayMs === 'number') await delay(delayMs)
-  return tryAction(selector, (el) => el.remove(), { selectorPredicate })
+  return tryAction(selector, (el) => el.remove(), {
+    selectorPredicate,
+    warnOnTimeout: false,
+  })
 }
 
 /**
