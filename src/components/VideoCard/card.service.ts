@@ -5,6 +5,7 @@ import { gmrequest, isWebApiSuccess, request } from '$request'
 import { getCsrfToken } from '$utility'
 import { preloadImg } from '$utility/image'
 import { toast } from '$utility/toast'
+import { delay } from 'es-toolkit'
 import QuickLRU from 'quick-lru'
 
 // api.bilibili.com/pvideo?aid=${target.dataset.id}&_=${Date.now()
@@ -31,6 +32,10 @@ export function isVideoshotDataValid(videoshotData?: PvideoJson['data']) {
   return !!(videoshotData?.image?.length && videoshotData?.index?.length)
 }
 
+/**
+ * cacheable: no result | valid result
+ * 但不能是 half-valid: ({ image: [1,2,3], index: [空] })
+ */
 export function isVideoshotJsonCacheable(json: PvideoJson) {
   const success = isWebApiSuccess(json)
   if (!success) {
@@ -67,8 +72,17 @@ export async function fetchVideoData(bvid: string): Promise<VideoData> {
     if (cached) return cached
   }
 
-  const videoshotJson = await videoshot(bvid)
-  const videoshotData = videoshotJson.data
+  let retryTimes = 0
+  let videoshotJson: PvideoJson
+  do {
+    retryTimes++
+    videoshotJson = await videoshot(bvid)
+    if (isVideoshotJsonCacheable(videoshotJson)) {
+      break
+    } else {
+      await delay(500) // this API is silly
+    }
+  } while (retryTimes < 3)
 
   // cache:save
   const cacheable = isVideoshotJsonCacheable(videoshotJson)
@@ -76,6 +90,7 @@ export async function fetchVideoData(bvid: string): Promise<VideoData> {
     cache.set(bvid, { videoshotJson })
   }
 
+  const videoshotData = videoshotJson.data
   if (settings.autoPreviewWhenHover) {
     // preload first img & without wait rest
     const imgs = videoshotData?.image || []
