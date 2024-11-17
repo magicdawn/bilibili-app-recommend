@@ -1,10 +1,15 @@
 import { explainForFlag } from '$components/ModalSettings/index.shared'
-import { CheckboxSettingItem, SwitchSettingItem } from '$components/ModalSettings/setting-item'
+import {
+  ButtonSettingItem,
+  CheckboxSettingItem,
+  SwitchSettingItem,
+} from '$components/ModalSettings/setting-item'
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
 import { useSettingsSnapshot } from '$modules/settings'
 import { toast } from '$utility/toast'
 import { Space, Tag } from 'antd'
 import { delay } from 'es-toolkit'
+import { ShuffleSettingsItemFor } from '../_shared'
 
 export function WatchLaterUsageInfo({ total }: { total: number }) {
   // 2023.12: B站的稍后再看上限提升到1000了
@@ -33,7 +38,6 @@ export function WatchLaterUsageInfo({ total }: { total: number }) {
       tooltip={<>随机顺序不包括近期添加的视频</>}
     />
   )
-
   const checkboxDisplay = (
     <CheckboxSettingItem
       configKey={'shuffleForWatchLater'}
@@ -46,9 +50,10 @@ export function WatchLaterUsageInfo({ total }: { total: number }) {
       }
     />
   )
+  const btnDisplay = <ShuffleSettingsItemFor configKey='shuffleForWatchLater' />
 
   return (
-    <Space size={20}>
+    <Space size={12}>
       <Tag
         color={color}
         style={{
@@ -64,14 +69,31 @@ export function WatchLaterUsageInfo({ total }: { total: number }) {
         {total}
       </Tag>
 
-      {switchDisplay}
+      {/* {switchDisplay} */}
       {/* {checkboxDisplay} */}
+      {btnDisplay}
 
       {!shuffleForWatchLater && (
-        <CheckboxSettingItem
-          configKey={'watchlaterNormalOrderSortByAddAtAsc'}
-          label='最早添加'
-          tooltip={explainForFlag('最早添加在最前', '最近添加在最前')}
+        <ButtonSettingItem
+          configKey='watchlaterNormalOrderSortByAddAtAsc'
+          tooltip={
+            <>
+              最近添加: 按添加时间倒序 <br />
+              最早添加: 按添加时间增序 <br />
+            </>
+          }
+          checkedChildren={
+            <>
+              <IconTablerSortAscending2 className='mr-1px' {...size(18)} />
+              最早添加
+            </>
+          }
+          unCheckedChildren={
+            <>
+              <IconTablerSortDescending2 className='mr-1px' {...size(18)} />
+              最近添加
+            </>
+          }
         />
       )}
     </Space>

@@ -1,6 +1,5 @@
 import { REQUEST_FAIL_MSG } from '$common'
 import { C } from '$common/emotion-css'
-import { SwitchSettingItem } from '$components/ModalSettings/setting-item'
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
 import { CustomTargetLink } from '$components/VideoCard/use/useOpenRelated'
 import { type ItemsSeparator } from '$define'
@@ -15,6 +14,7 @@ import { delay, shuffle } from 'es-toolkit'
 import pmap from 'promise.map'
 import type { Key } from 'react'
 import { QueueStrategy, usePopupContainer, type IService } from '../_base'
+import { ShuffleSettingsItemFor } from '../_shared'
 import type { FavItemExtend } from './define'
 import type { FavFolderListAllItem, FavFolderListAllJson } from './define/folder-list-all'
 import type { FavFolderDetailInfo, ResourceListJSON } from './define/resource-list'
@@ -305,11 +305,12 @@ export function FavUsageInfo({
         </Tag>
       </Popover>
 
-      <SwitchSettingItem
+      {/* <SwitchSettingItem
         configKey={'shuffleForFav'}
         checkedChildren='随机顺序: 开'
         unCheckedChildren='随机顺序: 关'
-      />
+      /> */}
+      <ShuffleSettingsItemFor configKey={'shuffleForFav'} />
     </Space>
   )
 }
