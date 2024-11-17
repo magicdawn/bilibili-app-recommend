@@ -236,8 +236,10 @@ class NormalOrderService implements IService {
 
     const recentGate = getRecentGate()
     if (!this.earlierSeparatorInserted && items.at(-1) && items.at(-1)!.add_at < recentGate) {
-      const idx = items.findIndex((item) => item.add_at < recentGate)
-      newItems = [...items.slice(0, idx), earlierSeparator, ...items.slice(idx)]
+      const idx = newItems.findIndex(
+        (item) => item.api === EApiType.Watchlater && item.add_at < recentGate,
+      )
+      newItems = [...newItems.slice(0, idx), earlierSeparator, ...newItems.slice(idx)]
       this.earlierSeparatorInserted = true
     }
 
