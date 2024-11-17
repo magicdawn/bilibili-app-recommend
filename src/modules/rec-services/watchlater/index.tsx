@@ -115,7 +115,7 @@ class ShuffleOrderService implements IService {
   }
 
   private async fetch(abortSignal: AbortSignal) {
-    const { items: rawItems, err } = await getAllWatchlaterItemsV2(abortSignal)
+    const { items: rawItems, err } = await getAllWatchlaterItemsV2(false, abortSignal)
     if (typeof err !== 'undefined') {
       showApiRequestError(err)
     }
@@ -186,7 +186,9 @@ class ShuffleOrderService implements IService {
 }
 
 class NormalOrderService implements IService {
+  // configs
   addSeparator = settings.addSeparatorForWatchLater
+  addAtAsc = settings.watchlaterNormalOrderSortByAddAtAsc
 
   firstPageLoaded = false
   count: number = 0
@@ -203,7 +205,7 @@ class NormalOrderService implements IService {
   async loadMore() {
     if (!this.hasMore) return
 
-    const result = await getWatchlaterItemFrom(this.nextKey)
+    const result = await getWatchlaterItemFrom(this.nextKey, this.addAtAsc)
     // error
     if (typeof result.err !== 'undefined') {
       this.hasMore = false

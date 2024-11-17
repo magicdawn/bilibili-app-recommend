@@ -1,4 +1,5 @@
-import { SwitchSettingItem } from '$components/ModalSettings/setting-item'
+import { explainForFlag } from '$components/ModalSettings/index.shared'
+import { CheckboxSettingItem, SwitchSettingItem } from '$components/ModalSettings/setting-item'
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
 import { useSettingsSnapshot } from '$modules/settings'
 import { toast } from '$utility/toast'
@@ -12,7 +13,8 @@ export function WatchLaterUsageInfo({ total }: { total: number }) {
   const color: TagColor = 'success'
   const title = `共 ${total} 个视频`
 
-  const { shuffleForWatchLater, addSeparatorForWatchLater } = useSettingsSnapshot()
+  const { shuffleForWatchLater, addSeparatorForWatchLater, watchlaterNormalOrderSortByAddAtAsc } =
+    useSettingsSnapshot()
   const onRefresh = useOnRefreshContext()
 
   // 切换 添加分割线 设置, 即时生效
@@ -21,10 +23,32 @@ export function WatchLaterUsageInfo({ total }: { total: number }) {
       await delay(100)
       onRefresh?.()
     })()
-  }, [shuffleForWatchLater, addSeparatorForWatchLater])
+  }, [shuffleForWatchLater, addSeparatorForWatchLater, watchlaterNormalOrderSortByAddAtAsc])
+
+  const switchDisplay = (
+    <SwitchSettingItem
+      configKey={'shuffleForWatchLater'}
+      checkedChildren='随机顺序: 开'
+      unCheckedChildren='随机顺序: 关'
+      tooltip={<>随机顺序不包括近期添加的视频</>}
+    />
+  )
+
+  const checkboxDisplay = (
+    <CheckboxSettingItem
+      configKey={'shuffleForWatchLater'}
+      label='随机顺序'
+      tooltip={
+        <>
+          {explainForFlag('随机顺序', '默认添加顺序')}
+          NOTE: 随机顺序不包括近期添加的视频
+        </>
+      }
+    />
+  )
 
   return (
-    <Space>
+    <Space size={20}>
       <Tag
         color={color}
         style={{
@@ -40,12 +64,16 @@ export function WatchLaterUsageInfo({ total }: { total: number }) {
         {total}
       </Tag>
 
-      <SwitchSettingItem
-        configKey={'shuffleForWatchLater'}
-        checkedChildren='随机顺序: 开'
-        unCheckedChildren='随机顺序: 关'
-        tooltip={<>随机顺序不包括近期添加的视频</>}
-      />
+      {switchDisplay}
+      {/* {checkboxDisplay} */}
+
+      {!shuffleForWatchLater && (
+        <CheckboxSettingItem
+          configKey={'watchlaterNormalOrderSortByAddAtAsc'}
+          label='最早添加'
+          tooltip={explainForFlag('最早添加在最前', '最近添加在最前')}
+        />
+      )}
     </Space>
   )
 }

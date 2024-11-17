@@ -111,7 +111,7 @@ export function useWatchlaterRelated({
 
     if (item.api === EApiType.Watchlater) {
       return watchLaterAdded ? (
-        <IconMaterialSymbolsDeleteOutlineRounded {...size(addedSize)} />
+        <IconMaterialSymbolsDeleteOutlineRounded {...size(16)} />
       ) : (
         <IconAnimatedChecked size={addedSize} useAnimation={watchLaterAddedPrevious === true} />
       )

@@ -71,6 +71,7 @@ export const initialSettings = {
    */
   shuffleForWatchLater: true, // 打乱顺序
   addSeparatorForWatchLater: true, // 添加 "近期" / "更早" 分割线
+  watchlaterNormalOrderSortByAddAtAsc: false,
 
   /**
    * tab=fav

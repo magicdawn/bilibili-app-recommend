@@ -6,8 +6,8 @@ import { AntdMessage, shouldDisableShortcut } from '$utility'
 import { Tag } from 'antd'
 import { isEqual } from 'es-toolkit'
 import { pick } from 'radash'
-import type { ReactNode } from 'react'
 import styles from '../index.module.scss'
+import { explainForFlag } from '../index.shared'
 import { CheckboxSettingItem } from '../setting-item'
 import { ResetPartialSettingsButton, SettingsGroup } from './_shared'
 
@@ -65,15 +65,6 @@ const S = {
     display: flex;
     flex-direction: column;
   `,
-}
-
-function explainForFlag(checked: ReactNode, unchecked: ReactNode) {
-  return (
-    <>
-      ✅: {checked} <br />
-      ❎: {unchecked} <br />
-    </>
-  )
 }
 
 export function TabPaneCustomUI() {

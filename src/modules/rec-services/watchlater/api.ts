@@ -13,11 +13,11 @@ import type { WatchlaterItem, WatchlaterJson } from './api.d'
  * 分页
  */
 
-export async function getWatchlaterItemFrom(startKey = '') {
+export async function getWatchlaterItemFrom(startKey = '', asc = false) {
   const res = await request.get('/x/v2/history/toview/v2/list', {
     params: await encWbi({
       start_key: startKey,
-      asc: false,
+      asc,
       sort_field: 1,
       web_location: 333.881,
     }),
@@ -37,7 +37,7 @@ export async function getWatchlaterItemFrom(startKey = '') {
   }
 }
 
-export async function getAllWatchlaterItemsV2(abortSignal?: AbortSignal) {
+export async function getAllWatchlaterItemsV2(asc = false, abortSignal?: AbortSignal) {
   let hasMore = true
   let startKey = ''
   let total = 0
@@ -47,7 +47,7 @@ export async function getAllWatchlaterItemsV2(abortSignal?: AbortSignal) {
   while (hasMore) {
     if (abortSignal?.aborted) break
 
-    const result = await getWatchlaterItemFrom(startKey)
+    const result = await getWatchlaterItemFrom(startKey, asc)
     if (typeof result.err !== 'undefined') {
       err = result.err
       break

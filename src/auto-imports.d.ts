@@ -8,6 +8,8 @@ export {}
 declare global {
   const Fragment: typeof import('react')['Fragment']
   const IconIconParkOutlineDownC: typeof import('~icons/icon-park-outline/down-c.jsx')['default']
+  const IconLineMdMenuToCloseAltTransition: typeof import('~icons/line-md/menu-to-close-alt-transition.jsx')['default']
+  const IconLineMdRemove: typeof import('~icons/line-md/remove.jsx')['default']
   const IconMaterialSymbolsDeleteOutlineRounded: typeof import('~icons/material-symbols/delete-outline-rounded.jsx')['default']
   const IconMaterialSymbolsLightOpenInNewOff: typeof import('~icons/material-symbols-light/open-in-new-off.jsx')['default']
   const IconRadixIconsPerson: typeof import('~icons/radix-icons/person.jsx')['default']
