@@ -229,18 +229,37 @@ class NormalOrderService implements IService {
 
     let newItems: (WatchLaterItemExtend | ItemsSeparator)[] = [...items]
 
-    if (!this.recentSeparatorInserted) {
-      newItems = [recentSeparator, ...items]
-      this.recentSeparatorInserted = true
-    }
-
     const recentGate = getRecentGate()
-    if (!this.earlierSeparatorInserted && items.at(-1) && items.at(-1)!.add_at < recentGate) {
-      const idx = newItems.findIndex(
-        (item) => item.api === EApiType.Watchlater && item.add_at < recentGate,
-      )
-      newItems = [...newItems.slice(0, idx), earlierSeparator, ...newItems.slice(idx)]
-      this.earlierSeparatorInserted = true
+    const needEarlierSeparator = items.some((item) => item.add_at < recentGate)
+    const needRecentSeparator = items.some((item) => item.add_at >= recentGate)
+
+    // ASC
+    if (this.addAtAsc) {
+      if (!this.earlierSeparatorInserted && needEarlierSeparator) {
+        newItems = [earlierSeparator, ...newItems]
+        this.earlierSeparatorInserted = true
+      }
+      if (!this.recentSeparatorInserted && needRecentSeparator) {
+        const idx = newItems.findIndex(
+          (item) => item.api === EApiType.Watchlater && item.add_at >= recentGate,
+        )
+        newItems = [...newItems.slice(0, idx), recentSeparator, ...newItems.slice(idx)]
+        this.recentSeparatorInserted = true
+      }
+    }
+    // desc
+    else {
+      if (!this.recentSeparatorInserted && needRecentSeparator) {
+        newItems = [recentSeparator, ...items]
+        this.recentSeparatorInserted = true
+      }
+      if (!this.earlierSeparatorInserted && needEarlierSeparator) {
+        const idx = newItems.findIndex(
+          (item) => item.api === EApiType.Watchlater && item.add_at < recentGate,
+        )
+        newItems = [...newItems.slice(0, idx), earlierSeparator, ...newItems.slice(idx)]
+        this.earlierSeparatorInserted = true
+      }
     }
 
     return newItems
