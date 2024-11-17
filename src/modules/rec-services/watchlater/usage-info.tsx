@@ -50,7 +50,12 @@ export function WatchLaterUsageInfo({ total }: { total: number }) {
       }
     />
   )
-  const btnDisplay = <ShuffleSettingsItemFor configKey='shuffleForWatchLater' />
+  const btnDisplay = (
+    <ShuffleSettingsItemFor
+      configKey='shuffleForWatchLater'
+      tooltip='随机顺序不包括近期添加的稍后再看'
+    />
+  )
 
   return (
     <Space size={12}>
