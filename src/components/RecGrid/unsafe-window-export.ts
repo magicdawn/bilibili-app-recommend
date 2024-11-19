@@ -23,12 +23,13 @@ function getGridCardData() {
   const gridItems = (win?.[gridItemsKey] || []) as RecItemType[]
   return gridItems.map((item) => normalizeCardData(item))
 }
-function copyBvidsSingleLine() {
+
+export function copyBvidsSingleLine() {
   const bvids = getGridCardData().map((cardData) => cardData.bvid)
   GM.setClipboard(bvids.join(' '))
 }
 
-function copyBvidsInfo() {
+export function copyBvidInfos() {
   const lines = getGridCardData().map(getBvidInfo)
   GM.setClipboard(lines.join('\n'))
 }
@@ -41,7 +42,7 @@ export function getBvidInfo(cardData: IVideoCardData) {
 }
 
 // bind(export) function to unsafeWindow
-const BIND_TO_UNSAFE_WINDOW_FNS = { getGridCardData, copyBvidsSingleLine, copyBvidsInfo }
+const BIND_TO_UNSAFE_WINDOW_FNS = { getGridCardData, copyBvidsSingleLine, copyBvidInfos }
 setTimeout(() => {
   Object.entries(BIND_TO_UNSAFE_WINDOW_FNS).forEach(([fnName, fn]) => {
     setWinValue(`${APP_KEY_PREFIX}_${fnName}`, fn)

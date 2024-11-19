@@ -1,5 +1,6 @@
 import { flexVerticalCenterStyle, iconOnlyRoundButtonCss } from '$common/emotion-css'
 import { CheckboxSettingItem } from '$components/ModalSettings/setting-item'
+import { copyBvidInfos, copyBvidsSingleLine } from '$components/RecGrid/unsafe-window-export'
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
 import { CHARGE_ONLY_TEXT } from '$components/VideoCard/top-marks'
 import { HelpInfo } from '$components/_base/HelpInfo'
@@ -7,7 +8,7 @@ import { AntdTooltip } from '$components/_base/antd-custom'
 import { colorPrimaryValue } from '$components/css-vars'
 import { IconPark } from '$modules/icon/icon-park'
 import { settings, updateSettings, useSettingsSnapshot } from '$modules/settings'
-import { AntdNotification } from '$utility'
+import { AntdMessage, AntdNotification } from '$utility'
 import { getAvatarSrc } from '$utility/image'
 import type { AntdMenuItemType } from '$utility/type'
 import { useRequest } from 'ahooks'
@@ -88,7 +89,7 @@ export function DynamicFeedUsageInfo() {
   const { ref, getPopupContainer } = usePopupContainer()
   const onRefresh = useOnRefreshContext()
 
-  const { enableFollowGroupFilterForDynamicFeed, __internalDynamicFeedCacheAllItemsEntry } =
+  const { enableFollowGroupFilterForDynamicFeed, __internalDynamicFeedAddCopyBvidButton } =
     useSettingsSnapshot()
   const {
     hasSelectedUp,
@@ -378,6 +379,27 @@ export function DynamicFeedUsageInfo() {
               </Button>
             </Badge>
           </Popover>
+        )}
+
+        {__internalDynamicFeedAddCopyBvidButton && (
+          <>
+            <Button
+              onClick={() => {
+                copyBvidsSingleLine()
+                AntdMessage.success('已复制')
+              }}
+            >
+              Copy Bvids SingleLine
+            </Button>
+            <Button
+              onClick={() => {
+                copyBvidInfos()
+                AntdMessage.success('已复制')
+              }}
+            >
+              Copy Bvid Infos
+            </Button>
+          </>
         )}
       </Space>
     </>

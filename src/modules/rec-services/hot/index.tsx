@@ -99,7 +99,7 @@ function HotUsageInfo({ children }: { children?: ReactNode }) {
   const { icon, label } = HotSubTabConfig[activeSubtab]
   const onRefresh = useOnRefreshContext()
   const { ref, getPopupContainer } = usePopupContainer<HTMLButtonElement>()
-  const { __internalHotSubUseTabBar } = useSettingsSnapshot()
+  const { __internalHotSubUseDropdown } = useSettingsSnapshot()
 
   const menus: AntdMenuItemType[] = useMemo(
     () =>
@@ -193,9 +193,7 @@ function HotUsageInfo({ children }: { children?: ReactNode }) {
 
   return (
     <>
-      {/* {dropdownMenu} */}
-      {/* {tab} */}
-      {__internalHotSubUseTabBar ? tab : dropdownMenu}
+      {__internalHotSubUseDropdown ? dropdownMenu : tab}
       {children}
     </>
   )
