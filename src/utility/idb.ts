@@ -21,6 +21,9 @@ export function getIdbCache<T>(tableName: string) {
     set(key: string | number, entry: T) {
       return db.setItem(key.toString(), entry)
     },
+    delete(key: string | number) {
+      return db.removeItem(key.toString())
+    },
   }
 }
 

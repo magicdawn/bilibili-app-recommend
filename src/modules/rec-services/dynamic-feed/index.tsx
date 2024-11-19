@@ -1,11 +1,16 @@
-import { REQUEST_FAIL_MSG } from '$common'
 import { CHARGE_ONLY_TEXT } from '$components/VideoCard/top-marks'
-import { type DynamicFeedItemExtend, type DynamicFeedJson } from '$define'
+import { type DynamicFeedItem, type DynamicFeedItemExtend } from '$define'
 import { EApiType } from '$define/index.shared'
-import { isWebApiSuccess, request } from '$request'
-import { parseDuration, toast } from '$utility'
-import type { IService } from '../_base'
+import { settings } from '$modules/settings'
+import { parseDuration } from '$utility'
+import { QueueStrategy, type IService } from '../_base'
 import { LiveRecService } from '../live'
+import { fetchVideoDynamicFeeds } from './api'
+import {
+  hasLocalDynamicFeedCache,
+  localDynamicFeedCache,
+  performIncrementalUpdateIfNeed,
+} from './cache'
 import { getFollowGroupContent } from './group'
 import {
   DynamicFeedVideoMinDuration,
@@ -44,7 +49,11 @@ export class DynamicFeedRecService implements IService {
   ) {
     if (this.showLiveInDynamicFeed) {
       const filterEmpty =
-        !this.upMid && typeof this.followGroupTagid === 'undefined' && !this.searchText
+        !this.upMid &&
+        typeof this.followGroupTagid === 'undefined' &&
+        !this.searchText &&
+        this.dynamicFeedVideoType === DynamicFeedVideoType.All &&
+        this.filterMinDuration === DynamicFeedVideoMinDuration.All
       if (filterEmpty) {
         this.liveRecService = new LiveRecService()
       }
@@ -89,6 +98,8 @@ export class DynamicFeedRecService implements IService {
     this.followGroupMids = new Set(mids)
   }
 
+  private _cacheQueue: QueueStrategy<DynamicFeedItem> | undefined
+
   async loadMore(signal: AbortSignal | undefined = undefined) {
     if (!this.hasMore) {
       return
@@ -106,45 +117,48 @@ export class DynamicFeedRecService implements IService {
       }
     }
 
-    const params: Record<string, number | string> = {
-      timezone_offset: '-480',
-      type: 'video',
-      features: 'itemOpusStyle',
-      page: this.page + 1, // ++this.page, starts from 1
-    }
-    if (this.offset) {
-      params.offset = this.offset
-    }
-    if (this.upMid) {
-      params.host_mid = this.upMid
-    }
+    let rawItems: DynamicFeedItem[]
 
-    const res = await request.get('/x/polymer/web-dynamic/v1/feed/all', {
-      signal,
-      params,
-    })
-    const json = res.data as DynamicFeedJson
-    if (!isWebApiSuccess(json)) {
-      toast(json.message || REQUEST_FAIL_MSG)
-
-      // prevent infinite call
-      if (json.message === '账号未登录') {
-        this.hasMoreDynFeed = false
+    // use search cache
+    const useSearchCache = !!(
+      this.upMid &&
+      this.searchText &&
+      new Set(settings.__internalDynamicFeedCacheAllItemsUpMids).has(this.upMid.toString()) &&
+      (await hasLocalDynamicFeedCache(this.upMid))
+    )
+    if (useSearchCache) {
+      // fill queue with cached items
+      if (!this._cacheQueue) {
+        await performIncrementalUpdateIfNeed(this.upMid)
+        this._cacheQueue = new QueueStrategy<DynamicFeedItem>(100)
+        this._cacheQueue.bufferQueue = (await localDynamicFeedCache.get(this.upMid)) || []
       }
-
-      return
+      // slice
+      rawItems = this._cacheQueue.sliceFromQueue(this.page + 1) || []
+      this.page++
+      this.hasMoreDynFeed = !!this._cacheQueue.bufferQueue.length
+      // offset not needed
     }
 
-    this.page++
-    this.hasMoreDynFeed = json.data.has_more
-    this.offset = json.data.offset
+    // normal
+    else {
+      // 未登录会直接 throw err
+      const data = await fetchVideoDynamicFeeds({
+        signal,
+        page: this.page + 1, // ++this.page, starts from 1, 实测 page 没啥用, 分页基于 offset
+        offset: this.offset,
+        upMid: this.upMid,
+      })
+      this.page++
+      this.hasMoreDynFeed = data.has_more
+      this.offset = data.offset
+      rawItems = data.items
+    }
 
     // ensure current follow-group's mids loaded
     await this.loadFollowGroupMids()
 
-    const arr = json.data.items
-    const items: DynamicFeedItemExtend[] = arr
-      .filter((x) => x.type === 'DYNAMIC_TYPE_AV') // 处理不了别的类型
+    const items: DynamicFeedItemExtend[] = rawItems
 
       // by 关注分组
       .filter((x) => {

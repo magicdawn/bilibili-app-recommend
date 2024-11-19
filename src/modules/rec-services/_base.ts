@@ -7,7 +7,7 @@ export interface IService {
   usageInfo?: ReactNode
 }
 
-export class QueueStrategy<T extends RecItemTypeOrSeparator = RecItemTypeOrSeparator> {
+export class QueueStrategy<T = RecItemTypeOrSeparator> {
   // full-list = returnQueue + bufferQueue + more
   private returnQueue: T[] = []
   bufferQueue: T[] = []

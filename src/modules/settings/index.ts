@@ -184,6 +184,8 @@ export const initialSettings = {
   __internalEnableCopyBvidInfoContextMenu: false,
   __internalVideoCardUsePadding: false,
   __internalHotSubUseTabBar: true,
+  __internalDynamicFeedCacheAllItemsEntry: false,
+  __internalDynamicFeedCacheAllItemsUpMids: [] as string[], // enable for these up
 }
 
 export type Settings = typeof initialSettings

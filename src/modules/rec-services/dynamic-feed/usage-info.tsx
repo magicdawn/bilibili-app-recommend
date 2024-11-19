@@ -5,16 +5,20 @@ import { HelpInfo } from '$components/_base/HelpInfo'
 import { AntdTooltip } from '$components/_base/antd-custom'
 import { colorPrimaryValue } from '$components/css-vars'
 import { IconPark } from '$modules/icon/icon-park'
-import { useSettingsSnapshot } from '$modules/settings'
+import { settings, updateSettings, useSettingsSnapshot } from '$modules/settings'
+import { AntdNotification } from '$utility'
 import { getAvatarSrc } from '$utility/image'
 import type { AntdMenuItemType } from '$utility/type'
+import { useRequest } from 'ahooks'
 import { Avatar, Badge, Button, Checkbox, Dropdown, Input, Popover, Radio, Space } from 'antd'
+import type { CheckboxChangeEvent } from 'antd/es/checkbox'
 import { delay } from 'es-toolkit'
 import { fastSortWithOrders } from 'fast-sort-lens'
 import { useSnapshot } from 'valtio'
 import TablerFilter from '~icons/tabler/filter'
 import TablerFilterCheck from '~icons/tabler/filter-check'
 import { usePopupContainer } from '../_base'
+import { hasLocalDynamicFeedCache, updateLocalDynamicFeedCache } from './cache'
 import {
   DynamicFeedVideoMinDuration,
   DynamicFeedVideoMinDurationConfig,
@@ -70,7 +74,8 @@ export function DynamicFeedUsageInfo() {
   const { ref, getPopupContainer } = usePopupContainer()
   const onRefresh = useOnRefreshContext()
 
-  const { enableFollowGroupFilterForDynamicFeed } = useSettingsSnapshot()
+  const { enableFollowGroupFilterForDynamicFeed, __internalDynamicFeedCacheAllItemsEntry } =
+    useSettingsSnapshot()
   const {
     hasSelectedUp,
     upName,
@@ -311,6 +316,9 @@ export function DynamicFeedUsageInfo() {
             // autoComplete='on'
             autoComplete='off'
             allowClear
+            onChange={(e) => {
+              tryInstantSearchWithCache({ searchText: e.target.value, upMid, onRefresh })
+            }}
             onSearch={async (val) => {
               dfStore.searchText = val || undefined
               await delay(100)
@@ -319,6 +327,8 @@ export function DynamicFeedUsageInfo() {
           />
         </div>
       </div>
+
+      <SearchCacheRelated />
     </div>
   )
 
@@ -351,6 +361,7 @@ export function DynamicFeedUsageInfo() {
 
         {showFilter && (
           <Popover
+            // open
             arrow={false}
             placement='bottomLeft'
             getPopupContainer={getPopupContainer}
@@ -366,4 +377,88 @@ export function DynamicFeedUsageInfo() {
       </Space>
     </>
   )
+}
+
+function SearchCacheRelated() {
+  const { __internalDynamicFeedCacheAllItemsEntry, __internalDynamicFeedCacheAllItemsUpMids } =
+    useSettingsSnapshot()
+  const { hasSelectedUp, upMid, upName } = useSnapshot(dfStore)
+
+  const $req = useRequest((upMid: number) => updateLocalDynamicFeedCache(upMid), {
+    manual: true,
+  })
+
+  const checked = useMemo(
+    () => !!upMid && __internalDynamicFeedCacheAllItemsUpMids.includes(upMid.toString()),
+    [upMid, __internalDynamicFeedCacheAllItemsUpMids],
+  )
+  const onChange = useCallback((e: CheckboxChangeEvent) => {
+    if (!upMid) return
+    const val = e.target.checked
+
+    const set = new Set(settings.__internalDynamicFeedCacheAllItemsUpMids)
+    if (val) {
+      set.add(upMid.toString())
+    } else {
+      set.delete(upMid.toString())
+    }
+    updateSettings({ __internalDynamicFeedCacheAllItemsUpMids: Array.from(set) })
+  }, [])
+
+  return (
+    <>
+      {__internalDynamicFeedCacheAllItemsEntry && hasSelectedUp && upMid && upName && (
+        <div className='section' css={S.filterSection}>
+          <div className='title'>
+            搜索缓存
+            <HelpInfo>
+              开启搜索缓存后, 会加载并缓存 UP 所有的动态 <br />
+              当本地有缓存时, 搜索框成为及时搜索, 无需点击搜索按钮
+            </HelpInfo>
+          </div>
+          <div className='content flex gap-10'>
+            <Checkbox className='inline-flex items-center' checked={checked} onChange={onChange}>
+              <AntdTooltip title='只有开启此项, 搜索时才会使用缓存'>
+                <span>为「{upName}」开启</span>
+              </AntdTooltip>
+            </Checkbox>
+            <Button
+              loading={$req.loading}
+              onClick={async () => {
+                const _upName = upName
+                await $req.runAsync(upMid)
+                AntdNotification.success({
+                  message: `缓存更新成功`,
+                  description: `「${_upName}」的搜索缓存更新成功`,
+                })
+              }}
+            >
+              更新缓存
+            </Button>
+          </div>
+        </div>
+      )}
+    </>
+  )
+}
+
+async function tryInstantSearchWithCache({
+  searchText,
+  upMid,
+  onRefresh,
+}: {
+  searchText: string
+  upMid?: number
+  onRefresh?: () => void
+}) {
+  if (!upMid) return
+  if (!(searchText || (!searchText && dfStore.searchText))) return
+  if (!settings.__internalDynamicFeedCacheAllItemsEntry) return false // feature not enabled
+  if (!settings.__internalDynamicFeedCacheAllItemsUpMids.includes(upMid.toString())) return false // up not checked
+  if (!(await hasLocalDynamicFeedCache(upMid))) return false // cache not exist
+
+  // instant search
+  dfStore.searchText = searchText
+  await delay(0)
+  onRefresh?.()
 }
