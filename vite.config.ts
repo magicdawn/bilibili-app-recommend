@@ -163,7 +163,7 @@ export default defineConfig(({ command }) => ({
       entry: './src/index.ts',
       userscript: {
         'name': 'Bilibili-Gate',
-        'description': 'B站自定义首页',
+        'description': 'Bilibili 自定义首页',
         // 'description': 'Add app like recommend part to bilibili homepage',
         'version': scriptVersion,
         'namespace': 'https://magicdawn.fun',

@@ -1,3 +1,4 @@
+import { APP_NAME } from '$common'
 import { flexVerticalCenterStyle, inlineFlexVerticalCenterStyle } from '$common/emotion-css'
 import { AccessKeyManage } from '$components/AccessKeyManage'
 import { CheckboxSettingItem } from '$components/ModalSettings/setting-item'
@@ -248,7 +249,7 @@ export function TabPaneBasic() {
                   margin-inline: 4px;
                 `}
               >
-                v{__SCRIPT_VERSION__}
+                {APP_NAME} v{__SCRIPT_VERSION__}
               </Tag>
               <IconPark
                 name={'Copy'}

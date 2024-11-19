@@ -1,6 +1,6 @@
 # bilibili-gate
 
-> B站首页推荐
+> Bilibili 自定义首页
 
 [![Greasy Fork Version](https://img.shields.io/greasyfork/v/443530?style=flat-square)][gfurl]
 [![Greasy Fork Downloads](https://img.shields.io/greasyfork/dt/443530?style=flat-square)][gfurl]
@@ -8,7 +8,7 @@
 [![Greasy Fork Rating](https://img.shields.io/greasyfork/rating-count/443530?style=flat-square)][gfurl]
 [![Build Status](https://img.shields.io/github/actions/workflow/status/magicdawn/bilibili-gate/ci.yml?branch=main&style=flat-square&label=CI%20Build)](https://github.com/magicdawn/bilibili-gate/actions/workflows/ci.yml)
 
-[gfurl]: https://greasyfork.org/zh-CN/scripts/443530-bilibili-gate
+[gfurl]: https://greasyfork.org/zh-CN/scripts/443530
 
 ## 安装
 
@@ -45,6 +45,11 @@
 
 ## 杂
 
+### 关于名称 Bilibili-Gate / bilibili-app-recommend
+
+起源于 [Bilibili Home](https://github.com/indefined/UserScripts/issues/76) 的一个 fork, 之前叫 bilibili-app-recommend
+后添加了不少不是推荐相关的功能, 遂更名. bilibili-app-recommend 用户可以通过文件导出全部设置迁移到 bilibili-gate 中.
+
 ### B 站首页版本
 
 支持当前最新首页(bili-feed4). 旧版首页请看这里 https://github.com/indefined/UserScripts/tree/master/bilibiliHome
@@ -60,6 +65,7 @@
 - ❌ 首页相关 (如清爽首页 / 极简首页)
 - ✅ 夜间模式
 - ✅ 自定义顶栏
+- ✅ [自定义字体](https://github.com/the1812/Bilibili-Evolved/discussions/4846)
 
 ### 与 [BewlyBewly](https://github.com/hakadao/BewlyBewly) 的兼容性
 
