@@ -1,31 +1,22 @@
-import { APP_NAMESPACE } from '$common'
 import { request } from '$request'
-import localforage from 'localforage'
-import type { VideoDetailData, VideoDetailJson } from './api.video-detail'
+import { wrapWithIdbCache } from '$utility/idb'
+import ms from 'ms'
+import type { VideoDetailJson } from './api.video-detail'
 
 /**
  * @see https://socialsisteryi.github.io/bilibili-API-collect/docs/video/info.html
  */
 
-const videoDetailCacheDB = localforage.createInstance({
-  name: APP_NAMESPACE,
-  storeName: 'video_detail',
-  driver: localforage.INDEXEDDB,
-})
-
-export async function getVideoDetail(bvid: string) {
-  const db = videoDetailCacheDB
-  const cacheKey = bvid
-
-  // check cache
-  {
-    const data = await db.getItem<VideoDetailData>(cacheKey)
-    if (data) return data
-  }
-
+async function __fetchVideoDetail(bvid: string) {
   const res = await request.get('/x/web-interface/view', { params: { bvid } })
   const json = res.data as VideoDetailJson
   const data = json.data
-  await db.setItem(cacheKey, data)
   return data
 }
+
+export const getVideoDetail = wrapWithIdbCache({
+  fn: __fetchVideoDetail,
+  generateKey: (bvid) => bvid,
+  tableName: 'video_detail',
+  ttl: ms('3M'),
+})
