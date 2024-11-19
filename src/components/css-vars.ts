@@ -1,16 +1,16 @@
-import { APP_NAME } from '$common'
+import { APP_NAMESPACE } from '$common'
 import { tweakColorWithOklch } from '$utility/css'
 
 export const borderRadiusIdentifier = '--video-card-border-radius'
 export const borderRadiusValue = `var(${borderRadiusIdentifier})`
 
-export const colorPrimaryIdentifier = `--${APP_NAME}-color-primary`
+export const colorPrimaryIdentifier = `--${APP_NAMESPACE}-color-primary`
 export const colorPrimaryValue = `var(${colorPrimaryIdentifier})`
 
-export const bgIdentifier = `--${APP_NAME}-bg`
+export const bgIdentifier = `--${APP_NAMESPACE}-bg`
 export const bgValue = `var(${bgIdentifier})`
 
-export const borderColorIdentifier = `--${APP_NAME}-border-color`
+export const borderColorIdentifier = `--${APP_NAMESPACE}-border-color`
 export const borderColorValue = `var(${borderColorIdentifier})`
 
 /**

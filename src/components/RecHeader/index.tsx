@@ -233,7 +233,7 @@ function useExpandToFullWidthCss() {
 
   return useMemo(() => {
     if (!xScrolling) {
-      // https://github.com/magicdawn/bilibili-app-recommend/issues/120
+      // https://github.com/magicdawn/bilibili-gate/issues/120
       const scrollbarWidth = isMac ? '0px' : '20px'
       return css`
         margin-inline: calc((100% - 100vw + ${scrollbarWidth}) / 2);

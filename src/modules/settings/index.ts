@@ -1,4 +1,4 @@
-import { APP_NAME, IN_BILIBILI_HOMEPAGE } from '$common'
+import { IN_BILIBILI_HOMEPAGE } from '$common'
 import { ETab } from '$components/RecHeader/tab-enum'
 import { VideoLinkOpenMode } from '$components/VideoCard/index.shared'
 import { EAppApiDevice } from '$define/index.shared'
@@ -216,11 +216,10 @@ export function getSettingsSnapshot() {
  * storage
  */
 
-const nsp = APP_NAME
-const key = `${nsp}.settings`
+const storageKey = `settings`
 
 export async function load() {
-  const val = await GM.getValue<Settings>(key)
+  const val = await GM.getValue<Settings>(storageKey)
   if (val && typeof val === 'object') {
     Object.assign(settings, pick(val, allowedSettingsKeys))
   }
@@ -236,7 +235,7 @@ async function save() {
   // console.log('GM.setValue newVal = %o', newVal)
 
   // GM save
-  await GM.setValue(key, newVal)
+  await GM.setValue(storageKey, newVal)
 
   // http backup
   await saveToDraft(newVal as Readonly<Settings>)

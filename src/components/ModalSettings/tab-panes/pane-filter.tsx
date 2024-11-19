@@ -32,7 +32,7 @@ export function TabPaneFilter() {
           "豁免" 一词来源{' '}
           <a
             target='_blank'
-            href='https://github.com/magicdawn/bilibili-app-recommend/issues/1#issuecomment-2197868587'
+            href='https://github.com/magicdawn/bilibili-gate/issues/1#issuecomment-2197868587'
           >
             pilipala
           </a>

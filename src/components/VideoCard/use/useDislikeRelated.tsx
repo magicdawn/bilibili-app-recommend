@@ -22,7 +22,7 @@ export function useDislikeRelated({
   actionButtonVisible: boolean
 }) {
   // show icon even accessKey not found
-  // https://greasyfork.org/zh-CN/scripts/443530-bilibili-app-recommend/discussions/244405
+  // https://greasyfork.org/zh-CN/scripts/443530-bilibili-gate/discussions/244405
 
   const hasDislikeEntry = isApp(item) && !!item.three_point?.dislike_reasons?.length
 

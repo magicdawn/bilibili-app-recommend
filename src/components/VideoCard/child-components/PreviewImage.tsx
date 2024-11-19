@@ -15,7 +15,7 @@ const S = {
     bottom: 0;
     overflow: hidden;
 
-    /* see https://github.com/magicdawn/bilibili-app-recommend/issues/112 */
+    /* see https://github.com/magicdawn/bilibili-gate/issues/112 */
     /* useMouse 使用的是 document.addEventListener, 不用它响应 mousemove 事件 */
     pointer-events: none;
 

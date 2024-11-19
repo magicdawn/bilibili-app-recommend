@@ -1,4 +1,4 @@
-import { APP_NAME } from '$common'
+import { appWarn } from '$common'
 import { AntdTooltip } from '$components/_base/antd-custom'
 import { colorPrimaryValue } from '$components/css-vars'
 import {
@@ -161,14 +161,14 @@ function apiAndroidAppAdapter(item: AndroidAppRecItemExtend): IVideoCardData {
       return item.uri
     }
 
-    // more see https://github.com/magicdawn/bilibili-app-recommend/issues/23#issuecomment-1533079590
+    // more see https://github.com/magicdawn/bilibili-gate/issues/23#issuecomment-1533079590
 
     if (item.goto === 'av') {
       return `/video/${bvid}/`
     }
 
     if (item.goto === 'bangumi') {
-      console.warn(`[${APP_NAME}]: bangumi uri should not starts with 'bilibili://': %s`, item.uri)
+      appWarn(`bangumi uri should not starts with 'bilibili://': %s`, item.uri)
       return item.uri
     }
 
@@ -265,14 +265,14 @@ function apiIpadAppAdapter(item: IpadAppRecItemExtend): IVideoCardData {
       return item.uri
     }
 
-    // more see https://github.com/magicdawn/bilibili-app-recommend/issues/23#issuecomment-1533079590
+    // more see https://github.com/magicdawn/bilibili-gate/issues/23#issuecomment-1533079590
 
     if (item.goto === 'av') {
       return `/video/${bvid}/`
     }
 
     if (item.goto === 'bangumi') {
-      console.warn(`[${APP_NAME}]: bangumi uri should not starts with 'bilibili://': %s`, item.uri)
+      appWarn(`bangumi uri should not starts with 'bilibili://': %s`, item.uri)
       return item.uri
     }
 

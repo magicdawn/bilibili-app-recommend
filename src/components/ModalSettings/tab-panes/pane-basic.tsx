@@ -263,25 +263,19 @@ export function TabPaneBasic() {
         }
       >
         <Space size={10} wrap>
-          <Button href='https://github.com/magicdawn/bilibili-app-recommend' target='_blank'>
+          <Button href='https://github.com/magicdawn/bilibili-gate' target='_blank'>
             GitHub 主页
           </Button>
-          <Button
-            href='https://greasyfork.org/zh-CN/scripts/443530-bilibili-app-recommend'
-            target='_blank'
-          >
+          <Button href='https://greasyfork.org/zh-CN/scripts/443530-bilibili-gate' target='_blank'>
             GreasyFork 主页
           </Button>
           <Button
-            href='https://github.com/magicdawn/bilibili-app-recommend#%E5%BF%AB%E6%8D%B7%E9%94%AE%E8%AF%B4%E6%98%8E'
+            href='https://github.com/magicdawn/bilibili-gate#%E5%BF%AB%E6%8D%B7%E9%94%AE%E8%AF%B4%E6%98%8E'
             target='_blank'
           >
             查看可用的快捷键
           </Button>
-          <Button
-            href='https://github.com/magicdawn/bilibili-app-recommend/releases'
-            target='_blank'
-          >
+          <Button href='https://github.com/magicdawn/bilibili-gate/releases' target='_blank'>
             更新日志
           </Button>
           <Button href='https://afdian.com/a/magicdawn' target='_blank'>

@@ -1,4 +1,4 @@
-import { APP_CLS_ROOT, APP_NAME } from '$common'
+import { APP_CLS_ROOT, APP_NAMESPACE, appWarn } from '$common'
 import { AntdApp } from '$components/AntdApp'
 import { PureRecommend } from '$components/PureRecommend'
 import { registerSettingsGmCommand } from '$components/RecHeader/modals'
@@ -12,7 +12,7 @@ import type { Root } from 'react-dom/client'
 import { createRoot } from 'react-dom/client'
 
 // in this entry, if no insert point found, render to document body
-const isHashEntry = (location.hash || '').startsWith(`#/${APP_NAME}/`)
+const isHashEntry = (location.hash || '').startsWith(`#/${APP_NAMESPACE}/`)
 
 const bewlyEnabledSelector = 'html.bewly-design:not(:has(#i_cecream))'
 
@@ -25,7 +25,7 @@ async function tryDetectBewlyBewly() {
   return tryAction(
     bewlyEnabledSelector,
     () => {
-      console.warn(`${APP_NAME}: unmount for using bewly-design`)
+      appWarn(`unmount for using bewly-design`)
       root?.unmount()
     },
     {
@@ -48,7 +48,7 @@ export async function initHomepage() {
   registerSettingsGmCommand()
 
   if (hasBewlyBewly()) {
-    console.warn(`${APP_NAME}: quit for using bewly-design`)
+    appWarn(`quit for using bewly-design`)
     return
   }
 
@@ -75,7 +75,7 @@ async function initHomepageSection() {
   }
 
   if (!insert) {
-    console.error(`[${APP_NAME}]: init fail`)
+    appWarn(`init fail`)
     return
   }
 
@@ -93,7 +93,7 @@ async function initHomepageSection() {
   )
 
   // header
-  // https://github.com/magicdawn/bilibili-app-recommend/issues/30
+  // https://github.com/magicdawn/bilibili-gate/issues/30
   // SectionRecommend: 这个 header channel fixed 样式有问题
   // 尝试修复太复杂了, 这里直接移除. 其功能有替代: 滚动到首页顶部查看分区
   tryToRemove('.bili-feed4 .header-channel')

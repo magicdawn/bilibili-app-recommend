@@ -1,4 +1,4 @@
-import { APP_NAME } from '$common'
+import { appWarn } from '$common'
 import { isWebApiSuccess, request } from '$request'
 import { wrapWithIdbCache } from '$utility/idb'
 import ms from 'ms'
@@ -11,7 +11,7 @@ async function __fetchSpaceAccInfo(mid: string | number) {
   })
   const json = res.data as SpaceAccInfoJson
   if (!isWebApiSuccess(json)) {
-    console.warn('[%s] space acc info error for %s: %o', APP_NAME, mid, json)
+    appWarn('space acc info error for %s: %o', mid, json)
     return
   }
   const info = json.data

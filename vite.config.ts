@@ -61,11 +61,11 @@ let downloadURL: string | undefined
 let updateURL: string | undefined
 
 if (process.env.RELEASE) {
-  const baseUrl = 'https://github.com/magicdawn/bilibili-app-recommend/raw/release/'
+  const baseUrl = 'https://github.com/magicdawn/bilibili-gate/raw/release/'
   downloadURL = `${baseUrl}${fileName}`
   updateURL = `${baseUrl}${metaFileName}`
 } else if (process.env.RELEASE_NIGHTLY) {
-  const baseUrl = 'https://github.com/magicdawn/bilibili-app-recommend/raw/release-nightly/'
+  const baseUrl = 'https://github.com/magicdawn/bilibili-gate/raw/release-nightly/'
   downloadURL = `${baseUrl}${fileName}`
   updateURL = `${baseUrl}${metaFileName}`
 }
@@ -162,15 +162,15 @@ export default defineConfig(({ command }) => ({
     monkey({
       entry: './src/index.ts',
       userscript: {
-        'name': packageName,
+        'name': 'Bilibili-Gate',
+        'description': 'B站自定义首页',
+        // 'description': 'Add app like recommend part to bilibili homepage',
         'version': scriptVersion,
         'namespace': 'https://magicdawn.fun',
-        'description': 'B站首页推荐',
         'icon': 'https://www.bilibili.com/favicon.ico',
-        // 'description': 'Add app like recommend part to bilibili homepage',
         'author': 'magicdawn',
-        'supportURL': 'https://github.com/magicdawn/bilibili-app-recommend/issues',
-        'homepageURL': 'https://greasyfork.org/zh-CN/scripts/443530-bilibili-app-recommend',
+        'supportURL': 'https://github.com/magicdawn/bilibili-gate/issues',
+        'homepageURL': 'https://greasyfork.org/zh-CN/scripts/443530-bilibili-gate',
         downloadURL,
         updateURL,
         'license': 'MIT',
@@ -202,7 +202,7 @@ export default defineConfig(({ command }) => ({
         metaFileName,
 
         // unpkg is not stable
-        // https://greasyfork.org/zh-CN/scripts/443530-bilibili-app-recommend/discussions/197900
+        // https://greasyfork.org/zh-CN/scripts/443530-bilibili-gate/discussions/197900
 
         externalGlobals: {
           // https://caniuse.com/resizeobserver

@@ -154,7 +154,7 @@ export function VideoCardBottom({
   }
 
   /**
-   * https://github.com/magicdawn/bilibili-app-recommend/issues/110
+   * https://github.com/magicdawn/bilibili-gate/issues/110
    */
   const ENABLE_HIDE_AVATAR = false
   let hideAvatar = false

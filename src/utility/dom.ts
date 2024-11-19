@@ -1,4 +1,4 @@
-import { APP_NAME, baseDebug } from '$common'
+import { appWarn, baseDebug } from '$common'
 import { delay, isNil } from 'es-toolkit'
 
 const debug = baseDebug.extend('utility:dom')
@@ -60,7 +60,7 @@ export async function tryAction(
   if (!arr?.length) {
     debug('tryAction: timeout for selector = `%s`', selector)
     if (warnOnTimeout) {
-      console.warn(`[${APP_NAME}]: tryAction timeout, selector = \`%s\``, selector)
+      appWarn('tryAction timeout, selector = `%s`', selector)
     }
     return
   }

@@ -7,8 +7,8 @@
 
 ## Todo
 
-- [x] preview invalid 时自动重新获取
-- [x] dark mode 切换时, cover border 显得很突兀
+- [ ] cache ALL Dynamic Feed with IDB in search case, because it's based on client search
+- [ ] advance search for dynamic feed
 
 ## 实现细节
 

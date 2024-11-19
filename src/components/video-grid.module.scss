@@ -103,7 +103,7 @@ $row-gap: clamp(20px, 1.4vw, 40px);
 }
 
 // 使用 .video-grid 增加权重, fix dark-reader 兼容性
-// https://greasyfork.org/zh-CN/scripts/443530-bilibili-app-recommend/discussions/222126
+// https://greasyfork.org/zh-CN/scripts/443530-bilibili-gate/discussions/222126
 // dark-reader 会将 没有@container 修饰的 .vdieo-grid-custom 再次添加, 导致 --col 覆盖为 2
 // 也可以使用 :where 降低默认 .video-grid-custom 权重
 

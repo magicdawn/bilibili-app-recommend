@@ -1,4 +1,4 @@
-import { APP_NAME } from '$common'
+import { APP_NAMESPACE } from '$common'
 import { request } from '$request'
 import localforage from 'localforage'
 import type { VideoDetailData, VideoDetailJson } from './api.video-detail'
@@ -8,7 +8,7 @@ import type { VideoDetailData, VideoDetailJson } from './api.video-detail'
  */
 
 const videoDetailCacheDB = localforage.createInstance({
-  name: APP_NAME,
+  name: APP_NAMESPACE,
   storeName: 'video_detail',
   driver: localforage.INDEXEDDB,
 })

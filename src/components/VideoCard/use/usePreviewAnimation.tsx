@@ -1,4 +1,4 @@
-import { APP_NAME, __PROD__ } from '$common'
+import { __PROD__, appLog } from '$common'
 import { useMittOn } from '$common/hooks/useMitt'
 import { useRefBox, useRefStateBox, type RefBox, type RefStateBox } from '$common/hooks/useRefState'
 import { settings } from '$modules/settings'
@@ -97,11 +97,7 @@ export function usePreviewAnimation({
       // start preview animation
       if (autoPreviewWhenHover && !idBox.val && hasVideoData()) {
         DEBUG_ANIMATION &&
-          console.log(
-            `[${APP_NAME}]: [animation] mouseenter onStartPreviewAnimation uniqId=%s title=%s`,
-            uniqId,
-            title,
-          )
+          appLog(`[animation] mouseenter onStartPreviewAnimation uniqId=%s title=%s`, uniqId, title)
         onStartPreviewAnimation(true)
       }
     },
@@ -288,7 +284,7 @@ function useAnimationController({
 
   const stop = useMemoizedFn((isClear = false) => {
     if (!isClear && DEBUG_ANIMATION) {
-      console.log(`[${APP_NAME}]: [animation] stopAnimation: %o`, {
+      appLog(`[animation] stopAnimation: %o`, {
         autoPreviewWhenHover,
         unmounted: unmounted.current,
         isHovering: isHoveringBox.val,

@@ -24,7 +24,7 @@
         "uno.config.ts",
         "package.json"
       ],
-      "outputs": ["dist/bilibili-app-recommend.user.js"]
+      "outputs": ["dist/bilibili-gate.user.js"]
     },
     "typecheck": {
       "dependsOn": ["build:scss"],

@@ -1,4 +1,4 @@
-import { APP_CLS_ROOT, APP_NAME } from '$common'
+import { APP_CLS_ROOT, APP_NAMESPACE } from '$common'
 import { $headerWidth, $usingEvolevdHeader, useBackToTopRight } from '$header'
 import { useColors, useIsDarkMode } from '$modules/dark-mode'
 import { useSettingsSnapshot } from '$modules/settings'
@@ -34,8 +34,8 @@ export function GlobalStyle() {
         styles={_css`
           :root {
             ${colorPrimaryIdentifier}: ${colorPrimary};
-            --${APP_NAME}-bg-color: ${bg};
-            --${APP_NAME}-color: ${c};
+            --${APP_NAMESPACE}-bg-color: ${bg};
+            --${APP_NAMESPACE}-color: ${c};
             ${borderColorIdentifier}: ${getBorderColor(dark, styleUseWhiteBackground)};
           }
 

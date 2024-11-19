@@ -1,4 +1,4 @@
-import { APP_NAME, HOST_APP, OPERATION_FAIL_MSG } from '$common'
+import { HOST_APP, OPERATION_FAIL_MSG, appWarn } from '$common'
 import type { AppRecItem, DmJson, PvideoJson } from '$define'
 import { settings } from '$modules/settings'
 import { gmrequest, isWebApiSuccess, request } from '$request'
@@ -19,10 +19,10 @@ export async function videoshot(bvid: string) {
   const json = res.data as PvideoJson
 
   if (!isWebApiSuccess(json)) {
-    console.warn('[%s] videoshot error for %s: %o', APP_NAME, bvid, json)
+    appWarn('videoshot error for %s: %o', bvid, json)
   }
   if (!isVideoshotDataValid(json.data)) {
-    console.warn('[%s] videoshot data invalid bvid=%s: %o', APP_NAME, bvid, json.data)
+    appWarn('videoshot data invalid bvid=%s: %o', bvid, json.data)
   }
 
   return json

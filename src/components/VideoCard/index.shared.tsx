@@ -97,7 +97,7 @@ export const VideoLinkOpenModeConfig: Record<VideoLinkOpenMode, VideoLinkOpenMod
     desc: (
       <>
         <a
-          href='https://github.com/magicdawn/bilibili-app-recommend/blob/main/notes/iina.md'
+          href='https://github.com/magicdawn/bilibili-gate/blob/main/notes/iina.md'
           target='_blank'
         >
           macOS IINA 设置教程

@@ -1,9 +1,10 @@
-export const APP_NAME = 'bilibili-app-recommend'
-export const APP_KEY_PREFIX = 'bilibili_app_recommend'
-export const APP_SHORT_PREFIX = 'bar'
+export const APP_NAME = 'Bilibili-Gate' // formal name
+export const APP_NAMESPACE = 'bilibili-gate' // as namespace, kebab-case
+export const APP_KEY_PREFIX = 'bilibili_gate' // as javascript key prefix, snake_case
+export const APP_SHORT_PREFIX = 'bili-gate'
 
 import debugFactory from 'debug'
-export const baseDebug = debugFactory(APP_NAME)
+export const baseDebug = debugFactory(APP_NAMESPACE)
 
 export const HOST_API = 'https://api.bilibili.com'
 export const HOST_APP = 'https://app.bilibili.com'
@@ -21,10 +22,10 @@ export const ThirdPartyKeyInfo = {
  * 固定的 classname, 有 app-name prefix.
  * 可用于: customize css / useShortcut query card 等
  */
-export const APP_CLS_ROOT = `${APP_NAME}-root`
-export const APP_CLS_GRID = `${APP_NAME}-video-grid`
-export const APP_CLS_CARD = `${APP_NAME}-video-card`
-export const APP_CLS_CARD_ACTIVE = `${APP_NAME}-video-card-active`
+export const APP_CLS_ROOT = `${APP_NAMESPACE}-root`
+export const APP_CLS_GRID = `${APP_NAMESPACE}-video-grid`
+export const APP_CLS_CARD = `${APP_NAMESPACE}-video-card`
+export const APP_CLS_CARD_ACTIVE = `${APP_NAMESPACE}-video-card-active`
 
 export const REQUEST_FAIL_MSG = '请求失败, 请重试 !!!'
 export const OPERATION_FAIL_MSG = '操作失败, 请重试 !!!'
@@ -48,3 +49,21 @@ export const IN_BILIBILI_VIDEO_PLAY_PAGE =
 
 // https://space.bilibili.com/17815937/
 export const IN_BILIBILI_SPACE_PAGE = hostname === 'space.bilibili.com'
+
+/**
+ * log with namespace
+ * e.g console.warn('[%s] videoshot error for %s: %o', APP_NAME, bvid, json)
+ */
+
+function logFactory(logFn: typeof console.log) {
+  return function appLog(...args: Parameters<typeof console.log>) {
+    const [message, ...rest] = args
+    if (typeof message === 'string') {
+      return logFn(`[${APP_NAME}]: ${message}`, ...rest)
+    } else {
+      return logFn(`[${APP_NAME}]:`, message, ...rest)
+    }
+  }
+}
+export const appLog = logFactory(console.log)
+export const appWarn = logFactory(console.warn)

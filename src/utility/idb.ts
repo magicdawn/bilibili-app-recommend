@@ -2,7 +2,7 @@
  * indexedDB related
  */
 
-import { APP_NAME } from '$common'
+import { APP_NAMESPACE } from '$common'
 import localforage from 'localforage'
 import pLimit from 'p-limit'
 import { whenIdle } from './dom'
@@ -10,7 +10,7 @@ import { whenIdle } from './dom'
 export function getIdbCache<T>(tableName: string) {
   const db = localforage.createInstance({
     driver: localforage.INDEXEDDB,
-    name: APP_NAME,
+    name: APP_NAMESPACE,
     storeName: tableName,
   })
   return {
@@ -47,7 +47,7 @@ export function wrapWithIdbCache<A extends unknown[], FnReturnType>({
 
   async function cleanUp() {
     cache.db.iterate((cached: CacheEntry, key) => {
-      if (Date.now() - cached.ts > ttl) {
+      if (!cache || !shouldReuse(cached)) {
         cache.db.removeItem(key)
       }
     })

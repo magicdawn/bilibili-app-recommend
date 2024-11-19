@@ -1,4 +1,4 @@
-import { APP_CLS_CARD, APP_CLS_GRID, APP_CLS_ROOT, APP_KEY_PREFIX, APP_NAME } from '$common'
+import { APP_CLS_CARD, APP_CLS_GRID, APP_CLS_ROOT, APP_KEY_PREFIX, appWarn } from '$common'
 import { C } from '$common/emotion-css'
 import { useLessFrequentFn } from '$common/hooks/useLessFrequentFn'
 import { useMittOn } from '$common/hooks/useMitt'
@@ -191,7 +191,7 @@ const VideoCardInner = memo(function VideoCardInner({
   const isNormalVideo = goto === 'av'
   const allowed = ['av', 'bangumi', 'picture', 'live']
   if (!allowed.includes(goto)) {
-    console.warn(`[${APP_NAME}]: none (${allowed.join(',')}) goto type %s`, goto, item)
+    appWarn(`none (${allowed.join(',')}) goto type %s`, goto, item)
   }
 
   const videoDataBox = useRefStateBox<VideoData | null>(null)
@@ -714,7 +714,7 @@ const VideoCardInner = memo(function VideoCardInner({
       ]}
       onClick={handleVideoLinkClick}
       onContextMenu={(e) => {
-        // try to solve https://github.com/magicdawn/bilibili-app-recommend/issues/92
+        // try to solve https://github.com/magicdawn/bilibili-gate/issues/92
         // can't reproduce on macOS
         e.preventDefault()
       }}
