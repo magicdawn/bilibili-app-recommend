@@ -130,7 +130,7 @@ export class DynamicFeedRecService implements IService {
     )
     const useAdvancedSearch = useSearchCache && settings.__internalDynamicFeedAdvancedSearch
     const useAdvancedSearchParsed = useAdvancedSearch
-      ? parseSearchInput(this.searchText || '')
+      ? parseSearchInput((this.searchText || '').toLowerCase())
       : undefined
 
     if (useSearchCache) {
@@ -259,6 +259,9 @@ export class DynamicFeedRecService implements IService {
       useAdvancedSearch: boolean
       useAdvancedSearchParsed?: ReturnType<typeof parseSearchInput>
     }) {
+      title = title.toLowerCase()
+      searchText = searchText.toLowerCase()
+
       // 简单搜索
       const simpleSearch = () => title.includes(searchText)
 
