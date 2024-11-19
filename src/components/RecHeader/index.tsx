@@ -1,4 +1,4 @@
-import { baseDebug } from '$common'
+import { APP_CLS_TAB_BAR, baseDebug } from '$common'
 import { iconOnlyRoundButtonCss } from '$common/emotion-css'
 import { useSizeExpression } from '$common/hooks/useResizeObserverExpression'
 import { useSticky } from '$common/hooks/useSticky'
@@ -130,6 +130,7 @@ export const RecHeader = forwardRef<
           }
         >
           <div
+            className={APP_CLS_TAB_BAR}
             data-raw-class='area-header'
             css={css`
               position: relative;

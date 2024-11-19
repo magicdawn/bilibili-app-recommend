@@ -1,3 +1,4 @@
+import { APP_CLS_TAB_BAR } from '$common'
 import type { RecItemTypeOrSeparator } from '$define'
 
 export interface IService {
@@ -44,7 +45,7 @@ export class QueueStrategy<T extends RecItemTypeOrSeparator = RecItemTypeOrSepar
 export function usePopupContainer<T extends HTMLElement = HTMLDivElement>() {
   const ref = useRef<T>(null)
   const getPopupContainer = useCallback(() => {
-    return ref.current?.closest<T>('.area-header') || document.body
+    return ref.current?.closest<T>('.' + APP_CLS_TAB_BAR) || document.body
   }, [])
   return { ref, getPopupContainer }
 }
