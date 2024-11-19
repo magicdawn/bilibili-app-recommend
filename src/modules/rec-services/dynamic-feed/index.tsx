@@ -11,6 +11,7 @@ import {
   localDynamicFeedCache,
   performIncrementalUpdateIfNeed,
 } from './cache'
+import { parseSearchInput } from './cache/search'
 import { getFollowGroupContent } from './group'
 import {
   DynamicFeedVideoMinDuration,
@@ -121,17 +122,33 @@ export class DynamicFeedRecService implements IService {
 
     // use search cache
     const useSearchCache = !!(
+      settings.__internalDynamicFeedCacheAllItemsEntry &&
       this.upMid &&
       this.searchText &&
       new Set(settings.__internalDynamicFeedCacheAllItemsUpMids).has(this.upMid.toString()) &&
       (await hasLocalDynamicFeedCache(this.upMid))
     )
+    const useAdvancedSearch = useSearchCache && settings.__internalDynamicFeedAdvancedSearch
+    const useAdvancedSearchParsed = useAdvancedSearch
+      ? parseSearchInput(this.searchText || '')
+      : undefined
+
     if (useSearchCache) {
-      // fill queue with cached items
+      // fill queue with pre-filtered cached-items
       if (!this._cacheQueue) {
         await performIncrementalUpdateIfNeed(this.upMid)
-        this._cacheQueue = new QueueStrategy<DynamicFeedItem>(100)
-        this._cacheQueue.bufferQueue = (await localDynamicFeedCache.get(this.upMid)) || []
+        this._cacheQueue = new QueueStrategy<DynamicFeedItem>(20)
+        this._cacheQueue.bufferQueue = ((await localDynamicFeedCache.get(this.upMid)) || []).filter(
+          (x) => {
+            const title = x?.modules?.module_dynamic?.major?.archive?.title || ''
+            return filterBySearchText({
+              searchText: this.searchText!,
+              title,
+              useAdvancedSearch,
+              useAdvancedSearchParsed,
+            })
+          },
+        )
       }
       // slice
       rawItems = this._cacheQueue.sliceFromQueue(this.page + 1) || []
@@ -212,7 +229,12 @@ export class DynamicFeedRecService implements IService {
         if (!this.showFilter) return true
         if (!this.searchText) return true
         const title = x?.modules?.module_dynamic?.major?.archive?.title || ''
-        return title.includes(this.searchText)
+        return filterBySearchText({
+          searchText: this.searchText,
+          title,
+          useAdvancedSearch,
+          useAdvancedSearchParsed,
+        })
       })
 
       .map((item) => {
@@ -222,6 +244,34 @@ export class DynamicFeedRecService implements IService {
           uniqId: item.id_str || crypto.randomUUID(),
         }
       })
+
+    /**
+     * filter functions
+     */
+    function filterBySearchText({
+      title,
+      searchText,
+      useAdvancedSearch,
+      useAdvancedSearchParsed,
+    }: {
+      title: string
+      searchText: string
+      useAdvancedSearch: boolean
+      useAdvancedSearchParsed?: ReturnType<typeof parseSearchInput>
+    }) {
+      // 简单搜索
+      const simpleSearch = () => title.includes(searchText)
+
+      // 高级搜索
+      const advancedSearch = () => {
+        return (
+          useAdvancedSearchParsed?.includes.every((x) => title.includes(x)) &&
+          useAdvancedSearchParsed?.excludes.every((x) => !title.includes(x))
+        )
+      }
+
+      return useAdvancedSearch ? advancedSearch() : simpleSearch()
+    }
 
     /**
      * side effects

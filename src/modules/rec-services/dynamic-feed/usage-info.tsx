@@ -1,4 +1,5 @@
 import { flexVerticalCenterStyle, iconOnlyRoundButtonCss } from '$common/emotion-css'
+import { CheckboxSettingItem } from '$components/ModalSettings/setting-item'
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
 import { CHARGE_ONLY_TEXT } from '$components/VideoCard/top-marks'
 import { HelpInfo } from '$components/_base/HelpInfo'
@@ -12,13 +13,17 @@ import type { AntdMenuItemType } from '$utility/type'
 import { useRequest } from 'ahooks'
 import { Avatar, Badge, Button, Checkbox, Dropdown, Input, Popover, Radio, Space } from 'antd'
 import type { CheckboxChangeEvent } from 'antd/es/checkbox'
-import { delay } from 'es-toolkit'
+import { delay, throttle } from 'es-toolkit'
 import { fastSortWithOrders } from 'fast-sort-lens'
 import { useSnapshot } from 'valtio'
 import TablerFilter from '~icons/tabler/filter'
 import TablerFilterCheck from '~icons/tabler/filter-check'
 import { usePopupContainer } from '../_base'
-import { hasLocalDynamicFeedCache, updateLocalDynamicFeedCache } from './cache'
+import {
+  hasLocalDynamicFeedCache,
+  localDynamicFeedInfoCache,
+  updateLocalDynamicFeedCache,
+} from './cache'
 import {
   DynamicFeedVideoMinDuration,
   DynamicFeedVideoMinDurationConfig,
@@ -69,6 +74,15 @@ const S = {
     }
   `,
 }
+
+const flexBreak = (
+  <div
+    css={css`
+      flex-basis: 100%;
+      height: 0;
+    `}
+  />
+)
 
 export function DynamicFeedUsageInfo() {
   const { ref, getPopupContainer } = usePopupContainer()
@@ -192,15 +206,6 @@ export function DynamicFeedUsageInfo() {
 
     return [itemAll, ...groupItems, ...items]
   }, [upList, upList.map((x) => !!x.has_update), enableFollowGroupFilterForDynamicFeed])
-
-  const flexBreak = (
-    <div
-      css={css`
-        flex-basis: 100%;
-        height: 0;
-      `}
-    />
-  )
 
   const filterPopoverContent = (
     <div css={S.filterWrapper}>
@@ -413,28 +418,44 @@ function SearchCacheRelated() {
             搜索缓存
             <HelpInfo>
               开启搜索缓存后, 会加载并缓存 UP 所有的动态 <br />
-              当本地有缓存时, 搜索框成为及时搜索, 无需点击搜索按钮
+              {'当本地有缓存且总条数 <= 5000时, 搜索框成为及时搜索, 无需点击搜索按钮'}
             </HelpInfo>
           </div>
-          <div className='content flex gap-10'>
-            <Checkbox className='inline-flex items-center' checked={checked} onChange={onChange}>
-              <AntdTooltip title='只有开启此项, 搜索时才会使用缓存'>
-                <span>为「{upName}」开启</span>
-              </AntdTooltip>
-            </Checkbox>
-            <Button
-              loading={$req.loading}
-              onClick={async () => {
-                const _upName = upName
-                await $req.runAsync(upMid)
-                AntdNotification.success({
-                  message: `缓存更新成功`,
-                  description: `「${_upName}」的搜索缓存更新成功`,
-                })
-              }}
-            >
-              更新缓存
-            </Button>
+          <div className='content'>
+            <div className='flex gap-y-3 gap-x-10 flex-wrap'>
+              <Checkbox className='inline-flex items-center' checked={checked} onChange={onChange}>
+                <AntdTooltip title='只有开启此项, 搜索时才会使用缓存'>
+                  <span>为「{upName}」开启</span>
+                </AntdTooltip>
+              </Checkbox>
+              <Button
+                loading={$req.loading}
+                onClick={async () => {
+                  const _upName = upName
+                  await $req.runAsync(upMid)
+                  AntdNotification.success({
+                    message: `缓存更新成功`,
+                    description: `「${_upName}」的搜索缓存更新成功`,
+                  })
+                }}
+              >
+                更新缓存
+              </Button>
+              {flexBreak}
+
+              <CheckboxSettingItem
+                configKey='__internalDynamicFeedAdvancedSearch'
+                label={'使用高级搜索'}
+                tooltip={
+                  <>
+                    高级搜索 <br />
+                    1. 可以使用多个搜索词, 用空格分隔, 逻辑关系为且 (AND) <br />
+                    2. 可以使用引号包裹搜索词, 如 "word or sentence" <br />
+                    2. 可以使用 -"word or sentence" 排除关键词 <br />
+                  </>
+                }
+              />
+            </div>
           </div>
         </div>
       )}
@@ -442,7 +463,7 @@ function SearchCacheRelated() {
   )
 }
 
-async function tryInstantSearchWithCache({
+const tryInstantSearchWithCache = throttle(async function ({
   searchText,
   upMid,
   onRefresh,
@@ -453,12 +474,17 @@ async function tryInstantSearchWithCache({
 }) {
   if (!upMid) return
   if (!(searchText || (!searchText && dfStore.searchText))) return
-  if (!settings.__internalDynamicFeedCacheAllItemsEntry) return false // feature not enabled
-  if (!settings.__internalDynamicFeedCacheAllItemsUpMids.includes(upMid.toString())) return false // up not checked
-  if (!(await hasLocalDynamicFeedCache(upMid))) return false // cache not exist
+  if (!settings.__internalDynamicFeedCacheAllItemsEntry) return // feature not enabled
+  if (!settings.__internalDynamicFeedCacheAllItemsUpMids.includes(upMid.toString())) return // up not checked
+  if (!(await hasLocalDynamicFeedCache(upMid))) return // cache not exist
+
+  // cached info
+  const info = await localDynamicFeedInfoCache.get(upMid)
+  if (!info || !info.count) return
+  if (info.count >= 5000) return // for bad performance
 
   // instant search
   dfStore.searchText = searchText
   await delay(0)
   onRefresh?.()
-}
+}, 100)

@@ -186,6 +186,7 @@ export const initialSettings = {
   __internalHotSubUseTabBar: true,
   __internalDynamicFeedCacheAllItemsEntry: false,
   __internalDynamicFeedCacheAllItemsUpMids: [] as string[], // enable for these up
+  __internalDynamicFeedAdvancedSearch: false,
 }
 
 export type Settings = typeof initialSettings

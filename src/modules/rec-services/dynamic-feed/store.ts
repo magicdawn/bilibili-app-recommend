@@ -132,6 +132,9 @@ export function getDfStoreFilterConfig() {
     // flags
     hasSelectedUp: snap.hasSelectedUp,
     showFilter: snap.showFilter,
+
+    // settings
+    advancedSearch: settings.__internalDynamicFeedAdvancedSearch,
   }
 }
 

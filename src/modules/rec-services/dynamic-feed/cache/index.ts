@@ -4,23 +4,21 @@ import { uniqBy } from 'es-toolkit'
 import { fetchVideoDynamicFeeds } from '../api'
 
 const cache = getIdbCache<DynamicFeedItem[]>('dynamic-feed-items')
-const lastUpdatedAtCache = getIdbCache<number>('dynamic-feed-last-updated-at')
-export { cache as localDynamicFeedCache, lastUpdatedAtCache as localDynamicFeedLastUpdatedAtCache }
+const infoCache = getIdbCache<{ count: number; updatedAt: number }>('dynamic-feed-items-info') // cache.get is expensive
+export { cache as localDynamicFeedCache, infoCache as localDynamicFeedInfoCache }
 
 export async function hasLocalDynamicFeedCache(upMid: number) {
-  const existing = await cache.get(upMid)
-  return !!existing?.length
+  const existing = await infoCache.get(upMid)
+  return !!existing?.count
 }
 
 export async function updateLocalDynamicFeedCache(upMid: number) {
   if (await hasLocalDynamicFeedCache(upMid)) {
     // perform incremental update
     await performIncrementalUpdate(upMid)
-    await lastUpdatedAtCache.set(upMid, Date.now())
   } else {
     // perform full update
     await performFullUpdate(upMid)
-    await lastUpdatedAtCache.set(upMid, Date.now())
   }
 }
 
@@ -28,8 +26,10 @@ export async function updateLocalDynamicFeedCache(upMid: number) {
  * 近期已经更新过, 不要再更新了
  */
 export async function performIncrementalUpdateIfNeed(upMid: number, force = false) {
-  const lastUpdatedAt = await lastUpdatedAtCache.get(upMid)
-  if (!force && lastUpdatedAt && Date.now() - lastUpdatedAt < 60 * 1000) return
+  const info = await infoCache.get(upMid)
+  if (!force && info && info.count && info.updatedAt && Date.now() - info.updatedAt < 60 * 1000) {
+    return
+  }
   return performIncrementalUpdate(upMid)
 }
 
@@ -53,7 +53,7 @@ async function performIncrementalUpdate(upMid: number) {
     hasMore = data.has_more
     page++
 
-    if (hasMore) {
+    if (hasMore && existingIds.size) {
       const allIncluded = items.every((item) => existingIds.has(item.id_str))
       if (allIncluded) {
         hasMore = false
@@ -63,6 +63,7 @@ async function performIncrementalUpdate(upMid: number) {
 
   const allItems = uniqBy([...newItems, ...existing], (x) => x.id_str)
   await cache.set(upMid, allItems)
+  await infoCache.set(upMid, { count: allItems.length, updatedAt: Date.now() })
 }
 
 const fullUpdateInProgressCache = getIdbCache<{
@@ -91,9 +92,8 @@ async function performFullUpdate(upMid: number, skipCache = false) {
   }
 
   // completed
-  await cache.set(
-    upMid,
-    uniqBy(allItems, (x) => x.id_str),
-  )
+  const _allItems = uniqBy(allItems, (x) => x.id_str)
+  await cache.set(upMid, _allItems)
+  await infoCache.set(upMid, { count: _allItems.length, updatedAt: Date.now() })
   await fullUpdateInProgressCache.delete(upMid)
 }

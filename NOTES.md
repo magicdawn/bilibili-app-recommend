@@ -7,9 +7,9 @@
 
 ## Todo
 
-- [ ] cache ALL Dynamic Feed with IDB in search case, because it's based on client search
+- [x] cache ALL Dynamic Feed with IDB in search case, because it's based on client search
+- [x] advance search for dynamic feed
 - [ ] invistigate antd Button.Group missing background issue
-- [ ] advance search for dynamic feed
 
 ## 实现细节
 
