@@ -1,4 +1,4 @@
-# bilibili-gate
+# Bilibili-Gate
 
 > Bilibili 自定义首页
 
