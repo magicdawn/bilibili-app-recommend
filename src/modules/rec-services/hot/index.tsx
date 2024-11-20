@@ -173,7 +173,8 @@ function HotUsageInfo({ children }: { children?: ReactNode }) {
                 <Button
                   css={groupedButtonCss}
                   icon={icon}
-                  type={active ? 'primary' : 'default'}
+                  variant={active ? 'solid' : 'outlined'}
+                  color={active ? 'primary' : 'default'}
                   onClick={() => {
                     if (subtab === hotStore.subtab) return
                     hotStore.subtab = subtab
