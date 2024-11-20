@@ -440,11 +440,11 @@ const VideoCardInner = memo(function VideoCardInner({
     }
   })
 
-  // 实在不知道怎么取名了...
-  const hasEntry_addMidTo__dynamicFeed_whenViewAll_hideMids =
+  // 不再 stick on camelCase 后, 腰不酸了, 腿不疼了~
+  const hasEntry_addMidTo_dynamicFeedWhenViewAllHideMids =
     isDynamic(item) && dfStore.selectedKey === SELECTED_KEY_ALL && !!authorMid
-  const onAddMidTo__dynamicFeed_whenViewAll_hideMids = useMemoizedFn(async () => {
-    if (!hasEntry_addMidTo__dynamicFeed_whenViewAll_hideMids) return
+  const onAddMidTo_dynamicFeedWhenViewAllHideMids = useMemoizedFn(async () => {
+    if (!hasEntry_addMidTo_dynamicFeedWhenViewAllHideMids) return
     const set = new Set(settings.dynamicFeedWhenViewAllHideMids)
     set.add(authorMid)
     updateSettings({ dynamicFeedWhenViewAllHideMids: Array.from(set) })
@@ -501,11 +501,11 @@ const VideoCardInner = memo(function VideoCardInner({
           onDynamicFeedFilterSelectUp()
         },
       },
-      hasEntry_addMidTo__dynamicFeed_whenViewAll_hideMids && {
+      hasEntry_addMidTo_dynamicFeedWhenViewAllHideMids && {
         key: 'addMidTo_hideDynamicFeedWhenViewAllMids',
         label: '在「全部」动态中隐藏 UP 的动态',
         icon: <IconLetsIconsViewHide {...size(15)} />,
-        onClick: onAddMidTo__dynamicFeed_whenViewAll_hideMids,
+        onClick: onAddMidTo_dynamicFeedWhenViewAllHideMids,
       },
       hasUnfollowEntry && {
         key: 'unfollow-up',
@@ -642,7 +642,7 @@ const VideoCardInner = memo(function VideoCardInner({
     hasUnfollowEntry,
     hasBlacklistEntry,
     hasDynamicFeedFilterSelectUpEntry,
-    hasEntry_addMidTo__dynamicFeed_whenViewAll_hideMids,
+    hasEntry_addMidTo_dynamicFeedWhenViewAllHideMids,
     favFolderNames,
     favFolderUrls,
     consistentOpenMenus,

@@ -162,7 +162,7 @@ export function TabPaneVideoSourceTabConfig() {
                     {
                       key: '1',
                       label: '在「全部」动态中隐藏 UP 的动态',
-                      children: <DynamicFeed_WhenViewAll_HideMidsPanel />,
+                      children: <DynamicFeedWhenViewAllHideMidsPanel />,
                     },
                   ]}
                 />
@@ -339,7 +339,7 @@ function VideoSourceTabSortableItem({ id }: { id: ETab }) {
   )
 }
 
-function DynamicFeed_WhenViewAll_HideMidsPanel() {
+function DynamicFeedWhenViewAllHideMidsPanel() {
   const { dynamicFeedWhenViewAllHideMids } = useSettingsSnapshot()
 
   const onDelete = useMemoizedFn((mid: string) => {
@@ -348,7 +348,7 @@ function DynamicFeed_WhenViewAll_HideMidsPanel() {
     updateSettings({ dynamicFeedWhenViewAllHideMids: Array.from(set) })
   })
 
-  const empty = dynamicFeedWhenViewAllHideMids.length === 0
+  const empty = !dynamicFeedWhenViewAllHideMids.length
   if (empty) {
     return (
       <div className='flex items-center justify-center'>
