@@ -16,7 +16,8 @@ import type { DynamicPortalUp } from './up/portal'
  */
 const searchParams = new URLSearchParams(location.search)
 export const QUERY_DYNAMIC_UP_MID = searchParams.get('dyn-mid')?.trim()
-export const QUERY_DYNAMIC_OFFSET = searchParams.get('dyn-offset') || '' // where to start, exclusive
+export const QUERY_DYNAMIC_OFFSET = searchParams.get('dyn-offset') // where to start, exclusive
+export const QUERY_DYNAMIC_SEARCH_TEXT = searchParams.get('dyn-search')
 
 let upMidInitial: UpMidType | undefined = undefined
 let upNameInitial: string | undefined = undefined
@@ -76,7 +77,7 @@ export const dfStore = proxy({
   followGroupsUpdatedAt: 0,
 
   dynamicFeedVideoType: DynamicFeedVideoType.All,
-  searchText: undefined as string | undefined,
+  searchText: (QUERY_DYNAMIC_SEARCH_TEXT ?? undefined) as string | undefined,
 
   // 选择了 UP
   get hasSelectedUp(): boolean {

@@ -321,6 +321,8 @@ export function DynamicFeedUsageInfo() {
             // 有自带的历史记录, 何乐而不为
             // 悬浮 autocomplete 时 popover 关闭了
             // autoComplete='on'
+            variant='filled'
+            defaultValue={dfStore.searchText}
             autoComplete='off'
             allowClear
             onChange={(e) => {
