@@ -18,14 +18,14 @@ const searchParams = new URLSearchParams(location.search)
 export const QUERY_DYNAMIC_UP_MID = searchParams.get('dyn-mid')?.trim()
 export const QUERY_DYNAMIC_OFFSET = searchParams.get('dyn-offset') || '' // where to start, exclusive
 
-let upMidInitial: number | undefined = undefined
+let upMidInitial: UpMidType | undefined = undefined
 let upNameInitial: string | undefined = undefined
 if (QUERY_DYNAMIC_UP_MID) {
-  upMidInitial = Number(QUERY_DYNAMIC_UP_MID)
+  upMidInitial = QUERY_DYNAMIC_UP_MID
   upNameInitial = searchParams.get('dyn-name') ?? upMidInitial.toString() ?? undefined
 }
 
-export type UpMidType = number
+export type UpMidType = string
 
 export enum DynamicFeedVideoType {
   All = 'all',

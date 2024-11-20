@@ -2,6 +2,7 @@ import { REQUEST_FAIL_MSG } from '$common'
 import type { DynamicFeedJson } from '$define'
 import { isWebApiSuccess, request } from '$request'
 import { toast } from '$utility/toast'
+import type { UpMidType } from './store'
 
 export async function fetchVideoDynamicFeeds({
   offset,
@@ -11,7 +12,7 @@ export async function fetchVideoDynamicFeeds({
 }: {
   offset?: string
   page: number
-  upMid?: number
+  upMid?: UpMidType
   signal?: AbortSignal
 }) {
   const params: Record<string, number | string> = {

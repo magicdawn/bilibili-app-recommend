@@ -413,7 +413,7 @@ const VideoCardInner = memo(function VideoCardInner({
 
     async function openInCurrentWindow() {
       dynamicFeedFilterSelectUp({
-        upMid: Number(authorMid),
+        upMid: authorMid,
         upName: authorName,
         searchText: undefined,
       })

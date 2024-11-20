@@ -33,13 +33,14 @@ import {
   dfStore,
   updateFilterData,
   type DynamicFeedStore,
+  type UpMidType,
 } from './store'
 
 export function dynamicFeedFilterSelectUp(payload: Partial<typeof dfStore>) {
   Object.assign(dfStore, payload)
   // 选择了 up, 去除红点
   if (payload.upMid) {
-    const item = dfStore.upList.find((x) => x.mid === payload.upMid)
+    const item = dfStore.upList.find((x) => x.mid.toString() === payload.upMid)
     if (item) item.has_update = false
   }
 }
@@ -200,7 +201,7 @@ export function DynamicFeedUsageInfo() {
           </span>
         ),
         onClick() {
-          onSelect({ ...clearPayload, upMid: up.mid, upName: up.uname })
+          onSelect({ ...clearPayload, upMid: up.mid.toString(), upName: up.uname })
         },
       }
     })
@@ -411,7 +412,7 @@ function SearchCacheRelated() {
     useSettingsSnapshot()
   const { hasSelectedUp, upMid, upName } = useSnapshot(dfStore)
 
-  const $req = useRequest((upMid: number) => updateLocalDynamicFeedCache(upMid), {
+  const $req = useRequest((upMid: UpMidType) => updateLocalDynamicFeedCache(upMid), {
     manual: true,
   })
 
@@ -491,7 +492,7 @@ const tryInstantSearchWithCache = throttle(async function ({
   onRefresh,
 }: {
   searchText: string
-  upMid?: number
+  upMid?: UpMidType | undefined
   onRefresh?: () => void
 }) {
   if (!upMid) return

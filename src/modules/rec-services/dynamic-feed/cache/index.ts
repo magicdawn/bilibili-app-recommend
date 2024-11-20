@@ -2,17 +2,18 @@ import type { DynamicFeedItem } from '$define'
 import { getIdbCache } from '$utility/idb'
 import { uniqBy } from 'es-toolkit'
 import { fetchVideoDynamicFeeds } from '../api'
+import type { UpMidType } from '../store'
 
 const cache = getIdbCache<DynamicFeedItem[]>('dynamic-feed-items')
 const infoCache = getIdbCache<{ count: number; updatedAt: number }>('dynamic-feed-items-info') // cache.get is expensive
 export { cache as localDynamicFeedCache, infoCache as localDynamicFeedInfoCache }
 
-export async function hasLocalDynamicFeedCache(upMid: number) {
+export async function hasLocalDynamicFeedCache(upMid: UpMidType) {
   const existing = await infoCache.get(upMid)
   return !!existing?.count
 }
 
-export async function updateLocalDynamicFeedCache(upMid: number) {
+export async function updateLocalDynamicFeedCache(upMid: UpMidType) {
   if (await hasLocalDynamicFeedCache(upMid)) {
     // perform incremental update
     await performIncrementalUpdate(upMid)
@@ -25,7 +26,7 @@ export async function updateLocalDynamicFeedCache(upMid: number) {
 /**
  * 近期已经更新过, 不要再更新了
  */
-export async function performIncrementalUpdateIfNeed(upMid: number, force = false) {
+export async function performIncrementalUpdateIfNeed(upMid: UpMidType, force = false) {
   const info = await infoCache.get(upMid)
   if (!force && info && info.count && info.updatedAt && Date.now() - info.updatedAt < 60 * 1000) {
     return
@@ -33,7 +34,7 @@ export async function performIncrementalUpdateIfNeed(upMid: number, force = fals
   return performIncrementalUpdate(upMid)
 }
 
-async function performIncrementalUpdate(upMid: number) {
+async function performIncrementalUpdate(upMid: UpMidType) {
   // it's built for "incremental"
   if (!(await hasLocalDynamicFeedCache(upMid))) return
 
@@ -72,7 +73,7 @@ const fullUpdateInProgressCache = getIdbCache<{
   items: DynamicFeedItem[]
 }>('dynamic-feed-items-in-progress')
 
-async function performFullUpdate(upMid: number, skipCache = false) {
+async function performFullUpdate(upMid: UpMidType, skipCache = false) {
   const inProgressCached = skipCache ? undefined : await fullUpdateInProgressCache.get(upMid)
   let page = inProgressCached?.page ?? 1
   let offset = inProgressCached?.offset ?? ''
