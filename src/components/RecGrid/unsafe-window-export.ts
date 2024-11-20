@@ -9,19 +9,19 @@ import { EApiType } from '$define/index.shared'
 import dayjs from 'dayjs'
 import { tryit } from 'radash'
 
-export const gridItemsKey = `${APP_KEY_PREFIX}_gridItems`
-
 const win = (typeof unsafeWindow !== 'undefined' ? unsafeWindow : globalThis) as any
 const setWinValue = (key: string, val: any) => void tryit(() => (win[key] = val))()
 
-export function setGlobalGridItems(items: RecItemTypeOrSeparator[]) {
-  items = items.filter((x) => x.api !== EApiType.Separator)
-  setWinValue(gridItemsKey, items)
+export const gridItemsKey = `${APP_KEY_PREFIX}_gridItems`
+export let currentGridItems: RecItemType[] = []
+export function setGlobalGridItems(itemsWithSep: RecItemTypeOrSeparator[]) {
+  const items = itemsWithSep.filter((x) => x.api !== EApiType.Separator)
+  currentGridItems = items
+  setWinValue(gridItemsKey, currentGridItems)
 }
 
 function getGridCardData() {
-  const gridItems = (win?.[gridItemsKey] || []) as RecItemType[]
-  return gridItems.map((item) => normalizeCardData(item))
+  return currentGridItems.map((item) => normalizeCardData(item))
 }
 
 export function copyBvidsSingleLine() {
