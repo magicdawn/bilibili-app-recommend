@@ -3,8 +3,9 @@ import { settings } from '$modules/settings'
 import { getUid, setPageTitle, whenIdle } from '$utility'
 import { proxySetWithGmStorage } from '$utility/valtio'
 import ms from 'ms'
-import { proxy, snapshot } from 'valtio'
+import { proxy } from 'valtio'
 import { subscribeKey } from 'valtio/utils'
+import type { getDynamicFeedServiceConfig } from '.'
 import { getAllFollowGroups } from './group'
 import type { FollowGroup } from './group/groups'
 import { getRecentUpdateUpList } from './up'
@@ -111,48 +112,6 @@ export const dfStore = proxy({
 export type DynamicFeedStore = typeof dfStore
 
 export type DynamicFeedServiceConfig = ReturnType<typeof getDynamicFeedServiceConfig>
-
-export function getDynamicFeedServiceConfig() {
-  const snap = snapshot(dfStore)
-  return {
-    /**
-     * from dfStore
-     */
-    // UP | 分组
-    upMid: snap.upMid,
-    followGroupTagid: snap.selectedFollowGroup?.tagid,
-
-    // 搜索
-    searchText: snap.searchText,
-
-    // 类型
-    dynamicFeedVideoType: snap.dynamicFeedVideoType,
-    hideChargeOnlyVideos: snap.hideChargeOnlyVideos,
-
-    // 时长
-    filterMinDuration: snap.filterMinDuration,
-    filterMinDurationValue: snap.filterMinDurationValue,
-
-    // flags
-    hasSelectedUp: snap.hasSelectedUp,
-    showFilter: snap.showFilter,
-
-    /**
-     * from settings
-     */
-    showLiveInDynamicFeed: settings.showLiveInDynamicFeed,
-    advancedSearch: settings.__internalDynamicFeedAdvancedSearch,
-    searchCacheEnabled:
-      !!snap.upMid &&
-      settings.__internalDynamicFeedCacheAllItemsEntry && // the main switch
-      settings.__internalDynamicFeedCacheAllItemsUpMids.includes(snap.upMid.toString()), // the switch for this up
-
-    /**
-     * from query
-     */
-    startingOffset: QUERY_DYNAMIC_OFFSET,
-  }
-}
 
 async function updateUpList(force = false) {
   const cacheHit =

@@ -1,7 +1,9 @@
 import { CHARGE_ONLY_TEXT } from '$components/VideoCard/top-marks'
 import { type DynamicFeedItem, type DynamicFeedItemExtend } from '$define'
 import { EApiType } from '$define/index.shared'
+import { settings } from '$modules/settings'
 import { parseDuration } from '$utility'
+import { snapshot } from 'valtio'
 import { QueueStrategy, type IService } from '../_base'
 import { LiveRecService } from '../live'
 import { fetchVideoDynamicFeeds } from './api'
@@ -15,11 +17,54 @@ import { getFollowGroupContent } from './group'
 import {
   DynamicFeedVideoMinDuration,
   DynamicFeedVideoType,
+  QUERY_DYNAMIC_OFFSET,
   QUERY_DYNAMIC_UP_MID,
   dfStore,
   type DynamicFeedServiceConfig,
 } from './store'
 import { DynamicFeedUsageInfo } from './usage-info'
+
+export function getDynamicFeedServiceConfig() {
+  const snap = snapshot(dfStore)
+  return {
+    /**
+     * from dfStore
+     */
+    // UP | 分组
+    upMid: snap.upMid,
+    followGroupTagid: snap.selectedFollowGroup?.tagid,
+
+    // 搜索
+    searchText: snap.searchText,
+
+    // 类型
+    dynamicFeedVideoType: snap.dynamicFeedVideoType,
+    hideChargeOnlyVideos: snap.hideChargeOnlyVideos,
+
+    // 时长
+    filterMinDuration: snap.filterMinDuration,
+    filterMinDurationValue: snap.filterMinDurationValue,
+
+    // flags
+    hasSelectedUp: snap.hasSelectedUp,
+    showFilter: snap.showFilter,
+
+    /**
+     * from settings
+     */
+    showLiveInDynamicFeed: settings.showLiveInDynamicFeed,
+    advancedSearch: settings.__internalDynamicFeedAdvancedSearch,
+    searchCacheEnabled:
+      !!snap.upMid &&
+      settings.__internalDynamicFeedCacheAllItemsEntry && // the main switch
+      settings.__internalDynamicFeedCacheAllItemsUpMids.includes(snap.upMid.toString()), // the switch for this up
+
+    /**
+     * from query
+     */
+    startingOffset: QUERY_DYNAMIC_OFFSET,
+  }
+}
 
 export class DynamicFeedRecService implements IService {
   static PAGE_SIZE = 15

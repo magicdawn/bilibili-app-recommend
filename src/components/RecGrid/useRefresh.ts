@@ -4,8 +4,10 @@ import { useCurrentUsingTab } from '$components/RecHeader/tab'
 import { TabConfig } from '$components/RecHeader/tab-config'
 import { ETab, type EHotSubTab } from '$components/RecHeader/tab-enum'
 import type { RecItemTypeOrSeparator } from '$define'
-import { type DynamicFeedRecService } from '$modules/rec-services/dynamic-feed'
-import { getDynamicFeedServiceConfig } from '$modules/rec-services/dynamic-feed/store'
+import {
+  getDynamicFeedServiceConfig,
+  type DynamicFeedRecService,
+} from '$modules/rec-services/dynamic-feed'
 import { hotStore } from '$modules/rec-services/hot'
 import { nextTick } from '$utility'
 import type { Debugger } from 'debug'

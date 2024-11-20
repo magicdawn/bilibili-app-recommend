@@ -1,3 +1,3 @@
 module.exports = {
-  reject: ['axios', 'typescript'],
+  reject: ['axios'],
 }
