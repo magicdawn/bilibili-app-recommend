@@ -90,7 +90,7 @@ export function DynamicFeedUsageInfo() {
   const { ref, getPopupContainer } = usePopupContainer()
   const onRefresh = useOnRefreshContext()
 
-  const { enableFollowGroupFilterForDynamicFeed, __internalDynamicFeedAddCopyBvidButton } =
+  const { dynamicFeedEnableFollowGroupFilter, __internalDynamicFeedAddCopyBvidButton } =
     useSettingsSnapshot()
   const {
     hasSelectedUp,
@@ -143,7 +143,7 @@ export function DynamicFeedUsageInfo() {
     }
 
     let groupItems: AntdMenuItemType[] = []
-    if (enableFollowGroupFilterForDynamicFeed) {
+    if (dynamicFeedEnableFollowGroupFilter) {
       groupItems = followGroups.map((group) => {
         return {
           key: `group:${group.tagid}`,
@@ -207,7 +207,7 @@ export function DynamicFeedUsageInfo() {
     })
 
     return [itemAll, ...groupItems, ...items]
-  }, [upList, upList.map((x) => !!x.has_update), enableFollowGroupFilterForDynamicFeed])
+  }, [upList, upList.map((x) => !!x.has_update), dynamicFeedEnableFollowGroupFilter])
 
   const filterPopoverContent = (
     <div css={S.filterWrapper}>

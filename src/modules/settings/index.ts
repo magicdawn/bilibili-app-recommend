@@ -7,6 +7,10 @@ import { pick } from 'es-toolkit'
 import { proxy, snapshot, subscribe, useSnapshot } from 'valtio'
 import { saveToDraft } from './cloud-backup'
 
+/**
+ * 命名: 模块/tab + 场景 + 功能
+ */
+
 export const initialSettings = {
   accessKey: '',
   accessKeyExpireAt: 0,
@@ -64,38 +68,37 @@ export const initialSettings = {
   /**
    * tab=dynamic-feed
    */
-  enableFollowGroupFilterForDynamicFeed: true, // 下拉筛选支持 - 关注分组
-  hideDynamicFeedWhenViewAllMids: [] as string[], // 在「全部」动态中隐藏 UP 的动态
+  dynamicFeedShowLive: true, // 在动态中显示直播
+  dynamicFeedEnableFollowGroupFilter: true, // 下拉筛选支持 - 关注分组
+  dynamicFeedWhenViewAllHideMids: [] as string[], // 在「全部」动态中隐藏 UP 的动态
 
   /**
    * tab=watchlater
    */
-  shuffleForWatchLater: true, // 打乱顺序
-  addSeparatorForWatchLater: true, // 添加 "近期" / "更早" 分割线
+  watchlaterUseShuffle: true, // 打乱顺序
+  watchlaterAddSeparator: true, // 添加 "近期" / "更早" 分割线
   watchlaterNormalOrderSortByAddAtAsc: false,
 
   /**
    * tab=fav
    */
-  shuffleForFav: true, // 打乱顺序
-  excludeFavFolderIds: [] as string[], // 忽略的收藏夹
-  addSeparatorForFav: true, // 收藏夹分割线
+  favUseShuffle: true, // 打乱顺序
+  favAddSeparator: true, // 收藏夹分割线
+  favExcludedFolderIds: [] as string[], // 忽略的收藏夹
 
   /**
    * tab=popular-general
    */
-  // shuffleForPopularGeneral: false, // shuffle
-  anonymousForPopularGeneral: false, // without credentials
+  popularGeneralUseAnonymous: false, // without credentials
 
   /**
    * tab=popular-weekly
    */
-  shuffleForPopularWeekly: false, // shuffle
+  popularWeeklyUseShuffle: false, // shuffle
 
   /**
    * tab=live
    */
-  showLiveInDynamicFeed: true, // 在动态中显示直播
 
   /**
    * 过滤器模块

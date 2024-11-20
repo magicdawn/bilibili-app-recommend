@@ -132,7 +132,7 @@ async function updateUpList(force = false) {
 }
 
 async function updateFollowGroups(force = false) {
-  if (!settings.enableFollowGroupFilterForDynamicFeed) return
+  if (!settings.dynamicFeedEnableFollowGroupFilter) return
 
   const cacheHit =
     !force &&

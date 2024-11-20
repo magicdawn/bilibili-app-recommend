@@ -27,7 +27,7 @@ const ServiceMap = {
 // 是否是: 换一换
 export function isHotTabUsingShuffle(shuffleForPopularWeekly?: boolean) {
   const { subtab } = hotStore
-  shuffleForPopularWeekly ??= settings.shuffleForPopularWeekly
+  shuffleForPopularWeekly ??= settings.popularWeeklyUseShuffle
   const change = subtab === EHotSubTab.PopularWeekly && shuffleForPopularWeekly
   return change
 }

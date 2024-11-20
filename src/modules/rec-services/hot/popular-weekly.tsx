@@ -51,7 +51,7 @@ export class PopularWeeklyRecService implements IService {
   useShuffle: boolean
   constructor() {
     this.id = PopularWeeklyRecService.id++
-    this.useShuffle = settings.shuffleForPopularWeekly
+    this.useShuffle = settings.popularWeeklyUseShuffle
   }
 
   // full-list = returnedItems + bufferQueue + more
@@ -166,7 +166,7 @@ function PopularWeeklyUsageInfo() {
   return (
     <>
       <SwitchSettingItem
-        configKey={'shuffleForPopularWeekly'}
+        configKey={'popularWeeklyUseShuffle'}
         checkedChildren='随机顺序: 开'
         unCheckedChildren='随机顺序: 关'
         extraAction={async () => {

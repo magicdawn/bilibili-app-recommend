@@ -54,8 +54,8 @@ export function getDynamicFeedServiceConfig() {
     /**
      * from settings
      */
-    showLiveInDynamicFeed: settings.showLiveInDynamicFeed,
-    hideWhenViewAllMids: new Set(settings.hideDynamicFeedWhenViewAllMids),
+    showLiveInDynamicFeed: settings.dynamicFeedShowLive,
+    hideWhenViewAllMids: new Set(settings.dynamicFeedWhenViewAllHideMids),
     advancedSearch: settings.__internalDynamicFeedAdvancedSearch,
     searchCacheEnabled:
       !!snap.upMid &&

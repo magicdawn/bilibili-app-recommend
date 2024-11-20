@@ -34,8 +34,8 @@ export class FavRecService implements IService {
   useShuffle: boolean
   addSeparator: boolean
   constructor() {
-    this.useShuffle = settings.shuffleForFav
-    this.addSeparator = settings.addSeparatorForFav
+    this.useShuffle = settings.favUseShuffle
+    this.addSeparator = settings.favAddSeparator
   }
 
   total = 0
@@ -113,7 +113,7 @@ export class FavRecService implements IService {
     this.foldersLoaded = true
     this.allFolderServices = folders.map((f) => new FavFolderService(f))
     this.folderServices = this.allFolderServices.filter(
-      (s) => !settings.excludeFavFolderIds.includes(s.entry.id.toString()),
+      (s) => !settings.favExcludedFolderIds.includes(s.entry.id.toString()),
     )
     this.total = this.folderServices.reduce((count, f) => count + f.entry.media_count, 0)
   }
@@ -222,7 +222,7 @@ export function FavUsageInfo({
 }: {
   allFavFolderServices: FavFolderService[]
 }) {
-  const { excludeFavFolderIds, shuffleForFav, addSeparatorForFav } = useSettingsSnapshot()
+  const { favExcludedFolderIds, favUseShuffle, favAddSeparator } = useSettingsSnapshot()
   const onRefresh = useOnRefreshContext()
   const [excludeFavFolderIdsChanged, setExcludeFavFolderIdsChanged] = useState(false)
 
@@ -232,28 +232,28 @@ export function FavUsageInfo({
       await delay(100)
       onRefresh?.()
     })()
-  }, [shuffleForFav, addSeparatorForFav])
+  }, [favUseShuffle, favAddSeparator])
 
   const handleChange = useMemoizedFn(
     (newTargetKeys: Key[], direction: TransferDirection, moveKeys: Key[]) => {
       setExcludeFavFolderIdsChanged(true)
-      updateSettings({ excludeFavFolderIds: newTargetKeys.map((k) => k.toString()) })
+      updateSettings({ favExcludedFolderIds: newTargetKeys.map((k) => k.toString()) })
     },
   )
 
   // may contains legacy ids, so not `allFavFolderServices.length - excludeFavFolderIds.length`
   const foldersCount = useMemo(
     () =>
-      allFavFolderServices.filter((x) => !excludeFavFolderIds.includes(x.entry.id.toString()))
+      allFavFolderServices.filter((x) => !favExcludedFolderIds.includes(x.entry.id.toString()))
         .length,
-    [allFavFolderServices, excludeFavFolderIds],
+    [allFavFolderServices, favExcludedFolderIds],
   )
 
   const videosCount = useMemo(() => {
     return allFavFolderServices
-      .filter((s) => !excludeFavFolderIds.includes(s.entry.id.toString()))
+      .filter((s) => !favExcludedFolderIds.includes(s.entry.id.toString()))
       .reduce((count, s) => count + s.entry.media_count, 0)
-  }, [allFavFolderServices, excludeFavFolderIds])
+  }, [allFavFolderServices, favExcludedFolderIds])
 
   const onPopupOpenChange = useMemoizedFn((open: boolean) => {
     // when open
@@ -285,7 +285,7 @@ export function FavUsageInfo({
               dataSource={allFavFolderServices}
               rowKey={(row) => row.entry.id.toString()}
               titles={['收藏夹', '忽略']}
-              targetKeys={excludeFavFolderIds}
+              targetKeys={favExcludedFolderIds}
               onChange={handleChange}
               render={(item) => item.entry.title}
               oneWay
@@ -310,7 +310,7 @@ export function FavUsageInfo({
         checkedChildren='随机顺序: 开'
         unCheckedChildren='随机顺序: 关'
       /> */}
-      <ShuffleSettingsItemFor configKey={'shuffleForFav'} />
+      <ShuffleSettingsItemFor configKey={'favUseShuffle'} />
     </Space>
   )
 }

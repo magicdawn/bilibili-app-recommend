@@ -19,7 +19,7 @@ export class PopularGeneralRecService implements IService {
 
   constructor() {
     // this.shuffle = settings.shuffleForPopularGeneral
-    this.anonymous = settings.anonymousForPopularGeneral
+    this.anonymous = settings.popularGeneralUseAnonymous
   }
 
   async loadMore() {
@@ -66,7 +66,7 @@ function PopularGeneralUsageInfo() {
 
   const _switch = (
     <SwitchSettingItem
-      configKey={'anonymousForPopularGeneral'}
+      configKey={'popularGeneralUseAnonymous'}
       checkedChildren='匿名访问: 开'
       unCheckedChildren='匿名访问: 关'
       tooltip={tooltip}
@@ -76,7 +76,7 @@ function PopularGeneralUsageInfo() {
 
   const checkbox = (
     <CheckboxSettingItem
-      configKey={'anonymousForPopularGeneral'}
+      configKey={'popularGeneralUseAnonymous'}
       tooltip={tooltip}
       label='匿名访问'
       extraAction={extraAction}

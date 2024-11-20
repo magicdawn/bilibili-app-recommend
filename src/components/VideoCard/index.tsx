@@ -32,7 +32,7 @@ import { dynamicFeedFilterSelectUp } from '$modules/rec-services/dynamic-feed/us
 import { formatFavFolderUrl } from '$modules/rec-services/fav'
 import { UserFavService, defaultFavFolderName } from '$modules/rec-services/fav/user-fav.service'
 import { ELiveStatus } from '$modules/rec-services/live/live-enum'
-import { useWatchLaterState } from '$modules/rec-services/watchlater'
+import { useWatchlaterState } from '$modules/rec-services/watchlater'
 import { settings, updateSettings, useSettingsSnapshot } from '$modules/settings'
 import { isWebApiSuccess } from '$request'
 import { isFirefox, isSafari } from '$ua'
@@ -47,7 +47,7 @@ import { tryit } from 'radash'
 import type { CSSProperties, MouseEventHandler, ReactNode } from 'react'
 import { borderRadiusValue } from '../css-vars'
 import type { VideoData } from './card.service'
-import { fetchVideoData, isVideoshotDataValid, watchLaterAdd } from './card.service'
+import { fetchVideoData, isVideoshotDataValid, watchlaterAdd } from './card.service'
 import {
   PreviewImage,
   SimplePregressBar,
@@ -106,7 +106,7 @@ export const VideoCard = memo(function VideoCard({
   const dislikedReason = useDislikedReason(item?.api === EApiType.App && item.param)
   const cardData = useMemo(() => item && normalizeCardData(item), [item])
   const blacklisted = useInBlacklist(cardData?.authorMid)
-  const watchLaterAdded = useWatchLaterState(cardData?.bvid)
+  const watchlaterAdded = useWatchlaterState(cardData?.bvid)
 
   return (
     <div
@@ -138,7 +138,7 @@ export const VideoCard = memo(function VideoCard({
             onRemoveCurrent={onRemoveCurrent}
             onMoveToFirst={onMoveToFirst}
             onRefresh={onRefresh}
-            watchLaterAdded={watchLaterAdded}
+            watchlaterAdded={watchlaterAdded}
           />
         ))
       )}
@@ -154,7 +154,7 @@ export type VideoCardInnerProps = {
   onMoveToFirst?: (item: RecItemType, data: IVideoCardData) => void | Promise<void>
   onRefresh?: OnRefresh
   emitter?: VideoCardEmitter
-  watchLaterAdded: boolean
+  watchlaterAdded: boolean
 }
 const VideoCardInner = memo(function VideoCardInner({
   item,
@@ -164,7 +164,7 @@ const VideoCardInner = memo(function VideoCardInner({
   onMoveToFirst,
   onRefresh,
   emitter = defaultEmitter,
-  watchLaterAdded,
+  watchlaterAdded,
 }: VideoCardInnerProps) {
   const { autoPreviewWhenHover, accessKey, styleUseCardBorder, styleUseCardBorderOnlyOnHover } =
     useSettingsSnapshot()
@@ -281,7 +281,7 @@ const VideoCardInner = memo(function VideoCardInner({
     cardData,
     onRemoveCurrent,
     actionButtonVisible,
-    watchLaterAdded,
+    watchlaterAdded,
   })
 
   // 不喜欢
@@ -441,20 +441,20 @@ const VideoCardInner = memo(function VideoCardInner({
   })
 
   // 实在不知道怎么取名了...
-  const hasEntry_addMidTo_hideDynamicFeedWhenViewAllMids =
+  const hasEntry_addMidTo__dynamicFeed_whenViewAll_hideMids =
     isDynamic(item) && dfStore.selectedKey === SELECTED_KEY_ALL && !!authorMid
-  const onAddMidTo_hideDynamicFeedWhenViewAllMids = useMemoizedFn(async () => {
-    if (!hasEntry_addMidTo_hideDynamicFeedWhenViewAllMids) return
-    const set = new Set(settings.hideDynamicFeedWhenViewAllMids)
+  const onAddMidTo__dynamicFeed_whenViewAll_hideMids = useMemoizedFn(async () => {
+    if (!hasEntry_addMidTo__dynamicFeed_whenViewAll_hideMids) return
+    const set = new Set(settings.dynamicFeedWhenViewAllHideMids)
     set.add(authorMid)
-    updateSettings({ hideDynamicFeedWhenViewAllMids: Array.from(set) })
+    updateSettings({ dynamicFeedWhenViewAllHideMids: Array.from(set) })
     setNicknameCache(authorMid, authorName || '')
     AntdMessage.success(`在「全部」动态中隐藏 ${authorName} 的动态`)
   })
 
   type MenuArr = MenuProps['items']
   const contextMenus: MenuArr = useMemo(() => {
-    const watchLaterLabel = watchLaterAdded ? '移除稍后再看' : '稍后再看'
+    const watchlaterLabel = watchlaterAdded ? '移除稍后再看' : '稍后再看'
 
     const divider = { type: 'divider' as const }
 
@@ -501,11 +501,11 @@ const VideoCardInner = memo(function VideoCardInner({
           onDynamicFeedFilterSelectUp()
         },
       },
-      hasEntry_addMidTo_hideDynamicFeedWhenViewAllMids && {
+      hasEntry_addMidTo__dynamicFeed_whenViewAll_hideMids && {
         key: 'addMidTo_hideDynamicFeedWhenViewAllMids',
         label: '在「全部」动态中隐藏 UP 的动态',
         icon: <IconLetsIconsViewHide {...size(15)} />,
-        onClick: onAddMidTo_hideDynamicFeedWhenViewAllMids,
+        onClick: onAddMidTo__dynamicFeed_whenViewAll_hideMids,
       },
       hasUnfollowEntry && {
         key: 'unfollow-up',
@@ -565,8 +565,8 @@ const VideoCardInner = memo(function VideoCardInner({
       },
       hasWatchLaterEntry && {
         key: 'watchlater',
-        label: watchLaterLabel,
-        icon: watchLaterAdded ? (
+        label: watchlaterLabel,
+        icon: watchlaterAdded ? (
           <IconMaterialSymbolsDeleteOutlineRounded {...size(15)} />
         ) : (
           <WatchLaterIcon {...size(15)} />
@@ -575,12 +575,12 @@ const VideoCardInner = memo(function VideoCardInner({
           onToggleWatchLater()
         },
       },
-      watchLaterAdded && {
+      watchlaterAdded && {
         key: 'watchlater-readd',
         label: '重新添加稍候再看 (移到最前)',
         icon: <IconPark name='AddTwo' size={15} />,
         async onClick() {
-          const { success } = await onToggleWatchLater(undefined, watchLaterAdd)
+          const { success } = await onToggleWatchLater(undefined, watchlaterAdd)
           if (!success) return
           onMoveToFirst?.(item, cardData)
         },
@@ -637,12 +637,12 @@ const VideoCardInner = memo(function VideoCardInner({
   }, [
     item,
     hasWatchLaterEntry,
-    watchLaterAdded,
+    watchlaterAdded,
     hasDislikeEntry,
     hasUnfollowEntry,
     hasBlacklistEntry,
     hasDynamicFeedFilterSelectUpEntry,
-    hasEntry_addMidTo_hideDynamicFeedWhenViewAllMids,
+    hasEntry_addMidTo__dynamicFeed_whenViewAll_hideMids,
     favFolderNames,
     favFolderUrls,
     consistentOpenMenus,

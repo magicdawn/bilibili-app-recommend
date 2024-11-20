@@ -17,14 +17,14 @@ export const getBackupOmitKeys: () => SettingsKey[] = () => [
   'backupSettingsToArticleDraft',
 
   // 无关紧要
-  'shuffleForFav',
-  'addSeparatorForFav',
+  'favUseShuffle',
+  'favAddSeparator',
 
-  'shuffleForWatchLater',
-  'addSeparatorForWatchLater',
+  'watchlaterUseShuffle',
+  'watchlaterAddSeparator',
 
-  'shuffleForPopularWeekly',
-  'anonymousForPopularGeneral',
+  'popularWeeklyUseShuffle',
+  'popularGeneralUseAnonymous',
 ]
 
 export const restoreOmitKeys: SettingsKey[] = [

@@ -542,7 +542,7 @@ detail
 - 0ccfa5a chore: fix ghproxy domain
 - 4a3d78a fix: moving ts file issue
 - 2d0b8f5 feat: split x.shared.ts required by react Fast Refresh
-- d5c609a feat: animation of watchLaterAdded
+- d5c609a feat: animation of watchlaterAdded
 - 0616d37 deps: ncu
 - b0d13f2 chore: change ghproxy.com to gh-proxy.com
 - ee1827f chore: update readme

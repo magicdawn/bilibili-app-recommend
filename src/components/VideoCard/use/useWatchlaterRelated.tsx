@@ -2,14 +2,14 @@ import { type RecItemType } from '$define'
 import { EApiType } from '$define/index.shared'
 import { WatchLaterIcon } from '$modules/icon'
 import { IconAnimatedChecked } from '$modules/icon/animated-checked'
-import { watchLaterState } from '$modules/rec-services/watchlater'
+import { watchlaterState } from '$modules/rec-services/watchlater'
 import { AntdMessage } from '$utility'
 import { usePrevious, useRequest } from 'ahooks'
 import { delay } from 'es-toolkit'
 import { size } from 'polished'
 import type { MouseEvent } from 'react'
 import type { VideoCardInnerProps } from '..'
-import { watchLaterAdd, watchLaterDel } from '../card.service'
+import { watchlaterAdd, watchlaterDel } from '../card.service'
 import { VideoCardActionButton } from '../child-components/VideoCardActions'
 import type { IVideoCardData } from '../process/normalize'
 
@@ -21,13 +21,13 @@ export function useWatchlaterRelated({
   cardData,
   onRemoveCurrent,
   actionButtonVisible,
-  watchLaterAdded,
+  watchlaterAdded,
 }: {
   item: RecItemType
   cardData: IVideoCardData
   onRemoveCurrent: VideoCardInnerProps['onRemoveCurrent']
   actionButtonVisible: boolean
-  watchLaterAdded: boolean
+  watchlaterAdded: boolean
 }) {
   const { avid, bvid } = cardData
   const hasWatchLaterEntry = (() => {
@@ -44,17 +44,17 @@ export function useWatchlaterRelated({
   })()
 
   const $req = useRequest(
-    (usingAction: typeof watchLaterAdd | typeof watchLaterDel, avid: string) => usingAction(avid),
+    (usingAction: typeof watchlaterAdd | typeof watchlaterDel, avid: string) => usingAction(avid),
     { manual: true },
   )
 
-  // watchLater added
-  const watchLaterAddedPrevious = usePrevious(watchLaterAdded)
+  // watchlater added
+  const watchlaterAddedPrevious = usePrevious(watchlaterAdded)
 
   const onToggleWatchLater = useMemoizedFn(
     async (
       e?: MouseEvent,
-      usingAction?: typeof watchLaterDel | typeof watchLaterAdd,
+      usingAction?: typeof watchlaterDel | typeof watchlaterAdd,
     ): Promise<{ success: boolean; targetState?: boolean }> => {
       e?.preventDefault()
       e?.stopPropagation()
@@ -67,15 +67,15 @@ export function useWatchlaterRelated({
       }
 
       // run the action
-      usingAction ??= watchLaterAdded ? watchLaterDel : watchLaterAdd
+      usingAction ??= watchlaterAdded ? watchlaterDel : watchlaterAdd
       const success = await $req.runAsync(usingAction, avid)
 
-      const targetState = usingAction === watchLaterAdd ? true : false
+      const targetState = usingAction === watchlaterAdd ? true : false
       if (success) {
         if (targetState) {
-          watchLaterState.bvidSet.add(bvid)
+          watchlaterState.bvidSet.add(bvid)
         } else {
-          watchLaterState.bvidSet.delete(bvid)
+          watchlaterState.bvidSet.delete(bvid)
         }
 
         // 稍后再看
@@ -97,7 +97,7 @@ export function useWatchlaterRelated({
     },
   )
 
-  // <use href={watchLaterAdded ? '#widget-watch-save' : '#widget-watch-later'} />
+  // <use href={watchlaterAdded ? '#widget-watch-save' : '#widget-watch-later'} />
   // <svg width={addSize} height={addSize}>
   //   <use href={'#widget-watch-later'} />
   // </svg>
@@ -110,15 +110,15 @@ export function useWatchlaterRelated({
     }
 
     if (item.api === EApiType.Watchlater) {
-      return watchLaterAdded ? (
+      return watchlaterAdded ? (
         <IconMaterialSymbolsDeleteOutlineRounded {...size(16)} />
       ) : (
-        <IconAnimatedChecked size={addedSize} useAnimation={watchLaterAddedPrevious === true} />
+        <IconAnimatedChecked size={addedSize} useAnimation={watchlaterAddedPrevious === true} />
       )
     }
 
-    return watchLaterAdded ? (
-      <IconAnimatedChecked size={addedSize} useAnimation={watchLaterAddedPrevious === false} />
+    return watchlaterAdded ? (
+      <IconAnimatedChecked size={addedSize} useAnimation={watchlaterAddedPrevious === false} />
     ) : (
       <WatchLaterIcon {...size(addSize)} />
     )
@@ -126,10 +126,10 @@ export function useWatchlaterRelated({
 
   const tooltip =
     item.api === EApiType.Watchlater
-      ? watchLaterAdded
+      ? watchlaterAdded
         ? '已添加稍后再看, 点击移除'
         : '已移除稍后再看'
-      : watchLaterAdded
+      : watchlaterAdded
         ? '已添加稍后再看, 点击移除'
         : '稍后再看'
 
@@ -143,5 +143,5 @@ export function useWatchlaterRelated({
     />
   )
 
-  return { watchlaterButtonEl, onToggleWatchLater, watchLaterAdded, hasWatchLaterEntry }
+  return { watchlaterButtonEl, onToggleWatchLater, watchlaterAdded, hasWatchLaterEntry }
 }

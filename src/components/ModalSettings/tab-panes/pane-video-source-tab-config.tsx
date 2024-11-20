@@ -75,12 +75,12 @@ export function TabPaneVideoSourceTabConfig() {
               </div>
               <Space size={10}>
                 <CheckboxSettingItem
-                  configKey='shuffleForWatchLater'
+                  configKey='watchlaterUseShuffle'
                   label='随机顺序'
                   tooltip='不包括近期添加的「稍后再看」'
                 />
                 <CheckboxSettingItem
-                  configKey='addSeparatorForWatchLater'
+                  configKey='watchlaterAddSeparator'
                   label='添加分割线'
                   tooltip='添加「近期」「更早」分割线'
                   css={css`
@@ -102,12 +102,12 @@ export function TabPaneVideoSourceTabConfig() {
               </div>
               <Space size={10}>
                 <CheckboxSettingItem
-                  configKey='shuffleForFav'
+                  configKey='favUseShuffle'
                   label='随机顺序'
                   tooltip='随机收藏'
                 />
                 <CheckboxSettingItem
-                  configKey='addSeparatorForFav'
+                  configKey='favAddSeparator'
                   label='添加分割线'
                   tooltip='顺序显示时, 按收藏夹添加分割线'
                   css={css`
@@ -129,7 +129,7 @@ export function TabPaneVideoSourceTabConfig() {
               </div>
               <div className='flex flex-wrap  gap-x-10 gap-y-10'>
                 <CheckboxSettingItem
-                  configKey='enableFollowGroupFilterForDynamicFeed'
+                  configKey='dynamicFeedEnableFollowGroupFilter'
                   label='启用分组筛选'
                   tooltip={
                     <>
@@ -142,7 +142,7 @@ export function TabPaneVideoSourceTabConfig() {
                   }
                 />
                 <CheckboxSettingItem
-                  configKey='showLiveInDynamicFeed'
+                  configKey='dynamicFeedShowLive'
                   label='在动态里显示直播'
                   tooltip={
                     <>
@@ -340,15 +340,15 @@ function VideoSourceTabSortableItem({ id }: { id: ETab }) {
 }
 
 function DynamicFeed_WhenViewAll_HideMidsPanel() {
-  const { hideDynamicFeedWhenViewAllMids } = useSettingsSnapshot()
+  const { dynamicFeedWhenViewAllHideMids } = useSettingsSnapshot()
 
   const onDelete = useMemoizedFn((mid: string) => {
-    const set = new Set(settings.hideDynamicFeedWhenViewAllMids)
+    const set = new Set(settings.dynamicFeedWhenViewAllHideMids)
     set.delete(mid)
-    updateSettings({ hideDynamicFeedWhenViewAllMids: Array.from(set) })
+    updateSettings({ dynamicFeedWhenViewAllHideMids: Array.from(set) })
   })
 
-  const empty = hideDynamicFeedWhenViewAllMids.length === 0
+  const empty = dynamicFeedWhenViewAllHideMids.length === 0
   if (empty) {
     return (
       <div className='flex items-center justify-center'>
@@ -359,7 +359,7 @@ function DynamicFeed_WhenViewAll_HideMidsPanel() {
 
   return (
     <div className='flex flex-wrap gap-x-10 gap-y-5'>
-      {hideDynamicFeedWhenViewAllMids.map((tag) => {
+      {dynamicFeedWhenViewAllHideMids.map((tag) => {
         return (
           <TagItemDisplay
             tag={tag}

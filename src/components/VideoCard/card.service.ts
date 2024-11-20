@@ -110,8 +110,8 @@ export async function fetchVideoData(bvid: string): Promise<VideoData> {
  * add 支持 avid & bvid, del 只支持 avid. 故使用 avid
  */
 
-function watchLaterFactory(action: 'add' | 'del') {
-  return async function watchLaterOp(avid: string) {
+function watchlaterFactory(action: 'add' | 'del') {
+  return async function watchlaterOp(avid: string) {
     const form = new URLSearchParams({
       aid: avid,
       csrf: getCsrfToken(),
@@ -134,8 +134,8 @@ function watchLaterFactory(action: 'add' | 'del') {
   }
 }
 
-export const watchLaterAdd = watchLaterFactory('add')
-export const watchLaterDel = watchLaterFactory('del')
+export const watchlaterAdd = watchlaterFactory('add')
+export const watchlaterDel = watchlaterFactory('del')
 
 /**
  * 不喜欢 / 撤销不喜欢
