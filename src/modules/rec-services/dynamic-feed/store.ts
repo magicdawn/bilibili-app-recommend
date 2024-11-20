@@ -17,7 +17,9 @@ import type { DynamicPortalUp } from './up/portal'
 const searchParams = new URLSearchParams(location.search)
 export const QUERY_DYNAMIC_UP_MID = searchParams.get('dyn-mid')?.trim()
 export const QUERY_DYNAMIC_OFFSET = searchParams.get('dyn-offset') // where to start, exclusive
-export const QUERY_DYNAMIC_SEARCH_TEXT = searchParams.get('dyn-search')
+export const QUERY_DYNAMIC_SEARCH_TEXT = QUERY_DYNAMIC_UP_MID // only support using with `dyn-mid`
+  ? searchParams.get('dyn-search') || undefined
+  : undefined
 
 let upMidInitial: UpMidType | undefined = undefined
 let upNameInitial: string | undefined = undefined
