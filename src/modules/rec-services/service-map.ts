@@ -1,10 +1,9 @@
 import type { OnRefreshOptions } from '$components/RecGrid/useRefresh'
 import { ETab } from '$components/RecHeader/tab-enum'
-import { settings } from '$modules/settings'
 import type { IService } from './_base'
 import { AppRecService } from './app'
 import { DynamicFeedRecService } from './dynamic-feed'
-import { getDfStoreFilterConfig } from './dynamic-feed/store'
+import { getDynamicFeedServiceConfig } from './dynamic-feed/store'
 import { FavRecService } from './fav'
 import { HotRecService } from './hot'
 import { LiveRecService } from './live'
@@ -23,8 +22,7 @@ export const createServiceMap = {
   [ETab.RecommendApp]: () => new AppRecService(),
   [ETab.RecommendPc]: () => new PcRecService(false),
   [ETab.KeepFollowOnly]: () => new PcRecService(true),
-  [ETab.DynamicFeed]: () =>
-    new DynamicFeedRecService(getDfStoreFilterConfig(), settings.showLiveInDynamicFeed),
+  [ETab.DynamicFeed]: () => new DynamicFeedRecService(getDynamicFeedServiceConfig()),
   [ETab.Watchlater]: (options) => new WatchLaterRecService(options?.watchlaterKeepOrderWhenShuffle),
   [ETab.Fav]: () => new FavRecService(),
   [ETab.Hot]: () => new HotRecService(),

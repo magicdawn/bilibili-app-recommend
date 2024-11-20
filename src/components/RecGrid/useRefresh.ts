@@ -5,7 +5,7 @@ import { TabConfig } from '$components/RecHeader/tab-config'
 import { ETab, type EHotSubTab } from '$components/RecHeader/tab-enum'
 import type { RecItemTypeOrSeparator } from '$define'
 import { type DynamicFeedRecService } from '$modules/rec-services/dynamic-feed'
-import { getDfStoreFilterConfig } from '$modules/rec-services/dynamic-feed/store'
+import { getDynamicFeedServiceConfig } from '$modules/rec-services/dynamic-feed/store'
 import { hotStore } from '$modules/rec-services/hot'
 import { nextTick } from '$utility'
 import type { Debugger } from 'debug'
@@ -117,7 +117,7 @@ export function useRefresh({
         if (
           tab === ETab.DynamicFeed &&
           (s = serviceMap[ETab.DynamicFeed]) &&
-          !isEqual(s.filterConfig, getDfStoreFilterConfig())
+          !isEqual(s.config, getDynamicFeedServiceConfig())
         ) {
           debug(
             'refresh(): [start] [refreshing] sametab(%s) but conditions change, abort existing',

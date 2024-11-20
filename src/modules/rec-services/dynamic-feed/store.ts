@@ -14,12 +14,13 @@ import type { DynamicPortalUp } from './up/portal'
  * view dynamic of <mid> via query
  */
 const searchParams = new URLSearchParams(location.search)
-export const QUERY_DYNAMIC_UP_MID = !!searchParams.get('dyn-mid')
+export const QUERY_DYNAMIC_UP_MID = searchParams.get('dyn-mid')?.trim()
+export const QUERY_DYNAMIC_OFFSET = searchParams.get('dyn-offset') || '' // where to start, exclusive
 
 let upMidInitial: number | undefined = undefined
 let upNameInitial: string | undefined = undefined
 if (QUERY_DYNAMIC_UP_MID) {
-  upMidInitial = Number(searchParams.get('dyn-mid'))
+  upMidInitial = Number(QUERY_DYNAMIC_UP_MID)
   upNameInitial = searchParams.get('dyn-name') ?? upMidInitial.toString() ?? undefined
 }
 
@@ -109,11 +110,14 @@ export const dfStore = proxy({
 
 export type DynamicFeedStore = typeof dfStore
 
-export type DynamicFeedStoreFilterConfig = ReturnType<typeof getDfStoreFilterConfig>
+export type DynamicFeedServiceConfig = ReturnType<typeof getDynamicFeedServiceConfig>
 
-export function getDfStoreFilterConfig() {
+export function getDynamicFeedServiceConfig() {
   const snap = snapshot(dfStore)
   return {
+    /**
+     * from dfStore
+     */
     // UP | 分组
     upMid: snap.upMid,
     followGroupTagid: snap.selectedFollowGroup?.tagid,
@@ -133,8 +137,20 @@ export function getDfStoreFilterConfig() {
     hasSelectedUp: snap.hasSelectedUp,
     showFilter: snap.showFilter,
 
-    // settings
+    /**
+     * from settings
+     */
+    showLiveInDynamicFeed: settings.showLiveInDynamicFeed,
     advancedSearch: settings.__internalDynamicFeedAdvancedSearch,
+    searchCacheEnabled:
+      !!snap.upMid &&
+      settings.__internalDynamicFeedCacheAllItemsEntry && // the main switch
+      settings.__internalDynamicFeedCacheAllItemsUpMids.includes(snap.upMid.toString()), // the switch for this up
+
+    /**
+     * from query
+     */
+    startingOffset: QUERY_DYNAMIC_OFFSET,
   }
 }
 

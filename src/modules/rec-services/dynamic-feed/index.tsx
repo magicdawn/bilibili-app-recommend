@@ -1,7 +1,6 @@
 import { CHARGE_ONLY_TEXT } from '$components/VideoCard/top-marks'
 import { type DynamicFeedItem, type DynamicFeedItemExtend } from '$define'
 import { EApiType } from '$define/index.shared'
-import { settings } from '$modules/settings'
 import { parseDuration } from '$utility'
 import { QueueStrategy, type IService } from '../_base'
 import { LiveRecService } from '../live'
@@ -18,7 +17,7 @@ import {
   DynamicFeedVideoType,
   QUERY_DYNAMIC_UP_MID,
   dfStore,
-  type DynamicFeedStoreFilterConfig,
+  type DynamicFeedServiceConfig,
 } from './store'
 import { DynamicFeedUsageInfo } from './usage-info'
 
@@ -44,11 +43,9 @@ export class DynamicFeedRecService implements IService {
     return this.hasMoreStreamingLive || this.hasMoreDynFeed
   }
 
-  constructor(
-    public filterConfig: DynamicFeedStoreFilterConfig,
-    public showLiveInDynamicFeed: boolean,
-  ) {
-    if (this.showLiveInDynamicFeed) {
+  constructor(public config: DynamicFeedServiceConfig) {
+    // config live
+    if (this.config.showLiveInDynamicFeed) {
       const filterEmpty =
         !this.upMid &&
         typeof this.followGroupTagid === 'undefined' &&
@@ -59,36 +56,43 @@ export class DynamicFeedRecService implements IService {
         this.liveRecService = new LiveRecService()
       }
     }
+
+    // start offset
+    if (this.config.startingOffset) {
+      this.offset = this.config.startingOffset
+    }
   }
 
-  // shortcut for filterConfig
+  /**
+   * shortcuts for ServiceConfig(this.config)
+   */
   get upMid() {
-    return this.filterConfig.upMid
+    return this.config.upMid
   }
   // NOTE: number | undefined 默认分组是 0
   get followGroupTagid() {
-    return this.filterConfig.followGroupTagid
+    return this.config.followGroupTagid
   }
   get searchText() {
-    return this.filterConfig.searchText
+    return this.config.searchText
   }
   get dynamicFeedVideoType() {
-    return this.filterConfig.dynamicFeedVideoType
+    return this.config.dynamicFeedVideoType
   }
   get hideChargeOnlyVideos() {
-    return this.filterConfig.hideChargeOnlyVideos
+    return this.config.hideChargeOnlyVideos
   }
   get filterMinDuration() {
-    return this.filterConfig.filterMinDuration
+    return this.config.filterMinDuration
   }
   get filterMinDurationValue() {
-    return this.filterConfig.filterMinDurationValue
+    return this.config.filterMinDurationValue
   }
   get hasSelectedUp() {
-    return this.filterConfig.hasSelectedUp
+    return this.config.hasSelectedUp
   }
   get showFilter() {
-    return this.filterConfig.showFilter
+    return this.config.showFilter
   }
 
   private followGroupMids = new Set<number>()
@@ -122,13 +126,12 @@ export class DynamicFeedRecService implements IService {
 
     // use search cache
     const useSearchCache = !!(
-      settings.__internalDynamicFeedCacheAllItemsEntry &&
       this.upMid &&
       this.searchText &&
-      new Set(settings.__internalDynamicFeedCacheAllItemsUpMids).has(this.upMid.toString()) &&
+      this.config.searchCacheEnabled &&
       (await hasLocalDynamicFeedCache(this.upMid))
     )
-    const useAdvancedSearch = useSearchCache && settings.__internalDynamicFeedAdvancedSearch
+    const useAdvancedSearch = useSearchCache && this.config.advancedSearch
     const useAdvancedSearchParsed = useAdvancedSearch
       ? parseSearchInput((this.searchText || '').toLowerCase())
       : undefined
@@ -268,8 +271,8 @@ export class DynamicFeedRecService implements IService {
       // 高级搜索
       const advancedSearch = () => {
         return (
-          useAdvancedSearchParsed?.includes.every((x) => title.includes(x)) &&
-          useAdvancedSearchParsed?.excludes.every((x) => !title.includes(x))
+          (useAdvancedSearchParsed?.includes ?? []).every((x) => title.includes(x)) &&
+          (useAdvancedSearchParsed?.excludes ?? []).every((x) => !title.includes(x))
         )
       }
 
