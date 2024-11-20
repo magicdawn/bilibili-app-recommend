@@ -358,7 +358,7 @@ function DynamicFeedWhenViewAllHideMidsPanel() {
   }
 
   return (
-    <div className='flex flex-wrap gap-x-10 gap-y-5'>
+    <div className='flex flex-wrap gap-x-10 gap-y-5 max-h-250px overflow-y-scroll'>
       {dynamicFeedWhenViewAllHideMids.map((tag) => {
         return (
           <TagItemDisplay

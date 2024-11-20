@@ -75,14 +75,14 @@ export const initialSettings = {
   /**
    * tab=watchlater
    */
-  watchlaterUseShuffle: true, // 打乱顺序
+  watchlaterUseShuffle: false, // 打乱顺序
   watchlaterAddSeparator: true, // 添加 "近期" / "更早" 分割线
   watchlaterNormalOrderSortByAddAtAsc: false,
 
   /**
    * tab=fav
    */
-  favUseShuffle: true, // 打乱顺序
+  favUseShuffle: false, // 打乱顺序
   favAddSeparator: true, // 收藏夹分割线
   favExcludedFolderIds: [] as string[], // 忽略的收藏夹
 

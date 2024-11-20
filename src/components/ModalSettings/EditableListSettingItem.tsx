@@ -190,18 +190,16 @@ export function UpTagItemDisplay({ tag }: { tag: string }) {
   const regMidWithRemark = /^(?<mid>\d+)\((?<remark>[\S ]+)\)$/
   const regMid = /^\d+$/
 
-  const mid = useMemo(() => {
+  const { mid, remark } = useMemo<{ mid?: string; remark?: string }>(() => {
     if (regMidWithRemark.test(tag)) {
-      const mid = regMidWithRemark.exec(tag)?.groups?.mid
-      return mid
+      const groups = regMidWithRemark.exec(tag)?.groups
+      const mid = groups?.mid
+      const remark = groups?.remark
+      return { mid, remark }
     } else if (regMid.test(tag)) {
-      return tag
-    }
-  }, [tag])
-
-  const remark = useMemo(() => {
-    if (regMidWithRemark.test(tag)) {
-      return regMidWithRemark.exec(tag)?.groups?.remark
+      return { mid: tag }
+    } else {
+      return {}
     }
   }, [tag])
 
@@ -214,7 +212,10 @@ export function UpTagItemDisplay({ tag }: { tag: string }) {
     })()
   }, [mid])
 
-  const label = mid ? nicknameByMid || remark || mid : tag
+  const label = mid
+    ? //
+      nicknameByMid || remark || mid
+    : tag
 
   const tooltip = (
     <>
