@@ -7,7 +7,7 @@ import { AntdTooltip } from '$components/_base/antd-custom'
 import { EAppApiDevice } from '$define/index.shared'
 import { useIsDarkMode } from '$modules/dark-mode'
 import { IconPark } from '$modules/icon/icon-park'
-import { updateSettings, useSettingsSnapshot } from '$modules/settings'
+import { settings, updateSettings, useSettingsSnapshot } from '$modules/settings'
 import { AntdMessage } from '$utility'
 import type { DragEndEvent } from '@dnd-kit/core'
 import { DndContext, PointerSensor, closestCenter, useSensor, useSensors } from '@dnd-kit/core'
@@ -19,7 +19,8 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { Checkbox, Col, Radio, Space } from 'antd'
+import { Checkbox, Col, Collapse, Empty, Radio, Space } from 'antd'
+import { TagItemDisplay, UpTagItemDisplay } from '../EditableListSettingItem'
 import styles from '../index.module.scss'
 import { ResetPartialSettingsButton } from './_shared'
 
@@ -126,7 +127,7 @@ export function TabPaneVideoSourceTabConfig() {
                 <TabIcon tabKey={ETab.DynamicFeed} mr={5} mt={-2} />
                 动态
               </div>
-              <Space size={10}>
+              <div className='flex flex-wrap  gap-x-10 gap-y-10'>
                 <CheckboxSettingItem
                   configKey='enableFollowGroupFilterForDynamicFeed'
                   label='启用分组筛选'
@@ -151,7 +152,21 @@ export function TabPaneVideoSourceTabConfig() {
                     </>
                   }
                 />
-              </Space>
+
+                <Collapse
+                  size='small'
+                  css={css`
+                    width: 100%;
+                  `}
+                  items={[
+                    {
+                      key: '1',
+                      label: '在「全部」动态中隐藏 UP 的动态',
+                      children: <DynamicFeed_WhenViewAll_HideMidsPanel />,
+                    },
+                  ]}
+                />
+              </div>
             </div>
 
             {/* recommend */}
@@ -320,6 +335,39 @@ function VideoSourceTabSortableItem({ id }: { id: ETab }) {
       >
         <IconPark name='Drag' size={18} />
       </div>
+    </div>
+  )
+}
+
+function DynamicFeed_WhenViewAll_HideMidsPanel() {
+  const { hideDynamicFeedWhenViewAllMids } = useSettingsSnapshot()
+
+  const onDelete = useMemoizedFn((mid: string) => {
+    const set = new Set(settings.hideDynamicFeedWhenViewAllMids)
+    set.delete(mid)
+    updateSettings({ hideDynamicFeedWhenViewAllMids: Array.from(set) })
+  })
+
+  const empty = hideDynamicFeedWhenViewAllMids.length === 0
+  if (empty) {
+    return (
+      <div className='flex items-center justify-center'>
+        <Empty />
+      </div>
+    )
+  }
+
+  return (
+    <div className='flex flex-wrap gap-x-10 gap-y-5'>
+      {hideDynamicFeedWhenViewAllMids.map((tag) => {
+        return (
+          <TagItemDisplay
+            tag={tag}
+            onDelete={onDelete}
+            renderTag={(t) => <UpTagItemDisplay tag={t} />}
+          />
+        )
+      })}
     </div>
   )
 }

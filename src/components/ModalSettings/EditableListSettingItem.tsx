@@ -140,7 +140,7 @@ type TagItemDisplayProps = {
   onDelete?: (tag: string) => void
 } & Omit<ComponentPropsWithoutRef<'div'>, 'children'>
 
-const TagItemDisplay = forwardRef<HTMLDivElement, TagItemDisplayProps>(
+export const TagItemDisplay = forwardRef<HTMLDivElement, TagItemDisplayProps>(
   ({ tag, renderTag, onDelete, ...restProps }, ref) => {
     return (
       <div
@@ -186,7 +186,7 @@ const TagItemDisplay = forwardRef<HTMLDivElement, TagItemDisplayProps>(
   },
 )
 
-function UpTagItemDisplay({ tag }: { tag: string }) {
+export function UpTagItemDisplay({ tag }: { tag: string }) {
   const regMidWithRemark = /^(?<mid>\d+)\((?<remark>[\S ]+)\)$/
   const regMid = /^\d+$/
 

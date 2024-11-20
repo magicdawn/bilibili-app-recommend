@@ -19,6 +19,7 @@ import {
   DynamicFeedVideoType,
   QUERY_DYNAMIC_OFFSET,
   QUERY_DYNAMIC_UP_MID,
+  SELECTED_KEY_ALL,
   dfStore,
   type DynamicFeedServiceConfig,
 } from './store'
@@ -48,11 +49,13 @@ export function getDynamicFeedServiceConfig() {
     // flags
     hasSelectedUp: snap.hasSelectedUp,
     showFilter: snap.showFilter,
+    selectedKey: snap.selectedKey,
 
     /**
      * from settings
      */
     showLiveInDynamicFeed: settings.showLiveInDynamicFeed,
+    hideWhenViewAllMids: new Set(settings.hideDynamicFeedWhenViewAllMids),
     advancedSearch: settings.__internalDynamicFeedAdvancedSearch,
     searchCacheEnabled:
       !!snap.upMid &&
@@ -283,6 +286,15 @@ export class DynamicFeedRecService implements IService {
           useAdvancedSearch,
           useAdvancedSearchParsed,
         })
+      })
+
+      // 在「全部」动态中隐藏 UP 的动态
+      .filter((x) => {
+        if (this.config.selectedKey !== SELECTED_KEY_ALL) return true
+        if (!this.config.hideWhenViewAllMids.size) return true
+        const mid = x?.modules?.module_author?.mid
+        if (!mid) return true
+        return !this.config.hideWhenViewAllMids.has(mid.toString())
       })
 
       .map((item) => {

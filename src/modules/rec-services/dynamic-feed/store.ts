@@ -64,6 +64,8 @@ export const DynamicFeedVideoMinDurationConfig: Record<
   [DynamicFeedVideoMinDuration._10s]: { label: '10秒', duration: 10 },
 }
 
+export const SELECTED_KEY_ALL = 'all'
+
 /**
  * df expand to `dynamic-feed`
  */
@@ -95,7 +97,7 @@ export const dfStore = proxy({
   get selectedKey() {
     if (this.upMid) return `up:${this.upMid}`
     if (this.selectedFollowGroup) return `group:${this.selectedFollowGroup.tagid}`
-    return 'all'
+    return SELECTED_KEY_ALL
   },
 
   hideChargeOnlyVideosForKeysSet: await proxySetWithGmStorage<string>(

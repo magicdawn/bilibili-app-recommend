@@ -11,6 +11,7 @@ import { ETab } from '$components/RecHeader/tab-enum'
 import { Picture } from '$components/_base/Picture'
 import { borderColorValue, colorPrimaryValue } from '$components/css-vars'
 import {
+  isDynamic,
   isLive,
   isRanking,
   isWatchlater,
@@ -26,6 +27,7 @@ import { useIsDarkMode } from '$modules/dark-mode'
 import { openNewTab } from '$modules/gm'
 import { DislikeIcon, OpenExternalLinkIcon, WatchLaterIcon } from '$modules/icon'
 import { IconPark } from '$modules/icon/icon-park'
+import { SELECTED_KEY_ALL, dfStore } from '$modules/rec-services/dynamic-feed/store'
 import { dynamicFeedFilterSelectUp } from '$modules/rec-services/dynamic-feed/usage-info'
 import { formatFavFolderUrl } from '$modules/rec-services/fav'
 import { UserFavService, defaultFavFolderName } from '$modules/rec-services/fav/user-fav.service'
@@ -407,7 +409,8 @@ const VideoCardInner = memo(function VideoCardInner({
    * 动态筛选
    */
 
-  const hasDynamicFeedFilterSelectUpEntry = isNormalVideo && !!authorMid && !!authorName
+  const hasDynamicFeedFilterSelectUpEntry =
+    (isNormalVideo || isLive(item)) && !!authorMid && !!authorName
   const onDynamicFeedFilterSelectUp = useMemoizedFn(async (newWindow?: boolean) => {
     if (!hasDynamicFeedFilterSelectUpEntry) return
 
@@ -435,6 +438,18 @@ const VideoCardInner = memo(function VideoCardInner({
     } else {
       openInCurrentWindow()
     }
+  })
+
+  // 实在不知道怎么取名了...
+  const hasEntry_addMidTo_hideDynamicFeedWhenViewAllMids =
+    isDynamic(item) && dfStore.selectedKey === SELECTED_KEY_ALL && !!authorMid
+  const onAddMidTo_hideDynamicFeedWhenViewAllMids = useMemoizedFn(async () => {
+    if (!hasEntry_addMidTo_hideDynamicFeedWhenViewAllMids) return
+    const set = new Set(settings.hideDynamicFeedWhenViewAllMids)
+    set.add(authorMid)
+    updateSettings({ hideDynamicFeedWhenViewAllMids: Array.from(set) })
+    setNicknameCache(authorMid, authorName || '')
+    AntdMessage.success(`在「全部」动态中隐藏 ${authorName} 的动态`)
   })
 
   type MenuArr = MenuProps['items']
@@ -485,6 +500,12 @@ const VideoCardInner = memo(function VideoCardInner({
         onClick() {
           onDynamicFeedFilterSelectUp()
         },
+      },
+      hasEntry_addMidTo_hideDynamicFeedWhenViewAllMids && {
+        key: 'addMidTo_hideDynamicFeedWhenViewAllMids',
+        label: '在「全部」动态中隐藏 UP 的动态',
+        icon: <IconLetsIconsViewHide {...size(15)} />,
+        onClick: onAddMidTo_hideDynamicFeedWhenViewAllMids,
       },
       hasUnfollowEntry && {
         key: 'unfollow-up',
@@ -601,16 +622,16 @@ const VideoCardInner = memo(function VideoCardInner({
     return [
       ...consistentOpenMenus,
 
-      copyMenus.length && divider,
+      !!copyMenus.length && divider,
       ...copyMenus,
 
-      actionMenus.length && divider,
+      !!actionMenus.length && divider,
       ...actionMenus,
 
-      favMenus.length && divider,
+      !!favMenus.length && divider,
       ...favMenus,
 
-      conditionalOpenMenus.length && divider,
+      !!conditionalOpenMenus.length && divider,
       ...conditionalOpenMenus,
     ].filter(Boolean)
   }, [
@@ -621,6 +642,7 @@ const VideoCardInner = memo(function VideoCardInner({
     hasUnfollowEntry,
     hasBlacklistEntry,
     hasDynamicFeedFilterSelectUpEntry,
+    hasEntry_addMidTo_hideDynamicFeedWhenViewAllMids,
     favFolderNames,
     favFolderUrls,
     consistentOpenMenus,

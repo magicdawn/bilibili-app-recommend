@@ -65,6 +65,7 @@ export const initialSettings = {
    * tab=dynamic-feed
    */
   enableFollowGroupFilterForDynamicFeed: true, // 下拉筛选支持 - 关注分组
+  hideDynamicFeedWhenViewAllMids: [] as string[], // 在「全部」动态中隐藏 UP 的动态
 
   /**
    * tab=watchlater

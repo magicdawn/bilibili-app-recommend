@@ -8,11 +8,13 @@ export {}
 declare global {
   const Fragment: typeof import('react')['Fragment']
   const IconIconParkOutlineDownC: typeof import('~icons/icon-park-outline/down-c.jsx')['default']
+  const IconLetsIconsViewHide: typeof import('~icons/lets-icons/view-hide.jsx')['default']
   const IconLineMdMenuToCloseAltTransition: typeof import('~icons/line-md/menu-to-close-alt-transition.jsx')['default']
   const IconLineMdRemove: typeof import('~icons/line-md/remove.jsx')['default']
   const IconMaterialSymbolsDeleteOutlineRounded: typeof import('~icons/material-symbols/delete-outline-rounded.jsx')['default']
   const IconMaterialSymbolsLightOpenInNewOff: typeof import('~icons/material-symbols-light/open-in-new-off.jsx')['default']
   const IconMdiShuffleDisabled: typeof import('~icons/mdi/shuffle-disabled.jsx')['default']
+  const IconMingcuteUserHideLine: typeof import('~icons/mingcute/user-hide-line.jsx')['default']
   const IconRadixIconsPerson: typeof import('~icons/radix-icons/person.jsx')['default']
   const IconSvgSpinnersBarsRotateFade: typeof import('~icons/svg-spinners/bars-rotate-fade.jsx')['default']
   const IconTablerFaceIdError: typeof import('~icons/tabler/face-id-error.jsx')['default']
