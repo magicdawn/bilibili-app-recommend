@@ -1,4 +1,5 @@
 import { settings } from '$modules/settings'
+import { shouldDisableShortcut } from '$utility/dom'
 import { subscribeOnKeys, valtioFactory } from '$utility/valtio'
 import { delay } from 'es-toolkit'
 import { subscribe } from 'valtio'
@@ -65,8 +66,8 @@ ob.observe(document.documentElement, {
 document.addEventListener('click', evolvedDarkModeClickHandler, { passive: true })
 async function evolvedDarkModeClickHandler(e: MouseEvent) {
   const t = e.target as HTMLElement
-  // role="listitem" data-name="darkMode" class="custom-navbar-item"
-  if (!t.closest('.custom-navbar-item[role="listitem"][data-name="darkMode"]')) return
+
+  if (!t.closest(EVOLVED_DARK_MODE_SELECTOR)) return
   await delay(0)
   $darkMode.updateThrottled()
   $colors.updateThrottled()
@@ -76,3 +77,21 @@ window.addEventListener('unload', () => {
   ob.disconnect()
   document.removeEventListener('click', evolvedDarkModeClickHandler)
 })
+
+const EVOLVED_DARK_MODE_SELECTOR = '.custom-navbar-item[role="listitem"][data-name="darkMode"]'
+const EVOLVED_DARK_MODE_INNER_SELECTOR = '.navbar-dark-mode[item="darkMode"]'
+
+function toggleEvolvedDarkMode() {
+  document.querySelector<HTMLElement>(EVOLVED_DARK_MODE_INNER_SELECTOR)?.click()
+}
+
+export function useHotkeyForToggleEvolvedDarkMode() {
+  return useKeyPress(
+    ['shift.d', 'shift.h'], // shift + d 被什么 prevent 了
+    () => {
+      if (shouldDisableShortcut()) return
+      toggleEvolvedDarkMode()
+    },
+    { exactMatch: true },
+  )
+}

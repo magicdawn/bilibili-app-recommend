@@ -11,10 +11,11 @@ import { Space, Tag } from 'antd'
 import { delay } from 'es-toolkit'
 import { ShuffleSettingsItemFor } from '../_shared'
 
+type TagColor = ComponentProps<typeof Tag>['color']
+
 export function WatchLaterUsageInfo({ total }: { total: number }) {
   // 2023.12: B站的稍后再看上限提升到1000了
   // 所有这里就不管数量喽
-  type TagColor = ComponentProps<typeof Tag>['color']
   const color: TagColor = 'success'
   const title = `共 ${total} 个视频`
 
@@ -53,7 +54,12 @@ export function WatchLaterUsageInfo({ total }: { total: number }) {
   const btnDisplay = (
     <ShuffleSettingsItemFor
       configKey='watchlaterUseShuffle'
-      tooltip='随机顺序不包括近期添加的稍后再看'
+      tooltip={
+        <>
+          随机顺序不包括近期添加的稍后再看 <br />
+          近期: 最近48小时内
+        </>
+      }
     />
   )
 
