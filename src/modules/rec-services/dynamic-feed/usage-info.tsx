@@ -91,8 +91,11 @@ export function DynamicFeedUsageInfo() {
   const { ref, getPopupContainer } = usePopupContainer()
   const onRefresh = useOnRefreshContext()
 
-  const { dynamicFeedEnableFollowGroupFilter, __internalDynamicFeedAddCopyBvidButton } =
-    useSettingsSnapshot()
+  const {
+    dynamicFeedEnableFollowGroupFilter,
+    __internalDynamicFeedAddCopyBvidButton: addCopyBvidButton,
+    __internalDynamicFeedExternalSearchInput: externalSearchInput,
+  } = useSettingsSnapshot()
   const {
     hasSelectedUp,
     upName,
@@ -210,6 +213,32 @@ export function DynamicFeedUsageInfo() {
     return [itemAll, ...groupItems, ...items]
   }, [upList, upList.map((x) => !!x.has_update), dynamicFeedEnableFollowGroupFilter])
 
+  const searchInput = (
+    <Input.Search
+      style={{ width: externalSearchInput ? '250px' : '97%' }}
+      placeholder='按标题关键字过滤'
+      type='search'
+      autoCorrect='off'
+      autoCapitalize='off'
+      name={`searchText_${upMid}`}
+      // 有自带的历史记录, 何乐而不为
+      // 悬浮 autocomplete 时 popover 关闭了
+      // autoComplete='on'
+      variant='outlined'
+      defaultValue={dfStore.searchText}
+      autoComplete='off'
+      allowClear
+      onChange={(e) => {
+        tryInstantSearchWithCache({ searchText: e.target.value, upMid, onRefresh })
+      }}
+      onSearch={async (val) => {
+        dfStore.searchText = val || undefined
+        await delay(100)
+        onRefresh?.()
+      }}
+    />
+  )
+
   const filterPopoverContent = (
     <div css={S.filterWrapper}>
       <div className='section' css={S.filterSection}>
@@ -309,34 +338,12 @@ export function DynamicFeedUsageInfo() {
         </div>
       </div>
 
-      <div className='section' css={S.filterSection}>
-        <div className='title'>搜索</div>
-        <div className='content'>
-          <Input.Search
-            style={{ width: '97%' }}
-            placeholder='按标题关键字过滤'
-            type='search'
-            autoCorrect='off'
-            autoCapitalize='off'
-            name={`searchText_${upMid}`}
-            // 有自带的历史记录, 何乐而不为
-            // 悬浮 autocomplete 时 popover 关闭了
-            // autoComplete='on'
-            variant='filled'
-            defaultValue={dfStore.searchText}
-            autoComplete='off'
-            allowClear
-            onChange={(e) => {
-              tryInstantSearchWithCache({ searchText: e.target.value, upMid, onRefresh })
-            }}
-            onSearch={async (val) => {
-              dfStore.searchText = val || undefined
-              await delay(100)
-              onRefresh?.()
-            }}
-          />
+      {!externalSearchInput && (
+        <div className='section' css={S.filterSection}>
+          <div className='title'>搜索</div>
+          <div className='content'>{searchInput}</div>
         </div>
-      </div>
+      )}
 
       <SearchCacheRelated />
     </div>
@@ -385,7 +392,9 @@ export function DynamicFeedUsageInfo() {
           </Popover>
         )}
 
-        {__internalDynamicFeedAddCopyBvidButton && (
+        {externalSearchInput && searchInput}
+
+        {addCopyBvidButton && (
           <>
             <Button
               onClick={() => {
@@ -472,7 +481,7 @@ function SearchCacheRelated() {
               {flexBreak}
 
               <CheckboxSettingItem
-                configKey='__internalDynamicFeedAdvancedSearch'
+                configKey='dynamicFeedAdvancedSearch'
                 label={'使用高级搜索'}
                 tooltip={
                   <>

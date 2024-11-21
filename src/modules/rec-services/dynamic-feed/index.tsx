@@ -56,7 +56,7 @@ export function getDynamicFeedServiceConfig() {
      */
     showLiveInDynamicFeed: settings.dynamicFeedShowLive,
     hideWhenViewAllMids: new Set(settings.dynamicFeedWhenViewAllHideMids),
-    advancedSearch: settings.__internalDynamicFeedAdvancedSearch,
+    advancedSearch: settings.dynamicFeedAdvancedSearch,
     searchCacheEnabled:
       !!snap.upMid &&
       settings.__internalDynamicFeedCacheAllItemsEntry && // the main switch

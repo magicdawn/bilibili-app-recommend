@@ -188,10 +188,12 @@ export const initialSettings = {
   __internalEnableCopyBvidInfoContextMenu: false,
   __internalVideoCardUsePadding: false,
   __internalHotSubUseDropdown: false,
+
   __internalDynamicFeedCacheAllItemsEntry: false,
   __internalDynamicFeedCacheAllItemsUpMids: [] as string[], // enable for these up
-  __internalDynamicFeedAdvancedSearch: false,
+  dynamicFeedAdvancedSearch: false, // this is not marked __internal, and not showing in the Settings Panlel
   __internalDynamicFeedAddCopyBvidButton: false,
+  __internalDynamicFeedExternalSearchInput: false, // more convenient
 }
 
 export type Settings = typeof initialSettings
