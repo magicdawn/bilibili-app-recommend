@@ -15,9 +15,9 @@ import pmap from 'promise.map'
 import type { Key } from 'react'
 import { QueueStrategy, usePopupContainer, type IService } from '../_base'
 import { ShuffleSettingsItemFor } from '../_shared'
-import type { FavItemExtend } from './define'
-import type { FavFolderListAllItem, FavFolderListAllJson } from './define/folder-list-all'
-import type { FavFolderDetailInfo, ResourceListJSON } from './define/resource-list'
+import type { FavItemExtend } from './types'
+import type { FavFolderListAllItem, FavFolderListAllJson } from './types/folder-list-all'
+import type { FavFolderDetailInfo, ResourceListJSON } from './types/resource-list'
 
 export function formatFavFolderUrl(id: number) {
   const uid = getUid()

@@ -12,7 +12,6 @@ import { proxyWithGmStorage } from '$utility/valtio'
 import { Button, Popover } from 'antd'
 import { useSnapshot } from 'valtio'
 import { QueueStrategy, type IService } from '../../_base'
-import type { RankingItem } from './api'
 import {
   RANKING_CATEGORIES,
   RANKING_CATEGORIES_GROUPDED,
@@ -21,6 +20,7 @@ import {
   type Category,
   type CategorySlug,
 } from './category'
+import type { RankingItem } from './types'
 
 export class RankingRecService implements IService {
   loaded = false

@@ -1,4 +1,4 @@
-import type { BiliPlayerConfig } from './player-config.d'
+import type { BiliPlayerConfig } from './player-config-types'
 
 export function getBiliPlayerConfig(): BiliPlayerConfig | undefined {
   const key = 'bpx_player_profile'

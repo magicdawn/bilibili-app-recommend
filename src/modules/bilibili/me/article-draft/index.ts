@@ -5,9 +5,9 @@
 import { isWebApiSuccess, request } from '$request'
 import { getCsrfToken } from '$utility/cookie'
 import { toast } from '$utility/toast'
-import type { AddUpdateJSON } from './define/addupdate'
-import type { DraftListJSON } from './define/draft-list'
-import type { DraftViewJSON } from './define/draft-view'
+import type { AddUpdateJSON } from './types/addupdate'
+import type { DraftListJSON } from './types/draft-list'
+import type { DraftViewJSON } from './types/draft-view'
 
 async function listAll() {
   const json = (await request.get('https://member.bilibili.com/x/web/draft/list'))

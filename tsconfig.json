@@ -25,6 +25,9 @@
     "jsx": "react-jsx",
     "jsxImportSource": "@emotion/react",
 
+    //
+    "moduleDetection": "force",
+
     /* Linting */
     "strict": true,
     // "noUnusedLocals": true,

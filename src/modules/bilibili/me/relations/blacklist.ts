@@ -7,8 +7,8 @@ import { isWebApiSuccess, request } from '$request'
 import { whenIdle } from '$utility'
 import { proxySetWithGmStorage } from '$utility/valtio'
 import { useSnapshot } from 'valtio'
-import type { ListBlackJson } from './api.list-black'
 import { modifyRelations } from './common'
+import type { ListBlackJson } from './types/list-black'
 
 const debug = baseDebug.extend('service:user:relations:blacklist')
 

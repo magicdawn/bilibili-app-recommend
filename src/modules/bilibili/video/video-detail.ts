@@ -1,7 +1,7 @@
 import { request } from '$request'
 import { wrapWithIdbCache } from '$utility/idb'
 import ms from 'ms'
-import type { VideoDetailJson } from './api.video-detail'
+import type { VideoDetailJson } from './video-detail-types'
 
 /**
  * @see https://socialsisteryi.github.io/bilibili-API-collect/docs/video/info.html

@@ -5,9 +5,7 @@
 import type { RankingItemExtend, RankingItemExtendProps } from '$define'
 import { groupBy } from 'es-toolkit'
 import type { Merge, SetOptional } from 'type-fest'
-import type { BangumiRankingItem } from './api.bangumi-category'
-import type { CinemaRankingItem } from './api.cinema-category'
-import type { NormalRankingItem } from './api.normal-category'
+import type { BangumiRankingItem, CinemaRankingItem, NormalRankingItem } from './types'
 
 // /x/web-interface/ranking/v2?rid=0&type=all
 export type NormalCategory = {

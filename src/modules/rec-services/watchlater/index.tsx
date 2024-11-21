@@ -8,7 +8,7 @@ import { proxy, useSnapshot } from 'valtio'
 import { proxySet } from 'valtio/utils'
 import { QueueStrategy, type IService } from '../_base'
 import { getAllWatchlaterItemsV2, getWatchlaterItemFrom } from './api'
-import { type WatchlaterItem } from './api.d'
+import { type WatchlaterItem } from './types'
 import { WatchLaterUsageInfo } from './usage-info'
 
 export const watchlaterState = proxy({

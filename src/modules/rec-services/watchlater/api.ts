@@ -1,7 +1,7 @@
 import { appWarn } from '$common'
 import { encWbi } from '$modules/bilibili/risk-control'
 import { isWebApiSuccess, request } from '$request'
-import type { WatchlaterItem, WatchlaterJson } from './api.d'
+import type { WatchlaterItem, WatchlaterJson } from './types'
 
 /**
  * 一次性获取所有「稍后再看」

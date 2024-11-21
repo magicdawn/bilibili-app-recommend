@@ -1,4 +1,4 @@
-import { type BiliPlayer } from './player.d'
+import { type BiliPlayer } from './player-types'
 
 export function getBiliPlayer(): BiliPlayer | undefined {
   if (typeof unsafeWindow === 'undefined') return

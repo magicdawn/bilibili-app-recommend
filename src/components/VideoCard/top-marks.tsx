@@ -4,11 +4,11 @@ import type { RankingItemExtend, RecItemType } from '$define'
 import { EApiType } from '$define/index.shared'
 import { openNewTab } from '$modules/gm'
 import { LiveIcon } from '$modules/icon'
-import type { NormalRankingItem } from '$modules/rec-services/hot/ranking/api.normal-category'
 import {
   RANKING_CATEGORIES_MAP,
   isNormalRankingItem,
 } from '$modules/rec-services/hot/ranking/category'
+import type { NormalRankingItem } from '$modules/rec-services/hot/ranking/types'
 import { Dropdown } from 'antd'
 import { size } from 'polished'
 import IconParkOutlineMore from '~icons/icon-park-outline/more'

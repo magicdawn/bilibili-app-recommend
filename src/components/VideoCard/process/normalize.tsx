@@ -25,7 +25,7 @@ import {
 } from '$define'
 import type { EApiType } from '$define/index.shared'
 import { IconPark } from '$modules/icon/icon-park'
-import type { FavItemExtend } from '$modules/rec-services/fav/define'
+import type { FavItemExtend } from '$modules/rec-services/fav/types'
 import {
   isBangumiRankingItem,
   isCinemaRankingItem,

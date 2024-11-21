@@ -7,9 +7,9 @@ import { proxy } from 'valtio'
 import { subscribeKey } from 'valtio/utils'
 import type { getDynamicFeedServiceConfig } from '.'
 import { getAllFollowGroups } from './group'
-import type { FollowGroup } from './group/groups'
+import type { FollowGroup } from './group/groups.json'
 import { getRecentUpdateUpList } from './up'
-import type { DynamicPortalUp } from './up/portal'
+import type { DynamicPortalUp } from './up/portal-types'
 
 /**
  * view dynamic of <mid> via query

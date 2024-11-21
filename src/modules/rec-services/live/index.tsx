@@ -5,8 +5,8 @@ import { isWebApiSuccess, request } from '$request'
 import { toast } from '$utility'
 import dayjs from 'dayjs'
 import type { IService } from '../_base'
-import type { ListFollowingLiveJson } from './define/list-live'
 import { ELiveStatus } from './live-enum'
+import type { ListFollowingLiveJson } from './types/list-live'
 
 export async function getLiveList(page: number) {
   const res = await request.get('https://api.live.bilibili.com/xlive/web-ucenter/user/following', {
