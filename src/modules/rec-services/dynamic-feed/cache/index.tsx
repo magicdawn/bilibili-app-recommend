@@ -1,6 +1,7 @@
 import type { DynamicFeedItem } from '$define'
+import { AntdNotification } from '$utility'
 import { getIdbCache } from '$utility/idb'
-import { uniqBy } from 'es-toolkit'
+import { throttle, uniqBy } from 'es-toolkit'
 import { fetchVideoDynamicFeeds } from '../api'
 import type { UpMidType } from '../store'
 
@@ -13,13 +14,42 @@ export async function hasLocalDynamicFeedCache(upMid: UpMidType) {
   return !!existing?.count
 }
 
-export async function updateLocalDynamicFeedCache(upMid: UpMidType) {
+export function createUpdateSearchCacheNotifyFns(upMid: UpMidType, upName: string) {
+  const notiKey = (mid: UpMidType) => `update-search-cache-${mid}`
+
+  const _onProgress: OnProgress = (page: number, total: number) => {
+    AntdNotification.info({
+      icon: <IconSvgSpinnersBarsRotateFade {...size(16)} />,
+      key: notiKey(upMid),
+      message: `搜索缓存更新中...`,
+      description: `「${upName}」更新中: Page(${page}) Total(${total})`,
+      duration: null, // do not auto close
+    })
+  }
+
+  // do not update UI too frequently
+  const onProgress = throttle(_onProgress, 200)
+
+  const onSuccess = () => {
+    onProgress.flush()
+    AntdNotification.success({
+      key: notiKey(upMid),
+      message: `缓存更新成功`,
+      description: `「${upName}」的搜索缓存更新成功`,
+      duration: null, // do not auto close
+    })
+  }
+
+  return { notifyOnProgress: onProgress, notifyOnSuccess: onSuccess }
+}
+
+export async function updateLocalDynamicFeedCache(upMid: UpMidType, onProgress?: OnProgress) {
   if (await hasLocalDynamicFeedCache(upMid)) {
     // perform incremental update
     await performIncrementalUpdate(upMid)
   } else {
     // perform full update
-    await performFullUpdate(upMid)
+    await performFullUpdate(upMid, undefined, onProgress)
   }
 }
 
@@ -73,7 +103,9 @@ const fullUpdateInProgressCache = getIdbCache<{
   items: DynamicFeedItem[]
 }>('dynamic-feed-items-in-progress')
 
-async function performFullUpdate(upMid: UpMidType, skipCache = false) {
+export type OnProgress = (page: number, total: number) => void
+
+async function performFullUpdate(upMid: UpMidType, skipCache = false, onProgress?: OnProgress) {
   const inProgressCached = skipCache ? undefined : await fullUpdateInProgressCache.get(upMid)
   let page = inProgressCached?.page ?? 1
   let offset = inProgressCached?.offset ?? ''
@@ -90,6 +122,9 @@ async function performFullUpdate(upMid: UpMidType, skipCache = false) {
 
     // save cache for future continuation
     await fullUpdateInProgressCache.set(upMid, { page, offset, items: allItems })
+
+    // report progress
+    onProgress?.(page, allItems.length)
   }
 
   // completed

@@ -8,7 +8,7 @@ import { AntdTooltip } from '$components/_base/antd-custom'
 import { colorPrimaryValue } from '$components/css-vars'
 import { IconPark } from '$modules/icon/icon-park'
 import { settings, updateSettings, useSettingsSnapshot } from '$modules/settings'
-import { AntdMessage, AntdNotification } from '$utility'
+import { AntdMessage } from '$utility'
 import { getAvatarSrc } from '$utility/image'
 import type { AntdMenuItemType } from '$utility/type'
 import { useRequest } from 'ahooks'
@@ -21,6 +21,7 @@ import TablerFilter from '~icons/tabler/filter'
 import TablerFilterCheck from '~icons/tabler/filter-check'
 import { usePopupContainer } from '../_base'
 import {
+  createUpdateSearchCacheNotifyFns,
   hasLocalDynamicFeedCache,
   localDynamicFeedInfoCache,
   updateLocalDynamicFeedCache,
@@ -414,9 +415,16 @@ function SearchCacheRelated() {
     useSettingsSnapshot()
   const { hasSelectedUp, upMid, upName } = useSnapshot(dfStore)
 
-  const $req = useRequest((upMid: UpMidType) => updateLocalDynamicFeedCache(upMid), {
-    manual: true,
-  })
+  const $req = useRequest(
+    async (upMid: UpMidType, upName: string) => {
+      const { notifyOnProgress, notifyOnSuccess } = createUpdateSearchCacheNotifyFns(upMid, upName)
+      await updateLocalDynamicFeedCache(upMid, notifyOnProgress)
+      notifyOnSuccess()
+    },
+    {
+      manual: true,
+    },
+  )
 
   const checked = useMemo(
     () => !!upMid && __internalDynamicFeedCacheAllItemsUpMids.includes(upMid.toString()),
@@ -456,12 +464,7 @@ function SearchCacheRelated() {
               <Button
                 loading={$req.loading}
                 onClick={async () => {
-                  const _upName = upName
-                  await $req.runAsync(upMid)
-                  AntdNotification.success({
-                    message: `缓存更新成功`,
-                    description: `「${_upName}」的搜索缓存更新成功`,
-                  })
+                  await $req.runAsync(upMid, upName)
                 }}
               >
                 更新缓存
