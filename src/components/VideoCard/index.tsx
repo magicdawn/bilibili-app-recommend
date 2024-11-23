@@ -27,7 +27,11 @@ import { useIsDarkMode } from '$modules/dark-mode'
 import { openNewTab } from '$modules/gm'
 import { DislikeIcon, OpenExternalLinkIcon, WatchLaterIcon } from '$modules/icon'
 import { IconPark } from '$modules/icon/icon-park'
-import { SELECTED_KEY_ALL, dfStore } from '$modules/rec-services/dynamic-feed/store'
+import {
+  SELECTED_KEY_ALL,
+  SELECTED_KEY_PREFIX_GROUP,
+  dfStore,
+} from '$modules/rec-services/dynamic-feed/store'
 import { dynamicFeedFilterSelectUp } from '$modules/rec-services/dynamic-feed/usage-info'
 import { formatFavFolderUrl } from '$modules/rec-services/fav'
 import { UserFavService, defaultFavFolderName } from '$modules/rec-services/fav/user-fav.service'
@@ -166,8 +170,13 @@ const VideoCardInner = memo(function VideoCardInner({
   emitter = defaultEmitter,
   watchlaterAdded,
 }: VideoCardInnerProps) {
-  const { autoPreviewWhenHover, accessKey, styleUseCardBorder, styleUseCardBorderOnlyOnHover } =
-    useSettingsSnapshot()
+  const {
+    autoPreviewWhenHover,
+    accessKey,
+    styleUseCardBorder,
+    styleUseCardBorderOnlyOnHover,
+    dynamicFeedWhenViewAllEnableHideSomeContents,
+  } = useSettingsSnapshot()
   const authed = Boolean(accessKey)
 
   const {
@@ -442,17 +451,32 @@ const VideoCardInner = memo(function VideoCardInner({
 
   // 不再 stick on camelCase 后, 腰不酸了, 腿不疼了~
   const hasEntry_addMidTo_dynamicFeedWhenViewAllHideMids =
-    isDynamic(item) && dfStore.selectedKey === SELECTED_KEY_ALL && !!authorMid
+    dynamicFeedWhenViewAllEnableHideSomeContents &&
+    isDynamic(item) &&
+    dfStore.selectedKey === SELECTED_KEY_ALL &&
+    !!authorMid
+  const hasEntry_addFollowGroupIdTo_dynamicFeedWhenViewAllHideMids =
+    dynamicFeedWhenViewAllEnableHideSomeContents &&
+    isDynamic(item) &&
+    dfStore.selectedKey.startsWith(SELECTED_KEY_PREFIX_GROUP)
   const onAddMidTo_dynamicFeedWhenViewAllHideMids = useMemoizedFn(async () => {
     if (!hasEntry_addMidTo_dynamicFeedWhenViewAllHideMids) return
-    const set = new Set(settings.dynamicFeedWhenViewAllHideMids)
+    const set = new Set(settings.dynamicFeedWhenViewAllHideIds)
     set.add(authorMid)
-    updateSettings({ dynamicFeedWhenViewAllHideMids: Array.from(set) })
+    updateSettings({ dynamicFeedWhenViewAllHideIds: Array.from(set) })
     setNicknameCache(authorMid, authorName || '')
     AntdMessage.success(`在「全部」动态中隐藏 ${authorName} 的动态`)
   })
+  const onAddFollowGroupIdTo_dynamicFeedWhenViewAllHideMids = useMemoizedFn(async () => {
+    if (!hasEntry_addFollowGroupIdTo_dynamicFeedWhenViewAllHideMids) return
+    if (!dfStore.selectedKey.startsWith(SELECTED_KEY_PREFIX_GROUP)) return
+    const set = new Set(settings.dynamicFeedWhenViewAllHideIds)
+    set.add(dfStore.selectedKey)
+    updateSettings({ dynamicFeedWhenViewAllHideIds: Array.from(set) })
+    AntdMessage.success(`在「全部」动态中隐藏 ${dfStore.selectedFollowGroup?.name} 的动态`)
+  })
 
-  type MenuArr = MenuProps['items']
+  type MenuArr = NonNullable<MenuProps['items']>
   const contextMenus: MenuArr = useMemo(() => {
     const watchlaterLabel = watchlaterAdded ? '移除稍后再看' : '稍后再看'
 
@@ -484,21 +508,92 @@ const VideoCardInner = memo(function VideoCardInner({
         },
     ].filter(Boolean)
 
-    const actionMenus: MenuArr = [
-      hasDislikeEntry && {
-        key: 'dislike',
-        label: '我不想看',
-        icon: <DislikeIcon width={15} height={15} />,
-        onClick() {
-          onTriggerDislike()
-        },
-      },
+    // I like this video
+    const positiveMenus: MenuArr = [
       hasDynamicFeedFilterSelectUpEntry && {
         key: 'dymamic-feed-filter-select-up',
         label: '查看 UP 的动态',
         icon: <IconPark name='PeopleSearch' size={15} />,
         onClick() {
           onDynamicFeedFilterSelectUp()
+        },
+      },
+
+      hasWatchLaterEntry && {
+        key: 'watchlater',
+        label: watchlaterLabel,
+        icon: watchlaterAdded ? (
+          <IconMaterialSymbolsDeleteOutlineRounded {...size(15)} />
+        ) : (
+          <WatchLaterIcon {...size(15)} />
+        ),
+        onClick() {
+          onToggleWatchLater()
+        },
+      },
+
+      ...(isWatchlater(item)
+        ? [
+            {
+              key: 'add-fav',
+              icon: (
+                <IconPark
+                  name='Star'
+                  size={15}
+                  {...(favFolderNames?.length
+                    ? {
+                        theme: 'two-tone',
+                        fill: ['currentColor', colorPrimaryValue],
+                      }
+                    : undefined)}
+                />
+              ),
+              label: favFolderNames?.length
+                ? `已收藏 ${favFolderNames.map((n) => `「${n}」`).join('')}`
+                : '快速收藏',
+              async onClick() {
+                if (!avid) return
+
+                const hasFaved = Boolean(favFolderNames?.length)
+
+                // 浏览收藏夹
+                if (hasFaved) {
+                  favFolderUrls?.forEach((u) => {
+                    window.open(u, getLinkTarget())
+                  })
+                }
+
+                // 快速收藏
+                else {
+                  const success = await UserFavService.addFav(avid)
+                  if (success) {
+                    AntdMessage.success(`已加入收藏夹「${defaultFavFolderName}」`)
+                  }
+                }
+              },
+            },
+            watchlaterAdded && {
+              key: 'watchlater-readd',
+              label: '重新添加稍候再看 (移到最前)',
+              icon: <IconPark name='AddTwo' size={15} />,
+              async onClick() {
+                const { success } = await onToggleWatchLater(undefined, watchlaterAdd)
+                if (!success) return
+                onMoveToFirst?.(item, cardData)
+              },
+            },
+          ]
+        : []),
+    ].filter((x) => typeof x !== 'boolean')
+
+    // I don't like this video
+    const dislikeMenus: MenuArr = [
+      hasDislikeEntry && {
+        key: 'dislike',
+        label: '我不想看',
+        icon: <DislikeIcon width={15} height={15} />,
+        onClick() {
+          onTriggerDislike()
         },
       },
       hasEntry_addMidTo_dynamicFeedWhenViewAllHideMids && {
@@ -524,66 +619,6 @@ const VideoCardInner = memo(function VideoCardInner({
         label: '将 UP 加入过滤列表',
         icon: <IconPark name='PeopleDelete' size={15} />,
         onClick: onAddUpToFilterList,
-      },
-      item.api === EApiType.Watchlater && {
-        key: 'add-fav',
-        icon: (
-          <IconPark
-            name='Star'
-            size={15}
-            {...(favFolderNames?.length
-              ? {
-                  theme: 'two-tone',
-                  fill: ['currentColor', colorPrimaryValue],
-                }
-              : undefined)}
-          />
-        ),
-        label: favFolderNames?.length
-          ? `已收藏 ${favFolderNames.map((n) => `「${n}」`).join('')}`
-          : '快速收藏',
-        async onClick() {
-          if (!avid) return
-
-          const hasFaved = Boolean(favFolderNames?.length)
-
-          // 浏览收藏夹
-          if (hasFaved) {
-            favFolderUrls?.forEach((u) => {
-              window.open(u, getLinkTarget())
-            })
-          }
-
-          // 快速收藏
-          else {
-            const success = await UserFavService.addFav(avid)
-            if (success) {
-              AntdMessage.success(`已加入收藏夹「${defaultFavFolderName}」`)
-            }
-          }
-        },
-      },
-      hasWatchLaterEntry && {
-        key: 'watchlater',
-        label: watchlaterLabel,
-        icon: watchlaterAdded ? (
-          <IconMaterialSymbolsDeleteOutlineRounded {...size(15)} />
-        ) : (
-          <WatchLaterIcon {...size(15)} />
-        ),
-        onClick() {
-          onToggleWatchLater()
-        },
-      },
-      watchlaterAdded && {
-        key: 'watchlater-readd',
-        label: '重新添加稍候再看 (移到最前)',
-        icon: <IconPark name='AddTwo' size={15} />,
-        async onClick() {
-          const { success } = await onToggleWatchLater(undefined, watchlaterAdd)
-          if (!success) return
-          onMoveToFirst?.(item, cardData)
-        },
       },
     ].filter(Boolean)
 
@@ -625,15 +660,18 @@ const VideoCardInner = memo(function VideoCardInner({
       !!copyMenus.length && divider,
       ...copyMenus,
 
-      !!actionMenus.length && divider,
-      ...actionMenus,
+      !!positiveMenus.length && divider,
+      ...positiveMenus,
+
+      !!dislikeMenus.length && divider,
+      ...dislikeMenus,
 
       !!favMenus.length && divider,
       ...favMenus,
 
       !!conditionalOpenMenus.length && divider,
       ...conditionalOpenMenus,
-    ].filter(Boolean)
+    ].filter((x) => typeof x !== 'boolean')
   }, [
     item,
     hasWatchLaterEntry,

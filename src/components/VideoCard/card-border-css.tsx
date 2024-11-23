@@ -42,7 +42,7 @@ export function useCardBorderCss(): TheCssType {
     styleUseCardBoxShadow: useBoxShadow,
     styleUseWhiteBackground,
     useDelayForHover,
-    __internalVideoCardUsePadding,
+    styleUseCardPadding,
   } = useSettingsSnapshot()
 
   const dark = useIsDarkMode()
@@ -76,7 +76,7 @@ export function useCardBorderCss(): TheCssType {
         // add padding & negative margin
         useBorderOnlyOnHover &&
           !useBoxShadow &&
-          __internalVideoCardUsePadding &&
+          styleUseCardPadding &&
           css`
             margin-inline: -6px;
             .bili-video-card__wrap {
@@ -93,7 +93,7 @@ export function useCardBorderCss(): TheCssType {
     dark,
     styleUseWhiteBackground,
     useDelayForHover,
-    __internalVideoCardUsePadding,
+    styleUseCardPadding,
   ])
 }
 

@@ -22,10 +22,11 @@ import { CSS } from '@dnd-kit/utilities'
 import { Checkbox, Col, Collapse, Empty, Radio, Space } from 'antd'
 import { TagItemDisplay, UpTagItemDisplay } from '../EditableListSettingItem'
 import styles from '../index.module.scss'
+import { explainForFlag } from '../index.shared'
 import { ResetPartialSettingsButton } from './_shared'
 
 export function TabPaneVideoSourceTabConfig() {
-  const { appApiDecice } = useSettingsSnapshot()
+  const { appApiDecice, dynamicFeedWhenViewAllEnableHideSomeContents } = useSettingsSnapshot()
   const sortedTabKeys = useSortedTabKeys()
 
   return (
@@ -143,7 +144,7 @@ export function TabPaneVideoSourceTabConfig() {
                 />
                 <CheckboxSettingItem
                   configKey='dynamicFeedShowLive'
-                  label='在动态里显示直播'
+                  label='在动态中显示直播'
                   tooltip={
                     <>
                       动态里显示正在直播的 UP
@@ -152,20 +153,35 @@ export function TabPaneVideoSourceTabConfig() {
                     </>
                   }
                 />
-
-                <Collapse
-                  size='small'
-                  css={css`
-                    width: 100%;
-                  `}
-                  items={[
-                    {
-                      key: '1',
-                      label: '在「全部」动态中隐藏 UP 的动态',
-                      children: <DynamicFeedWhenViewAllHideMidsPanel />,
-                    },
-                  ]}
+                <CheckboxSettingItem
+                  configKey='dynamicFeedWhenViewAllEnableHideSomeContents'
+                  label='「全部」动态过滤'
+                  tooltip={
+                    <>
+                      查看「全部」动态时 <br />
+                      {explainForFlag(
+                        '将添加右键菜单, 点击可添加到「全部」动态的过滤列表',
+                        '关闭此功能',
+                      )}
+                    </>
+                  }
                 />
+
+                {dynamicFeedWhenViewAllEnableHideSomeContents && (
+                  <Collapse
+                    size='small'
+                    css={css`
+                      width: 100%;
+                    `}
+                    items={[
+                      {
+                        key: '1',
+                        label: '在「全部」动态中隐藏 UP/分组 的动态',
+                        children: <DynamicFeedWhenViewAllHideMidsPanel />,
+                      },
+                    ]}
+                  />
+                )}
               </div>
             </div>
 
@@ -340,15 +356,15 @@ function VideoSourceTabSortableItem({ id }: { id: ETab }) {
 }
 
 function DynamicFeedWhenViewAllHideMidsPanel() {
-  const { dynamicFeedWhenViewAllHideMids } = useSettingsSnapshot()
+  const { dynamicFeedWhenViewAllHideIds } = useSettingsSnapshot()
 
   const onDelete = useMemoizedFn((mid: string) => {
-    const set = new Set(settings.dynamicFeedWhenViewAllHideMids)
+    const set = new Set(settings.dynamicFeedWhenViewAllHideIds)
     set.delete(mid)
-    updateSettings({ dynamicFeedWhenViewAllHideMids: Array.from(set) })
+    updateSettings({ dynamicFeedWhenViewAllHideIds: Array.from(set) })
   })
 
-  const empty = !dynamicFeedWhenViewAllHideMids.length
+  const empty = !dynamicFeedWhenViewAllHideIds.length
   if (empty) {
     return (
       <div className='flex items-center justify-center'>
@@ -359,7 +375,7 @@ function DynamicFeedWhenViewAllHideMidsPanel() {
 
   return (
     <div className='flex flex-wrap gap-x-10 gap-y-5 max-h-250px overflow-y-scroll'>
-      {dynamicFeedWhenViewAllHideMids.map((tag) => {
+      {dynamicFeedWhenViewAllHideIds.map((tag) => {
         return (
           <TagItemDisplay
             tag={tag}

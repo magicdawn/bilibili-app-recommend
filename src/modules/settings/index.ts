@@ -70,7 +70,9 @@ export const initialSettings = {
    */
   dynamicFeedShowLive: true, // 在动态中显示直播
   dynamicFeedEnableFollowGroupFilter: true, // 下拉筛选支持 - 关注分组
-  dynamicFeedWhenViewAllHideMids: [] as string[], // 在「全部」动态中隐藏 UP 的动态
+  // 在「全部」动态中隐藏 UP 的动态 & 在「全部」动态中隐藏此分组的动态
+  dynamicFeedWhenViewAllEnableHideSomeContents: false, // the flag
+  dynamicFeedWhenViewAllHideIds: [] as string[], // `${mid}` | `follow-group:${id}`
 
   /**
    * tab=watchlater
@@ -158,6 +160,7 @@ export const initialSettings = {
   styleUseCardBorder: true,
   styleUseCardBorderOnlyOnHover: true,
   styleUseCardBoxShadow: false,
+  styleUseCardPadding: false,
 
   /**
    * 颜色主题
@@ -186,7 +189,6 @@ export const initialSettings = {
    * internal
    */
   __internalEnableCopyBvidInfoContextMenu: false,
-  __internalVideoCardUsePadding: false,
   __internalHotSubUseDropdown: false,
 
   __internalDynamicFeedCacheAllItemsEntry: false,

@@ -65,6 +65,8 @@ export const DynamicFeedVideoMinDurationConfig: Record<
 }
 
 export const SELECTED_KEY_ALL = 'all'
+export const SELECTED_KEY_PREFIX_UP = 'up:'
+export const SELECTED_KEY_PREFIX_GROUP = 'group:'
 
 /**
  * df expand to `dynamic-feed`
@@ -95,8 +97,9 @@ export const dfStore = proxy({
 
   // 筛选 UP & 分组 select 控件的 key
   get selectedKey() {
-    if (this.upMid) return `up:${this.upMid}`
-    if (this.selectedFollowGroup) return `group:${this.selectedFollowGroup.tagid}`
+    if (this.upMid) return `${SELECTED_KEY_PREFIX_UP}${this.upMid}`
+    if (this.selectedFollowGroup)
+      return `${SELECTED_KEY_PREFIX_GROUP}${this.selectedFollowGroup.tagid}`
     return SELECTED_KEY_ALL
   },
 

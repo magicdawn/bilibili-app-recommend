@@ -166,6 +166,12 @@ export function TabPaneCustomUI() {
             label='延迟悬浮预览'
             tooltip={<>延迟悬浮预览</>}
           />
+
+          <CheckboxSettingItem
+            configKey='styleUseCardPadding'
+            label='卡片外扩'
+            tooltip={<>卡片会外扩一点距离</>}
+          />
         </div>
       </SettingsGroup>
     </div>
