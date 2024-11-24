@@ -24,7 +24,7 @@ import { UserFavService, defaultFavFolderName } from '$modules/rec-services/fav/
 import { settings, updateSettings, useSettingsSnapshot } from '$modules/settings'
 import { AntdMessage, toast } from '$utility'
 import type { MenuProps } from 'antd'
-import { delay, omit } from 'es-toolkit'
+import { delay, isNil, omit } from 'es-toolkit'
 import { size } from 'polished'
 import type { MouseEvent } from 'react'
 import { copyContent } from '.'
@@ -44,7 +44,7 @@ export function defineContextMenus(
   arr: Array<(ContextMenuItem & { test?: boolean | (() => boolean) }) | undefined | null | false>,
 ): ContextMenuItem[] {
   return arr
-    .filter((x) => typeof x !== 'undefined' && typeof x !== 'boolean' && x !== null) // infer predicate
+    .filter((x) => !isNil(x) && x !== false) // inferred type predicate
     .map((x) => {
       const testResult =
         typeof x.test === 'undefined' ? true : typeof x.test === 'function' ? x.test() : x.test
