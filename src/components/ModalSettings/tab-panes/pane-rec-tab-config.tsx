@@ -34,7 +34,7 @@ import styles from '../index.module.scss'
 import { explainForFlag } from '../index.shared'
 import { ResetPartialSettingsButton } from './_shared'
 
-export function TabPaneVideoSourceTabConfig() {
+export function TabPaneRecTabsConfig() {
   const { appApiDecice, dynamicFeedWhenViewAllEnableHideSomeContents } = useSettingsSnapshot()
   const sortedTabKeys = useSortedTabKeys()
 

@@ -12,7 +12,7 @@ import { TabPaneAdvance } from './tab-panes/pane-advance'
 import { TabPaneBasic } from './tab-panes/pane-basic'
 import { TabPaneCustomUI, useHotkeyForConfigBorder } from './tab-panes/pane-custom-ui'
 import { TabPaneFilter } from './tab-panes/pane-filter'
-import { TabPaneVideoSourceTabConfig } from './tab-panes/pane-video-source-tab-config'
+import { TabPaneRecTabsConfig } from './tab-panes/pane-rec-tab-config'
 import { ThemesSelect } from './theme'
 
 function useHotkeyForConfig(
@@ -141,7 +141,7 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
             {
               label: 'Tab 设置',
               key: TabPaneKey.VideoSourceTabConfig,
-              children: <TabPaneVideoSourceTabConfig />,
+              children: <TabPaneRecTabsConfig />,
             },
             {
               label: '高级设置',
