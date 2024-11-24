@@ -19,6 +19,12 @@ export const QUERY_DYNAMIC_OFFSET = searchParams.get('dyn-offset') // where to s
 export const QUERY_DYNAMIC_SEARCH_TEXT = QUERY_DYNAMIC_UP_MID // only support using with `dyn-mid`
   ? searchParams.get('dyn-search') || undefined
   : undefined
+export const QUERY_DYNAMIC_MIN_ID = QUERY_DYNAMIC_UP_MID // only support using with `dyn-mid`, dyn.id_str >= dyn-min-id, stands for `update since`
+  ? searchParams.get('dyn-min-id')
+  : undefined
+export const QUERY_DYNAMIC_MIN_TS = QUERY_DYNAMIC_MIN_ID // only support using with `dyn-min-id`, dyn.publish-time >= dyn-min-ts, stands for `update since`
+  ? searchParams.get('dyn-min-ts')
+  : undefined
 
 let upMidInitial: UpMidType | undefined = undefined
 let upNameInitial: string | undefined = undefined

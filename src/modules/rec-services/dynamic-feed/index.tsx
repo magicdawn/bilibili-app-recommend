@@ -19,6 +19,8 @@ import { getFollowGroupContent } from './group'
 import {
   DynamicFeedVideoMinDuration,
   DynamicFeedVideoType,
+  QUERY_DYNAMIC_MIN_ID,
+  QUERY_DYNAMIC_MIN_TS,
   QUERY_DYNAMIC_OFFSET,
   QUERY_DYNAMIC_UP_MID,
   SELECTED_KEY_ALL,
@@ -74,6 +76,8 @@ export function getDynamicFeedServiceConfig() {
      * from query
      */
     startingOffset: QUERY_DYNAMIC_OFFSET,
+    minId: QUERY_DYNAMIC_MIN_ID,
+    minTs: QUERY_DYNAMIC_MIN_TS,
   }
 }
 
@@ -263,6 +267,26 @@ export class DynamicFeedRecService implements IService {
       this.hasMoreDynFeed = data.has_more
       this.offset = data.offset
       rawItems = data.items
+
+      /**
+       * stop load more if there are `update since` conditions
+       */
+      if (this.config.minId && /^\d+$/.test(this.config.minId)) {
+        const minId = BigInt(this.config.minId)
+        const idx = rawItems.findIndex((x) => BigInt(x.id_str) <= minId)
+        if (idx !== -1) {
+          this.hasMoreDynFeed = false
+          rawItems = rawItems.slice(0, idx + 1) // include minId
+        }
+      }
+      if (this.config.minTs && /^\d+$/.test(this.config.minTs)) {
+        const minTs = Number(this.config.minTs)
+        const idx = rawItems.findIndex((x) => x.modules.module_author.pub_ts <= minTs)
+        if (idx !== -1) {
+          this.hasMoreDynFeed = false
+          rawItems = rawItems.slice(0, idx + 1) // include minTs
+        }
+      }
     }
 
     // viewingSomeGroup: ensure current follow-group's mids loaded
