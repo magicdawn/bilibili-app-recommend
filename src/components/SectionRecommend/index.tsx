@@ -45,12 +45,13 @@ export function SectionRecommend() {
         style={{ marginBottom: 30 }}
       >
         {showSkeleton
-          ? skeletonPlaceholders.map((id) => <VideoCard key={id} />)
+          ? skeletonPlaceholders.map((id) => <VideoCard key={id} tab={tab} />)
           : items.map((item) => {
               return item.api === EApiType.Separator ? null : (
                 <VideoCard
                   key={item.uniqId}
                   item={item}
+                  tab={tab}
                   className={clsx(APP_CLS_CARD)}
                   css={cardBorderCss}
                 />

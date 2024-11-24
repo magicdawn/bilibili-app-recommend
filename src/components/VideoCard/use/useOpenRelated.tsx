@@ -10,6 +10,7 @@ import { delay } from 'es-toolkit'
 import type { ComponentProps, MouseEvent, MouseEventHandler, ReactNode, RefObject } from 'react'
 import type { PreviewImageRef } from '../child-components/PreviewImage'
 import { VideoCardActionButton } from '../child-components/VideoCardActions'
+import type { ContextMenuItem } from '../context-menus'
 import {
   ForceAutoPlay,
   VideoLinkOpenMode as Mode,
@@ -129,7 +130,7 @@ export function useOpenRelated({
     window.open(iinaUrl, '_self')
   }
 
-  const consistentOpenMenus = useMemo(() => {
+  const consistentOpenMenus: ContextMenuItem[] = useMemo(() => {
     return Object.values(VideoLinkOpenMode)
       .filter((mode) => typeof ModeConfig[mode].enabled === 'undefined')
       .map((mode) => {
@@ -142,7 +143,7 @@ export function useOpenRelated({
       })
   }, [])
 
-  const conditionalOpenMenus = useMemo(() => {
+  const conditionalOpenMenus: ContextMenuItem[] = useMemo(() => {
     return Object.values(Mode).filter(
       (mode) => typeof ModeConfig[mode].enabled === 'boolean' && ModeConfig[mode].enabled,
     ).length

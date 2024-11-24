@@ -15,6 +15,7 @@ declare global {
   const IconMaterialSymbolsLightOpenInNewOff: typeof import('~icons/material-symbols-light/open-in-new-off.jsx')['default']
   const IconMdiShuffleDisabled: typeof import('~icons/mdi/shuffle-disabled.jsx')['default']
   const IconMingcuteUserHideLine: typeof import('~icons/mingcute/user-hide-line.jsx')['default']
+  const IconMynauiUsersGroup: typeof import('~icons/mynaui/users-group.jsx')['default']
   const IconRadixIconsPerson: typeof import('~icons/radix-icons/person.jsx')['default']
   const IconSvgSpinnersBarsRotateFade: typeof import('~icons/svg-spinners/bars-rotate-fade.jsx')['default']
   const IconTablerFaceIdError: typeof import('~icons/tabler/face-id-error.jsx')['default']

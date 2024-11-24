@@ -1,3 +1,4 @@
+import { inlineFlexVerticalCenterStyle } from '$common/emotion-css'
 import { CheckboxSettingItem } from '$components/ModalSettings/setting-item'
 import { useSortedTabKeys } from '$components/RecHeader/tab'
 import { TabConfig, TabIcon } from '$components/RecHeader/tab-config'
@@ -5,10 +6,17 @@ import { ETab, TabKeys } from '$components/RecHeader/tab-enum'
 import { HelpInfo } from '$components/_base/HelpInfo'
 import { AntdTooltip } from '$components/_base/antd-custom'
 import { EAppApiDevice } from '$define/index.shared'
+import { getUserNickname } from '$modules/bilibili/user/nickname'
 import { useIsDarkMode } from '$modules/dark-mode'
 import { IconPark } from '$modules/icon/icon-park'
+import type { FollowGroup } from '$modules/rec-services/dynamic-feed/group/groups-types'
+import {
+  SELECTED_KEY_PREFIX_GROUP,
+  SELECTED_KEY_PREFIX_UP,
+  dfStore,
+} from '$modules/rec-services/dynamic-feed/store'
 import { settings, updateSettings, useSettingsSnapshot } from '$modules/settings'
-import { AntdMessage } from '$utility'
+import { AntdMessage, getUid } from '$utility'
 import type { DragEndEvent } from '@dnd-kit/core'
 import { DndContext, PointerSensor, closestCenter, useSensor, useSensors } from '@dnd-kit/core'
 import { restrictToParentElement, restrictToVerticalAxis } from '@dnd-kit/modifiers'
@@ -20,7 +28,8 @@ import {
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { Checkbox, Col, Collapse, Empty, Radio, Space } from 'antd'
-import { TagItemDisplay, UpTagItemDisplay } from '../EditableListSettingItem'
+import { useSnapshot } from 'valtio'
+import { TagItemDisplay } from '../EditableListSettingItem'
 import styles from '../index.module.scss'
 import { explainForFlag } from '../index.shared'
 import { ResetPartialSettingsButton } from './_shared'
@@ -177,7 +186,7 @@ export function TabPaneVideoSourceTabConfig() {
                       {
                         key: '1',
                         label: '在「全部」动态中隐藏 UP/分组 的动态',
-                        children: <DynamicFeedWhenViewAllHideMidsPanel />,
+                        children: <DynamicFeedWhenViewAllHideIdsPanel />,
                       },
                     ]}
                   />
@@ -355,13 +364,18 @@ function VideoSourceTabSortableItem({ id }: { id: ETab }) {
   )
 }
 
-function DynamicFeedWhenViewAllHideMidsPanel() {
+function DynamicFeedWhenViewAllHideIdsPanel() {
   const { dynamicFeedWhenViewAllHideIds } = useSettingsSnapshot()
 
   const onDelete = useMemoizedFn((mid: string) => {
     const set = new Set(settings.dynamicFeedWhenViewAllHideIds)
     set.delete(mid)
     updateSettings({ dynamicFeedWhenViewAllHideIds: Array.from(set) })
+  })
+
+  const { followGroups } = useSnapshot(dfStore)
+  useMount(() => {
+    dfStore.updateFollowGroups()
   })
 
   const empty = !dynamicFeedWhenViewAllHideIds.length
@@ -374,16 +388,107 @@ function DynamicFeedWhenViewAllHideMidsPanel() {
   }
 
   return (
-    <div className='flex flex-wrap gap-x-10 gap-y-5 max-h-250px overflow-y-scroll'>
+    <div className='flex flex-wrap gap-10 max-h-250px overflow-y-scroll'>
       {dynamicFeedWhenViewAllHideIds.map((tag) => {
         return (
           <TagItemDisplay
             tag={tag}
             onDelete={onDelete}
-            renderTag={(t) => <UpTagItemDisplay tag={t} />}
+            renderTag={(t) => (
+              <DynamicFeedWhenViewAllHideIdTag tag={t} followGroups={followGroups} />
+            )}
           />
         )
       })}
     </div>
+  )
+}
+
+function DynamicFeedWhenViewAllHideIdTag({
+  tag,
+  followGroups,
+}: {
+  tag: string
+  followGroups?: FollowGroup[]
+}) {
+  let mid: string | undefined
+  let followGroupId: string | undefined
+  let invalid = false
+  if (tag.startsWith(SELECTED_KEY_PREFIX_UP)) {
+    mid = tag.slice(SELECTED_KEY_PREFIX_UP.length)
+  } else if (tag.startsWith(SELECTED_KEY_PREFIX_GROUP)) {
+    followGroupId = tag.slice(SELECTED_KEY_PREFIX_GROUP.length)
+  } else {
+    invalid = true
+  }
+
+  // mid -> nickname
+  const [upNickname, setUpNickname] = useState<string | undefined>(undefined)
+  useMount(async () => {
+    if (!mid) return
+    const nickname = await getUserNickname(mid)
+    if (nickname) setUpNickname(nickname)
+  })
+
+  // followGroupId -> name
+  const [followGroupName, setFollowGroupName] = useState<string | undefined>(undefined)
+  useMount(async () => {
+    if (!followGroupId) return
+    const groupName = followGroups?.find((g) => g.tagid.toString() === followGroupId)?.name
+    if (groupName) setFollowGroupName(groupName)
+  })
+
+  const label = useMemo(
+    () => (mid ? upNickname || mid : followGroupId ? followGroupName || followGroupId : '无效数据'),
+    [mid, upNickname, followGroupId, followGroupName],
+  )
+
+  const tooltip = useMemo(
+    () => (mid ? `mid: ${mid}` : followGroupId ? `分组: ${followGroupId}` : `Tag: ${tag}`),
+    [mid, followGroupId, tag],
+  )
+
+  const icon = useMemo(
+    () =>
+      mid ? (
+        <IconRadixIconsPerson {...size(12)} className='mr-2' />
+      ) : followGroupId ? (
+        <IconMynauiUsersGroup {...size(16)} className='mr-2' />
+      ) : undefined,
+    [mid, followGroupId],
+  )
+
+  const href = useMemo(
+    () =>
+      mid
+        ? `https://space.bilibili.com/${mid}`
+        : followGroupId
+          ? `https://space.bilibili.com/${getUid()}/fans/follow?tagid=${followGroupId}`
+          : undefined,
+    [mid, followGroupId],
+  )
+
+  return (
+    <>
+      <AntdTooltip title={tooltip}>
+        <span
+          css={[
+            inlineFlexVerticalCenterStyle,
+            css`
+              cursor: ${mid ? 'pointer' : 'edit'};
+            `,
+          ]}
+        >
+          {icon}
+          {href ? (
+            <a href={href} target='_blank'>
+              {label}
+            </a>
+          ) : (
+            label
+          )}
+        </span>
+      </AntdTooltip>
+    </>
   )
 }

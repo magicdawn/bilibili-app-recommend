@@ -437,8 +437,8 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
       <div className={scopedClsNames.videoGridContainer}>
         <div className={gridClassName}>
           {new Array(28).fill(undefined).map((_, index) => {
-            const x = <VideoCard key={index} loading={true} className={APP_CLS_CARD} />
-            return <VideoCard key={index} loading={true} className={APP_CLS_CARD} />
+            const x = <VideoCard key={index} loading={true} className={APP_CLS_CARD} tab={tab} />
+            return <VideoCard key={index} loading={true} className={APP_CLS_CARD} tab={tab} />
           })}
         </div>
       </div>
@@ -486,6 +486,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
           onMoveToFirst={handleMoveCardToFirst}
           onRefresh={refresh}
           emitter={videoCardEmitters[index]}
+          tab={tab}
         />
       )
     }

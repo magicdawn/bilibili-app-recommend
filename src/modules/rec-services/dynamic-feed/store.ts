@@ -5,9 +5,8 @@ import { proxySetWithGmStorage } from '$utility/valtio'
 import ms from 'ms'
 import { proxy } from 'valtio'
 import { subscribeKey } from 'valtio/utils'
-import type { getDynamicFeedServiceConfig } from '.'
 import { getAllFollowGroups } from './group'
-import type { FollowGroup } from './group/groups.json'
+import type { FollowGroup } from './group/groups-types'
 import { getRecentUpdateUpList } from './up'
 import type { DynamicPortalUp } from './up/portal-types'
 
@@ -115,11 +114,15 @@ export const dfStore = proxy({
   get filterMinDurationValue() {
     return DynamicFeedVideoMinDurationConfig[this.filterMinDuration].duration
   },
+
+  /**
+   * methods
+   */
+  updateUpList,
+  updateFollowGroups,
 })
 
 export type DynamicFeedStore = typeof dfStore
-
-export type DynamicFeedServiceConfig = ReturnType<typeof getDynamicFeedServiceConfig>
 
 async function updateUpList(force = false) {
   const cacheHit =
@@ -135,7 +138,11 @@ async function updateUpList(force = false) {
 }
 
 async function updateFollowGroups(force = false) {
-  if (!settings.dynamicFeedEnableFollowGroupFilter) return
+  const enabled =
+    settings.dynamicFeedEnableFollowGroupFilter ||
+    !!settings.dynamicFeedWhenViewAllHideIds.filter((x) => x.startsWith(SELECTED_KEY_PREFIX_GROUP))
+      .length
+  if (!enabled) return
 
   const cacheHit =
     !force &&

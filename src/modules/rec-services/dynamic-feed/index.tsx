@@ -1,8 +1,10 @@
+import { baseDebug } from '$common'
 import { CHARGE_ONLY_TEXT } from '$components/VideoCard/top-marks'
 import { type DynamicFeedItem, type DynamicFeedItemExtend } from '$define'
 import { EApiType } from '$define/index.shared'
 import { settings } from '$modules/settings'
 import { parseDuration } from '$utility'
+import pmap from 'promise.map'
 import { snapshot } from 'valtio'
 import { QueueStrategy, type IService } from '../_base'
 import { LiveRecService } from '../live'
@@ -20,10 +22,13 @@ import {
   QUERY_DYNAMIC_OFFSET,
   QUERY_DYNAMIC_UP_MID,
   SELECTED_KEY_ALL,
+  SELECTED_KEY_PREFIX_GROUP,
+  SELECTED_KEY_PREFIX_UP,
   dfStore,
-  type DynamicFeedServiceConfig,
 } from './store'
 import { DynamicFeedUsageInfo } from './usage-info'
+
+export type DynamicFeedServiceConfig = ReturnType<typeof getDynamicFeedServiceConfig>
 
 export function getDynamicFeedServiceConfig() {
   const snap = snapshot(dfStore)
@@ -55,7 +60,10 @@ export function getDynamicFeedServiceConfig() {
      * from settings
      */
     showLiveInDynamicFeed: settings.dynamicFeedShowLive,
-    hideWhenViewAllMids: new Set(settings.dynamicFeedWhenViewAllHideIds),
+
+    whenViewAllEnableHideSomeContents: settings.dynamicFeedWhenViewAllEnableHideSomeContents,
+    whenViewAllHideIds: new Set(settings.dynamicFeedWhenViewAllHideIds),
+
     advancedSearch: settings.dynamicFeedAdvancedSearch,
     searchCacheEnabled:
       !!snap.upMid &&
@@ -68,6 +76,8 @@ export function getDynamicFeedServiceConfig() {
     startingOffset: QUERY_DYNAMIC_OFFSET,
   }
 }
+
+const debug = baseDebug.extend('modules:rec-services:dynamic-feed')
 
 export class DynamicFeedRecService implements IService {
   static PAGE_SIZE = 15
@@ -143,12 +153,44 @@ export class DynamicFeedRecService implements IService {
     return this.config.showFilter
   }
 
-  private followGroupMids = new Set<number>()
-  async loadFollowGroupMids() {
-    if (typeof this.followGroupTagid !== 'number') return
-    if (this.followGroupMids.size) return
+  get viewingSomeGroup() {
+    return typeof this.config.followGroupTagid === 'number'
+  }
+  private currentFollowGroupMids = new Set<number>()
+  private async loadFollowGroupMids() {
+    if (typeof this.followGroupTagid !== 'number') return // no need
+    if (this.currentFollowGroupMids.size) return // loaded
     const mids = await getFollowGroupContent(this.followGroupTagid)
-    this.followGroupMids = new Set(mids)
+    this.currentFollowGroupMids = new Set(mids)
+  }
+
+  get viewingAll() {
+    return this.config.selectedKey === SELECTED_KEY_ALL
+  }
+  private whenViewAllHideMids = new Set<string>()
+  private whenViewAllHideMidsLoaded = false
+  private async loadWhenViewAllHideMids() {
+    // no need
+    if (!this.viewingAll) return
+    if (!this.config.whenViewAllEnableHideSomeContents) return
+    if (!this.config.whenViewAllHideIds.size) return
+    // loaded
+    if (this.whenViewAllHideMidsLoaded) return
+
+    const mids = Array.from(this.config.whenViewAllHideIds)
+      .filter((x) => x.startsWith(SELECTED_KEY_PREFIX_UP))
+      .map((x) => x.slice(SELECTED_KEY_PREFIX_UP.length))
+    const groupIds = Array.from(this.config.whenViewAllHideIds)
+      .filter((x) => x.startsWith(SELECTED_KEY_PREFIX_GROUP))
+      .map((x) => x.slice(SELECTED_KEY_PREFIX_GROUP.length))
+
+    const set = this.whenViewAllHideMids
+    mids.forEach((x) => set.add(x))
+
+    const midsInGroup = (await pmap(groupIds, async (id) => getFollowGroupContent(id), 3)).flat()
+    midsInGroup.forEach((x) => set.add(x.toString()))
+
+    this.whenViewAllHideMidsLoaded = true
   }
 
   private _cacheQueue: QueueStrategy<DynamicFeedItem> | undefined
@@ -223,17 +265,26 @@ export class DynamicFeedRecService implements IService {
       rawItems = data.items
     }
 
-    // ensure current follow-group's mids loaded
-    await this.loadFollowGroupMids()
+    // viewingSomeGroup: ensure current follow-group's mids loaded
+    if (this.viewingSomeGroup) {
+      await this.loadFollowGroupMids()
+    }
+
+    // viewingAll: ensure hide contents from these mids loaded
+    if (this.viewingAll) {
+      await this.loadWhenViewAllHideMids()
+      debug('viewingAll: hide-mids = %o', this.whenViewAllHideMids)
+    }
 
     const items: DynamicFeedItemExtend[] = rawItems
 
       // by 关注分组
       .filter((x) => {
-        if (typeof this.followGroupTagid !== 'number') return true
-        if (!this.followGroupMids.size) return true
+        if (!this.viewingSomeGroup) return true
+        if (!this.currentFollowGroupMids.size) return true
         const mid = x?.modules?.module_author?.mid
-        return mid && this.followGroupMids.has(mid)
+        if (!mid) return true
+        return this.currentFollowGroupMids.has(mid)
       })
 
       // by 动态视频|投稿视频
@@ -291,10 +342,11 @@ export class DynamicFeedRecService implements IService {
       // 在「全部」动态中隐藏 UP 的动态
       .filter((x) => {
         if (this.config.selectedKey !== SELECTED_KEY_ALL) return true
-        if (!this.config.hideWhenViewAllMids.size) return true
+        const set = this.whenViewAllHideMids
+        if (!set.size) return true
         const mid = x?.modules?.module_author?.mid
         if (!mid) return true
-        return !this.config.hideWhenViewAllMids.has(mid.toString())
+        return !set.has(mid.toString())
       })
 
       .map((item) => {
