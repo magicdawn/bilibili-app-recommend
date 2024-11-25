@@ -1,10 +1,17 @@
 import { C } from '$common/emotion-css'
-import { getBvidInfo } from '$components/RecGrid/unsafe-window-export'
+import { currentGridItems, getBvidInfo } from '$components/RecGrid/unsafe-window-export'
 import type { OnRefresh } from '$components/RecGrid/useRefresh'
 import { videoSourceTabState } from '$components/RecHeader/tab'
 import { ETab } from '$components/RecHeader/tab-enum'
 import { colorPrimaryValue } from '$components/css-vars'
-import { isDynamic, isFav, isLive, isWatchlater, type RecItemType } from '$define'
+import {
+  isDynamic,
+  isFav,
+  isLive,
+  isWatchlater,
+  type DynamicFeedItemExtend,
+  type RecItemType,
+} from '$define'
 import { EApiType } from '$define/index.shared'
 import { UserBlacklistService } from '$modules/bilibili/me/relations/blacklist'
 import { UserfollowService } from '$modules/bilibili/me/relations/follow'
@@ -13,6 +20,8 @@ import { openNewTab } from '$modules/gm'
 import { DislikeIcon, OpenExternalLinkIcon, WatchLaterIcon } from '$modules/icon'
 import { IconPark } from '$modules/icon/icon-park'
 import {
+  DynamicFeedQueryKey,
+  QUERY_DYNAMIC_UP_MID,
   SELECTED_KEY_ALL,
   SELECTED_KEY_PREFIX_GROUP,
   SELECTED_KEY_PREFIX_UP,
@@ -169,7 +178,7 @@ export function useContextMenus({
   })
 
   /**
-   * 动态筛选
+   * 查看 UP 的动态
    */
   const hasDynamicFeedFilterSelectUpEntry =
     (isNormalVideo || isLive(item)) && !!authorMid && !!authorName
@@ -202,6 +211,10 @@ export function useContextMenus({
     }
   })
 
+  /**
+   * 「全部」动态筛选
+   */
+
   // 不再 stick on camelCase 后, 腰不酸了, 腿不疼了~
   const hasEntry_addMidTo_dynamicFeedWhenViewAllHideIds =
     dynamicFeedWhenViewAllEnableHideSomeContents &&
@@ -230,9 +243,53 @@ export function useContextMenus({
     AntdMessage.success(`在「全部」动态中隐藏来自【${dfStore.selectedFollowGroup?.name}】的动态`)
   })
 
-  return useMemo(() => {
-    const watchlaterLabel = watchlaterAdded ? '移除稍后再看' : '稍后再看'
+  /**
+   * 动态 offset & minId
+   */
+  const hasEntry_dynamicFeed_offsetAndMinId = !!(
+    isDynamic(item) &&
+    QUERY_DYNAMIC_UP_MID &&
+    dfStore.hasSelectedUp &&
+    authorMid
+  )
+  const dynamicViewStartFromHere: ContextMenuItem | false = useMemo(
+    () =>
+      hasEntry_dynamicFeed_offsetAndMinId && {
+        label: '动态: 从此项开始查看',
+        key: '动态: 从此项开始查看',
+        icon: <IconTablerSortDescending2 {...size(17)} />,
+        onClick() {
+          const u = new URL('/', location.href)
+          u.searchParams.set(DynamicFeedQueryKey.Mid, authorMid)
+          const currentIndexInGrid = currentGridItems.findIndex(
+            (x) => x.api === EApiType.Dynamic && x.id_str === item.id_str,
+          )
+          const prevIdStr =
+            (currentGridItems[currentIndexInGrid - 1] as DynamicFeedItemExtend | undefined)
+              ?.id_str || item.id_str // 上一项的 id_str
+          u.searchParams.set(DynamicFeedQueryKey.Offset, prevIdStr)
+          openNewTab(u.href)
+        },
+      },
+    [hasEntry_dynamicFeed_offsetAndMinId, item],
+  )
+  const dynamicViewUpdateSinceThis: ContextMenuItem | false = useMemo(
+    () =>
+      hasEntry_dynamicFeed_offsetAndMinId && {
+        icon: <IconTablerSortAscending2 {...size(17)} />,
+        label: '动态: 从此项开始截止',
+        key: '动态: 从此项开始截止',
+        onClick() {
+          const u = new URL('/', location.href)
+          u.searchParams.set(DynamicFeedQueryKey.Mid, authorMid)
+          u.searchParams.set(DynamicFeedQueryKey.MinId, item.id_str)
+          openNewTab(u.href)
+        },
+      },
+    [hasEntry_dynamicFeed_offsetAndMinId, item],
+  )
 
+  return useMemo(() => {
     const divider: ContextMenuItem = { type: 'divider' }
 
     const copyMenus = defineContextMenus([
@@ -276,7 +333,7 @@ export function useContextMenus({
       {
         test: hasWatchLaterEntry,
         key: 'watchlater',
-        label: watchlaterLabel,
+        label: watchlaterAdded ? '移除稍后再看' : '稍后再看',
         icon: watchlaterAdded ? (
           <IconMaterialSymbolsDeleteOutlineRounded {...size(15)} />
         ) : (
@@ -336,6 +393,10 @@ export function useContextMenus({
           onMoveToFirst?.(item, cardData)
         },
       },
+
+      // 动态
+      dynamicViewUpdateSinceThis,
+      dynamicViewStartFromHere,
     ])
 
     // I don't like this video

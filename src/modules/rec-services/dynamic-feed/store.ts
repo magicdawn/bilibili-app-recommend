@@ -13,17 +13,26 @@ import type { DynamicPortalUp } from './up/portal-types'
 /**
  * view dynamic of <mid> via query
  */
+
+export enum DynamicFeedQueryKey {
+  Mid = 'dyn-mid',
+  Offset = 'dyn-offset',
+  SearchText = 'dyn-search',
+  MinId = 'dyn-min-id',
+  MinTs = 'dyn-min-ts',
+}
+
 const searchParams = new URLSearchParams(location.search)
-export const QUERY_DYNAMIC_UP_MID = searchParams.get('dyn-mid')?.trim()
-export const QUERY_DYNAMIC_OFFSET = searchParams.get('dyn-offset') // where to start, exclusive
+export const QUERY_DYNAMIC_UP_MID = searchParams.get(DynamicFeedQueryKey.Mid)?.trim()
+export const QUERY_DYNAMIC_OFFSET = searchParams.get(DynamicFeedQueryKey.Offset) // where to start, exclusive
 export const QUERY_DYNAMIC_SEARCH_TEXT = QUERY_DYNAMIC_UP_MID // only support using with `dyn-mid`
-  ? searchParams.get('dyn-search') || undefined
+  ? searchParams.get(DynamicFeedQueryKey.SearchText) || undefined
   : undefined
 export const QUERY_DYNAMIC_MIN_ID = QUERY_DYNAMIC_UP_MID // only support using with `dyn-mid`, dyn.id_str >= dyn-min-id, stands for `update since`
-  ? searchParams.get('dyn-min-id')
+  ? searchParams.get(DynamicFeedQueryKey.MinId)
   : undefined
 export const QUERY_DYNAMIC_MIN_TS = QUERY_DYNAMIC_MIN_ID // only support using with `dyn-min-id`, dyn.publish-time >= dyn-min-ts, stands for `update since`
-  ? searchParams.get('dyn-min-ts')
+  ? searchParams.get(DynamicFeedQueryKey.MinTs)
   : undefined
 
 let upMidInitial: UpMidType | undefined = undefined
