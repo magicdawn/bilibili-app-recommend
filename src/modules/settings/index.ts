@@ -178,6 +178,9 @@ export const initialSettings = {
   // 默认打开模式
   videoLinkOpenMode: VideoLinkOpenMode.Normal,
 
+  // 小窗默认锁定
+  pipWindowDefaultLocked: true,
+
   /**
    * 隐藏的 tab, 使用黑名单, 功能迭代之后新增的 tab, 默认开启.
    * 如果使用白名单, 新增的 tab 会被隐藏
