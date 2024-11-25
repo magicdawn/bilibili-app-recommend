@@ -127,57 +127,65 @@ export function TabPaneBasic() {
       </SettingsGroup>
 
       <SettingsGroup title='视频链接'>
-        <div css={flexVerticalCenterStyle}>
-          默认打开模式
-          <HelpInfo
-            tooltipProps={{ color: 'rgba(0, 0, 0, 0.85)' }} // 默认使用 colorPrimary, 链接可能看不清
-          >
-            选择点击视频(封面图片 或 标题)时打开的模式 <br />
-            {openModeOptions.map(({ value, config }) => {
-              return (
-                !!config.desc && (
-                  <div
-                    key={value}
-                    css={css`
-                      display: flex;
-                      align-items: flex-start;
-                      margin-top: 10px;
-                      &:first-child {
-                        margin-top: 0;
-                      }
-                      .label {
-                        display: inline-flex;
-                        align-items: center;
-                        .text {
-                          min-width: 95px;
-                          margin-left: 4px;
-                          margin-right: 10px;
+        <Space size={10}>
+          <div css={flexVerticalCenterStyle}>
+            默认打开模式
+            <HelpInfo
+              tooltipProps={{ color: 'rgba(0, 0, 0, 0.85)' }} // 默认使用 colorPrimary, 链接可能看不清
+            >
+              选择点击视频(封面图片 或 标题)时打开的模式 <br />
+              {openModeOptions.map(({ value, config }) => {
+                return (
+                  !!config.desc && (
+                    <div
+                      key={value}
+                      css={css`
+                        display: flex;
+                        align-items: flex-start;
+                        margin-top: 10px;
+                        &:first-child {
+                          margin-top: 0;
                         }
-                      }
-                    `}
-                  >
-                    <span className='label'>
-                      {config.icon}
-                      <span className='text'>{config.label}</span>
-                    </span>
-                    <span className='desc'>{config.desc}</span>
-                  </div>
+                        .label {
+                          display: inline-flex;
+                          align-items: center;
+                          .text {
+                            min-width: 95px;
+                            margin-left: 4px;
+                            margin-right: 10px;
+                          }
+                        }
+                      `}
+                    >
+                      <span className='label'>
+                        {config.icon}
+                        <span className='text'>{config.label}</span>
+                      </span>
+                      <span className='desc'>{config.desc}</span>
+                    </div>
+                  )
                 )
-              )
-            })}
-          </HelpInfo>
-          <Select
-            css={css`
-              width: 160px;
-              margin-left: 8px;
-            `}
-            options={openModeOptions}
-            value={videoLinkOpenMode}
-            onChange={(v) => {
-              updateSettings({ videoLinkOpenMode: v })
-            }}
+              })}
+            </HelpInfo>
+            <Select
+              css={css`
+                width: 160px;
+                margin-left: 8px;
+              `}
+              options={openModeOptions}
+              value={videoLinkOpenMode}
+              onChange={(v) => {
+                updateSettings({ videoLinkOpenMode: v })
+              }}
+            />
+          </div>
+
+          <CheckboxSettingItem
+            configKey='pipWindowDefaultLocked'
+            label='小窗默认锁定'
+            tooltip='开启后,小窗打开时默认为锁定状态'
           />
-        </div>
+        </Space>
       </SettingsGroup>
 
       <SettingsGroup title='预览'>

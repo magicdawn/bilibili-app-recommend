@@ -14,6 +14,7 @@ import RadixIconsLockOpen1 from '~icons/radix-icons/lock-open-1'
 import RadixIconsOpenInNewWindow from '~icons/radix-icons/open-in-new-window'
 import { VideoCardActionButton } from '../child-components/VideoCardActions'
 import { QueryKey } from '../index.shared'
+import { settings } from '$modules/settings'
 
 export function renderInPipWindow(newHref: string, pipWindow: Window) {
   const cssInsertContainer = pipWindow.document.head
@@ -60,9 +61,9 @@ export function PipWindowContent({ newHref, pipWindow }: { pipWindow: Window; ne
 
   const hovering = useHover(pipWindow.document.documentElement)
 
-  // locked initial value
+  // use settings value
   const [locked, setLocked] = useState(() => {
-    return true
+    return settings.pipWindowDefaultLocked
   })
 
   return (
