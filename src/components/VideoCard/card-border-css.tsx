@@ -87,6 +87,7 @@ export function useCardBorderCss(): TheCssType {
     styleUseWhiteBackground,
     useDelayForHover,
     styleUseCardPadding,
+    pureRecommend,
   } = useSettingsSnapshot()
 
   const dark = useIsDarkMode()
@@ -100,37 +101,39 @@ export function useCardBorderCss(): TheCssType {
         transition-timing-function: ease-in-out;
       `,
 
-      useBorder && [
-        css`
-          cursor: pointer;
-          border-radius: ${borderRadiusValue};
-          &:hover {
-            border-color: ${borderColorValue};
-            ${getHlBgCss(dark)}
-            ${useBoxShadow && borderAndShadow}
+      pureRecommend &&
+        useBorder && [
+          css`
+            cursor: pointer;
+            border-radius: ${borderRadiusValue};
+            &:hover {
+              border-color: ${borderColorValue};
+              ${getHlBgCss(dark)}
+              ${useBoxShadow && borderAndShadow}
             ${useDelayForHover && coverZoom}
-          }
-        `,
-
-        !useBorderOnlyOnHover &&
-          css`
-            border-color: ${borderColorValue};
-          `,
-
-        // add padding & negative margin
-        useBorderOnlyOnHover &&
-          !useBoxShadow &&
-          styleUseCardPadding &&
-          css`
-            margin-inline: -6px;
-            .bili-video-card__wrap {
-              padding: 6px;
-              padding-bottom: 0;
             }
           `,
-      ],
+
+          !useBorderOnlyOnHover &&
+            css`
+              border-color: ${borderColorValue};
+            `,
+
+          // add padding & negative margin
+          useBorderOnlyOnHover &&
+            !useBoxShadow &&
+            styleUseCardPadding &&
+            css`
+              margin-inline: -6px;
+              .bili-video-card__wrap {
+                padding: 6px;
+                padding-bottom: 0;
+              }
+            `,
+        ],
     ]
   }, [
+    pureRecommend,
     useBorder,
     useBorderOnlyOnHover,
     useBoxShadow,

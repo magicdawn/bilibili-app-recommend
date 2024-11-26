@@ -3,7 +3,7 @@ import { $headerWidth, $usingEvolevdHeader, useBackToTopRight } from '$header'
 import { useColors, useIsDarkMode } from '$modules/dark-mode'
 import { useSettingsSnapshot } from '$modules/settings'
 import { Global, css as _css, css } from '@emotion/react'
-import { USING_FONT_FAMILY } from './AntdApp'
+import { APP_CUSTOM_FONT, APP_CUSTOM_FONT_IDENTIFIER, USING_FONT } from './AntdApp'
 import { useColorPrimaryHex } from './ModalSettings/theme.shared'
 import {
   bgIdentifier,
@@ -37,10 +37,11 @@ export function GlobalStyle() {
             --${APP_NAMESPACE}-bg-color: ${bg};
             --${APP_NAMESPACE}-color: ${c};
             ${borderColorIdentifier}: ${getBorderColor(dark, styleUseWhiteBackground)};
+            ${APP_CUSTOM_FONT_IDENTIFIER}: ${APP_CUSTOM_FONT};
           }
 
           .${APP_CLS_ROOT} {
-            font-family: ${USING_FONT_FAMILY};
+            font-family: ${USING_FONT};
             --back-top-right: 24px;
 
             .bili-video-card a:not(.disable-hover):hover{

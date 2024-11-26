@@ -1,4 +1,4 @@
-import { APP_CLS_CARD, APP_CLS_GRID, APP_CLS_ROOT, APP_KEY_PREFIX, appWarn } from '$common'
+import { APP_CLS_CARD, APP_CLS_ROOT, APP_KEY_PREFIX, appWarn } from '$common'
 import { useLessFrequentFn } from '$common/hooks/useLessFrequentFn'
 import { useMittOn } from '$common/hooks/useMitt'
 import { useRefStateBox } from '$common/hooks/useRefState'
@@ -409,7 +409,7 @@ const VideoCardInner = memo(function VideoCardInner({
     ) : undefined
 
   // 一堆 selector 增加权重
-  const prefixCls = `.${APP_CLS_ROOT} .${APP_CLS_GRID} .${APP_CLS_CARD}`
+  const prefixCls = `.${APP_CLS_ROOT} .${APP_CLS_CARD}` // .${APP_CLS_GRID}
   const coverBottomNoRoundCss = css`
     ${prefixCls} & {
       border-bottom-left-radius: 0;
