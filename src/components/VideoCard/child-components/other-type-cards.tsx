@@ -9,10 +9,10 @@ import { AntdMessage } from '$utility'
 import { toastRequestFail } from '$utility/toast'
 import { borderRadiusValue } from '../../css-vars'
 import { cancelDislike } from '../card.service'
-import styles from '../index.module.scss'
 import type { VideoCardEmitter } from '../index.shared'
 import { defaultEmitter } from '../index.shared'
 import type { IVideoCardData } from '../process/normalize'
+import { skeletonActive as clsSkeletonActive } from './skeleton.module.scss'
 import { VideoCardBottom } from './VideoCardBottom'
 
 export const SkeletonCard = memo(function SkeletonCard({ loading }: { loading: boolean }) {
@@ -20,7 +20,7 @@ export const SkeletonCard = memo(function SkeletonCard({ loading }: { loading: b
     <div
       className={clsx('bili-video-card__skeleton', {
         hide: !loading,
-        [styles.skeletonActive]: loading,
+        [clsSkeletonActive]: loading,
       })}
     >
       <div
@@ -57,6 +57,75 @@ export const SkeletonCard = memo(function SkeletonCard({ loading }: { loading: b
     </div>
   )
 })
+
+const blockedCardCss = {
+  wrapper: css`
+    /* grid align-items 默认为 stretch, 同 row 互相撑起高度 */
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: var(--video-card-border-radius); /* note this is unscoped */
+  `,
+
+  cover: css`
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    aspect-ratio: 16 / 9;
+    // padding-top: #{calc(9 / 16 * 100%)};
+    position: relative;
+  `,
+
+  coverInner: css`
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  `,
+
+  dislikeReason: css`
+    font-size: 20px;
+    text-align: center;
+  `,
+  dislikeDesc: css`
+    font-size: 16px;
+    text-align: center;
+  `,
+
+  action: css`
+    flex: 1;
+    position: relative;
+  `,
+  actionInner: css`
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    /* as separator */
+    border-top: 1px solid var(--${APP_NAMESPACE}-separator-color);
+    transition: border-top-color 0.3s;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    button {
+      font-size: 16px;
+      color: inherit;
+      display: flex;
+      align-items: center;
+    }
+  `,
+}
 
 export const DislikedCard = memo(function DislikedCard({
   item,
@@ -96,25 +165,20 @@ export const DislikedCard = memo(function DislikedCard({
   useMittOn(emitter, 'cancel-dislike', onCancelDislike)
 
   return (
-    <div className={clsx(styles.dislikedWrapper)}>
-      <div className={styles.dislikeContentCover}>
-        <div className={styles.dislikeContentCoverInner}>
-          <IconPark name='DistraughtFace' size={32} className={styles.dislikeIcon} />
-          <div className={styles.dislikeReason}>{dislikedReason?.name}</div>
-          <div className={styles.dislikeDesc}>{dislikedReason?.toast || '将减少此类内容推荐'}</div>
+    <div css={blockedCardCss.wrapper}>
+      <div css={blockedCardCss.cover}>
+        <div css={blockedCardCss.coverInner}>
+          <IconPark name='DistraughtFace' size={32} className='mb-5px' />
+          <div css={blockedCardCss.dislikeReason}>{dislikedReason?.name}</div>
+          <div css={blockedCardCss.dislikeDesc}>
+            {dislikedReason?.toast || '将减少此类内容推荐'}
+          </div>
         </div>
       </div>
       <__BottomRevertAction item={item} cardData={cardData} onClick={onCancelDislike} />
     </div>
   )
 })
-
-const S = {
-  actionInner: css`
-    border-top: 1px solid var(--${APP_NAMESPACE}-separator-color);
-    transition: border-top-color 0.3s;
-  `,
-}
 
 function __BottomRevertAction({
   item,
@@ -126,9 +190,10 @@ function __BottomRevertAction({
   onClick: () => void
 }) {
   return (
-    <div className={styles.dislikeContentAction}>
-      <VideoCardBottom item={item as RecItemType} cardData={cardData} className='invisible' />
-      <div className={styles.dislikeContentActionInner} css={S.actionInner}>
+    <div css={blockedCardCss.action}>
+      {/* 需要它撑起高度 */}
+      <VideoCardBottom item={item} cardData={cardData} className='invisible' />
+      <div css={blockedCardCss.actionInner}>
         <button onClick={onClick}>
           <IconPark name='Return' size='16' style={{ marginRight: 4, marginTop: -2 }} />
           撤销
@@ -154,12 +219,12 @@ export const BlacklistCard = memo(function BlacklistCard({
   })
 
   return (
-    <div className={clsx(styles.dislikedWrapper)}>
-      <div className={styles.dislikeContentCover}>
-        <div className={styles.dislikeContentCoverInner}>
-          <IconPark name='PeopleDelete' size={32} className={styles.dislikeIcon} />
-          <div className={styles.dislikeReason}>已拉黑</div>
-          <div className={styles.dislikeDesc}>UP: {authorName}</div>
+    <div css={blockedCardCss.wrapper}>
+      <div css={blockedCardCss.cover}>
+        <div css={blockedCardCss.coverInner}>
+          <IconPark name='PeopleDelete' size={32} className='mb-5px' />
+          <div css={blockedCardCss.dislikeReason}>已拉黑</div>
+          <div css={blockedCardCss.dislikeDesc}>UP: {authorName}</div>
         </div>
       </div>
       <__BottomRevertAction item={item} cardData={cardData} onClick={onCancel} />
