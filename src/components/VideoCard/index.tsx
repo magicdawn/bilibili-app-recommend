@@ -410,7 +410,7 @@ const VideoCardInner = memo(function VideoCardInner({
 
   // 一堆 selector 增加权重
   const prefixCls = `.${APP_CLS_ROOT} .${APP_CLS_GRID} .${APP_CLS_CARD}`
-  const bottomBorderRadiusCss = css`
+  const coverBottomNoRoundCss = css`
     ${prefixCls} & {
       border-bottom-left-radius: 0;
       border-bottom-right-radius: 0;
@@ -423,11 +423,8 @@ const VideoCardInner = memo(function VideoCardInner({
         border-radius: ${borderRadiusValue};
       }
     `,
-    styleUseCardBorder
-      ? styleUseCardBorderOnlyOnHover
-        ? isHovering && bottomBorderRadiusCss
-        : bottomBorderRadiusCss
-      : isHovering && bottomBorderRadiusCss,
+    (isHovering || active || (styleUseCardBorder && !styleUseCardBorderOnlyOnHover)) &&
+      coverBottomNoRoundCss,
   ]
 
   // 防止看不清封面边界: (封面与背景色接近)
@@ -507,16 +504,18 @@ const VideoCardInner = memo(function VideoCardInner({
 
       {/* preview: follow-mouse or auto-preview */}
       {!!(videoshotData?.image?.length && duration && (isHoveringAfterDelay || active)) &&
-        // auto-preview: start-by (hover | keyboard)
-        (autoPreviewing ? (
-          <PreviewImage
-            ref={previewImageRef}
-            videoDuration={duration}
-            pvideo={videoshotData}
-            mouseEnterRelativeX={mouseEnterRelativeX}
-            progress={previewProgress}
-            t={previewT}
-          />
+        (autoPreviewWhenHover ? (
+          // auto-preview: start-by (hover | keyboard)
+          autoPreviewing && (
+            <PreviewImage
+              ref={previewImageRef}
+              videoDuration={duration}
+              pvideo={videoshotData}
+              mouseEnterRelativeX={mouseEnterRelativeX}
+              progress={previewProgress}
+              t={previewT}
+            />
+          )
         ) : (
           // follow-mouse
           <PreviewImage

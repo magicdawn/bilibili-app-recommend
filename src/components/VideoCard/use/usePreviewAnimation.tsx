@@ -10,9 +10,8 @@ import type { VideoData } from '../card.service'
 import type { VideoCardEmitter } from '../index.shared'
 
 const DEBUG_ANIMATION = __PROD__
-  ? false
-  : // free to change
-    false
+  ? false //
+  : false // 👈🏻👈🏻👈🏻 dev: free to change
 
 /**
  * 自动以动画方式预览
