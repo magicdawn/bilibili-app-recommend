@@ -69,6 +69,12 @@ export function useInNormalCardCss(showingInNormalCard: boolean): TheCssType {
         background-color: ${bg.lv1};
         ${sepIdentifier}: ${bg.lv2};
       }
+
+      /* disable padding */
+      margin-inline: 0;
+      .bili-video-card__wrap {
+        padding: 0;
+      }
     `
   }, [bg, showingInNormalCard])
 }
