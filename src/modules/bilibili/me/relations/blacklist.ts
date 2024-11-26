@@ -24,7 +24,7 @@ export const blacklistMids = await proxySetWithGmStorage('blacklist-mids')
 
 export function useInBlacklist(upMid?: string) {
   const set = useSnapshot(blacklistMids)
-  return upMid && set.has(upMid)
+  return !!upMid && set.has(upMid)
 }
 
 function blacklistActionFactory(action: 'follow' | 'remove') {

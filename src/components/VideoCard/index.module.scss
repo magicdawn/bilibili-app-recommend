@@ -23,12 +23,7 @@ $z: 3;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-
   border-radius: var(--video-card-border-radius);
-  border: 1px solid #eee;
-  :global(body.dark) & {
-    border: 1px solid #333;
-  }
 
   .dislike-content-cover {
     border-top-left-radius: 6px;
@@ -43,8 +38,6 @@ $z: 3;
       left: 0;
       width: 100%;
       height: 100%;
-      // backdrop-filter: blur(10px);
-      background-color: vars.$app-bg-color;
 
       display: flex;
       flex-direction: column;
@@ -77,13 +70,11 @@ $z: 3;
       left: 0;
       width: 100%;
       height: 100%;
-      // backdrop-filter: blur(10px);
-      background-color: vars.$app-bg-color;
 
-      border-top: 1px solid #eee;
-      :global(body.dark) & {
-        border-top: 1px solid #333;
-      }
+      // border-top: 1px solid #eee;
+      // :global(body.dark) & {
+      //   border-top: 1px solid #333;
+      // }
 
       display: flex;
       align-items: center;

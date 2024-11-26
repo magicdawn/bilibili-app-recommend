@@ -7,11 +7,13 @@
  * https://box-shadow.dev/
  */
 
+import { APP_NAMESPACE } from '$common'
 import { borderColorValue, colorPrimaryValue } from '$components/css-vars'
 import { useIsDarkMode } from '$modules/dark-mode'
 import { useSettingsSnapshot } from '$modules/settings'
 import { tweakLightness } from '$utility/css'
 import type { TheCssType } from '$utility/type'
+import { css as _css } from '@emotion/react'
 import { bgValue, borderRadiusValue } from '../css-vars'
 
 const c = tweakLightness(colorPrimaryValue, 0.1)
@@ -20,9 +22,22 @@ const borderAndShadow = css`
   box-shadow: 0px 0px 9px 4px ${c};
 `
 
-const hightlightBackground = (dark: boolean) => {
+export function getBg(dark: boolean) {
+  const factor = dark ? 1 : -1
+  return {
+    lv1: tweakLightness(bgValue, dark ? 0.03 : -0.04),
+    lv2: tweakLightness(bgValue, 0.08 * factor),
+    lv3: tweakLightness(bgValue, 0.12 * factor),
+  }
+}
+export function useBg() {
+  const dark = useIsDarkMode()
+  return useMemo(() => getBg(dark), [dark])
+}
+
+const getHlBgCss = (dark: boolean) => {
   return css`
-    background-color: ${tweakLightness(bgValue, dark ? 0.03 : -0.04)};
+    background-color: ${getBg(dark).lv1};
   `
 }
 
@@ -34,6 +49,29 @@ const coverZoom = css`
     transform: scale(1.05);
   }
 `
+
+/**
+ * for dislike & blacklist card
+ * - show border ALWAYS
+ * - hover highlight bg
+ * - hover highlight separator
+ */
+export function useInNormalCardCss(showingInNormalCard: boolean): TheCssType {
+  const bg = useBg()
+  const sepIdentifier = `--${APP_NAMESPACE}-separator-color`
+  return useMemo(() => {
+    if (!showingInNormalCard) return undefined
+    return _css`
+      border-color: ${borderColorValue};
+      background-color: ${bgValue};
+      ${sepIdentifier}: ${bg.lv1};
+      &:hover {
+        background-color: ${bg.lv1};
+        ${sepIdentifier}: ${bg.lv2};
+      }
+    `
+  }, [bg, showingInNormalCard])
+}
 
 export function useCardBorderCss(): TheCssType {
   const {
@@ -62,7 +100,7 @@ export function useCardBorderCss(): TheCssType {
           border-radius: ${borderRadiusValue};
           &:hover {
             border-color: ${borderColorValue};
-            ${hightlightBackground(dark)}
+            ${getHlBgCss(dark)}
             ${useBoxShadow && borderAndShadow}
             ${useDelayForHover && coverZoom}
           }

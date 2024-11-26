@@ -1,5 +1,4 @@
 import { APP_NAME } from '$common'
-import { C } from '$common/emotion-css'
 import type { Settings } from '$modules/settings'
 import { settings, useSettingsSnapshot } from '$modules/settings'
 import { AntdMessage, shouldDisableShortcut } from '$utility'
@@ -118,11 +117,12 @@ export function TabPaneCustomUI() {
           <>
             视频卡片
             <ResetPartialSettingsButton
-              css={[C.ml(10)]}
+              className='ml-10'
               keys={[
                 'styleUseCardBorder',
                 'styleUseCardBorderOnlyOnHover',
                 'styleUseCardBoxShadow',
+                'styleUseCardPadding',
                 'useDelayForHover',
               ]}
             />

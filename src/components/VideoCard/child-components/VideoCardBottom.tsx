@@ -80,10 +80,12 @@ export function VideoCardBottom({
   item,
   cardData,
   handleVideoLinkClick,
+  className,
 }: {
   item: RecItemType
   cardData: IVideoCardData
   handleVideoLinkClick?: MouseEventHandler
+  className?: string
 }) {
   const { styleUseCardBorder, styleUseCardBorderOnlyOnHover } = useSettingsSnapshot()
   const target = useLinkTarget()
@@ -167,6 +169,7 @@ export function VideoCardBottom({
    */
   return (
     <div
+      className={className}
       css={css`
         margin-top: 15px;
         margin-bottom: ${styleUseCardBorder ? 10 : 5}px;

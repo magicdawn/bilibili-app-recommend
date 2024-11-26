@@ -265,9 +265,12 @@ _\* 开关-第一项_
 
 ## 开发 or 使用源代码构建最新版本
 
-- git clone this repo
-- pnpm install
-- pnpm build, build 完会自动使用 Chrome 打开安装地址
+```sh
+git clone git@github.com:magicdawn/Bilibili-Gate.git
+corepack enable # this project use corepack
+pnpm install
+pnpm build # build 完会自动使用 Chrome 打开安装地址
+```
 
 ### CI build
 

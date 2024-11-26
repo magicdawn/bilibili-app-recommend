@@ -53,7 +53,7 @@ export function SectionRecommend() {
                   item={item}
                   tab={tab}
                   className={clsx(APP_CLS_CARD)}
-                  css={cardBorderCss}
+                  baseCss={cardBorderCss}
                 />
               )
             })}

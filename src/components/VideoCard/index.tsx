@@ -31,6 +31,7 @@ import { Dropdown } from 'antd'
 import { tryit } from 'radash'
 import type { CSSProperties, MouseEventHandler, ReactNode } from 'react'
 import { borderRadiusValue } from '../css-vars'
+import { useInNormalCardCss } from './card-border-css'
 import type { VideoData } from './card.service'
 import { fetchVideoData, isVideoshotDataValid } from './card.service'
 import {
@@ -70,6 +71,7 @@ export type VideoCardProps = {
   onRefresh?: OnRefresh
   emitter?: VideoCardEmitter
   tab: ETab
+  baseCss?: TheCssType
 } & ComponentProps<'div'>
 
 export const VideoCard = memo(function VideoCard({
@@ -83,6 +85,7 @@ export const VideoCard = memo(function VideoCard({
   onRefresh,
   emitter,
   tab,
+  baseCss,
   ...restProps
 }: VideoCardProps) {
   // loading defaults to
@@ -95,11 +98,17 @@ export const VideoCard = memo(function VideoCard({
   const blacklisted = useInBlacklist(cardData?.authorMid)
   const watchlaterAdded = useWatchlaterState(cardData?.bvid)
 
+  const showingDislikeCard = !!dislikedReason
+  const showingBlacklistCard = blacklisted
+  const showingInNormalCard = showingDislikeCard || showingBlacklistCard
+  const inNormalCardCss = useInNormalCardCss(showingInNormalCard)
+
   return (
     <div
       style={style}
-      className={clsx('bili-video-card', styles.biliVideoCard, className)}
       data-bvid={cardData?.bvid}
+      className={clsx('bili-video-card', styles.biliVideoCard, className)}
+      css={[baseCss, inNormalCardCss]}
       {...restProps}
     >
       {loading ? (
@@ -107,15 +116,15 @@ export const VideoCard = memo(function VideoCard({
       ) : (
         item &&
         cardData &&
-        (dislikedReason ? (
+        (showingDislikeCard ? (
           <DislikedCard
             item={item as AppRecItemExtend}
             cardData={cardData}
             emitter={emitter}
             dislikedReason={dislikedReason!}
           />
-        ) : blacklisted ? (
-          <BlacklistCard cardData={cardData} />
+        ) : showingBlacklistCard ? (
+          <BlacklistCard item={item} cardData={cardData} />
         ) : (
           <VideoCardInner
             item={item}

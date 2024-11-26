@@ -1,8 +1,8 @@
-import { OPERATION_FAIL_MSG } from '$common'
+import { APP_NAMESPACE, OPERATION_FAIL_MSG } from '$common'
 import { useMittOn } from '$common/hooks/useMitt'
 import type { Reason } from '$components/ModalDislike'
 import { delDislikeId } from '$components/ModalDislike'
-import type { AppRecItem, RecItemType } from '$define'
+import type { AppRecItemExtend, RecItemType } from '$define'
 import { UserBlacklistService } from '$modules/bilibili/me/relations/blacklist'
 import { IconPark } from '$modules/icon/icon-park'
 import { AntdMessage } from '$utility'
@@ -64,7 +64,7 @@ export const DislikedCard = memo(function DislikedCard({
   dislikedReason,
   emitter = defaultEmitter,
 }: {
-  item: AppRecItem
+  item: AppRecItemExtend
   cardData: IVideoCardData
   dislikedReason: Reason
   emitter?: VideoCardEmitter
@@ -104,22 +104,45 @@ export const DislikedCard = memo(function DislikedCard({
           <div className={styles.dislikeDesc}>{dislikedReason?.toast || '将减少此类内容推荐'}</div>
         </div>
       </div>
-      <div className={styles.dislikeContentAction}>
-        <VideoCardBottom item={item as RecItemType} cardData={cardData} />
-        <div className={styles.dislikeContentActionInner}>
-          <button onClick={onCancelDislike}>
-            <IconPark name='Return' size='16' style={{ marginRight: 4, marginTop: -2 }} />
-            撤销
-          </button>
-        </div>
-      </div>
+      <__BottomRevertAction item={item} cardData={cardData} onClick={onCancelDislike} />
     </div>
   )
 })
 
+const S = {
+  actionInner: css`
+    border-top: 1px solid var(--${APP_NAMESPACE}-separator-color);
+    transition: border-top-color 0.3s;
+  `,
+}
+
+function __BottomRevertAction({
+  item,
+  cardData,
+  onClick,
+}: {
+  item: RecItemType
+  cardData: IVideoCardData
+  onClick: () => void
+}) {
+  return (
+    <div className={styles.dislikeContentAction}>
+      <VideoCardBottom item={item as RecItemType} cardData={cardData} className='invisible' />
+      <div className={styles.dislikeContentActionInner} css={S.actionInner}>
+        <button onClick={onClick}>
+          <IconPark name='Return' size='16' style={{ marginRight: 4, marginTop: -2 }} />
+          撤销
+        </button>
+      </div>
+    </div>
+  )
+}
+
 export const BlacklistCard = memo(function BlacklistCard({
+  item,
   cardData,
 }: {
+  item: RecItemType
   cardData: IVideoCardData
 }) {
   const { authorMid, authorName } = cardData
@@ -139,14 +162,7 @@ export const BlacklistCard = memo(function BlacklistCard({
           <div className={styles.dislikeDesc}>UP: {authorName}</div>
         </div>
       </div>
-      <div className={styles.dislikeContentAction}>
-        <div className={styles.dislikeContentActionInner}>
-          <button onClick={onCancel}>
-            <IconPark name='Return' size='16' style={{ marginRight: 4, marginTop: -2 }} />
-            撤销
-          </button>
-        </div>
-      </div>
+      <__BottomRevertAction item={item} cardData={cardData} onClick={onCancel} />
     </div>
   )
 })

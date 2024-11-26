@@ -479,7 +479,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
         <VideoCard
           key={item.uniqId}
           className={clsx(APP_CLS_CARD, { [APP_CLS_CARD_ACTIVE]: active })}
-          css={[cardBorderCss, getActiveCardBorderCss(active)]}
+          baseCss={[cardBorderCss, getActiveCardBorderCss(active)]}
           item={item}
           active={active}
           onRemoveCurrent={handleRemoveCard}
