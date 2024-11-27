@@ -19,7 +19,7 @@ const typedScssModules = interopImportCJSDefault(typedScssModulesOriginal)
 const isDev = process.env.NODE_ENV == 'development'
 if (isDev) {
   // only needed in dev mode
-  typedScssModules(__dirname + '/src', {
+  typedScssModules(__dirname + '/src/**/*.module.scss', {
     watch: true,
   })
 }

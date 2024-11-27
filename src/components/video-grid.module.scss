@@ -1,3 +1,5 @@
+@use '../common/css-vars' as *;
+
 /**
  * 新版首页
  * 使用的是 .video-card-body 的样式
@@ -5,16 +7,16 @@
  */
 
 .video-grid {
-  --video-card-border-radius: 6px;
   display: grid;
   position: relative;
   width: 100%;
   grid-gap: 20px 12px;
   grid-template-columns: repeat(var(--col), minmax(0, 1fr));
+  #{$app-video-card-border-radius-id}: 6px;
 }
 
 .new-card-style {
-  --video-card-border-radius: 15px;
+  #{$app-video-card-border-radius-id}: 15px;
 }
 
 /**

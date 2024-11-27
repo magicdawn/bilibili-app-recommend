@@ -5,9 +5,9 @@ import { TabConfig, TabIcon } from '$components/RecHeader/tab-config'
 import { ETab, TabKeys } from '$components/RecHeader/tab-enum'
 import { HelpInfo } from '$components/_base/HelpInfo'
 import { AntdTooltip } from '$components/_base/antd-custom'
+import { bgLv2Value, bgLv3Value } from '$components/css-vars'
 import { EAppApiDevice } from '$define/index.shared'
 import { getUserNickname } from '$modules/bilibili/user/nickname'
-import { useIsDarkMode } from '$modules/dark-mode'
 import { IconPark } from '$modules/icon/icon-park'
 import type { FollowGroup } from '$modules/rec-services/dynamic-feed/group/groups-types'
 import {
@@ -300,8 +300,6 @@ function VideoSourceTabSortableItem({ id }: { id: ETab }) {
 
   const { label, desc } = TabConfig[id]
 
-  const dark = useIsDarkMode()
-
   return (
     <div
       key={id}
@@ -316,7 +314,7 @@ function VideoSourceTabSortableItem({ id }: { id: ETab }) {
 
         padding-left: 10px;
         padding-right: 6px;
-        border: 1px solid ${!dark ? '#ddd' : '#444'};
+        border: 1px solid ${bgLv2Value};
         border-radius: 6px;
         margin-top: 8px;
       `}
@@ -354,7 +352,7 @@ function VideoSourceTabSortableItem({ id }: { id: ETab }) {
           padding: 3px 5px;
           border-radius: 5px;
           &:hover {
-            background-color: ${!dark ? '#eee' : '#999'};
+            background-color: ${bgLv3Value};
           }
         `}
       >

@@ -1,4 +1,5 @@
 import { APP_CLS_ROOT } from '$common'
+import { appClsDarkSelector } from '$common/css-vars-export.module.scss'
 import { C } from '$common/emotion-css'
 import { useIsDarkMode } from '$modules/dark-mode'
 import type { TheCssType } from '$utility/type'
@@ -68,7 +69,7 @@ export const BaseModalStyle = {
       margin-top: -1px;
     }
 
-    :global(body.dark) & {
+    :global(${appClsDarkSelector}) & {
       color: #eee !important;
       background-color: #333 !important;
       border-color: transparent !important;

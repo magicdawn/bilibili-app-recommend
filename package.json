@@ -7,7 +7,7 @@
     "prepare": "husky",
     "dev": "vite",
     "typecheck": "tsc --noEmit",
-    "build:scss": "typed-scss-modules src",
+    "build:scss": "typed-scss-modules 'src/**/*.module.scss'",
     "build:scss:hcm": "hcm 'src/**/*.module.scss' -o generated --localsConvention camelCaseOnly",
     "build:vite": "vite build",
     "//": "//",

@@ -1,17 +1,10 @@
-import { APP_CLS_ROOT, APP_NAMESPACE } from '$common'
+import { APP_CLS_ROOT } from '$common'
+import { appBgId, appColorPrimaryId } from '$common/css-vars-export.module.scss'
 import { $headerWidth, $usingEvolevdHeader, useBackToTopRight } from '$header'
 import { useColors, useIsDarkMode } from '$modules/dark-mode'
 import { useSettingsSnapshot } from '$modules/settings'
 import { Global, css as _css, css } from '@emotion/react'
-import { APP_CUSTOM_FONT, APP_CUSTOM_FONT_IDENTIFIER, USING_FONT } from './AntdApp'
 import { useColorPrimaryHex } from './ModalSettings/theme.shared'
-import {
-  bgIdentifier,
-  borderColorIdentifier,
-  colorPrimaryIdentifier,
-  colorPrimaryValue,
-  getBorderColor,
-} from './css-vars'
 
 export function GlobalStyle() {
   const colorPrimary = useColorPrimaryHex()
@@ -31,30 +24,14 @@ export function GlobalStyle() {
   return (
     <>
       <Global
-        styles={_css`
-          :root {
-            ${colorPrimaryIdentifier}: ${colorPrimary};
-            --${APP_NAMESPACE}-bg-color: ${bg};
-            --${APP_NAMESPACE}-color: ${c};
-            ${borderColorIdentifier}: ${getBorderColor(dark, styleUseWhiteBackground)};
-            ${APP_CUSTOM_FONT_IDENTIFIER}: ${APP_CUSTOM_FONT};
-          }
-
-          .${APP_CLS_ROOT} {
-            font-family: ${USING_FONT};
-            --back-top-right: 24px;
-
-            .bili-video-card a:not(.disable-hover):hover{
-              color: ${colorPrimaryValue} !important;
+        styles={[
+          _css`
+            :root {
+              ${appColorPrimaryId}: ${colorPrimary};
+              ${appBgId}: ${dark ? '#222' : styleUseWhiteBackground ? `var(--bg1)` : `var(--bg2)`};
             }
-          }
-
-          @media (max-width: 1440px) {
-            .${APP_CLS_ROOT} {
-              --back-top-right: 16px;
-            }
-          }
-        `}
+          `,
+        ]}
       />
 
       {pureRecommend && (
@@ -100,6 +77,29 @@ export function GlobalStyle() {
                   --back-top-right: ${backToTopRight}px;
                 }
               `,
+
+            /**
+             * extra background-color work for `PureRecommend`
+             */
+            styleUseWhiteBackground
+              ? css`
+                  body {
+                    /* same as #i_cecream */
+                    background-color: var(--bg1);
+                  }
+                `
+              : css`
+                  body,
+                  .large-header,
+                  #i_cecream,
+                  .bili-header .bili-header__channel {
+                    background-color: var(--bg2);
+                  }
+                  .bili-header .bili-header__channel .channel-entry-more__link,
+                  .bili-header .bili-header__channel .channel-link {
+                    background-color: var(--bg1);
+                  }
+                `,
 
             styleHideTopChannel &&
               css`
@@ -149,42 +149,6 @@ export function GlobalStyle() {
 
                 .area-header-wrapper {
                   margin-top: 10px;
-                }
-              `,
-
-            /**
-             * background-color
-             */
-            styleUseWhiteBackground
-              ? css`
-                  :root {
-                    ${bgIdentifier}: var(--bg1);
-                  }
-                  /* same as #i_cecream */
-                  body {
-                    background-color: var(--bg1);
-                  }
-                `
-              : css`
-                  :root {
-                    ${bgIdentifier}: var(--bg2);
-                  }
-                  body,
-                  .large-header,
-                  #i_cecream,
-                  .bili-header .bili-header__channel {
-                    background-color: var(--bg2);
-                  }
-
-                  .bili-header .bili-header__channel .channel-entry-more__link,
-                  .bili-header .bili-header__channel .channel-link {
-                    background-color: var(--bg1);
-                  }
-                `,
-            dark &&
-              css`
-                :root {
-                  ${bgIdentifier}: #222;
                 }
               `,
           ]}

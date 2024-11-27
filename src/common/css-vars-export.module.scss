@@ -1,0 +1,24 @@
+@use 'css-vars' as *;
+@use 'sass:string';
+
+:export {
+  // ids
+  app-color-primary-id: $app-color-primary-id;
+  app-border-color-id: $app-border-color-id;
+  app-custom-font-family-id: $app-custom-font-family-id;
+  app-video-card-border-radius-id: $app-video-card-border-radius-id;
+
+  app-bg-id: $app-bg-id;
+  app-bg-lv1-id: $app-bg-lv1-id;
+  app-bg-lv2-id: $app-bg-lv2-id;
+  app-bg-lv3-id: $app-bg-lv3-id;
+
+  // values
+  bili-pink: $bili-pink;
+  app-custom-font-family: $app-custom-font-family;
+  app-using-font: $app-using-font;
+
+  app-cls-root: $app-cls-root;
+  app-cls-dark: $app-cls-dark;
+  app-cls-dark-selector: #{string.unquote($app-cls-dark-selector)};
+}

@@ -23,3 +23,13 @@ interface VMScriptGMObjectVMExtensions {
   download: (url: string, name: string) => Promise<Blob> | void
   download: (options: VMScriptGMDownloadOptions) => Promise<Blob> | void
 }
+
+// Override Vite's default CSS module type to force explicit type definitions
+type CSSModuleClasses = never
+
+declare module '*.css' {
+  never
+}
+declare module '*.scss' {
+  never
+}

@@ -1,7 +1,6 @@
 import { APP_CLS_ROOT } from '$common'
 import { AntdApp } from '$components/AntdApp'
 import { BaseModal, BaseModalStyle, ModalClose } from '$components/_base/BaseModal'
-import { useIsDarkMode } from '$modules/dark-mode'
 import { QRCode } from 'antd'
 import { once } from 'es-toolkit'
 import mitt from 'mitt'
@@ -51,8 +50,6 @@ async function confirmQrCodeLoginWithCookie() {
 export function TvQrCodeAuth() {
   const { qrcodeUrl, show, message } = useSnapshot(store)
   const onHide = hideQrCodeModal
-
-  const dark = useIsDarkMode()
 
   return (
     <BaseModal

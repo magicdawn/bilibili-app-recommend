@@ -1,3 +1,38 @@
+@use 'sass:meta';
+@use 'css-vars' as *;
+
+:root {
+  #{$app-custom-font-family-id}: #{meta.inspect($app-custom-font-family)};
+}
+
+// colors
+:root {
+  #{$app-border-color-id}: oklch(from var($app-bg-id) calc(l - 0.05) c h); // #fff -> #eee
+  #{$app-bg-lv1-id}: oklch(from var($app-bg-id) calc(l - 0.04) c h);
+  #{$app-bg-lv2-id}: oklch(from var($app-bg-id) calc(l - 0.08) c h);
+  #{$app-bg-lv3-id}: oklch(from var($app-bg-id) calc(l - 0.12) c h);
+
+  &.#{$app-cls-dark} {
+    #{$app-border-color-id}: oklch(from var($app-bg-id) calc(l + 0.07) c h); // #222 -> #333
+    #{$app-bg-lv1-id}: oklch(from var($app-bg-id) calc(l + 0.04) c h);
+    #{$app-bg-lv2-id}: oklch(from var($app-bg-id) calc(l + 0.08) c h);
+    #{$app-bg-lv3-id}: oklch(from var($app-bg-id) calc(l + 0.12) c h);
+  }
+}
+
+.#{$app-cls-root} {
+  font-family: $app-using-font;
+  --back-top-right: 24px;
+  .bili-video-card a:not(.disable-hover):hover {
+    color: var($app-color-primary-id) !important;
+  }
+}
+@media (max-width: 1440px) {
+  .#{$app-cls-root} {
+    --back-top-right: 16px;
+  }
+}
+
 .primary-btn:disabled {
   &:active,
   &:hover {

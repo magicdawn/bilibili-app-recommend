@@ -1,3 +1,5 @@
+@use '../../../common/css-vars' as *;
+
 :global {
   body {
     .bili-video-card__skeleton--cover,
@@ -14,7 +16,7 @@
   }
 
   // other type already handled by Bilibili-Evolved
-  body.dark .bili-video-card__skeleton--avatar {
+  #{$app-cls-dark-selector} .bili-video-card__skeleton--avatar {
     background-color: #444;
   }
 

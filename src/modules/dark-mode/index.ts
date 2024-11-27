@@ -1,3 +1,4 @@
+import { appClsDark } from '$common/css-vars-export.module.scss'
 import { settings } from '$modules/settings'
 import { shouldDisableShortcut } from '$utility/dom'
 import { subscribeOnKeys, valtioFactory } from '$utility/valtio'
@@ -5,9 +6,8 @@ import { delay } from 'es-toolkit'
 import { subscribe } from 'valtio'
 
 /**
- * BILIBILI-Evolved dark mode
- * get: body.dark
- * toggle: document.querySelector('[data-name=darkMode] .main-content').click()
+ * BILIBILI-Evolved dark mode:
+ * detect: body.dark
  */
 
 const $darkMode = valtioFactory(() => {
@@ -43,10 +43,17 @@ export function useColors() {
 
 // update
 setTimeout($colors.updateThrottled, 2000) // when onload complete
-subscribe($darkMode.state, $colors.updateThrottled) // when dark mode change
+// when dark mode change
+subscribe($darkMode.state, () => {
+  $colors.updateThrottled()
+  $darkMode.get()
+    ? document.documentElement.classList.add(appClsDark)
+    : document.documentElement.classList.remove(appClsDark)
+})
+// when settings.styleUseWhiteBackground change
 subscribeOnKeys(settings, ['styleUseWhiteBackground'], () =>
   setTimeout($colors.updateThrottled, 500),
-) // when settings.styleUseWhiteBackground change
+)
 
 const ob = new MutationObserver(() => {
   setTimeout(() => {

@@ -1,0 +1,39 @@
+@use 'sass:string';
+
+$app-name: bilibili-gate;
+// all id with `app-` prefix means it's scoped
+
+// cls
+$app-cls-root: #{$app-name}-root;
+$app-cls-dark: #{$app-name}-dark;
+$app-cls-dark-selector: 'html.#{$app-cls-dark}';
+
+// color
+$bili-pink: #ff6699;
+
+// app general
+$app-color-primary-id: --#{$app-name}--color-primary;
+$app-border-color-id: --#{$app-name}--border-color;
+
+$app-bg-id: --#{$app-name}--bg;
+$app-bg-lv1-id: --#{$app-name}--bg--lv1;
+$app-bg-lv2-id: --#{$app-name}--bg--lv2;
+$app-bg-lv3-id: --#{$app-name}--bg--lv3;
+
+//
+// font
+//
+// bilibili.com default: PingFang SC,HarmonyOS_Regular,Helvetica Neue,Microsoft YaHei,sans-serif
+//
+// 由于 B站 默认 css, 加上了 !important, 这里如果需要自定义也需要加上
+// 优先使用 Bilibili-Evolved 的自定义字体
+$app-custom-font-family-id: --#{$app-name}--custom-font-family;
+$app-custom-font-family: 'Alibaba PuHuiTi 3.0', 'PingFang SC', HarmonyOS_Regular, 'Helvetica Neue',
+  'Microsoft YaHei', sans-serif;
+$app-using-font: var(
+  --custom-font-family--options--font-family,
+  var(#{$app-custom-font-family-id})
+) !important;
+
+// video card
+$app-video-card-border-radius-id: --#{$app-name}--video-card--border-radius;

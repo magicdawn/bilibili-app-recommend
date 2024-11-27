@@ -1,6 +1,6 @@
 import { flexCenterStyle } from '$common/emotion-css'
 import { AntdTooltip } from '$components/_base/antd-custom'
-import { colorPrimaryValue } from '$components/css-vars'
+import { borderColorValue, colorPrimaryValue } from '$components/css-vars'
 import { getUserNickname } from '$modules/bilibili/user/nickname'
 import {
   settings,
@@ -68,11 +68,8 @@ export function EditableListSettingItem({
           css`
             min-height: 82px;
             border-radius: 6px;
-            border: 1px solid #eee;
+            border: 1px solid ${borderColorValue};
             margin-top: 3px;
-            body.dark & {
-              border-color: #333;
-            }
           `,
           disabled &&
             css`
@@ -151,10 +148,7 @@ export const TagItemDisplay = forwardRef<HTMLDivElement, TagItemDisplayProps>(
             border-radius: 5px;
             padding: 2px 6px;
             position: relative;
-            border: 1px solid #ddd;
-            body.dark & {
-              border-color: #333;
-            }
+            border: 1px solid ${borderColorValue};
 
             display: inline-flex;
             align-items: center;

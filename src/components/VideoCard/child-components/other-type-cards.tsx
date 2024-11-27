@@ -7,7 +7,7 @@ import { UserBlacklistService } from '$modules/bilibili/me/relations/blacklist'
 import { IconPark } from '$modules/icon/icon-park'
 import { AntdMessage } from '$utility'
 import { toastRequestFail } from '$utility/toast'
-import { borderRadiusValue } from '../../css-vars'
+import { videoCardBorderRadiusValue } from '../../css-vars'
 import { cancelDislike } from '../card.service'
 import type { VideoCardEmitter } from '../index.shared'
 import { defaultEmitter } from '../index.shared'
@@ -25,7 +25,7 @@ export const SkeletonCard = memo(function SkeletonCard({ loading }: { loading: b
     >
       <div
         className='bili-video-card__skeleton--cover'
-        style={{ borderRadius: borderRadiusValue }}
+        style={{ borderRadius: videoCardBorderRadiusValue }}
       />
       <div
         className='bili-video-card__skeleton--info'

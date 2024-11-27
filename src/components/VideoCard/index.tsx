@@ -30,7 +30,7 @@ import { useLockFn } from 'ahooks'
 import { Dropdown } from 'antd'
 import { tryit } from 'radash'
 import type { CSSProperties, MouseEventHandler, ReactNode } from 'react'
-import { borderRadiusValue } from '../css-vars'
+import { videoCardBorderRadiusValue } from '../css-vars'
 import { useInNormalCardCss } from './card-border-css'
 import type { VideoData } from './card.service'
 import { fetchVideoData, isVideoshotDataValid } from './card.service'
@@ -420,7 +420,7 @@ const VideoCardInner = memo(function VideoCardInner({
     css`
       ${prefixCls} & {
         overflow: hidden;
-        border-radius: ${borderRadiusValue};
+        border-radius: ${videoCardBorderRadiusValue};
       }
     `,
     (isHovering || active || (styleUseCardBorder && !styleUseCardBorderOnlyOnHover)) &&

@@ -1,6 +1,6 @@
 import { APP_CLS_ROOT, OPERATION_FAIL_MSG } from '$common'
 import { BaseModal, BaseModalStyle, ModalClose } from '$components/_base/BaseModal'
-import { colorPrimaryValue } from '$components/css-vars'
+import { borderColorValue, colorPrimaryValue } from '$components/css-vars'
 import type { AppRecItem, AppRecItemExtend } from '$define'
 import { DislikeIcon } from '$modules/icon'
 import { AntdMessage } from '$utility'
@@ -256,12 +256,7 @@ const S = {
     position: relative;
 
     border-radius: 4px;
-    border: 2px solid #eee;
-
-    /* https://github.com/emotion-js/emotion/issues/2836 */
-    * :where(body.dark) & {
-      border-color: #333;
-    }
+    border: 2px solid ${borderColorValue};
 
     padding-top: 5px;
     padding-bottom: 5px;
