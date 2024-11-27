@@ -45,7 +45,6 @@ export const TabConfig: Record<ETab, TabConfigItem> = {
     label: '动态',
     desc: '视频投稿动态',
     swr: true,
-    anonymousUsage: true,
   },
   [ETab.Watchlater]: {
     icon: (
