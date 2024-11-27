@@ -44,12 +44,14 @@ export function useColors() {
 // update
 setTimeout($colors.updateThrottled, 2000) // when onload complete
 // when dark mode change
-subscribe($darkMode.state, () => {
+const onDarkModeChange = () => {
   $colors.updateThrottled()
   $darkMode.get()
     ? document.documentElement.classList.add(appClsDark)
     : document.documentElement.classList.remove(appClsDark)
-})
+}
+onDarkModeChange()
+subscribe($darkMode.state, onDarkModeChange)
 // when settings.styleUseWhiteBackground change
 subscribeOnKeys(settings, ['styleUseWhiteBackground'], () =>
   setTimeout($colors.updateThrottled, 500),
