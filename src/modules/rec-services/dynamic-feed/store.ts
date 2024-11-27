@@ -6,7 +6,7 @@ import ms from 'ms'
 import { proxy } from 'valtio'
 import { subscribeKey } from 'valtio/utils'
 import { getAllFollowGroups } from './group'
-import type { FollowGroup } from './group/groups-types'
+import type { FollowGroup } from './group/types/groups'
 import { getRecentUpdateUpList } from './up'
 import type { DynamicPortalUp } from './up/portal-types'
 

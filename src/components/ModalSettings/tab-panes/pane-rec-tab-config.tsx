@@ -9,7 +9,7 @@ import { bgLv2Value, bgLv3Value } from '$components/css-vars'
 import { EAppApiDevice } from '$define/index.shared'
 import { getUserNickname } from '$modules/bilibili/user/nickname'
 import { IconPark } from '$modules/icon/icon-park'
-import type { FollowGroup } from '$modules/rec-services/dynamic-feed/group/groups-types'
+import type { FollowGroup } from '$modules/rec-services/dynamic-feed/group/types/groups'
 import {
   SELECTED_KEY_PREFIX_GROUP,
   SELECTED_KEY_PREFIX_UP,

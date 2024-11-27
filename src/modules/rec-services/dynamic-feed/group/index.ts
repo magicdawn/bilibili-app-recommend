@@ -3,8 +3,8 @@ import { encWbi } from '$modules/bilibili/risk-control/wbi'
 import { request } from '$request'
 import { getUid } from '$utility/cookie'
 import { uniq } from 'es-toolkit'
-import type { FollowGroupContent, FollowGroupContentJson } from './group-content-types'
-import type { FollowGroupsJson } from './groups-types'
+import type { FollowGroupContent, FollowGroupContentJson } from './types/group-content'
+import type { FollowGroupsJson } from './types/groups'
 
 /**
  * 其中返回的没有 "悄悄关注", 而且悄悄关注使用 API /x/relation/whispers
