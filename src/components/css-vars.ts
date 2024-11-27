@@ -1,5 +1,8 @@
+import { baseDebug } from '$common'
 import cssVars from '$common/css-vars-export.module.scss'
-// appLog(cssVars)
+
+const debug = baseDebug.extend('components:css-vars')
+debug(':export = %O', cssVars)
 
 export const cssVar = (id: string) => {
   if (!id.startsWith('--')) id = `--${id}`
