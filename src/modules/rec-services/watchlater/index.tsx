@@ -181,7 +181,7 @@ class ShuffleOrderService implements IService {
       this.loaded = true
     }
 
-    return this.qs.sliceFromQueue()
+    return this.qs.slicePagesFromQueue()
   }
 }
 

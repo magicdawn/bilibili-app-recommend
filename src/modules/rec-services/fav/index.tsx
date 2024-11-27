@@ -68,7 +68,7 @@ export class FavRecService implements IService {
     if (!this.useShuffle) {
       // from queue if queue not empty
       if (this.qs.bufferQueue.length) {
-        return this.qs.sliceFromQueue()
+        return this.qs.slicePagesFromQueue()
       }
       // api request
       const service = this.folderServices.find((s) => s.hasMore)
@@ -104,7 +104,7 @@ export class FavRecService implements IService {
     }
 
     // next: take from queue
-    return this.qs.sliceFromQueue()
+    return this.qs.slicePagesFromQueue()
   }
 
   foldersLoaded = false

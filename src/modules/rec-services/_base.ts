@@ -21,17 +21,23 @@ export class QueueStrategy<T = RecItemTypeOrSeparator> {
     this.ps = ps
   }
 
-  sliceFromQueue(page = 1) {
+  sliceFromQueue(count: number) {
     if (this.bufferQueue.length) {
-      const sliced = this.bufferQueue.slice(0, this.ps * page)
-      this.bufferQueue = this.bufferQueue.slice(this.ps * page)
-      return this.doReturnItems(sliced)
+      const sliced = this.bufferQueue.slice(0, count) // sliced
+      this.bufferQueue = this.bufferQueue.slice(count) // rest
+      return this.doReturnItems(sliced) ?? []
+    } else {
+      return []
     }
+  }
+
+  slicePagesFromQueue(page = 1) {
+    return this.sliceFromQueue(this.ps * page)
   }
 
   // add to returnQueue
   doReturnItems(items: T[] | undefined) {
-    this.returnQueue = [...this.returnQueue, ...(items || [])]
+    this.returnQueue = [...this.returnQueue, ...(items ?? [])]
     return items
   }
 

@@ -4,6 +4,7 @@ import { type DynamicFeedItem, type DynamicFeedItemExtend } from '$define'
 import { EApiType } from '$define/index.shared'
 import { settings } from '$modules/settings'
 import { parseDuration } from '$utility'
+import type { Nullable } from '$utility/type'
 import pmap from 'promise.map'
 import { snapshot } from 'valtio'
 import { QueueStrategy, type IService } from '../_base'
@@ -16,6 +17,7 @@ import {
 } from './cache'
 import { parseSearchInput } from './cache/search'
 import { getFollowGroupContent } from './group'
+import { FollowGroupMergeTimelineService } from './group/group-up-service'
 import {
   DynamicFeedVideoMinDuration,
   DynamicFeedVideoType,
@@ -76,9 +78,13 @@ export function getDynamicFeedServiceConfig() {
      * from query
      */
     startingOffset: QUERY_DYNAMIC_OFFSET,
-    minId: QUERY_DYNAMIC_MIN_ID,
-    minTs: QUERY_DYNAMIC_MIN_TS,
+    minId: isValidNumber(QUERY_DYNAMIC_MIN_ID) ? BigInt(QUERY_DYNAMIC_MIN_ID!) : undefined,
+    minTs: isValidNumber(QUERY_DYNAMIC_MIN_TS) ? Number(QUERY_DYNAMIC_MIN_TS) : undefined,
   }
+}
+
+function isValidNumber(str: Nullable<string>) {
+  return !!str && /^\d+$/.test(str)
 }
 
 const debug = baseDebug.extend('modules:rec-services:dynamic-feed')
@@ -102,7 +108,14 @@ export class DynamicFeedRecService implements IService {
   }
 
   get hasMore() {
-    return this.hasMoreStreamingLive || this.hasMoreDynFeed
+    if (this.hasMoreStreamingLive) return true
+
+    if (this.viewingSomeGroup && this.followGroupMergeTimelineService) {
+      return this.followGroupMergeTimelineService.hasMore
+    }
+
+    if (this.hasMoreDynFeed) return true
+    return false
   }
 
   constructor(public config: DynamicFeedServiceConfig) {
@@ -157,17 +170,30 @@ export class DynamicFeedRecService implements IService {
     return this.config.showFilter
   }
 
+  /**
+   * 查看分组
+   */
   get viewingSomeGroup() {
     return typeof this.config.followGroupTagid === 'number'
   }
+  private followGroupMergeTimelineService: FollowGroupMergeTimelineService | undefined
   private currentFollowGroupMids = new Set<number>()
   private async loadFollowGroupMids() {
     if (typeof this.followGroupTagid !== 'number') return // no need
     if (this.currentFollowGroupMids.size) return // loaded
     const mids = await getFollowGroupContent(this.followGroupTagid)
     this.currentFollowGroupMids = new Set(mids)
+    if (mids.length > 0 && mids.length <= 20) {
+      // <- 20, 太多了则从全部过滤
+      this.followGroupMergeTimelineService = new FollowGroupMergeTimelineService(
+        mids.map((x) => x.toString()),
+      )
+    }
   }
 
+  /**
+   * 查看全部
+   */
   get viewingAll() {
     return this.config.selectedKey === SELECTED_KEY_ALL
   }
@@ -197,7 +223,7 @@ export class DynamicFeedRecService implements IService {
     this.whenViewAllHideMidsLoaded = true
   }
 
-  private _cacheQueue: QueueStrategy<DynamicFeedItem> | undefined
+  private _queueForSearchCache: QueueStrategy<DynamicFeedItem> | undefined
 
   async loadMore(signal: AbortSignal | undefined = undefined) {
     if (!this.hasMore) {
@@ -218,6 +244,16 @@ export class DynamicFeedRecService implements IService {
 
     let rawItems: DynamicFeedItem[]
 
+    // viewingSomeGroup: ensure current follow-group's mids loaded
+    if (this.viewingSomeGroup) {
+      await this.loadFollowGroupMids()
+    }
+    // viewingAll: ensure hide contents from these mids loaded
+    if (this.viewingAll) {
+      await this.loadWhenViewAllHideMids()
+      debug('viewingAll: hide-mids = %o', this.whenViewAllHideMids)
+    }
+
     // use search cache
     const useSearchCache = !!(
       this.upMid &&
@@ -232,26 +268,31 @@ export class DynamicFeedRecService implements IService {
 
     if (useSearchCache) {
       // fill queue with pre-filtered cached-items
-      if (!this._cacheQueue) {
+      if (!this._queueForSearchCache) {
         await performIncrementalUpdateIfNeed(this.upMid)
-        this._cacheQueue = new QueueStrategy<DynamicFeedItem>(20)
-        this._cacheQueue.bufferQueue = ((await localDynamicFeedCache.get(this.upMid)) || []).filter(
-          (x) => {
-            const title = x?.modules?.module_dynamic?.major?.archive?.title || ''
-            return filterBySearchText({
-              searchText: this.searchText!,
-              title,
-              useAdvancedSearch,
-              useAdvancedSearchParsed,
-            })
-          },
-        )
+        this._queueForSearchCache = new QueueStrategy<DynamicFeedItem>(20)
+        this._queueForSearchCache.bufferQueue = (
+          (await localDynamicFeedCache.get(this.upMid)) || []
+        ).filter((x) => {
+          const title = x?.modules?.module_dynamic?.major?.archive?.title || ''
+          return filterBySearchText({
+            searchText: this.searchText!,
+            title,
+            useAdvancedSearch,
+            useAdvancedSearchParsed,
+          })
+        })
       }
       // slice
-      rawItems = this._cacheQueue.sliceFromQueue(this.page + 1) || []
+      rawItems = this._queueForSearchCache.slicePagesFromQueue(this.page + 1) || []
       this.page++
-      this.hasMoreDynFeed = !!this._cacheQueue.bufferQueue.length
+      this.hasMoreDynFeed = !!this._queueForSearchCache.bufferQueue.length
       // offset not needed
+    }
+
+    // a group with manual merge-timeline service
+    else if (this.viewingSomeGroup && this.followGroupMergeTimelineService) {
+      rawItems = await this.followGroupMergeTimelineService.loadMore(signal)
     }
 
     // normal
@@ -271,33 +312,22 @@ export class DynamicFeedRecService implements IService {
       /**
        * stop load more if there are `update since` conditions
        */
-      if (this.config.minId && /^\d+$/.test(this.config.minId)) {
-        const minId = BigInt(this.config.minId)
+      if (this.config.minId) {
+        const minId = this.config.minId
         const idx = rawItems.findIndex((x) => BigInt(x.id_str) <= minId)
         if (idx !== -1) {
           this.hasMoreDynFeed = false
           rawItems = rawItems.slice(0, idx + 1) // include minId
         }
       }
-      if (this.config.minTs && /^\d+$/.test(this.config.minTs)) {
-        const minTs = Number(this.config.minTs)
+      if (this.config.minTs) {
+        const minTs = this.config.minTs
         const idx = rawItems.findIndex((x) => x.modules.module_author.pub_ts <= minTs)
         if (idx !== -1) {
           this.hasMoreDynFeed = false
           rawItems = rawItems.slice(0, idx + 1) // include minTs
         }
       }
-    }
-
-    // viewingSomeGroup: ensure current follow-group's mids loaded
-    if (this.viewingSomeGroup) {
-      await this.loadFollowGroupMids()
-    }
-
-    // viewingAll: ensure hide contents from these mids loaded
-    if (this.viewingAll) {
-      await this.loadWhenViewAllHideMids()
-      debug('viewingAll: hide-mids = %o', this.whenViewAllHideMids)
     }
 
     const items: DynamicFeedItemExtend[] = rawItems

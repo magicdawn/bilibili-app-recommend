@@ -95,7 +95,7 @@ export class PcRecService implements IService {
 
   async getRecommendTimes(times: number, signal: AbortSignal | undefined = undefined) {
     if (this.qs.bufferQueue.length) {
-      return this.qs.sliceFromQueue()
+      return this.qs.slicePagesFromQueue()
     }
 
     let list: PcRecItem[] = []

@@ -59,7 +59,7 @@ export class AppRecService implements IService {
   // 一次不够, 多来几次
   async getRecommendTimes(times: number) {
     if (this.qs.bufferQueue.length) {
-      return this.qs.sliceFromQueue()
+      return this.qs.slicePagesFromQueue()
     }
 
     let list: AppRecItem[] = []
