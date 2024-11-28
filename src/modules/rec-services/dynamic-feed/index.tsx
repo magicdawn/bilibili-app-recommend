@@ -466,7 +466,9 @@ export class DynamicFeedRecService implements IService {
       items[0]
     ) {
       const authorName = items[0].modules.module_author.name
+      const authorFace = items[0].modules.module_author.face
       dfStore.upName = authorName
+      dfStore.upFace = authorFace
     }
 
     return items

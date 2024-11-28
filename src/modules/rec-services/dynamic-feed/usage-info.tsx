@@ -58,6 +58,7 @@ export function dynamicFeedFilterSelectUp(payload: Partial<typeof dfStore>) {
 const clearPayload: Partial<DynamicFeedStore> = {
   upMid: undefined,
   upName: undefined,
+  upFace: undefined,
   searchText: undefined,
   selectedFollowGroup: undefined,
   dynamicFeedVideoType: DynamicFeedVideoType.All,
@@ -113,6 +114,7 @@ export function DynamicFeedUsageInfo() {
     hasSelectedUp,
     upName,
     upMid,
+    upFace,
     upList,
     followGroups,
     selectedFollowGroup,
@@ -218,7 +220,7 @@ export function DynamicFeedUsageInfo() {
           </span>
         ),
         onClick() {
-          onSelect({ ...clearPayload, upMid: up.mid.toString(), upName: up.uname })
+          onSelect({ ...clearPayload, upMid: up.mid.toString(), upName: up.uname, upFace: up.face })
         },
       }
     })
@@ -375,8 +377,10 @@ export function DynamicFeedUsageInfo() {
   )
 
   const followGroupMidsCount = selectedFollowGroup?.count
+  const upIcon = <IconForUp {...size(14)} className='mt--2px' />
+  const upAvtar = upFace ? <Avatar size={20} src={getAvatarSrc(upFace)} /> : undefined
   const dropdownButtonIcon = hasSelectedUp ? (
-    <IconForUp {...size(14)} className='mt--2px' />
+    upAvtar || upIcon
   ) : selectedFollowGroup ? (
     <IconForGroup {...size(18)} />
   ) : undefined
@@ -566,6 +570,8 @@ function FollowGroupActions({
   followGroup: FollowGroup
   onRefresh?: () => void
 }) {
+  const { dynamicFeedWhenViewAllEnableHideSomeContents } = useSettingsSnapshot()
+
   let forceMergeTimelineCheckbox: ReactNode
   {
     const { checked, onChange } = useValueInSettingsCollection(
@@ -606,7 +612,7 @@ function FollowGroupActions({
       `${SELECTED_KEY_PREFIX_GROUP}${followGroup.tagid}`,
       'dynamicFeedWhenViewAllHideIds',
     )
-    addTo_dynamicFeedWhenViewAllHideIds_checkbox = (
+    addTo_dynamicFeedWhenViewAllHideIds_checkbox = dynamicFeedWhenViewAllEnableHideSomeContents && (
       <Checkbox checked={checked} onChange={onChange}>
         <AntdTooltip title={<>在「全部」动态中隐藏来自此 {followGroup.name} 的动态</>}>
           在「全部」动态中隐藏来自此分组的动态

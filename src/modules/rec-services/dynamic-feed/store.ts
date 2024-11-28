@@ -90,6 +90,7 @@ export type DynamicFeedStore = typeof dfStore
 export const dfStore = proxy({
   upMid: upMidInitial as UpMidType | undefined,
   upName: upNameInitial as string | undefined,
+  upFace: undefined as string | undefined,
   upList: [] as DynamicPortalUp[],
   upListUpdatedAt: 0,
 
