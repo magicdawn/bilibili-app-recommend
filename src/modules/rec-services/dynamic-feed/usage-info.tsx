@@ -376,7 +376,7 @@ export function DynamicFeedUsageInfo() {
 
   const followGroupMidsCount = selectedFollowGroup?.count
   const dropdownButtonIcon = hasSelectedUp ? (
-    <IconForUp {...size(14)} className='mt--1px' />
+    <IconForUp {...size(14)} className='mt--2px' />
   ) : selectedFollowGroup ? (
     <IconForGroup {...size(18)} />
   ) : undefined
