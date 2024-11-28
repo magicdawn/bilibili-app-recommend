@@ -190,7 +190,7 @@ function ModalFeedConfigChecks() {
   return (
     <>
       <CheckboxSettingItem
-        configKey={'showModalFeedOnLoad'}
+        configPath={'showModalFeedOnLoad'}
         label='自动查看更多'
         tooltip='打开首页时默认打开推荐弹窗'
         css={inModalFeedStyle}
@@ -202,7 +202,7 @@ function ModalFeedConfigChecks() {
       />
 
       <CheckboxSettingItem
-        configKey='modalFeedFullScreen'
+        configPath='modalFeedFullScreen'
         label='全屏'
         tooltip='世界清净了~'
         css={inModalFeedStyle}

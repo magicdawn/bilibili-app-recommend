@@ -11,7 +11,7 @@ import {
   settings,
   updateSettings,
   useSettingsSnapshot,
-  type ListSettingsKey,
+  type ListSettingsPath,
 } from '$modules/settings'
 import { AntdMessage } from '$utility'
 import { getAvatarSrc } from '$utility/image'
@@ -20,6 +20,7 @@ import { useRequest } from 'ahooks'
 import { Avatar, Badge, Button, Checkbox, Dropdown, Input, Popover, Radio, Space } from 'antd'
 import type { CheckboxChangeEvent } from 'antd/es/checkbox'
 import { delay, throttle } from 'es-toolkit'
+import { get, set } from 'es-toolkit/compat'
 import { fastSortWithOrders } from 'fast-sort-lens'
 import type { ReactNode } from 'react'
 import { useSnapshot } from 'valtio'
@@ -106,10 +107,11 @@ export function DynamicFeedUsageInfo() {
   const onRefresh = useOnRefreshContext()
 
   const {
-    dynamicFeedEnableFollowGroupFilter,
+    dynamicFeed,
     __internalDynamicFeedAddCopyBvidButton: addCopyBvidButton,
     __internalDynamicFeedExternalSearchInput: externalSearchInput,
   } = useSettingsSnapshot()
+
   const {
     hasSelectedUp,
     upName,
@@ -162,7 +164,7 @@ export function DynamicFeedUsageInfo() {
     }
 
     let groupItems: AntdMenuItemType[] = []
-    if (dynamicFeedEnableFollowGroupFilter) {
+    if (dynamicFeed.followGroup.enabled) {
       groupItems = followGroups.map((group) => {
         return {
           key: `group:${group.tagid}`,
@@ -226,7 +228,7 @@ export function DynamicFeedUsageInfo() {
     })
 
     return [itemAll, ...groupItems, ...items]
-  }, [upList, upList.map((x) => !!x.has_update), dynamicFeedEnableFollowGroupFilter])
+  }, [upList, upList.map((x) => !!x.has_update), dynamicFeed.followGroup.enabled])
 
   const searchInput = (
     <Input.Search
@@ -518,7 +520,7 @@ function SearchCacheRelated() {
               {flexBreak}
 
               <CheckboxSettingItem
-                configKey='dynamicFeedAdvancedSearch'
+                configPath='dynamicFeed.advancedSearch'
                 label={'使用高级搜索'}
                 tooltip={
                   <>
@@ -570,13 +572,13 @@ function FollowGroupActions({
   followGroup: FollowGroup
   onRefresh?: () => void
 }) {
-  const { dynamicFeedWhenViewAllEnableHideSomeContents } = useSettingsSnapshot()
+  const { whenViewAll } = useSnapshot(settings.dynamicFeed)
 
   let forceMergeTimelineCheckbox: ReactNode
   {
     const { checked, onChange } = useValueInSettingsCollection(
       followGroup.tagid,
-      'dynamicFeedWhenViewSomeGroupForceUseMergeTimelineIds',
+      'dynamicFeed.followGroup.forceUseMergeTimelineIds',
     )
     const disabled = followGroup.count <= FollowGroupMergeTimelineService.MAX_UPMID_COUNT
     forceMergeTimelineCheckbox = (
@@ -610,9 +612,9 @@ function FollowGroupActions({
   {
     const { checked, onChange } = useValueInSettingsCollection(
       `${SELECTED_KEY_PREFIX_GROUP}${followGroup.tagid}`,
-      'dynamicFeedWhenViewAllHideIds',
+      'dynamicFeed.whenViewAll.hideIds',
     )
-    addTo_dynamicFeedWhenViewAllHideIds_checkbox = dynamicFeedWhenViewAllEnableHideSomeContents && (
+    addTo_dynamicFeedWhenViewAllHideIds_checkbox = whenViewAll.enableHideSomeContents && (
       <Checkbox checked={checked} onChange={onChange}>
         <AntdTooltip title={<>在「全部」动态中隐藏来自此 {followGroup.name} 的动态</>}>
           在「全部」动态中隐藏来自此分组的动态
@@ -631,18 +633,16 @@ function FollowGroupActions({
 
 function useValueInSettingsCollection<T extends string | number>(
   value: T,
-  collectionKey: ListSettingsKey,
+  collectionKey: ListSettingsPath,
 ) {
-  const list = useSettingsSnapshot()[collectionKey]
+  const snap = useSettingsSnapshot()
+  const list = get(snap, collectionKey)
   const checked = useMemo(() => list.includes(value), [list])
+
   const setChecked = useMemoizedFn((checked: boolean) => {
-    const set = new Set<unknown>(list)
-    if (checked) {
-      set.add(value)
-    } else {
-      set.delete(value)
-    }
-    updateSettings({ [collectionKey]: Array.from(set) })
+    const collection = new Set<unknown>(list)
+    checked ? collection.add(value) : collection.delete(value)
+    set(settings, collectionKey, Array.from(collection))
   })
 
   const onChange = useCallback((e: CheckboxChangeEvent) => {

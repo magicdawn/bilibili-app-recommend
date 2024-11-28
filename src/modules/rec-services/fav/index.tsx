@@ -306,11 +306,11 @@ export function FavUsageInfo({
       </Popover>
 
       {/* <SwitchSettingItem
-        configKey={'shuffleForFav'}
+        configPath={'shuffleForFav'}
         checkedChildren='随机顺序: 开'
         unCheckedChildren='随机顺序: 关'
       /> */}
-      <ShuffleSettingsItemFor configKey={'favUseShuffle'} />
+      <ShuffleSettingsItemFor configPath={'favUseShuffle'} />
     </Space>
   )
 }

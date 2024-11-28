@@ -33,7 +33,7 @@ export function WatchLaterUsageInfo({ total }: { total: number }) {
 
   const switchDisplay = (
     <SwitchSettingItem
-      configKey={'watchlaterUseShuffle'}
+      configPath={'watchlaterUseShuffle'}
       checkedChildren='随机顺序: 开'
       unCheckedChildren='随机顺序: 关'
       tooltip={<>随机顺序不包括近期添加的视频</>}
@@ -41,7 +41,7 @@ export function WatchLaterUsageInfo({ total }: { total: number }) {
   )
   const checkboxDisplay = (
     <CheckboxSettingItem
-      configKey={'watchlaterUseShuffle'}
+      configPath={'watchlaterUseShuffle'}
       label='随机顺序'
       tooltip={
         <>
@@ -53,7 +53,7 @@ export function WatchLaterUsageInfo({ total }: { total: number }) {
   )
   const btnDisplay = (
     <ShuffleSettingsItemFor
-      configKey='watchlaterUseShuffle'
+      configPath='watchlaterUseShuffle'
       tooltip={
         <>
           随机顺序不包括近期添加的稍后再看 <br />
@@ -86,7 +86,7 @@ export function WatchLaterUsageInfo({ total }: { total: number }) {
 
       {!watchlaterUseShuffle && (
         <ButtonSettingItem
-          configKey='watchlaterNormalOrderSortByAddAtAsc'
+          configPath='watchlaterNormalOrderSortByAddAtAsc'
           tooltip={
             <>
               最近添加: 按添加时间倒序 <br />

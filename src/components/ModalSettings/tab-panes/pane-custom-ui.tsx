@@ -74,19 +74,19 @@ export function TabPaneCustomUI() {
       <SettingsGroup title='样式自定义'>
         <div css={S.itemsContainer}>
           <CheckboxSettingItem
-            configKey='styleUseStandardVideoSourceTab'
+            configPath='styleUseStandardVideoSourceTab'
             label='推荐 Tab: 按钮使用标准高度'
             tooltip={explainForFlag('标准高度', '紧凑高度')}
           />
 
           <CheckboxSettingItem
-            configKey='styleUseStickyTabbarInPureRecommend'
+            configPath='styleUseStickyTabbarInPureRecommend'
             label='全屏模式: sticky tab bar'
             tooltip={explainForFlag('Tab 栏会吸附在顶栏下方', 'Tab 栏会随页面一起滚动')}
           />
 
           <CheckboxSettingItem
-            configKey='styleUseCustomGrid'
+            configPath='styleUseCustomGrid'
             label='全屏模式: 使用自定义网格配置'
             tooltip={
               <>
@@ -100,13 +100,13 @@ export function TabPaneCustomUI() {
           />
 
           <CheckboxSettingItem
-            configKey='styleUseWhiteBackground'
+            configPath='styleUseWhiteBackground'
             label='全屏模式: 使用纯白背景'
             tooltip={explainForFlag('纯白背景', '浅灰色背景')}
           />
 
           <CheckboxSettingItem
-            configKey={'styleHideTopChannel'}
+            configPath={'styleHideTopChannel'}
             label='全屏模式: 隐藏顶部分区和Banner'
           />
         </div>
@@ -118,7 +118,7 @@ export function TabPaneCustomUI() {
             视频卡片
             <ResetPartialSettingsButton
               className='ml-10'
-              keys={[
+              paths={[
                 'styleUseCardBorder',
                 'styleUseCardBorderOnlyOnHover',
                 'styleUseCardBoxShadow',
@@ -131,7 +131,7 @@ export function TabPaneCustomUI() {
       >
         <div css={S.itemsContainer}>
           <CheckboxSettingItem
-            configKey='styleUseCardBorder'
+            configPath='styleUseCardBorder'
             label='使用卡片边框'
             tooltip=<>
               勾选后, 视频卡片会有边框包裹, 更像是一个卡片~ <br />
@@ -148,27 +148,27 @@ export function TabPaneCustomUI() {
           />
 
           <CheckboxSettingItem
-            configKey='styleUseCardBorderOnlyOnHover'
+            configPath='styleUseCardBorderOnlyOnHover'
             label='仅在悬浮时显示'
             disabled={!styleUseCardBorder}
             tooltip={explainForFlag('仅在悬浮时显示', '一直显示')}
           />
 
           <CheckboxSettingItem
-            configKey='styleUseCardBoxShadow'
+            configPath='styleUseCardBoxShadow'
             disabled={!styleUseCardBorder}
             label='悬浮卡片时使用发光效果'
             tooltip={<>悬浮卡片时使用发光效果, 看起来比较花哨~</>}
           />
 
           <CheckboxSettingItem
-            configKey='useDelayForHover'
+            configPath='useDelayForHover'
             label='延迟悬浮预览'
             tooltip={<>延迟悬浮预览</>}
           />
 
           <CheckboxSettingItem
-            configKey='styleUseCardPadding'
+            configPath='styleUseCardPadding'
             label='卡片外扩'
             tooltip={<>卡片会外扩一点距离</>}
           />

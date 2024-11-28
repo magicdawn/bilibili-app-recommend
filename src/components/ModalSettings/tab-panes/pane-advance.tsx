@@ -12,18 +12,23 @@ import { AntdTooltip } from '$components/_base/antd-custom'
 import { borderColorValue } from '$components/css-vars'
 import { OpenExternalLinkIcon } from '$modules/icon'
 import {
-  allowedSettingsKeys,
-  internalBooleanKeys,
+  allowedSettingsPaths,
+  internalBooleanPaths,
   resetSettings,
   settings,
   updateSettings,
   useSettingsSnapshot,
+  type BooleanSettingsPath,
+  type Settings,
 } from '$modules/settings'
 import { exportSettings, importSettings } from '$modules/settings/file-backup'
-import { articleDraft, restoreOmitKeys } from '$modules/settings/index.shared'
+import { articleDraft, restoreOmitPaths } from '$modules/settings/index.shared'
 import { AntdMessage } from '$utility'
+import { getPaths } from '$utility/type'
 import { Button, Popconfirm, Slider, Space } from 'antd'
-import { omit, pick, startCase } from 'es-toolkit'
+import { startCase } from 'es-toolkit'
+import { get, set } from 'es-toolkit/compat'
+import type { PartialDeep } from 'type-fest'
 import TablerFileExport from '~icons/tabler/file-export'
 import TablerFileImport from '~icons/tabler/file-import'
 import TablerRestore from '~icons/tabler/restore'
@@ -39,12 +44,18 @@ function onResetSettings() {
 
 async function onRestoreSettings() {
   const remoteSettings = await articleDraft.getData()
-  const pickedSettings = omit(pick(remoteSettings || {}, allowedSettingsKeys), restoreOmitKeys)
 
-  const len = Object.keys(pickedSettings).length
-  if (!len) {
+  const pickedPaths = getPaths(remoteSettings || {}).filter(
+    (p) => allowedSettingsPaths.includes(p) && !restoreOmitPaths.includes(p),
+  )
+  if (!pickedPaths.length) {
     return AntdMessage.error('备份不存在或没有有效的配置')
   }
+
+  const pickedSettings: PartialDeep<Settings> = {}
+  pickedPaths.forEach((p) => {
+    set(pickedSettings, p, get(remoteSettings, p))
+  })
 
   set_HAS_RESTORED_SETTINGS(true)
   updateSettings(pickedSettings)
@@ -91,7 +102,7 @@ export function TabPaneAdvance() {
       <SettingsGroup title='备份/恢复'>
         <div css={flexVerticalCenterStyle}>
           <CheckboxSettingItem
-            configKey='backupSettingsToArticleDraft'
+            configPath='backupSettingsToArticleDraft'
             label='备份设置到专栏草稿箱中'
             tooltip={`专栏 - 草稿箱 - ${APP_NAME}`}
           />
@@ -130,7 +141,7 @@ export function TabPaneAdvance() {
           <>
             预览
             <ResetPartialSettingsButton
-              keys={['autoPreviewUpdateInterval', 'autoPreviewUseContinuousProgress']}
+              paths={['autoPreviewUpdateInterval', 'autoPreviewUseContinuousProgress']}
             />
           </>
         }
@@ -149,7 +160,7 @@ export function TabPaneAdvance() {
         </div>
 
         <CheckboxSettingItem
-          configKey={'autoPreviewUseContinuousProgress'}
+          configPath={'autoPreviewUseContinuousProgress'}
           label='自动预览: 使用连续式进度条'
           tooltip={
             <>
@@ -206,12 +217,12 @@ export function TabPaneAdvance() {
               column-gap: 20px;
             `}
           >
-            <ResetPartialSettingsButton keys={internalBooleanKeys} />
+            <ResetPartialSettingsButton paths={internalBooleanPaths} />
             <Space size={[20, 10]} wrap>
-              {internalBooleanKeys.map((k) => (
+              {internalBooleanPaths.map((k) => (
                 <CheckboxSettingItem
                   key={k}
-                  configKey={k}
+                  configPath={k as BooleanSettingsPath}
                   tooltip={k}
                   label={startCase(k.slice('__internal'.length))}
                 />

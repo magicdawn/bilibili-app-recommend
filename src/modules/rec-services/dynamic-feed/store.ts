@@ -159,11 +159,13 @@ async function updateUpList(force = false) {
 }
 
 async function updateFollowGroups(force = false) {
-  const enabled =
-    settings.dynamicFeedEnableFollowGroupFilter ||
-    !!settings.dynamicFeedWhenViewAllHideIds.filter((x) => x.startsWith(SELECTED_KEY_PREFIX_GROUP))
-      .length
-  if (!enabled) return
+  {
+    const { followGroup, whenViewAll } = settings.dynamicFeed
+    const enabled =
+      followGroup.enabled ||
+      !!whenViewAll.hideIds.filter((x) => x.startsWith(SELECTED_KEY_PREFIX_GROUP)).length
+    if (!enabled) return
+  }
 
   const cacheHit =
     !force &&

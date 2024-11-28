@@ -63,12 +63,12 @@ export function getDynamicFeedServiceConfig() {
     /**
      * from settings
      */
-    showLiveInDynamicFeed: settings.dynamicFeedShowLive,
+    showLiveInDynamicFeed: settings.dynamicFeed.showLive,
 
-    whenViewAllEnableHideSomeContents: settings.dynamicFeedWhenViewAllEnableHideSomeContents,
-    whenViewAllHideIds: new Set(settings.dynamicFeedWhenViewAllHideIds),
+    whenViewAllEnableHideSomeContents: settings.dynamicFeed.whenViewAll.enableHideSomeContents,
+    whenViewAllHideIds: new Set(settings.dynamicFeed.whenViewAll.hideIds),
 
-    advancedSearch: settings.dynamicFeedAdvancedSearch,
+    advancedSearch: settings.dynamicFeed.advancedSearch,
     searchCacheEnabled:
       !!snap.upMid &&
       settings.__internalDynamicFeedCacheAllItemsEntry && // the main switch
@@ -76,7 +76,7 @@ export function getDynamicFeedServiceConfig() {
 
     forceUseMergeTime:
       !!snap.selectedFollowGroup &&
-      settings.dynamicFeedWhenViewSomeGroupForceUseMergeTimelineIds.includes(
+      settings.dynamicFeed.followGroup.forceUseMergeTimelineIds.includes(
         snap.selectedFollowGroup.tagid,
       ),
 

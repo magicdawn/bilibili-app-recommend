@@ -1,19 +1,19 @@
 import { ButtonSettingItem } from '$components/ModalSettings/setting-item'
-import type { BooleanSettingsKey } from '$modules/settings'
+import type { BooleanSettingsPath } from '$modules/settings'
 import type { ComponentProps } from 'react'
 import CuidaShuffleOutline from '~icons/cuida/shuffle-outline'
 
 export function ShuffleSettingsItemFor({
-  configKey,
+  configPath,
   ...rest
-}: { configKey: BooleanSettingsKey } & Omit<
+}: { configPath: BooleanSettingsPath } & Omit<
   ComponentProps<typeof ButtonSettingItem>,
-  'configKey' | 'checkedChildren' | 'unCheckedChildren'
+  'configPath' | 'checkedChildren' | 'unCheckedChildren'
 >) {
   return (
     <ButtonSettingItem
       {...rest}
-      configKey={configKey}
+      configPath={configPath}
       checkedChildren={
         <>
           <CuidaShuffleOutline {...size(18)} className='mr-2px' />

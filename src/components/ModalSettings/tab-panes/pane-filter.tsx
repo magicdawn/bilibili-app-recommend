@@ -56,7 +56,7 @@ export function TabPaneFilter() {
             视频/图文/影视: 仅推荐类 Tab 生效 <br />
             UP/标题: 推荐类 / 热门 等Tab 生效
           </HelpInfo>
-          <SwitchSettingItem configKey='filterEnabled' css={C.ml(10)} />
+          <SwitchSettingItem configPath='filterEnabled' css={C.ml(10)} />
         </div>
 
         <div className={clsx(styles.settingsGroupContent)}>
@@ -73,7 +73,7 @@ export function TabPaneFilter() {
               <div className={styles.row}>
                 <CheckboxSettingItem
                   disabled={!filterEnabled}
-                  configKey='filterMinPlayCountEnabled'
+                  configPath='filterMinPlayCountEnabled'
                   label='按播放量过滤'
                   tooltip={<>不显示播放量很少的视频</>}
                 />
@@ -88,7 +88,7 @@ export function TabPaneFilter() {
               </div>
               <div className={styles.row} style={{ marginTop: 3 }}>
                 <CheckboxSettingItem
-                  configKey='filterMinDurationEnabled'
+                  configPath='filterMinDurationEnabled'
                   label='按视频时长过滤'
                   tooltip={<>不显示短视频</>}
                   disabled={!filterEnabled}
@@ -107,7 +107,7 @@ export function TabPaneFilter() {
               <CheckboxSettingItem
                 className={styles.row}
                 style={{ marginTop: 3 }}
-                configKey='exemptForFollowedVideo'
+                configPath='exemptForFollowedVideo'
                 disabled={!filterEnabled}
                 {...getExemptFollowedTooltipProps('视频')}
               />
@@ -117,7 +117,7 @@ export function TabPaneFilter() {
               <div className={styles.settingsGroupSubTitle}>图文</div>
               <CheckboxSettingItem
                 className={styles.row}
-                configKey='filterOutGotoTypePicture'
+                configPath='filterOutGotoTypePicture'
                 label='过滤图文类型推荐'
                 tooltip={
                   <>
@@ -129,14 +129,14 @@ export function TabPaneFilter() {
               <CheckboxSettingItem
                 className={styles.row}
                 disabled={!filterEnabled || !filterOutGotoTypePicture}
-                configKey='exemptForFollowedPicture'
+                configPath='exemptForFollowedPicture'
                 {...getExemptFollowedTooltipProps('图文')}
               />
 
               <div className={styles.settingsGroupSubTitle}>影视</div>
               <CheckboxSettingItem
                 className={styles.row}
-                configKey='filterOutGotoTypeBangumi'
+                configPath='filterOutGotoTypeBangumi'
                 label='过滤影视类型推荐'
                 tooltip={
                   <>
@@ -163,7 +163,7 @@ export function TabPaneFilter() {
                   P.S 这里是客户端过滤, 与黑名单功能重复, 后期版本可能会删除这个功能
                 </HelpInfo>
                 <SwitchSettingItem
-                  configKey='filterByAuthorNameEnabled'
+                  configPath='filterByAuthorNameEnabled'
                   disabled={!filterEnabled}
                   css={css`
                     margin-left: 10px;
@@ -171,7 +171,7 @@ export function TabPaneFilter() {
                 />
               </div>
               <EditableListSettingItem
-                configKey={'filterByAuthorNameKeywords'}
+                configPath={'filterByAuthorNameKeywords'}
                 searchProps={{ placeholder: '添加UP: 全名 / mid / mid(备注)' }}
                 disabled={!filterEnabled || !filterByAuthorNameEnabled}
               />
@@ -186,7 +186,7 @@ export function TabPaneFilter() {
                   作用范围: 推荐 / 热门
                 </HelpInfo>
                 <SwitchSettingItem
-                  configKey='filterByTitleEnabled'
+                  configPath='filterByTitleEnabled'
                   disabled={!filterEnabled}
                   css={css`
                     margin-left: 10px;
@@ -194,7 +194,7 @@ export function TabPaneFilter() {
                 />
               </div>
               <EditableListSettingItem
-                configKey={'filterByTitleKeywords'}
+                configPath={'filterByTitleKeywords'}
                 searchProps={{ placeholder: '添加过滤关键词' }}
                 disabled={!filterEnabled || !filterByTitleEnabled}
               />

@@ -2,9 +2,15 @@ import { APP_NAME } from '$common'
 import { toastAndReload } from '$components/ModalSettings/index.shared'
 import { AntdMessage, toast } from '$utility'
 import dayjs from 'dayjs'
-import { pick } from 'es-toolkit'
 import { tryit } from 'radash'
-import { allowedSettingsKeys, getSettingsSnapshot, updateSettings, type Settings } from './index'
+import type { PartialDeep } from 'type-fest'
+import {
+  allowedSettingsPaths,
+  getSettingsSnapshot,
+  pickSettings,
+  updateSettings,
+  type Settings,
+} from './index'
 import { set_HAS_RESTORED_SETTINGS } from './restore-flag'
 
 let lastUrl: string | undefined
@@ -42,16 +48,15 @@ export async function importSettings() {
   const text = await file.text()
   if (!text) return toast('文件内容为空!')
 
-  let settingsFromFile
+  let settingsFromFile: PartialDeep<Settings>
   try {
-    settingsFromFile = JSON.parse(text) as Partial<Settings>
+    settingsFromFile = JSON.parse(text) as PartialDeep<Settings>
   } catch (error) {
     return toast('无法解析文件内容!')
   }
 
-  const pickedSettings = pick(settingsFromFile || {}, allowedSettingsKeys)
-  const len = Object.keys(pickedSettings).length
-  if (!len) {
+  const { pickedPaths, pickedSettings } = pickSettings(settingsFromFile, allowedSettingsPaths)
+  if (!pickedPaths.length) {
     return toast('没有有效的设置!')
   }
 

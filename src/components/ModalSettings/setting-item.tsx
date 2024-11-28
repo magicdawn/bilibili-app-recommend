@@ -1,26 +1,27 @@
 import { flexCenterStyle } from '$common/emotion-css'
 import { AntdTooltip } from '$components/_base/antd-custom'
-import type { BooleanSettingsKey } from '$modules/settings'
-import { settings, updateSettings, useSettingsSnapshot } from '$modules/settings'
+import type { BooleanSettingsPath } from '$modules/settings'
+import { settings, useSettingsSnapshot } from '$modules/settings'
 import { Button, Checkbox, Switch } from 'antd'
 import type { CheckboxChangeEvent } from 'antd/es/checkbox'
+import { get, set } from 'es-toolkit/compat'
 import type { ComponentProps, ReactNode } from 'react'
 
-function useSettingsBooleanKey(
-  configKey: BooleanSettingsKey,
+function useBooleanSettingsPath(
+  configPath: BooleanSettingsPath,
   extraAction?: (val: boolean) => void,
 ) {
   const snap = useSettingsSnapshot()
-  const checked = !!snap[configKey]
+  const checked = !!get(snap, configPath, false)
   const onChange = useCallback((val: boolean) => {
-    updateSettings({ [configKey]: val })
+    set(settings, configPath, val)
     extraAction?.(val)
   }, [])
   const checkboxOnChange = useCallback((e: CheckboxChangeEvent) => {
     onChange(e.target.checked)
   }, [])
   const onToggle = useCallback(() => {
-    onChange(!settings[configKey])
+    onChange(!get(settings, configPath, false))
   }, [])
   return { checked, onChange, checkboxOnChange, onToggle }
 }
@@ -28,7 +29,7 @@ function useSettingsBooleanKey(
 type FlagSettingItemProps = ComponentProps<typeof __FlagSettingItem>
 
 function __FlagSettingItem({
-  configKey,
+  configPath,
   label,
   extraAction,
   tooltip,
@@ -37,7 +38,7 @@ function __FlagSettingItem({
   checkboxProps,
   switchProps,
 }: {
-  configKey: BooleanSettingsKey
+  configPath: BooleanSettingsPath
   label?: string | ((val: boolean) => ReactNode)
   extraAction?: (val: boolean) => void | Promise<void>
   tooltip?: ReactNode
@@ -46,7 +47,7 @@ function __FlagSettingItem({
   checkboxProps?: ComponentProps<typeof Checkbox>
   switchProps?: ComponentProps<typeof Switch>
 }) {
-  const { checked, onChange, checkboxOnChange } = useSettingsBooleanKey(configKey, extraAction)
+  const { checked, onChange, checkboxOnChange } = useBooleanSettingsPath(configPath, extraAction)
 
   const wrapTooltip = (children: ReactNode) => {
     if (!tooltip) return children
@@ -61,7 +62,7 @@ function __FlagSettingItem({
   if (typeof label === 'function') {
     usingLabel = label(checked)
   } else {
-    usingLabel = label || configKey
+    usingLabel = label || configPath
   }
 
   if (as === 'checkbox') {
@@ -82,14 +83,14 @@ function __FlagSettingItem({
 }
 
 export function CheckboxSettingItem({
-  configKey,
+  configPath,
   label,
   extraAction,
   tooltip,
   tooltipProps,
   ...otherProps
 }: {
-  configKey: BooleanSettingsKey
+  configPath: BooleanSettingsPath
   label?: FlagSettingItemProps['label']
   extraAction?: FlagSettingItemProps['extraAction']
   tooltip?: ReactNode
@@ -98,7 +99,7 @@ export function CheckboxSettingItem({
   return (
     <__FlagSettingItem
       {...{
-        configKey,
+        configPath,
         label,
         extraAction,
         tooltip,
@@ -111,13 +112,13 @@ export function CheckboxSettingItem({
 }
 
 export function SwitchSettingItem({
-  configKey,
+  configPath,
   extraAction,
   tooltip,
   tooltipProps,
   ...otherProps
 }: {
-  configKey: BooleanSettingsKey
+  configPath: BooleanSettingsPath
   extraAction?: FlagSettingItemProps['extraAction']
   tooltip?: ReactNode
   tooltipProps?: FlagSettingItemProps['tooltipProps']
@@ -125,7 +126,7 @@ export function SwitchSettingItem({
   return (
     <__FlagSettingItem
       {...{
-        configKey,
+        configPath,
         extraAction,
         tooltip,
         tooltipProps,
@@ -137,21 +138,21 @@ export function SwitchSettingItem({
 }
 
 export function ButtonSettingItem({
-  configKey,
+  configPath,
   tooltip,
   tooltipProps,
   extraAction,
   checkedChildren,
   unCheckedChildren,
 }: {
-  configKey: BooleanSettingsKey
+  configPath: BooleanSettingsPath
   tooltip?: ReactNode
   tooltipProps?: FlagSettingItemProps['tooltipProps']
   extraAction?: (val: boolean) => void
   checkedChildren?: ReactNode
   unCheckedChildren?: ReactNode
 }) {
-  const { checked, onToggle } = useSettingsBooleanKey(configKey, extraAction)
+  const { checked, onToggle } = useBooleanSettingsPath(configPath, extraAction)
   return (
     <AntdTooltip title={tooltip} {...tooltipProps}>
       <Button onClick={onToggle}>

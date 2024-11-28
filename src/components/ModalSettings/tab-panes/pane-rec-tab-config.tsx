@@ -35,7 +35,7 @@ import { explainForFlag } from '../index.shared'
 import { ResetPartialSettingsButton } from './_shared'
 
 export function TabPaneRecTabsConfig() {
-  const { appApiDecice, dynamicFeedWhenViewAllEnableHideSomeContents } = useSettingsSnapshot()
+  const { appApiDecice, dynamicFeed } = useSettingsSnapshot()
   const sortedTabKeys = useSortedTabKeys()
 
   return (
@@ -59,7 +59,7 @@ export function TabPaneRecTabsConfig() {
               勾选显示, 拖动排序
             </HelpInfo>
             <Col flex={1} />
-            <ResetPartialSettingsButton keys={['hidingTabKeys', 'customTabKeysOrder']} />
+            <ResetPartialSettingsButton paths={['hidingTabKeys', 'customTabKeysOrder']} />
           </div>
           <VideoSourceTabOrder />
         </div>
@@ -85,12 +85,12 @@ export function TabPaneRecTabsConfig() {
               </div>
               <Space size={10}>
                 <CheckboxSettingItem
-                  configKey='watchlaterUseShuffle'
+                  configPath='watchlaterUseShuffle'
                   label='随机顺序'
                   tooltip='不包括近期添加的「稍后再看」'
                 />
                 <CheckboxSettingItem
-                  configKey='watchlaterAddSeparator'
+                  configPath='watchlaterAddSeparator'
                   label='添加分割线'
                   tooltip='添加「近期」「更早」分割线'
                   css={css`
@@ -112,12 +112,12 @@ export function TabPaneRecTabsConfig() {
               </div>
               <Space size={10}>
                 <CheckboxSettingItem
-                  configKey='favUseShuffle'
+                  configPath='favUseShuffle'
                   label='随机顺序'
                   tooltip='随机收藏'
                 />
                 <CheckboxSettingItem
-                  configKey='favAddSeparator'
+                  configPath='favAddSeparator'
                   label='添加分割线'
                   tooltip='顺序显示时, 按收藏夹添加分割线'
                   css={css`
@@ -139,7 +139,7 @@ export function TabPaneRecTabsConfig() {
               </div>
               <div className='flex flex-wrap  gap-x-10 gap-y-10'>
                 <CheckboxSettingItem
-                  configKey='dynamicFeedEnableFollowGroupFilter'
+                  configPath='dynamicFeed.followGroup.enabled'
                   label='启用分组筛选'
                   tooltip={
                     <>
@@ -151,7 +151,7 @@ export function TabPaneRecTabsConfig() {
                   }
                 />
                 <CheckboxSettingItem
-                  configKey='dynamicFeedShowLive'
+                  configPath='dynamicFeed.showLive'
                   label='在动态中显示直播'
                   tooltip={
                     <>
@@ -162,7 +162,7 @@ export function TabPaneRecTabsConfig() {
                   }
                 />
                 <CheckboxSettingItem
-                  configKey='dynamicFeedWhenViewAllEnableHideSomeContents'
+                  configPath='dynamicFeed.whenViewAll.enableHideSomeContents'
                   label='「全部」动态过滤'
                   tooltip={
                     <>
@@ -175,7 +175,7 @@ export function TabPaneRecTabsConfig() {
                   }
                 />
 
-                {dynamicFeedWhenViewAllEnableHideSomeContents && (
+                {dynamicFeed.whenViewAll.enableHideSomeContents && (
                   <Collapse
                     size='small'
                     css={css`
@@ -362,12 +362,13 @@ function VideoSourceTabSortableItem({ id }: { id: ETab }) {
 }
 
 function DynamicFeedWhenViewAllHideIdsPanel() {
-  const { dynamicFeedWhenViewAllHideIds } = useSettingsSnapshot()
+  const { hideIds } = useSnapshot(settings.dynamicFeed.whenViewAll)
 
   const onDelete = useMemoizedFn((mid: string) => {
-    const set = new Set(settings.dynamicFeedWhenViewAllHideIds)
+    const obj = settings.dynamicFeed.whenViewAll
+    const set = new Set(obj.hideIds)
     set.delete(mid)
-    updateSettings({ dynamicFeedWhenViewAllHideIds: Array.from(set) })
+    obj.hideIds = Array.from(set)
   })
 
   const { followGroups } = useSnapshot(dfStore)
@@ -375,7 +376,7 @@ function DynamicFeedWhenViewAllHideIdsPanel() {
     dfStore.updateFollowGroups()
   })
 
-  const empty = !dynamicFeedWhenViewAllHideIds.length
+  const empty = !hideIds.length
   if (empty) {
     return (
       <div className='flex items-center justify-center'>
@@ -386,7 +387,7 @@ function DynamicFeedWhenViewAllHideIdsPanel() {
 
   return (
     <div className='flex flex-wrap gap-10 max-h-250px overflow-y-scroll'>
-      {dynamicFeedWhenViewAllHideIds.map((tag) => {
+      {hideIds.map((tag) => {
         return (
           <TagItemDisplay
             tag={tag}

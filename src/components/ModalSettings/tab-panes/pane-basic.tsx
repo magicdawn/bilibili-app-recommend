@@ -79,7 +79,7 @@ export function TabPaneBasic() {
       <SettingsGroup title='开关'>
         <Space size={10} wrap>
           <CheckboxSettingItem
-            configKey='pureRecommend'
+            configPath='pureRecommend'
             label='全屏模式'
             tooltip={
               <>
@@ -94,7 +94,7 @@ export function TabPaneBasic() {
           />
 
           <CheckboxSettingItem
-            configKey={'useNarrowMode'}
+            configPath={'useNarrowMode'}
             label='居中模式'
             tooltip={
               <>
@@ -106,7 +106,7 @@ export function TabPaneBasic() {
           />
 
           <CheckboxSettingItem
-            configKey={'showModalFeedOnLoad'}
+            configPath={'showModalFeedOnLoad'}
             label='自动「查看更多」'
             tooltip='打开首页时自动打开「查看更多」弹窗'
             extraAction={(val) => {
@@ -119,7 +119,7 @@ export function TabPaneBasic() {
           />
 
           <CheckboxSettingItem
-            configKey={'showModalFeedEntry'}
+            configPath={'showModalFeedEntry'}
             label='「查看更多」按钮'
             tooltip='是否展示「查看更多」按钮'
           />
@@ -181,7 +181,7 @@ export function TabPaneBasic() {
           </div>
 
           <CheckboxSettingItem
-            configKey='pipWindowDefaultLocked'
+            configPath='pipWindowDefaultLocked'
             label='小窗默认锁定'
             tooltip='开启后,小窗打开时默认为锁定状态'
           />
@@ -191,7 +191,7 @@ export function TabPaneBasic() {
       <SettingsGroup title='预览'>
         <Space size={10}>
           <CheckboxSettingItem
-            configKey='autoPreviewWhenKeyboardSelect'
+            configPath='autoPreviewWhenKeyboardSelect'
             label='键盘选中后自动开始预览'
             tooltip={
               <>
@@ -203,7 +203,7 @@ export function TabPaneBasic() {
           />
 
           <CheckboxSettingItem
-            configKey='autoPreviewWhenHover'
+            configPath='autoPreviewWhenHover'
             label='鼠标悬浮后自动开始预览'
             tooltip={
               <>
@@ -214,7 +214,7 @@ export function TabPaneBasic() {
           />
 
           <CheckboxSettingItem
-            configKey='startPlayFromPreviewPoint'
+            configPath='startPlayFromPreviewPoint'
             label='从预览处开始播放'
             tooltip={
               <>

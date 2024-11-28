@@ -66,7 +66,7 @@ function PopularGeneralUsageInfo() {
 
   const _switch = (
     <SwitchSettingItem
-      configKey={'popularGeneralUseAnonymous'}
+      configPath={'popularGeneralUseAnonymous'}
       checkedChildren='匿名访问: 开'
       unCheckedChildren='匿名访问: 关'
       tooltip={tooltip}
@@ -76,7 +76,7 @@ function PopularGeneralUsageInfo() {
 
   const checkbox = (
     <CheckboxSettingItem
-      configKey={'popularGeneralUseAnonymous'}
+      configPath={'popularGeneralUseAnonymous'}
       tooltip={tooltip}
       label='匿名访问'
       extraAction={extraAction}

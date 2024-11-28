@@ -1,18 +1,22 @@
-import { isEqual, omit, throttle } from 'es-toolkit'
+import { isEqual, throttle } from 'es-toolkit'
 import ms from 'ms'
-import type { Settings } from '.'
-import { articleDraft, debug, getBackupOmitKeys } from './index.shared'
+import type { PartialDeep } from 'type-fest'
+import { allowedSettingsPaths, pickSettings, type Settings } from '.'
+import { articleDraft, debug, getBackupOmitPaths } from './index.shared'
 import { HAS_RESTORED_SETTINGS } from './restore-flag'
 
-let lastBackupVal: Partial<Settings> | undefined
+let lastBackupVal: PartialDeep<Settings> | undefined
 const setDataThrottled = throttle(articleDraft.setData, ms('5s'))
 
 export async function saveToDraft(val: Readonly<Settings>) {
   if (!val.backupSettingsToArticleDraft) return
-  // skip when `HAS_RESTORED_SETTINGS=true`
-  if (HAS_RESTORED_SETTINGS) return
+  if (HAS_RESTORED_SETTINGS) return // skip when `HAS_RESTORED_SETTINGS=true`
 
-  const currentBackupVal = omit(val, getBackupOmitKeys())
+  const { pickedSettings: currentBackupVal } = pickSettings(
+    val,
+    allowedSettingsPaths,
+    getBackupOmitPaths(),
+  )
   const shouldBackup = !lastBackupVal || !isEqual(lastBackupVal, currentBackupVal)
   if (!shouldBackup) return
 

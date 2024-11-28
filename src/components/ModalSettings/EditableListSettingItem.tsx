@@ -3,30 +3,32 @@ import { AntdTooltip } from '$components/_base/antd-custom'
 import { borderColorValue, colorPrimaryValue } from '$components/css-vars'
 import { getUserNickname } from '$modules/bilibili/user/nickname'
 import {
+  getSettings,
   settings,
-  updateSettings,
   useSettingsSnapshot,
-  type ListSettingsKey,
+  type ListSettingsPath,
 } from '$modules/settings'
 import { AntdMessage } from '$utility'
 import { Empty, Input } from 'antd'
 import { uniq } from 'es-toolkit'
+import { get, set } from 'es-toolkit/compat'
 import type { ComponentPropsWithoutRef } from 'react'
 import IconParkOutlineCloseSmall from '~icons/icon-park-outline/close-small'
 
 const { Search } = Input
 
 export function EditableListSettingItem({
-  configKey,
+  configPath,
   searchProps,
   disabled,
 }: {
-  configKey: ListSettingsKey
+  configPath: ListSettingsPath
   searchProps?: ComponentProps<typeof Search>
   disabled?: boolean
 }) {
-  let list = useSettingsSnapshot()[configKey] as string[]
-  list = useMemo(() => uniq(list).toReversed(), [list])
+  const snap = useSettingsSnapshot()
+  const rawList = get(snap, configPath) as string[]
+  const list = useMemo(() => uniq(rawList).toReversed(), [rawList])
 
   return (
     <>
@@ -42,14 +44,13 @@ export function EditableListSettingItem({
         onSearch={(val, e) => {
           if (!val) return
 
-          const set = new Set([...settings[configKey]])
-          if (!set.has(val)) {
-            set.add(val)
+          const s = new Set(getSettings(configPath) as string[])
+          if (!s.has(val)) {
+            s.add(val)
           } else {
             AntdMessage.warning(`${val} 已存在`)
           }
-
-          updateSettings({ [configKey]: Array.from(set) })
+          set(settings, configPath, Array.from(s))
 
           // clear
           // 非受控组件, 有内部状态, 不能简单设置 input.value
@@ -102,12 +103,12 @@ export function EditableListSettingItem({
                   key={t}
                   tag={t}
                   onDelete={(tag) => {
-                    const s = new Set([...settings[configKey]])
+                    const s = new Set(get(settings, configPath) as string[])
                     s.delete(tag)
-                    updateSettings({ [configKey]: Array.from(s) })
+                    set(settings, configPath, Array.from(s))
                   }}
                   renderTag={
-                    configKey === 'filterByAuthorNameKeywords'
+                    configPath === 'filterByAuthorNameKeywords'
                       ? (tag) => <UpTagItemDisplay tag={tag} />
                       : undefined
                   }

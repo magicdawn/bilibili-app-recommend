@@ -3,7 +3,10 @@ import { ETab } from '$components/RecHeader/tab-enum'
 import { VideoLinkOpenMode } from '$components/VideoCard/index.shared'
 import { EAppApiDevice } from '$define/index.shared'
 import { toast } from '$utility/toast'
-import { pick } from 'es-toolkit'
+import { getPaths, type BooleanPaths, type ListPaths, type Paths } from '$utility/type'
+import { cloneDeep, isNil } from 'es-toolkit'
+import { get, set } from 'es-toolkit/compat'
+import type { PartialDeep } from 'type-fest'
 import { proxy, snapshot, subscribe, useSnapshot } from 'valtio'
 import { saveToDraft } from './cloud-backup'
 
@@ -68,12 +71,21 @@ export const initialSettings = {
   /**
    * tab=dynamic-feed
    */
-  dynamicFeedShowLive: true, // 在动态中显示直播
-  dynamicFeedEnableFollowGroupFilter: true, // 下拉筛选支持 - 关注分组
-  // 在「全部」动态中隐藏 UP 的动态 & 在「全部」动态中隐藏此分组的动态
-  dynamicFeedWhenViewAllEnableHideSomeContents: false, // the flag
-  dynamicFeedWhenViewAllHideIds: [] as string[], // `${mid}` | `follow-group:${id}`
-  dynamicFeedWhenViewSomeGroupForceUseMergeTimelineIds: [] as number[], // these force uses merge-timeline-service
+  dynamicFeed: {
+    showLive: true, // 在动态中显示直播
+
+    followGroup: {
+      enabled: true, // 下拉筛选支持 - 关注分组
+      forceUseMergeTimelineIds: [] as number[],
+    },
+
+    whenViewAll: {
+      enableHideSomeContents: false, // 在「全部」动态中隐藏 UP 的动态 & 在「全部」动态中隐藏此分组的动态
+      hideIds: [] as string[], // `up:${mid}` | `follow-group:${id}`
+    },
+
+    advancedSearch: false,
+  },
 
   /**
    * tab=watchlater
@@ -197,36 +209,22 @@ export const initialSettings = {
 
   __internalDynamicFeedCacheAllItemsEntry: false,
   __internalDynamicFeedCacheAllItemsUpMids: [] as string[], // enable for these up
-  dynamicFeedAdvancedSearch: false, // this is not marked __internal, and not showing in the Settings Panlel
   __internalDynamicFeedAddCopyBvidButton: false,
   __internalDynamicFeedExternalSearchInput: false, // more convenient
 }
 
 export type Settings = typeof initialSettings
-export const settings = proxy({ ...initialSettings })
+export const settings = proxy(cloneDeep(initialSettings))
 
-export type SettingsKey = keyof Settings
-export const allowedSettingsKeys = Object.keys(initialSettings) as SettingsKey[]
+export type SettingsPath = Paths<Settings>
+export type BooleanSettingsPath = BooleanPaths<Settings>
+export type ListSettingsPath = ListPaths<Settings>
 
-export type BooleanSettingsKey = {
-  [k in SettingsKey]: Settings[k] extends boolean ? k : never
-}[SettingsKey]
+export const allowedSettingsPaths = getPaths(initialSettings)
 
-export type ListSettingsKey = {
-  [k in SettingsKey]: Settings[k] extends Array<unknown> ? k : never
-}[SettingsKey]
-
-export type ListSettingsKeyOf<T> = {
-  [k in ListSettingsKey]: Settings[k] extends Array<unknown>
-    ? Settings[k][number] extends T
-      ? k
-      : never
-    : never
-}[ListSettingsKey]
-
-export const internalBooleanKeys = (Object.keys(initialSettings) as SettingsKey[]).filter(
-  (k) => k.startsWith('__internal') && typeof initialSettings[k] === 'boolean',
-) as BooleanSettingsKey[]
+export const internalBooleanPaths = allowedSettingsPaths.filter(
+  (p) => p.startsWith('__internal') && typeof get(initialSettings, p) === 'boolean',
+) as BooleanSettingsPath[]
 
 export function useSettingsSnapshot() {
   return useSnapshot(settings)
@@ -245,7 +243,7 @@ const storageKey = `settings`
 export async function load() {
   const val = await GM.getValue<Settings>(storageKey)
   if (val && typeof val === 'object') {
-    Object.assign(settings, pick(val, allowedSettingsKeys))
+    updateSettings(val)
   }
 
   // persist when config change
@@ -255,7 +253,7 @@ export async function load() {
 }
 
 async function save() {
-  const newVal = snapshot(settings)
+  const newVal = cloneDeep(snapshot(settings))
   // console.log('GM.setValue newVal = %o', newVal)
 
   // GM save
@@ -265,11 +263,38 @@ async function save() {
   await saveToDraft(newVal as Readonly<Settings>)
 }
 
+export function getSettings(path: SettingsPath) {
+  return get(settings, path)
+}
+
+/**
+ * pick
+ */
+export function pickSettings(
+  source: PartialDeep<Settings>,
+  paths: SettingsPath[],
+  omit: SettingsPath[] = [],
+) {
+  const pickedSettings: PartialDeep<Settings> = {}
+  const pickedPaths = paths.filter(
+    (p) => allowedSettingsPaths.includes(p) && !omit.includes(p) && !isNil(get(source, p)),
+  )
+  pickedPaths.forEach((p) => {
+    const v = get(source, p)
+    set(pickedSettings, p, v)
+  })
+  return { pickedPaths, pickedSettings }
+}
+
 /**
  * update & persist
  */
-export function updateSettings(c: Partial<Settings>) {
-  Object.assign(settings, c)
+export function updateSettings(payload: PartialDeep<Settings>) {
+  const { pickedPaths } = pickSettings(payload, allowedSettingsPaths)
+  for (const p of pickedPaths) {
+    const v = get(payload, p)
+    set(settings, p, v)
+  }
 }
 
 /**

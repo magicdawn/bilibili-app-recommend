@@ -30,12 +30,13 @@ import {
 import { dynamicFeedFilterSelectUp } from '$modules/rec-services/dynamic-feed/usage-info'
 import { formatFavFolderUrl } from '$modules/rec-services/fav'
 import { UserFavService, defaultFavFolderName } from '$modules/rec-services/fav/user-fav.service'
-import { settings, updateSettings, useSettingsSnapshot } from '$modules/settings'
+import { settings, updateSettings } from '$modules/settings'
 import { AntdMessage, toast } from '$utility'
 import type { MenuProps } from 'antd'
 import { delay, isNil, omit } from 'es-toolkit'
 import { size } from 'polished'
 import type { MouseEvent } from 'react'
+import { useSnapshot } from 'valtio'
 import { copyContent } from '.'
 import type { watchlaterDel } from './card.service'
 import { watchlaterAdd } from './card.service'
@@ -121,7 +122,7 @@ export function useContextMenus({
   consistentOpenMenus: ContextMenuItem[]
   conditionalOpenMenus: ContextMenuItem[]
 }): ContextMenuItem[] {
-  const { dynamicFeedWhenViewAllEnableHideSomeContents } = useSettingsSnapshot()
+  const { enableHideSomeContents } = useSnapshot(settings.dynamicFeed.whenViewAll)
 
   const onCopyLink = useMemoizedFn(() => {
     let content = href
@@ -217,18 +218,19 @@ export function useContextMenus({
 
   // 不再 stick on camelCase 后, 腰不酸了, 腿不疼了~
   const hasEntry_addMidTo_dynamicFeedWhenViewAllHideIds =
-    dynamicFeedWhenViewAllEnableHideSomeContents &&
+    enableHideSomeContents &&
     isDynamic(item) &&
     dfStore.selectedKey === SELECTED_KEY_ALL &&
     !!authorMid
   const hasEntry_addFollowGroupIdTo_dynamicFeedWhenViewAllHideIds =
-    dynamicFeedWhenViewAllEnableHideSomeContents &&
+    enableHideSomeContents &&
     isDynamic(item) &&
     dfStore.selectedKey.startsWith(SELECTED_KEY_PREFIX_GROUP)
   const _dynamicFeedWhenViewAllHideIdsAdd = useMemoizedFn(async (newId: string) => {
-    const set = new Set(settings.dynamicFeedWhenViewAllHideIds)
+    const obj = settings.dynamicFeed.whenViewAll
+    const set = new Set(obj.hideIds)
     set.add(newId)
-    updateSettings({ dynamicFeedWhenViewAllHideIds: Array.from(set) })
+    obj.hideIds = Array.from(set)
   })
   const onAddMidTo_dynamicFeedWhenViewAllHideIds = useMemoizedFn(async () => {
     if (!hasEntry_addMidTo_dynamicFeedWhenViewAllHideIds) return

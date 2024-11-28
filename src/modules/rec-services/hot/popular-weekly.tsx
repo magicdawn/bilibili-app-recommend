@@ -166,7 +166,7 @@ function PopularWeeklyUsageInfo() {
   return (
     <>
       <SwitchSettingItem
-        configKey={'popularWeeklyUseShuffle'}
+        configPath={'popularWeeklyUseShuffle'}
         checkedChildren='随机顺序: 开'
         unCheckedChildren='随机顺序: 关'
         extraAction={async () => {
