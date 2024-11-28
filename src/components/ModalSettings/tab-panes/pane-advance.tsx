@@ -12,7 +12,7 @@ import { AntdTooltip } from '$components/_base/antd-custom'
 import { borderColorValue } from '$components/css-vars'
 import { OpenExternalLinkIcon } from '$modules/icon'
 import {
-  allowedSettingsPaths,
+  allowedLeafSettingsPaths,
   internalBooleanPaths,
   resetSettings,
   settings,
@@ -24,7 +24,7 @@ import {
 import { exportSettings, importSettings } from '$modules/settings/file-backup'
 import { articleDraft, restoreOmitPaths } from '$modules/settings/index.shared'
 import { AntdMessage } from '$utility'
-import { getPaths } from '$utility/type'
+import { getPaths } from '$utility/object-paths'
 import { Button, Popconfirm, Slider, Space } from 'antd'
 import { startCase } from 'es-toolkit'
 import { get, set } from 'es-toolkit/compat'
@@ -46,7 +46,7 @@ async function onRestoreSettings() {
   const remoteSettings = await articleDraft.getData()
 
   const pickedPaths = getPaths(remoteSettings || {}).filter(
-    (p) => allowedSettingsPaths.includes(p) && !restoreOmitPaths.includes(p),
+    (p) => allowedLeafSettingsPaths.includes(p) && !restoreOmitPaths.includes(p),
   )
   if (!pickedPaths.length) {
     return AntdMessage.error('备份不存在或没有有效的配置')

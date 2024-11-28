@@ -5,7 +5,7 @@ import dayjs from 'dayjs'
 import { tryit } from 'radash'
 import type { PartialDeep } from 'type-fest'
 import {
-  allowedSettingsPaths,
+  allowedLeafSettingsPaths,
   getSettingsSnapshot,
   pickSettings,
   runSettingsMigration,
@@ -57,7 +57,7 @@ export async function importSettings() {
   }
 
   runSettingsMigration(settingsFromFile)
-  const { pickedPaths, pickedSettings } = pickSettings(settingsFromFile, allowedSettingsPaths)
+  const { pickedPaths, pickedSettings } = pickSettings(settingsFromFile, allowedLeafSettingsPaths)
   if (!pickedPaths.length) {
     return toast('没有有效的设置!')
   }

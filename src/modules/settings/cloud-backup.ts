@@ -1,7 +1,7 @@
 import { isEqual, throttle } from 'es-toolkit'
 import ms from 'ms'
 import type { PartialDeep } from 'type-fest'
-import { allowedSettingsPaths, pickSettings, type Settings } from '.'
+import { allowedLeafSettingsPaths, pickSettings, type Settings } from '.'
 import { articleDraft, debug, getBackupOmitPaths } from './index.shared'
 import { HAS_RESTORED_SETTINGS } from './restore-flag'
 
@@ -14,7 +14,7 @@ export async function saveToDraft(val: Readonly<Settings>) {
 
   const { pickedSettings: currentBackupVal } = pickSettings(
     val,
-    allowedSettingsPaths,
+    allowedLeafSettingsPaths,
     getBackupOmitPaths(),
   )
   const shouldBackup = !lastBackupVal || !isEqual(lastBackupVal, currentBackupVal)

@@ -1,5 +1,10 @@
 import { C } from '$common/emotion-css'
-import { initialSettings, pickSettings, updateSettings, type SettingsPath } from '$modules/settings'
+import {
+  initialSettings,
+  pickSettings,
+  updateSettings,
+  type LeafSettingsPath,
+} from '$modules/settings'
 import type { TheCssType } from '$utility/type'
 import { Button, Popconfirm, Space } from 'antd'
 import { size } from 'polished'
@@ -62,7 +67,7 @@ export function SettingsGroup({
   )
 }
 
-export function resetPartialSettings(paths: SettingsPath[]) {
+export function resetPartialSettings(paths: LeafSettingsPath[]) {
   const { pickedSettings } = pickSettings(initialSettings, paths)
   updateSettings(pickedSettings)
 }
@@ -71,7 +76,7 @@ export function ResetPartialSettingsButton({
   paths,
   className,
 }: {
-  paths: SettingsPath[]
+  paths: LeafSettingsPath[]
   className?: string
 }) {
   return (

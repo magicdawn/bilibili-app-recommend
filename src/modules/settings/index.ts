@@ -1,14 +1,21 @@
-import { IN_BILIBILI_HOMEPAGE } from '$common'
+import { baseDebug, IN_BILIBILI_HOMEPAGE } from '$common'
 import { ETab } from '$components/RecHeader/tab-enum'
 import { VideoLinkOpenMode } from '$components/VideoCard/index.shared'
 import { EAppApiDevice } from '$define/index.shared'
+import {
+  getLeafPaths,
+  type BooleanPaths,
+  type LeafPaths,
+  type ListPaths,
+} from '$utility/object-paths'
 import { toast } from '$utility/toast'
-import { getLeafPaths, type BooleanPaths, type LeafPaths, type ListPaths } from '$utility/type'
 import { cloneDeep, isNil } from 'es-toolkit'
 import { get, set } from 'es-toolkit/compat'
 import type { PartialDeep } from 'type-fest'
 import { proxy, snapshot, subscribe, useSnapshot } from 'valtio'
 import { saveToDraft } from './cloud-backup'
+
+const debug = baseDebug.extend('settings')
 
 /**
  * 命名: 模块/tab + 场景 + 功能
@@ -219,14 +226,19 @@ export const initialSettings = {
 export type Settings = typeof initialSettings
 export const settings = proxy(cloneDeep(initialSettings))
 
-export type SettingsPath = LeafPaths<Settings>
+export type LeafSettingsPath = LeafPaths<Settings>
 export type BooleanSettingsPath = BooleanPaths<Settings>
 export type ListSettingsPath = ListPaths<Settings>
 
-export const allowedSettingsPaths = getLeafPaths(initialSettings)
-export const internalBooleanPaths = allowedSettingsPaths.filter(
+export const allowedLeafSettingsPaths = getLeafPaths(initialSettings)
+export const internalBooleanPaths = allowedLeafSettingsPaths.filter(
   (p) => p.includes('__internal') && typeof get(initialSettings, p) === 'boolean',
 ) as BooleanSettingsPath[]
+debug(
+  'allowedLeafSettingsPaths = %O, internalBooleanPaths = %O',
+  allowedLeafSettingsPaths,
+  internalBooleanPaths,
+)
 
 export function useSettingsSnapshot() {
   return useSnapshot(settings)
@@ -244,7 +256,7 @@ const storageKey = `settings`
 
 export function runSettingsMigration(val: object) {
   // from v0.28.2, remove after several releases
-  const config: Array<[configPath: SettingsPath, legacyConfigPath: string]> = [
+  const config: Array<[configPath: LeafSettingsPath, legacyConfigPath: string]> = [
     ['dynamicFeed.showLive', 'dynamicFeedShowLive'],
     ['dynamicFeed.followGroup.enabled', 'dynamicFeedFollowGroupEnabled'],
     [
@@ -301,7 +313,7 @@ async function save() {
   await saveToDraft(newVal as Readonly<Settings>)
 }
 
-export function getSettings(path: SettingsPath) {
+export function getSettings(path: LeafSettingsPath) {
   return get(settings, path)
 }
 
@@ -310,12 +322,12 @@ export function getSettings(path: SettingsPath) {
  */
 export function pickSettings(
   source: PartialDeep<Settings>,
-  paths: SettingsPath[],
-  omit: SettingsPath[] = [],
+  paths: LeafSettingsPath[],
+  omit: LeafSettingsPath[] = [],
 ) {
   const pickedSettings: PartialDeep<Settings> = {}
   const pickedPaths = paths.filter(
-    (p) => allowedSettingsPaths.includes(p) && !omit.includes(p) && !isNil(get(source, p)),
+    (p) => allowedLeafSettingsPaths.includes(p) && !omit.includes(p) && !isNil(get(source, p)),
   )
   pickedPaths.forEach((p) => {
     const v = get(source, p)
@@ -328,7 +340,7 @@ export function pickSettings(
  * update & persist
  */
 export function updateSettings(payload: PartialDeep<Settings>) {
-  const { pickedPaths } = pickSettings(payload, allowedSettingsPaths)
+  const { pickedPaths } = pickSettings(payload, allowedLeafSettingsPaths)
   for (const p of pickedPaths) {
     const v = get(payload, p)
     set(settings, p, v)
