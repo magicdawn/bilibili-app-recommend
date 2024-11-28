@@ -7,7 +7,12 @@ import { HelpInfo } from '$components/_base/HelpInfo'
 import { AntdTooltip } from '$components/_base/antd-custom'
 import { colorPrimaryValue } from '$components/css-vars'
 import { IconPark } from '$modules/icon/icon-park'
-import { settings, updateSettings, useSettingsSnapshot } from '$modules/settings'
+import {
+  settings,
+  updateSettings,
+  useSettingsSnapshot,
+  type ListSettingsKey,
+} from '$modules/settings'
 import { AntdMessage } from '$utility'
 import { getAvatarSrc } from '$utility/image'
 import type { AntdMenuItemType } from '$utility/type'
@@ -16,6 +21,7 @@ import { Avatar, Badge, Button, Checkbox, Dropdown, Input, Popover, Radio, Space
 import type { CheckboxChangeEvent } from 'antd/es/checkbox'
 import { delay, throttle } from 'es-toolkit'
 import { fastSortWithOrders } from 'fast-sort-lens'
+import type { ReactNode } from 'react'
 import { useSnapshot } from 'valtio'
 import TablerFilter from '~icons/tabler/filter'
 import TablerFilterCheck from '~icons/tabler/filter-check'
@@ -26,11 +32,14 @@ import {
   localDynamicFeedInfoCache,
   updateLocalDynamicFeedCache,
 } from './cache'
+import { FollowGroupMergeTimelineService } from './group/merge-timeline-service'
+import type { FollowGroup } from './group/types/groups'
 import {
   DynamicFeedVideoMinDuration,
   DynamicFeedVideoMinDurationConfig,
   DynamicFeedVideoType,
   DynamicFeedVideoTypeLabel,
+  SELECTED_KEY_PREFIX_GROUP,
   dfStore,
   updateFilterData,
   type DynamicFeedStore,
@@ -58,6 +67,7 @@ const clearPayload: Partial<DynamicFeedStore> = {
 const S = {
   filterWrapper: css`
     padding-block: 10px;
+    max-width: 350px;
   `,
 
   filterSection: css`
@@ -86,6 +96,9 @@ const flexBreak = (
     `}
   />
 )
+
+const IconForUp = IconRadixIconsPerson
+const IconForGroup = IconMynauiUsersGroup
 
 export function DynamicFeedUsageInfo() {
   const { ref, getPopupContainer } = usePopupContainer()
@@ -151,7 +164,7 @@ export function DynamicFeedUsageInfo() {
       groupItems = followGroups.map((group) => {
         return {
           key: `group:${group.tagid}`,
-          label: group.name,
+          label: group.name + ` (${group.count})`,
           icon: <Avatar size={'small'}>组</Avatar>,
           onClick() {
             onSelect({ ...clearPayload, selectedFollowGroup: structuredClone({ ...group }) })
@@ -346,8 +359,32 @@ export function DynamicFeedUsageInfo() {
       )}
 
       <SearchCacheRelated />
+
+      {selectedFollowGroup && (
+        <div className='section' css={S.filterSection}>
+          <div className='title'>
+            分组
+            <HelpInfo>当前分组的一些操作~</HelpInfo>
+          </div>
+          <div className='content'>
+            <FollowGroupActions followGroup={selectedFollowGroup} onRefresh={onRefresh} />
+          </div>
+        </div>
+      )}
     </div>
   )
+
+  const followGroupMidsCount = selectedFollowGroup?.count
+  const dropdownButtonIcon = hasSelectedUp ? (
+    <IconForUp {...size(14)} className='mt--1px' />
+  ) : selectedFollowGroup ? (
+    <IconForGroup {...size(18)} />
+  ) : undefined
+  const dropdownButtonLabel = hasSelectedUp
+    ? upName
+    : selectedFollowGroup
+      ? selectedFollowGroup.name + (followGroupMidsCount ? ` (${followGroupMidsCount})` : '')
+      : '全部'
 
   return (
     <>
@@ -360,12 +397,8 @@ export function DynamicFeedUsageInfo() {
             style: { maxHeight: '60vh', overflowY: 'scroll' },
           }}
         >
-          <Button>
-            {upName
-              ? `UP: ${upName}`
-              : selectedFollowGroup
-                ? `分组 - ${selectedFollowGroup.name}`
-                : '全部'}
+          <Button className='gap-4px' icon={dropdownButtonIcon}>
+            {dropdownButtonLabel}
           </Button>
         </Dropdown>
 
@@ -525,3 +558,90 @@ const tryInstantSearchWithCache = throttle(async function ({
   await delay(0)
   onRefresh?.()
 }, 100)
+
+function FollowGroupActions({
+  followGroup,
+  onRefresh,
+}: {
+  followGroup: FollowGroup
+  onRefresh?: () => void
+}) {
+  let forceMergeTimelineCheckbox: ReactNode
+  {
+    const { checked, onChange } = useValueInSettingsCollection(
+      followGroup.tagid,
+      'dynamicFeedWhenViewSomeGroupForceUseMergeTimelineIds',
+    )
+    const disabled = followGroup.count <= FollowGroupMergeTimelineService.MAX_UPMID_COUNT
+    forceMergeTimelineCheckbox = (
+      <Checkbox
+        checked={checked}
+        onChange={(e) => {
+          onChange(e)
+          onRefresh?.()
+        }}
+        disabled={disabled}
+      >
+        <AntdTooltip
+          title={
+            <>
+              {disabled && (
+                <p className='color-rose'>当前分组 UP 数量: {followGroup.count}, 无需设置</p>
+              )}
+              查看分组动态时, 强制使用「时间线拼接」 <br />
+              默认分组 UP 数量不超过 {FollowGroupMergeTimelineService.MAX_UPMID_COUNT}{' '}
+              时使用「时间线拼接」
+            </>
+          }
+        >
+          分组动态: 强制使用「时间线拼接」
+        </AntdTooltip>
+      </Checkbox>
+    )
+  }
+
+  let addTo_dynamicFeedWhenViewAllHideIds_checkbox: ReactNode
+  {
+    const { checked, onChange } = useValueInSettingsCollection(
+      `${SELECTED_KEY_PREFIX_GROUP}${followGroup.tagid}`,
+      'dynamicFeedWhenViewAllHideIds',
+    )
+    addTo_dynamicFeedWhenViewAllHideIds_checkbox = (
+      <Checkbox checked={checked} onChange={onChange}>
+        <AntdTooltip title={<>在「全部」动态中隐藏来自此 {followGroup.name} 的动态</>}>
+          在「全部」动态中隐藏来自此分组的动态
+        </AntdTooltip>
+      </Checkbox>
+    )
+  }
+
+  return (
+    <div className='flex items-center flex-wrap gap-x-10 gap-y-6'>
+      {addTo_dynamicFeedWhenViewAllHideIds_checkbox}
+      {forceMergeTimelineCheckbox}
+    </div>
+  )
+}
+
+function useValueInSettingsCollection<T extends string | number>(
+  value: T,
+  collectionKey: ListSettingsKey,
+) {
+  const list = useSettingsSnapshot()[collectionKey]
+  const checked = useMemo(() => list.includes(value), [list])
+  const setChecked = useMemoizedFn((checked: boolean) => {
+    const set = new Set<unknown>(list)
+    if (checked) {
+      set.add(value)
+    } else {
+      set.delete(value)
+    }
+    updateSettings({ [collectionKey]: Array.from(set) })
+  })
+
+  const onChange = useCallback((e: CheckboxChangeEvent) => {
+    setChecked(e.target.checked)
+  }, [])
+
+  return { checked, setChecked, onChange }
+}

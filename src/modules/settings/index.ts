@@ -73,6 +73,7 @@ export const initialSettings = {
   // 在「全部」动态中隐藏 UP 的动态 & 在「全部」动态中隐藏此分组的动态
   dynamicFeedWhenViewAllEnableHideSomeContents: false, // the flag
   dynamicFeedWhenViewAllHideIds: [] as string[], // `${mid}` | `follow-group:${id}`
+  dynamicFeedWhenViewSomeGroupForceUseMergeTimelineIds: [] as number[], // these force uses merge-timeline-service
 
   /**
    * tab=watchlater
@@ -212,8 +213,16 @@ export type BooleanSettingsKey = {
 }[SettingsKey]
 
 export type ListSettingsKey = {
-  [k in SettingsKey]: Settings[k] extends Array<any> ? k : never
+  [k in SettingsKey]: Settings[k] extends Array<unknown> ? k : never
 }[SettingsKey]
+
+export type ListSettingsKeyOf<T> = {
+  [k in ListSettingsKey]: Settings[k] extends Array<unknown>
+    ? Settings[k][number] extends T
+      ? k
+      : never
+    : never
+}[ListSettingsKey]
 
 export const internalBooleanKeys = (Object.keys(initialSettings) as SettingsKey[]).filter(
   (k) => k.startsWith('__internal') && typeof initialSettings[k] === 'boolean',

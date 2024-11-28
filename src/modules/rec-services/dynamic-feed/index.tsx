@@ -17,7 +17,7 @@ import {
 } from './cache'
 import { parseSearchInput } from './cache/search'
 import { getFollowGroupContent } from './group'
-import { FollowGroupMergeTimelineService } from './group/group-up-service'
+import { FollowGroupMergeTimelineService } from './group/merge-timeline-service'
 import {
   DynamicFeedVideoMinDuration,
   DynamicFeedVideoType,
@@ -74,6 +74,12 @@ export function getDynamicFeedServiceConfig() {
       settings.__internalDynamicFeedCacheAllItemsEntry && // the main switch
       settings.__internalDynamicFeedCacheAllItemsUpMids.includes(snap.upMid.toString()), // the switch for this up
 
+    forceUseMergeTime:
+      !!snap.selectedFollowGroup &&
+      settings.dynamicFeedWhenViewSomeGroupForceUseMergeTimelineIds.includes(
+        snap.selectedFollowGroup.tagid,
+      ),
+
     /**
      * from query
      */
@@ -110,8 +116,8 @@ export class DynamicFeedRecService implements IService {
   get hasMore() {
     if (this.hasMoreStreamingLive) return true
 
-    if (this.viewingSomeGroup && this.followGroupMergeTimelineService) {
-      return this.followGroupMergeTimelineService.hasMore
+    if (this.viewingSomeGroup && this.whenViewSomeGroupMergeTimelineService) {
+      return this.whenViewSomeGroupMergeTimelineService.hasMore
     }
 
     if (this.hasMoreDynFeed) return true
@@ -176,16 +182,19 @@ export class DynamicFeedRecService implements IService {
   get viewingSomeGroup() {
     return typeof this.config.followGroupTagid === 'number'
   }
-  private followGroupMergeTimelineService: FollowGroupMergeTimelineService | undefined
-  private currentFollowGroupMids = new Set<number>()
-  private async loadFollowGroupMids() {
+  private whenViewSomeGroupMergeTimelineService: FollowGroupMergeTimelineService | undefined
+  private whenViewSomeGroupMids = new Set<number>()
+  private async loadWhenViewSomeGroupMids() {
     if (typeof this.followGroupTagid !== 'number') return // no need
-    if (this.currentFollowGroupMids.size) return // loaded
+    if (this.whenViewSomeGroupMids.size) return // loaded
     const mids = await getFollowGroupContent(this.followGroupTagid)
-    this.currentFollowGroupMids = new Set(mids)
-    if (mids.length > 0 && mids.length <= 20) {
-      // <- 20, 太多了则从全部过滤
-      this.followGroupMergeTimelineService = new FollowGroupMergeTimelineService(
+    this.whenViewSomeGroupMids = new Set(mids)
+    if (
+      mids.length > 0 &&
+      (mids.length <= FollowGroupMergeTimelineService.MAX_UPMID_COUNT || // <- 太多了则从全部过滤
+        this.config.forceUseMergeTime)
+    ) {
+      this.whenViewSomeGroupMergeTimelineService = new FollowGroupMergeTimelineService(
         mids.map((x) => x.toString()),
       )
     }
@@ -246,7 +255,7 @@ export class DynamicFeedRecService implements IService {
 
     // viewingSomeGroup: ensure current follow-group's mids loaded
     if (this.viewingSomeGroup) {
-      await this.loadFollowGroupMids()
+      await this.loadWhenViewSomeGroupMids()
     }
     // viewingAll: ensure hide contents from these mids loaded
     if (this.viewingAll) {
@@ -291,8 +300,8 @@ export class DynamicFeedRecService implements IService {
     }
 
     // a group with manual merge-timeline service
-    else if (this.viewingSomeGroup && this.followGroupMergeTimelineService) {
-      rawItems = await this.followGroupMergeTimelineService.loadMore(signal)
+    else if (this.viewingSomeGroup && this.whenViewSomeGroupMergeTimelineService) {
+      rawItems = await this.whenViewSomeGroupMergeTimelineService.loadMore(signal)
     }
 
     // normal
@@ -335,10 +344,10 @@ export class DynamicFeedRecService implements IService {
       // by 关注分组
       .filter((x) => {
         if (!this.viewingSomeGroup) return true
-        if (!this.currentFollowGroupMids.size) return true
+        if (!this.whenViewSomeGroupMids.size) return true
         const mid = x?.modules?.module_author?.mid
         if (!mid) return true
-        return this.currentFollowGroupMids.has(mid)
+        return this.whenViewSomeGroupMids.has(mid)
       })
 
       // by 动态视频|投稿视频

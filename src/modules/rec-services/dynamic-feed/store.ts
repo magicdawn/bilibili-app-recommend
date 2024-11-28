@@ -86,6 +86,7 @@ export const SELECTED_KEY_PREFIX_GROUP = 'group:'
  * df expand to `dynamic-feed`
  */
 
+export type DynamicFeedStore = typeof dfStore
 export const dfStore = proxy({
   upMid: upMidInitial as UpMidType | undefined,
   upName: upNameInitial as string | undefined,
@@ -137,7 +138,11 @@ export const dfStore = proxy({
   updateFollowGroups,
 })
 
-export type DynamicFeedStore = typeof dfStore
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export type FollowGroupInfo = Record<number, {}>
+export const dfInfoStore = proxy<{ followGroupInfo: FollowGroupInfo }>({
+  followGroupInfo: {},
+})
 
 async function updateUpList(force = false) {
   const cacheHit =

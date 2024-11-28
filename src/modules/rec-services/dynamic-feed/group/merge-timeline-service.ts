@@ -37,6 +37,8 @@ export class FollowGroupUpService {
 }
 
 export class FollowGroupMergeTimelineService {
+  static MAX_UPMID_COUNT = 20 // fillQueues 会对每一个 upMid 请求, 多了不适合
+
   upServices: FollowGroupUpService[] = []
   constructor(public upMids: UpMidType[]) {
     this.upServices = upMids.map((upMid) => new FollowGroupUpService(upMid))
