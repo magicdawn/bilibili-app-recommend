@@ -7,12 +7,7 @@ import { HelpInfo } from '$components/_base/HelpInfo'
 import { AntdTooltip } from '$components/_base/antd-custom'
 import { colorPrimaryValue } from '$components/css-vars'
 import { IconPark } from '$modules/icon/icon-park'
-import {
-  settings,
-  updateSettings,
-  useSettingsSnapshot,
-  type ListSettingsPath,
-} from '$modules/settings'
+import { settings, useSettingsSnapshot, type ListSettingsPath } from '$modules/settings'
 import { AntdMessage } from '$utility'
 import { getAvatarSrc } from '$utility/image'
 import type { AntdMenuItemType } from '$utility/type'
@@ -106,11 +101,8 @@ export function DynamicFeedUsageInfo() {
   const { ref, getPopupContainer } = usePopupContainer()
   const onRefresh = useOnRefreshContext()
 
-  const {
-    dynamicFeed,
-    __internalDynamicFeedAddCopyBvidButton: addCopyBvidButton,
-    __internalDynamicFeedExternalSearchInput: externalSearchInput,
-  } = useSettingsSnapshot()
+  const dfSettings = useSettingsSnapshot().dynamicFeed
+  const { addCopyBvidButton, externalSearchInput } = dfSettings.__internal
 
   const {
     hasSelectedUp,
@@ -164,7 +156,7 @@ export function DynamicFeedUsageInfo() {
     }
 
     let groupItems: AntdMenuItemType[] = []
-    if (dynamicFeed.followGroup.enabled) {
+    if (dfSettings.followGroup.enabled) {
       groupItems = followGroups.map((group) => {
         return {
           key: `group:${group.tagid}`,
@@ -228,7 +220,7 @@ export function DynamicFeedUsageInfo() {
     })
 
     return [itemAll, ...groupItems, ...items]
-  }, [upList, upList.map((x) => !!x.has_update), dynamicFeed.followGroup.enabled])
+  }, [upList, upList.map((x) => !!x.has_update), dfSettings.followGroup.enabled])
 
   const searchInput = (
     <Input.Search
@@ -459,8 +451,7 @@ export function DynamicFeedUsageInfo() {
 }
 
 function SearchCacheRelated() {
-  const { __internalDynamicFeedCacheAllItemsEntry, __internalDynamicFeedCacheAllItemsUpMids } =
-    useSettingsSnapshot()
+  const { cacheAllItemsEntry, cacheAllItemsUpMids } = useSettingsSnapshot().dynamicFeed.__internal
   const { hasSelectedUp, upMid, upName } = useSnapshot(dfStore)
 
   const $req = useRequest(
@@ -475,25 +466,21 @@ function SearchCacheRelated() {
   )
 
   const checked = useMemo(
-    () => !!upMid && __internalDynamicFeedCacheAllItemsUpMids.includes(upMid.toString()),
-    [upMid, __internalDynamicFeedCacheAllItemsUpMids],
+    () => !!upMid && cacheAllItemsUpMids.includes(upMid.toString()),
+    [upMid, cacheAllItemsUpMids],
   )
   const onChange = useCallback((e: CheckboxChangeEvent) => {
     if (!upMid) return
     const val = e.target.checked
-
-    const set = new Set(settings.__internalDynamicFeedCacheAllItemsUpMids)
-    if (val) {
-      set.add(upMid.toString())
-    } else {
-      set.delete(upMid.toString())
-    }
-    updateSettings({ __internalDynamicFeedCacheAllItemsUpMids: Array.from(set) })
+    const obj = settings.dynamicFeed.__internal
+    const s = new Set(obj.cacheAllItemsUpMids)
+    val ? s.add(upMid.toString()) : s.delete(upMid.toString())
+    obj.cacheAllItemsUpMids = Array.from(s)
   }, [])
 
   return (
     <>
-      {__internalDynamicFeedCacheAllItemsEntry && hasSelectedUp && upMid && upName && (
+      {cacheAllItemsEntry && hasSelectedUp && upMid && upName && (
         <div className='section' css={S.filterSection}>
           <div className='title'>
             搜索缓存
@@ -550,8 +537,8 @@ const tryInstantSearchWithCache = throttle(async function ({
 }) {
   if (!upMid) return
   if (!(searchText || (!searchText && dfStore.searchText))) return
-  if (!settings.__internalDynamicFeedCacheAllItemsEntry) return // feature not enabled
-  if (!settings.__internalDynamicFeedCacheAllItemsUpMids.includes(upMid.toString())) return // up not checked
+  if (!settings.dynamicFeed.__internal.cacheAllItemsEntry) return // feature not enabled
+  if (!settings.dynamicFeed.__internal.cacheAllItemsUpMids.includes(upMid.toString())) return // up not checked
   if (!(await hasLocalDynamicFeedCache(upMid))) return // cache not exist
 
   // cached info

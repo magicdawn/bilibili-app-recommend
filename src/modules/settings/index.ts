@@ -3,7 +3,7 @@ import { ETab } from '$components/RecHeader/tab-enum'
 import { VideoLinkOpenMode } from '$components/VideoCard/index.shared'
 import { EAppApiDevice } from '$define/index.shared'
 import { toast } from '$utility/toast'
-import { getPaths, type BooleanPaths, type ListPaths, type Paths } from '$utility/type'
+import { getLeafPaths, type BooleanPaths, type LeafPaths, type ListPaths } from '$utility/type'
 import { cloneDeep, isNil } from 'es-toolkit'
 import { get, set } from 'es-toolkit/compat'
 import type { PartialDeep } from 'type-fest'
@@ -85,6 +85,12 @@ export const initialSettings = {
     },
 
     advancedSearch: false,
+    __internal: {
+      cacheAllItemsEntry: false,
+      cacheAllItemsUpMids: [] as string[], // enable for these up
+      addCopyBvidButton: false,
+      externalSearchInput: false, // more convenient
+    },
   },
 
   /**
@@ -97,9 +103,11 @@ export const initialSettings = {
   /**
    * tab=fav
    */
-  favUseShuffle: false, // 打乱顺序
-  favAddSeparator: true, // 收藏夹分割线
-  favExcludedFolderIds: [] as string[], // 忽略的收藏夹
+  fav: {
+    useShuffle: false, // 打乱顺序
+    addSeparator: true, // 收藏夹分割线
+    excludedFolderIds: [] as string[], // 忽略的收藏夹
+  },
 
   /**
    * tab=popular-general
@@ -206,24 +214,18 @@ export const initialSettings = {
    */
   __internalEnableCopyBvidInfoContextMenu: false,
   __internalHotSubUseDropdown: false,
-
-  __internalDynamicFeedCacheAllItemsEntry: false,
-  __internalDynamicFeedCacheAllItemsUpMids: [] as string[], // enable for these up
-  __internalDynamicFeedAddCopyBvidButton: false,
-  __internalDynamicFeedExternalSearchInput: false, // more convenient
 }
 
 export type Settings = typeof initialSettings
 export const settings = proxy(cloneDeep(initialSettings))
 
-export type SettingsPath = Paths<Settings>
+export type SettingsPath = LeafPaths<Settings>
 export type BooleanSettingsPath = BooleanPaths<Settings>
 export type ListSettingsPath = ListPaths<Settings>
 
-export const allowedSettingsPaths = getPaths(initialSettings)
-
+export const allowedSettingsPaths = getLeafPaths(initialSettings)
 export const internalBooleanPaths = allowedSettingsPaths.filter(
-  (p) => p.startsWith('__internal') && typeof get(initialSettings, p) === 'boolean',
+  (p) => p.includes('__internal') && typeof get(initialSettings, p) === 'boolean',
 ) as BooleanSettingsPath[]
 
 export function useSettingsSnapshot() {
@@ -240,9 +242,45 @@ export function getSettingsSnapshot() {
 
 const storageKey = `settings`
 
+export function runSettingsMigration(val: object) {
+  // from v0.28.2, remove after several releases
+  const config: Array<[configPath: SettingsPath, legacyConfigPath: string]> = [
+    ['dynamicFeed.showLive', 'dynamicFeedShowLive'],
+    ['dynamicFeed.followGroup.enabled', 'dynamicFeedFollowGroupEnabled'],
+    [
+      'dynamicFeed.followGroup.forceUseMergeTimelineIds',
+      'dynamicFeedFollowGroupForceUseMergeTimelineIds',
+    ],
+    [
+      'dynamicFeed.whenViewAll.enableHideSomeContents',
+      'dynamicFeedWhenViewAllEnableHideSomeContents',
+    ],
+    ['dynamicFeed.whenViewAll.hideIds', 'dynamicFeedWhenViewAllHideIds'],
+    ['dynamicFeed.advancedSearch', 'dynamicFeedAdvancedSearch'],
+
+    ['fav.useShuffle', 'favUseShuffle'],
+    ['fav.addSeparator', 'favAddSeparator'],
+    ['fav.excludedFolderIds', 'favExcludedFolderIds'],
+  ]
+  for (const [configPath, legacyConfigPath] of config) {
+    const haveValue = (v: any) => !isNil(v) // 迁移设置, 只是改名, 不用考虑空数组
+    if (haveValue(get(val, configPath))) {
+      // already have a value
+      continue
+    }
+    if (!haveValue(get(val, legacyConfigPath))) {
+      // no legacy value
+      continue
+    }
+    // fallback to legacy
+    set(val, configPath, get(val, legacyConfigPath))
+  }
+}
+
 export async function load() {
   const val = await GM.getValue<Settings>(storageKey)
   if (val && typeof val === 'object') {
+    runSettingsMigration(val)
     updateSettings(val)
   }
 

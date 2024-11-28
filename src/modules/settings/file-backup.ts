@@ -8,6 +8,7 @@ import {
   allowedSettingsPaths,
   getSettingsSnapshot,
   pickSettings,
+  runSettingsMigration,
   updateSettings,
   type Settings,
 } from './index'
@@ -55,6 +56,7 @@ export async function importSettings() {
     return toast('无法解析文件内容!')
   }
 
+  runSettingsMigration(settingsFromFile)
   const { pickedPaths, pickedSettings } = pickSettings(settingsFromFile, allowedSettingsPaths)
   if (!pickedPaths.length) {
     return toast('没有有效的设置!')

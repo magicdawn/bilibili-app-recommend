@@ -17,8 +17,8 @@ export const getBackupOmitPaths: () => SettingsPath[] = () => [
   'backupSettingsToArticleDraft',
 
   // 无关紧要
-  'favUseShuffle',
-  'favAddSeparator',
+  'fav.useShuffle',
+  'fav.addSeparator',
 
   'watchlaterUseShuffle',
   'watchlaterAddSeparator',

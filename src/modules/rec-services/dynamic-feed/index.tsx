@@ -71,8 +71,8 @@ export function getDynamicFeedServiceConfig() {
     advancedSearch: settings.dynamicFeed.advancedSearch,
     searchCacheEnabled:
       !!snap.upMid &&
-      settings.__internalDynamicFeedCacheAllItemsEntry && // the main switch
-      settings.__internalDynamicFeedCacheAllItemsUpMids.includes(snap.upMid.toString()), // the switch for this up
+      settings.dynamicFeed.__internal.cacheAllItemsEntry && // the main switch
+      settings.dynamicFeed.__internal.cacheAllItemsUpMids.includes(snap.upMid.toString()), // the switch for this up
 
     forceUseMergeTime:
       !!snap.selectedFollowGroup &&

@@ -67,7 +67,7 @@ export const TabConfig: Record<ETab, TabConfigItem> = {
     label: '收藏',
     desc: '你添加的收藏; 默认随机乱序, 可在设置中关闭乱序',
     get swr() {
-      return !settings.favUseShuffle
+      return !settings.fav.useShuffle
     },
   },
   [ETab.Hot]: {

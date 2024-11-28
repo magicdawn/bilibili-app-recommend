@@ -46,12 +46,12 @@ export const RefreshButton = forwardRef<RefreshButtonActions, RefreshButtonProps
   )
 
   const tab = useCurrentUsingTab()
-  const { favUseShuffle, watchlaterUseShuffle, popularWeeklyUseShuffle } = useSettingsSnapshot()
+  const { fav, watchlaterUseShuffle, popularWeeklyUseShuffle } = useSettingsSnapshot()
 
   const text =
     tab === ETab.DynamicFeed ||
     (tab === ETab.Watchlater && !watchlaterUseShuffle) ||
-    (tab === ETab.Fav && !favUseShuffle) ||
+    (tab === ETab.Fav && !fav.useShuffle) ||
     (tab === ETab.Hot && !isHotTabUsingShuffle(popularWeeklyUseShuffle)) ||
     tab === ETab.Live
       ? '刷新'
