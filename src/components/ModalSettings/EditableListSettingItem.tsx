@@ -42,7 +42,7 @@ export function EditableListSettingItem({
         onSearch={(val, e) => {
           if (!val) return
 
-          const set = new Set<string>([...settings[configKey]])
+          const set = new Set([...settings[configKey]])
           if (!set.has(val)) {
             set.add(val)
           } else {
