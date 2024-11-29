@@ -22,13 +22,13 @@ export function anyFilterEnabled(tab: ETab) {
     return true
   }
 
-  // common checks
+  // common checks for: recommend / hot
   if (shouldEnableCommonChecks(tab)) {
     if (
       blacklistMids.size ||
-      (settings.filterEnabled &&
-        ((settings.filterByAuthorNameEnabled && settings.filterByAuthorNameKeywords.length > 0) ||
-          (settings.filterByTitleEnabled && settings.filterByTitleKeywords.length > 0)))
+      (settings.filter.enabled &&
+        ((settings.filter.byAuthor.enabled && settings.filter.byAuthor.keywords.length > 0) ||
+          (settings.filter.byTitle.enabled && settings.filter.byTitle.keywords.length > 0)))
     ) {
       return true
     }
@@ -37,10 +37,11 @@ export function anyFilterEnabled(tab: ETab) {
   // recommend
   if (tab === ETab.RecommendApp || tab === ETab.RecommendPc) {
     if (
-      settings.filterEnabled &&
-      (settings.filterMinDurationEnabled ||
-        settings.filterMinPlayCountEnabled ||
-        settings.filterOutGotoTypePicture)
+      settings.filter.enabled &&
+      (settings.filter.minDuration.enabled ||
+        settings.filter.minPlayCount.enabled ||
+        settings.filter.hideGotoTypePicture ||
+        settings.filter.hideGotoTypeBangumi)
     ) {
       return true
     }
@@ -50,12 +51,8 @@ export function anyFilterEnabled(tab: ETab) {
 }
 
 function shouldEnableCommonChecks(tab: ETab) {
-  // except
-  // KeepFollowOnly = 'keep-follow-only',
-  // DynamicFeed = 'dynamic-feed',
-  // Watchlater = 'watchlater',
-  // Fav = 'fav',
-  return ([ETab.RecommendApp, ETab.RecommendPc, ETab.Hot] satisfies ETab[]).includes(tab)
+  const enableForTabs: ETab[] = [ETab.RecommendApp, ETab.RecommendPc, ETab.Hot]
+  return enableForTabs.includes(tab)
 }
 
 export function filterRecItems(items: RecItemTypeOrSeparator[], tab: ETab) {
@@ -63,13 +60,14 @@ export function filterRecItems(items: RecItemTypeOrSeparator[], tab: ETab) {
     return items
   }
 
-  const settings = getSettingsSnapshot()
+  const filter = getSettingsSnapshot().filter
+  const { minDuration, minPlayCount, byAuthor, byTitle } = filter
 
   const blockUpMids = new Set<string>()
   const blockUpNames = new Set<string>()
   const regMidWithRemark = /^(?<mid>\d+)\([\S ]+\)$/
   const regMid = /^\d+$/
-  settings.filterByAuthorNameKeywords.forEach((x) => {
+  byAuthor.keywords.forEach((x) => {
     if (regMidWithRemark.test(x)) {
       const mid = regMidWithRemark.exec(x)?.groups?.mid
       if (mid) blockUpMids.add(mid)
@@ -82,7 +80,7 @@ export function filterRecItems(items: RecItemTypeOrSeparator[], tab: ETab) {
 
   const titleRegexList: RegExp[] = []
   const titleKeywordList: string[] = []
-  settings.filterByTitleKeywords.forEach((keyword) => {
+  byTitle.keywords.forEach((keyword) => {
     if (keyword.startsWith('/') && keyword.endsWith('/')) {
       const regex = new RegExp(keyword.slice(1, -1), 'i')
       titleRegexList.push(regex)
@@ -117,8 +115,8 @@ export function filterRecItems(items: RecItemTypeOrSeparator[], tab: ETab) {
 
       // up
       if (
-        settings.filterEnabled &&
-        settings.filterByAuthorNameEnabled &&
+        filter.enabled &&
+        byAuthor.enabled &&
         (blockUpMids.size || blockUpNames.size) &&
         (authorName || authorMid)
       ) {
@@ -129,7 +127,7 @@ export function filterRecItems(items: RecItemTypeOrSeparator[], tab: ETab) {
           debug('filter out by author-rule: %o', {
             authorName,
             authorMid,
-            rules: settings.filterByAuthorNameKeywords,
+            rules: byAuthor.keywords,
             blockUpMids,
             blockUpNames,
             bvid,
@@ -148,19 +146,14 @@ export function filterRecItems(items: RecItemTypeOrSeparator[], tab: ETab) {
         possibleTitles.push(item.desc)
       }
       possibleTitles = possibleTitles.filter(Boolean)
-      if (
-        settings.filterEnabled &&
-        settings.filterByTitleEnabled &&
-        settings.filterByTitleKeywords.length &&
-        possibleTitles.length
-      ) {
+      if (filter.enabled && byTitle.enabled && byTitle.keywords.length && possibleTitles.length) {
         const titleHit = (title: string) =>
           titleKeywordList.some((keyword) => title.includes(keyword)) ||
           titleRegexList.some((regex) => regex.test(title))
         if (possibleTitles.some(titleHit)) {
           debug('filter out by title-rule: %o', {
             possibleTitles,
-            rules: settings.filterByTitleKeywords,
+            rules: byTitle.keywords,
             bvid,
           })
           return false
@@ -181,7 +174,7 @@ export function filterRecItems(items: RecItemTypeOrSeparator[], tab: ETab) {
 
     // 推荐
     if (tab === ETab.RecommendApp || tab === ETab.RecommendPc) {
-      if (settings.filterEnabled) {
+      if (filter.enabled) {
         const isVideo = goto === 'av'
         const isPicture = goto === 'picture'
         const isBangumi = goto === 'bangumi'
@@ -195,7 +188,7 @@ export function filterRecItems(items: RecItemTypeOrSeparator[], tab: ETab) {
 
     function filterVideo() {
       // 不过滤已关注视频
-      if (followed && settings.exemptForFollowedVideo) return true
+      if (followed && filter.exemptForFollowed.video) return true
 
       // https://github.com/magicdawn/bilibili-gate/issues/87
       // 反向推送, 蜜汁操作.
@@ -209,12 +202,12 @@ export function filterRecItems(items: RecItemTypeOrSeparator[], tab: ETab) {
 
       // play
       if (
-        settings.filterMinPlayCountEnabled &&
-        settings.filterMinPlayCount &&
+        minPlayCount.enabled &&
+        minPlayCount.value &&
         typeof play === 'number' &&
-        play < settings.filterMinPlayCount
+        play < minPlayCount.value
       ) {
-        debug('filter out by min-play-count-rule: %s < %s, %o', play, settings.filterMinPlayCount, {
+        debug('filter out by min-play-count-rule: %s < %s, %o', play, minPlayCount.value, {
           bvid,
           title,
         })
@@ -222,13 +215,8 @@ export function filterRecItems(items: RecItemTypeOrSeparator[], tab: ETab) {
       }
 
       // duration
-      if (
-        settings.filterMinDurationEnabled &&
-        settings.filterMinDuration &&
-        duration &&
-        duration < settings.filterMinDuration
-      ) {
-        debug('filter out by min-duration-rule: %s < %s %o', duration, settings.filterMinDuration, {
+      if (minDuration.enabled && minDuration.value && duration && duration < minDuration.value) {
+        debug('filter out by min-duration-rule: %s < %s %o', duration, minDuration.value, {
           bvid,
           title,
         })
@@ -239,9 +227,9 @@ export function filterRecItems(items: RecItemTypeOrSeparator[], tab: ETab) {
     }
 
     function filterPicture() {
-      if (settings.filterOutGotoTypePicture) {
+      if (filter.hideGotoTypePicture) {
         // 不去掉已关注的图文
-        if (followed && settings.exemptForFollowedPicture) {
+        if (followed && filter.exemptForFollowed.picture) {
           return true
         }
         debug('filter out by goto-type-picture-rule: %s %o', goto, {
@@ -255,7 +243,7 @@ export function filterRecItems(items: RecItemTypeOrSeparator[], tab: ETab) {
     }
 
     function filterBangumi() {
-      if (settings.filterOutGotoTypeBangumi) {
+      if (filter.hideGotoTypeBangumi) {
         debug('filter out by goto-type-bangumi-rule: %s %o', goto, { title, href })
         return false
       }

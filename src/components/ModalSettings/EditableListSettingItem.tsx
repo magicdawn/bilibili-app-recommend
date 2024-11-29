@@ -108,7 +108,7 @@ export function EditableListSettingItem({
                     set(settings, configPath, Array.from(s))
                   }}
                   renderTag={
-                    configPath === 'filterByAuthorNameKeywords'
+                    configPath === 'filter.byAuthor.keywords'
                       ? (tag) => <UpTagItemDisplay tag={tag} />
                       : undefined
                   }

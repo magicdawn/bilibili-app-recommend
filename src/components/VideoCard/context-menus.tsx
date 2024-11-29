@@ -30,7 +30,7 @@ import {
 import { dynamicFeedFilterSelectUp } from '$modules/rec-services/dynamic-feed/usage-info'
 import { formatFavFolderUrl } from '$modules/rec-services/fav'
 import { UserFavService, defaultFavFolderName } from '$modules/rec-services/fav/user-fav.service'
-import { settings, updateSettings } from '$modules/settings'
+import { settings, updateSettingsCollection } from '$modules/settings'
 import { AntdMessage, toast } from '$utility'
 import type { MenuProps } from 'antd'
 import { delay, isNil, omit } from 'es-toolkit'
@@ -151,12 +151,11 @@ export function useContextMenus({
     if (!authorMid) return AntdMessage.error('UP mid 为空!')
 
     const content = `${authorMid}`
-    if (settings.filterByAuthorNameKeywords.includes(content)) {
+    if (settings.filter.byAuthor.keywords.includes(content)) {
       return toast(`已在过滤名单中: ${content}`)
     }
-    updateSettings({
-      filterByAuthorNameKeywords: [...settings.filterByAuthorNameKeywords, content],
-    })
+
+    updateSettingsCollection('filter.byAuthor.keywords', { add: [content] })
     if (authorName) setNicknameCache(authorMid, authorName)
 
     let toastContent = content

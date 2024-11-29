@@ -11,7 +11,7 @@ import {
 import { toast } from '$utility/toast'
 import { cloneDeep, isNil } from 'es-toolkit'
 import { get, set } from 'es-toolkit/compat'
-import type { PartialDeep } from 'type-fest'
+import type { Get, PartialDeep } from 'type-fest'
 import { proxy, snapshot, subscribe, useSnapshot } from 'valtio'
 import { saveToDraft } from './cloud-backup'
 
@@ -132,37 +132,42 @@ export const initialSettings = {
 
   /**
    * 过滤器模块
-   * 使用 flat config 方便使用 FlagSettingItem
    */
-  filterEnabled: true,
+  filter: {
+    enabled: true,
 
-  // 最少播放量
-  filterMinPlayCountEnabled: false,
-  filterMinPlayCount: 10000,
+    // 最少播放量
+    minPlayCount: {
+      enabled: false,
+      value: 10000,
+    },
 
-  // 时长
-  filterMinDurationEnabled: false,
-  filterMinDuration: 60, // 60s
+    // 时长
+    minDuration: {
+      enabled: false,
+      value: 60, // 60s
+    },
 
-  // 已关注豁免
-  exemptForFollowedVideo: true,
+    // 已关注豁免
+    exemptForFollowed: {
+      video: true,
+      // 图文也是有 rcmd_reason = '已关注' 的
+      picture: true,
+    },
 
-  // filter out whose goto = 'picture'
-  filterOutGotoTypePicture: false,
-  // 图文也是有 rcmd_reason = '已关注' 的
-  // 已关注UP的推荐图文, 默认不参与过滤
-  exemptForFollowedPicture: true,
+    // filter out goto = 'picture' | 'bangumi'
+    hideGotoTypePicture: false,
+    hideGotoTypeBangumi: false,
 
-  // filter out whose goto = 'bangumi'
-  filterOutGotoTypeBangumi: false,
-
-  // authorName
-  filterByAuthorNameEnabled: false,
-  filterByAuthorNameKeywords: [] as string[],
-
-  // title
-  filterByTitleEnabled: false,
-  filterByTitleKeywords: [] as string[],
+    byAuthor: {
+      enabled: false,
+      keywords: [] as string[],
+    },
+    byTitle: {
+      enabled: false,
+      keywords: [] as string[],
+    },
+  },
 
   /**
    * 外观
@@ -273,7 +278,22 @@ export function runSettingsMigration(val: object) {
     ['fav.useShuffle', 'favUseShuffle'],
     ['fav.addSeparator', 'favAddSeparator'],
     ['fav.excludedFolderIds', 'favExcludedFolderIds'],
+
+    ['filter.enabled', 'filterEnabled'],
+    ['filter.minPlayCount.enabled', 'filterMinPlayCountEnabled'],
+    ['filter.minPlayCount.value', 'filterMinPlayCount'],
+    ['filter.minDuration.enabled', 'filterMinDurationEnabled'],
+    ['filter.minDuration.value', 'filterMinDuration'],
+    ['filter.exemptForFollowed.video', 'exemptForFollowedVideo'],
+    ['filter.exemptForFollowed.picture', 'exemptForFollowedPicture'],
+    ['filter.hideGotoTypePicture', 'filterOutGotoTypePicture'],
+    ['filter.hideGotoTypeBangumi', 'filterOutGotoTypeBangumi'],
+    ['filter.byAuthor.enabled', 'filterByAuthorNameEnabled'],
+    ['filter.byAuthor.keywords', 'filterByAuthorNameKeywords'],
+    ['filter.byTitle.enabled', 'filterByTitleEnabled'],
+    ['filter.byTitle.keywords', 'filterByTitleKeywords'],
   ]
+  // 伪代码: savedConfig[newName] = savedConfig[legacyName]
   for (const [configPath, legacyConfigPath] of config) {
     const haveValue = (v: any) => !isNil(v) // 迁移设置, 只是改名, 不用考虑空数组
     if (haveValue(get(val, configPath))) {
@@ -345,6 +365,17 @@ export function updateSettings(payload: PartialDeep<Settings>) {
     const v = get(payload, p)
     set(settings, p, v)
   }
+}
+
+export function updateSettingsCollection<P extends ListSettingsPath>(
+  path: P,
+  { add, remove }: { add?: Get<Settings, P>; remove?: Get<Settings, P> },
+) {
+  const collection = get(settings, path)
+  const s = new Set<unknown>(collection)
+  for (const x of add ?? []) s.add(x)
+  for (const x of remove ?? []) s.delete(x)
+  set(settings, path, Array.from(s))
 }
 
 /**

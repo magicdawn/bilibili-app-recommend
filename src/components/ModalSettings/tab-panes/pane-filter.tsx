@@ -1,23 +1,25 @@
 import { C } from '$common/emotion-css'
 import { CheckboxSettingItem, SwitchSettingItem } from '$components/ModalSettings/setting-item'
 import { HelpInfo } from '$components/_base/HelpInfo'
-import { updateSettings, useSettingsSnapshot } from '$modules/settings'
+import { settings, useSettingsSnapshot } from '$modules/settings'
 import { InputNumber, Tag } from 'antd'
+import { isNil } from 'es-toolkit'
 import type { ComponentProps } from 'react'
 import { EditableListSettingItem } from '../EditableListSettingItem'
 import styles from '../index.module.scss'
 
 export function TabPaneFilter() {
   const {
-    filterEnabled,
-    filterMinPlayCount,
-    filterMinPlayCountEnabled,
-    filterMinDuration,
-    filterMinDurationEnabled,
-    filterOutGotoTypePicture,
-    filterByAuthorNameEnabled,
-    filterByTitleEnabled,
-  } = useSettingsSnapshot()
+    enabled,
+    minPlayCount,
+    minDuration,
+
+    hideGotoTypeBangumi,
+    hideGotoTypePicture,
+
+    byAuthor,
+    byTitle,
+  } = useSettingsSnapshot().filter
 
   const getExemptFollowedTooltipProps = (
     label: '视频' | '图文',
@@ -56,7 +58,7 @@ export function TabPaneFilter() {
             视频/图文/影视: 仅推荐类 Tab 生效 <br />
             UP/标题: 推荐类 / 热门 等Tab 生效
           </HelpInfo>
-          <SwitchSettingItem configPath='filterEnabled' css={C.ml(10)} />
+          <SwitchSettingItem configPath='filter.enabled' css={C.ml(10)} />
         </div>
 
         <div className={clsx(styles.settingsGroupContent)}>
@@ -72,8 +74,8 @@ export function TabPaneFilter() {
               <div className={styles.settingsGroupSubTitle}>视频</div>
               <div className={styles.row}>
                 <CheckboxSettingItem
-                  disabled={!filterEnabled}
-                  configPath='filterMinPlayCountEnabled'
+                  disabled={!enabled}
+                  configPath='filter.minPlayCount.enabled'
                   label='按播放量过滤'
                   tooltip={<>不显示播放量很少的视频</>}
                 />
@@ -81,17 +83,17 @@ export function TabPaneFilter() {
                   size='small'
                   min={1}
                   step={1000}
-                  value={filterMinPlayCount}
-                  onChange={(val) => val && updateSettings({ filterMinPlayCount: val })}
-                  disabled={!filterEnabled || !filterMinPlayCountEnabled}
+                  value={minPlayCount.value}
+                  onChange={(val) => !isNil(val) && (settings.filter.minPlayCount.value = val)}
+                  disabled={!enabled || !minPlayCount.enabled}
                 />
               </div>
               <div className={styles.row} style={{ marginTop: 3 }}>
                 <CheckboxSettingItem
-                  configPath='filterMinDurationEnabled'
+                  configPath='filter.minDuration.enabled'
                   label='按视频时长过滤'
                   tooltip={<>不显示短视频</>}
-                  disabled={!filterEnabled}
+                  disabled={!enabled}
                 />
                 <InputNumber
                   style={{ width: 150 }}
@@ -99,16 +101,16 @@ export function TabPaneFilter() {
                   min={1}
                   step={10}
                   addonAfter={'单位:秒'}
-                  value={filterMinDuration}
-                  onChange={(val) => val && updateSettings({ filterMinDuration: val })}
-                  disabled={!filterEnabled || !filterMinDurationEnabled}
+                  value={minDuration.value}
+                  onChange={(val) => !isNil(val) && (settings.filter.minDuration.value = val)}
+                  disabled={!enabled || !minDuration.enabled}
                 />
               </div>
               <CheckboxSettingItem
                 className={styles.row}
                 style={{ marginTop: 3 }}
-                configPath='exemptForFollowedVideo'
-                disabled={!filterEnabled}
+                configPath='filter.exemptForFollowed.video'
+                disabled={!enabled}
                 {...getExemptFollowedTooltipProps('视频')}
               />
             </div>
@@ -117,33 +119,33 @@ export function TabPaneFilter() {
               <div className={styles.settingsGroupSubTitle}>图文</div>
               <CheckboxSettingItem
                 className={styles.row}
-                configPath='filterOutGotoTypePicture'
+                configPath='filter.hideGotoTypePicture'
                 label='过滤图文类型推荐'
                 tooltip={
                   <>
                     过滤 <kbd>goto = picture</kbd> 的内容: 包括 (动态 & 专栏) 等
                   </>
                 }
-                disabled={!filterEnabled}
+                disabled={!enabled}
               />
               <CheckboxSettingItem
                 className={styles.row}
-                disabled={!filterEnabled || !filterOutGotoTypePicture}
-                configPath='exemptForFollowedPicture'
+                disabled={!enabled || !hideGotoTypePicture}
+                configPath='filter.exemptForFollowed.picture'
                 {...getExemptFollowedTooltipProps('图文')}
               />
 
               <div className={styles.settingsGroupSubTitle}>影视</div>
               <CheckboxSettingItem
                 className={styles.row}
-                configPath='filterOutGotoTypeBangumi'
+                configPath='filter.hideGotoTypeBangumi'
                 label='过滤影视类型推荐'
                 tooltip={
                   <>
                     过滤 <kbd>goto = bangumi</kbd> 的内容: 包括 (番剧 / 电影 / 国创 / 纪录片) 等
                   </>
                 }
-                disabled={!filterEnabled}
+                disabled={!enabled}
               />
             </div>
 
@@ -163,17 +165,17 @@ export function TabPaneFilter() {
                   P.S 这里是客户端过滤, 与黑名单功能重复, 后期版本可能会删除这个功能
                 </HelpInfo>
                 <SwitchSettingItem
-                  configPath='filterByAuthorNameEnabled'
-                  disabled={!filterEnabled}
+                  configPath='filter.byAuthor.enabled'
+                  disabled={!enabled}
                   css={css`
                     margin-left: 10px;
                   `}
                 />
               </div>
               <EditableListSettingItem
-                configPath={'filterByAuthorNameKeywords'}
+                configPath={'filter.byAuthor.keywords'}
                 searchProps={{ placeholder: '添加UP: 全名 / mid / mid(备注)' }}
-                disabled={!filterEnabled || !filterByAuthorNameEnabled}
+                disabled={!enabled || !byAuthor.enabled}
               />
             </div>
 
@@ -186,17 +188,17 @@ export function TabPaneFilter() {
                   作用范围: 推荐 / 热门
                 </HelpInfo>
                 <SwitchSettingItem
-                  configPath='filterByTitleEnabled'
-                  disabled={!filterEnabled}
+                  configPath='filter.byTitle.enabled'
+                  disabled={!enabled}
                   css={css`
                     margin-left: 10px;
                   `}
                 />
               </div>
               <EditableListSettingItem
-                configPath={'filterByTitleKeywords'}
+                configPath={'filter.byTitle.keywords'}
                 searchProps={{ placeholder: '添加过滤关键词' }}
-                disabled={!filterEnabled || !filterByTitleEnabled}
+                disabled={!enabled || !byTitle.enabled}
               />
             </div>
           </div>

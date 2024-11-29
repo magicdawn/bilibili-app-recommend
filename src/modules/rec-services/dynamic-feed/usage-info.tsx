@@ -374,7 +374,7 @@ export function DynamicFeedUsageInfo() {
     >
       <Badge dot={showPopoverBadge} color={colorPrimaryValue} offset={[-5, 5]}>
         <Button css={iconOnlyRoundButtonCss}>
-          <IconForPopoverTrigger {...size(18)} className='ml-1' />
+          <IconForPopoverTrigger className='ml-1' />
         </Button>
       </Badge>
     </Popover>
