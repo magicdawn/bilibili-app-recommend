@@ -6,6 +6,7 @@
  */
 
 import { dailyCache } from '$modules/gm/daily-cache'
+import { formatSpaceUrl } from '$modules/rec-services/dynamic-feed/shared'
 import { request } from '$request'
 import { getUid } from '$utility'
 
@@ -18,7 +19,7 @@ export async function get_w_webId(): Promise<string | undefined> {
   const mid = getUid()
   if (!mid) return
 
-  const spacePageUrl = `https://space.bilibili.com/${mid}`
+  const spacePageUrl = formatSpaceUrl(mid)
   const res = await request.get(spacePageUrl, {
     responseType: 'text',
     withCredentials: true,

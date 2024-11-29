@@ -91,3 +91,11 @@ body .ant-btn.ant-btn-variant-solid {
     background: var(--ant-color-primary);
   }
 }
+
+// B站默认样式 color: inherited, 导致显示黑色
+.#{$app-cls-root} a {
+  color: var(--ant-color-link);
+  &:visited {
+    color: var(--ant-color-link);
+  }
+}

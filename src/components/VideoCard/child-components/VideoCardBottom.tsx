@@ -8,6 +8,7 @@ import { colorPrimaryValue } from '$components/css-vars'
 import { isApp, isLive, isRanking, type RecItemType } from '$define'
 import { EApiType, EAppApiDevice } from '$define/index.shared'
 import { LiveIcon } from '$modules/icon'
+import { formatSpaceUrl } from '$modules/rec-services/dynamic-feed/shared'
 import { ELiveStatus } from '$modules/rec-services/live/live-enum'
 import { useSettingsSnapshot } from '$modules/settings'
 import { getAvatarSrc } from '$utility/image'
@@ -117,7 +118,7 @@ export function VideoCardBottom({
   const isNormalVideo = goto === 'av'
 
   // fallback to href
-  const authorHref = authorMid ? `https://space.bilibili.com/${authorMid}` : href
+  const authorHref = authorMid ? formatSpaceUrl(authorMid) : href
 
   const streaming = item.api === EApiType.Live && item.live_status === ELiveStatus.Streaming
 

@@ -2,6 +2,7 @@ import { flexCenterStyle } from '$common/emotion-css'
 import { AntdTooltip } from '$components/_base/antd-custom'
 import { borderColorValue, colorPrimaryValue } from '$components/css-vars'
 import { getUserNickname } from '$modules/bilibili/user/nickname'
+import { formatSpaceUrl } from '$modules/rec-services/dynamic-feed/shared'
 import {
   getSettingsInnerArray,
   updateSettingsInnerArray,
@@ -249,7 +250,7 @@ export function UpTagItemDisplay({ tag }: { tag: string }) {
         >
           {mid && <IconRadixIconsPerson {...size(12)} className='mr-2' />}
           {mid ? (
-            <a href={`https://space.bilibili.com/${mid}`} target='_blank'>
+            <a href={formatSpaceUrl(mid)} target='_blank'>
               {label}
             </a>
           ) : (

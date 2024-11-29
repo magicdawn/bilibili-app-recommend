@@ -12,6 +12,12 @@ import { IconPark } from '$modules/icon/icon-park'
 import { FollowGroupMergeTimelineService } from '$modules/rec-services/dynamic-feed/group/merge-timeline-service'
 import type { FollowGroup } from '$modules/rec-services/dynamic-feed/group/types/groups'
 import {
+  IconForGroup,
+  IconForUp,
+  formatFollowGroupUrl,
+  formatSpaceUrl,
+} from '$modules/rec-services/dynamic-feed/shared'
+import {
   SELECTED_KEY_PREFIX_GROUP,
   SELECTED_KEY_PREFIX_UP,
   dfStore,
@@ -22,7 +28,7 @@ import {
   updateSettingsInnerArray,
   useSettingsSnapshot,
 } from '$modules/settings'
-import { AntdMessage, getUid } from '$utility'
+import { AntdMessage } from '$utility'
 import type { DragEndEvent } from '@dnd-kit/core'
 import { DndContext, PointerSensor, closestCenter, useSensor, useSensors } from '@dnd-kit/core'
 import { restrictToParentElement, restrictToVerticalAxis } from '@dnd-kit/modifiers'
@@ -453,20 +459,16 @@ function DynamicFeedWhenViewAllHideIdTag({
   const icon = useMemo(
     () =>
       mid ? (
-        <IconRadixIconsPerson {...size(12)} className='mr-2' />
+        <IconForUp {...size(12)} className='mr-2' />
       ) : followGroupId ? (
-        <IconMynauiUsersGroup {...size(16)} className='mr-2' />
+        <IconForGroup {...size(16)} className='mr-2' />
       ) : undefined,
     [mid, followGroupId],
   )
 
   const href = useMemo(
     () =>
-      mid
-        ? `https://space.bilibili.com/${mid}`
-        : followGroupId
-          ? `https://space.bilibili.com/${getUid()}/fans/follow?tagid=${followGroupId}`
-          : undefined,
+      mid ? formatSpaceUrl(mid) : followGroupId ? formatFollowGroupUrl(followGroupId) : undefined,
     [mid, followGroupId],
   )
 

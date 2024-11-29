@@ -6,6 +6,7 @@ import { CHARGE_ONLY_TEXT } from '$components/VideoCard/top-marks'
 import { HelpInfo } from '$components/_base/HelpInfo'
 import { AntdTooltip } from '$components/_base/antd-custom'
 import { colorPrimaryValue } from '$components/css-vars'
+import { OpenExternalLinkIcon } from '$modules/icon'
 import { IconPark } from '$modules/icon/icon-park'
 import {
   settings,
@@ -35,13 +36,14 @@ import {
 } from './cache'
 import { FollowGroupMergeTimelineService } from './group/merge-timeline-service'
 import type { FollowGroup } from './group/types/groups'
+import { formatFollowGroupUrl, IconForGroup, IconForPopoverTrigger, IconForUp } from './shared'
 import {
+  dfStore,
   DynamicFeedVideoMinDuration,
   DynamicFeedVideoMinDurationConfig,
   DynamicFeedVideoType,
   DynamicFeedVideoTypeLabel,
   SELECTED_KEY_PREFIX_GROUP,
-  dfStore,
   updateFilterData,
   type DynamicFeedStore,
   type UpMidType,
@@ -98,10 +100,6 @@ const flexBreak = (
     `}
   />
 )
-
-const IconForUp = IconRadixIconsPerson
-const IconForGroup = IconMynauiUsersGroup
-const IconForPopoverTrigger = IconTablerPlus
 
 export function DynamicFeedUsageInfo() {
   const { ref, getPopupContainer } = usePopupContainer()
@@ -250,6 +248,7 @@ export function DynamicFeedUsageInfo() {
     />
   )
 
+  // #region popover
   const popoverContent = (
     <div css={S.filterWrapper}>
       <div className='section' css={S.filterSection}>
@@ -281,7 +280,6 @@ export function DynamicFeedUsageInfo() {
           </Radio.Group>
         </div>
       </div>
-
       {dynamicFeedVideoType !== DynamicFeedVideoType.DynamicOnly && (
         <div className='section' css={S.filterSection}>
           <div className='title'>充电专属</div>
@@ -306,9 +304,8 @@ export function DynamicFeedUsageInfo() {
               <AntdTooltip
                 title={
                   <>
-                    隐藏「{CHARGE_ONLY_TEXT}」视频
-                    <br />
-                    程序会针对 UP 或 分组记忆你的选择~
+                    隐藏「{CHARGE_ONLY_TEXT}」视频 <br />
+                    仅对当前 UP 或 分组生效
                   </>
                 }
               >
@@ -318,7 +315,6 @@ export function DynamicFeedUsageInfo() {
           </div>
         </div>
       )}
-
       <div className='section' css={S.filterSection}>
         <div className='title'>最短时长</div>
         <div className='content'>
@@ -348,21 +344,32 @@ export function DynamicFeedUsageInfo() {
           </Radio.Group>
         </div>
       </div>
-
       {!externalSearchInput && (
         <div className='section' css={S.filterSection}>
           <div className='title'>搜索</div>
           <div className='content'>{searchInput}</div>
         </div>
       )}
-
       <SearchCacheRelated />
 
+      {/* follow group related */}
       {selectedFollowGroup && (
         <div className='section' css={S.filterSection}>
           <div className='title'>
             分组
             <HelpInfo>当前分组的一些操作~</HelpInfo>
+            <span className='inline-flex items-center ml-15 font-size-14'>
+              (
+              <a
+                href={formatFollowGroupUrl(selectedFollowGroup?.tagid || '')}
+                target='_blank'
+                className='inline-flex items-center font-size-16'
+              >
+                <OpenExternalLinkIcon className='size-16 mr-2' />
+                {selectedFollowGroup?.name}
+              </a>
+              )
+            </span>
           </div>
           <div className='content'>
             <FollowGroupActions followGroup={selectedFollowGroup} onRefresh={onRefresh} />
@@ -386,6 +393,7 @@ export function DynamicFeedUsageInfo() {
       </Badge>
     </Popover>
   )
+  // #endregion
 
   const followGroupMidsCount = selectedFollowGroup?.count
   const upIcon = <IconForUp {...size(14)} className='mt--2px' />
