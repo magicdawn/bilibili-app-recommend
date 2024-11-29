@@ -16,7 +16,12 @@ import {
   SELECTED_KEY_PREFIX_UP,
   dfStore,
 } from '$modules/rec-services/dynamic-feed/store'
-import { settings, updateSettings, useSettingsSnapshot } from '$modules/settings'
+import {
+  settings,
+  updateSettings,
+  updateSettingsInnerArray,
+  useSettingsSnapshot,
+} from '$modules/settings'
 import { AntdMessage, getUid } from '$utility'
 import type { DragEndEvent } from '@dnd-kit/core'
 import { DndContext, PointerSensor, closestCenter, useSensor, useSensors } from '@dnd-kit/core'
@@ -367,10 +372,7 @@ function DynamicFeedWhenViewAllHideIdsPanel() {
   const { hideIds } = useSnapshot(settings.dynamicFeed.whenViewAll)
 
   const onDelete = useMemoizedFn((mid: string) => {
-    const obj = settings.dynamicFeed.whenViewAll
-    const set = new Set(obj.hideIds)
-    set.delete(mid)
-    obj.hideIds = Array.from(set)
+    updateSettingsInnerArray('dynamicFeed.whenViewAll.hideIds', { remove: [mid] })
   })
 
   const { followGroups } = useSnapshot(dfStore)

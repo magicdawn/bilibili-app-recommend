@@ -7,7 +7,13 @@ import { HelpInfo } from '$components/_base/HelpInfo'
 import { AntdTooltip } from '$components/_base/antd-custom'
 import { colorPrimaryValue } from '$components/css-vars'
 import { IconPark } from '$modules/icon/icon-park'
-import { settings, useSettingsSnapshot, type ListSettingsPath } from '$modules/settings'
+import {
+  settings,
+  updateSettingsInnerArray,
+  useSettingsSnapshot,
+  type ListSettingsPath,
+  type Settings,
+} from '$modules/settings'
 import { AntdMessage } from '$utility'
 import { getAvatarSrc } from '$utility/image'
 import type { AntdMenuItemType } from '$utility/type'
@@ -15,9 +21,10 @@ import { useRequest } from 'ahooks'
 import { Avatar, Badge, Button, Checkbox, Dropdown, Input, Popover, Radio, Space } from 'antd'
 import type { CheckboxChangeEvent } from 'antd/es/checkbox'
 import { delay, throttle } from 'es-toolkit'
-import { get, set } from 'es-toolkit/compat'
+import { get } from 'es-toolkit/compat'
 import { fastSortWithOrders } from 'fast-sort-lens'
 import type { ReactNode } from 'react'
+import type { Get } from 'type-fest'
 import { useSnapshot } from 'valtio'
 import { usePopupContainer } from '../_base'
 import {
@@ -468,10 +475,8 @@ function SearchCacheRelated() {
   const onChange = useCallback((e: CheckboxChangeEvent) => {
     if (!upMid) return
     const val = e.target.checked
-    const obj = settings.dynamicFeed.__internal
-    const s = new Set(obj.cacheAllItemsUpMids)
-    val ? s.add(upMid.toString()) : s.delete(upMid.toString())
-    obj.cacheAllItemsUpMids = Array.from(s)
+    const args = val ? { add: [upMid] } : { remove: [upMid] }
+    updateSettingsInnerArray('dynamicFeed.__internal.cacheAllItemsUpMids', args)
   }, [])
 
   return (
@@ -613,18 +618,17 @@ function FollowGroupActions({
   )
 }
 
-function useValueInSettingsCollection<T extends string | number>(
-  value: T,
-  collectionKey: ListSettingsPath,
+function useValueInSettingsCollection<P extends ListSettingsPath>(
+  value: Get<Settings, P>[number],
+  collectionKey: P,
 ) {
   const snap = useSettingsSnapshot()
   const list = get(snap, collectionKey)
   const checked = useMemo(() => list.includes(value), [list])
 
   const setChecked = useMemoizedFn((checked: boolean) => {
-    const collection = new Set<unknown>(list)
-    checked ? collection.add(value) : collection.delete(value)
-    set(settings, collectionKey, Array.from(collection))
+    const arg = checked ? { add: [value] } : { remove: [value] }
+    updateSettingsInnerArray(collectionKey, arg)
   })
 
   const onChange = useCallback((e: CheckboxChangeEvent) => {

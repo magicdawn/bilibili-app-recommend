@@ -367,22 +367,37 @@ export function updateSettings(payload: PartialDeep<Settings>) {
   }
 }
 
-export function updateSettingsCollection<P extends ListSettingsPath>(
-  path: P,
-  { add, remove }: { add?: Get<Settings, P>; remove?: Get<Settings, P> },
-) {
-  const collection = get(settings, path)
-  const s = new Set<unknown>(collection)
-  for (const x of add ?? []) s.add(x)
-  for (const x of remove ?? []) s.delete(x)
-  set(settings, path, Array.from(s))
-}
-
 /**
  * reset
  */
 export function resetSettings() {
   return updateSettings(initialSettings)
+}
+
+/**
+ * 便于操作 inner array
+ */
+
+export type SettingsInnerArrayItem<P extends ListSettingsPath> = Get<Settings, P>[number]
+
+export function getSettingsInnerArray<P extends ListSettingsPath>(path: P) {
+  return get(settings, path) as SettingsInnerArrayItem<P>[]
+}
+export function setSettingsInnerArray<P extends ListSettingsPath>(
+  path: P,
+  value: SettingsInnerArrayItem<P>[],
+) {
+  set(settings, path, value)
+}
+export function updateSettingsInnerArray<P extends ListSettingsPath>(
+  path: P,
+  { add, remove }: { add?: SettingsInnerArrayItem<P>[]; remove?: SettingsInnerArrayItem<P>[] },
+) {
+  const arr = getSettingsInnerArray(path)
+  const s = new Set(arr)
+  for (const x of add ?? []) s.add(x)
+  for (const x of remove ?? []) s.delete(x)
+  setSettingsInnerArray(path, Array.from(s))
 }
 
 /**

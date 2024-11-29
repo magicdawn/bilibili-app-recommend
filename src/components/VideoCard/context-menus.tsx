@@ -30,7 +30,7 @@ import {
 import { dynamicFeedFilterSelectUp } from '$modules/rec-services/dynamic-feed/usage-info'
 import { formatFavFolderUrl } from '$modules/rec-services/fav'
 import { UserFavService, defaultFavFolderName } from '$modules/rec-services/fav/user-fav.service'
-import { settings, updateSettingsCollection } from '$modules/settings'
+import { settings, updateSettingsInnerArray } from '$modules/settings'
 import { AntdMessage, toast } from '$utility'
 import type { MenuProps } from 'antd'
 import { delay, isNil, omit } from 'es-toolkit'
@@ -155,7 +155,7 @@ export function useContextMenus({
       return toast(`已在过滤名单中: ${content}`)
     }
 
-    updateSettingsCollection('filter.byAuthor.keywords', { add: [content] })
+    updateSettingsInnerArray('filter.byAuthor.keywords', { add: [content] })
     if (authorName) setNicknameCache(authorMid, authorName)
 
     let toastContent = content
@@ -226,10 +226,7 @@ export function useContextMenus({
     isDynamic(item) &&
     dfStore.selectedKey.startsWith(SELECTED_KEY_PREFIX_GROUP)
   const _dynamicFeedWhenViewAllHideIdsAdd = useMemoizedFn(async (newId: string) => {
-    const obj = settings.dynamicFeed.whenViewAll
-    const set = new Set(obj.hideIds)
-    set.add(newId)
-    obj.hideIds = Array.from(set)
+    updateSettingsInnerArray('dynamicFeed.whenViewAll.hideIds', { add: [newId] })
   })
   const onAddMidTo_dynamicFeedWhenViewAllHideIds = useMemoizedFn(async () => {
     if (!hasEntry_addMidTo_dynamicFeedWhenViewAllHideIds) return

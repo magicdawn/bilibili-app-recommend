@@ -3,15 +3,15 @@ import { AntdTooltip } from '$components/_base/antd-custom'
 import { borderColorValue, colorPrimaryValue } from '$components/css-vars'
 import { getUserNickname } from '$modules/bilibili/user/nickname'
 import {
-  getSettings,
-  settings,
+  getSettingsInnerArray,
+  updateSettingsInnerArray,
   useSettingsSnapshot,
   type ListSettingsPath,
 } from '$modules/settings'
 import { AntdMessage } from '$utility'
 import { Empty, Input } from 'antd'
 import { uniq } from 'es-toolkit'
-import { get, set } from 'es-toolkit/compat'
+import { get } from 'es-toolkit/compat'
 import type { ComponentPropsWithoutRef } from 'react'
 import IconParkOutlineCloseSmall from '~icons/icon-park-outline/close-small'
 
@@ -44,16 +44,17 @@ export function EditableListSettingItem({
         onSearch={(val, e) => {
           if (!val) return
 
-          const s = new Set(getSettings(configPath) as string[])
-          if (!s.has(val)) {
-            s.add(val)
-          } else {
+          // exists check
+          const set = new Set(getSettingsInnerArray(configPath))
+          if (set.has(val)) {
             AntdMessage.warning(`${val} 已存在`)
+            return
           }
-          set(settings, configPath, Array.from(s))
 
-          // clear
-          // 非受控组件, 有内部状态, 不能简单设置 input.value
+          // add
+          updateSettingsInnerArray(configPath, { add: [val] })
+
+          // clear: 非受控组件, 有内部状态, 不能简单设置 input.value
           if (e?.target) {
             const el = e.target as HTMLElement
             const clearBtn = el
@@ -103,9 +104,7 @@ export function EditableListSettingItem({
                   key={t}
                   tag={t}
                   onDelete={(tag) => {
-                    const s = new Set(get(settings, configPath) as string[])
-                    s.delete(tag)
-                    set(settings, configPath, Array.from(s))
+                    updateSettingsInnerArray(configPath, { remove: [tag] })
                   }}
                   renderTag={
                     configPath === 'filter.byAuthor.keywords'
