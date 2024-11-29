@@ -581,11 +581,18 @@ function FollowGroupActions({
         <AntdTooltip
           title={
             <>
-              {disabled && (
-                <p className='color-rose'>当前分组 UP 数量: {followGroup.count}, 无需设置</p>
-              )}
               默认分组 UP 数量不超过 {FollowGroupMergeTimelineService.MAX_UPMID_COUNT}{' '}
-              时使用「拼接时间线」
+              时会使用「拼接时间线」
+              {disabled && (
+                <p
+                  css={css`
+                    color: oklch(from ${colorPrimaryValue} calc(1 - l) calc(c + 0.1) h);
+                    font-style: italic;
+                  `}
+                >
+                  当前分组 UP 数量: {followGroup.count}, 无需设置
+                </p>
+              )}
             </>
           }
         >
