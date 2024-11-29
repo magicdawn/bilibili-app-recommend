@@ -284,6 +284,13 @@ pnpm build # build 完会自动使用 Chrome 打开安装地址
 
 ![afdian-magicdawn_w375](https://ghp.ci/https://raw.githubusercontent.com/magicdawn/magicdawn/master/images/afdian-magicdawn_w375_v2.jpg)
 
+### 赞助者
+
+感谢这些来自爱发电的赞助者：
+
+<!-- AFDIAN-ACTION:START -->
+<!-- AFDIAN-ACTION:END -->
+
 ## 更新日志
 
 [GitHub Release](https://github.com/magicdawn/bilibili-gate/releases)
