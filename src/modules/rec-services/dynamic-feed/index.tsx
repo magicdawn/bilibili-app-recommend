@@ -57,7 +57,6 @@ export function getDynamicFeedServiceConfig() {
 
     // flags
     hasSelectedUp: snap.hasSelectedUp,
-    showFilter: snap.showFilter,
     selectedKey: snap.selectedKey,
 
     /**
@@ -171,9 +170,6 @@ export class DynamicFeedRecService implements IService {
   }
   get hasSelectedUp() {
     return this.config.hasSelectedUp
-  }
-  get showFilter() {
-    return this.config.showFilter
   }
 
   /**
@@ -352,8 +348,6 @@ export class DynamicFeedRecService implements IService {
 
       // by 动态视频|投稿视频
       .filter((x) => {
-        // only when the filter UI visible
-        if (!this.showFilter) return true
         // all
         if (this.dynamicFeedVideoType === DynamicFeedVideoType.All) return true
         // type only
@@ -369,8 +363,6 @@ export class DynamicFeedRecService implements IService {
 
       // by 充电专属
       .filter((x) => {
-        // only when the filter UI visible
-        if (!this.showFilter) return true
         if (!this.hideChargeOnlyVideos) return true
         const chargeOnly =
           (x.modules?.module_dynamic?.major?.archive?.badge?.text as string) === CHARGE_ONLY_TEXT
@@ -379,10 +371,7 @@ export class DynamicFeedRecService implements IService {
 
       // by 最短时长
       .filter((x) => {
-        // only when the filter UI visible
-        if (!this.showFilter) return true
         if (this.filterMinDuration === DynamicFeedVideoMinDuration.All) return true
-
         const v = x.modules.module_dynamic.major.archive
         const duration = parseDuration(v.duration_text)
         return duration >= this.filterMinDurationValue
@@ -390,8 +379,6 @@ export class DynamicFeedRecService implements IService {
 
       // by 关键字搜索
       .filter((x) => {
-        // only when the filter UI visible
-        if (!this.showFilter) return true
         if (!this.searchText) return true
         const title = x?.modules?.module_dynamic?.major?.archive?.title || ''
         return filterBySearchText({

@@ -9,6 +9,7 @@ import { bgLv2Value, bgLv3Value } from '$components/css-vars'
 import { EAppApiDevice } from '$define/index.shared'
 import { getUserNickname } from '$modules/bilibili/user/nickname'
 import { IconPark } from '$modules/icon/icon-park'
+import { FollowGroupMergeTimelineService } from '$modules/rec-services/dynamic-feed/group/merge-timeline-service'
 import type { FollowGroup } from '$modules/rec-services/dynamic-feed/group/types/groups'
 import {
   SELECTED_KEY_PREFIX_GROUP,
@@ -144,9 +145,10 @@ export function TabPaneRecTabsConfig() {
                   tooltip={
                     <>
                       动态 Tab 启用分组筛选 <br />
-                      当分组中 UP 较少时, 会使用拼接时间线的形式, 速度较快, 可以获取所有动态; <br />
+                      当分组中 UP 较少(不超过 {FollowGroupMergeTimelineService.MAX_UPMID_COUNT}),
+                      会使用「拼接时间线」的形式, 速度较快, 可以获取所有动态; <br />
                       否则基于全部动态 + 分组UP过滤, 速度可能巨慢,
-                      且貌似只能拉取最近一个月的动态数据. <br />
+                      且貌似只能获取最近一个月的动态数据. <br />
                     </>
                   }
                 />

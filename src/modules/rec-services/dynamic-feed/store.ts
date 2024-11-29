@@ -105,11 +105,6 @@ export const dfStore = proxy({
   get hasSelectedUp(): boolean {
     return !!(this.upName && this.upMid)
   },
-  // 展示 filter
-  get showFilter() {
-    // return this.hasSelectedUp || !!this.selectedFollowGroup
-    return true
-  },
 
   // 筛选 UP & 分组 select 控件的 key
   get selectedKey() {

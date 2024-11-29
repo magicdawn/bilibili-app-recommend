@@ -142,12 +142,11 @@ export async function refreshForGrid(fetcherOptions: FetcherOptions) {
   if (fetcherOptions.tab === ETab.DynamicFeed) {
     const s = fetcherOptions.serviceMap[ETab.DynamicFeed]
     if (
-      s.followGroupTagid || // 选择了分组 & 分组很少更新
-      (s.showFilter &&
-        // 过滤结果可能比较少
-        (s.searchText ||
-          s.dynamicFeedVideoType === DynamicFeedVideoType.DynamicOnly ||
-          s.filterMinDuration !== DynamicFeedVideoMinDuration.All))
+      typeof s.followGroupTagid !== 'undefined' || // 选择了分组 & 分组很少更新, TODO: 考虑 merge-timeline
+      // 过滤结果可能比较少
+      s.searchText ||
+      s.dynamicFeedVideoType === DynamicFeedVideoType.DynamicOnly ||
+      s.filterMinDuration !== DynamicFeedVideoMinDuration.All
     ) {
       minCount = 1
     }

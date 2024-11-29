@@ -19,8 +19,6 @@ import { get, set } from 'es-toolkit/compat'
 import { fastSortWithOrders } from 'fast-sort-lens'
 import type { ReactNode } from 'react'
 import { useSnapshot } from 'valtio'
-import TablerFilter from '~icons/tabler/filter'
-import TablerFilterCheck from '~icons/tabler/filter-check'
 import { usePopupContainer } from '../_base'
 import {
   createUpdateSearchCacheNotifyFns,
@@ -96,6 +94,7 @@ const flexBreak = (
 
 const IconForUp = IconRadixIconsPerson
 const IconForGroup = IconMynauiUsersGroup
+const IconForPopoverTrigger = IconTablerPlus
 
 export function DynamicFeedUsageInfo() {
   const { ref, getPopupContainer } = usePopupContainer()
@@ -114,23 +113,19 @@ export function DynamicFeedUsageInfo() {
     selectedFollowGroup,
     dynamicFeedVideoType,
     filterMinDuration,
-    showFilter,
     searchText,
     selectedKey,
     hideChargeOnlyVideos,
   } = useSnapshot(dfStore)
 
-  const showFilterBadge = useMemo(() => {
-    return (
-      showFilter &&
-      !!(
-        dynamicFeedVideoType !== DynamicFeedVideoType.All ||
-        hideChargeOnlyVideos ||
-        searchText ||
-        filterMinDuration !== DynamicFeedVideoMinDuration.All
-      )
+  const showPopoverBadge = useMemo(() => {
+    return !!(
+      dynamicFeedVideoType !== DynamicFeedVideoType.All ||
+      hideChargeOnlyVideos ||
+      searchText ||
+      filterMinDuration !== DynamicFeedVideoMinDuration.All
     )
-  }, [showFilter, dynamicFeedVideoType, hideChargeOnlyVideos, searchText, filterMinDuration])
+  }, [dynamicFeedVideoType, hideChargeOnlyVideos, searchText, filterMinDuration])
 
   // try update on mount
   useMount(() => {
@@ -248,7 +243,7 @@ export function DynamicFeedUsageInfo() {
     />
   )
 
-  const filterPopoverContent = (
+  const popoverContent = (
     <div css={S.filterWrapper}>
       <div className='section' css={S.filterSection}>
         <div className='title'>
@@ -369,6 +364,21 @@ export function DynamicFeedUsageInfo() {
       )}
     </div>
   )
+  const popoverTrigger = (
+    <Popover
+      // open
+      arrow={false}
+      placement='bottomLeft'
+      getPopupContainer={getPopupContainer}
+      content={popoverContent}
+    >
+      <Badge dot={showPopoverBadge} color={colorPrimaryValue} offset={[-5, 5]}>
+        <Button css={iconOnlyRoundButtonCss}>
+          <IconForPopoverTrigger {...size(18)} className='ml-1' />
+        </Button>
+      </Badge>
+    </Popover>
+  )
 
   const followGroupMidsCount = selectedFollowGroup?.count
   const upIcon = <IconForUp {...size(14)} className='mt--2px' />
@@ -407,21 +417,7 @@ export function DynamicFeedUsageInfo() {
           </Button>
         )}
 
-        {showFilter && (
-          <Popover
-            // open
-            arrow={false}
-            placement='bottomLeft'
-            getPopupContainer={getPopupContainer}
-            content={filterPopoverContent}
-          >
-            <Badge dot={showFilterBadge} color={colorPrimaryValue} offset={[-5, 5]}>
-              <Button css={iconOnlyRoundButtonCss}>
-                {showFilterBadge ? <TablerFilterCheck /> : <TablerFilter />}
-              </Button>
-            </Badge>
-          </Popover>
-        )}
+        {popoverTrigger}
 
         {externalSearchInput && searchInput}
 
@@ -583,13 +579,12 @@ function FollowGroupActions({
               {disabled && (
                 <p className='color-rose'>当前分组 UP 数量: {followGroup.count}, 无需设置</p>
               )}
-              查看分组动态时, 强制使用「时间线拼接」 <br />
               默认分组 UP 数量不超过 {FollowGroupMergeTimelineService.MAX_UPMID_COUNT}{' '}
-              时使用「时间线拼接」
+              时使用「拼接时间线」
             </>
           }
         >
-          分组动态: 强制使用「时间线拼接」
+          分组动态: 强制使用「拼接时间线」
         </AntdTooltip>
       </Checkbox>
     )
