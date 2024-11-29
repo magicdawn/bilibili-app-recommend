@@ -458,6 +458,14 @@ export class DynamicFeedRecService implements IService {
       dfStore.upFace = authorFace
     }
 
+    // update group count if needed
+    if (this.viewingSomeGroup && dfStore.followGroups.length) {
+      const group = dfStore.followGroups.find((x) => x.tagid === this.followGroupTagid)
+      if (group && group.count !== this.whenViewSomeGroupMids.size) {
+        group.count = this.whenViewSomeGroupMids.size
+      }
+    }
+
     return items
   }
 
