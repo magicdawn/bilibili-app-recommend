@@ -620,15 +620,15 @@ function FollowGroupActions({
 
 function useValueInSettingsCollection<P extends ListSettingsPath>(
   value: Get<Settings, P>[number],
-  collectionKey: P,
+  listSettingsPath: P,
 ) {
   const snap = useSettingsSnapshot()
-  const list = get(snap, collectionKey)
+  const list = get(snap, listSettingsPath)
   const checked = useMemo(() => list.includes(value), [list])
 
   const setChecked = useMemoizedFn((checked: boolean) => {
     const arg = checked ? { add: [value] } : { remove: [value] }
-    updateSettingsInnerArray(collectionKey, arg)
+    updateSettingsInnerArray(listSettingsPath, arg)
   })
 
   const onChange = useCallback((e: CheckboxChangeEvent) => {
