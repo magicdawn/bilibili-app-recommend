@@ -290,64 +290,64 @@ pnpm build # build 完会自动使用 Chrome 打开安装地址
 
 <!-- AFDIAN-ACTION:START -->
 
-<a href="https://afdian.net/u/adde092c531411eeb1b252540025c377">
+<a href="https://afdian.com/u/adde092c531411eeb1b252540025c377">
     <img src="https://pic1.afdiancdn.com/default/avatar/avatar-purple.png?imageView2/1/w/120/h/120" width="40" height="40" alt="璃幻梦" title="璃幻梦"/>
 </a>
-<a href="https://afdian.net/u/30dc989c9f6411efa78152540025c377">
+<a href="https://afdian.com/u/30dc989c9f6411efa78152540025c377">
     <img src="https://pic1.afdiancdn.com/default/avatar/avatar-orange.png?imageView2/1/w/120/h/120" width="40" height="40" alt="HaBoom" title="HaBoom"/>
 </a>
-<a href="https://afdian.net/u/41803a229ed611ed9d9952540025c377">
+<a href="https://afdian.com/u/41803a229ed611ed9d9952540025c377">
     <img src="https://pic1.afdiancdn.com/default/avatar/avatar-yellow.png?imageView2/1/w/120/h/120" width="40" height="40" alt="非法昵称银狼" title="非法昵称银狼"/>
 </a>
-<a href="https://afdian.net/u/e4ba6388815711efb91152540025c377">
+<a href="https://afdian.com/u/e4ba6388815711efb91152540025c377">
     <img src="https://pic1.afdiancdn.com/default/avatar/avatar-blue.png?imageView2/1/w/120/h/120" width="40" height="40" alt="爱发电用户_PnHy" title="爱发电用户_PnHy"/>
 </a>
-<a href="https://afdian.net/u/50e374f26f8b11ef857252540025c377">
+<a href="https://afdian.com/u/50e374f26f8b11ef857252540025c377">
     <img src="https://pic1.afdiancdn.com/default/avatar/avatar-purple.png?imageView2/1/?imageView2/1/w/120/h/120" width="40" height="40" alt="爱发电用户_50e37" title="爱发电用户_50e37"/>
 </a>
-<a href="https://afdian.net/u/4e1781c85d6611ef830f52540025c377">
+<a href="https://afdian.com/u/4e1781c85d6611ef830f52540025c377">
     <img src="https://pic1.afdiancdn.com/default/avatar/avatar-yellow.png?imageView2/1/w/120/h/120" width="40" height="40" alt="爱发电用户_Gq7D" title="爱发电用户_Gq7D"/>
 </a>
-<a href="https://afdian.net/u/46feb6722e6811ef999f52540025c377">
+<a href="https://afdian.com/u/46feb6722e6811ef999f52540025c377">
     <img src="https://pic1.afdiancdn.com/default/avatar/avatar-purple.png?imageView2/1/?imageView2/1/w/120/h/120" width="40" height="40" alt="爱发电用户_46feb" title="爱发电用户_46feb"/>
 </a>
-<a href="https://afdian.net/u/203aa308254811ef8aba52540025c377">
+<a href="https://afdian.com/u/203aa308254811ef8aba52540025c377">
     <img src="https://pic1.afdiancdn.com/default/avatar/avatar-purple.png?imageView2/1/?imageView2/1/w/120/h/120" width="40" height="40" alt="爱发电用户_203aa" title="爱发电用户_203aa"/>
 </a>
-<a href="https://afdian.net/u/194d3f34910411ee9a5a5254001e7c00">
+<a href="https://afdian.com/u/194d3f34910411ee9a5a5254001e7c00">
     <img src="https://pic1.afdiancdn.com/user/user_upload_osl/5b4d4e90c6dfe4b6a78b65d48fb9a2ef_w132_h132_s0.jpeg?imageView2/1/w/120/h/120" width="40" height="40" alt="xfgy1234" title="xfgy1234"/>
 </a>
-<a href="https://afdian.net/u/17cf949a203d11ef9be652540025c377">
+<a href="https://afdian.com/u/17cf949a203d11ef9be652540025c377">
     <img src="https://pic1.afdiancdn.com/default/avatar/avatar-purple.png?imageView2/1/?imageView2/1/w/120/h/120" width="40" height="40" alt="爱发电用户_17cf9" title="爱发电用户_17cf9"/>
 </a>
-<a href="https://afdian.net/u/21b921fa200c11ef91a052540025c377">
+<a href="https://afdian.com/u/21b921fa200c11ef91a052540025c377">
     <img src="https://pic1.afdiancdn.com/default/avatar/avatar-purple.png?imageView2/1/?imageView2/1/w/120/h/120" width="40" height="40" alt="爱发电用户_21b92" title="爱发电用户_21b92"/>
 </a>
-<a href="https://afdian.net/u/fde6772e19c011ef819352540025c377">
+<a href="https://afdian.com/u/fde6772e19c011ef819352540025c377">
     <img src="https://pic1.afdiancdn.com/default/avatar/avatar-purple.png?imageView2/1/w/120/h/120" width="40" height="40" alt="hhxc" title="hhxc"/>
 </a>
-<a href="https://afdian.net/u/2bb8b5ce11db11ef85bd5254001e7c00">
+<a href="https://afdian.com/u/2bb8b5ce11db11ef85bd5254001e7c00">
     <img src="https://pic1.afdiancdn.com/default/avatar/avatar-purple.png?imageView2/1/?imageView2/1/w/120/h/120" width="40" height="40" alt="爱发电用户_2bb8b" title="爱发电用户_2bb8b"/>
 </a>
-<a href="https://afdian.net/u/6512ce40ffe311eeb70a5254001e7c00">
+<a href="https://afdian.com/u/6512ce40ffe311eeb70a5254001e7c00">
     <img src="https://pic1.afdiancdn.com/default/avatar/avatar-yellow.png?imageView2/1/w/120/h/120" width="40" height="40" alt="17817215892" title="17817215892"/>
 </a>
-<a href="https://afdian.net/u/ca43354afe3311ee9ab352540025c377">
+<a href="https://afdian.com/u/ca43354afe3311ee9ab352540025c377">
     <img src="https://pic1.afdiancdn.com/default/avatar/avatar-blue.png?imageView2/1/w/120/h/120" width="40" height="40" alt="爱发电用户_mPYj" title="爱发电用户_mPYj"/>
 </a>
-<a href="https://afdian.net/u/7a77f2b6dee511eeb9a852540025c377">
+<a href="https://afdian.com/u/7a77f2b6dee511eeb9a852540025c377">
     <img src="https://pic1.afdiancdn.com/default/avatar/avatar-purple.png?imageView2/1/?imageView2/1/w/120/h/120" width="40" height="40" alt="爱发电用户_7a77f" title="爱发电用户_7a77f"/>
 </a>
-<a href="https://afdian.net/u/0f445608c3dc11edbe4852540025c377">
+<a href="https://afdian.com/u/0f445608c3dc11edbe4852540025c377">
     <img src="https://pic1.afdiancdn.com/default/avatar/avatar-purple.png?imageView2/1/?imageView2/1/w/120/h/120" width="40" height="40" alt="爱发电用户_0f445" title="爱发电用户_0f445"/>
 </a>
-<a href="https://afdian.net/u/3cb7759cb52c11eea14a52540025c377">
+<a href="https://afdian.com/u/3cb7759cb52c11eea14a52540025c377">
     <img src="https://pic1.afdiancdn.com/default/avatar/avatar-purple.png?imageView2/1/?imageView2/1/w/120/h/120" width="40" height="40" alt="爱发电用户_3cb77" title="爱发电用户_3cb77"/>
 </a>
-<a href="https://afdian.net/u/603f8734aa5011eea3295254001e7c00">
+<a href="https://afdian.com/u/603f8734aa5011eea3295254001e7c00">
     <img src="https://pic1.afdiancdn.com/default/avatar/avatar-orange.png?imageView2/1/w/120/h/120" width="40" height="40" alt="爱发电用户_A9Bn" title="爱发电用户_A9Bn"/>
 </a>
-<a href="https://afdian.net/u/e36f42b290ce11edbc125254001e7c00">
+<a href="https://afdian.com/u/e36f42b290ce11edbc125254001e7c00">
     <img src="https://pic1.afdiancdn.com/default/avatar/avatar-blue.png?imageView2/1/w/120/h/120" width="40" height="40" alt="爱发电用户_Te4f" title="爱发电用户_Te4f"/>
 </a>
 <!-- 注意: 尽量将标签前靠,否则经测试可能被 GitHub 解析为代码块 -->
