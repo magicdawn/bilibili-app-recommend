@@ -35,9 +35,10 @@ jobs:
       # 下方为 直接 push 到目标分支, 当然你也可以选择 Pull Request 方式
       - name: Commit files
         run: |
-          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git commit -m "Add changes: 爱发电赞助" -a
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -a -m "chore(afdian): update afdian sponsors"
 
       - name: Push changes
         uses: ad-m/github-push-action@master # https://github.com/ad-m/github-push-action
