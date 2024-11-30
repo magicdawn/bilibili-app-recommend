@@ -61,12 +61,10 @@ export function useInNormalCardCss(showingInNormalCard: boolean): TheCssType {
 
 export function useCardBorderCss(): TheCssType {
   const {
-    styleUseCardBorder: useBorder,
-    styleUseCardBorderOnlyOnHover: useBorderOnlyOnHover,
-    styleUseCardBoxShadow: useBoxShadow,
-    styleUseWhiteBackground,
     useDelayForHover,
-    styleUseCardPadding,
+    style: {
+      videoCard: { useBorder, useBorderOnlyOnHover, useBoxShadow, usePadding },
+    },
   } = useSettingsSnapshot()
 
   return useMemo(() => {
@@ -98,7 +96,7 @@ export function useCardBorderCss(): TheCssType {
         // add padding & negative margin
         useBorderOnlyOnHover &&
           !useBoxShadow &&
-          styleUseCardPadding &&
+          usePadding &&
           css`
             margin-inline: -6px;
             .bili-video-card__wrap {
@@ -108,14 +106,7 @@ export function useCardBorderCss(): TheCssType {
           `,
       ],
     ]
-  }, [
-    useBorder,
-    useBorderOnlyOnHover,
-    useBoxShadow,
-    styleUseWhiteBackground,
-    useDelayForHover,
-    styleUseCardPadding,
-  ])
+  }, [useBorder, useBorderOnlyOnHover, useBoxShadow, usePadding, useDelayForHover])
 }
 
 export function getActiveCardBorderCss(active: boolean): TheCssType {

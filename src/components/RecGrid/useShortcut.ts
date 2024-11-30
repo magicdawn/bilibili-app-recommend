@@ -253,7 +253,7 @@ const countCache2 = new Map<number, number>()
 export function getColumnCount(container?: HTMLElement | null, mayHaveNarrowMode = true) {
   if (mayHaveNarrowMode && settings.useNarrowMode) return 2
 
-  const countCache = settings.styleUseCustomGrid ? countCache1 : countCache2
+  const countCache = settings.style.pureRecommend.useCustomGrid ? countCache1 : countCache2
   let count = countCache.get(Math.trunc(window.innerWidth))
   if (count) {
     return count

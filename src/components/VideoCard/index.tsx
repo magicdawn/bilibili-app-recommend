@@ -165,8 +165,13 @@ const VideoCardInner = memo(function VideoCardInner({
   emitter = defaultEmitter,
   watchlaterAdded,
 }: VideoCardInnerProps) {
-  const { autoPreviewWhenHover, accessKey, styleUseCardBorder, styleUseCardBorderOnlyOnHover } =
-    useSettingsSnapshot()
+  const {
+    autoPreviewWhenHover,
+    accessKey,
+    style: {
+      videoCard: { useBorder: cardUseBorder, useBorderOnlyOnHover: cardUseBorderOnlyOnHover },
+    },
+  } = useSettingsSnapshot()
   const authed = !!accessKey
 
   const {
@@ -231,7 +236,7 @@ const VideoCardInner = memo(function VideoCardInner({
   // single ref 与 useEventListener 配合不是很好, 故使用两个 ref
   const cardRef = useRef<HTMLElement | null>(null)
   const coverRef = useRef<HTMLElement | null>(null)
-  const videoPreviewWrapperRef = styleUseCardBorder ? cardRef : coverRef
+  const videoPreviewWrapperRef = cardUseBorder ? cardRef : coverRef
 
   const previewImageRef = useRef<PreviewImageRef>(null)
 
@@ -324,7 +329,7 @@ const VideoCardInner = memo(function VideoCardInner({
   })
 
   const handleCardClick: MouseEventHandler<HTMLDivElement> = useMemoizedFn((e) => {
-    if (!styleUseCardBorder) return
+    if (!cardUseBorder) return
 
     // already handled by <a>
     if ((e.target as HTMLElement).closest('a')) return
@@ -423,18 +428,16 @@ const VideoCardInner = memo(function VideoCardInner({
         border-radius: ${videoCardBorderRadiusValue};
       }
     `,
-    (isHovering || active || (styleUseCardBorder && !styleUseCardBorderOnlyOnHover)) &&
-      coverBottomNoRoundCss,
+    (isHovering || active || (cardUseBorder && !cardUseBorderOnlyOnHover)) && coverBottomNoRoundCss,
   ]
 
   // 防止看不清封面边界: (封面与背景色接近)
   const dark = useIsDarkMode()
   const coverBorderCss: TheCssType = (() => {
     // card has border always showing, so cover does not need
-    if (styleUseCardBorder && !styleUseCardBorderOnlyOnHover) return undefined
+    if (cardUseBorder && !cardUseBorderOnlyOnHover) return undefined
     const visible =
-      !dark &&
-      (!styleUseCardBorder || (styleUseCardBorder && styleUseCardBorderOnlyOnHover && !isHovering))
+      !dark && (!cardUseBorder || (cardUseBorder && cardUseBorderOnlyOnHover && !isHovering))
     return css`
       border: 1px solid ${visible ? borderColorValue : 'transparent'};
     `
@@ -587,7 +590,7 @@ const VideoCardInner = memo(function VideoCardInner({
         `}
         onClick={handleCardClick}
         onContextMenu={(e) => {
-          if (styleUseCardBorder) {
+          if (cardUseBorder) {
             e.preventDefault()
           }
         }}
@@ -597,7 +600,7 @@ const VideoCardInner = memo(function VideoCardInner({
     )
   }
 
-  if (styleUseCardBorder) {
+  if (cardUseBorder) {
     return wrapDropdown(
       wrapCardWrapper(
         <>

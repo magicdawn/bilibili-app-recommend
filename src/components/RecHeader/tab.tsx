@@ -2,7 +2,7 @@ import { flexVerticalCenterStyle } from '$common/emotion-css'
 import { type OnRefresh } from '$components/RecGrid/useRefresh'
 import { HelpInfo } from '$components/_base/HelpInfo'
 import { QUERY_DYNAMIC_UP_MID } from '$modules/rec-services/dynamic-feed/store'
-import { useSettingsSnapshot } from '$modules/settings'
+import { settings, useSettingsSnapshot } from '$modules/settings'
 import { checkLoginStatus, useHasLogined } from '$utility'
 import { proxyWithGmStorage } from '$utility/valtio'
 import { Radio } from 'antd'
@@ -115,7 +115,7 @@ const radioBtnStandardCss = css`
 export function VideoSourceTab({ onRefresh }: { onRefresh: OnRefresh }) {
   const logined = useHasLogined()
   const tab = useCurrentUsingTab()
-  const { styleUseStandardVideoSourceTab } = useSettingsSnapshot()
+  const { videoSourceTabStandardHeight } = useSnapshot(settings.style.general)
   const currentTabConfigList = useCurrentDisplayingTabConfigList()
 
   return (
@@ -157,7 +157,7 @@ export function VideoSourceTab({ onRefresh }: { onRefresh: OnRefresh }) {
       >
         {currentTabConfigList.map(({ key, label }) => (
           <Radio.Button
-            css={[radioBtnCss, styleUseStandardVideoSourceTab && radioBtnStandardCss]}
+            css={[radioBtnCss, videoSourceTabStandardHeight && radioBtnStandardCss]}
             className='video-source-tab' // can be used to customize css
             tabIndex={-1}
             value={key}

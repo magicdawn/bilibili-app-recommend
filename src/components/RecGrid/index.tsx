@@ -403,12 +403,14 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
     </div>
   )
 
-  const { useNarrowMode, styleUseCustomGrid } = useSettingsSnapshot()
+  const { useNarrowMode, style } = useSettingsSnapshot()
   const gridClassName = clsx(
     APP_CLS_GRID, // for customize css
     scopedClsNames.videoGrid,
     scopedClsNames.newCardStyle,
-    styleUseCustomGrid ? scopedClsNames.videoGridCustom : scopedClsNames.videoGridBiliFeed4,
+    style.pureRecommend.useCustomGrid
+      ? scopedClsNames.videoGridCustom
+      : scopedClsNames.videoGridBiliFeed4,
     useNarrowMode && scopedClsNames.narrowMode, // 居中
     className,
   )

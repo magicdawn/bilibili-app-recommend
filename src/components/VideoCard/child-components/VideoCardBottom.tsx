@@ -10,13 +10,14 @@ import { EApiType, EAppApiDevice } from '$define/index.shared'
 import { LiveIcon } from '$modules/icon'
 import { formatSpaceUrl } from '$modules/rec-services/dynamic-feed/shared'
 import { ELiveStatus } from '$modules/rec-services/live/live-enum'
-import { useSettingsSnapshot } from '$modules/settings'
+import { settings } from '$modules/settings'
 import { getAvatarSrc } from '$utility/image'
 import type { TheCssType } from '$utility/type'
 import { Avatar } from 'antd'
 import { size } from 'polished'
 import { type MouseEventHandler } from 'react'
 import { Case, Switch } from 'react-if'
+import { useSnapshot } from 'valtio'
 import type { IVideoCardData } from '../process/normalize'
 import { DESC_SEPARATOR } from '../process/normalize'
 import { useLinkTarget } from '../use/useOpenRelated'
@@ -88,7 +89,7 @@ export function VideoCardBottom({
   handleVideoLinkClick?: MouseEventHandler
   className?: string
 }) {
-  const { styleUseCardBorder, styleUseCardBorderOnlyOnHover } = useSettingsSnapshot()
+  const { useBorder } = useSnapshot(settings.style.videoCard)
   const target = useLinkTarget()
 
   const {
@@ -173,7 +174,7 @@ export function VideoCardBottom({
       className={className}
       css={css`
         margin-top: 15px;
-        margin-bottom: ${styleUseCardBorder ? 10 : 5}px;
+        margin-bottom: ${useBorder ? 10 : 5}px;
         padding-inline: 5px;
         display: flex;
         column-gap: 5px;

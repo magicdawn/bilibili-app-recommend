@@ -1,8 +1,8 @@
 import { REQUEST_FAIL_MSG } from '$common'
-import { buttonActiveCss, flexVerticalCenterStyle } from '$common/emotion-css'
+import { buttonOpenCss, flexVerticalCenterStyle, usePopoverBorderColor } from '$common/emotion-css'
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
 import { HelpInfo } from '$components/_base/HelpInfo'
-import { borderColorValue, colorPrimaryValue } from '$components/css-vars'
+import { colorPrimaryValue } from '$components/css-vars'
 import type { RankingItemExtend } from '$define'
 import { EApiType } from '$define/index.shared'
 import { usePopupContainer } from '$modules/rec-services/_base'
@@ -175,9 +175,9 @@ function RankingUsageInfo() {
       placement='bottomLeft'
       getPopupContainer={getPopupContainer}
       content={popoverContent}
-      overlayInnerStyle={{ border: `1px solid ${borderColorValue}` }}
+      overlayInnerStyle={{ border: `1px solid ${usePopoverBorderColor()}` }}
     >
-      <Button css={[popoverOpen && buttonActiveCss]}>{category.name}</Button>
+      <Button css={[popoverOpen && buttonOpenCss]}>{category.name}</Button>
     </Popover>
   )
 

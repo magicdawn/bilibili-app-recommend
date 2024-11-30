@@ -46,13 +46,7 @@ export const RecHeader = forwardRef<
     rightSlot?: ReactNode
   }
 >(function RecHeader({ onRefresh, refreshing, leftSlot, rightSlot }, ref) {
-  const {
-    accessKey,
-    pureRecommend,
-    styleUseWhiteBackground,
-    showModalFeedEntry,
-    styleUseStickyTabbarInPureRecommend,
-  } = useSettingsSnapshot()
+  const { accessKey, pureRecommend, showModalFeedEntry, style } = useSettingsSnapshot()
   const { modalFeedVisible, modalSettingsVisible } = useSnapshot(headerState)
 
   useKeyPress(
@@ -106,7 +100,7 @@ export const RecHeader = forwardRef<
           className={clsx('area-header-wrapper', { sticky })}
           css={
             pureRecommend &&
-            styleUseStickyTabbarInPureRecommend && [
+            style.pureRecommend.useStickyTabbar && [
               css`
                 position: sticky;
                 top: ${headerHeight - 1}px; // 有缝隙, 故 -1 px

@@ -1,8 +1,9 @@
 import { __PROD__ } from '$common'
 import {
-  buttonActiveCss,
+  buttonOpenCss,
   flexVerticalCenterStyle,
   iconOnlyRoundButtonCss,
+  usePopoverBorderColor,
 } from '$common/emotion-css'
 import { CheckboxSettingItem } from '$components/ModalSettings/setting-item'
 import { copyBvidInfos, copyBvidsSingleLine } from '$components/RecGrid/unsafe-window-export'
@@ -10,7 +11,7 @@ import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
 import { CHARGE_ONLY_TEXT } from '$components/VideoCard/top-marks'
 import { HelpInfo } from '$components/_base/HelpInfo'
 import { AntdTooltip } from '$components/_base/antd-custom'
-import { borderColorValue, colorPrimaryValue } from '$components/css-vars'
+import { colorPrimaryValue } from '$components/css-vars'
 import { OpenExternalLinkIcon } from '$modules/icon'
 import { IconPark } from '$modules/icon/icon-park'
 import {
@@ -24,7 +25,18 @@ import { AntdMessage } from '$utility'
 import { getAvatarSrc } from '$utility/image'
 import type { AntdMenuItemType } from '$utility/type'
 import { useRequest } from 'ahooks'
-import { Avatar, Badge, Button, Checkbox, Dropdown, Input, Popover, Radio, Space } from 'antd'
+import {
+  Avatar,
+  Badge,
+  Button,
+  Checkbox,
+  Dropdown,
+  Input,
+  Popover,
+  Radio,
+  Space,
+  theme,
+} from 'antd'
 import type { CheckboxChangeEvent } from 'antd/es/checkbox'
 import { delay, throttle } from 'es-toolkit'
 import { get } from 'es-toolkit/compat'
@@ -53,6 +65,8 @@ import {
   type DynamicFeedStore,
   type UpMidType,
 } from './store'
+
+const { useToken } = theme
 
 export function dynamicFeedFilterSelectUp(payload: Partial<typeof dfStore>) {
   Object.assign(dfStore, payload)
@@ -238,14 +252,14 @@ export function DynamicFeedUsageInfo() {
         style: {
           maxHeight: '60vh',
           overflowY: 'scroll',
-          border: `1px solid ${borderColorValue}`,
+          border: `1px solid ${usePopoverBorderColor()}`,
         },
       }}
     >
       <Button
         icon={dropdownButtonIcon}
         className='gap-4px'
-        css={[scopeDropdownOpen && buttonActiveCss]}
+        css={[scopeDropdownOpen && buttonOpenCss]}
       >
         {dropdownButtonLabel}
       </Button>
@@ -413,18 +427,21 @@ export function DynamicFeedUsageInfo() {
       ? false //
       : false, // dev: change to true for debug if needed);
   )
+  const onPopoverOpenChange = __PROD__
+    ? setPopoverOpen //
+    : setPopoverOpen // dev: free to change
   const popoverTrigger = (
     <Popover
       open={popoverOpen}
-      onOpenChange={setPopoverOpen}
+      onOpenChange={onPopoverOpenChange}
       arrow={false}
       placement='bottomLeft'
       getPopupContainer={getPopupContainer}
       content={popoverContent}
-      overlayInnerStyle={{ border: `1px solid ${borderColorValue}` }}
+      overlayInnerStyle={{ border: `1px solid ${usePopoverBorderColor()}` }}
     >
       <Badge dot={showPopoverBadge} color={colorPrimaryValue} offset={[-5, 5]}>
-        <Button css={[iconOnlyRoundButtonCss, popoverOpen && buttonActiveCss]}>
+        <Button css={[iconOnlyRoundButtonCss, popoverOpen && buttonOpenCss]}>
           <IconForPopoverTrigger className='ml-1' />
         </Button>
       </Badge>

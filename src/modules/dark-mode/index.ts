@@ -53,7 +53,7 @@ const onDarkModeChange = () => {
 onDarkModeChange()
 subscribe($darkMode.state, onDarkModeChange)
 // when settings.styleUseWhiteBackground change
-subscribeOnKeys(settings, ['styleUseWhiteBackground'], () =>
+subscribeOnKeys(settings.style.pureRecommend, ['useWhiteBackground'], () =>
   setTimeout($colors.updateThrottled, 500),
 )
 

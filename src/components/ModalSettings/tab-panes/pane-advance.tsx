@@ -1,6 +1,6 @@
 import { APP_NAME } from '$common'
 import {
-  buttonActiveCss,
+  buttonOpenCss,
   C,
   flexVerticalCenterStyle,
   iconOnlyRoundButtonCss,
@@ -182,7 +182,7 @@ export function TabPaneAdvance() {
             <Button
               onClick={() => setInternalKeysExpanded((v) => !v)}
               className='ml-10px'
-              css={[iconOnlyRoundButtonCss, internalKeysExpanded && buttonActiveCss]}
+              css={[iconOnlyRoundButtonCss, internalKeysExpanded && buttonOpenCss]}
             >
               <IconIconParkOutlineDownC
                 {...size(16)}

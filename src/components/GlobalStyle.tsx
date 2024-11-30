@@ -8,8 +8,7 @@ import { useColorPrimaryHex } from './ModalSettings/theme.shared'
 
 export function GlobalStyle() {
   const colorPrimary = useColorPrimaryHex()
-  const { pureRecommend, styleUseCustomGrid, styleUseWhiteBackground, styleHideTopChannel } =
-    useSettingsSnapshot()
+  const { pureRecommend, style } = useSettingsSnapshot()
   const dark = useIsDarkMode()
   const { c, bg } = useColors()
   const backToTopRight = useBackToTopRight()
@@ -28,7 +27,7 @@ export function GlobalStyle() {
           _css`
             :root {
               ${appColorPrimaryId}: ${colorPrimary};
-              ${appBgId}: ${dark ? '#222' : styleUseWhiteBackground ? `var(--bg1)` : `var(--bg2)`};
+              ${appBgId}: ${dark ? '#222' : style.pureRecommend.useWhiteBackground ? `var(--bg1)` : `var(--bg2)`};
             }
           `,
         ]}
@@ -53,7 +52,7 @@ export function GlobalStyle() {
               }
             `,
 
-            styleUseCustomGrid &&
+            style.pureRecommend.useCustomGrid &&
               css`
                 /* enlarge container width */
                 #i_cecream,
@@ -70,7 +69,7 @@ export function GlobalStyle() {
                 }
               `,
 
-            styleUseCustomGrid &&
+            style.pureRecommend.useCustomGrid &&
               typeof backToTopRight === 'number' &&
               css`
                 .${APP_CLS_ROOT} {
@@ -81,7 +80,7 @@ export function GlobalStyle() {
             /**
              * extra background-color work for `PureRecommend`
              */
-            styleUseWhiteBackground
+            style.pureRecommend.useWhiteBackground
               ? css`
                   body {
                     /* same as #i_cecream */
@@ -101,7 +100,7 @@ export function GlobalStyle() {
                   }
                 `,
 
-            styleHideTopChannel &&
+            style.pureRecommend.hideTopChannel &&
               css`
                 .bili-header__channel,
                 .bili-header__banner {

@@ -45,9 +45,14 @@ export const $headerWidth = valtioFactory(calcHeaderWidth)
  */
 export function useBackToTopRight(): number | undefined {
   const width = $headerWidth.use()
-  const { styleUseCustomGrid, pureRecommend } = useSettingsSnapshot()
+  const {
+    pureRecommend,
+    style: {
+      pureRecommend: { useCustomGrid },
+    },
+  } = useSettingsSnapshot()
 
-  if (!pureRecommend || !styleUseCustomGrid) return
+  if (!pureRecommend || !useCustomGrid) return
   if (!width) return
 
   const rest = ((1 - width / 100) / 2) * window.innerWidth + /* padding */ 10

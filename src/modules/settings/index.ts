@@ -172,28 +172,37 @@ export const initialSettings = {
   /**
    * 外观
    */
+  style: {
+    general: {
+      // video-source-tab 高度: true 高; false compact;
+      videoSourceTabStandardHeight: true,
 
-  // video-source-tab 高度: true 高; false compact;
-  styleUseStandardVideoSourceTab: true,
+      popoverBorderColorUseColorPrimary: false,
+    },
 
-  // sticky tabbar
-  styleUseStickyTabbarInPureRecommend: true,
+    pureRecommend: {
+      // sticky tabbar
+      useStickyTabbar: true,
 
-  // custom grid | default grid
-  styleUseCustomGrid: true,
+      // custom grid | default grid
+      useCustomGrid: true,
 
-  // bg1
-  styleUseWhiteBackground: true,
+      // bg1
+      useWhiteBackground: true,
 
-  // 隐藏顶部分区
-  styleHideTopChannel: false,
+      // 隐藏顶部分区
+      hideTopChannel: false,
+    },
 
-  // 使用卡片模式
-  // inspired by https://ai.taobao.com
-  styleUseCardBorder: true,
-  styleUseCardBorderOnlyOnHover: true,
-  styleUseCardBoxShadow: false,
-  styleUseCardPadding: false,
+    videoCard: {
+      // 使用卡片模式
+      // inspired by https://ai.taobao.com
+      useBorder: true,
+      useBorderOnlyOnHover: true,
+      useBoxShadow: false,
+      usePadding: false,
+    },
+  },
 
   /**
    * 颜色主题
@@ -292,6 +301,16 @@ export function runSettingsMigration(val: object) {
     ['filter.byAuthor.keywords', 'filterByAuthorNameKeywords'],
     ['filter.byTitle.enabled', 'filterByTitleEnabled'],
     ['filter.byTitle.keywords', 'filterByTitleKeywords'],
+
+    ['style.general.videoSourceTabStandardHeight', 'styleUseStandardVideoSourceTab'],
+    ['style.pureRecommend.useStickyTabbar', 'styleUseStickyTabbarInPureRecommend'],
+    ['style.pureRecommend.useCustomGrid', 'styleUseCustomGrid'],
+    ['style.pureRecommend.useWhiteBackground', 'styleUseWhiteBackground'],
+    ['style.pureRecommend.hideTopChannel', 'styleHideTopChannel'],
+    ['style.videoCard.useBorder', 'styleUseCardBorder'],
+    ['style.videoCard.useBorderOnlyOnHover', 'styleUseCardBorderOnlyOnHover'],
+    ['style.videoCard.useBoxShadow', 'styleUseCardBoxShadow'],
+    ['style.videoCard.usePadding', 'styleUseCardPadding'],
   ]
   // 伪代码: savedConfig[newName] = savedConfig[legacyName]
   for (const [configPath, legacyConfigPath] of config) {
