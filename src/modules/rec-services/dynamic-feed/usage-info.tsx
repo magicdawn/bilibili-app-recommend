@@ -1,11 +1,16 @@
-import { flexVerticalCenterStyle, iconOnlyRoundButtonCss } from '$common/emotion-css'
+import { __PROD__ } from '$common'
+import {
+  buttonActiveCss,
+  flexVerticalCenterStyle,
+  iconOnlyRoundButtonCss,
+} from '$common/emotion-css'
 import { CheckboxSettingItem } from '$components/ModalSettings/setting-item'
 import { copyBvidInfos, copyBvidsSingleLine } from '$components/RecGrid/unsafe-window-export'
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
 import { CHARGE_ONLY_TEXT } from '$components/VideoCard/top-marks'
 import { HelpInfo } from '$components/_base/HelpInfo'
 import { AntdTooltip } from '$components/_base/antd-custom'
-import { colorPrimaryValue } from '$components/css-vars'
+import { borderColorValue, colorPrimaryValue } from '$components/css-vars'
 import { OpenExternalLinkIcon } from '$modules/icon'
 import { IconPark } from '$modules/icon/icon-park'
 import {
@@ -68,29 +73,13 @@ const clearPayload: Partial<DynamicFeedStore> = {
   filterMinDuration: DynamicFeedVideoMinDuration.All,
 }
 
-const S = {
-  filterWrapper: css`
-    padding-block: 10px;
-    max-width: 350px;
-  `,
-
-  filterSection: css`
-    min-width: 300px;
-    margin-top: 10px;
-    &:first-child {
-      margin-top: 0;
-    }
-
-    .title {
-      padding-left: 3px;
-      font-size: 20px;
-      ${flexVerticalCenterStyle}
-    }
-    .content {
-      /* margin-top: 5px; */
-    }
-  `,
-}
+const classes = {
+  popover: {
+    wrapper: 'max-w-350px',
+    section: 'mt-10 first:mt-0 min-w-300px',
+    sectionTilte: 'flex items-center text-20px pl-2px pb-2px',
+  },
+} as const
 
 const flexBreak = (
   <div
@@ -222,9 +211,52 @@ export function DynamicFeedUsageInfo() {
     return [itemAll, ...groupItems, ...items]
   }, [upList, upList.map((x) => !!x.has_update), dfSettings.followGroup.enabled])
 
+  // #region scope dropdown menus
+  const followGroupMidsCount = selectedFollowGroup?.count
+  const upIcon = <IconForUp {...size(14)} className='mt--2px' />
+  const upAvtar = upFace ? <Avatar size={20} src={getAvatarSrc(upFace)} /> : undefined
+  const dropdownButtonIcon = hasSelectedUp ? (
+    upAvtar || upIcon
+  ) : selectedFollowGroup ? (
+    <IconForGroup {...size(18)} />
+  ) : undefined
+  const dropdownButtonLabel = hasSelectedUp
+    ? upName
+    : selectedFollowGroup
+      ? selectedFollowGroup.name + (followGroupMidsCount ? ` (${followGroupMidsCount})` : '')
+      : '全部'
+
+  const [scopeDropdownOpen, setScopeDropdownOpen] = useState(false)
+  const scopeDropdownMenu = (
+    <Dropdown
+      open={scopeDropdownOpen}
+      onOpenChange={setScopeDropdownOpen}
+      placement='bottomLeft'
+      getPopupContainer={getPopupContainer}
+      menu={{
+        items: menuItems,
+        style: {
+          maxHeight: '60vh',
+          overflowY: 'scroll',
+          border: `1px solid ${borderColorValue}`,
+        },
+      }}
+    >
+      <Button
+        icon={dropdownButtonIcon}
+        className='gap-4px'
+        css={[scopeDropdownOpen && buttonActiveCss]}
+      >
+        {dropdownButtonLabel}
+      </Button>
+    </Dropdown>
+  )
+  // #endregion
+
+  // #region popover
   const searchInput = (
     <Input.Search
-      style={{ width: externalSearchInput ? '250px' : '97%' }}
+      style={{ width: externalSearchInput ? '250px' : undefined }}
       placeholder='按标题关键字过滤'
       type='search'
       autoCorrect='off'
@@ -247,12 +279,10 @@ export function DynamicFeedUsageInfo() {
       }}
     />
   )
-
-  // #region popover
   const popoverContent = (
-    <div css={S.filterWrapper}>
-      <div className='section' css={S.filterSection}>
-        <div className='title'>
+    <div className={classes.popover.wrapper}>
+      <div className={classes.popover.section}>
+        <div className={classes.popover.sectionTilte}>
           视频类型
           <HelpInfo>
             「{CHARGE_ONLY_TEXT}」在此程序中归类为「投稿视频」
@@ -260,7 +290,7 @@ export function DynamicFeedUsageInfo() {
             「动态视频」时长通常较短
           </HelpInfo>
         </div>
-        <div className='content'>
+        <div>
           <Radio.Group
             buttonStyle='solid'
             value={dynamicFeedVideoType}
@@ -281,9 +311,9 @@ export function DynamicFeedUsageInfo() {
         </div>
       </div>
       {dynamicFeedVideoType !== DynamicFeedVideoType.DynamicOnly && (
-        <div className='section' css={S.filterSection}>
-          <div className='title'>充电专属</div>
-          <div className='content' css={flexVerticalCenterStyle}>
+        <div className={classes.popover.section}>
+          <div className={classes.popover.sectionTilte}>充电专属</div>
+          <div css={flexVerticalCenterStyle}>
             <Checkbox
               checked={hideChargeOnlyVideos}
               onChange={async (e) => {
@@ -315,9 +345,9 @@ export function DynamicFeedUsageInfo() {
           </div>
         </div>
       )}
-      <div className='section' css={S.filterSection}>
-        <div className='title'>最短时长</div>
-        <div className='content'>
+      <div className={classes.popover.section}>
+        <div className={classes.popover.sectionTilte}>最短时长</div>
+        <div>
           <Radio.Group
             css={css`
               overflow: hidden;
@@ -345,17 +375,17 @@ export function DynamicFeedUsageInfo() {
         </div>
       </div>
       {!externalSearchInput && (
-        <div className='section' css={S.filterSection}>
-          <div className='title'>搜索</div>
-          <div className='content'>{searchInput}</div>
+        <div className={classes.popover.section}>
+          <div className={classes.popover.sectionTilte}>搜索</div>
+          <div>{searchInput}</div>
         </div>
       )}
       <SearchCacheRelated />
 
       {/* follow group related */}
       {selectedFollowGroup && (
-        <div className='section' css={S.filterSection}>
-          <div className='title'>
+        <div className={classes.popover.section}>
+          <div className={classes.popover.sectionTilte}>
             分组
             <HelpInfo>当前分组的一些操作~</HelpInfo>
             <span className='inline-flex items-center ml-15 font-size-14'>
@@ -363,31 +393,38 @@ export function DynamicFeedUsageInfo() {
               <a
                 href={formatFollowGroupUrl(selectedFollowGroup?.tagid || '')}
                 target='_blank'
-                className='inline-flex items-center font-size-16'
+                className='inline-flex items-center font-size-16 mx-4'
               >
-                <OpenExternalLinkIcon className='size-16 mr-2' />
+                <OpenExternalLinkIcon className='size-18 mr-2' />
                 {selectedFollowGroup?.name}
               </a>
               )
             </span>
           </div>
-          <div className='content'>
+          <div>
             <FollowGroupActions followGroup={selectedFollowGroup} onRefresh={onRefresh} />
           </div>
         </div>
       )}
     </div>
   )
+  const [popoverOpen, setPopoverOpen] = useState(
+    __PROD__
+      ? false //
+      : false, // dev: change to true for debug if needed);
+  )
   const popoverTrigger = (
     <Popover
-      // open
+      open={popoverOpen}
+      onOpenChange={setPopoverOpen}
       arrow={false}
       placement='bottomLeft'
       getPopupContainer={getPopupContainer}
       content={popoverContent}
+      overlayInnerStyle={{ border: `1px solid ${borderColorValue}` }}
     >
       <Badge dot={showPopoverBadge} color={colorPrimaryValue} offset={[-5, 5]}>
-        <Button css={iconOnlyRoundButtonCss}>
+        <Button css={[iconOnlyRoundButtonCss, popoverOpen && buttonActiveCss]}>
           <IconForPopoverTrigger className='ml-1' />
         </Button>
       </Badge>
@@ -395,35 +432,10 @@ export function DynamicFeedUsageInfo() {
   )
   // #endregion
 
-  const followGroupMidsCount = selectedFollowGroup?.count
-  const upIcon = <IconForUp {...size(14)} className='mt--2px' />
-  const upAvtar = upFace ? <Avatar size={20} src={getAvatarSrc(upFace)} /> : undefined
-  const dropdownButtonIcon = hasSelectedUp ? (
-    upAvtar || upIcon
-  ) : selectedFollowGroup ? (
-    <IconForGroup {...size(18)} />
-  ) : undefined
-  const dropdownButtonLabel = hasSelectedUp
-    ? upName
-    : selectedFollowGroup
-      ? selectedFollowGroup.name + (followGroupMidsCount ? ` (${followGroupMidsCount})` : '')
-      : '全部'
-
   return (
     <>
       <Space ref={ref}>
-        <Dropdown
-          placement='bottomLeft'
-          getPopupContainer={getPopupContainer}
-          menu={{
-            items: menuItems,
-            style: { maxHeight: '60vh', overflowY: 'scroll' },
-          }}
-        >
-          <Button className='gap-4px' icon={dropdownButtonIcon}>
-            {dropdownButtonLabel}
-          </Button>
-        </Dropdown>
+        {scopeDropdownMenu}
 
         {(hasSelectedUp || selectedFollowGroup) && (
           <Button onClick={onClear} className='gap-0'>
@@ -490,15 +502,15 @@ function SearchCacheRelated() {
   return (
     <>
       {cacheAllItemsEntry && hasSelectedUp && upMid && upName && (
-        <div className='section' css={S.filterSection}>
-          <div className='title'>
+        <div className={classes.popover.section}>
+          <div className={classes.popover.sectionTilte}>
             搜索缓存
             <HelpInfo>
               开启搜索缓存后, 会加载并缓存 UP 所有的动态 <br />
               {'当本地有缓存且总条数 <= 5000时, 搜索框成为及时搜索, 无需点击搜索按钮'}
             </HelpInfo>
           </div>
-          <div className='content'>
+          <div>
             <div className='flex gap-y-3 gap-x-10 flex-wrap'>
               <Checkbox className='inline-flex items-center' checked={checked} onChange={onChange}>
                 <AntdTooltip title='只有开启此项, 搜索时才会使用缓存'>

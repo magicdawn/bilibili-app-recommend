@@ -74,3 +74,10 @@ export const iconOnlyRoundButtonCss = css`
   border-radius: 50%;
   ${flexCenterStyle}
 `
+
+// copy from button:hover
+export const buttonActiveCss = css`
+  color: var(--ant-button-default-hover-color);
+  border-color: var(--ant-button-default-hover-border-color);
+  background: var(--ant-button-default-hover-bg);
+`

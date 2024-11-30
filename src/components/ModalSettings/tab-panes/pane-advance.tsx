@@ -1,7 +1,7 @@
 import { APP_NAME } from '$common'
 import {
+  buttonActiveCss,
   C,
-  flexCenterStyle,
   flexVerticalCenterStyle,
   iconOnlyRoundButtonCss,
 } from '$common/emotion-css'
@@ -182,18 +182,7 @@ export function TabPaneAdvance() {
             <Button
               onClick={() => setInternalKeysExpanded((v) => !v)}
               className='ml-10px'
-              css={[
-                iconOnlyRoundButtonCss,
-                flexCenterStyle,
-                internalKeysExpanded &&
-                  css`
-                    &.ant-btn-default.ant-btn-outlined {
-                      color: var(--ant-button-default-active-color);
-                      border-color: var(--ant-button-default-active-border-color);
-                      background: var(--ant-button-default-active-bg);
-                    }
-                  `,
-              ]}
+              css={[iconOnlyRoundButtonCss, internalKeysExpanded && buttonActiveCss]}
             >
               <IconIconParkOutlineDownC
                 {...size(16)}

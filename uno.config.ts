@@ -1,9 +1,7 @@
 import presetRemToPx from '@unocss/preset-rem-to-px'
-import { defineConfig, presetUno } from 'unocss'
-
-// import presetRemToPx from '@unocss/preset-rem-to-px'
-// import transformerAttributifyJsx from '@unocss/transformer-attributify-jsx'
+import { defineConfig, presetUno, transformerDirectives } from 'unocss'
 // import { defineConfig, presetAttributify, presetUno } from 'unocss'
+// import transformerAttributifyJsx from '@unocss/transformer-attributify-jsx'
 
 export default defineConfig({
   presets: [
@@ -19,6 +17,8 @@ export default defineConfig({
     // `size-15` or `size-15px`
     [/^size-([.\d]+)(?:px)?$/, ([_, num]) => ({ width: `${num}px`, height: `${num}px` })],
   ],
+
+  transformers: [transformerDirectives()],
 
   // presetAttributify({
   //     prefixedOnly: true,
