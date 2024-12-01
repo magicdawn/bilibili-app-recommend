@@ -12,7 +12,7 @@ export const favStore = proxy({
 
   selectedFavFolderId: undefined as number | undefined,
   get selectedFavFolder(): FavFolder | undefined {
-    if (typeof this.selectedFavFolderId === 'undefined') return
+    if (typeof this.selectedFavFolderId !== 'number') return
     return this.favFolders.find((x) => x.id === this.selectedFavFolderId)
   },
 

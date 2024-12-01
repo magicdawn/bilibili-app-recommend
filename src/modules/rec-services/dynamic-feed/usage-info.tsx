@@ -25,18 +25,7 @@ import type { AntMenuItem } from '$utility/antd'
 import { antMessage } from '$utility/antd'
 import { getAvatarSrc } from '$utility/image'
 import { useRequest } from 'ahooks'
-import {
-  Avatar,
-  Badge,
-  Button,
-  Checkbox,
-  Dropdown,
-  Input,
-  Popover,
-  Radio,
-  Space,
-  theme,
-} from 'antd'
+import { Avatar, Badge, Button, Checkbox, Dropdown, Input, Popover, Radio, Space } from 'antd'
 import type { CheckboxChangeEvent } from 'antd/es/checkbox'
 import { delay, throttle } from 'es-toolkit'
 import { get } from 'es-toolkit/compat'
@@ -65,8 +54,6 @@ import {
   type DynamicFeedStore,
   type UpMidType,
 } from './store'
-
-const { useToken } = theme
 
 export function dynamicFeedFilterSelectUp(payload: Partial<typeof dfStore>) {
   Object.assign(dfStore, payload)

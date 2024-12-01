@@ -99,7 +99,7 @@ export const dfStore = proxy({
   followGroupsUpdatedAt: 0,
   selectedFollowGroupTagId: undefined as number | undefined,
   get selectedFollowGroup(): FollowGroup | undefined {
-    if (typeof this.selectedFollowGroupTagId) return
+    if (typeof this.selectedFollowGroupTagId !== 'number') return
     return this.followGroups.find((x) => x.tagid === this.selectedFollowGroupTagId)
   },
 
