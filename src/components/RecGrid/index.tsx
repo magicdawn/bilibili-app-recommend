@@ -318,7 +318,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
         updateExtraInfo(tab)
       }
       if (tab === ETab.Fav) {
-        serviceMapBox.val[tab].total--
+        serviceMapBox.val[tab].decreaseTotal()
         updateExtraInfo(tab)
       }
 

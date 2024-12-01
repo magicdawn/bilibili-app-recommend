@@ -80,7 +80,7 @@ export class PopularWeeklyRecService implements IService {
 
     if (!this.useShuffle) {
       // from queue
-      if (this.qs.bufferQueue.length) return this.qs.slicePagesFromQueue()
+      if (this.qs.bufferQueue.length) return this.qs.sliceFromQueue()
 
       // fill queue
       const ep = this.episodes[0]
@@ -100,7 +100,7 @@ export class PopularWeeklyRecService implements IService {
       )
       this.episodes = this.episodes.slice(1) // consume 1
 
-      return this.qs.slicePagesFromQueue()
+      return this.qs.sliceFromQueue()
     }
 
     /**
@@ -127,7 +127,7 @@ export class PopularWeeklyRecService implements IService {
       this.qs.bufferQueue = shuffle([...this.qs.bufferQueue, ...fetched.flat()])
     }
 
-    return this.qs.slicePagesFromQueue()
+    return this.qs.sliceFromQueue()
   }
 
   get usageInfo() {

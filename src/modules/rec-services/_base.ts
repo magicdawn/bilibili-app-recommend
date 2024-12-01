@@ -21,7 +21,7 @@ export class QueueStrategy<T = RecItemTypeOrSeparator> {
     this.ps = ps
   }
 
-  sliceFromQueue(count: number) {
+  sliceCountFromQueue(count: number) {
     if (this.bufferQueue.length) {
       const sliced = this.bufferQueue.slice(0, count) // sliced
       this.bufferQueue = this.bufferQueue.slice(count) // rest
@@ -31,8 +31,8 @@ export class QueueStrategy<T = RecItemTypeOrSeparator> {
     }
   }
 
-  slicePagesFromQueue(page = 1) {
-    return this.sliceFromQueue(this.ps * page)
+  sliceFromQueue(page = 1) {
+    return this.sliceCountFromQueue(this.ps * page)
   }
 
   // add to returnQueue

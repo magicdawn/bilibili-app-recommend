@@ -9,8 +9,8 @@ import { OPERATION_FAIL_MSG } from '$common'
 import { isWebApiSuccess, request } from '$request'
 import { getCsrfToken, getHasLogined, getUid } from '$utility/cookie'
 import toast from '$utility/toast'
-import { apiFavFolderListAll, formatFavFolderUrl } from './index'
-import type { FavFolderListAllJson } from './types/folder-list-all'
+import { formatFavFolderUrl } from './fav-util'
+import type { FavFolderListAllJson } from './types/list-all-folders'
 
 export const UserFavService = {
   removeFav,
@@ -101,9 +101,20 @@ export let defaultFavFolderName = ''
 export async function addFav(avid: string | number) {
   if (!defaultFavFolderId || !defaultFavFolderName) {
     // NOTE: 不使用 FavService, 因其包含 exclude fav folder 逻辑, 这里期望加入默认收藏夹
-    const folders = await apiFavFolderListAll()
+    const folders = await fetchFavFolder()
     defaultFavFolderId = folders[0].id
     defaultFavFolderName = folders[0].title
   }
   return await favDeal({ avid, add_media_ids: defaultFavFolderId.toString() })
+}
+
+export async function fetchFavFolder() {
+  const res = await request.get('/x/v3/fav/folder/created/list-all', {
+    params: {
+      up_mid: getUid(),
+    },
+  })
+  const json = res.data as FavFolderListAllJson
+  const folders = json.data.list
+  return folders
 }

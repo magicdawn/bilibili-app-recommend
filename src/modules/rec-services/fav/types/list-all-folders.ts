@@ -9,11 +9,11 @@ export interface FavFolderListAllJson {
 
 export interface Data {
   count: number
-  list: FavFolderListAllItem[]
+  list: FavFolder[]
   season: null
 }
 
-export interface FavFolderListAllItem {
+export interface FavFolder {
   id: number
   fid: number
   mid: number

@@ -66,7 +66,7 @@ export class RankingRecService implements IService {
       this.qs.bufferQueue = items
     }
 
-    return this.qs.slicePagesFromQueue()
+    return this.qs.sliceFromQueue()
   }
 
   get usageInfo() {

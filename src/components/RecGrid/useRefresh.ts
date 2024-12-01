@@ -8,6 +8,7 @@ import {
   getDynamicFeedServiceConfig,
   type DynamicFeedRecService,
 } from '$modules/rec-services/dynamic-feed'
+import { getFavServiceConfig, type FavRecService } from '$modules/rec-services/fav'
 import { hotStore } from '$modules/rec-services/hot'
 import { nextTick } from '$utility/dom'
 import type { Debugger } from 'debug'
@@ -114,12 +115,28 @@ export function useRefresh({
     if (refreshing) {
       // same tab
       if (tab === refreshFor) {
-        // same tab but conditions changed
-        let s: DynamicFeedRecService
+        /**
+         * same tab but conditions changed
+         */
+        let s: DynamicFeedRecService | FavRecService
+
+        // dynamic-feed: conditions changed
         if (
           tab === ETab.DynamicFeed &&
           (s = serviceMap[ETab.DynamicFeed]) &&
           !isEqual(s.config, getDynamicFeedServiceConfig())
+        ) {
+          debug(
+            'refresh(): [start] [refreshing] sametab(%s) but conditions change, abort existing',
+            tab,
+          )
+          refreshAbortController.abort()
+        }
+        // fav: conditions changed
+        else if (
+          tab === ETab.Fav &&
+          (s = serviceMap[ETab.Fav]) &&
+          !isEqual(s.config, getFavServiceConfig())
         ) {
           debug(
             'refresh(): [start] [refreshing] sametab(%s) but conditions change, abort existing',

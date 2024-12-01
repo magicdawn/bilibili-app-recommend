@@ -142,7 +142,7 @@ export async function refreshForGrid(fetcherOptions: FetcherOptions) {
   if (fetcherOptions.tab === ETab.DynamicFeed) {
     const s = fetcherOptions.serviceMap[ETab.DynamicFeed]
     if (
-      typeof s.followGroupTagid !== 'undefined' || // 选择了分组 & 分组很少更新, TODO: 考虑 merge-timeline
+      typeof s.followGroupTagId !== 'undefined' || // 选择了分组 & 分组很少更新, TODO: 考虑 merge-timeline
       // 过滤结果可能比较少
       s.searchText ||
       s.dynamicFeedVideoType === DynamicFeedVideoType.DynamicOnly ||

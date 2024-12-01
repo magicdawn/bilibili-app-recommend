@@ -95,9 +95,13 @@ export const dfStore = proxy({
   upList: [] as DynamicPortalUp[],
   upListUpdatedAt: 0,
 
-  selectedFollowGroup: undefined as FollowGroup | undefined,
   followGroups: [] as FollowGroup[],
   followGroupsUpdatedAt: 0,
+  selectedFollowGroupTagId: undefined as number | undefined,
+  get selectedFollowGroup(): FollowGroup | undefined {
+    if (typeof this.selectedFollowGroupTagId) return
+    return this.followGroups.find((x) => x.tagid === this.selectedFollowGroupTagId)
+  },
 
   dynamicFeedVideoType: DynamicFeedVideoType.All,
   searchText: (QUERY_DYNAMIC_SEARCH_TEXT ?? undefined) as string | undefined,

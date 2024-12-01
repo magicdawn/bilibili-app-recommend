@@ -42,7 +42,7 @@ export function getDynamicFeedServiceConfig() {
      */
     // UP | 分组
     upMid: snap.upMid,
-    followGroupTagid: snap.selectedFollowGroup?.tagid,
+    followGroupTagId: snap.selectedFollowGroup?.tagid,
 
     // 搜索
     searchText: snap.searchText,
@@ -128,7 +128,7 @@ export class DynamicFeedRecService implements IService {
     if (this.config.showLiveInDynamicFeed) {
       const filterEmpty =
         !this.upMid &&
-        typeof this.followGroupTagid === 'undefined' &&
+        typeof this.followGroupTagId === 'undefined' &&
         !this.searchText &&
         this.dynamicFeedVideoType === DynamicFeedVideoType.All &&
         this.filterMinDuration === DynamicFeedVideoMinDuration.All
@@ -150,8 +150,8 @@ export class DynamicFeedRecService implements IService {
     return this.config.upMid
   }
   // NOTE: number | undefined 默认分组是 0
-  get followGroupTagid() {
-    return this.config.followGroupTagid
+  get followGroupTagId() {
+    return this.config.followGroupTagId
   }
   get searchText() {
     return this.config.searchText
@@ -176,14 +176,14 @@ export class DynamicFeedRecService implements IService {
    * 查看分组
    */
   get viewingSomeGroup() {
-    return typeof this.config.followGroupTagid === 'number'
+    return typeof this.config.followGroupTagId === 'number'
   }
   private whenViewSomeGroupMergeTimelineService: FollowGroupMergeTimelineService | undefined
   private whenViewSomeGroupMids = new Set<number>()
   private async loadWhenViewSomeGroupMids() {
-    if (typeof this.followGroupTagid !== 'number') return // no need
+    if (typeof this.followGroupTagId !== 'number') return // no need
     if (this.whenViewSomeGroupMids.size) return // loaded
-    const mids = await getFollowGroupContent(this.followGroupTagid)
+    const mids = await getFollowGroupContent(this.followGroupTagId)
     this.whenViewSomeGroupMids = new Set(mids)
     if (
       mids.length > 0 &&
@@ -289,7 +289,7 @@ export class DynamicFeedRecService implements IService {
         })
       }
       // slice
-      rawItems = this._queueForSearchCache.slicePagesFromQueue(this.page + 1) || []
+      rawItems = this._queueForSearchCache.sliceFromQueue(this.page + 1) || []
       this.page++
       this.hasMoreDynFeed = !!this._queueForSearchCache.bufferQueue.length
       // offset not needed
@@ -460,8 +460,8 @@ export class DynamicFeedRecService implements IService {
 
     // update group count if needed
     if (this.viewingSomeGroup && dfStore.followGroups.length) {
-      const group = dfStore.followGroups.find((x) => x.tagid === this.followGroupTagid)
-      if (group && group.count !== this.whenViewSomeGroupMids.size) {
+      const group = dfStore.followGroups.find((x) => x.tagid === this.followGroupTagId)
+      if (group) {
         group.count = this.whenViewSomeGroupMids.size
       }
     }

@@ -6,6 +6,7 @@ import { settings, useSettingsSnapshot } from '$modules/settings'
 import { checkLoginStatus, useHasLogined } from '$utility/cookie'
 import { proxyWithGmStorage } from '$utility/valtio'
 import { Radio } from 'antd'
+import { delay } from 'es-toolkit'
 import { useSnapshot } from 'valtio'
 import type { TabConfigItem } from './tab-config'
 import { TabConfig, TabIcon, toastNeedLogin } from './tab-config'
@@ -135,7 +136,7 @@ export function VideoSourceTab({ onRefresh }: { onRefresh: OnRefresh }) {
           const target = e.target as HTMLElement
           target.blur()
         }}
-        onChange={(e) => {
+        onChange={async (e) => {
           const newValue = e.target.value as ETab
 
           if (!logined) {
@@ -149,10 +150,9 @@ export function VideoSourceTab({ onRefresh }: { onRefresh: OnRefresh }) {
           videoSourceTabState.value = newValue
 
           // so that `RecGrid.refresh` can access latest `tab`
-          setTimeout(() => {
-            // reuse results & keep original order when switch tab
-            onRefresh(true, { watchlaterKeepOrderWhenShuffle: true })
-          })
+          // reuse results & keep original order when switch tab
+          await delay(0)
+          onRefresh(true, { watchlaterKeepOrderWhenShuffle: true })
         }}
       >
         {currentTabConfigList.map(({ key, label }) => (

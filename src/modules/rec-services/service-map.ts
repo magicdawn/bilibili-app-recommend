@@ -3,7 +3,7 @@ import { ETab } from '$components/RecHeader/tab-enum'
 import type { IService } from './_base'
 import { AppRecService } from './app'
 import { DynamicFeedRecService, getDynamicFeedServiceConfig } from './dynamic-feed'
-import { FavRecService } from './fav'
+import { FavRecService, getFavServiceConfig } from './fav'
 import { HotRecService } from './hot'
 import { LiveRecService } from './live'
 import { PcRecService } from './pc'
@@ -23,7 +23,7 @@ export const createServiceMap = {
   [ETab.KeepFollowOnly]: () => new PcRecService(true),
   [ETab.DynamicFeed]: () => new DynamicFeedRecService(getDynamicFeedServiceConfig()),
   [ETab.Watchlater]: (options) => new WatchLaterRecService(options?.watchlaterKeepOrderWhenShuffle),
-  [ETab.Fav]: () => new FavRecService(),
+  [ETab.Fav]: () => new FavRecService(getFavServiceConfig()),
   [ETab.Hot]: () => new HotRecService(),
   [ETab.Live]: () => new LiveRecService(),
 } satisfies Record<ETab, (options?: OnRefreshOptions) => IService>

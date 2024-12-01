@@ -18,7 +18,7 @@ import {
 import { EApiType } from '$define/index.shared'
 import { useInBlacklist } from '$modules/bilibili/me/relations/blacklist'
 import { useIsDarkMode } from '$modules/dark-mode'
-import { UserFavService } from '$modules/rec-services/fav/user-fav.service'
+import { UserFavService } from '$modules/rec-services/fav/user-fav-service'
 import { ELiveStatus } from '$modules/rec-services/live/live-enum'
 import { useWatchlaterState } from '$modules/rec-services/watchlater'
 import { settings, useSettingsSnapshot } from '$modules/settings'

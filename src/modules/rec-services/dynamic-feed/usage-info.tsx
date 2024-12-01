@@ -82,7 +82,7 @@ const clearPayload: Partial<DynamicFeedStore> = {
   upName: undefined,
   upFace: undefined,
   searchText: undefined,
-  selectedFollowGroup: undefined,
+  selectedFollowGroupTagId: undefined,
   dynamicFeedVideoType: DynamicFeedVideoType.All,
   filterMinDuration: DynamicFeedVideoMinDuration.All,
 }
@@ -166,7 +166,7 @@ export function DynamicFeedUsageInfo() {
           label: group.name + ` (${group.count})`,
           icon: <Avatar size={'small'}>组</Avatar>,
           onClick() {
-            onSelect({ ...clearPayload, selectedFollowGroup: structuredClone({ ...group }) })
+            onSelect({ ...clearPayload, selectedFollowGroupTagId: group.tagid })
           },
         }
       })
@@ -223,7 +223,11 @@ export function DynamicFeedUsageInfo() {
     })
 
     return [itemAll, ...groupItems, ...items]
-  }, [upList, upList.map((x) => !!x.has_update), dfSettings.followGroup.enabled])
+  }, [
+    upList,
+    upList.map((x) => `${x.mid.toString()}_has_update=${!!x.has_update}`).join(','),
+    dfSettings.followGroup.enabled,
+  ])
 
   // #region scope dropdown menus
   const followGroupMidsCount = selectedFollowGroup?.count
@@ -250,6 +254,7 @@ export function DynamicFeedUsageInfo() {
       menu={{
         items: menuItems,
         style: {
+          overscrollBehavior: 'contain',
           maxHeight: '60vh',
           overflowY: 'scroll',
           border: `1px solid ${usePopoverBorderColor()}`,

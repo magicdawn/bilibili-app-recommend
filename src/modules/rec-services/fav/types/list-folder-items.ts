@@ -4,10 +4,10 @@ export interface ResourceListJSON {
   code: number
   message: string
   ttl: number
-  data: Data
+  data: FavFolderDetail
 }
 
-export interface Data {
+export interface FavFolderDetail {
   info: FavFolderDetailInfo
   medias: Media[]
   has_more: boolean
