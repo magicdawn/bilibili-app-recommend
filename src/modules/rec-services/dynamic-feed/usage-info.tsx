@@ -211,11 +211,7 @@ export function DynamicFeedUsageInfo() {
     })
 
     return [itemAll, ...groupItems, ...items]
-  }, [
-    upList,
-    upList.map((x) => `${x.mid.toString()}_has_update=${!!x.has_update}`).join(','),
-    dfSettings.followGroup.enabled,
-  ])
+  }, [upList, dfSettings.followGroup.enabled])
 
   // #region scope dropdown menus
   const followGroupMidsCount = selectedFollowGroup?.count
