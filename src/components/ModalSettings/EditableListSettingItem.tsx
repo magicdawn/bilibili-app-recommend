@@ -250,7 +250,7 @@ export function UpTagItemDisplay({ tag }: { tag: string }) {
         >
           {mid && <IconRadixIconsPerson {...size(12)} className='mr-2' />}
           {mid ? (
-            <a href={formatSpaceUrl(mid)} target='_blank'>
+            <a href={formatSpaceUrl(mid)} target='_blank' style={{ color: 'inherit' }}>
               {label}
             </a>
           ) : (
