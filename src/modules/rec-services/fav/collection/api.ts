@@ -1,5 +1,6 @@
 import { request } from '$request'
 import { getUid } from '$utility/cookie'
+import { uniqBy } from 'es-toolkit'
 import type { FavCollectionDetailJson } from '../types/collections/collection-detail'
 import type {
   FavCollection,
@@ -21,13 +22,20 @@ async function fetchFavCollections(page: number) {
 export async function fetchAllFavCollections() {
   let page = 1
   let hasMore = true
-  const items: FavCollection[] = []
+  let items: FavCollection[] = []
   while (hasMore) {
     const data = await fetchFavCollections(page)
     items.push(...data.list)
     hasMore = data.has_more
     page++
   }
+
+  items = items.filter((x) => {
+    if (x.title === '该合集已失效' && x.upper.mid === 0) return false
+    return true
+  })
+  items = uniqBy(items, (x) => x.id)
+
   return items
 }
 

@@ -4,7 +4,7 @@ import { settings, useSettingsSnapshot } from '$modules/settings'
 import { defineAntMenus, type AntMenuItem } from '$utility/antd'
 import { Button, Dropdown, Popover, Space, Tag, Transfer } from 'antd'
 import type { TransferDirection } from 'antd/es/transfer'
-import { delay } from 'es-toolkit'
+import { delay, groupBy } from 'es-toolkit'
 import type { Key } from 'react'
 import { useSnapshot } from 'valtio'
 import { usePopupContainer } from '../_base'
@@ -45,6 +45,40 @@ export function FavUsageInfo({
 
   // #region scope selection dropdown
   const scopeSelectionDropdownMenus: AntMenuItem[] = useMemo(() => {
+    const collectionSubMenus: AntMenuItem[] = []
+    const collectionGrouped = groupBy(favCollections, (x) => x.upper.name)
+    const entries = Object.entries(collectionGrouped).map(([upName, collections]) => ({
+      upName,
+      collections: collections.sort((a, b) => a.title.localeCompare(b.title, 'zh-CN')),
+    }))
+    entries.sort((a, b) => a.upName.localeCompare(b.upName, 'zh-CN'))
+    for (const { upName, collections } of entries) {
+      collectionSubMenus.push(
+        ...defineAntMenus([
+          {
+            type: 'group',
+            label: `@${upName}`,
+            children: collections.map((f) => {
+              const icon = <IconForCollection />
+              const label = `${f.title} (${f.media_count})`
+              return {
+                key: `fav-collection:${f.id}`,
+                icon,
+                label,
+                async onClick() {
+                  favStore.selectedFavFolderId = undefined
+                  favStore.selectedFavCollectionId = f.id
+                  setScopeDropdownOpen(false)
+                  await delay(100)
+                  onRefresh?.()
+                },
+              }
+            }),
+          },
+        ]),
+      )
+    }
+
     return defineAntMenus([
       {
         key: 'all',
@@ -82,10 +116,7 @@ export function FavUsageInfo({
         }),
       },
 
-      !!favCollections.length && {
-        type: 'group',
-        label: '合集',
-        children: favCollections.map((f) => {
+      /* favCollections.map((f) => {
           const icon = <IconForCollection />
           const label = `${f.title} (${f.media_count})`
           return {
@@ -100,7 +131,11 @@ export function FavUsageInfo({
               onRefresh?.()
             },
           }
-        }),
+        }) */
+      !!favCollections.length && {
+        type: 'group',
+        label: '合集',
+        children: collectionSubMenus,
       },
     ])
   }, [favFolders, favCollections])

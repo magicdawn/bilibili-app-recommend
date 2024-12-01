@@ -78,12 +78,7 @@ async function updateCollectionList(force = false) {
     }
   }
 
-  let collections = await fetchAllFavCollections()
-  collections = collections.filter((x) => {
-    if (x.title === '该合集已失效' && x.upper.mid === 0) return false
-    return true
-  })
-
+  const collections = await fetchAllFavCollections()
   favStore.favCollections = collections
   favStore.favCollectionsUpdateAt = Date.now()
 }
