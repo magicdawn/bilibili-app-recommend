@@ -24,8 +24,15 @@ import {
   type WatchLaterItemExtend,
 } from '$define'
 import type { EApiType } from '$define/index.shared'
+import { styled } from '$libs'
 import { IconPark } from '$modules/icon/icon-park'
+import { isFavFolderPrivate } from '$modules/rec-services/fav/fav-util'
 import type { FavItemExtend } from '$modules/rec-services/fav/types'
+import {
+  IconForCollection,
+  IconForPrivateFolder,
+  IconForPublicFolder,
+} from '$modules/rec-services/fav/usage-info'
 import {
   isBangumiRankingItem,
   isCinemaRankingItem,
@@ -468,8 +475,54 @@ function apiWatchLaterAdapter(item: WatchLaterItemExtend): IVideoCardData {
   }
 }
 
+const fillWithColorPrimary = styled.createClass`
+  & path {
+    fill: ${colorPrimaryValue};
+  }
+`
+const originalIcon = (
+  <IconPark
+    name='Star'
+    size={16}
+    theme='two-tone'
+    fill={['currentColor', colorPrimaryValue]}
+    style={{
+      display: 'inline-block',
+      verticalAlign: 'middle',
+      marginRight: 4,
+      marginTop: -4,
+    }}
+  />
+)
+
 function apiFavAdapter(item: FavItemExtend): IVideoCardData {
   const belongsToTitle = item.from === 'fav-folder' ? item.folder.title : item.collection.title
+
+  const iconInTitleStyle = {
+    display: 'inline-block',
+    verticalAlign: 'middle',
+    marginRight: 4,
+    marginTop: -2,
+  }
+  const iconInTitle =
+    item.from === 'fav-folder' ? (
+      isFavFolderPrivate(item.folder.attr) ? (
+        <IconForPrivateFolder
+          style={iconInTitleStyle}
+          {...size(15)}
+          className={fillWithColorPrimary}
+        />
+      ) : (
+        <IconForPublicFolder
+          style={iconInTitleStyle}
+          {...size(15)}
+          className={fillWithColorPrimary}
+        />
+      )
+    ) : (
+      <IconForCollection style={iconInTitleStyle} {...size(15)} className={fillWithColorPrimary} />
+    )
+
   return {
     // video
     avid: String(item.id),
@@ -479,19 +532,7 @@ function apiFavAdapter(item: FavItemExtend): IVideoCardData {
     title: `【${belongsToTitle}】· ${item.title}`,
     titleRender: (
       <>
-        【
-        <IconPark
-          name='Star'
-          size={16}
-          theme='two-tone'
-          fill={['currentColor', colorPrimaryValue]}
-          style={{
-            display: 'inline-block',
-            verticalAlign: 'middle',
-            marginRight: 4,
-            marginTop: -4,
-          }}
-        />
+        【{iconInTitle}
         {belongsToTitle}】· {item.title}
       </>
     ),
