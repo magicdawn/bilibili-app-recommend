@@ -32,7 +32,7 @@ import {
   dfStore,
 } from '$modules/rec-services/dynamic-feed/store'
 import { dynamicFeedFilterSelectUp } from '$modules/rec-services/dynamic-feed/usage-info'
-import { formatFavFolderUrl } from '$modules/rec-services/fav/fav-util'
+import { formatFavFolderUrl } from '$modules/rec-services/fav/fav-url'
 import { UserFavService, defaultFavFolderName } from '$modules/rec-services/fav/user-fav-service'
 import { settings, updateSettingsInnerArray } from '$modules/settings'
 import { antMessage, defineAntMenus, type AntMenuItem } from '$utility/antd'

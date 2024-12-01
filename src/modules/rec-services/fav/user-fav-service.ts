@@ -9,7 +9,7 @@ import { OPERATION_FAIL_MSG } from '$common'
 import { isWebApiSuccess, request } from '$request'
 import { getCsrfToken, getHasLogined, getUid } from '$utility/cookie'
 import toast from '$utility/toast'
-import { formatFavFolderUrl } from './fav-util'
+import { formatFavFolderUrl } from './fav-url'
 import type { FavFolderListAllJson } from './types/list-all-folders'
 
 export const UserFavService = {
