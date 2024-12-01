@@ -3,7 +3,7 @@ import { BaseModal, BaseModalStyle, ModalClose } from '$components/_base/BaseMod
 import { borderColorValue, colorPrimaryValue } from '$components/css-vars'
 import type { AppRecItem, AppRecItemExtend } from '$define'
 import { DislikeIcon } from '$modules/icon'
-import { AntdMessage } from '$utility'
+import { antMessage } from '$utility/antd'
 import { toastRequestFail } from '$utility/toast'
 import { Info } from '@icon-park/react'
 import { useLockFn, useRequest, useUpdateLayoutEffect } from 'ahooks'
@@ -64,13 +64,13 @@ function ModalDislike({ show, onHide, item }: IProps) {
     }
 
     if (success) {
-      AntdMessage.success('已标记不想看')
+      antMessage.success('已标记不想看')
       dislikedIds.set(item.param, { ...reason })
       await delay(100)
       onHide()
     } else {
       // fail
-      AntdMessage.error(message || OPERATION_FAIL_MSG)
+      antMessage.error(message || OPERATION_FAIL_MSG)
     }
   })
 

@@ -3,7 +3,7 @@
  */
 
 import request from 'axios'
-import { toast } from '../../../utility/toast'
+import toast from '../../../utility/toast'
 
 export const appkey = '27eb53fc9058f8c3'
 

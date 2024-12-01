@@ -7,7 +7,8 @@
 
 import { OPERATION_FAIL_MSG } from '$common'
 import { isWebApiSuccess, request } from '$request'
-import { getCsrfToken, getHasLogined, getUid, toast } from '$utility'
+import { getCsrfToken, getHasLogined, getUid } from '$utility/cookie'
+import toast from '$utility/toast'
 import { apiFavFolderListAll, formatFavFolderUrl } from './index'
 import type { FavFolderListAllJson } from './types/folder-list-all'
 

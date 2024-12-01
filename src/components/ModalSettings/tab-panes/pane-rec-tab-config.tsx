@@ -28,7 +28,7 @@ import {
   updateSettingsInnerArray,
   useSettingsSnapshot,
 } from '$modules/settings'
-import { AntdMessage } from '$utility'
+import { antMessage } from '$utility/antd'
 import type { DragEndEvent } from '@dnd-kit/core'
 import { DndContext, PointerSensor, closestCenter, useSensor, useSensors } from '@dnd-kit/core'
 import { restrictToParentElement, restrictToVerticalAxis } from '@dnd-kit/modifiers'
@@ -277,7 +277,7 @@ function VideoSourceTabOrder({ className, style }: { className?: string; style?:
         value={currentShowingTabKeys}
         onChange={(newVal) => {
           if (!newVal.length) {
-            return AntdMessage.error('至少选择一项!')
+            return antMessage.error('至少选择一项!')
           }
           updateSettings({
             hidingTabKeys: TabKeys.filter((k) => !newVal.includes(k)),

@@ -8,7 +8,7 @@
 import { dailyCache } from '$modules/gm/daily-cache'
 import { formatSpaceUrl } from '$modules/rec-services/dynamic-feed/shared'
 import { request } from '$request'
-import { getUid } from '$utility'
+import { getUid } from '$utility/cookie'
 
 const cache = dailyCache<string>('w_webid')
 

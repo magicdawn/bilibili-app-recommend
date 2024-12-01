@@ -9,7 +9,7 @@ import {
   useSettingsSnapshot,
   type ListSettingsPath,
 } from '$modules/settings'
-import { AntdMessage } from '$utility'
+import { antMessage } from '$utility/antd'
 import { Empty, Input } from 'antd'
 import { uniq } from 'es-toolkit'
 import { get } from 'es-toolkit/compat'
@@ -48,7 +48,7 @@ export function EditableListSettingItem({
           // exists check
           const set = new Set(getSettingsInnerArray(configPath))
           if (set.has(val)) {
-            AntdMessage.warning(`${val} 已存在`)
+            antMessage.warning(`${val} 已存在`)
             return
           }
 

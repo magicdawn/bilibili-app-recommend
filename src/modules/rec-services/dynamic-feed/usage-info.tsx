@@ -21,9 +21,9 @@ import {
   type ListSettingsPath,
   type Settings,
 } from '$modules/settings'
-import { AntdMessage } from '$utility'
+import type { AntMenuItem } from '$utility/antd'
+import { antMessage } from '$utility/antd'
 import { getAvatarSrc } from '$utility/image'
-import type { AntdMenuItemType } from '$utility/type'
 import { useRequest } from 'ahooks'
 import {
   Avatar,
@@ -150,15 +150,15 @@ export function DynamicFeedUsageInfo() {
     onSelect({ ...clearPayload })
   })
 
-  const menuItems = useMemo((): AntdMenuItemType[] => {
-    const itemAll: AntdMenuItemType = {
+  const menuItems = useMemo((): AntMenuItem[] => {
+    const itemAll: AntMenuItem = {
       key: 'all',
       icon: <Avatar size={'small'}>全</Avatar>,
       label: '全部',
       onClick: onClear,
     }
 
-    let groupItems: AntdMenuItemType[] = []
+    let groupItems: AntMenuItem[] = []
     if (dfSettings.followGroup.enabled) {
       groupItems = followGroups.map((group) => {
         return {
@@ -192,7 +192,7 @@ export function DynamicFeedUsageInfo() {
       },
     ])
 
-    const items: AntdMenuItemType[] = upListSorted.map((up) => {
+    const items: AntMenuItem[] = upListSorted.map((up) => {
       let avatar: ReactNode = <Avatar size={'small'} src={getAvatarSrc(up.face)} />
       if (up.has_update) {
         avatar = <Badge dot>{avatar}</Badge>
@@ -470,7 +470,7 @@ export function DynamicFeedUsageInfo() {
             <Button
               onClick={() => {
                 copyBvidsSingleLine()
-                AntdMessage.success('已复制')
+                antMessage.success('已复制')
               }}
             >
               Copy Bvids SingleLine
@@ -478,7 +478,7 @@ export function DynamicFeedUsageInfo() {
             <Button
               onClick={() => {
                 copyBvidInfos()
-                AntdMessage.success('已复制')
+                antMessage.success('已复制')
               }}
             >
               Copy Bvid Infos

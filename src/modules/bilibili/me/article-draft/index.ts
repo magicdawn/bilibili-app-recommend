@@ -4,7 +4,7 @@
 
 import { isWebApiSuccess, request } from '$request'
 import { getCsrfToken } from '$utility/cookie'
-import { toast } from '$utility/toast'
+import toast from '$utility/toast'
 import type { AddUpdateJSON } from './types/addupdate'
 import type { DraftListJSON } from './types/draft-list'
 import type { DraftViewJSON } from './types/draft-view'

@@ -25,7 +25,7 @@ import { hotStore } from '$modules/rec-services/hot'
 import { getIService } from '$modules/rec-services/service-map.ts'
 import { useSettingsSnapshot } from '$modules/settings'
 import { isSafari } from '$ua'
-import { AntdMessage } from '$utility'
+import { antMessage } from '$utility/antd'
 import { useEventListener, useLatest } from 'ahooks'
 import { Divider } from 'antd'
 import type { AxiosError } from 'axios'
@@ -311,7 +311,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
 
       const newItems = items.slice()
       newItems.splice(index, 1)
-      AntdMessage.success(`已移除: ${data.title}`, 4)
+      antMessage.success(`已移除: ${data.title}`, 4)
 
       if (tab === ETab.Watchlater) {
         serviceMapBox.val[tab].decreaseTotal()

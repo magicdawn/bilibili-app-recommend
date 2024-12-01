@@ -4,7 +4,7 @@
 
 import { IN_BILIBILI_HOMEPAGE, baseDebug } from '$common'
 import { isWebApiSuccess, request } from '$request'
-import { whenIdle } from '$utility'
+import { whenIdle } from '$utility/dom'
 import { proxySetWithGmStorage } from '$utility/valtio'
 import { useSnapshot } from 'valtio'
 import { modifyRelations } from './common'

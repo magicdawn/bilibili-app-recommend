@@ -12,7 +12,7 @@ import { formatSpaceUrl } from '$modules/rec-services/dynamic-feed/shared'
 import { ELiveStatus } from '$modules/rec-services/live/live-enum'
 import { settings } from '$modules/settings'
 import { getAvatarSrc } from '$utility/image'
-import type { TheCssType } from '$utility/type'
+import type { CssProp } from '$utility/type'
 import { Avatar } from 'antd'
 import { size } from 'polished'
 import { type MouseEventHandler } from 'react'
@@ -123,7 +123,7 @@ export function VideoCardBottom({
 
   const streaming = item.api === EApiType.Live && item.live_status === ELiveStatus.Streaming
 
-  const avatarExtraCss: TheCssType = [
+  const avatarExtraCss: CssProp = [
     css`
       ${flexCenterStyle}
       padding: 1px;

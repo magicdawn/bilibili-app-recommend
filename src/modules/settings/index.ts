@@ -8,7 +8,7 @@ import {
   type LeafPaths,
   type ListPaths,
 } from '$utility/object-paths'
-import { toast } from '$utility/toast'
+import toast from '$utility/toast'
 import { cloneDeep, isNil } from 'es-toolkit'
 import { get, set } from 'es-toolkit/compat'
 import type { Get, PartialDeep } from 'type-fest'

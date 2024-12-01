@@ -1,23 +1,20 @@
 import { REQUEST_FAIL_MSG } from '$common'
 import { C } from '$common/emotion-css'
-import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
 import { CustomTargetLink } from '$components/VideoCard/use/useOpenRelated'
 import { type ItemsSeparator } from '$define'
 import { EApiType } from '$define/index.shared'
 import { OpenExternalLinkIcon, PlayerIcon } from '$modules/icon'
-import { settings, useSettingsSnapshot } from '$modules/settings'
+import { settings } from '$modules/settings'
 import { isWebApiSuccess, request } from '$request'
-import { getUid, toast } from '$utility'
-import { Popover, Space, Tag, Transfer } from 'antd'
-import type { TransferDirection } from 'antd/es/transfer'
-import { delay, shuffle } from 'es-toolkit'
+import { getUid } from '$utility/cookie'
+import toast from '$utility/toast'
+import { shuffle } from 'es-toolkit'
 import pmap from 'promise.map'
-import type { Key } from 'react'
-import { QueueStrategy, usePopupContainer, type IService } from '../_base'
-import { ShuffleSettingsItemFor } from '../_shared'
+import { QueueStrategy, type IService } from '../_base'
 import type { FavItemExtend } from './types'
 import type { FavFolderListAllItem, FavFolderListAllJson } from './types/folder-list-all'
 import type { FavFolderDetailInfo, ResourceListJSON } from './types/resource-list'
+import { FavUsageInfo } from './usage-info'
 
 export function formatFavFolderUrl(id: number) {
   const uid = getUid()
@@ -215,102 +212,4 @@ export class FavFolderService {
       }
     })
   }
-}
-
-export function FavUsageInfo({
-  allFavFolderServices,
-}: {
-  allFavFolderServices: FavFolderService[]
-}) {
-  const { fav } = useSettingsSnapshot()
-  const onRefresh = useOnRefreshContext()
-  const [excludeFavFolderIdsChanged, setExcludeFavFolderIdsChanged] = useState(false)
-
-  // 分割线设置切换, 即时生效
-  useUpdateEffect(() => {
-    void (async () => {
-      await delay(100)
-      onRefresh?.()
-    })()
-  }, [fav.useShuffle, fav.addSeparator])
-
-  const handleChange = useMemoizedFn(
-    (newTargetKeys: Key[], direction: TransferDirection, moveKeys: Key[]) => {
-      setExcludeFavFolderIdsChanged(true)
-      settings.fav.excludedFolderIds = newTargetKeys.map((k) => k.toString())
-    },
-  )
-
-  // may contains legacy ids, so not `allFavFolderServices.length - excludeFavFolderIds.length`
-  const foldersCount = useMemo(
-    () =>
-      allFavFolderServices.filter((x) => !fav.excludedFolderIds.includes(x.entry.id.toString()))
-        .length,
-    [allFavFolderServices, fav.excludedFolderIds],
-  )
-
-  const videosCount = useMemo(() => {
-    return allFavFolderServices
-      .filter((s) => !fav.excludedFolderIds.includes(s.entry.id.toString()))
-      .reduce((count, s) => count + s.entry.media_count, 0)
-  }, [allFavFolderServices, fav.excludedFolderIds])
-
-  const onPopupOpenChange = useMemoizedFn((open: boolean) => {
-    // when open
-    if (open) {
-      setExcludeFavFolderIdsChanged(false)
-    }
-
-    // when close
-    else {
-      if (excludeFavFolderIdsChanged) {
-        onRefresh?.()
-      }
-    }
-  })
-
-  const { ref, getPopupContainer } = usePopupContainer()
-
-  return (
-    <Space ref={ref}>
-      <Popover
-        getTooltipContainer={getPopupContainer}
-        trigger={'click'}
-        placement='bottom'
-        onOpenChange={onPopupOpenChange}
-        getPopupContainer={(el) => el.parentElement || document.body}
-        content={
-          <>
-            <Transfer
-              dataSource={allFavFolderServices}
-              rowKey={(row) => row.entry.id.toString()}
-              titles={['收藏夹', '忽略']}
-              targetKeys={fav.excludedFolderIds}
-              onChange={handleChange}
-              render={(item) => item.entry.title}
-              oneWay
-              style={{ marginBottom: 10 }}
-            />
-          </>
-        }
-      >
-        <Tag
-          color='success'
-          css={css`
-            cursor: pointer;
-            font-size: 12px;
-          `}
-        >
-          收藏夹({foldersCount}) 收藏({videosCount})
-        </Tag>
-      </Popover>
-
-      {/* <SwitchSettingItem
-        configPath={'shuffleForFav'}
-        checkedChildren='随机顺序: 开'
-        unCheckedChildren='随机顺序: 关'
-      /> */}
-      <ShuffleSettingsItemFor configPath={'fav.useShuffle'} />
-    </Space>
-  )
 }

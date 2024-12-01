@@ -1,5 +1,5 @@
 import { APP_NAME } from '$common'
-import { tryAction } from '$utility'
+import { tryAction } from '$utility/dom'
 
 export async function initSpacePage() {
   addDynEntry()

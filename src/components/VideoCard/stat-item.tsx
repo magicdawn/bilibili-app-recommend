@@ -2,7 +2,7 @@
  * app 接口返回的 icon 是数字 (id), 映射成 field(play / like ...), field 映射成 svg-icon
  */
 
-import { formatCount } from '$utility'
+import { formatCount } from '$utility/video'
 import { STAT_NUMBER_FALLBACK } from './index.shared'
 import type { StatItemType } from './process/normalize'
 

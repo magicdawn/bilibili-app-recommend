@@ -2,7 +2,7 @@ import { APP_CLS_ROOT } from '$common'
 import { appClsDarkSelector } from '$common/css-vars-export.module.scss'
 import { C } from '$common/emotion-css'
 import { useIsDarkMode } from '$modules/dark-mode'
-import type { TheCssType } from '$utility/type'
+import type { CssProp } from '$utility/type'
 import { Close } from '@icon-park/react'
 import type { Icon } from '@icon-park/react/es/runtime'
 import type { ComponentProps, MouseEvent } from 'react'
@@ -88,10 +88,10 @@ interface IProps {
 
   // classNames
   clsModalMask?: string
-  cssModalMask?: TheCssType
+  cssModalMask?: CssProp
 
   clsModal?: string
-  cssModal?: TheCssType
+  cssModal?: CssProp
 
   width?: CSSProperties['width']
 

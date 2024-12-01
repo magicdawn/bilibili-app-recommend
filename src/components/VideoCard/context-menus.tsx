@@ -1,3 +1,7 @@
+/**
+ * context menus related
+ */
+
 import { C } from '$common/emotion-css'
 import { currentGridItems, getBvidInfo } from '$components/RecGrid/unsafe-window-export'
 import type { OnRefresh } from '$components/RecGrid/useRefresh'
@@ -31,9 +35,9 @@ import { dynamicFeedFilterSelectUp } from '$modules/rec-services/dynamic-feed/us
 import { formatFavFolderUrl } from '$modules/rec-services/fav'
 import { UserFavService, defaultFavFolderName } from '$modules/rec-services/fav/user-fav.service'
 import { settings, updateSettingsInnerArray } from '$modules/settings'
-import { AntdMessage, toast } from '$utility'
-import type { MenuProps } from 'antd'
-import { delay, isNil, omit } from 'es-toolkit'
+import { antMessage, defineAntMenus, type AntMenuItem } from '$utility/antd'
+import toast from '$utility/toast'
+import { delay } from 'es-toolkit'
 import { size } from 'polished'
 import type { MouseEvent } from 'react'
 import { useSnapshot } from 'valtio'
@@ -43,29 +47,6 @@ import { watchlaterAdd } from './card.service'
 import { getFollowedStatus } from './process/filter'
 import type { IVideoCardData } from './process/normalize'
 import { getLinkTarget } from './use/useOpenRelated'
-
-/**
- * context menus related
- */
-
-export type ContextMenuItem = NonNullable<NonNullable<MenuProps['items']>[number]>
-
-export function defineContextMenus(
-  arr: Array<(ContextMenuItem & { test?: boolean | (() => boolean) }) | undefined | null | false>,
-): ContextMenuItem[] {
-  return arr
-    .filter((x) => !isNil(x) && x !== false) // inferred type predicate
-    .map((x) => {
-      const testResult =
-        typeof x.test === 'undefined' ? true : typeof x.test === 'function' ? x.test() : x.test
-      return {
-        ...x,
-        testResult,
-      }
-    })
-    .filter((x) => x.testResult)
-    .map((x) => omit(x, ['test', 'testResult']) as ContextMenuItem)
-}
 
 export function useContextMenus({
   item,
@@ -119,9 +100,9 @@ export function useContextMenus({
   hasDislikeEntry: boolean
   onTriggerDislike: () => unknown
   onRemoveCurrent: ((item: RecItemType, data: IVideoCardData) => void | Promise<void>) | undefined
-  consistentOpenMenus: ContextMenuItem[]
-  conditionalOpenMenus: ContextMenuItem[]
-}): ContextMenuItem[] {
+  consistentOpenMenus: AntMenuItem[]
+  conditionalOpenMenus: AntMenuItem[]
+}): AntMenuItem[] {
   const { enableHideSomeContents } = useSnapshot(settings.dynamicFeed.whenViewAll)
 
   const onCopyLink = useMemoizedFn(() => {
@@ -140,15 +121,15 @@ export function useContextMenus({
     !!authorMid && (tab === ETab.RecommendApp || tab === ETab.RecommendPc || tab === ETab.Hot)
 
   const onBlacklistUp = useMemoizedFn(async () => {
-    if (!authorMid) return AntdMessage.error('UP mid 为空!')
+    if (!authorMid) return antMessage.error('UP mid 为空!')
     const success = await UserBlacklistService.add(authorMid)
     if (success) {
-      AntdMessage.success(`已加入黑名单: ${authorName}`)
+      antMessage.success(`已加入黑名单: ${authorName}`)
     }
   })
 
   const onAddUpToFilterList = useMemoizedFn(async () => {
-    if (!authorMid) return AntdMessage.error('UP mid 为空!')
+    if (!authorMid) return antMessage.error('UP mid 为空!')
 
     const content = `${authorMid}`
     if (settings.filter.byAuthor.keywords.includes(content)) {
@@ -160,7 +141,7 @@ export function useContextMenus({
 
     let toastContent = content
     if (authorName) toastContent += ` 用户名: ${authorName}`
-    AntdMessage.success(`已加入过滤名单: ${toastContent}, 刷新后生效~`)
+    antMessage.success(`已加入过滤名单: ${toastContent}, 刷新后生效~`)
   })
 
   /**
@@ -173,7 +154,7 @@ export function useContextMenus({
     if (!authorMid) return
     const success = await UserfollowService.unfollow(authorMid)
     if (success) {
-      AntdMessage.success('已取消关注')
+      antMessage.success('已取消关注')
     }
   })
 
@@ -232,13 +213,13 @@ export function useContextMenus({
     if (!hasEntry_addMidTo_dynamicFeedWhenViewAllHideIds) return
     _dynamicFeedWhenViewAllHideIdsAdd(SELECTED_KEY_PREFIX_UP + authorMid)
     setNicknameCache(authorMid, authorName || '')
-    AntdMessage.success(`在「全部」动态中隐藏【${authorName}】的动态`)
+    antMessage.success(`在「全部」动态中隐藏【${authorName}】的动态`)
   })
   const onAddFollowGroupIdTo_dynamicFeedWhenViewAllHideIds = useMemoizedFn(async () => {
     if (!hasEntry_addFollowGroupIdTo_dynamicFeedWhenViewAllHideIds) return
     if (!dfStore.selectedKey.startsWith(SELECTED_KEY_PREFIX_GROUP)) return
     _dynamicFeedWhenViewAllHideIdsAdd(dfStore.selectedKey)
-    AntdMessage.success(`在「全部」动态中隐藏来自【${dfStore.selectedFollowGroup?.name}】的动态`)
+    antMessage.success(`在「全部」动态中隐藏来自【${dfStore.selectedFollowGroup?.name}】的动态`)
   })
 
   /**
@@ -250,7 +231,7 @@ export function useContextMenus({
     dfStore.hasSelectedUp &&
     authorMid
   )
-  const dynamicViewStartFromHere: ContextMenuItem | false = useMemo(
+  const dynamicViewStartFromHere: AntMenuItem | false = useMemo(
     () =>
       hasEntry_dynamicFeed_offsetAndMinId && {
         label: '动态: 从此项开始查看',
@@ -271,7 +252,7 @@ export function useContextMenus({
       },
     [hasEntry_dynamicFeed_offsetAndMinId, item],
   )
-  const dynamicViewUpdateSinceThis: ContextMenuItem | false = useMemo(
+  const dynamicViewUpdateSinceThis: AntMenuItem | false = useMemo(
     () =>
       hasEntry_dynamicFeed_offsetAndMinId && {
         icon: <IconTablerSortAscending2 {...size(17)} />,
@@ -288,9 +269,9 @@ export function useContextMenus({
   )
 
   return useMemo(() => {
-    const divider: ContextMenuItem = { type: 'divider' }
+    const divider: AntMenuItem = { type: 'divider' }
 
-    const copyMenus = defineContextMenus([
+    const copyMenus = defineAntMenus([
       {
         key: 'copy-link',
         label: '复制视频链接',
@@ -318,7 +299,7 @@ export function useContextMenus({
     ])
 
     // I'm interested in this video
-    const interestedMenus = defineContextMenus([
+    const interestedMenus = defineAntMenus([
       {
         test: hasDynamicFeedFilterSelectUpEntry,
         key: 'dymamic-feed-filter-select-up',
@@ -375,7 +356,7 @@ export function useContextMenus({
           else {
             const success = await UserFavService.addFav(avid)
             if (success) {
-              AntdMessage.success(`已加入收藏夹「${defaultFavFolderName}」`)
+              antMessage.success(`已加入收藏夹「${defaultFavFolderName}」`)
             }
           }
         },
@@ -398,7 +379,7 @@ export function useContextMenus({
     ])
 
     // I don't like this video
-    const dislikeMenus = defineContextMenus([
+    const dislikeMenus = defineAntMenus([
       {
         test: hasDislikeEntry,
         key: 'dislike',
@@ -445,7 +426,7 @@ export function useContextMenus({
       },
     ])
 
-    const favMenus = defineContextMenus(
+    const favMenus = defineAntMenus(
       isFav(item)
         ? [
             {
@@ -479,7 +460,7 @@ export function useContextMenus({
         : [],
     )
 
-    return defineContextMenus([
+    return defineAntMenus([
       ...consistentOpenMenus,
 
       !!copyMenus.length && divider,

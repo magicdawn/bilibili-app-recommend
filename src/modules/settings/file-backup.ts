@@ -1,6 +1,7 @@
 import { APP_NAME } from '$common'
 import { toastAndReload } from '$components/ModalSettings/index.shared'
-import { AntdMessage, toast } from '$utility'
+import { antMessage } from '$utility/antd'
+import toast from '$utility/toast'
 import dayjs from 'dayjs'
 import { tryit } from 'radash'
 import type { PartialDeep } from 'type-fest'
@@ -64,7 +65,7 @@ export async function importSettings() {
 
   set_HAS_RESTORED_SETTINGS(true)
   updateSettings(pickedSettings)
-  AntdMessage.success('导入成功!')
+  antMessage.success('导入成功!')
   return toastAndReload()
 }
 

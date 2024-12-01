@@ -2,8 +2,8 @@ import { C } from '$common/emotion-css'
 import { LiveIcon, WatchLaterIcon } from '$modules/icon'
 import { isHotTabUsingShuffle } from '$modules/rec-services/hot'
 import { settings } from '$modules/settings'
-import { toast } from '$utility'
-import type { TheCssType } from '$utility/type'
+import toast from '$utility/toast'
+import type { CssProp } from '$utility/type'
 import { size } from 'polished'
 import { cloneElement, type ReactElement } from 'react'
 import IconParkOutlineComputer from '~icons/icon-park-outline/computer'
@@ -99,7 +99,7 @@ export function TabIcon({
   active,
 }: {
   tabKey: ETab
-  moreCss?: TheCssType
+  moreCss?: CssProp
   size?: number
   ml?: number
   mr?: number
@@ -109,7 +109,7 @@ export function TabIcon({
 }) {
   const { icon } = TabConfig[tabKey]
   const newCssProp = [
-    icon.props.css as TheCssType,
+    icon.props.css as CssProp,
     moreCss,
     ml && C.ml(ml),
     mr && C.mr(mr),

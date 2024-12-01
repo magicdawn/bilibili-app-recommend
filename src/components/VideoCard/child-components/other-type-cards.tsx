@@ -5,7 +5,7 @@ import { delDislikeId } from '$components/ModalDislike'
 import type { AppRecItemExtend, RecItemType } from '$define'
 import { UserBlacklistService } from '$modules/bilibili/me/relations/blacklist'
 import { IconPark } from '$modules/icon/icon-park'
-import { AntdMessage } from '$utility'
+import { antMessage } from '$utility/antd'
 import { toastRequestFail } from '$utility/toast'
 import { videoCardBorderRadiusValue } from '../../css-vars'
 import { cancelDislike } from '../card.service'
@@ -155,10 +155,10 @@ export const DislikedCard = memo(function DislikedCard({
     }
 
     if (success) {
-      AntdMessage.success('已撤销')
+      antMessage.success('已撤销')
       delDislikeId(item.param)
     } else {
-      AntdMessage.error(message || OPERATION_FAIL_MSG)
+      antMessage.error(message || OPERATION_FAIL_MSG)
     }
   })
 
@@ -215,7 +215,7 @@ export const BlacklistCard = memo(function BlacklistCard({
   const onCancel = useMemoizedFn(async () => {
     if (!authorMid) return
     const success = await UserBlacklistService.remove(authorMid)
-    if (success) AntdMessage.success(`已移出黑名单: ${authorName}`)
+    if (success) antMessage.success(`已移出黑名单: ${authorName}`)
   })
 
   return (

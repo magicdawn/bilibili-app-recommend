@@ -27,7 +27,7 @@ const singleLine = css`
   text-align: center;
 `
 
-export function toast(msg: string, duration = 2000, container = document.body) {
+export default function toast(msg: string, duration = 2000, container = document.body) {
   const div = document.createElement('div')
   div.classList.add(toastContainer, APP_CLS_ROOT)
   div.innerText = msg

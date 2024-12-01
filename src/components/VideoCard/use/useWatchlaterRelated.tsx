@@ -3,7 +3,7 @@ import { EApiType } from '$define/index.shared'
 import { WatchLaterIcon } from '$modules/icon'
 import { IconAnimatedChecked } from '$modules/icon/animated-checked'
 import { watchlaterState } from '$modules/rec-services/watchlater'
-import { AntdMessage } from '$utility'
+import { antMessage } from '$utility/antd'
 import { usePrevious, useRequest } from 'ahooks'
 import { delay } from 'es-toolkit'
 import { size } from 'polished'
@@ -89,7 +89,7 @@ export function useWatchlaterRelated({
 
         // 其他 Tab
         else {
-          AntdMessage.success(`已${targetState ? '添加' : '移除'}稍后再看`)
+          antMessage.success(`已${targetState ? '添加' : '移除'}稍后再看`)
         }
       }
 

@@ -9,7 +9,7 @@ import {
   type DynamicFeedRecService,
 } from '$modules/rec-services/dynamic-feed'
 import { hotStore } from '$modules/rec-services/hot'
-import { nextTick } from '$utility'
+import { nextTick } from '$utility/dom'
 import type { Debugger } from 'debug'
 import { isEqual } from 'radash'
 import { createContext } from 'react'

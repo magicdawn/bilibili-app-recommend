@@ -1,7 +1,8 @@
 import { APP_NAME } from '$common'
 import type { Settings } from '$modules/settings'
 import { settings, useSettingsSnapshot } from '$modules/settings'
-import { AntdMessage, shouldDisableShortcut } from '$utility'
+import { antMessage } from '$utility/antd'
+import { shouldDisableShortcut } from '$utility/dom'
 import { Tag } from 'antd'
 import { isEqual } from 'es-toolkit'
 import { pick } from 'radash'
@@ -44,7 +45,7 @@ export function useHotkeyForConfigBorder() {
       Object.assign(settings.style.videoCard, nextState)
 
       const nextLabel = borderCycleListLabels[nextIndex]
-      AntdMessage.success(nextLabel)
+      antMessage.success(nextLabel)
     },
     { exactMatch: true },
   )

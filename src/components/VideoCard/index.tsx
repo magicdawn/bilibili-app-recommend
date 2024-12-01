@@ -24,8 +24,8 @@ import { useWatchlaterState } from '$modules/rec-services/watchlater'
 import { settings, useSettingsSnapshot } from '$modules/settings'
 import { isWebApiSuccess } from '$request'
 import { isFirefox, isSafari } from '$ua'
-import { AntdMessage, AntdNotification } from '$utility'
-import type { TheCssType } from '$utility/type'
+import { antMessage, antNotification } from '$utility/antd'
+import type { CssProp } from '$utility/type'
 import { useLockFn } from 'ahooks'
 import { Dropdown } from 'antd'
 import { tryit } from 'radash'
@@ -57,7 +57,7 @@ import { useWatchlaterRelated } from './use/useWatchlaterRelated'
 
 export function copyContent(content: string) {
   GM.setClipboard(content)
-  AntdMessage.success(`已复制: ${content}`)
+  antMessage.success(`已复制: ${content}`)
 }
 
 export type VideoCardProps = {
@@ -71,7 +71,7 @@ export type VideoCardProps = {
   onRefresh?: OnRefresh
   emitter?: VideoCardEmitter
   tab: ETab
-  baseCss?: TheCssType
+  baseCss?: CssProp
 } & ComponentProps<'div'>
 
 export const VideoCard = memo(function VideoCard({
@@ -219,7 +219,7 @@ const VideoCardInner = memo(function VideoCardInner({
   // 3,false: 每三次触发一次
   const warnNoPreview = useLessFrequentFn(
     (json: PvideoJson) => {
-      AntdNotification.warning({
+      antNotification.warning({
         message: `${json.message} (code: ${json.code})`,
         description: `${title} (${bvid})`,
         duration: 2,
@@ -421,7 +421,7 @@ const VideoCardInner = memo(function VideoCardInner({
       border-bottom-right-radius: 0;
     }
   `
-  const coverRoundCss: TheCssType = [
+  const coverRoundCss: CssProp = [
     css`
       ${prefixCls} & {
         overflow: hidden;
@@ -433,7 +433,7 @@ const VideoCardInner = memo(function VideoCardInner({
 
   // 防止看不清封面边界: (封面与背景色接近)
   const dark = useIsDarkMode()
-  const coverBorderCss: TheCssType = (() => {
+  const coverBorderCss: CssProp = (() => {
     // card has border always showing, so cover does not need
     if (cardUseBorder && !cardUseBorderOnlyOnHover) return undefined
     const visible =

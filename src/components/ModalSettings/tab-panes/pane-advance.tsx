@@ -23,7 +23,7 @@ import {
 } from '$modules/settings'
 import { exportSettings, importSettings } from '$modules/settings/file-backup'
 import { articleDraft, restoreOmitPaths } from '$modules/settings/index.shared'
-import { AntdMessage } from '$utility'
+import { antMessage } from '$utility/antd'
 import { getPaths } from '$utility/object-paths'
 import { Button, Popconfirm, Slider, Space } from 'antd'
 import { startCase } from 'es-toolkit'
@@ -49,7 +49,7 @@ async function onRestoreSettings() {
     (p) => allowedLeafSettingsPaths.includes(p) && !restoreOmitPaths.includes(p),
   )
   if (!pickedPaths.length) {
-    return AntdMessage.error('备份不存在或没有有效的配置')
+    return antMessage.error('备份不存在或没有有效的配置')
   }
 
   const pickedSettings: PartialDeep<Settings> = {}

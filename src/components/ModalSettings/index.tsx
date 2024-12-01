@@ -4,7 +4,8 @@ import { useHotkeyForToggleEvolvedDarkMode } from '$modules/dark-mode'
 import { ConfigIcon } from '$modules/icon'
 import type { BooleanSettingsPath } from '$modules/settings'
 import { settings } from '$modules/settings'
-import { AntdMessage, shouldDisableShortcut } from '$utility'
+import { antMessage } from '$utility/antd'
+import { shouldDisableShortcut } from '$utility/dom'
 import { Tabs } from 'antd'
 import { get, set } from 'es-toolkit/compat'
 import { proxy, useSnapshot } from 'valtio'
@@ -29,7 +30,7 @@ function useHotkeyForConfig(
       const _set = (val: boolean) => set(settings, configPath, val)
       _set(!_get())
       const isCancel = !_get()
-      AntdMessage.success(`已${isCancel ? '禁用' : '启用'}「${label}」`)
+      antMessage.success(`已${isCancel ? '禁用' : '启用'}「${label}」`)
     },
     { exactMatch: true },
   )

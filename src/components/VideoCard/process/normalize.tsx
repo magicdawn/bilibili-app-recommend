@@ -31,7 +31,7 @@ import {
   isCinemaRankingItem,
 } from '$modules/rec-services/hot/ranking/category'
 import { ELiveStatus } from '$modules/rec-services/live/live-enum'
-import { toHttps } from '$utility'
+import { toHttps } from '$utility/url'
 import {
   formatDuration,
   formatTimeStamp,

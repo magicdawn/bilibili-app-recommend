@@ -6,7 +6,7 @@ import { colorPrimaryValue } from '$components/css-vars'
 import type { RecItemTypeOrSeparator } from '$define'
 import { styled } from '$libs'
 import { settings, useSettingsSnapshot } from '$modules/settings'
-import type { AntdMenuItemType } from '$utility/type'
+import type { AntMenuItem } from '$utility/antd'
 import { proxyWithGmStorage } from '$utility/valtio'
 import { Button, Dropdown } from 'antd'
 import { size } from 'polished'
@@ -101,7 +101,7 @@ function HotUsageInfo({ children }: { children?: ReactNode }) {
   const { ref, getPopupContainer } = usePopupContainer<HTMLButtonElement>()
   const { __internalHotSubUseDropdown } = useSettingsSnapshot()
 
-  const menus: AntdMenuItemType[] = useMemo(
+  const menus: AntMenuItem[] = useMemo(
     () =>
       [EHotSubTab.PopularGeneral, EHotSubTab.PopularWeekly, EHotSubTab.Ranking]
         .map((subtab, index) => {
@@ -130,7 +130,7 @@ function HotUsageInfo({ children }: { children?: ReactNode }) {
                 // onRefresh?.(true) // 可以但没必要, 有 skeleton 有 Tab切换 的反馈
                 onRefresh?.()
               },
-            } satisfies AntdMenuItemType,
+            } satisfies AntMenuItem,
           ].filter(Boolean)
         })
         .flat(),

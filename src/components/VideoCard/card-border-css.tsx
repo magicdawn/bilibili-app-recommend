@@ -11,7 +11,7 @@ import { APP_NAMESPACE } from '$common'
 import { bgLv1Value, bgLv2Value, borderColorValue, colorPrimaryValue } from '$components/css-vars'
 import { useSettingsSnapshot } from '$modules/settings'
 import { tweakLightness } from '$utility/css'
-import type { TheCssType } from '$utility/type'
+import type { CssProp } from '$utility/type'
 import { css as _css } from '@emotion/react'
 import { bgValue, videoCardBorderRadiusValue } from '../css-vars'
 
@@ -36,7 +36,7 @@ const coverZoom = css`
  * - hover highlight bg
  * - hover highlight separator
  */
-export function useInNormalCardCss(showingInNormalCard: boolean): TheCssType {
+export function useInNormalCardCss(showingInNormalCard: boolean): CssProp {
   const sepIdentifier = `--${APP_NAMESPACE}-separator-color`
   return useMemo(() => {
     if (!showingInNormalCard) return undefined
@@ -59,7 +59,7 @@ export function useInNormalCardCss(showingInNormalCard: boolean): TheCssType {
   }, [showingInNormalCard])
 }
 
-export function useCardBorderCss(): TheCssType {
+export function useCardBorderCss(): CssProp {
   const {
     useDelayForHover,
     style: {
@@ -109,7 +109,7 @@ export function useCardBorderCss(): TheCssType {
   }, [useBorder, useBorderOnlyOnHover, useBoxShadow, usePadding, useDelayForHover])
 }
 
-export function getActiveCardBorderCss(active: boolean): TheCssType {
+export function getActiveCardBorderCss(active: boolean): CssProp {
   return (
     active &&
     css`

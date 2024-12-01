@@ -6,7 +6,7 @@ import {
 } from '$components/ModalSettings/setting-item'
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
 import { useSettingsSnapshot } from '$modules/settings'
-import { toast } from '$utility/toast'
+import toast from '$utility/toast'
 import { Space, Tag } from 'antd'
 import { delay } from 'es-toolkit'
 import { ShuffleSettingsItemFor } from '../_shared'

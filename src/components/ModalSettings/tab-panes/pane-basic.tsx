@@ -8,7 +8,7 @@ import { VideoLinkOpenMode, VideoLinkOpenModeConfig } from '$components/VideoCar
 import { HelpInfo } from '$components/_base/HelpInfo'
 import { IconPark } from '$modules/icon/icon-park'
 import { updateSettings, useSettingsSnapshot } from '$modules/settings'
-import { AntdMessage } from '$utility'
+import { antMessage } from '$utility/antd'
 import { Button, Select, Space, Tag } from 'antd'
 import styles from '../index.module.scss'
 import { toastAndReload } from '../index.shared'
@@ -46,7 +46,7 @@ export function TabPaneBasic() {
   const handleCopyScriptVersion = useMemoizedFn(() => {
     const content = `v${__SCRIPT_VERSION__}`
     GM.setClipboard(content)
-    AntdMessage.success(`已复制当前版本: ${content}`)
+    antMessage.success(`已复制当前版本: ${content}`)
   })
 
   return (
@@ -111,7 +111,7 @@ export function TabPaneBasic() {
             tooltip='打开首页时自动打开「查看更多」弹窗'
             extraAction={(val) => {
               if (val) {
-                AntdMessage.success(
+                antMessage.success(
                   '已开启自动「查看更多」: 下次打开首页时将自动打开「查看更多」弹窗',
                 )
               }

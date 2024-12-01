@@ -1,9 +1,9 @@
-import { AntdMessage } from '$utility'
+import { antMessage } from '$utility/antd'
 import { delay } from 'es-toolkit'
 import type { ReactNode } from 'react'
 
 export async function toastAndReload(msg = '即将刷新网页!') {
-  AntdMessage.info(msg)
+  antMessage.info(msg)
   await delay(500)
   location.reload()
 }

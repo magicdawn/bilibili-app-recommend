@@ -1,6 +1,6 @@
 import { isWebApiSuccess, request } from '$request'
-import { toast } from '$utility'
 import { getCsrfToken, getUid } from '$utility/cookie'
+import toast from '$utility/toast'
 
 /**
  * 拷贝自 space.bilibili.com 代码

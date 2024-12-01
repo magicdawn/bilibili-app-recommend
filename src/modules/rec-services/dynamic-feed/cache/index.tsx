@@ -1,5 +1,5 @@
 import type { DynamicFeedItem } from '$define'
-import { AntdNotification } from '$utility'
+import { antNotification } from '$utility/antd'
 import { getIdbCache } from '$utility/idb'
 import { throttle, uniqBy } from 'es-toolkit'
 import { fetchVideoDynamicFeeds } from '../api'
@@ -18,7 +18,7 @@ export function createUpdateSearchCacheNotifyFns(upMid: UpMidType, upName: strin
   const notiKey = (mid: UpMidType) => `update-search-cache-${mid}`
 
   const _onProgress: OnProgress = (page: number, total: number) => {
-    AntdNotification.info({
+    antNotification.info({
       icon: <IconSvgSpinnersBarsRotateFade {...size(16)} />,
       key: notiKey(upMid),
       message: `搜索缓存更新中...`,
@@ -32,7 +32,7 @@ export function createUpdateSearchCacheNotifyFns(upMid: UpMidType, upName: strin
 
   const onSuccess = () => {
     onProgress.flush()
-    AntdNotification.success({
+    antNotification.success({
       key: notiKey(upMid),
       message: `缓存更新成功`,
       description: `「${upName}」的搜索缓存更新成功`,

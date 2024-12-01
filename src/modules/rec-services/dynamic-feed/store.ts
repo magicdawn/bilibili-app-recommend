@@ -1,6 +1,7 @@
 import { IN_BILIBILI_HOMEPAGE } from '$common'
 import { settings } from '$modules/settings'
-import { getUid, setPageTitle, whenIdle } from '$utility'
+import { getUid } from '$utility/cookie'
+import { setPageTitle, whenIdle } from '$utility/dom'
 import { proxySetWithGmStorage } from '$utility/valtio'
 import ms from 'ms'
 import { proxy } from 'valtio'

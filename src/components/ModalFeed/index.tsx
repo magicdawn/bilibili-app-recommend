@@ -10,7 +10,7 @@ import { BaseModal, BaseModalStyle, ModalClose } from '$components/_base/BaseMod
 import { CollapseBtn } from '$components/_base/CollapseBtn'
 import { colorPrimaryValue } from '$components/css-vars'
 import { useSettingsSnapshot } from '$modules/settings'
-import { AntdMessage } from '$utility'
+import { antMessage } from '$utility/antd'
 
 const S = {
   modalMask: (narrowMode: boolean) => [
@@ -196,7 +196,7 @@ function ModalFeedConfigChecks() {
         css={inModalFeedStyle}
         extraAction={(val) => {
           if (val) {
-            AntdMessage.success('已开启自动查看更多: 下次打开首页时将直接展示推荐弹窗')
+            antMessage.success('已开启自动查看更多: 下次打开首页时将直接展示推荐弹窗')
           }
         }}
       />

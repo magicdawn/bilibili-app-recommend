@@ -1,5 +1,5 @@
 import { proxy, useSnapshot } from 'valtio'
-import { toast } from './toast'
+import toast from './toast'
 
 export function parseCookie(): Record<string, string> {
   const cookies: Record<string, string> = {}
