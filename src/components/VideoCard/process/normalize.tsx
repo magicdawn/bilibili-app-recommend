@@ -469,13 +469,14 @@ function apiWatchLaterAdapter(item: WatchLaterItemExtend): IVideoCardData {
 }
 
 function apiFavAdapter(item: FavItemExtend): IVideoCardData {
+  const belongsToTitle = item.from === 'fav-folder' ? item.folder.title : item.collection.title
   return {
     // video
     avid: String(item.id),
     bvid: item.bvid,
     goto: 'av',
     href: `/video/${item.bvid}/`,
-    title: `【${item.folder.title}】· ${item.title}`,
+    title: `【${belongsToTitle}】· ${item.title}`,
     titleRender: (
       <>
         【
@@ -491,7 +492,7 @@ function apiFavAdapter(item: FavItemExtend): IVideoCardData {
             marginTop: -4,
           }}
         />
-        {item.folder.title}】· {item.title}
+        {belongsToTitle}】· {item.title}
       </>
     ),
     cover: item.cover,
@@ -499,7 +500,8 @@ function apiFavAdapter(item: FavItemExtend): IVideoCardData {
     pubdateDisplay: formatTimeStamp(item.pubtime),
     duration: item.duration,
     durationStr: formatDuration(item.duration),
-    recommendReason: `${formatTimeStamp(item.fav_time)} · 收藏`,
+    recommendReason:
+      item.from === 'fav-folder' ? `${formatTimeStamp(item.fav_time)} · 收藏` : undefined,
 
     // stat
     play: item.cnt_info.play,

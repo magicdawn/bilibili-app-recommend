@@ -10,7 +10,7 @@ import { isWebApiSuccess, request } from '$request'
 import { getCsrfToken, getHasLogined, getUid } from '$utility/cookie'
 import toast from '$utility/toast'
 import { formatFavFolderUrl } from './fav-url'
-import type { FavFolderListAllJson } from './types/list-all-folders'
+import type { FavFolderListAllJson } from './types/folders/list-all-folders'
 
 export const UserFavService = {
   removeFav,

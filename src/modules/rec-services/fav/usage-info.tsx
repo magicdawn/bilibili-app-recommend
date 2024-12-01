@@ -16,6 +16,7 @@ import { favStore } from './store'
 export const IconForAll = IconLucideList
 export const IconForPrivateFolder = IconLucideFolderLock
 export const IconForPublicFolder = IconLucideFolder
+export const IconForCollection = IconIonLayersOutline
 
 export function FavUsageInfo({
   viewingAll,
@@ -25,7 +26,8 @@ export function FavUsageInfo({
   allFavFolderServices?: FavFolderBasicService[]
 }) {
   const { fav } = useSettingsSnapshot()
-  const { favFolders, selectedFavFolder, selectedLabel } = useSnapshot(favStore)
+  const { favFolders, selectedFavFolder, favCollections, selectedFavCollection, selectedLabel } =
+    useSnapshot(favStore)
   const onRefresh = useOnRefreshContext()
   const { ref, getPopupContainer } = usePopupContainer()
 
@@ -50,30 +52,58 @@ export function FavUsageInfo({
         label: '全部',
         async onClick() {
           favStore.selectedFavFolderId = undefined
+          favStore.selectedFavCollectionId = undefined
           setScopeDropdownOpen(false)
           await delay(100)
           onRefresh?.()
         },
       },
-      ...favFolders.map((f) => {
-        const isDefault = isFavFolderDefault(f.attr)
-        const isPrivate = isFavFolderPrivate(f.attr)
-        const icon = isPrivate ? <IconForPrivateFolder /> : <IconForPublicFolder />
-        const label = `${f.title} (${f.media_count})`
-        return {
-          key: `fav-folder:${f.id}`,
-          icon,
-          label,
-          async onClick() {
-            favStore.selectedFavFolderId = f.id
-            setScopeDropdownOpen(false)
-            await delay(100)
-            onRefresh?.()
-          },
-        }
-      }),
+
+      !!favFolders.length && {
+        type: 'group',
+        label: '收藏夹',
+        children: favFolders.map((f) => {
+          const isDefault = isFavFolderDefault(f.attr)
+          const isPrivate = isFavFolderPrivate(f.attr)
+          const icon = isPrivate ? <IconForPrivateFolder /> : <IconForPublicFolder />
+          const label = `${f.title} (${f.media_count})`
+          return {
+            key: `fav-folder:${f.id}`,
+            icon,
+            label,
+            async onClick() {
+              favStore.selectedFavFolderId = f.id
+              favStore.selectedFavCollectionId = undefined
+              setScopeDropdownOpen(false)
+              await delay(100)
+              onRefresh?.()
+            },
+          }
+        }),
+      },
+
+      !!favCollections.length && {
+        type: 'group',
+        label: '合集',
+        children: favCollections.map((f) => {
+          const icon = <IconForCollection />
+          const label = `${f.title} (${f.media_count})`
+          return {
+            key: `fav-collection:${f.id}`,
+            icon,
+            label,
+            async onClick() {
+              favStore.selectedFavFolderId = undefined
+              favStore.selectedFavCollectionId = f.id
+              setScopeDropdownOpen(false)
+              await delay(100)
+              onRefresh?.()
+            },
+          }
+        }),
+      },
     ])
-  }, [favFolders])
+  }, [favFolders, favCollections])
   const [scopeDropdownOpen, setScopeDropdownOpen] = useState(false)
   const dropdownButtonIcon = selectedFavFolder ? (
     isFavFolderPrivate(selectedFavFolder.attr) ? (
@@ -81,12 +111,12 @@ export function FavUsageInfo({
     ) : (
       <IconForPublicFolder />
     )
+  ) : selectedFavCollection ? (
+    <IconForCollection />
   ) : (
     <IconForAll />
   )
-  const dropdownButtonLabel = selectedFavFolder
-    ? `${selectedLabel} (${selectedFavFolder.media_count})`
-    : '全部'
+  const dropdownButtonLabel = selectedLabel
   const scopeSelectionDropdown = (
     <Dropdown
       open={scopeDropdownOpen}

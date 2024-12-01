@@ -3,19 +3,26 @@ import { C } from '$common/emotion-css'
 import { CustomTargetLink } from '$components/VideoCard/use/useOpenRelated'
 import { type ItemsSeparator } from '$define'
 import { EApiType } from '$define/index.shared'
+import { getSpaceAccInfo } from '$modules/bilibili/user/space-acc-info'
 import { OpenExternalLinkIcon, PlayerIcon } from '$modules/icon'
 import { settings } from '$modules/settings'
 import { isWebApiSuccess, request } from '$request'
 import toast from '$utility/toast'
-import { shuffle } from 'es-toolkit'
+import { groupBy, orderBy, shuffle } from 'es-toolkit'
 import pmap from 'promise.map'
 import { snapshot } from 'valtio'
 import { QueueStrategy, type IService } from '../_base'
+import { fetchCollectionDetail } from './collection/api'
 import { formatFavFolderUrl, formatFavPlaylistUrl } from './fav-url'
 import { favStore, updateFavFolderMediaCount } from './store'
 import type { FavItemExtend } from './types'
-import type { FavFolder } from './types/list-all-folders'
-import type { FavFolderDetailInfo, ResourceListJSON } from './types/list-folder-items'
+import type {
+  FavCollectionDetailInfo,
+  FavCollectionDetailMedia,
+} from './types/collections/collection-detail'
+import type { FavCollection } from './types/collections/list-all-collections'
+import type { FavFolder } from './types/folders/list-all-folders'
+import type { FavFolderDetailInfo, ResourceListJSON } from './types/folders/list-folder-items'
 import { FavUsageInfo } from './usage-info'
 import { fetchFavFolder } from './user-fav-service'
 
@@ -26,6 +33,7 @@ export function getFavServiceConfig() {
   return {
     selectedKey: snap.selectedKey,
     selectedFavFolder: snap.selectedFavFolder,
+    selectedFavCollection: snap.selectedFavCollection,
 
     // from settings
     useShuffle: settings.fav.useShuffle,
@@ -47,6 +55,12 @@ export class FavRecService implements IService {
         this.config.useShuffle,
         this.config.addSeparator,
       )
+    } else if (this.viewingSomeCollection) {
+      this.innerService = new FavCollectionService(
+        this.config.selectedFavCollection!,
+        this.config.useShuffle,
+        this.config.addSeparator,
+      )
     } else {
       throw new Error('unexpected case!')
     }
@@ -56,6 +70,9 @@ export class FavRecService implements IService {
   }
   get viewingSomeFolder() {
     return !!this.config.selectedFavFolder
+  }
+  get viewingSomeCollection() {
+    return !!this.config.selectedFavCollection
   }
 
   // for shuffle restore
@@ -337,10 +354,98 @@ export class FavFolderBasicService {
     return items.map((item) => {
       return {
         ...item,
+        from: 'fav-folder',
         folder: this.info!,
         api: EApiType.Fav,
         uniqId: `fav-${this.info?.id}-${item.bvid}`,
       }
     })
+  }
+}
+
+class FavCollectionService implements IFavInnerService {
+  constructor(
+    public entry: FavCollection,
+    public useShuffle: boolean,
+    public addSeparator: boolean,
+  ) {}
+
+  get usageInfo() {
+    return <FavUsageInfo />
+  }
+
+  info: FavCollectionDetailInfo | undefined
+  get hasMore() {
+    if (!this.loaded) return true
+    return !!this.bufferQueue.length
+  }
+
+  /**
+   * 这是个假分页... 一次返回所有
+   */
+  loaded = false
+  bufferQueue: (FavItemExtend | ItemsSeparator)[] = []
+
+  async loadMore(
+    abortSignal?: AbortSignal,
+  ): Promise<(FavItemExtend | ItemsSeparator)[] | undefined> {
+    if (!this.hasMore) return
+
+    if (!this.loaded) {
+      const data = await fetchCollectionDetail(this.entry.id, 1)
+      const medias = data?.medias || []
+      const info = data?.info
+      this.loaded = true
+      this.info = info
+      await this.loadUserDetailForFace(medias)
+
+      const items = medias.map((x) => {
+        return {
+          ...x,
+          api: EApiType.Fav as const,
+          uniqId: `fav-${this.entry.id}-${x.bvid}`,
+          collection: data.info,
+          from: 'fav-collection' as const,
+        }
+      })
+      this.bufferQueue = items
+    }
+
+    if (this.useShuffle) {
+      this.bufferQueue = shuffle(this.bufferQueue)
+    }
+
+    const sliced = this.bufferQueue.slice(0, FavRecService.PAGE_SIZE)
+    this.bufferQueue = this.bufferQueue.slice(FavRecService.PAGE_SIZE)
+    return sliced
+  }
+
+  // 合集返回的数据没有头像, 这里通过 user-detail 获取
+  private async loadUserDetailForFace(items: FavCollectionDetailMedia[]) {
+    if (!items.length) return
+    const midsArr = items.map((x) => x.upper.mid)
+    const midsGrouped = groupBy(midsArr, (x) => x)
+    const tuples: [mid: string, count: number][] = []
+    for (const [mid, mids] of Object.entries(midsGrouped)) {
+      tuples.push([mid, mids.length])
+    }
+    // 出现次数最多的 mid
+    const topMids = orderBy(tuples, [(x) => x[1]], ['desc'])
+      .slice(0, 5)
+      .map((x) => x[0])
+
+    await Promise.all(
+      topMids.map(async (mid) => {
+        const info = await getSpaceAccInfo(mid)
+        const face = info?.face
+        if (face) {
+          items
+            .filter((x) => x.upper.mid.toString() === mid)
+            .forEach((x) => {
+              x.upper.face ||= face
+            })
+        }
+      }),
+    )
   }
 }
