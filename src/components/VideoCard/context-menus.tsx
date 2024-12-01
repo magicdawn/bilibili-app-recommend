@@ -427,7 +427,7 @@ export function useContextMenus({
     ])
 
     const favMenus = defineAntMenus(
-      isFav(item)
+      isFav(item) && item.from === 'fav-folder'
         ? [
             {
               key: 'open-fav-folder',
