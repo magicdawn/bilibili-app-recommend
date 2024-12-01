@@ -1,6 +1,6 @@
 import { ButtonSettingItem } from '$components/ModalSettings/setting-item'
 import type { BooleanSettingsPath } from '$modules/settings'
-import type { ComponentProps } from 'react'
+import type { ComponentProps, CSSProperties } from 'react'
 import CuidaShuffleOutline from '~icons/cuida/shuffle-outline'
 
 export function ShuffleSettingsItemFor({
@@ -28,4 +28,12 @@ export function ShuffleSettingsItemFor({
       }
     />
   )
+}
+
+export const dropdownMenuStyle: CSSProperties = {
+  overscrollBehavior: 'contain',
+  maxHeight: '60vh',
+  overflowY: 'scroll',
+  scrollbarWidth: 'thin',
+  paddingRight: '12px',
 }

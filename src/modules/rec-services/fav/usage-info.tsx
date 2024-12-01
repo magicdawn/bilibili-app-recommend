@@ -8,7 +8,7 @@ import { delay } from 'es-toolkit'
 import type { Key } from 'react'
 import { useSnapshot } from 'valtio'
 import { usePopupContainer } from '../_base'
-import { ShuffleSettingsItemFor } from '../_shared'
+import { dropdownMenuStyle, ShuffleSettingsItemFor } from '../_shared'
 import { isFavFolderDefault, isFavFolderPrivate } from './fav-util'
 import type { FavFolderBasicService } from './index'
 import { favStore } from './store'
@@ -95,13 +95,7 @@ export function FavUsageInfo({
       getPopupContainer={getPopupContainer}
       menu={{
         items: scopeSelectionDropdownMenus,
-        style: {
-          overscrollBehavior: 'contain',
-          maxHeight: '60vh',
-          overflowY: 'scroll',
-          scrollbarWidth: 'thin',
-          border: `1px solid ${usePopoverBorderColor()}`,
-        },
+        style: { ...dropdownMenuStyle, border: `1px solid ${usePopoverBorderColor()}` },
       }}
     >
       <Button

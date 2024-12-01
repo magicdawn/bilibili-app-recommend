@@ -34,6 +34,7 @@ import type { ReactNode } from 'react'
 import type { Get } from 'type-fest'
 import { useSnapshot } from 'valtio'
 import { usePopupContainer } from '../_base'
+import { dropdownMenuStyle } from '../_shared'
 import {
   createUpdateSearchCacheNotifyFns,
   hasLocalDynamicFeedCache,
@@ -240,12 +241,7 @@ export function DynamicFeedUsageInfo() {
       getPopupContainer={getPopupContainer}
       menu={{
         items: menuItems,
-        style: {
-          overscrollBehavior: 'contain',
-          maxHeight: '60vh',
-          overflowY: 'scroll',
-          border: `1px solid ${usePopoverBorderColor()}`,
-        },
+        style: { ...dropdownMenuStyle, border: `1px solid ${usePopoverBorderColor()}` },
       }}
     >
       <Button
