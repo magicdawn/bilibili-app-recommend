@@ -39,13 +39,17 @@ export const ORDER_LIST = [
   FavItemsOrder.Shuffle,
 ]
 
+// 缺省
+// 是否 fallback 到 FavItemsOrder.PubTimeDesc 呢 ??? 感觉这个更有用
+export const FALLBACK_ORDER = FavItemsOrder.Default
+
 const tooltip = <>在 {ORDER_LIST.map((x) => FavItemsOrderConfig[x].label).join(' / ')} 之间切换</>
 
 export function FavItemsOrderSwitcher() {
   const onRefresh = useOnRefreshContext()
   const { selectedKey, savedOrderMap } = useSnapshot(favStore)
 
-  const current = savedOrderMap.get(selectedKey) || FavItemsOrder.Default
+  const current = savedOrderMap.get(selectedKey) || FALLBACK_ORDER
   const { icon, label } = FavItemsOrderConfig[current]
 
   const onToggle = useMemoizedFn(async () => {

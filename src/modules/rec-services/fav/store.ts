@@ -4,7 +4,7 @@ import { proxy } from 'valtio'
 import { fetchAllFavCollections } from './collection/api'
 import type { FavCollection } from './types/collections/list-all-collections'
 import type { FavFolder } from './types/folders/list-all-folders'
-import { FavItemsOrder } from './usage-info/fav-items-order'
+import type { FavItemsOrder } from './usage-info/fav-items-order'
 import { fetchFavFolder } from './user-fav-service'
 
 export const favStore = proxy({
@@ -45,9 +45,11 @@ export const favStore = proxy({
   },
 
   // 保存的顺序
-  savedOrderMap: await proxyMapWithGmStorage<string, FavItemsOrder>('fav-saved-order', (vals) => {
-    return vals.filter((x) => x[1] !== FavItemsOrder.Default)
-  }),
+  savedOrderMap: await proxyMapWithGmStorage<string, FavItemsOrder>('fav-saved-order'),
+  // FALLBACK_ORDER 后面可能会改, 先记住所有更改的
+  // (vals) => {
+  //   return vals.filter((x) => x[1] !== FALLBACK_ORDER)
+  // }
 })
 
 export function updateFavFolderMediaCount(
