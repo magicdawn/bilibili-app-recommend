@@ -1,5 +1,6 @@
 import { __PROD__ } from '$common'
 import {
+  APP_CLS_USE_ANT_LINK_COLOR,
   buttonOpenCss,
   flexVerticalCenterStyle,
   iconOnlyRoundButtonCss,
@@ -391,7 +392,7 @@ export function DynamicFeedUsageInfo() {
               <a
                 href={formatFollowGroupUrl(selectedFollowGroup?.tagid || '')}
                 target='_blank'
-                className='inline-flex items-center font-size-16 mx-4'
+                className={`inline-flex items-center font-size-16 mx-4 ${APP_CLS_USE_ANT_LINK_COLOR}`}
               >
                 <OpenExternalLinkIcon className='size-18 mr-2' />
                 {selectedFollowGroup?.name}

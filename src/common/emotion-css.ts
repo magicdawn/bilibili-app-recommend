@@ -1,3 +1,4 @@
+import { APP_NAMESPACE } from '$common'
 import { borderColorValue } from '$components/css-vars'
 import { settings } from '$modules/settings'
 import { theme } from 'antd'
@@ -94,4 +95,33 @@ export function usePopoverBorderColor() {
   const { popoverBorderColorUseColorPrimary } = useSnapshot(settings.style.general)
   const buttonOpenColor = useButtonOpenColor()
   return popoverBorderColorUseColorPrimary ? buttonOpenColor : borderColorValue
+}
+
+export function useAntLinkCss() {
+  const { colorLink, colorLinkActive, colorLinkHover } = theme.useToken().token
+  return useMemo(
+    () => css`
+      color: ${colorLink};
+      &:visited {
+        color: ${colorLink};
+      }
+      &:hover {
+        color: ${colorLinkHover};
+      }
+      &:active {
+        color: ${colorLinkActive};
+      }
+    `,
+    [colorLink, colorLinkActive, colorLinkHover],
+  )
+}
+
+export const APP_CLS_USE_ANT_LINK_COLOR = `${APP_NAMESPACE}--use-ant-link-color`
+export function useAntLinkColorGlobalCss() {
+  const s = useAntLinkCss()
+  return css`
+    :root .${APP_CLS_USE_ANT_LINK_COLOR} {
+      ${s}
+    }
+  `
 }

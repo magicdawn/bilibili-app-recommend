@@ -1,8 +1,10 @@
 import { APP_CLS_ROOT } from '$common'
 import { appBgId, appColorPrimaryId } from '$common/css-vars-export.module.scss'
+import { useAntLinkColorGlobalCss } from '$common/emotion-css'
 import { $headerWidth, $usingEvolevdHeader, useBackToTopRight } from '$header'
 import { useColors, useIsDarkMode } from '$modules/dark-mode'
 import { useSettingsSnapshot } from '$modules/settings'
+import type { CssProp } from '$utility/type'
 import { Global, css as _css, css } from '@emotion/react'
 import { useColorPrimaryHex } from './ModalSettings/theme.shared'
 
@@ -20,6 +22,8 @@ export function GlobalStyle() {
   // const padding = width === 90 ? 0 : '0 10px'
   const padding = '0 10px'
 
+  const more: CssProp = [useAntLinkColorGlobalCss()]
+
   return (
     <>
       <Global
@@ -30,6 +34,7 @@ export function GlobalStyle() {
               ${appBgId}: ${dark ? '#222' : style.pureRecommend.useWhiteBackground ? `var(--bg1)` : `var(--bg2)`};
             }
           `,
+          more,
         ]}
       />
 

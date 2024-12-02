@@ -92,10 +92,12 @@ body .ant-btn.ant-btn-variant-solid {
   }
 }
 
-// B站默认样式 color: inherited, 导致显示黑色
-.#{$app-cls-root} a:where(:not(.ant-btn)) {
-  color: var(--ant-color-link);
-  &:visited {
-    color: var(--ant-color-link);
-  }
-}
+// @history
+//  1. B站默认样式 color: inherited, 导致显示黑色
+//  2. 太广, fallback 到单独覆盖 https://github.com/magicdawn/Bilibili-Gate/issues/141
+// .#{$app-cls-root} a:where(:not(.ant-btn)) {
+//   color: var(--ant-color-link);
+//   &:visited {
+//     color: var(--ant-color-link);
+//   }
+// }
