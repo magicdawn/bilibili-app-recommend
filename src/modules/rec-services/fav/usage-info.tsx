@@ -10,7 +10,7 @@ import { useSnapshot } from 'valtio'
 import { usePopupContainer } from '../_base'
 import { dropdownMenuStyle, ShuffleSettingsItemFor } from '../_shared'
 import { isFavFolderDefault, isFavFolderPrivate } from './fav-util'
-import type { FavFolderBasicService } from './index'
+import type { FavFolderBasicService } from './service/_base'
 import { favStore } from './store'
 
 export const IconForAll = IconLucideList
@@ -18,13 +18,7 @@ export const IconForPrivateFolder = IconLucideFolderLock
 export const IconForPublicFolder = IconLucideFolder
 export const IconForCollection = IconIonLayersOutline
 
-export function FavUsageInfo({
-  viewingAll,
-  allFavFolderServices = [],
-}: {
-  viewingAll?: boolean
-  allFavFolderServices?: FavFolderBasicService[]
-}) {
+export function FavUsageInfo({ extraContent }: { extraContent?: ReactNode }) {
   const { fav } = useSettingsSnapshot()
   const { favFolders, selectedFavFolder, favCollections, selectedFavCollection, selectedLabel } =
     useSnapshot(favStore)
@@ -182,28 +176,20 @@ export function FavUsageInfo({
       {/* shuffle? */}
       <ShuffleSettingsItemFor configPath={'fav.useShuffle'} />
 
-      {/* config exclude for viewingAll */}
-      {viewingAll && (
-        <ViewingAllExcludeFolderConfig
-          allFavFolderServices={allFavFolderServices}
-          getPopupContainer={getPopupContainer}
-          onRefresh={onRefresh}
-        />
-      )}
+      {/* extra */}
+      {extraContent}
     </Space>
   )
 }
 
-function ViewingAllExcludeFolderConfig({
+export function ViewingAllExcludeFolderConfig({
   allFavFolderServices,
-  onRefresh,
-  getPopupContainer,
 }: {
   allFavFolderServices: FavFolderBasicService[]
-  onRefresh?: () => void
-  getPopupContainer: () => HTMLElement
 }) {
   const { fav } = useSettingsSnapshot()
+  const onRefresh = useOnRefreshContext()
+  const { ref, getPopupContainer } = usePopupContainer()
 
   const [excludeFavFolderIdsChanged, setExcludeFavFolderIdsChanged] = useState(false)
 
@@ -265,6 +251,7 @@ function ViewingAllExcludeFolderConfig({
       }
     >
       <Tag
+        ref={ref}
         color='success'
         css={css`
           cursor: pointer;
