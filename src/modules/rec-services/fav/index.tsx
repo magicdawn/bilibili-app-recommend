@@ -2,6 +2,7 @@ import type { FavItemExtend, ItemsSeparator } from '$define'
 import { settings } from '$modules/settings'
 import { snapshot } from 'valtio'
 import { type IService, QueueStrategy } from '../_base'
+import { FAV_PAGE_SIZE } from './service/_base'
 import { FavAllService } from './service/fav-all'
 import { FavCollectionService } from './service/fav-collection'
 import { FavFolderService } from './service/fav-folder'
@@ -32,7 +33,7 @@ export interface IFavInnerService {
 }
 
 export class FavRecService implements IService {
-  static PAGE_SIZE = 20
+  static PAGE_SIZE = FAV_PAGE_SIZE
 
   innerService: IFavInnerService
   constructor(public config: FavServiceConfig) {

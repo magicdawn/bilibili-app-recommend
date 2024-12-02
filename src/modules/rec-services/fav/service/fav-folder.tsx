@@ -1,10 +1,11 @@
+import type { ItemsSeparator } from '$define'
 import { EApiType } from '$define/index.shared'
 import { shuffle } from 'es-toolkit'
-import { type IFavInnerService, FavRecService } from '..'
+import { type IFavInnerService } from '../index'
 import { updateFavFolderMediaCount } from '../store'
 import type { FavItemExtend } from '../types'
 import type { FavFolder } from '../types/folders/list-all-folders'
-import { FavFolderBasicService, FavSeparatorContent } from './_base'
+import { FAV_PAGE_SIZE, FavFolderBasicService, FavFolderSeparator } from './_base'
 
 export class FavFolderService implements IFavInnerService {
   basicService: FavFolderBasicService
@@ -27,11 +28,11 @@ export class FavFolderService implements IFavInnerService {
   }
 
   private separatorAdded = false
-  private get separator() {
+  private get separator(): ItemsSeparator {
     return {
-      api: EApiType.Separator as const,
+      api: EApiType.Separator,
       uniqId: `fav-folder-${this.entry.id}`,
-      content: <FavSeparatorContent service={this.basicService} />,
+      content: <FavFolderSeparator service={this.basicService} />,
     }
   }
 
@@ -47,8 +48,8 @@ export class FavFolderService implements IFavInnerService {
     if (this.useShuffle) {
       if (!this.loadAllCalled) await this.loadAllItems(abortSignal)
       this.shuffleBufferQueue = shuffle(this.shuffleBufferQueue)
-      const sliced = this.shuffleBufferQueue.slice(0, FavRecService.PAGE_SIZE)
-      this.shuffleBufferQueue = this.shuffleBufferQueue.slice(FavRecService.PAGE_SIZE)
+      const sliced = this.shuffleBufferQueue.slice(0, FAV_PAGE_SIZE)
+      this.shuffleBufferQueue = this.shuffleBufferQueue.slice(FAV_PAGE_SIZE)
       return sliced
     }
 

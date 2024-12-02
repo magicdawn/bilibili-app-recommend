@@ -1,11 +1,11 @@
 import { EApiType } from '$define/index.shared'
 import { shuffle } from 'es-toolkit'
 import pmap from 'promise.map'
-import { type FavServiceConfig, type IFavInnerService, FavRecService } from '..'
+import { type FavServiceConfig, type IFavInnerService } from '../index'
 import type { FavItemExtend } from '../types'
 import { ViewingAllExcludeFolderConfig } from '../usage-info'
 import { fetchFavFolder } from '../user-fav-service'
-import { FavFolderBasicService, FavSeparatorContent } from './_base'
+import { FAV_PAGE_SIZE, FavFolderBasicService, FavFolderSeparator } from './_base'
 
 export class FavAllService implements IFavInnerService {
   constructor(public config: FavServiceConfig) {}
@@ -57,7 +57,7 @@ export class FavAllService implements IFavInnerService {
         !!items?.length && {
           api: EApiType.Separator as const,
           uniqId: `fav-folder-${service.entry.id}`,
-          content: <FavSeparatorContent service={service} />,
+          content: <FavFolderSeparator service={service} />,
         }
       return [header, ...(items || [])].filter((x) => x !== false)
     }
@@ -65,11 +65,11 @@ export class FavAllService implements IFavInnerService {
     /**
      * in shuffle order
      */
-    if (this.shuffleBufferQueue.length < FavRecService.PAGE_SIZE) {
+    if (this.shuffleBufferQueue.length < FAV_PAGE_SIZE) {
       // 1.fill queue
       const count = 6
       const batch = 2
-      while (this.folderHasMore && this.shuffleBufferQueue.length < FavRecService.PAGE_SIZE) {
+      while (this.folderHasMore && this.shuffleBufferQueue.length < FAV_PAGE_SIZE) {
         const restServices = this.folderServices.filter((s) => s.hasMore)
         const pickedServices = shuffle(restServices).slice(0, count)
         const fetched = (
@@ -80,8 +80,8 @@ export class FavAllService implements IFavInnerService {
     }
 
     // next: take from queue
-    const sliced = this.shuffleBufferQueue.slice(0, FavRecService.PAGE_SIZE)
-    this.shuffleBufferQueue = this.shuffleBufferQueue.slice(FavRecService.PAGE_SIZE)
+    const sliced = this.shuffleBufferQueue.slice(0, FAV_PAGE_SIZE)
+    this.shuffleBufferQueue = this.shuffleBufferQueue.slice(FAV_PAGE_SIZE)
     return sliced
   }
 

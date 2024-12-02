@@ -32,7 +32,7 @@ import {
   dfStore,
 } from '$modules/rec-services/dynamic-feed/store'
 import { dynamicFeedFilterSelectUp } from '$modules/rec-services/dynamic-feed/usage-info'
-import { formatFavFolderUrl } from '$modules/rec-services/fav/fav-url'
+import { formatFavCollectionUrl, formatFavFolderUrl } from '$modules/rec-services/fav/fav-url'
 import { UserFavService, defaultFavFolderName } from '$modules/rec-services/fav/user-fav-service'
 import { settings, updateSettingsInnerArray } from '$modules/settings'
 import { antMessage, defineAntMenus, type AntMenuItem } from '$utility/antd'
@@ -426,39 +426,59 @@ export function useContextMenus({
       },
     ])
 
-    const favMenus = defineAntMenus(
-      isFav(item) && item.from === 'fav-folder'
-        ? [
-            {
-              key: 'open-fav-folder',
-              label: '浏览收藏夹',
-              icon: <OpenExternalLinkIcon css={C.size(15)} />,
-              onClick() {
-                if (!isFav(item)) return
-                const { id } = item.folder
-                const url = formatFavFolderUrl(id)
-                window.open(url, getLinkTarget())
-              },
-            },
-            {
-              key: 'remove-fav',
-              label: '移除收藏',
-              icon: <IconMaterialSymbolsDeleteOutlineRounded {...size(15)} />,
-              async onClick() {
-                if (!isFav(item)) return
-                const success = await UserFavService.removeFav(
-                  item.folder.id,
-                  `${item.id}:${item.type}`,
-                )
-                if (success) {
-                  await delay(1000)
-                  onRemoveCurrent?.(item, cardData)
-                }
-              },
-            },
-          ]
-        : [],
-    )
+    const favMenus = !isFav(item)
+      ? []
+      : defineAntMenus([
+          // 收藏夹
+          ...(item.from === 'fav-folder'
+            ? [
+                {
+                  key: 'open-fav-folder',
+                  label: '浏览收藏夹',
+                  icon: <OpenExternalLinkIcon css={C.size(15)} />,
+                  onClick() {
+                    if (!isFav(item)) return
+                    const { id } = item.folder
+                    const url = formatFavFolderUrl(id)
+                    window.open(url, getLinkTarget())
+                  },
+                },
+                {
+                  key: 'remove-fav',
+                  label: '移除收藏',
+                  icon: <IconMaterialSymbolsDeleteOutlineRounded {...size(15)} />,
+                  async onClick() {
+                    if (!isFav(item)) return
+                    const success = await UserFavService.removeFav(
+                      item.folder.id,
+                      `${item.id}:${item.type}`,
+                    )
+                    if (success) {
+                      await delay(1000)
+                      onRemoveCurrent?.(item, cardData)
+                    }
+                  },
+                },
+              ]
+            : []),
+
+          // 合集
+          ...(item.from === 'fav-collection'
+            ? [
+                {
+                  key: 'open-fav-collection',
+                  label: '浏览合集',
+                  icon: <OpenExternalLinkIcon css={C.size(15)} />,
+                  onClick() {
+                    if (!isFav(item)) return
+                    const { id } = item.collection
+                    const url = formatFavCollectionUrl(id)
+                    window.open(url, getLinkTarget())
+                  },
+                },
+              ]
+            : []),
+        ])
 
     return defineAntMenus([
       ...consistentOpenMenus,

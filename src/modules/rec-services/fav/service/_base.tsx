@@ -6,9 +6,18 @@ import { EApiType } from '$define/index.shared'
 import { OpenExternalLinkIcon, PlayerIcon } from '$modules/icon'
 import { isWebApiSuccess, request } from '$request'
 import toast from '$utility/toast'
-import { formatFavFolderUrl, formatFavPlaylistUrl } from '../fav-url'
+import { useSnapshot } from 'valtio'
+import {
+  formatBvidUrl,
+  formatFavCollectionUrl,
+  formatFavFolderUrl,
+  formatFavPlaylistUrl,
+} from '../fav-url'
 import type { FavFolder } from '../types/folders/list-all-folders'
 import type { FavFolderDetailInfo, ResourceListJSON } from '../types/folders/list-folder-items'
+import type { FavCollectionService } from './fav-collection'
+
+export const FAV_PAGE_SIZE = 20
 
 export class FavFolderBasicService {
   constructor(public entry: FavFolder) {
@@ -82,7 +91,7 @@ const S = {
   `,
 }
 
-export function FavSeparatorContent({ service }: { service: FavFolderBasicService }) {
+export function FavFolderSeparator({ service }: { service: FavFolderBasicService }) {
   return (
     <>
       <CustomTargetLink href={formatFavFolderUrl(service.entry.id)} css={S.item}>
@@ -93,6 +102,24 @@ export function FavSeparatorContent({ service }: { service: FavFolderBasicServic
         <PlayerIcon css={C.size(16)} />
         播放全部
       </CustomTargetLink>
+    </>
+  )
+}
+
+export function FavCollectionSeparator({ service }: { service: FavCollectionService }) {
+  const { firstBvid } = useSnapshot(service.state)
+  return (
+    <>
+      <CustomTargetLink href={formatFavCollectionUrl(service.entry.id)} css={S.item}>
+        <OpenExternalLinkIcon css={C.size(16)} />
+        {service.entry.title}
+      </CustomTargetLink>
+      {firstBvid && (
+        <CustomTargetLink href={formatBvidUrl(firstBvid)} css={S.item}>
+          <PlayerIcon css={C.size(16)} />
+          播放全部
+        </CustomTargetLink>
+      )}
     </>
   )
 }
