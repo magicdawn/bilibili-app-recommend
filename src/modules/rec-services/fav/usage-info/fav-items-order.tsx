@@ -55,11 +55,17 @@ export function FavItemsOrderSwitcher() {
   const onRefresh = useOnRefreshContext()
   const { selectedKey, savedOrderMap } = useSnapshot(favStore)
 
-  const current = savedOrderMap.get(selectedKey) || FALLBACK_ORDER
+  const current = useMemo(() => {
+    const allowed = Object.values(FavItemsOrder)
+    const current = savedOrderMap.get(selectedKey) || FALLBACK_ORDER
+    if (allowed.includes(current)) return current
+    return FALLBACK_ORDER
+  }, [savedOrderMap, selectedKey])
   const { icon, label } = FavItemsOrderConfig[current]
 
   const onToggle = useMemoizedFn(async (e: MouseEvent) => {
     const currentIndex = ORDER_LIST.findIndex((x) => x === current)
+    if (currentIndex === -1) return
     const nextIndex = (currentIndex + (e.shiftKey ? -1 : 1) + ORDER_LIST.length) % ORDER_LIST.length
     const next = ORDER_LIST[nextIndex]
     favStore.savedOrderMap.set(selectedKey, next)
