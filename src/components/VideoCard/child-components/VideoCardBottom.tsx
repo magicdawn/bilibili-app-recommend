@@ -7,7 +7,7 @@ import { C, flexCenterStyle } from '$common/emotion-css'
 import { colorPrimaryValue } from '$components/css-vars'
 import { isApp, isLive, isRanking, type RecItemType } from '$define'
 import { EApiType, EAppApiDevice } from '$define/index.shared'
-import { LiveIcon } from '$modules/icon'
+import { IconForLive } from '$modules/icon'
 import { formatSpaceUrl } from '$modules/rec-services/dynamic-feed/shared'
 import { ELiveStatus } from '$modules/rec-services/live/live-enum'
 import { settings } from '$modules/settings'
@@ -191,7 +191,7 @@ export function VideoCardBottom({
               <Avatar>{authorName?.[0] || appBadgeDesc?.[0] || ''}</Avatar>
             )}
             {streaming && (
-              <LiveIcon
+              <IconForLive
                 {...size(12)}
                 active
                 css={css`

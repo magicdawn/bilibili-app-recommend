@@ -1,5 +1,5 @@
 import { C } from '$common/emotion-css'
-import { LiveIcon, WatchLaterIcon } from '$modules/icon'
+import { IconForLive, IconForWatchlater } from '$modules/icon'
 import { isHotTabUsingShuffle } from '$modules/rec-services/hot'
 import { settings } from '$modules/settings'
 import toast from '$utility/toast'
@@ -48,7 +48,7 @@ export const TabConfig: Record<ETab, TabConfigItem> = {
   },
   [ETab.Watchlater]: {
     icon: (
-      <WatchLaterIcon
+      <IconForWatchlater
         {...size(17)}
         css={css`
           /* circle 使用的是 fill, 在 tab 中显示太细了 */
@@ -80,7 +80,7 @@ export const TabConfig: Record<ETab, TabConfigItem> = {
     },
   },
   [ETab.Live]: {
-    icon: <LiveIcon {...size(16)} />,
+    icon: <IconForLive {...size(16)} />,
     // icon: <MaterialSymbolsBarChart {...size(16)} />,
     label: '直播',
     desc: '直播~',

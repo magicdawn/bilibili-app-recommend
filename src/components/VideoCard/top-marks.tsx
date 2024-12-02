@@ -3,7 +3,7 @@ import { colorPrimaryValue } from '$components/css-vars'
 import type { RankingItemExtend, RecItemType } from '$define'
 import { EApiType } from '$define/index.shared'
 import { openNewTab } from '$modules/gm'
-import { LiveIcon } from '$modules/icon'
+import { IconForLive } from '$modules/icon'
 import {
   RANKING_CATEGORIES_MAP,
   isNormalRankingItem,
@@ -170,7 +170,7 @@ export function LiveBadge({ className }: { className?: string }) {
         `,
       ]}
     >
-      <LiveIcon active {...size(14)} css={[C.mr(2)]} />
+      <IconForLive active {...size(14)} css={[C.mr(2)]} />
       <span
         css={css`
           font-weight: normal;

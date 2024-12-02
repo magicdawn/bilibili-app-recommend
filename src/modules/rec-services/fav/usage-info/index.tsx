@@ -7,18 +7,24 @@ import type { TransferDirection } from 'antd/es/transfer'
 import { delay, groupBy } from 'es-toolkit'
 import type { Key } from 'react'
 import { useSnapshot } from 'valtio'
-import { usePopupContainer } from '../_base'
-import { dropdownMenuStyle, ShuffleSettingsItemFor } from '../_shared'
-import { isFavFolderDefault, isFavFolderPrivate } from './fav-util'
-import type { FavFolderBasicService } from './service/_base'
-import { favStore } from './store'
+import { usePopupContainer } from '../../_base'
+import { dropdownMenuStyle, ShuffleSettingsItemFor } from '../../_shared'
+import { isFavFolderDefault, isFavFolderPrivate } from '../fav-util'
+import type { FavFolderBasicService } from '../service/_base'
+import { favStore } from '../store'
 
 export const IconForAll = IconLucideList
 export const IconForPrivateFolder = IconLucideFolderLock
 export const IconForPublicFolder = IconLucideFolder
 export const IconForCollection = IconIonLayersOutline
 
-export function FavUsageInfo({ extraContent }: { extraContent?: ReactNode }) {
+export function FavUsageInfo({
+  showShuffle = true,
+  extraContent,
+}: {
+  showShuffle?: boolean
+  extraContent?: ReactNode
+}) {
   const { fav } = useSettingsSnapshot()
   const { favFolders, selectedFavFolder, favCollections, selectedFavCollection, selectedLabel } =
     useSnapshot(favStore)
@@ -174,7 +180,7 @@ export function FavUsageInfo({ extraContent }: { extraContent?: ReactNode }) {
       {scopeSelectionDropdown}
 
       {/* shuffle? */}
-      <ShuffleSettingsItemFor configPath={'fav.useShuffle'} />
+      {showShuffle && <ShuffleSettingsItemFor configPath={'fav.useShuffle'} />}
 
       {/* extra */}
       {extraContent}

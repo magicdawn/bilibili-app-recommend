@@ -10,7 +10,7 @@ import { CollapsePanel } from '$components/_base/CollapsePanel'
 import { HelpInfo } from '$components/_base/HelpInfo'
 import { AntdTooltip } from '$components/_base/antd-custom'
 import { borderColorValue } from '$components/css-vars'
-import { OpenExternalLinkIcon } from '$modules/icon'
+import { IconForOpenExternalLink } from '$modules/icon'
 import {
   allowedLeafSettingsPaths,
   internalBooleanPaths,
@@ -116,7 +116,7 @@ export function TabPaneAdvance() {
             href='https://member.bilibili.com/platform/upload/text/draft'
             target='_blank'
           >
-            <OpenExternalLinkIcon css={[C.size(16), C.mr(4)]} />
+            <IconForOpenExternalLink css={[C.size(16), C.mr(4)]} />
             去草稿箱浏览
           </a>
         </div>

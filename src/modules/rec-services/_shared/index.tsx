@@ -1,7 +1,7 @@
 import { ButtonSettingItem } from '$components/ModalSettings/setting-item'
+import { IconForDefaultOrder, IconForShuffle } from '$modules/icon'
 import type { BooleanSettingsPath } from '$modules/settings'
 import type { ComponentProps, CSSProperties } from 'react'
-import CuidaShuffleOutline from '~icons/cuida/shuffle-outline'
 
 export function ShuffleSettingsItemFor({
   configPath,
@@ -16,13 +16,13 @@ export function ShuffleSettingsItemFor({
       configPath={configPath}
       checkedChildren={
         <>
-          <CuidaShuffleOutline {...size(18)} className='mr-2px' />
+          <IconForShuffle {...size(18)} className='mr-2px' />
           随机顺序
         </>
       }
       unCheckedChildren={
         <>
-          <IconMdiShuffleDisabled {...size(18)} className='mr-2px position-relative top-[-1px]' />
+          <IconForDefaultOrder {...size(18)} className='mr-2px position-relative top-[-1px]' />
           默认顺序
         </>
       }

@@ -11,13 +11,15 @@ import type {
   FavCollectionDetailMedia,
 } from '../types/collections/collection-detail'
 import type { FavCollection } from '../types/collections/list-all-collections'
+import { FavUsageInfo } from '../usage-info'
+import { FavItemsOrder, FavItemsOrderSwitcher } from '../usage-info/fav-items-order'
 import { FAV_PAGE_SIZE, FavCollectionSeparator } from './_base'
 
 export class FavCollectionService implements IFavInnerService {
   constructor(
     public entry: FavCollection,
-    public useShuffle: boolean,
     public addSeparator: boolean,
+    public itemsOrder: FavItemsOrder,
   ) {}
 
   get hasMore() {
@@ -31,7 +33,7 @@ export class FavCollectionService implements IFavInnerService {
    */
   loaded = false
   info: FavCollectionDetailInfo | undefined
-  bufferQueue: (FavItemExtend | ItemsSeparator)[] = []
+  bufferQueue: FavItemExtend[] = []
 
   private separatorAdded = false
   private get separator(): ItemsSeparator {
@@ -65,7 +67,7 @@ export class FavCollectionService implements IFavInnerService {
       this.info = info
       await this.loadUserAvatarFromSpaceAccInfo(medias, abortSignal)
 
-      const items = medias.map((x) => {
+      let items: FavItemExtend[] = medias.map((x) => {
         return {
           ...x,
           api: EApiType.Fav as const,
@@ -74,18 +76,36 @@ export class FavCollectionService implements IFavInnerService {
           from: 'fav-collection' as const,
         }
       })
-      this.bufferQueue = items
+      items = this.setupItemsOrder(items)
 
       this.state.firstBvid = items[0]?.bvid
+      this.bufferQueue = items
     }
 
-    if (this.useShuffle) {
+    // just for fun, shuffle every time
+    if (this.itemsOrder === FavItemsOrder.Shuffle) {
       this.bufferQueue = shuffle(this.bufferQueue)
     }
 
     const sliced = this.bufferQueue.slice(0, FAV_PAGE_SIZE)
     this.bufferQueue = this.bufferQueue.slice(FAV_PAGE_SIZE)
     return sliced
+  }
+
+  setupItemsOrder(items: FavItemExtend[]) {
+    if (this.itemsOrder === FavItemsOrder.Shuffle) {
+      return shuffle(items)
+    }
+
+    if (
+      this.itemsOrder === FavItemsOrder.PubTimeDesc ||
+      this.itemsOrder === FavItemsOrder.PubTimeAsc
+    ) {
+      const order = this.itemsOrder === FavItemsOrder.PubTimeDesc ? 'desc' : 'asc'
+      return orderBy(items, [(x) => x.pubtime], [order])
+    }
+
+    return items
   }
 
   // 合集返回的数据没有头像, 这里通过 user-detail 获取
@@ -119,5 +139,9 @@ export class FavCollectionService implements IFavInnerService {
         }
       }),
     )
+  }
+
+  get usageInfo() {
+    return <FavUsageInfo showShuffle={false} extraContent={<FavItemsOrderSwitcher />} />
   }
 }

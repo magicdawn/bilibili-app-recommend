@@ -18,7 +18,7 @@ import { colorPrimaryValue } from '$components/css-vars'
 import { type RecItemType, type RecItemTypeOrSeparator } from '$define'
 import { EApiType } from '$define/index.shared'
 import { $headerHeight } from '$header'
-import { OpenExternalLinkIcon } from '$modules/icon'
+import { IconForOpenExternalLink } from '$modules/icon'
 import { IconPark } from '$modules/icon/icon-park'
 import { concatThenUniq, refreshForGrid } from '$modules/rec-services'
 import { hotStore } from '$modules/rec-services/hot'
@@ -614,7 +614,7 @@ function ErrorDetail({ err, tab }: { err: any; tab: ETab }) {
       {tab === ETab.Hot && hotStore.subtab === EHotSubTab.PopularWeekly && (
         <p className='mt-8 flex items-center justify-center'>
           可能需手动输入验证码
-          <OpenExternalLinkIcon className='ml-12' />
+          <IconForOpenExternalLink className='ml-12' />
           <a href='https://www.bilibili.com/v/popular/weekly' target={target} className='ml-2'>
             每周必看
           </a>

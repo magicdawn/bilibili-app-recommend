@@ -1,5 +1,5 @@
 import { APP_SHORT_PREFIX } from '$common'
-import { OpenExternalLinkIcon, PlayerIcon } from '$modules/icon'
+import { IconForOpenExternalLink, IconForPlayer } from '$modules/icon'
 import { isMac } from '$ua'
 import mitt, { type Emitter } from 'mitt'
 import { size } from 'polished'
@@ -54,7 +54,7 @@ export type VideoLinkOpenModeConfigItem = {
 
 export const VideoLinkOpenModeConfig: Record<VideoLinkOpenMode, VideoLinkOpenModeConfigItem> = {
   [VideoLinkOpenMode.Normal]: {
-    icon: <OpenExternalLinkIcon {...size(16)} />,
+    icon: <IconForOpenExternalLink {...size(16)} />,
     label: '打开',
     desc: '默认在新标签页中打开',
   },
@@ -91,7 +91,7 @@ export const VideoLinkOpenModeConfig: Record<VideoLinkOpenMode, VideoLinkOpenMod
     label: '后台打开',
   },
   [VideoLinkOpenMode.Iina]: {
-    icon: <PlayerIcon {...size(15)} />,
+    icon: <IconForPlayer {...size(15)} />,
     label: '在 IINA 中打开',
     enabled: isMac,
     desc: (

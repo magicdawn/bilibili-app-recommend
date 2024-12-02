@@ -13,7 +13,7 @@ import { CHARGE_ONLY_TEXT } from '$components/VideoCard/top-marks'
 import { HelpInfo } from '$components/_base/HelpInfo'
 import { AntdTooltip } from '$components/_base/antd-custom'
 import { colorPrimaryValue } from '$components/css-vars'
-import { OpenExternalLinkIcon } from '$modules/icon'
+import { IconForOpenExternalLink } from '$modules/icon'
 import { IconPark } from '$modules/icon/icon-park'
 import {
   settings,
@@ -394,7 +394,7 @@ export function DynamicFeedUsageInfo() {
                 target='_blank'
                 className={`inline-flex items-center font-size-16 mx-4 ${APP_CLS_USE_ANT_LINK_COLOR}`}
               >
-                <OpenExternalLinkIcon className='size-18 mr-2' />
+                <IconForOpenExternalLink className='size-18 mr-2' />
                 {selectedFollowGroup?.name}
               </a>
               )

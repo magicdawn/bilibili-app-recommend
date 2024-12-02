@@ -1,6 +1,6 @@
 import { type RecItemType } from '$define'
 import { EApiType } from '$define/index.shared'
-import { WatchLaterIcon } from '$modules/icon'
+import { IconForWatchlater } from '$modules/icon'
 import { IconAnimatedChecked } from '$modules/icon/animated-checked'
 import { watchlaterState } from '$modules/rec-services/watchlater'
 import { antMessage } from '$utility/antd'
@@ -120,7 +120,7 @@ export function useWatchlaterRelated({
     return watchlaterAdded ? (
       <IconAnimatedChecked size={addedSize} useAnimation={watchlaterAddedPrevious === false} />
     ) : (
-      <WatchLaterIcon {...size(addSize)} />
+      <IconForWatchlater {...size(addSize)} />
     )
   })()
 

@@ -1,6 +1,6 @@
 import { isEqual, pick, throttle } from 'es-toolkit'
 import { proxy, snapshot, subscribe, useSnapshot } from 'valtio'
-import { proxySet } from 'valtio/utils'
+import { proxyMap, proxySet } from 'valtio/utils'
 
 export function valtioFactory<T>(computeValue: () => T) {
   const state = proxy({ value: computeValue() })
@@ -87,6 +87,25 @@ export async function proxySetWithGmStorage<T>(storageKey: string) {
   setTimeout(() => {
     subscribe(p, () => {
       const val = Array.from(snapshot(p))
+      GM.setValue(storageKey, val)
+    })
+  })
+
+  return p
+}
+
+export async function proxyMapWithGmStorage<K, V>(
+  storageKey: string,
+  beforeSave?: (vals: [K, V][]) => [K, V][],
+) {
+  const savedValue: [key: K, value: V][] = (await GM.getValue(storageKey)) || []
+  const p = proxyMap<K, V>(savedValue)
+
+  // start subscribe in nextTick, so value can be changed synchronously without persist
+  setTimeout(() => {
+    subscribe(p, () => {
+      let val = Array.from(snapshot(p))
+      if (beforeSave) val = beforeSave(val)
       GM.setValue(storageKey, val)
     })
   })

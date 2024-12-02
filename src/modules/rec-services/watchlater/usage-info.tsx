@@ -5,6 +5,7 @@ import {
   SwitchSettingItem,
 } from '$components/ModalSettings/setting-item'
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
+import { IconForAsc, IconForDesc } from '$modules/icon'
 import { useSettingsSnapshot } from '$modules/settings'
 import toast from '$utility/toast'
 import { Space, Tag } from 'antd'
@@ -95,13 +96,13 @@ export function WatchLaterUsageInfo({ total }: { total: number }) {
           }
           checkedChildren={
             <>
-              <IconTablerSortAscending2 className='mr-1px' {...size(18)} />
+              <IconForAsc className='mr-1px' {...size(18)} />
               最早添加
             </>
           }
           unCheckedChildren={
             <>
-              <IconTablerSortDescending2 className='mr-1px' {...size(18)} />
+              <IconForDesc className='mr-1px' {...size(18)} />
               最近添加
             </>
           }

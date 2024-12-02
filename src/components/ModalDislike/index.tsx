@@ -2,7 +2,7 @@ import { APP_CLS_ROOT, OPERATION_FAIL_MSG } from '$common'
 import { BaseModal, BaseModalStyle, ModalClose } from '$components/_base/BaseModal'
 import { borderColorValue, colorPrimaryValue } from '$components/css-vars'
 import type { AppRecItem, AppRecItemExtend } from '$define'
-import { DislikeIcon } from '$modules/icon'
+import { IconForDislike } from '$modules/icon'
 import { antMessage } from '$utility/antd'
 import { toastRequestFail } from '$utility/toast'
 import { Info } from '@icon-park/react'
@@ -143,7 +143,7 @@ function ModalDislike({ show, onHide, item }: IProps) {
     >
       <div css={BaseModalStyle.modalHeader}>
         <div css={BaseModalStyle.modalTitle}>
-          <DislikeIcon className='size-25' />
+          <IconForDislike className='size-25' />
           <span className='m-inline-5'>我不想看</span>
           <span
             css={css`

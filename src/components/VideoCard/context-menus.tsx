@@ -21,7 +21,7 @@ import { UserBlacklistService } from '$modules/bilibili/me/relations/blacklist'
 import { UserfollowService } from '$modules/bilibili/me/relations/follow'
 import { setNicknameCache } from '$modules/bilibili/user/nickname'
 import { openNewTab } from '$modules/gm'
-import { DislikeIcon, OpenExternalLinkIcon, WatchLaterIcon } from '$modules/icon'
+import { IconForDislike, IconForOpenExternalLink, IconForWatchlater } from '$modules/icon'
 import { IconPark } from '$modules/icon/icon-park'
 import {
   DynamicFeedQueryKey,
@@ -316,7 +316,7 @@ export function useContextMenus({
         icon: watchlaterAdded ? (
           <IconMaterialSymbolsDeleteOutlineRounded {...size(15)} />
         ) : (
-          <WatchLaterIcon {...size(15)} />
+          <IconForWatchlater {...size(15)} />
         ),
         onClick() {
           onToggleWatchLater()
@@ -384,7 +384,7 @@ export function useContextMenus({
         test: hasDislikeEntry,
         key: 'dislike',
         label: '我不想看',
-        icon: <DislikeIcon width={15} height={15} />,
+        icon: <IconForDislike width={15} height={15} />,
         onClick() {
           onTriggerDislike()
         },
@@ -435,7 +435,7 @@ export function useContextMenus({
                 {
                   key: 'open-fav-folder',
                   label: '浏览收藏夹',
-                  icon: <OpenExternalLinkIcon css={C.size(15)} />,
+                  icon: <IconForOpenExternalLink css={C.size(15)} />,
                   onClick() {
                     if (!isFav(item)) return
                     const { id } = item.folder
@@ -468,7 +468,7 @@ export function useContextMenus({
                 {
                   key: 'open-fav-collection',
                   label: '浏览合集',
-                  icon: <OpenExternalLinkIcon css={C.size(15)} />,
+                  icon: <IconForOpenExternalLink css={C.size(15)} />,
                   onClick() {
                     if (!isFav(item)) return
                     const { id } = item.collection

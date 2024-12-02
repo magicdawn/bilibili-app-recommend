@@ -8,7 +8,7 @@ import { OnRefreshContext } from '$components/RecGrid/useRefresh'
 import { bgValue } from '$components/css-vars'
 import { $headerHeight, $usingEvolevdHeader } from '$header'
 import { useIsDarkMode } from '$modules/dark-mode'
-import { ConfigIcon } from '$modules/icon'
+import { IconForConfig } from '$modules/icon'
 import { useSettingsSnapshot } from '$modules/settings'
 import { isMac } from '$ua'
 import { getElementOffset, shouldDisableShortcut } from '$utility/dom'
@@ -176,7 +176,7 @@ export const RecHeader = forwardRef<
 
                 <Button onClick={showModalSettings} css={iconOnlyRoundButtonCss}>
                   <ModalSettingsHotkey />
-                  <ConfigIcon {...size(14)} />
+                  <IconForConfig {...size(14)} />
                 </Button>
 
                 <RefreshButton

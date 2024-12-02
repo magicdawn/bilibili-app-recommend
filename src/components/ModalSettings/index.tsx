@@ -1,7 +1,7 @@
 import { __PROD__ } from '$common'
 import { BaseModal, BaseModalStyle, ModalClose } from '$components/_base/BaseModal'
 import { useHotkeyForToggleEvolvedDarkMode } from '$modules/dark-mode'
-import { ConfigIcon } from '$modules/icon'
+import { IconForConfig } from '$modules/icon'
 import type { BooleanSettingsPath } from '$modules/settings'
 import { settings } from '$modules/settings'
 import { antMessage } from '$utility/antd'
@@ -79,7 +79,7 @@ export function ModalSettings({ show, onHide }: { show: boolean; onHide: () => v
     >
       <div css={BaseModalStyle.modalHeader}>
         <div css={BaseModalStyle.modalTitle}>
-          <ConfigIcon className='size-26 mr-4 mt--2' />
+          <IconForConfig className='size-26 mr-4 mt--2' />
           设置
         </div>
 

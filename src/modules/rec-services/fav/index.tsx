@@ -8,6 +8,7 @@ import { FavCollectionService } from './service/fav-collection'
 import { FavFolderService } from './service/fav-folder'
 import { favStore, updateFavFolderMediaCount } from './store'
 import { FavUsageInfo } from './usage-info'
+import { FavItemsOrder } from './usage-info/fav-items-order'
 
 export type FavServiceConfig = ReturnType<typeof getFavServiceConfig>
 
@@ -17,6 +18,7 @@ export function getFavServiceConfig() {
     selectedKey: snap.selectedKey,
     selectedFavFolder: snap.selectedFavFolder,
     selectedFavCollection: snap.selectedFavCollection,
+    itemsOrder: snap.savedOrderMap.get(snap.selectedKey) || FavItemsOrder.Default,
 
     // from settings
     useShuffle: settings.fav.useShuffle,
@@ -48,8 +50,8 @@ export class FavRecService implements IService {
     } else if (this.viewingSomeCollection) {
       this.innerService = new FavCollectionService(
         this.config.selectedFavCollection!,
-        this.config.useShuffle,
         this.config.addSeparator,
+        this.config.itemsOrder,
       )
     } else {
       throw new Error('unexpected case!')
