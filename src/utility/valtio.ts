@@ -80,15 +80,21 @@ export async function proxyWithGmStorage<T extends object>(initialVaue: T, stora
 }
 
 export async function proxySetWithGmStorage<T>(storageKey: string) {
-  const savedValue: T[] = (await GM.getValue(storageKey)) || []
-  const p = proxySet<T>(savedValue)
+  const load = async (): Promise<T[]> => (await GM.getValue(storageKey)) || []
+  const p = proxySet<T>(await load())
 
   // start subscribe in nextTick, so value can be changed synchronously without persist
   setTimeout(() => {
-    subscribe(p, () => {
-      const val = Array.from(snapshot(p))
+    const onChange = throttle(async () => {
+      // existing
+      const set = new Set<T>(await load())
+      // update
+      for (const x of snapshot(p)) set.add(x)
+      // serialize
+      const val = Array.from(set)
       GM.setValue(storageKey, val)
-    })
+    }, 100)
+    subscribe(p, onChange)
   })
 
   return p
@@ -98,16 +104,22 @@ export async function proxyMapWithGmStorage<K, V>(
   storageKey: string,
   beforeSave?: (vals: [K, V][]) => [K, V][],
 ) {
-  const savedValue: [key: K, value: V][] = (await GM.getValue(storageKey)) || []
-  const p = proxyMap<K, V>(savedValue)
+  const load = async (): Promise<[K, V][]> => (await GM.getValue(storageKey)) || []
+  const p = proxyMap<K, V>(await load())
 
   // start subscribe in nextTick, so value can be changed synchronously without persist
   setTimeout(() => {
-    subscribe(p, () => {
-      let val = Array.from(snapshot(p))
+    const onChange = throttle(async () => {
+      // existing
+      const map = new Map<K, V>(await load())
+      // update map
+      for (const [k, v] of snapshot(p)) map.set(k, v)
+      // serialize
+      let val = Array.from(map)
       if (beforeSave) val = beforeSave(val)
       GM.setValue(storageKey, val)
-    })
+    }, 100)
+    subscribe(p, onChange)
   })
 
   return p
