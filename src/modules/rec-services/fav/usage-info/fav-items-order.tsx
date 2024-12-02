@@ -60,7 +60,7 @@ export function FavItemsOrderSwitcher() {
 
   const onToggle = useMemoizedFn(async (e: MouseEvent) => {
     const currentIndex = ORDER_LIST.findIndex((x) => x === current)
-    const nextIndex = (currentIndex + (e.shiftKey ? -1 : 1)) % ORDER_LIST.length
+    const nextIndex = (currentIndex + (e.shiftKey ? -1 : 1) + ORDER_LIST.length) % ORDER_LIST.length
     const next = ORDER_LIST[nextIndex]
     favStore.savedOrderMap.set(selectedKey, next)
     await delay(100)
