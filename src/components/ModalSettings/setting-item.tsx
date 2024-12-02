@@ -1,4 +1,3 @@
-import { flexCenterStyle } from '$common/emotion-css'
 import { AntdTooltip } from '$components/_base/antd-custom'
 import type { BooleanSettingsPath } from '$modules/settings'
 import { settings, useSettingsSnapshot } from '$modules/settings'
@@ -156,16 +155,9 @@ export function ButtonSettingItem({
   return (
     <AntdTooltip title={tooltip} {...tooltipProps}>
       <Button onClick={onToggle}>
-        <div
-          css={[
-            flexCenterStyle,
-            css`
-              line-height: 1;
-            `,
-          ]}
-        >
+        <span className='inline-flex items-center justify-center line-height-[1] gap-4'>
           {checked ? (checkedChildren ?? '✅') : (unCheckedChildren ?? '❎')}
-        </div>
+        </span>
       </Button>
     </AntdTooltip>
   )

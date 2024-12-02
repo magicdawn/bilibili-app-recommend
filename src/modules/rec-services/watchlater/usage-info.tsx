@@ -96,13 +96,13 @@ export function WatchLaterUsageInfo({ total }: { total: number }) {
           }
           checkedChildren={
             <>
-              <IconForAsc className='mr-1px' {...size(18)} />
+              <IconForAsc {...size(18)} />
               最早添加
             </>
           }
           unCheckedChildren={
             <>
-              <IconForDesc className='mr-1px' {...size(18)} />
+              <IconForDesc {...size(18)} />
               最近添加
             </>
           }
