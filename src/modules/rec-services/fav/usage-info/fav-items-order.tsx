@@ -3,6 +3,7 @@ import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
 import { IconForAsc, IconForDefaultOrder, IconForDesc, IconForShuffle } from '$modules/icon'
 import { Button } from 'antd'
 import { delay } from 'es-toolkit'
+import type { MouseEvent } from 'react'
 import { useSnapshot } from 'valtio'
 import { favStore } from '../store'
 
@@ -43,7 +44,12 @@ export const ORDER_LIST = [
 // 是否 fallback 到 FavItemsOrder.PubTimeDesc 呢 ??? 感觉这个更有用
 export const FALLBACK_ORDER = FavItemsOrder.Default
 
-const tooltip = <>在 {ORDER_LIST.map((x) => FavItemsOrderConfig[x].label).join(' / ')} 之间切换</>
+const tooltip = (
+  <>
+    在 {ORDER_LIST.map((x) => FavItemsOrderConfig[x].label).join(' -> ')} 之间切换 <br />
+    点击切换, 按住 Shift 键点击切换到上一个
+  </>
+)
 
 export function FavItemsOrderSwitcher() {
   const onRefresh = useOnRefreshContext()
@@ -52,9 +58,9 @@ export function FavItemsOrderSwitcher() {
   const current = savedOrderMap.get(selectedKey) || FALLBACK_ORDER
   const { icon, label } = FavItemsOrderConfig[current]
 
-  const onToggle = useMemoizedFn(async () => {
+  const onToggle = useMemoizedFn(async (e: MouseEvent) => {
     const currentIndex = ORDER_LIST.findIndex((x) => x === current)
-    const nextIndex = (currentIndex + 1) % ORDER_LIST.length
+    const nextIndex = (currentIndex + (e.shiftKey ? -1 : 1)) % ORDER_LIST.length
     const next = ORDER_LIST[nextIndex]
     favStore.savedOrderMap.set(selectedKey, next)
     await delay(100)
