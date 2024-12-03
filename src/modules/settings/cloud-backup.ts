@@ -8,7 +8,7 @@ import { HAS_RESTORED_SETTINGS } from './restore-flag'
 let lastBackupVal: PartialDeep<Settings> | undefined
 const setDataThrottled = throttle(articleDraft.setData, ms('5s'))
 
-export async function saveToDraft(val: Readonly<Settings>) {
+export async function saveToDraft(val: PartialDeep<Settings>) {
   if (!val.backupSettingsToArticleDraft) return
   if (HAS_RESTORED_SETTINGS) return // skip when `HAS_RESTORED_SETTINGS=true`
 

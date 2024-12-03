@@ -9,7 +9,7 @@ import {
   type ListPaths,
 } from '$utility/object-paths'
 import toast from '$utility/toast'
-import { cloneDeep, isNil } from 'es-toolkit'
+import { cloneDeep, isEqual, isNil, mergeWith } from 'es-toolkit'
 import { get, set } from 'es-toolkit/compat'
 import type { Get, PartialDeep } from 'type-fest'
 import { proxy, snapshot, subscribe, useSnapshot } from 'valtio'
@@ -328,13 +328,22 @@ export function runSettingsMigration(val: object) {
   }
 }
 
-export async function load() {
-  const val = await GM.getValue<Settings>(storageKey)
-  if (val && typeof val === 'object') {
-    runSettingsMigration(val)
-    updateSettings(val)
+/**
+ * @private
+ */
+async function __pickSettingsFromGmStorage(): Promise<PartialDeep<Settings>> {
+  const saved = await GM.getValue<Settings>(storageKey)
+  if (saved && typeof saved === 'object') {
+    runSettingsMigration(saved)
+    return pickSettings(saved, allowedLeafSettingsPaths).pickedSettings
+  } else {
+    return {}
   }
+}
 
+export async function loadAndSetup() {
+  const val = await __pickSettingsFromGmStorage()
+  updateSettings(val)
   // persist when config change
   subscribe(settings, () => {
     save()
@@ -342,14 +351,34 @@ export async function load() {
 }
 
 async function save() {
-  const newVal = cloneDeep(snapshot(settings))
-  // console.log('GM.setValue newVal = %o', newVal)
+  /**
+   * existing-update-serialize 多个 Tab 同时修改, 不至于覆盖
+   */
 
-  // GM save
-  await GM.setValue(storageKey, newVal)
-
-  // http backup
-  await saveToDraft(newVal as Readonly<Settings>)
+  // existing
+  const existing = await __pickSettingsFromGmStorage()
+  // update
+  const currentSnapshot = cloneDeep(snapshot(settings))
+  mergeWith(existing, currentSnapshot, (targetValue, sourceValue) => {
+    // use default logic
+    if (targetValue === existing.customTabKeysOrder) {
+      return
+    }
+    const shouldMergeSimpleArray =
+      Array.isArray(targetValue) &&
+      Array.isArray(sourceValue) &&
+      !!(targetValue.length || sourceValue.length) && // have value
+      new Set([...targetValue, ...sourceValue].map((x) => typeof x)).size === 1 && // primitive value
+      !isEqual(targetValue, sourceValue) // changed
+    if (shouldMergeSimpleArray) {
+      return Array.from(new Set([...targetValue, ...sourceValue]))
+    }
+  })
+  // serialize
+  //  1) save to GM storage
+  await GM.setValue(storageKey, existing)
+  //  2) http backup
+  await saveToDraft(existing)
 }
 
 export function getSettings(path: LeafSettingsPath) {
@@ -422,7 +451,7 @@ export function updateSettingsInnerArray<P extends ListSettingsPath>(
 /**
  * load on init
  */
-await load()
+await loadAndSetup()
 
 /**
  * access_key expire check
