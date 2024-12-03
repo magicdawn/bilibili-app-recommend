@@ -1,4 +1,5 @@
-import { isEqual, pick, throttle } from 'es-toolkit'
+import { isEqual, pick, throttle, toMerged } from 'es-toolkit'
+import pLimit from 'p-limit'
 import { proxy, snapshot, subscribe, useSnapshot } from 'valtio'
 import { proxyMap, proxySet } from 'valtio/utils'
 
@@ -60,20 +61,25 @@ export function proxyWithLocalStorage<T extends object>(initialVaue: T, storageK
 }
 
 export async function proxyWithGmStorage<T extends object>(initialVaue: T, storageKey: string) {
-  const allowedKeys = Object.keys(initialVaue)
-  const savedValue = pick(((await GM.getValue(storageKey)) || {}) as any, allowedKeys)
-
+  async function load() {
+    const allowedKeys = Object.keys(initialVaue)
+    return pick(((await GM.getValue(storageKey)) || {}) as any, allowedKeys)
+  }
   const p = proxy<T>({
     ...initialVaue,
-    ...savedValue,
+    ...(await load()),
   })
 
   // start subscribe in nextTick, so value can be changed synchronously without persist
   setTimeout(() => {
-    subscribe(p, () => {
-      const val = snapshot(p)
-      GM.setValue(storageKey, val)
-    })
+    const limit = pLimit(1) // works like a mutex lock
+    subscribe(p, () =>
+      limit(async () => {
+        const existing = await load()
+        const newValue = toMerged(existing, snapshot(p) as object)
+        GM.setValue(storageKey, newValue)
+      }),
+    )
   })
 
   return p
@@ -85,16 +91,18 @@ export async function proxySetWithGmStorage<T>(storageKey: string) {
 
   // start subscribe in nextTick, so value can be changed synchronously without persist
   setTimeout(() => {
-    const onChange = throttle(async () => {
-      // existing
-      const set = new Set<T>(await load())
-      // update
-      for (const x of snapshot(p)) set.add(x)
-      // serialize
-      const val = Array.from(set)
-      GM.setValue(storageKey, val)
-    }, 100)
-    subscribe(p, onChange)
+    const limit = pLimit(1)
+    subscribe(p, () =>
+      limit(async () => {
+        // existing
+        const set = new Set<T>(await load())
+        // update
+        for (const x of snapshot(p)) set.add(x)
+        // serialize
+        const val = Array.from(set)
+        GM.setValue(storageKey, val)
+      }),
+    )
   })
 
   return p
@@ -109,17 +117,19 @@ export async function proxyMapWithGmStorage<K, V>(
 
   // start subscribe in nextTick, so value can be changed synchronously without persist
   setTimeout(() => {
-    const onChange = throttle(async () => {
-      // existing
-      const map = new Map<K, V>(await load())
-      // update map
-      for (const [k, v] of snapshot(p)) map.set(k, v)
-      // serialize
-      let val = Array.from(map)
-      if (beforeSave) val = beforeSave(val)
-      GM.setValue(storageKey, val)
-    }, 100)
-    subscribe(p, onChange)
+    const limit = pLimit(1)
+    subscribe(p, () =>
+      limit(async () => {
+        // existing
+        const map = new Map<K, V>(await load())
+        // update map
+        for (const [k, v] of snapshot(p)) map.set(k, v)
+        // serialize
+        let val = Array.from(map)
+        if (beforeSave) val = beforeSave(val)
+        GM.setValue(storageKey, val)
+      }),
+    )
   })
 
   return p
