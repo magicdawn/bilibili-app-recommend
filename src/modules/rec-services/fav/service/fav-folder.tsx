@@ -5,23 +5,44 @@ import { type IFavInnerService } from '../index'
 import { updateFavFolderMediaCount } from '../store'
 import type { FavItemExtend } from '../types'
 import type { FavFolder } from '../types/folders/list-all-folders'
-import { FAV_PAGE_SIZE, FavFolderBasicService, FavFolderSeparator } from './_base'
+import {
+  FavItemsOrder,
+  FavItemsOrderSwitcher,
+  handleItemsOrder,
+} from '../usage-info/fav-items-order'
+import {
+  FAV_PAGE_SIZE,
+  FavFolderBasicService,
+  FavFolderSeparator,
+  isFavFolderApiSuppoetedOrder,
+} from './_base'
 
 export class FavFolderService implements IFavInnerService {
   basicService: FavFolderBasicService
+  needLoadAll: boolean
   constructor(
     public entry: FavFolder,
-    public useShuffle: boolean,
     public addSeparator: boolean,
+    public itemsOrder: FavItemsOrder,
   ) {
-    this.basicService = new FavFolderBasicService(this.entry)
+    if (this.itemsOrder === FavItemsOrder.Default) {
+      throw new Error('this should not happen!')
+    }
+
+    if (isFavFolderApiSuppoetedOrder(this.itemsOrder)) {
+      this.basicService = new FavFolderBasicService(this.entry, this.itemsOrder)
+      this.needLoadAll = false
+    } else {
+      this.basicService = new FavFolderBasicService(this.entry)
+      this.needLoadAll = true
+    }
   }
 
   get hasMore() {
     if (this.addSeparator && !this.separatorAdded) return true
-    if (this.useShuffle) {
+    if (this.needLoadAll) {
       if (!this.loadAllCalled) return true
-      return !!this.shuffleBufferQueue.length
+      return !!this.bufferQueue.length
     } else {
       return this.basicService.hasMore
     }
@@ -44,12 +65,17 @@ export class FavFolderService implements IFavInnerService {
       return [this.separator]
     }
 
-    // shuffle
-    if (this.useShuffle) {
+    // load all
+    if (this.needLoadAll) {
       if (!this.loadAllCalled) await this.loadAllItems(abortSignal)
-      this.shuffleBufferQueue = shuffle(this.shuffleBufferQueue)
-      const sliced = this.shuffleBufferQueue.slice(0, FAV_PAGE_SIZE)
-      this.shuffleBufferQueue = this.shuffleBufferQueue.slice(FAV_PAGE_SIZE)
+
+      // shuffle every time
+      if (this.itemsOrder === FavItemsOrder.Shuffle) {
+        this.bufferQueue = shuffle(this.bufferQueue)
+      }
+
+      const sliced = this.bufferQueue.slice(0, FAV_PAGE_SIZE)
+      this.bufferQueue = this.bufferQueue.slice(FAV_PAGE_SIZE)
       return sliced
     }
 
@@ -62,13 +88,14 @@ export class FavFolderService implements IFavInnerService {
   }
 
   private loadAllCalled = false
-  private shuffleBufferQueue: FavItemExtend[] = []
+  private bufferQueue: FavItemExtend[] = []
   private async loadAllItems(abortSignal?: AbortSignal) {
     this.loadAllCalled = true
     while (this.basicService.hasMore && !abortSignal?.aborted) {
-      const items = await this.basicService.loadMore()
-      this.shuffleBufferQueue.push(...(items || []))
+      const items = (await this.basicService.loadMore()) || []
+      this.bufferQueue.push(...items)
     }
+    this.bufferQueue = handleItemsOrder(this.bufferQueue, this.itemsOrder)
     this.runSideEffects()
   }
 
@@ -76,5 +103,9 @@ export class FavFolderService implements IFavInnerService {
     if (typeof this.basicService.info?.media_count === 'number') {
       updateFavFolderMediaCount(this.entry.id, this.basicService.info.media_count)
     }
+  }
+
+  get extraUsageInfo() {
+    return <FavItemsOrderSwitcher />
   }
 }

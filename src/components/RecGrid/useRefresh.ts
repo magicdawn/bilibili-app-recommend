@@ -230,8 +230,13 @@ export function useRefresh({
 
     const newServiceMap = { ...serviceMap }
     const recreateFor = (tab: ServiceMapKey) => {
-      // @ts-ignore
-      newServiceMap[tab] = createServiceMap[tab](options)
+      try {
+        // @ts-ignore
+        newServiceMap[tab] = createServiceMap[tab](options)
+      } catch (e) {
+        setError(e)
+        throw e
+      }
       serviceMapBox.set(newServiceMap)
     }
 

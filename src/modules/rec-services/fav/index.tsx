@@ -1,14 +1,15 @@
 import type { FavItemExtend, ItemsSeparator } from '$define'
 import { settings } from '$modules/settings'
 import { snapshot } from 'valtio'
-import { type IService, QueueStrategy } from '../_base'
+import { QueueStrategy, type IService } from '../_base'
 import { FAV_PAGE_SIZE } from './service/_base'
 import { FavAllService } from './service/fav-all'
 import { FavCollectionService } from './service/fav-collection'
 import { FavFolderService } from './service/fav-folder'
 import { favStore, updateFavFolderMediaCount } from './store'
 import { FavUsageInfo } from './usage-info'
-import { FavItemsOrder } from './usage-info/fav-items-order'
+import type { FavItemsOrder } from './usage-info/fav-items-order'
+import { getSavedOrder } from './usage-info/fav-items-order'
 
 export type FavServiceConfig = ReturnType<typeof getFavServiceConfig>
 
@@ -18,10 +19,9 @@ export function getFavServiceConfig() {
     selectedKey: snap.selectedKey,
     selectedFavFolder: snap.selectedFavFolder,
     selectedFavCollection: snap.selectedFavCollection,
-    itemsOrder: snap.savedOrderMap.get(snap.selectedKey) || FavItemsOrder.Default,
+    itemsOrder: getSavedOrder(snap.selectedKey, snap.savedOrderMap as Map<string, FavItemsOrder>),
 
     // from settings
-    useShuffle: settings.fav.useShuffle,
     addSeparator: settings.fav.addSeparator,
     excludedFolderIds: settings.fav.excludedFolderIds,
   }
@@ -40,12 +40,16 @@ export class FavRecService implements IService {
   innerService: IFavInnerService
   constructor(public config: FavServiceConfig) {
     if (this.viewingAll) {
-      this.innerService = new FavAllService(this.config)
+      this.innerService = new FavAllService(
+        this.config.addSeparator,
+        this.config.itemsOrder,
+        this.config.excludedFolderIds,
+      )
     } else if (this.viewingSomeFolder) {
       this.innerService = new FavFolderService(
         this.config.selectedFavFolder!,
-        this.config.useShuffle,
         this.config.addSeparator,
+        this.config.itemsOrder,
       )
     } else if (this.viewingSomeCollection) {
       this.innerService = new FavCollectionService(

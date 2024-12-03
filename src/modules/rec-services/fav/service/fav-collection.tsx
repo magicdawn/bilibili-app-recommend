@@ -11,8 +11,11 @@ import type {
   FavCollectionDetailMedia,
 } from '../types/collections/collection-detail'
 import type { FavCollection } from '../types/collections/list-all-collections'
-import { FavUsageInfo } from '../usage-info'
-import { FavItemsOrder, FavItemsOrderSwitcher } from '../usage-info/fav-items-order'
+import {
+  FavItemsOrder,
+  FavItemsOrderSwitcher,
+  handleItemsOrder,
+} from '../usage-info/fav-items-order'
 import { FAV_PAGE_SIZE, FavCollectionSeparator } from './_base'
 
 export class FavCollectionService implements IFavInnerService {
@@ -76,7 +79,7 @@ export class FavCollectionService implements IFavInnerService {
           from: 'fav-collection' as const,
         }
       })
-      items = this.setupItemsOrder(items)
+      items = handleItemsOrder(items, this.itemsOrder)
 
       this.state.firstBvid = items[0]?.bvid
       this.bufferQueue = items
@@ -90,22 +93,6 @@ export class FavCollectionService implements IFavInnerService {
     const sliced = this.bufferQueue.slice(0, FAV_PAGE_SIZE)
     this.bufferQueue = this.bufferQueue.slice(FAV_PAGE_SIZE)
     return sliced
-  }
-
-  setupItemsOrder(items: FavItemExtend[]) {
-    if (this.itemsOrder === FavItemsOrder.Shuffle) {
-      return shuffle(items)
-    }
-
-    if (
-      this.itemsOrder === FavItemsOrder.PubTimeDesc ||
-      this.itemsOrder === FavItemsOrder.PubTimeAsc
-    ) {
-      const order = this.itemsOrder === FavItemsOrder.PubTimeDesc ? 'desc' : 'asc'
-      return orderBy(items, [(x) => x.pubtime], [order])
-    }
-
-    return items
   }
 
   // 合集返回的数据没有头像, 这里通过 user-detail 获取
@@ -141,7 +128,7 @@ export class FavCollectionService implements IFavInnerService {
     )
   }
 
-  get usageInfo() {
-    return <FavUsageInfo showShuffle={false} extraContent={<FavItemsOrderSwitcher />} />
+  get extraUsageInfo() {
+    return <FavItemsOrderSwitcher />
   }
 }

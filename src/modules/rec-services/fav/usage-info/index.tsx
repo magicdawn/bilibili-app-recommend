@@ -8,7 +8,7 @@ import { delay, groupBy } from 'es-toolkit'
 import type { Key } from 'react'
 import { useSnapshot } from 'valtio'
 import { usePopupContainer } from '../../_base'
-import { dropdownMenuStyle, ShuffleSettingsItemFor } from '../../_shared'
+import { dropdownMenuStyle } from '../../_shared'
 import { isFavFolderDefault, isFavFolderPrivate } from '../fav-util'
 import type { FavFolderBasicService } from '../service/_base'
 import { favStore } from '../store'
@@ -18,13 +18,7 @@ export const IconForPrivateFolder = IconLucideFolderLock
 export const IconForPublicFolder = IconLucideFolder
 export const IconForCollection = IconIonLayersOutline
 
-export function FavUsageInfo({
-  showShuffle = true,
-  extraContent,
-}: {
-  showShuffle?: boolean
-  extraContent?: ReactNode
-}) {
+export function FavUsageInfo({ extraContent }: { extraContent?: ReactNode }) {
   const { fav } = useSettingsSnapshot()
   const { favFolders, selectedFavFolder, favCollections, selectedFavCollection, selectedLabel } =
     useSnapshot(favStore)
@@ -41,7 +35,7 @@ export function FavUsageInfo({
       await delay(100)
       onRefresh?.()
     })()
-  }, [fav.useShuffle, fav.addSeparator])
+  }, [fav.addSeparator])
 
   // #region scope selection dropdown
   const scopeSelectionDropdownMenus: AntMenuItem[] = useMemo(() => {
@@ -178,9 +172,6 @@ export function FavUsageInfo({
     <Space ref={ref} size={10}>
       {/* scope selction */}
       {scopeSelectionDropdown}
-
-      {/* shuffle? */}
-      {showShuffle && <ShuffleSettingsItemFor configPath={'fav.useShuffle'} />}
 
       {/* extra */}
       {extraContent}

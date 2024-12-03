@@ -1,17 +1,20 @@
 import { C } from '$common/emotion-css'
-import { IconForLive, IconForWatchlater } from '$modules/icon'
+import {
+  IconForDynamicFeed,
+  IconForFav,
+  IconForFollowedOnly,
+  IconForHot,
+  IconForLive,
+  IconForPc,
+  IconForPhone,
+  IconForWatchlater,
+} from '$modules/icon'
+import { favStore } from '$modules/rec-services/fav/store'
 import { isHotTabUsingShuffle } from '$modules/rec-services/hot'
-import { settings } from '$modules/settings'
 import toast from '$utility/toast'
 import type { CssProp } from '$utility/type'
 import { size } from 'polished'
 import { cloneElement, type ReactElement } from 'react'
-import IconParkOutlineComputer from '~icons/icon-park-outline/computer'
-import IconParkOutlineConcern from '~icons/icon-park-outline/concern'
-import IconParkOutlineFire from '~icons/icon-park-outline/fire'
-import IconParkOutlineIphone from '~icons/icon-park-outline/iphone'
-import IconParkOutlineStar from '~icons/icon-park-outline/star'
-import IconParkOutlineTumblr from '~icons/icon-park-outline/tumblr'
 import { ETab } from './tab-enum'
 
 export type TabConfigItem = {
@@ -24,24 +27,24 @@ export type TabConfigItem = {
 
 export const TabConfig: Record<ETab, TabConfigItem> = {
   [ETab.RecommendApp]: {
-    icon: <IconParkOutlineIphone {...size(18)} />,
+    icon: <IconForPhone {...size(18)} />,
     label: '推荐',
     desc: '使用 Bilibili App 端推荐 API',
     anonymousUsage: true,
   },
   [ETab.RecommendPc]: {
-    icon: <IconParkOutlineComputer {...size(18)} />,
+    icon: <IconForPc {...size(18)} />,
     label: '推荐',
     desc: '使用新版首页顶部推荐 API',
     anonymousUsage: true,
   },
   [ETab.KeepFollowOnly]: {
-    icon: <IconParkOutlineConcern {...size(18)} />,
+    icon: <IconForFollowedOnly {...size(18)} />,
     label: '已关注',
     desc: '从PC端推荐中筛选出「已关注」,可能比较慢; 关注的UP更新在动态~',
   },
   [ETab.DynamicFeed]: {
-    icon: <IconParkOutlineTumblr {...size(16)} />,
+    icon: <IconForDynamicFeed {...size(16)} />,
     label: '动态',
     desc: '视频投稿动态',
     swr: true,
@@ -63,15 +66,15 @@ export const TabConfig: Record<ETab, TabConfigItem> = {
     swr: true,
   },
   [ETab.Fav]: {
-    icon: <IconParkOutlineStar {...size(16)} css={C.mt(-1)} />,
+    icon: <IconForFav {...size(16)} css={C.mt(-1)} />,
     label: '收藏',
     desc: '你添加的收藏; 默认随机乱序, 可在设置中关闭乱序',
     get swr() {
-      return !settings.fav.useShuffle
+      return !favStore.usingShuffle
     },
   },
   [ETab.Hot]: {
-    icon: <IconParkOutlineFire {...size(16)} />,
+    icon: <IconForHot {...size(16)} />,
     label: '热门',
     desc: '各个领域中新奇好玩的优质内容都在这里~',
     anonymousUsage: true,

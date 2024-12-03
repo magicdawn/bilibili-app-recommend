@@ -124,11 +124,6 @@ export function TabPaneRecTabsConfig() {
               </div>
               <Space size={10}>
                 <CheckboxSettingItem
-                  configPath='fav.useShuffle'
-                  label='随机顺序'
-                  tooltip='随机收藏'
-                />
-                <CheckboxSettingItem
                   configPath='fav.addSeparator'
                   label='添加分割线'
                   tooltip='顺序显示时, 按收藏夹添加分割线'

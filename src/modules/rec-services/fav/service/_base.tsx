@@ -15,12 +15,29 @@ import {
 } from '../fav-url'
 import type { FavFolder } from '../types/folders/list-all-folders'
 import type { FavFolderDetailInfo, ResourceListJSON } from '../types/folders/list-folder-items'
+import { FavItemsOrder } from '../usage-info/fav-items-order'
 import type { FavCollectionService } from './fav-collection'
 
 export const FAV_PAGE_SIZE = 20
 
+// Q: why function
+// A: circular deps
+export const getFavFolderApiSuppoetedOrder = () =>
+  [FavItemsOrder.FavTimeDesc, FavItemsOrder.PlayCountDesc, FavItemsOrder.PubTimeDesc] as const
+
+export type FavFolderApiSuppoetedOrder = ReturnType<typeof getFavFolderApiSuppoetedOrder>[number]
+
+export function isFavFolderApiSuppoetedOrder(
+  order: FavItemsOrder,
+): order is FavFolderApiSuppoetedOrder {
+  return getFavFolderApiSuppoetedOrder().includes(order)
+}
+
 export class FavFolderBasicService {
-  constructor(public entry: FavFolder) {
+  constructor(
+    public entry: FavFolder,
+    public itemsOrder: FavFolderApiSuppoetedOrder = FavItemsOrder.FavTimeDesc,
+  ) {
     this.hasMore = entry.media_count > 0
   }
 
@@ -31,13 +48,20 @@ export class FavFolderBasicService {
   async loadMore(abortSignal?: AbortSignal): Promise<FavItemExtend[] | undefined> {
     if (!this.hasMore) return
 
+    // mtime(最近收藏)  view(最多播放) pubtime(最新投稿)
+    const order = {
+      [FavItemsOrder.FavTimeDesc]: 'mtime',
+      [FavItemsOrder.PlayCountDesc]: 'view',
+      [FavItemsOrder.PubTimeDesc]: 'pubtime',
+    }[this.itemsOrder]
+
     const res = await request.get('/x/v3/fav/resource/list', {
       params: {
         media_id: this.entry.id,
         pn: this.page + 1, // start from 1
         ps: 20,
         keyword: '',
-        order: 'mtime', // mtime(最近收藏)  view(最多播放) pubtime(最新投稿)
+        order, // mtime(最近收藏)  view(最多播放) pubtime(最新投稿)
         type: '0', // unkown
         tid: '0', // 分区
         platform: 'web',

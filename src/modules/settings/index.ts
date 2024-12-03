@@ -111,7 +111,7 @@ export const initialSettings = {
    * tab=fav
    */
   fav: {
-    useShuffle: false, // 打乱顺序
+    // useShuffle: false, // 打乱顺序
     addSeparator: true, // 收藏夹分割线
     excludedFolderIds: [] as string[], // 忽略的收藏夹
   },
@@ -284,7 +284,7 @@ export function runSettingsMigration(val: object) {
     ['dynamicFeed.whenViewAll.hideIds', 'dynamicFeedWhenViewAllHideIds'],
     ['dynamicFeed.advancedSearch', 'dynamicFeedAdvancedSearch'],
 
-    ['fav.useShuffle', 'favUseShuffle'],
+    // ['fav.useShuffle', 'favUseShuffle'],
     ['fav.addSeparator', 'favAddSeparator'],
     ['fav.excludedFolderIds', 'favExcludedFolderIds'],
 
@@ -352,7 +352,7 @@ export async function loadAndSetup() {
 
 async function save() {
   /**
-   * existing-update-serialize 多个 Tab 同时修改, 不至于覆盖
+   * existing-update-serialize 多个 Tab 同时修改, 不至于丢失 collection items
    */
 
   // existing

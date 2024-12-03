@@ -1,22 +1,27 @@
 import { EApiType } from '$define/index.shared'
 import { shuffle } from 'es-toolkit'
 import pmap from 'promise.map'
-import { type FavServiceConfig, type IFavInnerService } from '../index'
+import { type IFavInnerService } from '../index'
 import type { FavItemExtend } from '../types'
 import { ViewingAllExcludeFolderConfig } from '../usage-info'
+import { FavItemsOrder, FavItemsOrderSwitcher } from '../usage-info/fav-items-order'
 import { fetchFavFolder } from '../user-fav-service'
 import { FAV_PAGE_SIZE, FavFolderBasicService, FavFolderSeparator } from './_base'
 
 export class FavAllService implements IFavInnerService {
-  constructor(public config: FavServiceConfig) {}
+  constructor(
+    public addSeparator: boolean,
+    public itemsOrder: FavItemsOrder,
+    public excludedFolderIds: string[],
+  ) {
+    // validate
+    if (![FavItemsOrder.Default, FavItemsOrder.Shuffle].includes(this.itemsOrder)) {
+      throw new Error('invalid items order')
+    }
+  }
+
   get useShuffle() {
-    return this.config.useShuffle
-  }
-  get addSeparator() {
-    return this.config.addSeparator
-  }
-  get excludedFolderIds() {
-    return this.config.excludedFolderIds
+    return this.itemsOrder === FavItemsOrder.Shuffle
   }
 
   total = 0
@@ -38,7 +43,12 @@ export class FavAllService implements IFavInnerService {
   }
 
   get extraUsageInfo() {
-    return <ViewingAllExcludeFolderConfig allFavFolderServices={this.allFolderServices} />
+    return (
+      <>
+        <FavItemsOrderSwitcher />
+        <ViewingAllExcludeFolderConfig allFavFolderServices={this.allFolderServices} />
+      </>
+    )
   }
 
   async loadMore(abortSignal?: AbortSignal) {
