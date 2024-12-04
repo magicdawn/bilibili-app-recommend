@@ -197,8 +197,8 @@ export function FavItemsOrderSwitcher() {
 
   const dropdownMenuItems = useDropdownMenus({ selectedKey, onRefresh })
   const dropdownStyle: CSSProperties = {
+    // width: 'max-content',
     overscrollBehavior: 'contain',
-    width: 'max-content',
     border: `1px solid ${usePopoverBorderColor()}`,
   }
 

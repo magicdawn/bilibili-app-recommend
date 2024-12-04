@@ -79,9 +79,14 @@ export const DynamicFeedVideoMinDurationConfig: Record<
   [DynamicFeedVideoMinDuration._10s]: { label: '10秒', duration: 10 },
 }
 
-export const SELECTED_KEY_ALL = 'all'
-export const SELECTED_KEY_PREFIX_UP = 'up:'
-export const SELECTED_KEY_PREFIX_GROUP = 'group:'
+export const SELECTED_KEY_ALL = 'all' as const
+export const SELECTED_KEY_PREFIX_UP = 'up:' as const
+export const SELECTED_KEY_PREFIX_GROUP = 'group:' as const
+
+export type DynamicFeedStoreSelectedKey =
+  | typeof SELECTED_KEY_ALL
+  | `${typeof SELECTED_KEY_PREFIX_UP}${UpMidType}`
+  | `${typeof SELECTED_KEY_PREFIX_GROUP}${number}`
 
 /**
  * df expand to `dynamic-feed`
@@ -112,7 +117,7 @@ export const dfStore = proxy({
   },
 
   // 筛选 UP & 分组 select 控件的 key
-  get selectedKey() {
+  get selectedKey(): DynamicFeedStoreSelectedKey {
     if (this.upMid) return `${SELECTED_KEY_PREFIX_UP}${this.upMid}`
     if (this.selectedFollowGroup)
       return `${SELECTED_KEY_PREFIX_GROUP}${this.selectedFollowGroup.tagid}`

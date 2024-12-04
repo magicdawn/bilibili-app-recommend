@@ -54,6 +54,7 @@ import {
   SELECTED_KEY_PREFIX_GROUP,
   updateFilterData,
   type DynamicFeedStore,
+  type DynamicFeedStoreSelectedKey,
   type UpMidType,
 } from './store'
 
@@ -141,7 +142,7 @@ export function DynamicFeedUsageInfo() {
 
   const menuItems = useMemo((): AntMenuItem[] => {
     const itemAll: AntMenuItem = {
-      key: 'all',
+      key: 'all' satisfies DynamicFeedStoreSelectedKey,
       icon: <Avatar size={'small'}>全</Avatar>,
       label: '全部',
       onClick: onClear,
@@ -151,7 +152,7 @@ export function DynamicFeedUsageInfo() {
     if (dfSettings.followGroup.enabled) {
       groupItems = followGroups.map((group) => {
         return {
-          key: `group:${group.tagid}`,
+          key: `group:${group.tagid}` satisfies DynamicFeedStoreSelectedKey,
           label: group.name + ` (${group.count})`,
           icon: <Avatar size={'small'}>组</Avatar>,
           onClick() {
@@ -188,7 +189,7 @@ export function DynamicFeedUsageInfo() {
       }
 
       return {
-        key: `up:${up.mid}`,
+        key: `up:${up.mid}` satisfies DynamicFeedStoreSelectedKey,
         icon: avatar,
         // label: up.uname,
         label: (
@@ -239,6 +240,7 @@ export function DynamicFeedUsageInfo() {
       menu={{
         items: menuItems,
         style: { ...dropdownMenuStyle, border: `1px solid ${usePopoverBorderColor()}` },
+        selectedKeys: [selectedKey],
       }}
     >
       <Button
