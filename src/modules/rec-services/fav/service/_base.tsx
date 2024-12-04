@@ -1,5 +1,6 @@
 import { REQUEST_FAIL_MSG } from '$common'
 import { C } from '$common/emotion-css'
+import { AntdTooltip } from '$components/_base/antd-custom'
 import { CustomTargetLink } from '$components/VideoCard/use/useOpenRelated'
 import type { FavItemExtend } from '$define'
 import { EApiType } from '$define/index.shared'
@@ -131,13 +132,22 @@ export function FavFolderSeparator({ service }: { service: FavFolderBasicService
 }
 
 export function FavCollectionSeparator({ service }: { service: FavCollectionService }) {
-  const { firstBvid } = useSnapshot(service.state)
+  const { firstBvid, info } = useSnapshot(service.state)
   return (
     <>
-      <CustomTargetLink href={formatFavCollectionUrl(service.entry.id)} css={S.item}>
-        <IconForOpenExternalLink css={C.size(16)} />
-        {service.entry.title}
-      </CustomTargetLink>
+      <AntdTooltip
+        title={
+          <>
+            UP: {info?.upper.name} <br />
+            {info?.intro || '简介: N/A'}
+          </>
+        }
+      >
+        <CustomTargetLink href={formatFavCollectionUrl(service.collectionId)} css={S.item}>
+          <IconForOpenExternalLink css={C.size(16)} />
+          {info?.title}
+        </CustomTargetLink>
+      </AntdTooltip>
       {firstBvid && (
         <CustomTargetLink href={formatBvidUrl(firstBvid)} css={S.item}>
           <IconForPlayer css={C.size(16)} />

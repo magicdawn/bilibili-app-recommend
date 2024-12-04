@@ -2,6 +2,7 @@ import { flexVerticalCenterStyle } from '$common/emotion-css'
 import { type OnRefresh } from '$components/RecGrid/useRefresh'
 import { HelpInfo } from '$components/_base/HelpInfo'
 import { QUERY_DYNAMIC_UP_MID } from '$modules/rec-services/dynamic-feed/store'
+import { QUERY_FAV_COLLECTION_ID } from '$modules/rec-services/fav/store'
 import { settings, useSettingsSnapshot } from '$modules/settings'
 import { checkLoginStatus, useHasLogined } from '$utility/cookie'
 import { proxyWithGmStorage } from '$utility/valtio'
@@ -54,12 +55,22 @@ export function useCurrentDisplayingTabKeys() {
         return true
       }
 
+      if (key === ETab.Fav && typeof QUERY_FAV_COLLECTION_ID === 'number') {
+        return true
+      }
+
       return !hidingTabKeys.includes(key)
     })
   }, [hidingTabKeys, customTabKeysOrder, logined])
 
+  // dynamic-feed only
   if (QUERY_DYNAMIC_UP_MID && keys.includes(ETab.DynamicFeed)) {
     return [ETab.DynamicFeed]
+  }
+
+  // fav only
+  if (typeof QUERY_FAV_COLLECTION_ID === 'number' && keys.includes(ETab.Fav)) {
+    return [ETab.Fav]
   }
 
   return keys

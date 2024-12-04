@@ -17,9 +17,13 @@ export function getFavServiceConfig() {
   const snap = snapshot(favStore)
   return {
     selectedKey: snap.selectedKey,
-    selectedFavFolder: snap.selectedFavFolder,
-    selectedFavCollection: snap.selectedFavCollection,
     itemsOrder: getSavedOrder(snap.selectedKey, snap.savedOrderMap as Map<string, FavItemsOrder>),
+
+    selectedFavFolderId: snap.selectedFavFolderId,
+    selectedFavFolder: snap.selectedFavFolder,
+
+    selectedFavCollectionId: snap.selectedFavCollectionId,
+    selectedFavCollection: snap.selectedFavCollection,
 
     // from settings
     addSeparator: settings.fav.addSeparator,
@@ -53,7 +57,7 @@ export class FavRecService implements IService {
       )
     } else if (this.viewingSomeCollection) {
       this.innerService = new FavCollectionService(
-        this.config.selectedFavCollection!,
+        this.config.selectedFavCollectionId!,
         this.config.addSeparator,
         this.config.itemsOrder,
       )
@@ -65,10 +69,10 @@ export class FavRecService implements IService {
     return this.config.selectedKey === 'all'
   }
   get viewingSomeFolder() {
-    return !!this.config.selectedFavFolder
+    return typeof this.config.selectedFavFolderId === 'number'
   }
   get viewingSomeCollection() {
-    return !!this.config.selectedFavCollection
+    return typeof this.config.selectedFavCollectionId === 'number'
   }
 
   // for shuffle restore
