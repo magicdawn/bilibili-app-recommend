@@ -1,7 +1,7 @@
-import { usePopoverBorderColor } from '$common/emotion-css'
-import { colorPrimaryValue } from '$components/css-vars'
+import { buttonOpenCss, usePopoverBorderColor } from '$common/emotion-css'
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
 import type { FavItemExtend } from '$define'
+import { styled } from '$libs'
 import {
   IconForAsc,
   IconForDefaultOrder,
@@ -12,7 +12,6 @@ import {
   IconForTimestamp,
 } from '$modules/icon'
 import { usePopupContainer } from '$modules/rec-services/_base'
-import { dropdownMenuStyle } from '$modules/rec-services/_shared'
 import { defineAntMenus } from '$utility/antd'
 import { Button, Dropdown } from 'antd'
 import { delay, orderBy, shuffle } from 'es-toolkit'
@@ -33,13 +32,11 @@ export enum FavItemsOrder {
   FavTimeAsc = 'fav-time-asc',
 }
 
-const classes = {
-  icontextWrapper: 'inline-flex items-center justify-center line-height-[0]',
-}
+const clsIconTextWrapper = 'inline-flex items-center justify-center line-height-[0]'
 
 function withDescIcon(label: string) {
   return (
-    <span className={clsx(classes.icontextWrapper, 'gap-1px')}>
+    <span className={clsx(clsIconTextWrapper, 'gap-1px')}>
       {label}
       <IconForDesc {...size(16)} />
     </span>
@@ -47,44 +44,47 @@ function withDescIcon(label: string) {
 }
 function withAscIcon(label: string) {
   return (
-    <span className={clsx(classes.icontextWrapper, 'gap-1px')}>
+    <span className={clsx(clsIconTextWrapper, 'gap-1px')}>
       {label}
       <IconForAsc {...size(16)} />
     </span>
   )
 }
 
+// 需要统一尺寸
+const clsIconSize = 'size-16px'
+
 export const FavItemsOrderConfig: Record<FavItemsOrder, { icon: ReactNode; label: ReactNode }> = {
   [FavItemsOrder.Default]: {
-    icon: <IconForDefaultOrder {...size(16)} />,
+    icon: <IconForDefaultOrder className={clsIconSize} />,
     label: '默认顺序',
   },
   [FavItemsOrder.Shuffle]: {
-    icon: <IconForShuffle {...size(16)} />,
+    icon: <IconForShuffle className={clsIconSize} />,
     label: '随机顺序',
   },
   [FavItemsOrder.PubTimeDesc]: {
-    icon: <IconForTimestamp {...size(16)} />,
+    icon: <IconForTimestamp className={clsIconSize} />,
     label: withDescIcon('最新投稿'),
   },
   [FavItemsOrder.PubTimeAsc]: {
-    icon: <IconForTimestamp {...size(16)} />,
+    icon: <IconForTimestamp className={clsIconSize} />,
     label: withAscIcon('最早投稿'),
   },
   [FavItemsOrder.PlayCountDesc]: {
-    icon: <IconForPlayer {...size(16)} />,
+    icon: <IconForPlayer className={clsIconSize} />,
     label: withDescIcon('最多播放'),
   },
   [FavItemsOrder.CollectCountDesc]: {
-    icon: <IconForFav {...size(15)} className='mt--1px' />,
+    icon: <IconForFav className={clsx(clsIconSize, 'mt--1px')} />,
     label: withDescIcon('最多收藏'),
   },
   [FavItemsOrder.FavTimeDesc]: {
-    icon: <IconForFav {...size(16)} className='mt--1px' />,
+    icon: <IconForFav className={clsx(clsIconSize, 'mt--1px')} />,
     label: withDescIcon('最近收藏'),
   },
   [FavItemsOrder.FavTimeAsc]: {
-    icon: <IconForFav {...size(16)} className='mt--1px' />,
+    icon: <IconForFav className={clsx(clsIconSize, 'mt--1px')} />,
     label: withAscIcon('最早收藏'),
   },
 }
@@ -124,11 +124,9 @@ function getMenuItemsFor(selectedKey: string) {
 function useDropdownMenus({
   selectedKey,
   onRefresh,
-  current,
 }: {
   selectedKey: string
   onRefresh?: () => void
-  current: FavItemsOrder
 }) {
   return useMemo(() => {
     const orders = getMenuItemsFor(selectedKey)
@@ -137,21 +135,10 @@ function useDropdownMenus({
         // divider
         if (x === 'divider') return { type: 'divider' }
         const { icon, label } = FavItemsOrderConfig[x]
-        const active = x === current
         return {
           key: x,
           icon,
-          label: active ? (
-            <span
-              css={css`
-                color: ${colorPrimaryValue};
-              `}
-            >
-              {label}
-            </span>
-          ) : (
-            label
-          ),
+          label,
           async onClick() {
             favStore.savedOrderMap.set(selectedKey, x)
             await delay(100)
@@ -160,7 +147,7 @@ function useDropdownMenus({
         }
       }),
     )
-  }, [selectedKey, onRefresh, current])
+  }, [selectedKey, onRefresh])
 }
 
 function _getFallbackOrder(selectedKey: string) {
@@ -181,6 +168,16 @@ export function useSavedOrder(selectedKey: string, savedOrderMap: Map<string, Fa
   return useMemo(() => getSavedOrder(selectedKey, savedOrderMap), [savedOrderMap, selectedKey])
 }
 
+const clsMenuRoot = styled.createClass`
+  .ant-dropdown &.ant-dropdown-menu .ant-dropdown-menu-item {
+    font-size: 13px; // same as Button
+    justify-content: flex-start;
+    .ant-dropdown-menu-title-content {
+      flex-shrink: 0;
+    }
+  }
+`
+
 export function FavItemsOrderSwitcher() {
   const onRefresh = useOnRefreshContext()
   const { selectedKey, savedOrderMap } = useSnapshot(favStore)
@@ -200,25 +197,37 @@ export function FavItemsOrderSwitcher() {
     onRefresh?.()
   })
 
-  const dropdownMenuItems = useDropdownMenus({ selectedKey, onRefresh, current })
+  const dropdownMenuItems = useDropdownMenus({ selectedKey, onRefresh })
   const dropdownStyle: CSSProperties = {
-    ...dropdownMenuStyle,
+    overscrollBehavior: 'contain',
     width: 'max-content',
     border: `1px solid ${usePopoverBorderColor()}`,
-    paddingRight: 0,
   }
+
+  const [open, setOpen] = useState(false)
 
   return (
     <Dropdown
       // open
+      open={open}
+      onOpenChange={setOpen}
       getPopupContainer={getPopupContainer}
-      menu={{ items: dropdownMenuItems, style: dropdownStyle }}
-      placement='bottomRight'
+      menu={{
+        items: dropdownMenuItems,
+        style: dropdownStyle,
+        className: clsMenuRoot,
+        selectedKeys: [current],
+      }}
+      // placement='bottomRight'
     >
-      <Button ref={ref} onClick={onToggle}>
-        <span className={clsx(classes.icontextWrapper, 'gap-4px')}>
-          {icon} {label}
-        </span>
+      <Button
+        ref={ref}
+        onClick={onToggle}
+        css={[open && buttonOpenCss]}
+        icon={icon}
+        className='gap-8px px-16px'
+      >
+        {label}
       </Button>
     </Dropdown>
   )
