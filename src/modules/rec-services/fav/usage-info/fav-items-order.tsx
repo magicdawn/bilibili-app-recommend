@@ -17,7 +17,7 @@ import { Button, Dropdown } from 'antd'
 import { delay, orderBy, shuffle } from 'es-toolkit'
 import type { CSSProperties, MouseEvent, ReactNode } from 'react'
 import { useSnapshot } from 'valtio'
-import { favStore } from '../store'
+import { favStore, type FavSelectedKeyPrefix } from '../store'
 
 export enum FavItemsOrder {
   Default = 'default',
@@ -89,9 +89,7 @@ export const FavItemsOrderConfig: Record<FavItemsOrder, { icon: ReactNode; label
   },
 }
 
-export type SelectedKeyPrefix = 'fav-folder' | 'fav-collection' | 'all'
-
-const MenuItemsConfig: Record<SelectedKeyPrefix, (FavItemsOrder | 'divider')[]> = {
+const MenuItemsConfig: Record<FavSelectedKeyPrefix, (FavItemsOrder | 'divider')[]> = {
   'all': [FavItemsOrder.Default, FavItemsOrder.Shuffle],
   'fav-folder': [
     FavItemsOrder.FavTimeDesc,
@@ -117,7 +115,7 @@ const MenuItemsConfig: Record<SelectedKeyPrefix, (FavItemsOrder | 'divider')[]> 
 }
 
 function getMenuItemsFor(selectedKey: string) {
-  const prefix = selectedKey.split(':')[0] as SelectedKeyPrefix
+  const prefix = selectedKey.split(':')[0] as FavSelectedKeyPrefix
   return MenuItemsConfig[prefix] || Object.values(FavItemsOrder)
 }
 
@@ -218,7 +216,7 @@ export function FavItemsOrderSwitcher() {
         className: clsMenuRoot,
         selectedKeys: [current],
       }}
-      // placement='bottomRight'
+      placement='bottomRight'
     >
       <Button
         ref={ref}

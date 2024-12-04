@@ -11,7 +11,7 @@ import { usePopupContainer } from '../../_base'
 import { dropdownMenuStyle } from '../../_shared'
 import { isFavFolderDefault, isFavFolderPrivate } from '../fav-util'
 import type { FavFolderBasicService } from '../service/_base'
-import { favStore } from '../store'
+import { favStore, type FavStore } from '../store'
 
 export const IconForAll = IconLucideList
 export const IconForPrivateFolder = IconLucideFolderLock
@@ -20,8 +20,14 @@ export const IconForCollection = IconIonLayersOutline
 
 export function FavUsageInfo({ extraContent }: { extraContent?: ReactNode }) {
   const { fav } = useSettingsSnapshot()
-  const { favFolders, selectedFavFolder, favCollections, selectedFavCollection, selectedLabel } =
-    useSnapshot(favStore)
+  const {
+    favFolders,
+    selectedFavFolder,
+    favCollections,
+    selectedFavCollection,
+    selectedLabel,
+    selectedKey,
+  } = useSnapshot(favStore)
   const onRefresh = useOnRefreshContext()
   const { ref, getPopupContainer } = usePopupContainer()
 
@@ -53,10 +59,11 @@ export function FavUsageInfo({ extraContent }: { extraContent?: ReactNode }) {
             type: 'group',
             label: `@${upName}`,
             children: collections.map((f) => {
+              const key: FavStore['selectedKey'] = `fav-collection:${f.id}`
               const icon = <IconForCollection />
               const label = `${f.title} (${f.media_count})`
               return {
-                key: `fav-collection:${f.id}`,
+                key,
                 icon,
                 label,
                 async onClick() {
@@ -86,17 +93,17 @@ export function FavUsageInfo({ extraContent }: { extraContent?: ReactNode }) {
           onRefresh?.()
         },
       },
-
       !!favFolders.length && {
         type: 'group',
         label: '收藏夹',
         children: favFolders.map((f) => {
           const isDefault = isFavFolderDefault(f.attr)
           const isPrivate = isFavFolderPrivate(f.attr)
+          const key: FavStore['selectedKey'] = `fav-folder:${f.id}`
           const icon = isPrivate ? <IconForPrivateFolder /> : <IconForPublicFolder />
           const label = `${f.title} (${f.media_count})`
           return {
-            key: `fav-folder:${f.id}`,
+            key,
             icon,
             label,
             async onClick() {
@@ -109,23 +116,6 @@ export function FavUsageInfo({ extraContent }: { extraContent?: ReactNode }) {
           }
         }),
       },
-
-      /* favCollections.map((f) => {
-          const icon = <IconForCollection />
-          const label = `${f.title} (${f.media_count})`
-          return {
-            key: `fav-collection:${f.id}`,
-            icon,
-            label,
-            async onClick() {
-              favStore.selectedFavFolderId = undefined
-              favStore.selectedFavCollectionId = f.id
-              setScopeDropdownOpen(false)
-              await delay(100)
-              onRefresh?.()
-            },
-          }
-        }) */
       !!favCollections.length && {
         type: 'group',
         label: '合集',
@@ -155,6 +145,7 @@ export function FavUsageInfo({ extraContent }: { extraContent?: ReactNode }) {
       menu={{
         items: scopeSelectionDropdownMenus,
         style: { ...dropdownMenuStyle, border: `1px solid ${usePopoverBorderColor()}` },
+        selectedKeys: [selectedKey],
       }}
     >
       <Button

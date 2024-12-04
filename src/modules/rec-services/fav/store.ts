@@ -7,6 +7,9 @@ import type { FavFolder } from './types/folders/list-all-folders'
 import { FavItemsOrder, getSavedOrder } from './usage-info/fav-items-order'
 import { fetchFavFolder } from './user-fav-service'
 
+export type FavSelectedKeyPrefix = 'fav-folder' | 'fav-collection' | 'all'
+export type FavStore = typeof favStore
+
 export const favStore = proxy({
   // methods
   updateList,
@@ -27,15 +30,21 @@ export const favStore = proxy({
     return this.favCollections.find((x) => x.id === this.selectedFavCollectionId)
   },
 
-  get selectedKey() {
+  get selectedKey(): 'all' | `${Exclude<FavSelectedKeyPrefix, 'all'>}:${number}` {
+    let prefix: FavSelectedKeyPrefix
+    let id: number | undefined
     if (typeof this.selectedFavFolderId !== 'undefined') {
-      return `fav-folder:${this.selectedFavFolderId}`
+      prefix = 'fav-folder'
+      id = this.selectedFavFolderId
+    } else if (typeof this.selectedFavCollectionId !== 'undefined') {
+      prefix = 'fav-collection'
+      id = this.selectedFavCollectionId
+    } else {
+      return 'all'
     }
-    if (typeof this.selectedFavCollectionId !== 'undefined') {
-      return `fav-collection:${this.selectedFavCollectionId}`
-    }
-    return 'all'
+    return `${prefix}:${id}`
   },
+
   get selectedLabel() {
     if (this.selectedFavFolder)
       return `${this.selectedFavFolder.title} (${this.selectedFavFolder.media_count})`
