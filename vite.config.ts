@@ -72,7 +72,7 @@ if (process.env.RELEASE) {
 }
 
 // https://vitejs.dev/config/
-export default defineConfig(({ command }) => ({
+export default defineConfig(({ command, mode }) => ({
   define: {
     __SCRIPT_VERSION__: JSON.stringify(scriptVersion),
   },
@@ -107,7 +107,7 @@ export default defineConfig(({ command }) => ({
   // To specify the target in dev, the `esbuild.target` option can be used, which defaults to `esnext` for minimal transpilation.
   // In builds, the `build.target` option takes higher priority over `esbuild.target` and can also be set if needed.
   esbuild: {
-    target: 'es2024', // transform explicit-resource-management, current stage 3
+    target: 'es2022', // transform explicit-resource-management, current stage 3
   },
 
   build: {
@@ -267,7 +267,7 @@ export default defineConfig(({ command }) => ({
         open: true,
       }),
 
-    Inspect(),
+    mode === 'development' && Inspect(),
   ].filter(Boolean),
 }))
 
