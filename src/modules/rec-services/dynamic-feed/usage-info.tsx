@@ -13,8 +13,7 @@ import { CHARGE_ONLY_TEXT } from '$components/VideoCard/top-marks'
 import { HelpInfo } from '$components/_base/HelpInfo'
 import { AntdTooltip } from '$components/_base/antd-custom'
 import { colorPrimaryValue } from '$components/css-vars'
-import { IconForOpenExternalLink } from '$modules/icon'
-import { IconPark } from '$modules/icon/icon-park'
+import { IconForOpenExternalLink, IconForReset } from '$modules/icon'
 import {
   settings,
   updateSettingsInnerArray,
@@ -444,7 +443,7 @@ export function DynamicFeedUsageInfo() {
 
         {(hasSelectedUp || selectedFollowGroup) && (
           <Button onClick={onClear} className='gap-0'>
-            <IconPark name='Return' size={14} style={{ marginRight: 5 }} />
+            <IconForReset className='size-14px mr-5px' />
             <span>清除</span>
           </Button>
         )}

@@ -1,33 +1,33 @@
-import { IconPark } from '$modules/icon/icon-park'
-import type { ReactNode } from 'react'
-import type { SetOptional } from 'type-fest'
+import type { ComponentType, ReactNode, SVGProps } from 'react'
+import IconParkOutlineTips from '~icons/icon-park-outline/tips'
 import { AntdTooltip } from './antd-custom'
+
+const DefaultIconComponent = IconParkOutlineTips
 
 export function HelpInfo({
   children,
-  iconProps,
   tooltipProps,
+  IconComponent,
+  ...restSvgProps
 }: {
-  children?: ReactNode
+  children?: ReactNode // tooltip content
   tooltipProps?: Partial<ComponentProps<typeof AntdTooltip>>
-  iconProps?: SetOptional<ComponentProps<typeof IconPark>, 'name'>
-}) {
+  IconComponent?: ComponentType<SVGProps<SVGSVGElement>>
+} & SVGProps<SVGSVGElement>) {
+  IconComponent ??= DefaultIconComponent
+
+  const icon = (
+    <IconComponent
+      {...restSvgProps}
+      className={clsx('size-16px cursor-pointer ml-4px', restSvgProps.className)}
+    />
+  )
+
   return (
-    <>
-      {children && (
-        <AntdTooltip {...tooltipProps} title={children}>
-          <IconPark
-            name={'Tips'}
-            size={16}
-            {...iconProps}
-            style={{
-              cursor: 'pointer',
-              marginLeft: '4px',
-              ...iconProps?.style,
-            }}
-          />
-        </AntdTooltip>
-      )}
-    </>
+    !!children && (
+      <AntdTooltip {...tooltipProps} title={children}>
+        {icon}
+      </AntdTooltip>
+    )
   )
 }

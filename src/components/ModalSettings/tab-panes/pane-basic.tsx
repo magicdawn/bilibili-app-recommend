@@ -6,7 +6,7 @@ import { TabIcon } from '$components/RecHeader/tab-config'
 import { ETab } from '$components/RecHeader/tab-enum'
 import { VideoLinkOpenMode, VideoLinkOpenModeConfig } from '$components/VideoCard/index.shared'
 import { HelpInfo } from '$components/_base/HelpInfo'
-import { IconPark } from '$modules/icon/icon-park'
+import { IconForCopy } from '$modules/icon'
 import { updateSettings, useSettingsSnapshot } from '$modules/settings'
 import { antMessage } from '$utility/antd'
 import { css } from '@emotion/react'
@@ -56,13 +56,7 @@ export function TabPaneBasic() {
         title={
           <>
             <TabIcon tabKey={ETab.RecommendApp} size={30} mr={5} /> 推荐 access_key
-            <HelpInfo
-              iconProps={{
-                name: 'Help',
-                size: 18,
-                style: { marginTop: 6, marginLeft: 5 },
-              }}
-            >
+            <HelpInfo className='size-18px mt-6px ml-5px' IconComponent={IconIconParkOutlineHelp}>
               <span css={inlineFlexVerticalCenterStyle}>
                 用于「
                 <TabIcon tabKey={ETab.RecommendApp} mr={5} />
@@ -260,14 +254,7 @@ export function TabPaneBasic() {
               >
                 {APP_NAME} v{__SCRIPT_VERSION__}
               </Tag>
-              <IconPark
-                name={'Copy'}
-                size={16}
-                onClick={handleCopyScriptVersion}
-                css={css`
-                  cursor: pointer;
-                `}
-              />
+              <IconForCopy className='size-16px cursor-pointer' onClick={handleCopyScriptVersion} />
             </span>
           </>
         }

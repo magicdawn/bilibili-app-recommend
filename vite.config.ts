@@ -115,7 +115,7 @@ export default defineConfig(({ command }) => ({
     cssMinify: minify,
     minify: minify,
     // target defaults `modules`, = ['es2020', 'edge88', 'firefox78', 'chrome87', 'safari14']
-    target: 'modules',
+    // target: 'modules',
   },
 
   // Set this to 0.0.0.0 or true to listen on all addresses, including LAN and public addresses.

@@ -189,7 +189,7 @@ export function VideoSourceTab({ onRefresh }: { onRefresh: OnRefresh }) {
           </Radio.Button>
         ))}
       </Radio.Group>
-      <HelpInfo iconProps={{ name: 'Tips', size: 16, style: { marginLeft: 6 } }}>
+      <HelpInfo className='size-16px ml-6px'>
         <>
           {currentTabConfigList.map(({ key, label, desc }) => (
             <div

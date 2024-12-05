@@ -19,7 +19,6 @@ import { type RecItemType, type RecItemTypeOrSeparator } from '$define'
 import { EApiType } from '$define/index.shared'
 import { $headerHeight } from '$header'
 import { IconForOpenExternalLink } from '$modules/icon'
-import { IconPark } from '$modules/icon/icon-park'
 import { concatThenUniq, refreshForGrid } from '$modules/rec-services'
 import { hotStore } from '$modules/rec-services/hot'
 import { getIService } from '$modules/rec-services/service-map.ts'
@@ -380,24 +379,16 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
         <>
           {hasMore ? (
             <>
-              {/* <IconSvgSpinnersBarsRotateFade
-                {...size(30)}
-                className='mr-10'
+              <IconIconParkOutlineLoading
+                className='size-40px animate-spin mr-10px'
                 css={css`
                   color: ${colorPrimaryValue};
                 `}
-              /> */}
-              <IconPark
-                name='Loading'
-                fill={colorPrimaryValue}
-                spin
-                size={40}
-                style={{ marginRight: 10 }}
               />
               加载中~
             </>
           ) : (
-            '没有更多了~'
+            <>没有更多了~</>
           )}
         </>
       )}

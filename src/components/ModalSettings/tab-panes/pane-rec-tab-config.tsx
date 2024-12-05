@@ -8,7 +8,6 @@ import { AntdTooltip } from '$components/_base/antd-custom'
 import { bgLv2Value, bgLv3Value } from '$components/css-vars'
 import { EAppApiDevice } from '$define/index.shared'
 import { getUserNickname } from '$modules/bilibili/user/nickname'
-import { IconPark } from '$modules/icon/icon-park'
 import { FollowGroupMergeTimelineService } from '$modules/rec-services/dynamic-feed/group/merge-timeline-service'
 import type { FollowGroup } from '$modules/rec-services/dynamic-feed/group/types/groups'
 import {
@@ -63,14 +62,7 @@ export function TabPaneRecTabsConfig() {
         <div className={styles.settingsGroup}>
           <div className={styles.settingsGroupTitle}>
             Tab 设置
-            <HelpInfo
-              iconProps={{
-                name: 'Tips',
-                style: { marginLeft: 5, marginRight: 20 },
-              }}
-            >
-              勾选显示, 拖动排序
-            </HelpInfo>
+            <HelpInfo className='ml-5px mr-20px'>勾选显示, 拖动排序</HelpInfo>
             <Col flex={1} />
             <ResetPartialSettingsButton paths={['hidingTabKeys', 'customTabKeysOrder']} />
           </div>
@@ -128,9 +120,6 @@ export function TabPaneRecTabsConfig() {
                   configPath='fav.addSeparator'
                   label='添加分割线'
                   tooltip='顺序显示时, 按收藏夹添加分割线'
-                  css={css`
-                    margin-left: 20px !important;
-                  `}
                 />
               </Space>
             </div>
@@ -214,12 +203,7 @@ export function TabPaneRecTabsConfig() {
               </div>
               <div style={{ width: '100%', display: 'flex', alignItems: 'center' }}>
                 App API 设备类型
-                <HelpInfo
-                  iconProps={{
-                    name: 'Tips',
-                    style: { marginLeft: 5, marginRight: 10 },
-                  }}
-                >
+                <HelpInfo className='ml-5px mr-10px'>
                   默认 ipad, 视频有 头像/日期 等信息
                   <br />
                   可选 android, 有图文类型的推荐
@@ -364,7 +348,7 @@ function VideoSourceTabSortableItem({ id }: { id: ETab }) {
           }
         `}
       >
-        <IconPark name='Drag' size={18} />
+        <IconIconParkOutlineDrag className='size-18px' />
       </div>
     </div>
   )

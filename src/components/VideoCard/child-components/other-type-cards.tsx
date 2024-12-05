@@ -4,7 +4,7 @@ import type { Reason } from '$components/ModalDislike'
 import { delDislikeId } from '$components/ModalDislike'
 import type { AppRecItemExtend, RecItemType } from '$define'
 import { UserBlacklistService } from '$modules/bilibili/me/relations/blacklist'
-import { IconPark } from '$modules/icon/icon-park'
+import { IconForBlacklist, IconForReset } from '$modules/icon'
 import { antMessage } from '$utility/antd'
 import { toastRequestFail } from '$utility/toast'
 import { css } from '@emotion/react'
@@ -169,7 +169,7 @@ export const DislikedCard = memo(function DislikedCard({
     <div css={blockedCardCss.wrapper}>
       <div css={blockedCardCss.cover}>
         <div css={blockedCardCss.coverInner}>
-          <IconPark name='DistraughtFace' size={32} className='mb-5px' />
+          <IconIconParkOutlineDistraughtFace className='size-32px mb-5px' />
           <div css={blockedCardCss.dislikeReason}>{dislikedReason?.name}</div>
           <div css={blockedCardCss.dislikeDesc}>
             {dislikedReason?.toast || '将减少此类内容推荐'}
@@ -196,7 +196,7 @@ function __BottomRevertAction({
       <VideoCardBottom item={item} cardData={cardData} className='invisible' />
       <div css={blockedCardCss.actionInner}>
         <button onClick={onClick}>
-          <IconPark name='Return' size='16' style={{ marginRight: 4, marginTop: -2 }} />
+          <IconForReset className='size-16px mr-4px mt--2px' />
           撤销
         </button>
       </div>
@@ -223,7 +223,7 @@ export const BlacklistCard = memo(function BlacklistCard({
     <div css={blockedCardCss.wrapper}>
       <div css={blockedCardCss.cover}>
         <div css={blockedCardCss.coverInner}>
-          <IconPark name='PeopleDelete' size={32} className='mb-5px' />
+          <IconForBlacklist className='size-32px mb-5px' />
           <div css={blockedCardCss.dislikeReason}>已拉黑</div>
           <div css={blockedCardCss.dislikeDesc}>UP: {authorName}</div>
         </div>

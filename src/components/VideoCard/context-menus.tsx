@@ -2,12 +2,12 @@
  * context menus related
  */
 
+import { appClsColorPrimary } from '$common/css-vars-export.module.scss'
 import { C } from '$common/emotion-css'
 import { currentGridItems, getBvidInfo } from '$components/RecGrid/unsafe-window-export'
 import type { OnRefresh } from '$components/RecGrid/useRefresh'
 import { videoSourceTabState } from '$components/RecHeader/tab'
 import { ETab } from '$components/RecHeader/tab-enum'
-import { colorPrimaryValue } from '$components/css-vars'
 import {
   isDynamic,
   isFav,
@@ -21,8 +21,15 @@ import { UserBlacklistService } from '$modules/bilibili/me/relations/blacklist'
 import { UserfollowService } from '$modules/bilibili/me/relations/follow'
 import { setNicknameCache } from '$modules/bilibili/user/nickname'
 import { openNewTab } from '$modules/gm'
-import { IconForDislike, IconForOpenExternalLink, IconForWatchlater } from '$modules/icon'
-import { IconPark } from '$modules/icon/icon-park'
+import {
+  IconForBlacklist,
+  IconForCopy,
+  IconForDislike,
+  IconForFav,
+  IconForFaved,
+  IconForOpenExternalLink,
+  IconForWatchlater,
+} from '$modules/icon'
 import {
   DynamicFeedQueryKey,
   QUERY_DYNAMIC_UP_MID,
@@ -275,14 +282,14 @@ export function useContextMenus({
       {
         key: 'copy-link',
         label: '复制视频链接',
-        icon: <IconPark name='Copy' size={15} />,
+        icon: <IconForCopy className='size-15px' />,
         onClick: onCopyLink,
       },
       {
         test: !!bvid,
         key: 'copy-bvid',
         label: '复制 BVID',
-        icon: <IconPark name='Copy' size={15} />,
+        icon: <IconForCopy className='size-15px' />,
         onClick() {
           copyContent(bvid!)
         },
@@ -291,7 +298,7 @@ export function useContextMenus({
         test: !!bvid && settings.__internalEnableCopyBvidInfoContextMenu,
         key: 'copy-bvid-info',
         label: '复制 BVID 信息',
-        icon: <IconPark name='Copy' size={15} />,
+        icon: <IconForCopy className='size-15px' />,
         onClick() {
           copyContent(getBvidInfo(cardData))
         },
@@ -304,7 +311,7 @@ export function useContextMenus({
         test: hasDynamicFeedFilterSelectUpEntry,
         key: 'dymamic-feed-filter-select-up',
         label: '查看 UP 的动态',
-        icon: <IconPark name='PeopleSearch' size={15} />,
+        icon: <IconIconParkOutlinePeopleSearch className='size-15px' />,
         onClick() {
           onDynamicFeedFilterSelectUp()
         },
@@ -325,17 +332,10 @@ export function useContextMenus({
       {
         test: isWatchlater(item),
         key: 'add-fav',
-        icon: (
-          <IconPark
-            name='Star'
-            size={15}
-            {...(favFolderNames?.length
-              ? {
-                  theme: 'two-tone',
-                  fill: ['currentColor', colorPrimaryValue],
-                }
-              : undefined)}
-          />
+        icon: favFolderNames?.length ? (
+          <IconForFaved className={clsx('size-15px', appClsColorPrimary)} />
+        ) : (
+          <IconForFav className='size-15px' />
         ),
         label: favFolderNames?.length
           ? `已收藏 ${favFolderNames.map((n) => `「${n}」`).join('')}`
@@ -365,7 +365,7 @@ export function useContextMenus({
         test: isWatchlater(item) && watchlaterAdded,
         key: 'watchlater-readd',
         label: '重新添加稍候再看 (移到最前)',
-        icon: <IconPark name='AddTwo' size={15} />,
+        icon: <IconIconParkOutlineAddTwo className='size-15px' />,
         async onClick() {
           const { success } = await onToggleWatchLater(undefined, watchlaterAdd)
           if (!success) return
@@ -407,21 +407,21 @@ export function useContextMenus({
         test: hasUnfollowEntry,
         key: 'unfollow-up',
         label: '取消关注',
-        icon: <IconPark name='PeopleMinus' size={15} />,
+        icon: <IconIconParkOutlinePeopleMinus className='size-15px' />,
         onClick: onUnfollowUp,
       },
       {
         test: hasBlacklistEntry,
         key: 'blacklist-up',
         label: '将 UP 加入黑名单',
-        icon: <IconPark name='PeopleDelete' size={15} />,
+        icon: <IconForBlacklist className='size-15' />,
         onClick: onBlacklistUp,
       },
       {
         test: hasBlacklistEntry,
         key: 'add-up-to-filterlist',
         label: '将 UP 加入过滤列表',
-        icon: <IconPark name='PeopleDelete' size={15} />,
+        icon: <IconForBlacklist className='size-15' />,
         onClick: onAddUpToFilterList,
       },
     ])

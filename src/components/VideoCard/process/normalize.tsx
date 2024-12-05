@@ -25,7 +25,6 @@ import {
 } from '$define'
 import type { EApiType } from '$define/index.shared'
 import { styled } from '$libs'
-import { IconPark } from '$modules/icon/icon-park'
 import { isFavFolderPrivate } from '$modules/rec-services/fav/fav-util'
 import type { FavItemExtend } from '$modules/rec-services/fav/types'
 import {
@@ -480,20 +479,6 @@ const fillWithColorPrimary = styled.createClass`
     fill: ${colorPrimaryValue};
   }
 `
-const originalIcon = (
-  <IconPark
-    name='Star'
-    size={16}
-    theme='two-tone'
-    fill={['currentColor', colorPrimaryValue]}
-    style={{
-      display: 'inline-block',
-      verticalAlign: 'middle',
-      marginRight: 4,
-      marginTop: -4,
-    }}
-  />
-)
 
 function apiFavAdapter(item: FavItemExtend): IVideoCardData {
   const belongsToTitle = item.from === 'fav-folder' ? item.folder.title : item.collection.title

@@ -5,6 +5,10 @@
   #{$app-custom-font-family-id}: #{meta.inspect($app-custom-font-family)};
 }
 
+.#{$app-cls-color-primary} {
+  color: var(#{$app-color-primary-id});
+}
+
 // colors
 :root {
   #{$app-border-color-id}: oklch(from var($app-bg-id) calc(l - 0.05) c h); // #fff -> #eee

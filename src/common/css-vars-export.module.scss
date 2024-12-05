@@ -21,4 +21,5 @@
   app-cls-root: $app-cls-root;
   app-cls-dark: $app-cls-dark;
   app-cls-dark-selector: #{string.unquote($app-cls-dark-selector)};
+  app-cls-color-primary: $app-cls-color-primary;
 }
