@@ -11,6 +11,7 @@ import IconsResolver from 'unplugin-icons/resolver'
 import Icons from 'unplugin-icons/vite'
 import { defineConfig, type ConfigEnv, type PluginOption } from 'vite'
 import importer from 'vite-plugin-importer'
+import Inspect from 'vite-plugin-inspect'
 import monkey, { cdn } from 'vite-plugin-monkey'
 import tsconfigPaths from 'vite-tsconfig-paths'
 import { name as packageName, version as packageVersion } from './package.json'
@@ -107,7 +108,11 @@ export default defineConfig(({ command }) => ({
     cssMinify: minify,
     minify: minify,
     // target defaults `modules`, = ['es2020', 'edge88', 'firefox78', 'chrome87', 'safari14']
-    // target: ''
+    // target: 'modules',
+  },
+
+  esbuild: {
+    target: 'es2022',
   },
 
   // Set this to 0.0.0.0 or true to listen on all addresses, including LAN and public addresses.
@@ -255,6 +260,8 @@ export default defineConfig(({ command }) => ({
       visualizer({
         open: true,
       }),
+
+    Inspect(),
   ].filter(Boolean),
 }))
 
@@ -287,7 +294,7 @@ function getReactPlugin(command: ConfigEnv['command']) {
   const babel = react({
     jsxImportSource: '@emotion/react',
     babel: {
-      plugins: ['@emotion/babel-plugin'],
+      plugins: ['@emotion/babel-plugin', '@babel/plugin-syntax-explicit-resource-management'],
     },
   })
 

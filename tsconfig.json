@@ -10,9 +10,15 @@
       "$*": ["./src/*"]
     },
 
-    "target": "ES2022",
     "module": "ESNext",
-    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "target": "ES2022",
+    "lib": [
+      "ES2023",
+      "DOM",
+      "DOM.Iterable",
+      "ES2024.Promise", // Promise.withResolvers
+      "ESNext.Disposable" // DisposableStack / ...
+    ],
     "useDefineForClassFields": true,
     "skipLibCheck": true,
 

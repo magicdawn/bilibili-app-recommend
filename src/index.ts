@@ -10,6 +10,10 @@
  *     不见满街漂亮妹，哪个归得程序员？
  */
 
+// polyfills
+import 'core-js/proposals/explicit-resource-management'
+import 'core-js/proposals/promise-with-resolvers'
+
 // styles
 import '$common/global.scss'
 import '@icon-park/react/styles/index.css'
