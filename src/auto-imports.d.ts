@@ -46,7 +46,6 @@ declare global {
   const clsx: typeof import('clsx')['clsx']
   const createRef: typeof import('react')['createRef']
   const createRoot: typeof import('react-dom/client')['createRoot']
-  const css: typeof import('@emotion/react')['css']
   const forwardRef: typeof import('react')['forwardRef']
   const lazy: typeof import('react')['lazy']
   const memo: typeof import('react')['memo']

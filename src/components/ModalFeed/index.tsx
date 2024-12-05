@@ -11,6 +11,7 @@ import { CollapseBtn } from '$components/_base/CollapseBtn'
 import { colorPrimaryValue } from '$components/css-vars'
 import { useSettingsSnapshot } from '$modules/settings'
 import { antMessage } from '$utility/antd'
+import { css } from '@emotion/react'
 
 const S = {
   modalMask: (narrowMode: boolean) => [

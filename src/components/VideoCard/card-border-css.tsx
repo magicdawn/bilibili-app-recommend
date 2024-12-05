@@ -12,7 +12,7 @@ import { bgLv1Value, bgLv2Value, borderColorValue, colorPrimaryValue } from '$co
 import { useSettingsSnapshot } from '$modules/settings'
 import { tweakLightness } from '$utility/css'
 import type { CssProp } from '$utility/type'
-import { css as _css } from '@emotion/react'
+import { css as _css, css } from '@emotion/react'
 import { bgValue, videoCardBorderRadiusValue } from '../css-vars'
 
 const c = tweakLightness(colorPrimaryValue, 0.1)

@@ -1,6 +1,7 @@
 import { APP_CLS_ROOT } from '$common'
 import { AntdApp } from '$components/AntdApp'
 import { BaseModal, BaseModalStyle, ModalClose } from '$components/_base/BaseModal'
+import { css } from '@emotion/react'
 import { QRCode } from 'antd'
 import { once } from 'es-toolkit'
 import mitt from 'mitt'

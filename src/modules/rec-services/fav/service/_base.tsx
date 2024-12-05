@@ -7,6 +7,7 @@ import { EApiType } from '$define/index.shared'
 import { IconForOpenExternalLink, IconForPlayer } from '$modules/icon'
 import { isWebApiSuccess, request } from '$request'
 import toast from '$utility/toast'
+import { css } from '@emotion/react'
 import { useSnapshot } from 'valtio'
 import {
   formatBvidUrl,

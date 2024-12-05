@@ -5,6 +5,7 @@ import type { RecHeaderRef } from '$components/RecHeader'
 import { RecHeader } from '$components/RecHeader'
 import { useHeaderState } from '$components/RecHeader/index.shared'
 import { useSettingsSnapshot } from '$modules/settings'
+import { css } from '@emotion/react'
 
 const narrowStyle = {
   grid: css`

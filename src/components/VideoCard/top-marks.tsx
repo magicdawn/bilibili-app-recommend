@@ -9,6 +9,7 @@ import {
   isNormalRankingItem,
 } from '$modules/rec-services/hot/ranking/category'
 import type { NormalRankingItem } from '$modules/rec-services/hot/ranking/types'
+import { css } from '@emotion/react'
 import { Dropdown } from 'antd'
 import { size } from 'polished'
 import IconParkOutlineMore from '~icons/icon-park-outline/more'

@@ -3,8 +3,9 @@ import { useLessFrequentFn } from '$common/hooks/useLessFrequentFn'
 import { AntdApp } from '$components/AntdApp'
 import { colorPrimaryValue } from '$components/css-vars'
 import { openNewTab } from '$modules/gm'
+import { settings } from '$modules/settings'
 import createEmotion from '@emotion/css/create-instance'
-import { Global } from '@emotion/react'
+import { css, Global } from '@emotion/react'
 import { useHover } from 'ahooks'
 import { App } from 'antd'
 import { once } from 'es-toolkit'
@@ -14,7 +15,6 @@ import RadixIconsLockOpen1 from '~icons/radix-icons/lock-open-1'
 import RadixIconsOpenInNewWindow from '~icons/radix-icons/open-in-new-window'
 import { VideoCardActionButton } from '../child-components/VideoCardActions'
 import { QueryKey } from '../index.shared'
-import { settings } from '$modules/settings'
 
 export function renderInPipWindow(newHref: string, pipWindow: Window) {
   const cssInsertContainer = pipWindow.document.head

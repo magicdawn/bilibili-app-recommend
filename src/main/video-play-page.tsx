@@ -13,6 +13,7 @@ import {
 import { getBiliPlayer } from '$modules/bilibili/player'
 import { getBiliPlayerConfigAutoPlay } from '$modules/bilibili/player-config'
 import { onVideoChange } from '$modules/bilibili/video-page'
+import { css } from '@emotion/react'
 import { Button } from 'antd'
 import { delay } from 'es-toolkit'
 import ms from 'ms'

@@ -1,4 +1,5 @@
 import { isSafari } from '$ua'
+import { css } from '@emotion/react'
 import type { ComponentProps } from 'react'
 
 type IProps = {

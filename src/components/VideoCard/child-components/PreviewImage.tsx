@@ -1,5 +1,6 @@
 import { bgLv1Value, colorPrimaryValue } from '$components/css-vars'
 import type { PvideoData } from '$define'
+import { css } from '@emotion/react'
 import { useMouse } from 'ahooks'
 import type { ComponentProps, ComponentPropsWithoutRef } from 'react'
 import { videoCardBorderRadiusValue } from '../../css-vars'

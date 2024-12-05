@@ -103,16 +103,19 @@ export default defineConfig(({ command }) => ({
     alias: {},
   },
 
+  // Vite ignores the target value in the tsconfig.json, following the same behavior as esbuild.
+  // To specify the target in dev, the `esbuild.target` option can be used, which defaults to `esnext` for minimal transpilation.
+  // In builds, the `build.target` option takes higher priority over `esbuild.target` and can also be set if needed.
+  esbuild: {
+    target: 'es2024', // transform explicit-resource-management, current stage 3
+  },
+
   build: {
     emptyOutDir: process.env.RELEASE ? false : true,
     cssMinify: minify,
     minify: minify,
     // target defaults `modules`, = ['es2020', 'edge88', 'firefox78', 'chrome87', 'safari14']
-    // target: 'modules',
-  },
-
-  esbuild: {
-    target: 'es2022',
+    target: 'modules',
   },
 
   // Set this to 0.0.0.0 or true to listen on all addresses, including LAN and public addresses.
@@ -149,7 +152,10 @@ export default defineConfig(({ command }) => ({
         },
         { from: 'react-dom/client', imports: ['Root'], type: true },
         { from: 'react-dom/client', imports: ['createRoot'] },
-        { from: '@emotion/react', imports: ['css'] },
+
+        // @emotion/babel-plugin can not optimize auto-import, babel is pre transform, auto-import is a post transform
+        // { from: '@emotion/react', imports: ['css'] },
+
         { from: 'clsx', imports: ['clsx'] },
         { from: 'polished', imports: ['size'] },
       ],
