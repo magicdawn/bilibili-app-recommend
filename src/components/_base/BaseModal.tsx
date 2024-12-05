@@ -1,11 +1,9 @@
 import { APP_CLS_ROOT } from '$common'
 import { appClsDarkSelector } from '$common/css-vars-export.module.scss'
-import { C } from '$common/emotion-css'
 import { useIsDarkMode } from '$modules/dark-mode'
+import { hasMarginLeft, hasSize } from '$utility/css'
 import type { CssProp } from '$utility/type'
 import { css } from '@emotion/react'
-import { Close } from '@icon-park/react'
-import type { Icon } from '@icon-park/react/es/runtime'
 import type { ComponentProps, MouseEvent } from 'react'
 import { createPortal } from 'react-dom'
 
@@ -225,15 +223,16 @@ export function BaseModal({
   )
 }
 
-export const ModalClose = (props: ComponentProps<Icon>) => {
+export const ModalClose = ({ className, ...props }: ComponentProps<'svg'>) => {
   return (
-    <Close
+    <IconIconParkOutlineClose
       {...props}
-      css={css`
-        ${C.size(18)};
-        ${C.ml(10)};
-        cursor: pointer;
-      `}
+      className={clsx(
+        'cursor-pointer',
+        !hasSize(className) && 'size-18px',
+        !hasMarginLeft(className) && 'ml-10px',
+        className,
+      )}
     />
   )
 }

@@ -9,6 +9,7 @@ export const IconForOpenExternalLink = IconMaterialSymbolsLightOpenInNew
 // general
 export const IconForAsc = IconTablerSortAscending2
 export const IconForDesc = IconTablerSortDescending2
+export const IconForInfo = IconIconParkOutlineInfo
 
 // orders
 export const IconForDefaultOrder = IconMdiShuffleDisabled

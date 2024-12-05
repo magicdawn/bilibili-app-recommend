@@ -2,11 +2,10 @@ import { APP_CLS_ROOT, OPERATION_FAIL_MSG } from '$common'
 import { BaseModal, BaseModalStyle, ModalClose } from '$components/_base/BaseModal'
 import { borderColorValue, colorPrimaryValue } from '$components/css-vars'
 import type { AppRecItem, AppRecItemExtend } from '$define'
-import { IconForDislike } from '$modules/icon'
+import { IconForDislike, IconForInfo } from '$modules/icon'
 import { antMessage } from '$utility/antd'
 import { toastRequestFail } from '$utility/toast'
 import { css } from '@emotion/react'
-import { Info } from '@icon-park/react'
 import { useLockFn, useRequest, useUpdateLayoutEffect } from 'ahooks'
 import { Spin } from 'antd'
 import { clsx } from 'clsx'
@@ -233,12 +232,12 @@ function ModalDislike({ show, onHide, item }: IProps) {
           `}
         >
           <div className='tips' css={S.tips}>
-            <Info className='mr-5 size-15' />
+            <IconForInfo className='mr-5 size-15' />
             使用删除键打开弹窗, 数字键选择, Esc 关闭
           </div>
           {activeReasonName && (
             <div className='tips' css={S.tips}>
-              <Info className='mr-5 size-15' />
+              <IconForInfo className='mr-5 size-15' />
               已选择「{activeReasonName}」, 回车键提交
             </div>
           )}

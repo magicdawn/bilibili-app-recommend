@@ -1,4 +1,4 @@
-import { uniq } from 'es-toolkit'
+import { hasMarginLeft, hasSize } from '$utility/css'
 import type { ComponentType, ReactNode, SVGProps } from 'react'
 import IconParkOutlineTips from '~icons/icon-park-outline/tips'
 import { AntdTooltip } from './antd-custom'
@@ -16,18 +16,14 @@ export function HelpInfo({
   tooltipProps?: Partial<ComponentProps<typeof AntdTooltip>>
   IconComponent?: ComponentType<SVGProps<SVGSVGElement>>
 } & SVGProps<SVGSVGElement>) {
-  const classList = useMemo(() => {
-    return uniq(
-      (className || '')
-        .split(/\s+/)
-        .map((x) => x.trim())
-        .filter(Boolean),
-    )
-  }, [className])
+  const [_hasSize, _hasMarginLeft] = useMemo(
+    () => [hasSize(className), hasMarginLeft(className)],
+    [className],
+  )
   const _className = clsx(
     'cursor-pointer',
-    !classList.some((x) => x.startsWith('size-')) && 'size-16px',
-    !classList.some((x) => x.startsWith('ml-')) && 'ml-4px',
+    !_hasSize && 'size-16px',
+    !_hasMarginLeft && 'ml-4px',
     className,
   )
 
