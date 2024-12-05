@@ -1,3 +1,4 @@
+import { uniq } from 'es-toolkit'
 import type { ComponentType, ReactNode, SVGProps } from 'react'
 import IconParkOutlineTips from '~icons/icon-park-outline/tips'
 import { AntdTooltip } from './antd-custom'
@@ -8,20 +9,30 @@ export function HelpInfo({
   children,
   tooltipProps,
   IconComponent,
+  className,
   ...restSvgProps
 }: {
   children?: ReactNode // tooltip content
   tooltipProps?: Partial<ComponentProps<typeof AntdTooltip>>
   IconComponent?: ComponentType<SVGProps<SVGSVGElement>>
 } & SVGProps<SVGSVGElement>) {
-  IconComponent ??= DefaultIconComponent
-
-  const icon = (
-    <IconComponent
-      {...restSvgProps}
-      className={clsx('size-16px cursor-pointer ml-4px', restSvgProps.className)}
-    />
+  const classList = useMemo(() => {
+    return uniq(
+      (className || '')
+        .split(/\s+/)
+        .map((x) => x.trim())
+        .filter(Boolean),
+    )
+  }, [className])
+  const _className = clsx(
+    'cursor-pointer',
+    !classList.some((x) => x.startsWith('size-')) && 'size-16px',
+    !classList.some((x) => x.startsWith('ml-')) && 'ml-4px',
+    className,
   )
+
+  IconComponent ??= DefaultIconComponent
+  const icon = <IconComponent {...restSvgProps} className={_className} />
 
   return (
     !!children && (
