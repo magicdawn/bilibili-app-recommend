@@ -235,8 +235,8 @@ const VideoCardInner = memo(function VideoCardInner({
    */
 
   // single ref 与 useEventListener 配合不是很好, 故使用两个 ref
-  const cardRef = useRef<HTMLElement | null>(null)
-  const coverRef = useRef<HTMLElement | null>(null)
+  const cardRef = useRef<HTMLElement>(null)
+  const coverRef = useRef<HTMLElement>(null)
   const videoPreviewWrapperRef = cardUseBorder ? cardRef : coverRef
 
   const previewImageRef = useRef<PreviewImageRef>(null)
@@ -447,7 +447,7 @@ const VideoCardInner = memo(function VideoCardInner({
   const target = useLinkTarget()
   const coverContent = (
     <a
-      ref={(el) => (coverRef.current = el)}
+      ref={(el) => void (coverRef.current = el)}
       href={href}
       target={target}
       css={[
@@ -582,7 +582,7 @@ const VideoCardInner = memo(function VideoCardInner({
   function wrapCardWrapper(c: ReactNode) {
     return (
       <div
-        ref={(el) => (cardRef.current = el)}
+        ref={(el) => void (cardRef.current = el)}
         className='bili-video-card__wrap'
         css={css`
           background-color: unset;

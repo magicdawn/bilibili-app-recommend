@@ -123,7 +123,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
   useMount(refresh)
   useImperativeHandle(ref, () => ({ refresh }), [refresh])
 
-  const goOutAt = useRef<number | undefined>()
+  const goOutAt = useRef<number>(undefined)
   useEventListener(
     'visibilitychange',
     (e) => {
@@ -221,7 +221,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
   const usingItems = itemsBox.state
 
   // .video-grid
-  const containerRef = useRef<HTMLDivElement | null>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
 
   const getScrollerRect = useMemoizedFn(() => {
     // use window
