@@ -348,7 +348,7 @@ function VideoSourceTabSortableItem({ id }: { id: ETab }) {
           }
         `}
       >
-        <IconIconParkOutlineDrag className='size-18px' />
+        <IconParkOutlineDrag className='size-18px' />
       </div>
     </div>
   )

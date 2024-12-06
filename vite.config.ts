@@ -135,6 +135,12 @@ export default defineConfig(({ command, mode }) => ({
         IconsResolver({
           prefix: 'Icon',
           extension: 'jsx',
+          alias: {
+            // prevent `IconIconPark` double `Icon`
+            'park-outline': 'icon-park-outline',
+            'park-solid': 'icon-park-solid',
+            'park-twotone': 'icon-park-twotone',
+          },
         }),
       ],
       imports: [

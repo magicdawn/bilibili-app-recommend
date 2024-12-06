@@ -311,7 +311,7 @@ export function useContextMenus({
         test: hasDynamicFeedFilterSelectUpEntry,
         key: 'dymamic-feed-filter-select-up',
         label: '查看 UP 的动态',
-        icon: <IconIconParkOutlinePeopleSearch className='size-15px' />,
+        icon: <IconParkOutlinePeopleSearch className='size-15px' />,
         onClick() {
           onDynamicFeedFilterSelectUp()
         },
@@ -365,7 +365,7 @@ export function useContextMenus({
         test: isWatchlater(item) && watchlaterAdded,
         key: 'watchlater-readd',
         label: '重新添加稍候再看 (移到最前)',
-        icon: <IconIconParkOutlineAddTwo className='size-15px' />,
+        icon: <IconParkOutlineAddTwo className='size-15px' />,
         async onClick() {
           const { success } = await onToggleWatchLater(undefined, watchlaterAdd)
           if (!success) return
@@ -407,7 +407,7 @@ export function useContextMenus({
         test: hasUnfollowEntry,
         key: 'unfollow-up',
         label: '取消关注',
-        icon: <IconIconParkOutlinePeopleMinus className='size-15px' />,
+        icon: <IconParkOutlinePeopleMinus className='size-15px' />,
         onClick: onUnfollowUp,
       },
       {

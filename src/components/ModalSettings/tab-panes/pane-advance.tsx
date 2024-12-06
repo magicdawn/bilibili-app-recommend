@@ -185,7 +185,7 @@ export function TabPaneAdvance() {
               className='ml-10px'
               css={[iconOnlyRoundButtonCss, internalKeysExpanded && buttonOpenCss]}
             >
-              <IconIconParkOutlineDownC
+              <IconParkOutlineDownC
                 {...size(16)}
                 css={css`
                   transition: transform 0.3s ease;

@@ -169,7 +169,7 @@ export const DislikedCard = memo(function DislikedCard({
     <div css={blockedCardCss.wrapper}>
       <div css={blockedCardCss.cover}>
         <div css={blockedCardCss.coverInner}>
-          <IconIconParkOutlineDistraughtFace className='size-32px mb-5px' />
+          <IconParkOutlineDistraughtFace className='size-32px mb-5px' />
           <div css={blockedCardCss.dislikeReason}>{dislikedReason?.name}</div>
           <div css={blockedCardCss.dislikeDesc}>
             {dislikedReason?.toast || '将减少此类内容推荐'}

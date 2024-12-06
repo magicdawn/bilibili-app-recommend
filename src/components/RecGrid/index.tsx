@@ -379,7 +379,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
         <>
           {hasMore ? (
             <>
-              <IconIconParkOutlineLoading
+              <IconParkOutlineLoading
                 className='size-40px animate-spin mr-10px'
                 css={css`
                   color: ${colorPrimaryValue};

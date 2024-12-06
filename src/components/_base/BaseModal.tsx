@@ -225,7 +225,7 @@ export function BaseModal({
 
 export const ModalClose = ({ className, ...props }: ComponentProps<'svg'>) => {
   return (
-    <IconIconParkOutlineClose
+    <IconParkOutlineClose
       {...props}
       className={clsx(
         'cursor-pointer',

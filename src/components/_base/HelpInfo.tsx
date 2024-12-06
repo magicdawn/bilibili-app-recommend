@@ -20,6 +20,7 @@ export function HelpInfo({
     () => [hasSize(className), hasMarginLeft(className)],
     [className],
   )
+
   const _className = clsx(
     'cursor-pointer',
     !_hasSize && 'size-16px',
