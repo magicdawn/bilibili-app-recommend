@@ -46,12 +46,13 @@ import { FollowGroupMergeTimelineService } from './group/merge-timeline-service'
 import type { FollowGroup } from './group/types/groups'
 import { formatFollowGroupUrl, IconForGroup, IconForPopoverTrigger, IconForUp } from './shared'
 import {
+  DF_SELECTED_KEY_PREFIX_GROUP,
+  DF_SELECTED_KEY_PREFIX_UP,
   dfStore,
   DynamicFeedVideoMinDuration,
   DynamicFeedVideoMinDurationConfig,
   DynamicFeedVideoType,
   DynamicFeedVideoTypeLabel,
-  SELECTED_KEY_PREFIX_GROUP,
   updateFilterData,
   type DynamicFeedStore,
   type DynamicFeedStoreSelectedKey,
@@ -102,17 +103,21 @@ export function DynamicFeedUsageInfo() {
   const { addCopyBvidButton, externalSearchInput } = dfSettings.__internal
 
   const {
-    hasSelectedUp,
+    viewingSomeUp,
     upName,
     upMid,
     upFace,
     upList,
+
     followGroups,
     selectedFollowGroup,
+    viewingSomeGroup,
+
+    selectedKey,
+
     dynamicFeedVideoType,
     filterMinDuration,
     searchText,
-    selectedKey,
     hideChargeOnlyVideos,
   } = useSnapshot(dfStore)
 
@@ -219,12 +224,12 @@ export function DynamicFeedUsageInfo() {
   const followGroupMidsCount = selectedFollowGroup?.count
   const upIcon = <IconForUp {...size(14)} className='mt--2px' />
   const upAvtar = upFace ? <Avatar size={20} src={getAvatarSrc(upFace)} /> : undefined
-  const dropdownButtonIcon = hasSelectedUp ? (
+  const dropdownButtonIcon = viewingSomeUp ? (
     upAvtar || upIcon
   ) : selectedFollowGroup ? (
     <IconForGroup {...size(18)} />
   ) : undefined
-  const dropdownButtonLabel = hasSelectedUp
+  const dropdownButtonLabel = viewingSomeUp
     ? upName
     : selectedFollowGroup
       ? selectedFollowGroup.name + (followGroupMidsCount ? ` (${followGroupMidsCount})` : '')
@@ -383,8 +388,8 @@ export function DynamicFeedUsageInfo() {
       )}
       <SearchCacheRelated />
 
-      {/* follow group related */}
-      {selectedFollowGroup && (
+      {/* actions for up|group */}
+      {viewingSomeGroup && !!selectedFollowGroup && (
         <div className={classes.popover.section}>
           <div className={classes.popover.sectionTilte}>
             分组
@@ -441,7 +446,7 @@ export function DynamicFeedUsageInfo() {
       <Space ref={ref}>
         {scopeDropdownMenu}
 
-        {(hasSelectedUp || selectedFollowGroup) && (
+        {(viewingSomeUp || selectedFollowGroup) && (
           <Button onClick={onClear} className='gap-0'>
             <IconForReset className='size-14px mr-5px' />
             <span>清除</span>
@@ -479,7 +484,7 @@ export function DynamicFeedUsageInfo() {
 
 function SearchCacheRelated() {
   const { cacheAllItemsEntry, cacheAllItemsUpMids } = useSettingsSnapshot().dynamicFeed.__internal
-  const { hasSelectedUp, upMid, upName } = useSnapshot(dfStore)
+  const { viewingSomeUp, upMid, upName } = useSnapshot(dfStore)
 
   const $req = useRequest(
     async (upMid: UpMidType, upName: string) => {
@@ -505,7 +510,7 @@ function SearchCacheRelated() {
 
   return (
     <>
-      {cacheAllItemsEntry && hasSelectedUp && upMid && upName && (
+      {cacheAllItemsEntry && viewingSomeUp && upMid && upName && (
         <div className={classes.popover.section}>
           <div className={classes.popover.sectionTilte}>
             搜索缓存
@@ -629,7 +634,7 @@ function FollowGroupActions({
   let addTo_dynamicFeedWhenViewAllHideIds_checkbox: ReactNode
   {
     const { checked, onChange } = useValueInSettingsCollection(
-      `${SELECTED_KEY_PREFIX_GROUP}${followGroup.tagid}`,
+      `${DF_SELECTED_KEY_PREFIX_GROUP}${followGroup.tagid}`,
       'dynamicFeed.whenViewAll.hideIds',
     )
     addTo_dynamicFeedWhenViewAllHideIds_checkbox = whenViewAll.enableHideSomeContents && (
@@ -647,6 +652,27 @@ function FollowGroupActions({
       {forceMergeTimelineCheckbox}
     </div>
   )
+}
+
+function UpActions({ upMid, upName }: { upMid: UpMidType; upName: string }) {
+  const { whenViewAll } = useSnapshot(settings.dynamicFeed)
+
+  let addTo_dynamicFeedWhenViewAllHideIds_checkbox: ReactNode
+  {
+    const { checked, onChange } = useValueInSettingsCollection(
+      `${DF_SELECTED_KEY_PREFIX_UP}${upMid}`,
+      'dynamicFeed.whenViewAll.hideIds',
+    )
+    addTo_dynamicFeedWhenViewAllHideIds_checkbox = whenViewAll.enableHideSomeContents && (
+      <Checkbox checked={checked} onChange={onChange}>
+        <AntdTooltip title={<>在「全部」动态中隐藏来自 {upName} 的动态</>}>
+          在「全部」动态中隐藏来自 {upName} 的动态
+        </AntdTooltip>
+      </Checkbox>
+    )
+  }
+
+  return <>{addTo_dynamicFeedWhenViewAllHideIds_checkbox}</>
 }
 
 function useValueInSettingsCollection<P extends ListSettingsPath>(

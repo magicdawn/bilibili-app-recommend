@@ -19,16 +19,16 @@ import { parseSearchInput } from './cache/search'
 import { getFollowGroupContent } from './group'
 import { FollowGroupMergeTimelineService } from './group/merge-timeline-service'
 import {
+  DF_SELECTED_KEY_ALL,
+  DF_SELECTED_KEY_PREFIX_GROUP,
+  DF_SELECTED_KEY_PREFIX_UP,
+  dfStore,
   DynamicFeedVideoMinDuration,
   DynamicFeedVideoType,
   QUERY_DYNAMIC_MIN_ID,
   QUERY_DYNAMIC_MIN_TS,
   QUERY_DYNAMIC_OFFSET,
   QUERY_DYNAMIC_UP_MID,
-  SELECTED_KEY_ALL,
-  SELECTED_KEY_PREFIX_GROUP,
-  SELECTED_KEY_PREFIX_UP,
-  dfStore,
 } from './store'
 import { DynamicFeedUsageInfo } from './usage-info'
 
@@ -56,7 +56,7 @@ export function getDynamicFeedServiceConfig() {
     filterMinDurationValue: snap.filterMinDurationValue,
 
     // flags
-    hasSelectedUp: snap.hasSelectedUp,
+    hasSelectedUp: snap.viewingSomeUp,
     selectedKey: snap.selectedKey,
 
     /**
@@ -200,7 +200,7 @@ export class DynamicFeedRecService implements IService {
    * 查看全部
    */
   get viewingAll() {
-    return this.config.selectedKey === SELECTED_KEY_ALL
+    return this.config.selectedKey === DF_SELECTED_KEY_ALL
   }
   private whenViewAllHideMids = new Set<string>()
   private whenViewAllHideMidsLoaded = false
@@ -213,11 +213,11 @@ export class DynamicFeedRecService implements IService {
     if (this.whenViewAllHideMidsLoaded) return
 
     const mids = Array.from(this.config.whenViewAllHideIds)
-      .filter((x) => x.startsWith(SELECTED_KEY_PREFIX_UP))
-      .map((x) => x.slice(SELECTED_KEY_PREFIX_UP.length))
+      .filter((x) => x.startsWith(DF_SELECTED_KEY_PREFIX_UP))
+      .map((x) => x.slice(DF_SELECTED_KEY_PREFIX_UP.length))
     const groupIds = Array.from(this.config.whenViewAllHideIds)
-      .filter((x) => x.startsWith(SELECTED_KEY_PREFIX_GROUP))
-      .map((x) => x.slice(SELECTED_KEY_PREFIX_GROUP.length))
+      .filter((x) => x.startsWith(DF_SELECTED_KEY_PREFIX_GROUP))
+      .map((x) => x.slice(DF_SELECTED_KEY_PREFIX_GROUP.length))
 
     const set = this.whenViewAllHideMids
     mids.forEach((x) => set.add(x))
@@ -391,7 +391,7 @@ export class DynamicFeedRecService implements IService {
 
       // 在「全部」动态中隐藏 UP 的动态
       .filter((x) => {
-        if (this.config.selectedKey !== SELECTED_KEY_ALL) return true
+        if (this.config.selectedKey !== DF_SELECTED_KEY_ALL) return true
         const set = this.whenViewAllHideMids
         if (!set.size) return true
         const mid = x?.modules?.module_author?.mid

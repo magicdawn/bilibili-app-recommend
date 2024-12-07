@@ -17,8 +17,8 @@ import {
   formatSpaceUrl,
 } from '$modules/rec-services/dynamic-feed/shared'
 import {
-  SELECTED_KEY_PREFIX_GROUP,
-  SELECTED_KEY_PREFIX_UP,
+  DF_SELECTED_KEY_PREFIX_GROUP,
+  DF_SELECTED_KEY_PREFIX_UP,
   dfStore,
 } from '$modules/rec-services/dynamic-feed/store'
 import {
@@ -402,10 +402,10 @@ function DynamicFeedWhenViewAllHideIdTag({
   let mid: string | undefined
   let followGroupId: string | undefined
   let invalid = false
-  if (tag.startsWith(SELECTED_KEY_PREFIX_UP)) {
-    mid = tag.slice(SELECTED_KEY_PREFIX_UP.length)
-  } else if (tag.startsWith(SELECTED_KEY_PREFIX_GROUP)) {
-    followGroupId = tag.slice(SELECTED_KEY_PREFIX_GROUP.length)
+  if (tag.startsWith(DF_SELECTED_KEY_PREFIX_UP)) {
+    mid = tag.slice(DF_SELECTED_KEY_PREFIX_UP.length)
+  } else if (tag.startsWith(DF_SELECTED_KEY_PREFIX_GROUP)) {
+    followGroupId = tag.slice(DF_SELECTED_KEY_PREFIX_GROUP.length)
   } else {
     invalid = true
   }

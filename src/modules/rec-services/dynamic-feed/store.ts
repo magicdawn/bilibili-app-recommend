@@ -79,14 +79,14 @@ export const DynamicFeedVideoMinDurationConfig: Record<
   [DynamicFeedVideoMinDuration._10s]: { label: '10秒', duration: 10 },
 }
 
-export const SELECTED_KEY_ALL = 'all' as const
-export const SELECTED_KEY_PREFIX_UP = 'up:' as const
-export const SELECTED_KEY_PREFIX_GROUP = 'group:' as const
+export const DF_SELECTED_KEY_ALL = 'all' as const
+export const DF_SELECTED_KEY_PREFIX_UP = 'up:' as const
+export const DF_SELECTED_KEY_PREFIX_GROUP = 'group:' as const
 
 export type DynamicFeedStoreSelectedKey =
-  | typeof SELECTED_KEY_ALL
-  | `${typeof SELECTED_KEY_PREFIX_UP}${UpMidType}`
-  | `${typeof SELECTED_KEY_PREFIX_GROUP}${number}`
+  | typeof DF_SELECTED_KEY_ALL
+  | `${typeof DF_SELECTED_KEY_PREFIX_UP}${UpMidType}`
+  | `${typeof DF_SELECTED_KEY_PREFIX_GROUP}${number}`
 
 /**
  * df expand to `dynamic-feed`
@@ -112,16 +112,19 @@ export const dfStore = proxy({
   searchText: (QUERY_DYNAMIC_SEARCH_TEXT ?? undefined) as string | undefined,
 
   // 选择了 UP
-  get hasSelectedUp(): boolean {
-    return !!(this.upName && this.upMid)
+  get viewingSomeUp(): boolean {
+    return !!this.upMid
+  },
+  get viewingSomeGroup(): boolean {
+    return typeof this.selectedFollowGroupTagId === 'number'
   },
 
   // 筛选 UP & 分组 select 控件的 key
   get selectedKey(): DynamicFeedStoreSelectedKey {
-    if (this.upMid) return `${SELECTED_KEY_PREFIX_UP}${this.upMid}`
+    if (this.upMid) return `${DF_SELECTED_KEY_PREFIX_UP}${this.upMid}`
     if (this.selectedFollowGroup)
-      return `${SELECTED_KEY_PREFIX_GROUP}${this.selectedFollowGroup.tagid}`
-    return SELECTED_KEY_ALL
+      return `${DF_SELECTED_KEY_PREFIX_GROUP}${this.selectedFollowGroup.tagid}`
+    return DF_SELECTED_KEY_ALL
   },
 
   hideChargeOnlyVideosForKeysSet: await proxySetWithGmStorage<string>(
@@ -168,7 +171,7 @@ async function updateFollowGroups(force = false) {
     const { followGroup, whenViewAll } = settings.dynamicFeed
     const enabled =
       followGroup.enabled ||
-      !!whenViewAll.hideIds.filter((x) => x.startsWith(SELECTED_KEY_PREFIX_GROUP)).length
+      !!whenViewAll.hideIds.filter((x) => x.startsWith(DF_SELECTED_KEY_PREFIX_GROUP)).length
     if (!enabled) return
   }
 

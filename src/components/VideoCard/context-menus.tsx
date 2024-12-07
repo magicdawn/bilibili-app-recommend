@@ -31,11 +31,10 @@ import {
   IconForWatchlater,
 } from '$modules/icon'
 import {
+  DF_SELECTED_KEY_ALL,
+  DF_SELECTED_KEY_PREFIX_UP,
   DynamicFeedQueryKey,
   QUERY_DYNAMIC_UP_MID,
-  SELECTED_KEY_ALL,
-  SELECTED_KEY_PREFIX_GROUP,
-  SELECTED_KEY_PREFIX_UP,
   dfStore,
 } from '$modules/rec-services/dynamic-feed/store'
 import { dynamicFeedFilterSelectUp } from '$modules/rec-services/dynamic-feed/usage-info'
@@ -207,26 +206,15 @@ export function useContextMenus({
   const hasEntry_addMidTo_dynamicFeedWhenViewAllHideIds =
     enableHideSomeContents &&
     isDynamic(item) &&
-    dfStore.selectedKey === SELECTED_KEY_ALL &&
+    dfStore.selectedKey === DF_SELECTED_KEY_ALL &&
     !!authorMid
-  const hasEntry_addFollowGroupIdTo_dynamicFeedWhenViewAllHideIds =
-    enableHideSomeContents &&
-    isDynamic(item) &&
-    dfStore.selectedKey.startsWith(SELECTED_KEY_PREFIX_GROUP)
-  const _dynamicFeedWhenViewAllHideIdsAdd = useMemoizedFn(async (newId: string) => {
-    updateSettingsInnerArray('dynamicFeed.whenViewAll.hideIds', { add: [newId] })
-  })
   const onAddMidTo_dynamicFeedWhenViewAllHideIds = useMemoizedFn(async () => {
     if (!hasEntry_addMidTo_dynamicFeedWhenViewAllHideIds) return
-    _dynamicFeedWhenViewAllHideIdsAdd(SELECTED_KEY_PREFIX_UP + authorMid)
+    updateSettingsInnerArray('dynamicFeed.whenViewAll.hideIds', {
+      add: [DF_SELECTED_KEY_PREFIX_UP + authorMid],
+    })
     setNicknameCache(authorMid, authorName || '')
     antMessage.success(`在「全部」动态中隐藏【${authorName}】的动态`)
-  })
-  const onAddFollowGroupIdTo_dynamicFeedWhenViewAllHideIds = useMemoizedFn(async () => {
-    if (!hasEntry_addFollowGroupIdTo_dynamicFeedWhenViewAllHideIds) return
-    if (!dfStore.selectedKey.startsWith(SELECTED_KEY_PREFIX_GROUP)) return
-    _dynamicFeedWhenViewAllHideIdsAdd(dfStore.selectedKey)
-    antMessage.success(`在「全部」动态中隐藏来自【${dfStore.selectedFollowGroup?.name}】的动态`)
   })
 
   /**
@@ -235,7 +223,7 @@ export function useContextMenus({
   const hasEntry_dynamicFeed_offsetAndMinId = !!(
     isDynamic(item) &&
     QUERY_DYNAMIC_UP_MID &&
-    dfStore.hasSelectedUp &&
+    dfStore.viewingSomeUp &&
     authorMid
   )
   const dynamicViewStartFromHere: AntMenuItem | false = useMemo(
@@ -390,25 +378,18 @@ export function useContextMenus({
         },
       },
       {
-        test: hasEntry_addMidTo_dynamicFeedWhenViewAllHideIds,
-        key: 'hasEntry_addMidTo_dynamicFeedWhenViewAllHideIds',
-        label: '在「全部」动态中隐藏 UP 的动态',
-        icon: <IconLetsIconsViewHide {...size(15)} />,
-        onClick: onAddMidTo_dynamicFeedWhenViewAllHideIds,
-      },
-      {
-        test: hasEntry_addFollowGroupIdTo_dynamicFeedWhenViewAllHideIds,
-        key: 'hasEntry_addFollowGroupIdTo_dynamicFeedWhenViewAllHideIds',
-        label: '在「全部」动态中隐藏分组的动态',
-        icon: <IconLetsIconsViewHide {...size(15)} />,
-        onClick: onAddFollowGroupIdTo_dynamicFeedWhenViewAllHideIds,
-      },
-      {
         test: hasUnfollowEntry,
         key: 'unfollow-up',
         label: '取消关注',
         icon: <IconParkOutlinePeopleMinus className='size-15px' />,
         onClick: onUnfollowUp,
+      },
+      {
+        test: hasEntry_addMidTo_dynamicFeedWhenViewAllHideIds,
+        key: 'hasEntry_addMidTo_dynamicFeedWhenViewAllHideIds',
+        label: '在「全部」动态中隐藏 UP 的动态',
+        icon: <IconLetsIconsViewHide {...size(15)} />,
+        onClick: onAddMidTo_dynamicFeedWhenViewAllHideIds,
       },
       {
         test: hasBlacklistEntry,
@@ -510,7 +491,6 @@ export function useContextMenus({
     hasBlacklistEntry,
     hasDynamicFeedFilterSelectUpEntry,
     hasEntry_addMidTo_dynamicFeedWhenViewAllHideIds,
-    hasEntry_addFollowGroupIdTo_dynamicFeedWhenViewAllHideIds,
     // others
     favFolderNames,
     favFolderUrls,
