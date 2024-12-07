@@ -46,10 +46,10 @@ importers:
         version: 5.22.3(date-fns@2.30.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       axios:
         specifier: '0'
-        version: 0.27.2(debug@4.3.7)
+        version: 0.27.2(debug@4.4.0)
       axios-userscript-adapter:
         specifier: '0'
-        version: 0.2.0(axios@0.27.2(debug@4.3.7))
+        version: 0.2.0(axios@0.27.2(debug@4.4.0))
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -60,8 +60,8 @@ importers:
         specifier: 1.11.13
         version: 1.11.13
       debug:
-        specifier: ^4.3.7
-        version: 4.3.7
+        specifier: ^4.4.0
+        version: 4.4.0
       es-toolkit:
         specifier: ^1.29.0
         version: 1.29.0
@@ -145,8 +145,8 @@ importers:
         specifier: ^11.13.5
         version: 11.13.5
       '@iconify/json':
-        specifier: ^2.2.279
-        version: 2.2.279
+        specifier: ^2.2.280
+        version: 2.2.280
       '@magicdawn/prettier-config':
         specifier: ^0.0.4
         version: 0.0.4
@@ -283,8 +283,8 @@ importers:
         specifier: ^4.0.6
         version: 4.0.6(vite@6.0.3(@types/node@22.10.1)(jiti@2.4.0)(sass-embedded@1.82.0)(sass@1.82.0)(tsx@4.16.4)(yaml@2.5.0))
       vite-tsconfig-paths:
-        specifier: ^5.1.3
-        version: 5.1.3(typescript@5.7.2)(vite@6.0.3(@types/node@22.10.1)(jiti@2.4.0)(sass-embedded@1.82.0)(sass@1.82.0)(tsx@4.16.4)(yaml@2.5.0))
+        specifier: ^5.1.4
+        version: 5.1.4(typescript@5.7.2)(vite@6.0.3(@types/node@22.10.1)(jiti@2.4.0)(sass-embedded@1.82.0)(sass@1.82.0)(tsx@4.16.4)(yaml@2.5.0))
       vitest:
         specifier: ^2.1.8
         version: 2.1.8(@types/node@22.10.1)(@vitest/ui@2.1.8)(sass-embedded@1.82.0)(sass@1.82.0)
@@ -1082,8 +1082,8 @@ packages:
     resolution: {integrity: sha512-c7hNEllBlenFTHBky65mhq8WD2kbN9Q6gk0bTk8lSBvc554jpXSkST1iePudpt7+A/AQvuHs9EMqjHDXMY1lrA==}
     engines: {node: '>=18.18'}
 
-  '@iconify/json@2.2.279':
-    resolution: {integrity: sha512-9HJWOos32Qik+Mg0fTgP/FgoCpswQPAsFAJtGQv7PN3KQ3Dwta5DDfpEj/QSwdNB9xJ/gI+aFhSlULgeah7eFA==}
+  '@iconify/json@2.2.280':
+    resolution: {integrity: sha512-3N1lTn6XBPQ+wMTiYkBAx+GE4yBD8B3l9/OGzs2sEy4FDsYoq7lLoiSo7S0XA6NN/dK9rv6bup8NPCIwIkOPOw==}
 
   '@iconify/types@2.0.0':
     resolution: {integrity: sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==}
@@ -2263,6 +2263,15 @@ packages:
 
   debug@4.3.7:
     resolution: {integrity: sha512-Er2nc/H7RrMXZBFCEim6TCmMk02Z8vLC2Rbi1KEBggpo0fS6l0S1nnapwmIi3yW/+GOJap1Krg4w0Hg80oCqgQ==}
+    engines: {node: '>=6.0'}
+    peerDependencies:
+      supports-color: '*'
+    peerDependenciesMeta:
+      supports-color:
+        optional: true
+
+  debug@4.4.0:
+    resolution: {integrity: sha512-6WTZ/IxCY/T6BALoZHaE4ctp9xm+Z5kY/pzYaCHRFeyVhojxlrm+46y68HA6hr0TcwEssoxNiDEUJQjfPZ/RYA==}
     engines: {node: '>=6.0'}
     peerDependencies:
       supports-color: '*'
@@ -4713,8 +4722,8 @@ packages:
       vite:
         optional: true
 
-  vite-tsconfig-paths@5.1.3:
-    resolution: {integrity: sha512-0bz+PDlLpGfP2CigeSKL9NFTF1KtXkeHGZSSaGQSuPZH77GhoiQaA8IjYgOaynSuwlDTolSUEU0ErVvju3NURg==}
+  vite-tsconfig-paths@5.1.4:
+    resolution: {integrity: sha512-cYj0LRuLV2c2sMqhqhGpaO3LretdtMn/BVX4cPLanIZuwwrkVl+lK84E/miEXkCHWXuq65rhNN4rXsBcOB3S4w==}
     peerDependencies:
       vite: '*'
     peerDependenciesMeta:
@@ -5018,7 +5027,7 @@ snapshots:
       '@babel/traverse': 7.25.7
       '@babel/types': 7.25.7
       convert-source-map: 2.0.0
-      debug: 4.3.7
+      debug: 4.4.0
       gensync: 1.0.0-beta.2
       json5: 2.2.3
       semver: 6.3.1
@@ -5038,7 +5047,7 @@ snapshots:
       '@babel/traverse': 7.25.9
       '@babel/types': 7.26.0
       convert-source-map: 2.0.0
-      debug: 4.3.7
+      debug: 4.4.0
       gensync: 1.0.0-beta.2
       json5: 2.2.3
       semver: 6.3.1
@@ -5200,7 +5209,7 @@ snapshots:
       '@babel/parser': 7.25.7
       '@babel/template': 7.25.7
       '@babel/types': 7.25.7
-      debug: 4.3.7
+      debug: 4.4.0
       globals: 11.12.0
     transitivePeerDependencies:
       - supports-color
@@ -5212,7 +5221,7 @@ snapshots:
       '@babel/parser': 7.26.2
       '@babel/template': 7.25.9
       '@babel/types': 7.26.0
-      debug: 4.3.7
+      debug: 4.4.0
       globals: 11.12.0
     transitivePeerDependencies:
       - supports-color
@@ -5671,7 +5680,7 @@ snapshots:
   '@eslint/config-array@0.19.0':
     dependencies:
       '@eslint/object-schema': 2.1.4
-      debug: 4.3.7
+      debug: 4.4.0
       minimatch: 3.1.2
     transitivePeerDependencies:
       - supports-color
@@ -5681,7 +5690,7 @@ snapshots:
   '@eslint/eslintrc@3.2.0':
     dependencies:
       ajv: 6.12.6
-      debug: 4.3.7
+      debug: 4.4.0
       espree: 10.3.0
       globals: 14.0.0
       ignore: 5.3.1
@@ -5713,7 +5722,7 @@ snapshots:
 
   '@humanwhocodes/retry@0.4.1': {}
 
-  '@iconify/json@2.2.279':
+  '@iconify/json@2.2.280':
     dependencies:
       '@iconify/types': 2.0.0
       pathe: 1.1.2
@@ -5725,7 +5734,7 @@ snapshots:
       '@antfu/install-pkg': 0.4.1
       '@antfu/utils': 0.7.10
       '@iconify/types': 2.0.0
-      debug: 4.3.7
+      debug: 4.4.0
       kolorist: 1.8.0
       local-pkg: 0.5.1
       mlly: 1.7.3
@@ -6191,7 +6200,7 @@ snapshots:
       '@typescript-eslint/types': 8.17.0
       '@typescript-eslint/typescript-estree': 8.17.0(typescript@5.7.2)
       '@typescript-eslint/visitor-keys': 8.17.0
-      debug: 4.3.7
+      debug: 4.4.0
       eslint: 9.16.0(jiti@2.4.0)
     optionalDependencies:
       typescript: 5.7.2
@@ -6207,7 +6216,7 @@ snapshots:
     dependencies:
       '@typescript-eslint/typescript-estree': 8.17.0(typescript@5.7.2)
       '@typescript-eslint/utils': 8.17.0(eslint@9.16.0(jiti@2.4.0))(typescript@5.7.2)
-      debug: 4.3.7
+      debug: 4.4.0
       eslint: 9.16.0(jiti@2.4.0)
       ts-api-utils: 1.3.0(typescript@5.7.2)
     optionalDependencies:
@@ -6221,7 +6230,7 @@ snapshots:
     dependencies:
       '@typescript-eslint/types': 8.17.0
       '@typescript-eslint/visitor-keys': 8.17.0
-      debug: 4.3.7
+      debug: 4.4.0
       fast-glob: 3.3.2
       is-glob: 4.0.3
       minimatch: 9.0.5
@@ -6554,7 +6563,7 @@ snapshots:
 
   agent-base@7.1.0:
     dependencies:
-      debug: 4.3.7
+      debug: 4.4.0
     transitivePeerDependencies:
       - supports-color
 
@@ -6687,13 +6696,13 @@ snapshots:
 
   asynckit@0.4.0: {}
 
-  axios-userscript-adapter@0.2.0(axios@0.27.2(debug@4.3.7)):
+  axios-userscript-adapter@0.2.0(axios@0.27.2(debug@4.4.0)):
     dependencies:
-      axios: 0.27.2(debug@4.3.7)
+      axios: 0.27.2(debug@4.4.0)
 
-  axios@0.27.2(debug@4.3.7):
+  axios@0.27.2(debug@4.4.0):
     dependencies:
-      follow-redirects: 1.15.2(debug@4.3.7)
+      follow-redirects: 1.15.2(debug@4.4.0)
       form-data: 4.0.0
     transitivePeerDependencies:
       - debug
@@ -7048,6 +7057,10 @@ snapshots:
     dependencies:
       ms: 2.1.3
 
+  debug@4.4.0:
+    dependencies:
+      ms: 2.1.3
+
   decompress-response@6.0.0:
     dependencies:
       mimic-response: 3.1.0
@@ -7108,7 +7121,7 @@ snapshots:
 
   dl-vampire@2.1.2:
     dependencies:
-      debug: 4.3.7
+      debug: 4.4.0
       fs-extra: 11.2.0
       got: 14.4.1
       lodash: 4.17.21
@@ -7374,7 +7387,7 @@ snapshots:
       ajv: 6.12.6
       chalk: 4.1.2
       cross-spawn: 7.0.5
-      debug: 4.3.7
+      debug: 4.4.0
       escape-string-regexp: 4.0.0
       eslint-scope: 8.2.0
       eslint-visitor-keys: 4.2.0
@@ -7530,9 +7543,9 @@ snapshots:
 
   flatted@3.3.1: {}
 
-  follow-redirects@1.15.2(debug@4.3.7):
+  follow-redirects@1.15.2(debug@4.4.0):
     optionalDependencies:
-      debug: 4.3.7
+      debug: 4.4.0
 
   form-data-encoder@4.0.2: {}
 
@@ -7605,7 +7618,7 @@ snapshots:
     dependencies:
       basic-ftp: 5.0.3
       data-uri-to-buffer: 6.0.1
-      debug: 4.3.7
+      debug: 4.4.0
       fs-extra: 8.1.0
     transitivePeerDependencies:
       - supports-color
@@ -7709,7 +7722,7 @@ snapshots:
   http-proxy-agent@7.0.2:
     dependencies:
       agent-base: 7.1.0
-      debug: 4.3.7
+      debug: 4.4.0
     transitivePeerDependencies:
       - supports-color
 
@@ -7721,7 +7734,7 @@ snapshots:
   https-proxy-agent@7.0.4:
     dependencies:
       agent-base: 7.1.0
-      debug: 4.3.7
+      debug: 4.4.0
     transitivePeerDependencies:
       - supports-color
 
@@ -7759,7 +7772,7 @@ snapshots:
   importx@0.4.3:
     dependencies:
       bundle-require: 5.0.0(esbuild@0.21.5)
-      debug: 4.3.7
+      debug: 4.4.0
       esbuild: 0.21.5
       jiti: 2.0.0-beta.2
       jiti-v1: jiti@1.21.6
@@ -8269,7 +8282,7 @@ snapshots:
     dependencies:
       '@tootallnate/quickjs-emscripten': 0.23.0
       agent-base: 7.1.0
-      debug: 4.3.7
+      debug: 4.4.0
       get-uri: 6.0.2
       http-proxy-agent: 7.0.2
       https-proxy-agent: 7.0.4
@@ -8429,7 +8442,7 @@ snapshots:
   proxy-agent@6.4.0:
     dependencies:
       agent-base: 7.1.0
-      debug: 4.3.7
+      debug: 4.4.0
       http-proxy-agent: 7.0.2
       https-proxy-agent: 7.0.4
       lru-cache: 7.18.3
@@ -9111,7 +9124,7 @@ snapshots:
   socks-proxy-agent@8.0.2:
     dependencies:
       agent-base: 7.1.0
-      debug: 4.3.7
+      debug: 4.4.0
       socks: 2.7.1
     transitivePeerDependencies:
       - supports-color
@@ -9419,7 +9432,7 @@ snapshots:
       '@antfu/install-pkg': 0.5.0
       '@antfu/utils': 0.7.10
       '@iconify/utils': 2.1.33
-      debug: 4.3.7
+      debug: 4.4.0
       kolorist: 1.8.0
       local-pkg: 0.5.1
       unplugin: 1.16.0
@@ -9468,7 +9481,7 @@ snapshots:
   vite-node@2.1.8(@types/node@22.10.1)(sass-embedded@1.82.0)(sass@1.82.0):
     dependencies:
       cac: 6.7.14
-      debug: 4.3.7
+      debug: 4.4.0
       es-module-lexer: 1.5.4
       pathe: 1.1.2
       vite: 5.4.11(@types/node@22.10.1)(sass-embedded@1.82.0)(sass@1.82.0)
@@ -9495,7 +9508,7 @@ snapshots:
     dependencies:
       '@antfu/utils': 0.7.10
       '@rollup/pluginutils': 5.1.3(rollup@4.27.4)
-      debug: 4.3.7
+      debug: 4.4.0
       error-stack-parser-es: 0.1.5
       fs-extra: 11.2.0
       open: 10.1.0
@@ -9521,9 +9534,9 @@ snapshots:
     optionalDependencies:
       vite: 6.0.3(@types/node@22.10.1)(jiti@2.4.0)(sass-embedded@1.82.0)(sass@1.82.0)(tsx@4.16.4)(yaml@2.5.0)
 
-  vite-tsconfig-paths@5.1.3(typescript@5.7.2)(vite@6.0.3(@types/node@22.10.1)(jiti@2.4.0)(sass-embedded@1.82.0)(sass@1.82.0)(tsx@4.16.4)(yaml@2.5.0)):
+  vite-tsconfig-paths@5.1.4(typescript@5.7.2)(vite@6.0.3(@types/node@22.10.1)(jiti@2.4.0)(sass-embedded@1.82.0)(sass@1.82.0)(tsx@4.16.4)(yaml@2.5.0)):
     dependencies:
-      debug: 4.3.7
+      debug: 4.4.0
       globrex: 0.1.2
       tsconfck: 3.0.3(typescript@5.7.2)
     optionalDependencies:
@@ -9567,7 +9580,7 @@ snapshots:
       '@vitest/spy': 2.1.8
       '@vitest/utils': 2.1.8
       chai: 5.1.2
-      debug: 4.3.7
+      debug: 4.4.0
       expect-type: 1.1.0
       magic-string: 0.30.14
       pathe: 1.1.2

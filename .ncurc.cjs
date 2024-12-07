@@ -1,3 +1,10 @@
 module.exports = {
-  reject: ['axios'],
+  reject: [
+    'axios',
+    // react v19
+    '*react',
+    '*react-dom',
+    // v1 is enough
+    'ua-parser-js',
+  ],
 }
