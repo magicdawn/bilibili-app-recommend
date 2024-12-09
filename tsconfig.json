@@ -16,8 +16,8 @@
       "ES2023",
       "DOM",
       "DOM.Iterable",
-      "ES2024.Promise", // Promise.withResolvers
-      "ESNext.Disposable" // DisposableStack / ...
+      "ES2024.Promise", // Promise.withResolvers; Baseline 2024
+      "ESNext.Disposable" // DisposableStack; Stage 3; need polyfill
     ],
     "useDefineForClassFields": true,
     "skipLibCheck": true,

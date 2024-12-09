@@ -24,7 +24,7 @@ import {
 import { exportSettings, importSettings } from '$modules/settings/file-backup'
 import { articleDraft, restoreOmitPaths } from '$modules/settings/index.shared'
 import { antMessage } from '$utility/antd'
-import { getPaths } from '$utility/object-paths'
+import { getLeafPaths } from '$utility/object-paths'
 import { css } from '@emotion/react'
 import { Button, Popconfirm, Slider, Space } from 'antd'
 import { startCase } from 'es-toolkit'
@@ -46,7 +46,7 @@ function onResetSettings() {
 async function onRestoreSettings() {
   const remoteSettings = await articleDraft.getData()
 
-  const pickedPaths = getPaths(remoteSettings || {}).filter(
+  const pickedPaths = getLeafPaths(remoteSettings || {}).filter(
     (p) => allowedLeafSettingsPaths.includes(p) && !restoreOmitPaths.includes(p),
   )
   if (!pickedPaths.length) {

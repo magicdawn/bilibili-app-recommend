@@ -11,8 +11,7 @@
  */
 
 // polyfills
-import 'core-js/proposals/explicit-resource-management'
-import 'core-js/proposals/promise-with-resolvers'
+// import 'core-js/proposals/explicit-resource-management' // useful, but current not used
 
 // styles
 import '$common/global.scss'
