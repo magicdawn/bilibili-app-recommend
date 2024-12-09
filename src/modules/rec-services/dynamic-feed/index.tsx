@@ -56,8 +56,10 @@ export function getDynamicFeedServiceConfig() {
     filterMinDurationValue: snap.filterMinDurationValue,
 
     // flags
-    hasSelectedUp: snap.viewingSomeUp,
     selectedKey: snap.selectedKey,
+    viewingAll: snap.viewingAll,
+    viewingSomeUp: snap.viewingSomeUp,
+    viewingSomeGroup: snap.viewingSomeGroup,
 
     /**
      * from settings
@@ -168,15 +170,15 @@ export class DynamicFeedRecService implements IService {
   get filterMinDurationValue() {
     return this.config.filterMinDurationValue
   }
-  get hasSelectedUp() {
-    return this.config.hasSelectedUp
+  get viewingSomeUp() {
+    return this.config.viewingSomeUp
   }
 
   /**
    * 查看分组
    */
   get viewingSomeGroup() {
-    return typeof this.config.followGroupTagId === 'number'
+    return this.config.viewingSomeGroup
   }
   private whenViewSomeGroupMergeTimelineService: FollowGroupMergeTimelineService | undefined
   private whenViewSomeGroupMids = new Set<number>()
@@ -200,7 +202,7 @@ export class DynamicFeedRecService implements IService {
    * 查看全部
    */
   get viewingAll() {
-    return this.config.selectedKey === DF_SELECTED_KEY_ALL
+    return this.config.viewingAll
   }
   private whenViewAllHideMids = new Set<string>()
   private whenViewAllHideMidsLoaded = false
@@ -461,9 +463,7 @@ export class DynamicFeedRecService implements IService {
     // update group count if needed
     if (this.viewingSomeGroup && dfStore.followGroups.length) {
       const group = dfStore.followGroups.find((x) => x.tagid === this.followGroupTagId)
-      if (group) {
-        group.count = this.whenViewSomeGroupMids.size
-      }
+      if (group) group.count = this.whenViewSomeGroupMids.size
     }
 
     return items

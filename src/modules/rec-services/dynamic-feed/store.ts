@@ -2,10 +2,10 @@ import { IN_BILIBILI_HOMEPAGE } from '$common'
 import { settings } from '$modules/settings'
 import { getUid } from '$utility/cookie'
 import { setPageTitle, whenIdle } from '$utility/dom'
-import { proxySetWithGmStorage } from '$utility/valtio'
+import { proxySetWithGmStorage, subscribeOnKeys } from '$utility/valtio'
+import { delay } from 'es-toolkit'
 import ms from 'ms'
 import { proxy } from 'valtio'
-import { subscribeKey } from 'valtio/utils'
 import { getAllFollowGroups } from './group'
 import type { FollowGroup } from './group/types/groups'
 import { getRecentUpdateUpList } from './up'
@@ -111,7 +111,10 @@ export const dfStore = proxy({
   dynamicFeedVideoType: DynamicFeedVideoType.All,
   searchText: (QUERY_DYNAMIC_SEARCH_TEXT ?? undefined) as string | undefined,
 
-  // 选择了 UP
+  // 选择状态
+  get viewingAll(): boolean {
+    return this.selectedKey === DF_SELECTED_KEY_ALL
+  },
   get viewingSomeUp(): boolean {
     return !!this.upMid
   },
@@ -193,21 +196,33 @@ export async function updateFilterData() {
   return Promise.all([updateUpList(), updateFollowGroups()])
 }
 
-/* #region Side Effects */
+// #region !Side Effects
 
-setTimeout(async () => {
+void (async () => {
   if (!IN_BILIBILI_HOMEPAGE) return
+  await delay(5_000)
   if (!dfStore.upList.length || !dfStore.followGroups.length) {
     await whenIdle()
     updateFilterData()
   }
-}, ms('5s'))
+})()
 
 if (QUERY_DYNAMIC_UP_MID) {
-  subscribeKey(dfStore, 'upName', (upName) => {
-    const title = upName ? `「${upName}」的动态` : '动态'
-    setPageTitle(title)
-  })
+  subscribeOnKeys(
+    dfStore,
+    ['upName', 'searchText', 'selectedFollowGroup', 'viewingSomeUp', 'viewingAll'],
+    ({ upName, searchText, selectedFollowGroup, viewingSomeUp, viewingAll }) => {
+      let title = viewingAll
+        ? '动态'
+        : viewingSomeUp
+          ? `「${upName}」的动态`
+          : `「${selectedFollowGroup?.name}」分组动态`
+      if (searchText) {
+        title = `🔍【${searchText}】 - ` + title
+      }
+      setPageTitle(title)
+    },
+  )
 }
 
-/* #endregion */
+// #endregion
