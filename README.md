@@ -288,20 +288,6 @@ pnpm build # build 完会自动使用 Chrome 打开安装地址
 
 感谢这些来自爱发电的赞助者：
 
-<style>
-.sponsors {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 5px 10px;
-}
-.sponsors a {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-</style>
-
-<div class='sponsors'>
 <!-- AFDIAN-ACTION:START -->
 
 <a href="https://afdian.com/u/8f4c3df8963211ecb3de52540025c377">
@@ -367,7 +353,6 @@ pnpm build # build 完会自动使用 Chrome 打开安装地址
 <!-- 注意: 尽量将标签前靠,否则经测试可能被 GitHub 解析为代码块 -->
 
 <!-- AFDIAN-ACTION:END -->
-</div>
 
 ## 更新日志
 
