@@ -288,6 +288,20 @@ pnpm build # build 完会自动使用 Chrome 打开安装地址
 
 感谢这些来自爱发电的赞助者：
 
+<style>
+.sponsors {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 5px 10px;
+}
+.sponsors a {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+</style>
+
+<div class='sponsors'>
 <!-- AFDIAN-ACTION:START -->
 
 <a href="https://afdian.com/u/8f4c3df8963211ecb3de52540025c377">
@@ -353,6 +367,7 @@ pnpm build # build 完会自动使用 Chrome 打开安装地址
 <!-- 注意: 尽量将标签前靠,否则经测试可能被 GitHub 解析为代码块 -->
 
 <!-- AFDIAN-ACTION:END -->
+</div>
 
 ## 更新日志
 
@@ -368,6 +383,14 @@ pnpm build # build 完会自动使用 Chrome 打开安装地址
 - https://greasyfork.org/zh-CN/scripts/415804-%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9-bilibili-com-%E6%92%AD%E6%94%BE%E9%A1%B5%E8%B0%83%E6%95%B4
 - https://github.com/imsyy/SPlayer
 - ...more
+
+## ❤️ 鸣谢
+
+- 以上参考的项目
+- vite & [vite-plugin-monkey](https://github.com/lisonge/vite-plugin-monkey): great DX
+- [icones](https://icones.js.org): 找图标方便多了
+- [valtio](https://github.com/pmndrs/valtio): 状态管理哪家强
+- [ant-design](https://github.com/ant-design/ant-design): <del>燕子, 燕子</del>(antd, antd) 没有你我怎么活啊~
 
 ## License
 
