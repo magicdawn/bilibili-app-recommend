@@ -190,7 +190,7 @@ export function FavItemsOrderSwitcher() {
     if (index === -1) return
     const nextIndex = (index + (e.shiftKey ? -1 : 1) + allowed.length) % allowed.length
     const next = allowed[nextIndex]
-    favStore.savedOrderMap.set(selectedKey, next)
+    await favStore.savedOrderMapActions.performUpdate((map) => void map.set(selectedKey, next))
     await delay(100)
     onRefresh?.()
   })

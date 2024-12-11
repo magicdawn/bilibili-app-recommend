@@ -92,6 +92,9 @@ export type DynamicFeedStoreSelectedKey =
  * df expand to `dynamic-feed`
  */
 
+const { set: hideChargeOnlyVideosForKeysSet, actions: hideChargeOnlyVideosForKeysActions } =
+  await proxySetWithGmStorage<string>('dynamic-feed:hide-charge-only-videos-for-keys')
+
 export type DynamicFeedStore = typeof dfStore
 export const dfStore = proxy({
   upMid: upMidInitial as UpMidType | undefined,
@@ -130,9 +133,8 @@ export const dfStore = proxy({
     return DF_SELECTED_KEY_ALL
   },
 
-  hideChargeOnlyVideosForKeysSet: await proxySetWithGmStorage<string>(
-    'dynamic-feed:hide-charge-only-videos-for-keys',
-  ),
+  hideChargeOnlyVideosForKeysSet,
+  hideChargeOnlyVideosForKeysActions,
 
   get hideChargeOnlyVideos() {
     return this.hideChargeOnlyVideosForKeysSet.has(this.selectedKey)

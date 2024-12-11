@@ -324,12 +324,13 @@ export function DynamicFeedUsageInfo() {
               checked={hideChargeOnlyVideos}
               onChange={async (e) => {
                 const val = e.target.checked
-                const set = dfStore.hideChargeOnlyVideosForKeysSet
-                if (val) {
-                  set.add(selectedKey)
-                } else {
-                  set.delete(selectedKey)
-                }
+                await dfStore.hideChargeOnlyVideosForKeysActions.performUpdate((set) => {
+                  if (val) {
+                    set.add(selectedKey)
+                  } else {
+                    set.delete(selectedKey)
+                  }
+                })
                 await delay(100)
                 onRefresh?.()
               }}
@@ -501,11 +502,11 @@ function SearchCacheRelated() {
     () => !!upMid && cacheAllItemsUpMids.includes(upMid.toString()),
     [upMid, cacheAllItemsUpMids],
   )
-  const onChange = useCallback((e: CheckboxChangeEvent) => {
+  const onChange = useCallback(async (e: CheckboxChangeEvent) => {
     if (!upMid) return
     const val = e.target.checked
     const args = val ? { add: [upMid] } : { remove: [upMid] }
-    updateSettingsInnerArray('dynamicFeed.__internal.cacheAllItemsUpMids', args)
+    await updateSettingsInnerArray('dynamicFeed.__internal.cacheAllItemsUpMids', args)
   }, [])
 
   return (
@@ -683,9 +684,9 @@ function useValueInSettingsCollection<P extends ListSettingsPath>(
   const list = get(snap, listSettingsPath)
   const checked = useMemo(() => list.includes(value), [list])
 
-  const setChecked = useMemoizedFn((checked: boolean) => {
+  const setChecked = useMemoizedFn(async (checked: boolean) => {
     const arg = checked ? { add: [value] } : { remove: [value] }
-    updateSettingsInnerArray(listSettingsPath, arg)
+    await updateSettingsInnerArray(listSettingsPath, arg)
   })
 
   const onChange = useCallback((e: CheckboxChangeEvent) => {

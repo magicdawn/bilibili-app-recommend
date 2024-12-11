@@ -4,7 +4,7 @@ import { borderColorValue, colorPrimaryValue } from '$components/css-vars'
 import { getUserNickname } from '$modules/bilibili/user/nickname'
 import { formatSpaceUrl } from '$modules/rec-services/dynamic-feed/shared'
 import {
-  getSettingsInnerArray,
+  getNewestValueOfSettingsInnerArray,
   updateSettingsInnerArray,
   useSettingsSnapshot,
   type ListSettingsPath,
@@ -43,18 +43,18 @@ export function EditableListSettingItem({
         allowClear
         disabled={disabled}
         {...searchProps}
-        onSearch={(val, e) => {
+        onSearch={async (val, e) => {
           if (!val) return
 
           // exists check
-          const set = new Set(getSettingsInnerArray(configPath))
+          const set = new Set(await getNewestValueOfSettingsInnerArray(configPath))
           if (set.has(val)) {
             antMessage.warning(`${val} 已存在`)
             return
           }
 
           // add
-          updateSettingsInnerArray(configPath, { add: [val] })
+          await updateSettingsInnerArray(configPath, { add: [val] })
 
           // clear: 非受控组件, 有内部状态, 不能简单设置 input.value
           if (e?.target) {
@@ -105,8 +105,8 @@ export function EditableListSettingItem({
                 <TagItemDisplay
                   key={t}
                   tag={t}
-                  onDelete={(tag) => {
-                    updateSettingsInnerArray(configPath, { remove: [tag] })
+                  onDelete={async (tag) => {
+                    await updateSettingsInnerArray(configPath, { remove: [tag] })
                   }}
                   renderTag={
                     configPath === 'filter.byAuthor.keywords'

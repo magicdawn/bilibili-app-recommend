@@ -3,6 +3,7 @@
  */
 
 import { IN_BILIBILI_HOMEPAGE, baseDebug } from '$common'
+import type { UpMidType } from '$modules/rec-services/dynamic-feed/store'
 import { isWebApiSuccess, request } from '$request'
 import { whenIdle } from '$utility/dom'
 import { proxySetWithGmStorage } from '$utility/valtio'
@@ -20,7 +21,8 @@ export const UserBlacklistService = {
   remove: blacklistRemove,
 }
 
-export const blacklistMids = await proxySetWithGmStorage('blacklist-mids')
+export const { set: blacklistMids, actions: blacklistMidsActions } =
+  await proxySetWithGmStorage<UpMidType>('blacklist-mids')
 
 export function useInBlacklist(upMid?: string) {
   const set = useSnapshot(blacklistMids)
@@ -34,11 +36,13 @@ function blacklistActionFactory(action: 'follow' | 'remove') {
     const success = await modifyRelations(upMid, act)
 
     if (success) {
-      if (action === 'follow') {
-        blacklistMids.add(upMid)
-      } else if (action === 'remove') {
-        blacklistMids.delete(upMid)
-      }
+      await blacklistMidsActions.performUpdate((set) => {
+        if (action === 'follow') {
+          set.add(upMid)
+        } else if (action === 'remove') {
+          set.delete(upMid)
+        }
+      })
     }
 
     return success
@@ -82,17 +86,12 @@ export async function getUserBlacklist() {
 }
 
 ;(async () => {
-  // 首页需要
+  // 仅首页需要
   if (!IN_BILIBILI_HOMEPAGE) return
-
   await whenIdle()
   const ids = await getUserBlacklist()
-
-  if (ids) {
-    blacklistMids.clear()
-    ids.forEach((x) => blacklistMids.add(x.toString()))
-  }
-
   debug('user blocklist fetched: %o', ids)
-  return ids
+  if (ids) {
+    blacklistMidsActions.replaceAllWith(ids.map((x) => x.toString()))
+  }
 })()

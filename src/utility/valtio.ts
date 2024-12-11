@@ -88,24 +88,49 @@ export async function proxyWithGmStorage<T extends object>(initialVaue: T, stora
 export async function proxySetWithGmStorage<T>(storageKey: string) {
   const load = async (): Promise<T[]> => (await GM.getValue(storageKey)) || []
   const p = proxySet<T>(await load())
-
   // start subscribe in nextTick, so value can be changed synchronously without persist
-  setTimeout(() => {
-    const limit = pLimit(1)
-    subscribe(p, () =>
-      limit(async () => {
-        // existing
-        const set = new Set<T>(await load())
-        // update
-        for (const x of snapshot(p)) set.add(x)
-        // serialize
-        const val = Array.from(set)
-        GM.setValue(storageKey, val)
-      }),
-    )
-  })
+  setTimeout(setupSubscribe)
 
-  return p
+  let unsubscribe: (() => void) | undefined
+  function setupSubscribe() {
+    unsubscribe?.()
+    unsubscribe = subscribe(p, () => {
+      GM.setValue(storageKey, Array.from(snapshot(p)))
+    })
+  }
+
+  async function replaceAllWith(newVal: Iterable<T>) {
+    const newSet = new Set(newVal)
+    for (const x of [...p, ...newSet]) {
+      if (!newSet.has(x)) p.delete(x)
+      else p.add(x)
+    }
+  }
+
+  // 如果需要覆盖, 直接修改即可
+  // 不覆盖, 使用 `await p.performUpdate(() => {})`
+  async function performUpdate(action: (this: Set<T>, set: Set<T>) => void | Promise<void>) {
+    // reload GM storage to memory
+    const newest = await load()
+    unsubscribe?.()
+    unsubscribe = undefined
+    // modify: sync with newest
+    replaceAllWith(newest)
+    // listen change
+    setupSubscribe()
+
+    // perform the action
+    await action.call(p, p)
+  }
+
+  // p is sealed, can't be modified
+  return {
+    set: p,
+    actions: {
+      performUpdate,
+      replaceAllWith,
+    },
+  }
 }
 
 export async function proxyMapWithGmStorage<K, V>(
@@ -114,23 +139,52 @@ export async function proxyMapWithGmStorage<K, V>(
 ) {
   const load = async (): Promise<[K, V][]> => (await GM.getValue(storageKey)) || []
   const p = proxyMap<K, V>(await load())
-
   // start subscribe in nextTick, so value can be changed synchronously without persist
-  setTimeout(() => {
-    const limit = pLimit(1)
-    subscribe(p, () =>
-      limit(async () => {
-        // existing
-        const map = new Map<K, V>(await load())
-        // update map
-        for (const [k, v] of snapshot(p)) map.set(k, v)
-        // serialize
-        let val = Array.from(map)
-        if (beforeSave) val = beforeSave(val)
-        GM.setValue(storageKey, val)
-      }),
-    )
-  })
+  setTimeout(setupSubscribe)
 
-  return p
+  let unsubscribe: (() => void) | undefined
+  function setupSubscribe() {
+    unsubscribe?.()
+    unsubscribe = subscribe(p, () => {
+      // serialize
+      let val = Array.from(snapshot(p))
+      if (beforeSave) val = beforeSave(val)
+      GM.setValue(storageKey, val)
+    })
+  }
+
+  async function replaceAllWith(newVal: Iterable<[K, V]>) {
+    const newMap = new Map(newVal)
+    for (const [k, v] of [...p, ...newMap]) {
+      if (!newMap.has(k)) p.delete(k)
+      else p.set(k, v)
+    }
+  }
+
+  async function reloadFromGmStorage() {
+    // reload GM storage to memory
+    const newest = await load()
+    unsubscribe?.()
+    unsubscribe = undefined
+    // modify: sync with newest
+    replaceAllWith(newest)
+    // listen change
+    setupSubscribe()
+  }
+
+  async function performUpdate(action: (this: Map<K, V>, map: Map<K, V>) => void | Promise<void>) {
+    // reload
+    await reloadFromGmStorage()
+    // perform the action
+    await action.call(p, p)
+  }
+
+  return {
+    map: p,
+    actions: {
+      performUpdate,
+      reloadFromGmStorage,
+      replaceAllWith,
+    },
+  }
 }

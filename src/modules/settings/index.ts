@@ -9,9 +9,9 @@ import {
   type ListPaths,
 } from '$utility/object-paths'
 import toast from '$utility/toast'
-import { cloneDeep, isEqual, isNil, mergeWith } from 'es-toolkit'
+import { cloneDeep, isEqual, isNil } from 'es-toolkit'
 import { get, set } from 'es-toolkit/compat'
-import type { Get, PartialDeep } from 'type-fest'
+import type { Get, PartialDeep, ReadonlyDeep } from 'type-fest'
 import { proxy, snapshot, subscribe, useSnapshot } from 'valtio'
 import { saveToDraft } from './cloud-backup'
 
@@ -345,40 +345,32 @@ export async function loadAndSetup() {
   const val = await __pickSettingsFromGmStorage()
   updateSettings(val)
   // persist when config change
+  __lastSnapForGmSave = snapshot(settings)
   subscribe(settings, () => {
     save()
   })
 }
 
-async function save() {
-  /**
-   * existing-update-serialize 多个 Tab 同时修改, 不至于丢失 collection items
-   */
+let __lastSnapForGmSave: ReadonlyDeep<PartialDeep<Settings>> | undefined
+async function saveToGmStorage(snap: ReadonlyDeep<PartialDeep<Settings>>) {
+  // only persist CHANGED fields
+  const changedPaths = allowedLeafSettingsPaths.filter(
+    (p) => !isEqual(get(__lastSnapForGmSave, p), get(snap, p)),
+  )
+  if (!changedPaths.length) return
 
-  // existing
-  const existing = await __pickSettingsFromGmStorage()
-  // update
-  const currentSnapshot = cloneDeep(snapshot(settings))
-  mergeWith(existing, currentSnapshot, (targetValue, sourceValue) => {
-    // use default logic
-    if (targetValue === existing.customTabKeysOrder) {
-      return
-    }
-    const shouldMergeSimpleArray =
-      Array.isArray(targetValue) &&
-      Array.isArray(sourceValue) &&
-      !!(targetValue.length || sourceValue.length) && // have value
-      new Set([...targetValue, ...sourceValue].map((x) => typeof x)).size === 1 && // primitive value
-      !isEqual(targetValue, sourceValue) // changed
-    if (shouldMergeSimpleArray) {
-      return Array.from(new Set([...targetValue, ...sourceValue]))
-    }
-  })
-  // serialize
-  //  1) save to GM storage
-  await GM.setValue(storageKey, existing)
-  //  2) http backup
-  await saveToDraft(existing)
+  const newest = await __pickSettingsFromGmStorage()
+  for (const p of changedPaths) {
+    set(newest, p, get(snap, p))
+  }
+  await GM.setValue(storageKey, newest)
+  __lastSnapForGmSave = snap
+}
+
+async function save() {
+  const snap = cloneDeep(snapshot(settings))
+  await saveToGmStorage(snap)
+  await saveToDraft(snap) // http backup
 }
 
 export function getSettings(path: LeafSettingsPath) {
@@ -389,7 +381,7 @@ export function getSettings(path: LeafSettingsPath) {
  * pick
  */
 export function pickSettings(
-  source: PartialDeep<Settings>,
+  source: ReadonlyDeep<PartialDeep<Settings>>,
   paths: LeafSettingsPath[],
   omit: LeafSettingsPath[] = [],
 ) {
@@ -428,8 +420,17 @@ export function resetSettings() {
 
 export type SettingsInnerArrayItem<P extends ListSettingsPath> = Get<Settings, P>[number]
 
+/**
+ * @deprecated use `getNewestValueOfSettingsInnerArray` instead
+ */
 export function getSettingsInnerArray<P extends ListSettingsPath>(path: P) {
   return get(settings, path) as SettingsInnerArrayItem<P>[]
+}
+// Q: 为什么重新获取
+// A: 在多 Tab 访问的情况下, `settings` 上的数据可能不是最新的, 不想丢失 collection 数据
+export async function getNewestValueOfSettingsInnerArray<P extends ListSettingsPath>(path: P) {
+  const newest = await __pickSettingsFromGmStorage()
+  return (get(newest, path) || get(getSettingsSnapshot(), path)) as SettingsInnerArrayItem<P>[]
 }
 export function setSettingsInnerArray<P extends ListSettingsPath>(
   path: P,
@@ -437,11 +438,11 @@ export function setSettingsInnerArray<P extends ListSettingsPath>(
 ) {
   set(settings, path, value)
 }
-export function updateSettingsInnerArray<P extends ListSettingsPath>(
+export async function updateSettingsInnerArray<P extends ListSettingsPath>(
   path: P,
   { add, remove }: { add?: SettingsInnerArrayItem<P>[]; remove?: SettingsInnerArrayItem<P>[] },
 ) {
-  const arr = getSettingsInnerArray(path)
+  const arr = await getNewestValueOfSettingsInnerArray(path)
   const s = new Set(arr)
   for (const x of add ?? []) s.add(x)
   for (const x of remove ?? []) s.delete(x)

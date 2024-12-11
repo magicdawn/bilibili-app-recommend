@@ -357,8 +357,8 @@ function VideoSourceTabSortableItem({ id }: { id: ETab }) {
 function DynamicFeedWhenViewAllHideIdsPanel() {
   const { hideIds } = useSnapshot(settings.dynamicFeed.whenViewAll)
 
-  const onDelete = useMemoizedFn((mid: string) => {
-    updateSettingsInnerArray('dynamicFeed.whenViewAll.hideIds', { remove: [mid] })
+  const onDelete = useMemoizedFn(async (mid: string) => {
+    await updateSettingsInnerArray('dynamicFeed.whenViewAll.hideIds', { remove: [mid] })
   })
 
   const { followGroups } = useSnapshot(dfStore)

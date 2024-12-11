@@ -142,7 +142,7 @@ export function useContextMenus({
       return toast(`已在过滤名单中: ${content}`)
     }
 
-    updateSettingsInnerArray('filter.byAuthor.keywords', { add: [content] })
+    await updateSettingsInnerArray('filter.byAuthor.keywords', { add: [content] })
     if (authorName) setNicknameCache(authorMid, authorName)
 
     let toastContent = content
@@ -210,7 +210,7 @@ export function useContextMenus({
     !!authorMid
   const onAddMidTo_dynamicFeedWhenViewAllHideIds = useMemoizedFn(async () => {
     if (!hasEntry_addMidTo_dynamicFeedWhenViewAllHideIds) return
-    updateSettingsInnerArray('dynamicFeed.whenViewAll.hideIds', {
+    await updateSettingsInnerArray('dynamicFeed.whenViewAll.hideIds', {
       add: [DF_SELECTED_KEY_PREFIX_UP + authorMid],
     })
     setNicknameCache(authorMid, authorName || '')
