@@ -6,7 +6,7 @@
       "inputs": ["src/**/*.scss"],
       "outputs": ["src/**/*.scss.d.ts"]
     },
-    "build:typecheck": {
+    "_typecheck": {
       "dependsOn": ["build:scss"],
       "inputs": ["src/**/*.{ts,tsx}", "tsconfig.json"]
     },
