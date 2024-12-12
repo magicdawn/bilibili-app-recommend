@@ -48,12 +48,10 @@ import {
 import { BvCode } from '@mgdn/bvid'
 import dayjs from 'dayjs'
 import type { ReactNode } from 'react'
-import type { AppRecIconField } from '../stat-item'
-import { AppRecIconMap, getField } from '../stat-item'
+import type { StatItemField, StatItemType } from '../stat-item'
+import { AppRecStatItemFieldMap, defineStatItems, getField } from '../stat-item'
 
 export const DESC_SEPARATOR = ' · '
-
-export type StatItemType = { field: AppRecIconField; value: number | string | undefined }
 
 export interface IVideoCardData {
   // video
@@ -148,12 +146,12 @@ function apiAppAdapter(item: AppRecItemExtend): IVideoCardData {
 }
 
 function apiAndroidAppAdapter(item: AndroidAppRecItemExtend): IVideoCardData {
-  const extractCountFor = (target: AppRecIconField) => {
+  const extractCountFor = (target: StatItemField) => {
     const { cover_left_icon_1, cover_left_text_1, cover_left_icon_2, cover_left_text_2 } = item
-    if (cover_left_icon_1 && AppRecIconMap[cover_left_icon_1] === target) {
+    if (cover_left_icon_1 && AppRecStatItemFieldMap[cover_left_icon_1] === target) {
       return parseCount(cover_left_text_1)
     }
-    if (cover_left_icon_2 && AppRecIconMap[cover_left_icon_2] === target) {
+    if (cover_left_icon_2 && AppRecStatItemFieldMap[cover_left_icon_2] === target) {
       return parseCount(cover_left_text_2)
     }
   }
@@ -207,7 +205,7 @@ function apiAndroidAppAdapter(item: AndroidAppRecItemExtend): IVideoCardData {
     // stat
     play: extractCountFor('play'),
     danmaku: extractCountFor('danmaku'),
-    bangumiFollow: extractCountFor('bangumiFollow'),
+    bangumiFollow: extractCountFor('bangumi:follow'),
     like: undefined,
     coin: undefined,
     favorite: undefined,
@@ -237,7 +235,7 @@ function apiAndroidAppAdapter(item: AndroidAppRecItemExtend): IVideoCardData {
   }
 }
 function apiIpadAppAdapter(item: IpadAppRecItemExtend): IVideoCardData {
-  const extractCountFor = (target: AppRecIconField) => {
+  const extractCountFor = (target: StatItemField) => {
     const { cover_left_text_1, cover_left_text_2, cover_left_text_3 } = item
     const arr = [cover_left_text_1, cover_left_text_2, cover_left_text_3].filter(Boolean)
     if (target === 'play') {
@@ -254,7 +252,7 @@ function apiIpadAppAdapter(item: IpadAppRecItemExtend): IVideoCardData {
       return parseCount(rest)
     }
 
-    if (target === 'bangumiFollow') {
+    if (target === 'bangumi:follow') {
       const text = arr.find((text) => /追[剧番]$/.test(text))
       if (!text) return
       const rest = text.replace(/追[剧番]$/, '')
@@ -300,12 +298,12 @@ function apiIpadAppAdapter(item: IpadAppRecItemExtend): IVideoCardData {
   const coin = undefined
   const danmaku = extractCountFor('danmaku')
   const favorite = undefined
-  const bangumiFollow = extractCountFor('bangumiFollow')
+  const bangumiFollow = extractCountFor('bangumi:follow')
   const statItems: StatItemType[] = [
     { field: 'play', value: play },
     typeof danmaku === 'number'
       ? { field: 'danmaku', value: danmaku }
-      : { field: 'bangumiFollow', value: bangumiFollow },
+      : { field: 'bangumi:follow', value: bangumiFollow },
   ]
 
   const desc = item.desc || ''
@@ -634,11 +632,11 @@ function apiRankingAdapter(item: RankingItemExtend): IVideoCardData {
       play: item.stat.view,
       like: item.stat.follow,
       danmaku: item.stat.danmaku,
-      statItems: [
-        { field: 'play', value: item.stat.view } as const,
-        { field: 'bangumiFollow', value: item.stat.follow } as const,
-        { field: 'danmaku', value: item.stat.danmaku } as const,
-      ].filter(Boolean) satisfies StatItemType[],
+      statItems: defineStatItems([
+        { field: 'play', value: item.stat.view },
+        { field: 'bangumi:follow', value: item.stat.follow },
+        { field: 'danmaku', value: item.stat.danmaku },
+      ]),
 
       rankingDesc,
     }
@@ -705,12 +703,8 @@ function apiLiveAdapter(item: LiveItemExtend): IVideoCardData {
     liveDesc,
     cover: item.room_cover,
     recommendReason: area,
-
     // stat
-    statItems: [{ field: 'play', value: item.text_small } as const].filter(
-      Boolean,
-    ) satisfies StatItemType[],
-
+    statItems: defineStatItems([{ field: 'live:viewed-by', value: item.text_small }]),
     // author
     authorName: item.uname,
     authorFace: item.face,

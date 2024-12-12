@@ -36,6 +36,7 @@ declare global {
   const IconParkOutlinePeopleMinus: typeof import('~icons/icon-park-outline/people-minus.jsx')['default']
   const IconParkOutlinePeopleSearch: typeof import('~icons/icon-park-outline/people-search.jsx')['default']
   const IconParkOutlinePlayTwo: typeof import('~icons/icon-park-outline/play-two.jsx')['default']
+  const IconParkOutlinePreviewOpen: typeof import('~icons/icon-park-outline/preview-open.jsx')['default']
   const IconParkOutlineReturn: typeof import('~icons/icon-park-outline/return.jsx')['default']
   const IconParkOutlineStar: typeof import('~icons/icon-park-outline/star.jsx')['default']
   const IconParkOutlineTime: typeof import('~icons/icon-park-outline/time.jsx')['default']

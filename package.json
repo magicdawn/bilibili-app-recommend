@@ -6,7 +6,8 @@
   "scripts": {
     "prepare": "husky",
     "dev": "vite",
-    "typecheck": "tsc --noEmit",
+    "build:typecheck": "tsc --noEmit",
+    "typecheck": "turbo build:typecheck",
     "build:scss": "typed-scss-modules 'src/**/*.module.scss'",
     "build:scss:hcm": "hcm 'src/**/*.module.scss' -o generated --localsConvention camelCaseOnly",
     "build:vite": "vite build",

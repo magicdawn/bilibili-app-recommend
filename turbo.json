@@ -2,6 +2,15 @@
   "$schema": "https://turbo.build/schema.json",
   "ui": "stream",
   "tasks": {
+    "build:scss": {
+      "inputs": ["src/**/*.scss"],
+      "outputs": ["src/**/*.scss.d.ts"]
+    },
+    "build:typecheck": {
+      "dependsOn": ["build:scss"],
+      "inputs": ["src/**/*.{ts,tsx}", "tsconfig.json"]
+    },
+
     "build:vite": {
       "dependsOn": ["build:scss"],
       "env": ["RELEASE", "RELEASE_NIGHTLY", "MINIFY", "GHD_DESCRIBE"],
@@ -25,14 +34,6 @@
         "package.json"
       ],
       "outputs": ["dist/bilibili-gate.user.js"]
-    },
-    "typecheck": {
-      "dependsOn": ["build:scss"],
-      "inputs": ["src/**/*.{ts,tsx}", "tsconfig.json"]
-    },
-    "build:scss": {
-      "inputs": ["src/**/*.scss"],
-      "outputs": ["src/**/*.scss.d.ts"]
     }
   }
 }
