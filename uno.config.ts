@@ -5,7 +5,7 @@ import { defineConfig, presetUno, transformerDirectives } from 'unocss'
 
 export default defineConfig({
   presets: [
-    presetUno,
+    presetUno({ preflight: false }),
     presetRemToPx({
       baseFontSize: 4, // mr-4 = 1rem;
     }),
