@@ -1,19 +1,45 @@
 import type { DynamicFeedItem } from '$define'
+import { wrapWithIdbCache } from '$utility/idb'
 import { orderBy } from 'es-toolkit'
 import pmap from 'promise.map'
 import { fetchVideoDynamicFeeds } from '../api'
 import type { UpMidType } from '../store'
 
+const fetchVideoDynamicFeedsWithCache = wrapWithIdbCache({
+  fn: fetchVideoDynamicFeeds,
+  generateKey: ({ upMid }) => `${upMid}`,
+  tableName: 'dynamic-feed-newest-items', // only head
+  ttl: 5 * 60 * 1000, // 5 minutes
+})
+
 export class FollowGroupUpService {
-  constructor(public upMid: UpMidType) {}
+  constructor(
+    public upMid: UpMidType,
+    public enableHeadCache = false,
+  ) {}
 
   bufferQueue: DynamicFeedItem[] = []
   hasMoreForApi = true
   offset: string = ''
-  page = 0 // pages loaded
+  page = 1 // current page
 
   get hasMore() {
     return !!this.bufferQueue.length || this.hasMoreForApi
+  }
+
+  async loadMore() {
+    const enableCache = this.page === 1 && !this.offset && this.enableHeadCache
+    const fn = enableCache ? fetchVideoDynamicFeedsWithCache : fetchVideoDynamicFeeds
+    const data = await fn({
+      upMid: this.upMid,
+      page: this.page,
+      offset: this.offset,
+    })
+
+    this.offset = data.offset
+    this.hasMoreForApi = data.has_more
+    this.page++
+    return data.items
   }
 
   async fillQueue(minimalQueueSize: number, abortSignal?: AbortSignal) {
@@ -22,16 +48,8 @@ export class FollowGroupUpService {
       this.hasMoreForApi &&
       this.bufferQueue.length < minimalQueueSize
     ) {
-      const data = await fetchVideoDynamicFeeds({
-        upMid: this.upMid,
-        page: this.page + 1,
-        offset: this.offset,
-      })
-
-      this.bufferQueue.push(...data.items)
-      this.offset = data.offset
-      this.hasMoreForApi = data.has_more
-      this.page++
+      const items = await this.loadMore()
+      this.bufferQueue.push(...items)
     }
   }
 }
@@ -41,7 +59,8 @@ export class FollowGroupMergeTimelineService {
 
   upServices: FollowGroupUpService[] = []
   constructor(public upMids: UpMidType[]) {
-    this.upServices = upMids.map((upMid) => new FollowGroupUpService(upMid))
+    const enableHeadCache = upMids.length > 10
+    this.upServices = upMids.map((upMid) => new FollowGroupUpService(upMid, enableHeadCache))
   }
 
   get hasMore() {

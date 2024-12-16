@@ -3,6 +3,7 @@
  */
 
 import { APP_NAMESPACE } from '$common'
+import { throttle } from 'es-toolkit'
 import localforage from 'localforage'
 import pLimit from 'p-limit'
 import { whenIdle } from './dom'
@@ -48,13 +49,14 @@ export function wrapWithIdbCache<A extends unknown[], FnReturnType>({
   const cache = getIdbCache<CacheEntry>(tableName)
   const limit = concurrency && concurrency > 0 ? pLimit(concurrency) : undefined
 
-  async function cleanUp() {
+  const cleanUp = throttle(async () => {
     cache.db.iterate((cached: CacheEntry, key) => {
       if (!cache || !shouldReuse(cached)) {
         cache.db.removeItem(key)
       }
     })
-  }
+  }, 1000)
+
   if (autoCleanUp) {
     whenIdle().then(cleanUp)
   }
