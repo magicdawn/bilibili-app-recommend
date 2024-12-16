@@ -51,7 +51,7 @@ export function wrapWithIdbCache<A extends unknown[], FnReturnType>({
 
   const cleanUp = throttle(async () => {
     cache.db.iterate((cached: CacheEntry, key) => {
-      if (!cache || !shouldReuse(cached)) {
+      if (!cache || !shouldReuseCached(cached)) {
         cache.db.removeItem(key)
       }
     })
@@ -61,14 +61,14 @@ export function wrapWithIdbCache<A extends unknown[], FnReturnType>({
     whenIdle().then(cleanUp)
   }
 
-  function shouldReuse(cached: CacheEntry) {
+  function shouldReuseCached(cached: CacheEntry) {
     return cached.val && cached.ts && Date.now() - cached.ts <= ttl
   }
 
   async function wrapped(...args: A): Promise<R> {
     const key = generateKey(...args)
     const cached = await cache.get(key)
-    if (cached && shouldReuse(cached)) return cached.val
+    if (cached && shouldReuseCached(cached)) return cached.val
     const result = await (limit ? limit(() => fn(...args)) : fn(...args))
     await cache.set(key, { ts: Date.now(), val: result })
     return result
@@ -76,11 +76,15 @@ export function wrapWithIdbCache<A extends unknown[], FnReturnType>({
   Object.defineProperties(wrapped, {
     cache: { value: cache },
     cleanUp: { value: cleanUp },
+    generateKey: { value: generateKey },
+    shouldReuseCached: { value: shouldReuseCached },
   })
 
   return wrapped as {
     (...args: A): Promise<R>
     cache: typeof cache
     cleanUp: typeof cleanUp
+    generateKey: typeof generateKey
+    shouldReuseCached: typeof shouldReuseCached
   }
 }

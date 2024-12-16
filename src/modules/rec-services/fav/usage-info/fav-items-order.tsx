@@ -1,4 +1,5 @@
 import { buttonOpenCss, usePopoverBorderColor } from '$common/emotion-css'
+import { HelpInfo } from '$components/_base/HelpInfo'
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
 import type { FavItemExtend } from '$define'
 import { styled } from '$libs'
@@ -205,29 +206,35 @@ export function FavItemsOrderSwitcher() {
   const [open, setOpen] = useState(false)
 
   return (
-    <Dropdown
-      // open
-      open={open}
-      onOpenChange={setOpen}
-      getPopupContainer={getPopupContainer}
-      menu={{
-        items: dropdownMenuItems,
-        style: dropdownStyle,
-        className: clsMenuRoot,
-        selectedKeys: [current],
-      }}
-      placement='bottomRight'
-    >
-      <Button
-        ref={ref}
-        onClick={onToggle}
-        css={[open && buttonOpenCss]}
-        icon={icon}
-        className='gap-8px px-16px'
+    <>
+      <Dropdown
+        // open
+        open={open}
+        onOpenChange={setOpen}
+        getPopupContainer={getPopupContainer}
+        menu={{
+          items: dropdownMenuItems,
+          style: dropdownStyle,
+          className: clsMenuRoot,
+          selectedKeys: [current],
+        }}
+        placement='bottomRight'
       >
-        {label}
-      </Button>
-    </Dropdown>
+        <Button
+          ref={ref}
+          onClick={onToggle}
+          css={[open && buttonOpenCss]}
+          icon={icon}
+          className='gap-8px px-16px'
+        >
+          {label}
+        </Button>
+      </Dropdown>
+      <HelpInfo>
+        1. 点击/下拉切换 <br />
+        2. 按住 <kbd>Shift</kbd> 键点击逆序切换 <br />
+      </HelpInfo>
+    </>
   )
 }
 

@@ -38,7 +38,7 @@ import { VirtuosoGrid } from 'react-virtuoso'
 import * as scopedClsNames from '../video-grid.module.scss'
 import type { OnRefresh } from './useRefresh'
 import { useRefresh } from './useRefresh'
-import { useShortcut } from './useShortcut'
+import { getColumnCount, useShortcut } from './useShortcut'
 import type { CustomGridComponents, CustomGridContext } from './virtuoso.config'
 import { ENABLE_VIRTUAL_GRID, gridComponents } from './virtuoso.config'
 
@@ -427,11 +427,11 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
   // skeleton loading
   const _skeleton = refreshing && useSkeleton
   if (_skeleton) {
+    const cardCount = getColumnCount() * 4
     return (
       <div className={scopedClsNames.videoGridContainer}>
         <div className={gridClassName}>
-          {new Array(28).fill(undefined).map((_, index) => {
-            const x = <VideoCard key={index} loading={true} className={APP_CLS_CARD} tab={tab} />
+          {new Array(cardCount).fill(0).map((_, index) => {
             return <VideoCard key={index} loading={true} className={APP_CLS_CARD} tab={tab} />
           })}
         </div>

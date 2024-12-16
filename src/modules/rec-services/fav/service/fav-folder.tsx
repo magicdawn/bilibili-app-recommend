@@ -1,6 +1,8 @@
 import type { ItemsSeparator } from '$define'
 import { EApiType } from '$define/index.shared'
-import { shuffle } from 'es-toolkit'
+import { wrapWithIdbCache } from '$utility/idb'
+import { shuffle, uniqBy } from 'es-toolkit'
+import ms from 'ms'
 import { type IFavInnerService } from '../index'
 import { updateFavFolderMediaCount } from '../store'
 import type { FavItemExtend } from '../types'
@@ -41,7 +43,7 @@ export class FavFolderService implements IFavInnerService {
   get hasMore() {
     if (this.addSeparator && !this.separatorAdded) return true
     if (this.needLoadAll) {
-      if (!this.loadAllCalled) return true
+      if (!this.allItemsLoaded) return true
       return !!this.bufferQueue.length
     } else {
       return this.basicService.hasMore
@@ -67,7 +69,7 @@ export class FavFolderService implements IFavInnerService {
 
     // load all
     if (this.needLoadAll) {
-      if (!this.loadAllCalled) await this.loadAllItems(abortSignal)
+      if (!this.allItemsLoaded) await this.loadAllItems(abortSignal)
 
       // shuffle every time
       if (this.itemsOrder === FavItemsOrder.Shuffle) {
@@ -82,21 +84,43 @@ export class FavFolderService implements IFavInnerService {
     // normal
     else {
       const ret = await this.basicService.loadMore(abortSignal)
+      if (ret?.length) await this.addToFetchAllItemsWithCache(ret)
       this.runSideEffects()
       return ret
     }
   }
 
-  private loadAllCalled = false
+  private allItemsLoaded = false
   private bufferQueue: FavItemExtend[] = []
   private async loadAllItems(abortSignal?: AbortSignal) {
-    this.loadAllCalled = true
+    const allItems = await this.fetchAllItemsWithCache(abortSignal)
+    this.bufferQueue = handleItemsOrder(allItems, this.itemsOrder)
+    this.allItemsLoaded = true
+    this.runSideEffects()
+  }
+  private __fetchAllItems = async (abortSignal?: AbortSignal) => {
+    const allItems: FavItemExtend[] = []
     while (this.basicService.hasMore && !abortSignal?.aborted) {
       const items = (await this.basicService.loadMore()) || []
-      this.bufferQueue.push(...items)
+      allItems.push(...items)
     }
-    this.bufferQueue = handleItemsOrder(this.bufferQueue, this.itemsOrder)
-    this.runSideEffects()
+    return allItems
+  }
+  // __fetchAllItems will result multiple requests, so cache it
+  private fetchAllItemsWithCache = wrapWithIdbCache({
+    fn: this.__fetchAllItems,
+    tableName: 'fav-folder-all-items',
+    generateKey: () => `${this.entry.id}`,
+    ttl: ms('5min'),
+  })
+  private addToFetchAllItemsWithCache = async (items: FavItemExtend[]) => {
+    const { cache, generateKey, shouldReuseCached } = this.fetchAllItemsWithCache
+
+    const cached = await cache.get(generateKey())
+    if (!cached || !shouldReuseCached(cached)) return
+
+    const newItems = uniqBy([...cached.val, ...items], (x) => x.bvid)
+    await cache.set(generateKey(), { ...cached, val: newItems })
   }
 
   private runSideEffects() {

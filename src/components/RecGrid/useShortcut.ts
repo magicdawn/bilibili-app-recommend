@@ -254,9 +254,9 @@ export function getColumnCount(container?: HTMLElement | null, mayHaveNarrowMode
   if (mayHaveNarrowMode && settings.useNarrowMode) return 2
 
   const countCache = settings.style.pureRecommend.useCustomGrid ? countCache1 : countCache2
-  let count = countCache.get(Math.trunc(window.innerWidth))
-  if (count) {
-    return count
+  {
+    const count = countCache.get(Math.trunc(window.innerWidth))
+    if (count) return count
   }
 
   container ||= document.querySelector<HTMLElement>(`.${videoGrid}`)
@@ -264,7 +264,7 @@ export function getColumnCount(container?: HTMLElement | null, mayHaveNarrowMode
 
   const style = window.getComputedStyle(container)
   if (style.display !== 'grid') return 0
-  count = style.gridTemplateColumns.split(' ').length
+  const count = style.gridTemplateColumns.split(' ').length
 
   countCache.set(window.innerWidth, count)
   return count
