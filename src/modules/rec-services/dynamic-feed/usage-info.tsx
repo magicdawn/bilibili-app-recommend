@@ -42,7 +42,10 @@ import {
   localDynamicFeedInfoCache,
   updateLocalDynamicFeedCache,
 } from './cache'
-import { FollowGroupMergeTimelineService } from './group/merge-timeline-service'
+import {
+  fetchVideoDynamicFeedsWithCache,
+  FollowGroupMergeTimelineService,
+} from './group/merge-timeline-service'
 import type { FollowGroup } from './group/types/groups'
 import { formatFollowGroupUrl, IconForGroup, IconForPopoverTrigger, IconForUp } from './shared'
 import {
@@ -591,14 +594,17 @@ function FollowGroupActions({
   onRefresh?: () => void
 }) {
   const { whenViewAll } = useSnapshot(settings.dynamicFeed)
+  const midCount = followGroup.count
 
   let forceMergeTimelineCheckbox: ReactNode
+  const forceMergeTimelineHandle = useValueInSettingsCollection(
+    followGroup.tagid,
+    'dynamicFeed.followGroup.forceUseMergeTimelineIds',
+  )
   {
-    const { checked, onChange } = useValueInSettingsCollection(
-      followGroup.tagid,
-      'dynamicFeed.followGroup.forceUseMergeTimelineIds',
-    )
-    const disabled = followGroup.count <= FollowGroupMergeTimelineService.MAX_UPMID_COUNT
+    const { checked, onChange } = forceMergeTimelineHandle
+    const disabled =
+      midCount <= FollowGroupMergeTimelineService.ENABLE_MERGE_TIMELINE_UPMID_COUNT_THRESHOLD
     forceMergeTimelineCheckbox = (
       <Checkbox
         checked={checked}
@@ -611,7 +617,8 @@ function FollowGroupActions({
         <AntdTooltip
           title={
             <>
-              默认分组 UP 数量不超过 {FollowGroupMergeTimelineService.MAX_UPMID_COUNT}{' '}
+              默认分组 UP 数量不超过{' '}
+              {FollowGroupMergeTimelineService.ENABLE_MERGE_TIMELINE_UPMID_COUNT_THRESHOLD}{' '}
               时会使用「拼接时间线」
               {disabled && (
                 <p
@@ -620,7 +627,7 @@ function FollowGroupActions({
                     font-style: italic;
                   `}
                 >
-                  当前分组 UP 数量: {followGroup.count}, 无需设置
+                  当前分组 UP 数量: {midCount}, 无需设置
                 </p>
               )}
             </>
@@ -629,6 +636,37 @@ function FollowGroupActions({
           分组动态: 强制使用「拼接时间线」
         </AntdTooltip>
       </Checkbox>
+    )
+  }
+
+  let clearMergeTimelineHeadCacheButton: ReactNode
+  {
+    const usingMergeTimeline =
+      midCount <= FollowGroupMergeTimelineService.ENABLE_MERGE_TIMELINE_UPMID_COUNT_THRESHOLD ||
+      forceMergeTimelineHandle.checked
+    const usingMergeTimelineHeadCache =
+      usingMergeTimeline &&
+      midCount > FollowGroupMergeTimelineService.ENABLE_HEAD_CACHE_UPMID_COUNT_THRESHOLD
+    clearMergeTimelineHeadCacheButton = usingMergeTimelineHeadCache && (
+      <AntdTooltip
+        title={
+          <>
+            当分组 UP 数量{' >  '}
+            {FollowGroupMergeTimelineService.ENABLE_HEAD_CACHE_UPMID_COUNT_THRESHOLD}时,
+            「拼接时间线」功能会缓存每个 UP 的最新动态5分钟. <br />
+            这里可以手动清除缓存
+          </>
+        }
+      >
+        <Button
+          onClick={() => {
+            fetchVideoDynamicFeedsWithCache.cache.db.clear()
+            antMessage.success('已清除缓存')
+          }}
+        >
+          清除「拼接时间线」- 队头缓存
+        </Button>
+      </AntdTooltip>
     )
   }
 
@@ -651,6 +689,7 @@ function FollowGroupActions({
     <div className='flex items-center flex-wrap gap-x-10 gap-y-6'>
       {addTo_dynamicFeedWhenViewAllHideIds_checkbox}
       {forceMergeTimelineCheckbox}
+      {clearMergeTimelineHeadCacheButton}
     </div>
   )
 }

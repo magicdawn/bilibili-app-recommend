@@ -189,7 +189,7 @@ export class DynamicFeedRecService implements IService {
     this.whenViewSomeGroupMids = new Set(mids)
     if (
       mids.length > 0 &&
-      (mids.length <= FollowGroupMergeTimelineService.MAX_UPMID_COUNT || // <- 太多了则从全部过滤
+      (mids.length <= FollowGroupMergeTimelineService.ENABLE_MERGE_TIMELINE_UPMID_COUNT_THRESHOLD || // <- 太多了则从全部过滤
         this.config.forceUseMergeTime)
     ) {
       this.whenViewSomeGroupMergeTimelineService = new FollowGroupMergeTimelineService(

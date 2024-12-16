@@ -5,7 +5,7 @@ import pmap from 'promise.map'
 import { fetchVideoDynamicFeeds } from '../api'
 import type { UpMidType } from '../store'
 
-const fetchVideoDynamicFeedsWithCache = wrapWithIdbCache({
+export const fetchVideoDynamicFeedsWithCache = wrapWithIdbCache({
   fn: fetchVideoDynamicFeeds,
   generateKey: ({ upMid }) => `${upMid}`,
   tableName: 'dynamic-feed-newest-items', // only head
@@ -55,11 +55,16 @@ export class FollowGroupUpService {
 }
 
 export class FollowGroupMergeTimelineService {
-  static MAX_UPMID_COUNT = 20 // fillQueues 会对每一个 upMid 请求, 多了不适合
+  // fillQueues 会对每一个 upMid 请求, 多了不适合
+  static ENABLE_MERGE_TIMELINE_UPMID_COUNT_THRESHOLD = 20
+
+  // if upMids > 10, enable head cache
+  static ENABLE_HEAD_CACHE_UPMID_COUNT_THRESHOLD = 10
 
   upServices: FollowGroupUpService[] = []
   constructor(public upMids: UpMidType[]) {
-    const enableHeadCache = upMids.length > 10
+    const enableHeadCache =
+      upMids.length > FollowGroupMergeTimelineService.ENABLE_HEAD_CACHE_UPMID_COUNT_THRESHOLD
     this.upServices = upMids.map((upMid) => new FollowGroupUpService(upMid, enableHeadCache))
   }
 

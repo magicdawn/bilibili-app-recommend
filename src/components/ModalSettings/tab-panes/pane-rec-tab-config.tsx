@@ -141,8 +141,9 @@ export function TabPaneRecTabsConfig() {
                   tooltip={
                     <>
                       动态 Tab 启用分组筛选 <br />
-                      当分组中 UP 较少(不超过 {FollowGroupMergeTimelineService.MAX_UPMID_COUNT}),
-                      会使用「拼接时间线」的形式, 速度较快, 可以获取所有动态; <br />
+                      当分组中 UP 较少(不超过{' '}
+                      {FollowGroupMergeTimelineService.ENABLE_MERGE_TIMELINE_UPMID_COUNT_THRESHOLD}
+                      ), 会使用「拼接时间线」的形式, 速度较快, 可以获取所有动态; <br />
                       否则基于全部动态 + 分组UP过滤, 速度可能巨慢,
                       且貌似只能获取最近一个月的动态数据. <br />
                     </>
