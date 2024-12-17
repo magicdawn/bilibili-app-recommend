@@ -50,6 +50,18 @@ export function anyFilterEnabled(tab: ETab) {
   return false
 }
 
+// 推荐 / 热门
+// 会使用 blacklistMids / filter.byAuthor / filter.byTitle 过滤
+export function isApiRecLike(api: EApiType) {
+  return [
+    EApiType.AppRecommend,
+    EApiType.PcRecommend,
+    EApiType.Ranking,
+    EApiType.PopularGeneral,
+    EApiType.PopularWeekly,
+  ].includes(api)
+}
+
 export function filterRecItems(items: RecItemTypeOrSeparator[], tab: ETab) {
   if (!anyFilterEnabled(tab)) {
     return items
@@ -157,14 +169,7 @@ export function filterRecItems(items: RecItemTypeOrSeparator[], tab: ETab) {
     }
 
     // 推荐 / 热门
-    const should_check_blacklist_filterByUp_filterByTitle = [
-      EApiType.AppRecommend,
-      EApiType.PcRecommend,
-      EApiType.Ranking,
-      EApiType.PopularGeneral,
-      EApiType.PopularWeekly,
-    ].includes(item.api)
-    if (should_check_blacklist_filterByUp_filterByTitle) {
+    if (isApiRecLike(item.api)) {
       if (check_blacklist_filterByUp_filterByTitle() === false) {
         return false
       }

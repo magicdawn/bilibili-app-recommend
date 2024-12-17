@@ -50,7 +50,7 @@ import { useSnapshot } from 'valtio'
 import { copyContent } from '.'
 import type { watchlaterDel } from './card.service'
 import { watchlaterAdd } from './card.service'
-import { getFollowedStatus } from './process/filter'
+import { getFollowedStatus, isApiRecLike } from './process/filter'
 import type { IVideoCardData } from './process/normalize'
 import { getLinkTarget } from './use/useOpenRelated'
 
@@ -122,9 +122,8 @@ export function useContextMenus({
   /**
    * blacklist
    */
-  // 已关注 item.api 也为 'pc', 故使用 tab, 而不是 api 区分
-  const hasBlacklistEntry =
-    !!authorMid && (tab === ETab.AppRecommend || tab === ETab.PcRecommend || tab === ETab.Hot)
+  // 已关注 item.api 也为 'pc',
+  const hasBlacklistEntry = !!authorMid && isApiRecLike(item.api) && tab !== ETab.KeepFollowOnly
 
   const onBlacklistUp = useMemoizedFn(async () => {
     if (!authorMid) return antMessage.error('UP mid 为空!')
