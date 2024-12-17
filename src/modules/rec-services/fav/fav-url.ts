@@ -1,7 +1,7 @@
 import { getUid } from '$utility/cookie'
 
-export function formatFavFolderUrl(id: number) {
-  return `https://space.bilibili.com/${getUid()}/favlist?fid=${id}`
+export function formatFavFolderUrl(id: number, ctype = 21) {
+  return `https://space.bilibili.com/${getUid()}/favlist?fid=${id}&ftype=create&ctype=${ctype}`
 }
 
 export function formatFavCollectionUrl(id: number, ctype = 21) {

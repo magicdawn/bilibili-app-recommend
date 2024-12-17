@@ -96,7 +96,7 @@ export class FavRecService implements IService {
   decreaseTotal() {
     if (this.viewingAll) {
       // TODO: this is not working, since <FavUsageInfo> is calculating inside itself
-      ;(this.innerService as FavAllService).total -= 1
+      ;(this.innerService as FavAllService).state.totalCountInFavFolders -= 1
     }
 
     // viewingSomeFolder

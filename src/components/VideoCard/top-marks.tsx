@@ -20,7 +20,7 @@ import { useLinkNewTab } from './use/useOpenRelated'
 export const CHARGE_ONLY_TEXT = '充电专属'
 
 export function isChargeOnlyVideo(item: RecItemType, recommendReason?: string) {
-  if (item.api !== EApiType.Dynamic) return false
+  if (item.api !== EApiType.DynamicFeed) return false
   recommendReason ||= item.modules?.module_dynamic?.major?.archive?.badge?.text as string
   return recommendReason === CHARGE_ONLY_TEXT
 }

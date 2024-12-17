@@ -8,23 +8,19 @@
 import { dailyCache } from '$modules/gm/daily-cache'
 import { formatSpaceUrl } from '$modules/rec-services/dynamic-feed/shared'
 import { request } from '$request'
+import { createUpdateDataFunction } from '$utility/async'
 import { getUid } from '$utility/cookie'
-import pLimit from 'p-limit'
 
 const cache = dailyCache<string>('w_webid')
-const limit = pLimit(1)
 
-export async function get_w_webId(): Promise<string | undefined> {
-  const val = await cache.get()
-  if (val) return val
-  return await limit(fetch_w_webId)
-}
+export const get_w_webId = createUpdateDataFunction({
+  fn: fetch_w_webId,
+  getCached() {
+    return cache.get()
+  },
+})
 
 async function fetch_w_webId(): Promise<string | undefined> {
-  // we got the mutex here, check cache again
-  const val = await cache.get()
-  if (val) return val
-
   const mid = getUid()
   if (!mid) return
 

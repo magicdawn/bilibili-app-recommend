@@ -1,10 +1,16 @@
+import { C } from '$common/emotion-css'
+import { AntdTooltip } from '$components/_base/antd-custom'
+import { CustomTargetLink } from '$components/VideoCard/use/useOpenRelated'
 import { type ItemsSeparator } from '$define'
 import { EApiType } from '$define/index.shared'
 import { getSpaceAccInfo } from '$modules/bilibili/user/space-acc-info'
+import { IconForOpenExternalLink, IconForPlayer } from '$modules/icon'
 import { cloneDeep, countBy, orderBy, shuffle } from 'es-toolkit'
 import { tryit } from 'radash'
 import { proxy } from 'valtio'
+import { useSnapshot } from 'valtio/react'
 import { fetchCollectionDetail } from '../collection/api'
+import { formatBvidUrl, formatFavCollectionUrl } from '../fav-url'
 import { type IFavInnerService } from '../index'
 import { favStore } from '../store'
 import type { FavItemExtend } from '../types'
@@ -17,7 +23,7 @@ import {
   FavItemsOrderSwitcher,
   handleItemsOrder,
 } from '../usage-info/fav-items-order'
-import { FAV_PAGE_SIZE, FavCollectionSeparator } from './_base'
+import { FAV_PAGE_SIZE, favSeparatorCss } from './_base'
 
 export class FavCollectionService implements IFavInnerService {
   constructor(
@@ -136,4 +142,34 @@ export class FavCollectionService implements IFavInnerService {
   get extraUsageInfo() {
     return <FavItemsOrderSwitcher />
   }
+}
+
+export function FavCollectionSeparator({ service }: { service: FavCollectionService }) {
+  const { firstBvid, info } = useSnapshot(service.state)
+  return (
+    <>
+      <AntdTooltip
+        title={
+          <>
+            UP: {info?.upper.name} <br />
+            {info?.intro || '简介: N/A'}
+          </>
+        }
+      >
+        <CustomTargetLink
+          href={formatFavCollectionUrl(service.collectionId)}
+          css={favSeparatorCss.item}
+        >
+          <IconForOpenExternalLink css={C.size(16)} />
+          {info?.title}
+        </CustomTargetLink>
+      </AntdTooltip>
+      {firstBvid && (
+        <CustomTargetLink href={formatBvidUrl(firstBvid)} css={favSeparatorCss.item}>
+          <IconForPlayer css={C.size(16)} />
+          播放全部
+        </CustomTargetLink>
+      )}
+    </>
+  )
 }

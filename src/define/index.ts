@@ -33,13 +33,13 @@ export type IpadAppRecItem = ipad.AppRecItem
 
 export interface AndroidAppRecItemExtend extends AndroidAppRecItem {
   uniqId: string
-  api: EApiType.App
+  api: EApiType.AppRecommend
   device: EAppApiDevice.android
 }
 
 export interface IpadAppRecItemExtend extends ipad.AppRecItem {
   uniqId: string
-  api: EApiType.App
+  api: EApiType.AppRecommend
   device: EAppApiDevice.ipad
 }
 
@@ -69,12 +69,12 @@ export type ItemsSeparator = { uniqId: string; api: EApiType.Separator; content:
 
 export type PcRecItemExtend = PcRecItem & {
   uniqId: string
-  api: EApiType.Pc
+  api: EApiType.PcRecommend
 }
 
 export type DynamicFeedItemExtend = DynamicFeedItem & {
   uniqId: string
-  api: EApiType.Dynamic
+  api: EApiType.DynamicFeed
 }
 
 export type WatchLaterItemExtend = WatchlaterItem & {
@@ -106,14 +106,14 @@ export type LiveItemExtend = LiveItem & {
   api: EApiType.Live
 }
 
-export function isApp(item: RecItemType): item is AppRecItemExtend {
-  return item.api === EApiType.App
+export function isAppRecommend(item: RecItemType): item is AppRecItemExtend {
+  return item.api === EApiType.AppRecommend
 }
-export function isPc(item: RecItemType): item is PcRecItemExtend {
-  return item.api === EApiType.Pc
+export function isPcRecommend(item: RecItemType): item is PcRecItemExtend {
+  return item.api === EApiType.PcRecommend
 }
-export function isDynamic(item: RecItemType): item is DynamicFeedItemExtend {
-  return item.api === EApiType.Dynamic
+export function isDynamicFeed(item: RecItemType): item is DynamicFeedItemExtend {
+  return item.api === EApiType.DynamicFeed
 }
 export function isWatchlater(item: RecItemType): item is WatchLaterItemExtend {
   return item.api === EApiType.Watchlater

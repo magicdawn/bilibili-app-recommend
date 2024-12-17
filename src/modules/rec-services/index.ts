@@ -17,9 +17,9 @@ export const recItemUniqer = (item: RecItemTypeOrSeparator) =>
   item.api === EApiType.Separator
     ? item.uniqId
     : lookinto<string | number>(item, {
-        [EApiType.App]: (item) => item.param,
-        [EApiType.Pc]: (item) => item.bvid,
-        [EApiType.Dynamic]: (item) => item.modules.module_dynamic.major.archive.bvid,
+        [EApiType.AppRecommend]: (item) => item.param,
+        [EApiType.PcRecommend]: (item) => item.bvid,
+        [EApiType.DynamicFeed]: (item) => item.modules.module_dynamic.major.archive.bvid,
         [EApiType.Watchlater]: (item) => item.bvid,
         [EApiType.Fav]: (item) => item.bvid,
         [EApiType.PopularGeneral]: (item) => item.bvid,

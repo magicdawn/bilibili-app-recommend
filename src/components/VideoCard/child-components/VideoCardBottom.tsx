@@ -5,7 +5,7 @@
 
 import { C, flexCenterStyle } from '$common/emotion-css'
 import { colorPrimaryValue } from '$components/css-vars'
-import { isApp, isLive, isRanking, type RecItemType } from '$define'
+import { isAppRecommend, isLive, isRanking, type RecItemType } from '$define'
 import { EApiType, EAppApiDevice } from '$define/index.shared'
 import { IconForLive } from '$modules/icon'
 import { formatSpaceUrl } from '$modules/rec-services/dynamic-feed/shared'
@@ -163,7 +163,7 @@ export function VideoCardBottom({
    */
   const ENABLE_HIDE_AVATAR = false
   let hideAvatar = false
-  if (ENABLE_HIDE_AVATAR && isApp(item) && item.device === EAppApiDevice.android) {
+  if (ENABLE_HIDE_AVATAR && isAppRecommend(item) && item.device === EAppApiDevice.android) {
     hideAvatar = true
   }
 

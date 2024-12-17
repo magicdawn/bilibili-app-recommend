@@ -11,7 +11,7 @@ import { useSnapshot } from 'valtio'
 import { usePopupContainer } from '../../_base'
 import { dropdownMenuStyle } from '../../_shared'
 import { isFavFolderDefault, isFavFolderPrivate } from '../fav-util'
-import type { FavFolderBasicService } from '../service/_base'
+import type { FavFolderBasicService } from '../service/fav-folder'
 import { favStore, type FavStore } from '../store'
 
 export const IconForAll = IconLucideList

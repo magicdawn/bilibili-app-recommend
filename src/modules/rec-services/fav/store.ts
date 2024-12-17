@@ -1,3 +1,4 @@
+import { createUpdateDataFunction } from '$utility/async'
 import { proxyMapWithGmStorage } from '$utility/valtio'
 import ms from 'ms'
 import { proxy } from 'valtio'
@@ -112,31 +113,42 @@ export function updateFavFolderMediaCount(
   }
 }
 
-export async function updateList() {
-  return Promise.all([updateFolderList(), updateCollectionList()])
+export async function updateList(force = false) {
+  return Promise.all([updateFolderList(force), updateCollectionList(force)])
 }
 
-async function updateFolderList(force = false) {
-  if (!force) {
-    const { favFoldersUpdateAt } = favStore
-    if (favFoldersUpdateAt && Date.now() - favFoldersUpdateAt < ms('5min')) {
-      return
+const updateFolderList = createUpdateDataFunction({
+  async fn(force?: boolean) {
+    const folders = await fetchFavFolder()
+    favStore.favFolders = folders
+    favStore.favFoldersUpdateAt = Date.now()
+    return favStore.favFolders
+  },
+  async getCached(force = false) {
+    if (force) return
+    const { favFolders, favFoldersUpdateAt } = favStore
+    if (favFolders.length && favFoldersUpdateAt && Date.now() - favFoldersUpdateAt < ms('5min')) {
+      return favFolders
     }
-  }
-  const folders = await fetchFavFolder()
-  favStore.favFolders = folders
-  favStore.favFoldersUpdateAt = Date.now()
-}
+  },
+})
 
-async function updateCollectionList(force = false) {
-  if (!force) {
-    const { favCollectionsUpdateAt } = favStore
-    if (favCollectionsUpdateAt && Date.now() - favCollectionsUpdateAt < ms('5min')) {
-      return
+const updateCollectionList = createUpdateDataFunction({
+  async fn(force?: boolean) {
+    const collections = await fetchAllFavCollections()
+    favStore.favCollections = collections
+    favStore.favCollectionsUpdateAt = Date.now()
+    return favStore.favCollections
+  },
+  async getCached(force = false) {
+    if (force) return
+    const { favCollections, favCollectionsUpdateAt } = favStore
+    if (
+      favCollections.length &&
+      favCollectionsUpdateAt &&
+      Date.now() - favCollectionsUpdateAt < ms('5min')
+    ) {
+      return favCollections
     }
-  }
-
-  const collections = await fetchAllFavCollections()
-  favStore.favCollections = collections
-  favStore.favCollectionsUpdateAt = Date.now()
-}
+  },
+})

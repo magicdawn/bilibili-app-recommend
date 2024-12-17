@@ -2,11 +2,11 @@ import { appWarn } from '$common'
 import { AntdTooltip } from '$components/_base/antd-custom'
 import { colorPrimaryValue } from '$components/css-vars'
 import {
-  isApp,
-  isDynamic,
+  isAppRecommend,
+  isDynamicFeed,
   isFav,
   isLive,
-  isPc,
+  isPcRecommend,
   isPopularGeneral,
   isPopularWeekly,
   isRanking,
@@ -23,7 +23,7 @@ import {
   type RecItemType,
   type WatchLaterItemExtend,
 } from '$define'
-import type { EApiType } from '$define/index.shared'
+import { EApiType } from '$define/index.shared'
 import { styled } from '$libs'
 import { isFavFolderPrivate } from '$modules/rec-services/fav/fav-util'
 import type { FavItemExtend } from '$modules/rec-services/fav/types'
@@ -98,9 +98,9 @@ type Getter<T> = Record<RecItemType['api'], (item: RecItemType) => T>
 export function lookinto<T>(
   item: RecItemType,
   opts: {
-    [EApiType.App]: (item: AppRecItemExtend) => T
-    [EApiType.Pc]: (item: PcRecItemExtend) => T
-    [EApiType.Dynamic]: (item: DynamicFeedItemExtend) => T
+    [EApiType.AppRecommend]: (item: AppRecItemExtend) => T
+    [EApiType.PcRecommend]: (item: PcRecItemExtend) => T
+    [EApiType.DynamicFeed]: (item: DynamicFeedItemExtend) => T
     [EApiType.Watchlater]: (item: WatchLaterItemExtend) => T
     [EApiType.Fav]: (item: FavItemExtend) => T
     [EApiType.PopularGeneral]: (item: PopularGeneralItemExtend) => T
@@ -109,9 +109,9 @@ export function lookinto<T>(
     [EApiType.Live]: (item: LiveItemExtend) => T
   },
 ): T {
-  if (isApp(item)) return opts.app(item)
-  if (isPc(item)) return opts.pc(item)
-  if (isDynamic(item)) return opts.dynamic(item)
+  if (isAppRecommend(item)) return opts[EApiType.AppRecommend](item)
+  if (isPcRecommend(item)) return opts[EApiType.PcRecommend](item)
+  if (isDynamicFeed(item)) return opts[EApiType.DynamicFeed](item)
   if (isWatchlater(item)) return opts.watchlater(item)
   if (isFav(item)) return opts.fav(item)
   if (isPopularGeneral(item)) return opts['popular-general'](item)
@@ -123,15 +123,15 @@ export function lookinto<T>(
 
 export function normalizeCardData(item: RecItemType) {
   const ret = lookinto<IVideoCardData>(item, {
-    'app': apiAppAdapter,
-    'pc': apiPcAdapter,
-    'dynamic': apiDynamicAdapter,
-    'watchlater': apiWatchLaterAdapter,
-    'fav': apiFavAdapter,
-    'popular-general': apiPopularGeneralAdapter,
-    'popular-weekly': apiPopularWeeklyAdapter,
-    'ranking': apiRankingAdapter,
-    'live': apiLiveAdapter,
+    [EApiType.AppRecommend]: apiAppAdapter,
+    [EApiType.PcRecommend]: apiPcAdapter,
+    [EApiType.DynamicFeed]: apiDynamicAdapter,
+    [EApiType.Watchlater]: apiWatchLaterAdapter,
+    [EApiType.Fav]: apiFavAdapter,
+    [EApiType.PopularGeneral]: apiPopularGeneralAdapter,
+    [EApiType.PopularWeekly]: apiPopularWeeklyAdapter,
+    [EApiType.Ranking]: apiRankingAdapter,
+    [EApiType.Live]: apiLiveAdapter,
   })
 
   // handle mixed content

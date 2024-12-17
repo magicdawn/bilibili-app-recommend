@@ -100,7 +100,7 @@ export function useOpenRelated({
     let videoWidth: number | undefined
     let videoHeight: number | undefined
 
-    if (item.api === EApiType.App && item.uri?.startsWith('bilibili://')) {
+    if (item.api === EApiType.AppRecommend && item.uri?.startsWith('bilibili://')) {
       const searchParams = new URL(item.uri).searchParams
       const playerWidth = Number(searchParams.get('player_width') || 0)
       const playerHeight = Number(searchParams.get('player_height') || 0)

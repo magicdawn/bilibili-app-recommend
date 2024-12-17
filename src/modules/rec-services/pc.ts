@@ -1,4 +1,5 @@
 import type { PcRecItem, PcRecItemExtend, PcRecommendJson } from '$define'
+import { EApiType } from '$define/index.shared'
 import { isWebApiSuccess, request } from '$request'
 import toast from '$utility/toast'
 import { uniqBy } from 'es-toolkit'
@@ -139,7 +140,7 @@ export class PcRecService implements IService {
       return {
         ...item,
         uniqId: item.id + '-' + crypto.randomUUID(),
-        api: 'pc',
+        api: EApiType.PcRecommend,
       } as PcRecItemExtend
     })
     return this.qs.doReturnItems(_list)

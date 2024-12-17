@@ -4,9 +4,8 @@ import type { ipad } from '$define/app-recommend.ipad'
 import { EApiType, EAppApiDevice } from '$define/index.shared'
 import { getSettingsSnapshot } from '$modules/settings'
 import { gmrequest } from '$request'
-import { randomInt, range, shuffle, uniqBy } from 'es-toolkit'
+import { randomInt, shuffle, uniqBy } from 'es-toolkit'
 import { times } from 'es-toolkit/compat'
-import { draw } from 'radash'
 import { QueueStrategy, type IService } from './_base'
 import {
   DynamicFeedRecService,
@@ -121,16 +120,17 @@ export class AppRecService implements IService {
     if (!this.hasMore) return
 
     // fill if needed
-    fill: while (this.hasMore && this.qs.bufferQueue.length < AppRecService.PAGE_SIZE * 3) {
-      for (const i of range(3)) {
-        const service = draw(this.allServices.filter((s) => s.hasMore))
-        if (!service) break fill
-        const more = ((await service?.loadMore(abortSignal)) || []).filter(
-          (x) => x.api !== EApiType.Separator,
-        )
-        this.qs.bufferQueue.push(...more)
-        this.qs.bufferQueue = shuffle(this.qs.bufferQueue)
-      }
+    while (this.hasMore && this.qs.bufferQueue.length < AppRecService.PAGE_SIZE * 3) {
+      const restServices = this.allServices.filter((s) => s.hasMore)
+      if (!restServices.length) break
+      const pickedServices = shuffle(restServices).slice(0, 3)
+      const more = (
+        await Promise.all(pickedServices.map(async (s) => (await s.loadMore(abortSignal)) || []))
+      )
+        .flat()
+        .filter((x) => x.api !== EApiType.Separator)
+      this.qs.bufferQueue.push(...more)
+      this.qs.bufferQueue = shuffle(this.qs.bufferQueue)
     }
 
     // slice
@@ -234,7 +234,7 @@ class AppRecInnerService implements IService {
     const _list = list.map((item) => {
       return {
         ...item,
-        api: 'app',
+        api: EApiType.AppRecommend,
         device: this.deviceParamForApi, // android | ipad
         uniqId: item.param + '-' + crypto.randomUUID(),
       } as AppRecItemExtend

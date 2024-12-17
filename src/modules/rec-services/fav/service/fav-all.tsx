@@ -1,12 +1,15 @@
 import { EApiType } from '$define/index.shared'
-import { shuffle } from 'es-toolkit'
+import { cloneDeep, shuffle } from 'es-toolkit'
 import pmap from 'promise.map'
+import { proxy, snapshot } from 'valtio'
 import { type IFavInnerService } from '../index'
+import { favStore } from '../store'
 import type { FavItemExtend } from '../types'
 import { ViewingAllExcludeFolderConfig } from '../usage-info'
 import { FavItemsOrder, FavItemsOrderSwitcher } from '../usage-info/fav-items-order'
-import { fetchFavFolder } from '../user-fav-service'
-import { FAV_PAGE_SIZE, FavFolderBasicService, FavFolderSeparator } from './_base'
+import { FAV_PAGE_SIZE } from './_base'
+import { FavCollectionService } from './fav-collection'
+import { FavFolderBasicService, FavFolderService } from './fav-folder'
 
 export class FavAllService implements IFavInnerService {
   constructor(
@@ -24,21 +27,17 @@ export class FavAllService implements IFavInnerService {
     return this.itemsOrder === FavItemsOrder.Shuffle
   }
 
-  total = 0
-  allFolderServices: FavFolderBasicService[] = [] // before exclude
-  folderServices: FavFolderBasicService[] = [] // after exclude
-
   shuffleBufferQueue: FavItemExtend[] = []
 
-  get folderHasMore() {
-    if (!this.foldersLoaded) return true
-    return this.folderServices.some((s) => s.hasMore)
+  get hasMoreInService() {
+    if (!this.serviceCreated) return true
+    return this.allServices.some((s) => s.hasMore)
   }
   get hasMore() {
     if (this.useShuffle) {
-      return !!this.shuffleBufferQueue.length || this.folderHasMore
+      return !!this.shuffleBufferQueue.length || this.hasMoreInService
     } else {
-      return this.folderHasMore
+      return this.hasMoreInService
     }
   }
 
@@ -52,24 +51,15 @@ export class FavAllService implements IFavInnerService {
   }
 
   async loadMore(abortSignal?: AbortSignal) {
-    if (!this.foldersLoaded) await this.getAllFolders()
+    if (!this.serviceCreated) await this.createServices()
     if (!this.hasMore) return
 
     /**
      * in sequence order
      */
     if (!this.useShuffle) {
-      const service = this.folderServices.find((s) => s.hasMore)
-      if (!service) return
-      const items = await service.loadMore()
-      const header = this.addSeparator &&
-        service.page === 1 &&
-        !!items?.length && {
-          api: EApiType.Separator as const,
-          uniqId: `fav-folder-${service.entry.id}`,
-          content: <FavFolderSeparator service={service} />,
-        }
-      return [header, ...(items || [])].filter((x) => x !== false)
+      const service = this.allServices.find((s) => s.hasMore)
+      return service?.loadMore()
     }
 
     /**
@@ -79,12 +69,12 @@ export class FavAllService implements IFavInnerService {
       // 1.fill queue
       const count = 6
       const batch = 2
-      while (this.folderHasMore && this.shuffleBufferQueue.length < FAV_PAGE_SIZE) {
-        const restServices = this.folderServices.filter((s) => s.hasMore)
+      while (this.hasMoreInService && this.shuffleBufferQueue.length < FAV_PAGE_SIZE * 3) {
+        const restServices = this.allServices.filter((s) => s.hasMore)
         const pickedServices = shuffle(restServices).slice(0, count)
-        const fetched = (
-          await pmap(pickedServices, async (s) => (await s.loadMore()) || [], batch)
-        ).flat()
+        const fetched = (await pmap(pickedServices, async (s) => (await s.loadMore()) || [], batch))
+          .flat()
+          .filter((x) => x.api !== EApiType.Separator)
         this.shuffleBufferQueue = shuffle([...this.shuffleBufferQueue, ...shuffle(fetched)])
       }
     }
@@ -95,14 +85,39 @@ export class FavAllService implements IFavInnerService {
     return sliced
   }
 
-  private foldersLoaded = false
-  private async getAllFolders() {
-    const folders = await fetchFavFolder()
-    this.foldersLoaded = true
-    this.allFolderServices = folders.map((f) => new FavFolderBasicService(f))
-    this.folderServices = this.allFolderServices.filter(
-      (s) => !this.excludedFolderIds.includes(s.entry.id.toString()),
-    )
-    this.total = this.folderServices.reduce((count, f) => count + f.entry.media_count, 0)
+  // fav-folder
+  allFolderServices: FavFolderBasicService[] = [] // before exclude
+  state = proxy({
+    totalCountInFavFolders: 0,
+  })
+
+  private serviceCreated = false
+  allServices: IFavInnerService[] = []
+  private async createServices() {
+    await favStore.updateList()
+    const { favFolders, favCollections } = cloneDeep(snapshot(favStore))
+
+    // fav-folders
+    this.allFolderServices = favFolders.map((f) => new FavFolderBasicService(f))
+    this.state.totalCountInFavFolders = favFolders.reduce((count, f) => count + f.media_count, 0)
+
+    // create services
+    {
+      const folders = favFolders.filter((f) => !this.excludedFolderIds.includes(f.id.toString()))
+      let itemsOrder = this.itemsOrder
+      if (itemsOrder === FavItemsOrder.Default) itemsOrder = FavItemsOrder.FavTimeDesc // 收藏夹没有 `默认`
+      this.allServices.push(
+        ...folders.map((f) => new FavFolderService(f, this.addSeparator, itemsOrder)),
+      )
+    }
+    {
+      this.allServices.push(
+        ...favCollections.map(
+          (f) => new FavCollectionService(f.id, this.addSeparator, this.itemsOrder),
+        ),
+      )
+    }
+
+    this.serviceCreated = true
   }
 }

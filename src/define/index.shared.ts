@@ -5,9 +5,9 @@ export enum EAppApiDevice {
 
 export enum EApiType {
   Separator = 'separator',
-  App = 'app',
-  Pc = 'pc',
-  Dynamic = 'dynamic',
+  AppRecommend = 'app-recommend',
+  PcRecommend = 'pc-recommend',
+  DynamicFeed = 'dynamic-feed',
   Watchlater = 'watchlater',
   Fav = 'fav',
   PopularGeneral = 'popular-general',

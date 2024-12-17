@@ -31,7 +31,7 @@ export function useWatchlaterRelated({
 }) {
   const { avid, bvid } = cardData
   const hasWatchLaterEntry = (() => {
-    if (item.api === EApiType.App) {
+    if (item.api === EApiType.AppRecommend) {
       return item.goto === 'av'
     }
     if (item.api === EApiType.Ranking) {

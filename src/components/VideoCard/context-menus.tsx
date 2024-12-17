@@ -9,7 +9,7 @@ import type { OnRefresh } from '$components/RecGrid/useRefresh'
 import { videoSourceTabState } from '$components/RecHeader/tab'
 import { ETab } from '$components/RecHeader/tab-enum'
 import {
-  isDynamic,
+  isDynamicFeed,
   isFav,
   isLive,
   isWatchlater,
@@ -154,8 +154,9 @@ export function useContextMenus({
    * unfollow
    */
   const hasUnfollowEntry =
-    item.api === EApiType.Dynamic ||
-    ((item.api === EApiType.App || item.api === EApiType.Pc) && getFollowedStatus(recommendReason))
+    item.api === EApiType.DynamicFeed ||
+    ((item.api === EApiType.AppRecommend || item.api === EApiType.PcRecommend) &&
+      getFollowedStatus(recommendReason))
   const onUnfollowUp = useMemoizedFn(async () => {
     if (!authorMid) return
     const success = await UserfollowService.unfollow(authorMid)
@@ -205,7 +206,7 @@ export function useContextMenus({
   // 不再 stick on camelCase 后, 腰不酸了, 腿不疼了~
   const hasEntry_addMidTo_dynamicFeedWhenViewAllHideIds =
     enableHideSomeContents &&
-    isDynamic(item) &&
+    isDynamicFeed(item) &&
     dfStore.selectedKey === DF_SELECTED_KEY_ALL &&
     !!authorMid
   const onAddMidTo_dynamicFeedWhenViewAllHideIds = useMemoizedFn(async () => {
@@ -221,7 +222,7 @@ export function useContextMenus({
    * 动态 offset & minId
    */
   const hasEntry_dynamicFeed_offsetAndMinId = !!(
-    isDynamic(item) &&
+    isDynamicFeed(item) &&
     QUERY_DYNAMIC_UP_MID &&
     dfStore.viewingSomeUp &&
     authorMid
@@ -236,7 +237,7 @@ export function useContextMenus({
           const u = new URL('/', location.href)
           u.searchParams.set(DynamicFeedQueryKey.Mid, authorMid)
           const currentIndexInGrid = currentGridItems.findIndex(
-            (x) => x.api === EApiType.Dynamic && x.id_str === item.id_str,
+            (x) => x.api === EApiType.DynamicFeed && x.id_str === item.id_str,
           )
           const prevIdStr =
             (currentGridItems[currentIndexInGrid - 1] as DynamicFeedItemExtend | undefined)

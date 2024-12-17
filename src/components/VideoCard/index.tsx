@@ -94,7 +94,7 @@ export const VideoCard = memo(function VideoCard({
   // false when item provided
   loading = loading ?? !item
 
-  const dislikedReason = useDislikedReason(item?.api === EApiType.App && item.param)
+  const dislikedReason = useDislikedReason(item?.api === EApiType.AppRecommend && item.param)
   const cardData = useMemo(() => item && normalizeCardData(item), [item])
   const blacklisted = useInBlacklist(cardData?.authorMid)
   const watchlaterAdded = useWatchlaterState(cardData?.bvid)

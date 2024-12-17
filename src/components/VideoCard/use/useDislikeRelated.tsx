@@ -3,7 +3,8 @@
  */
 
 import { showModalDislike } from '$components/ModalDislike'
-import { isApp, type RecItemType } from '$define'
+import { isAppRecommend, type RecItemType } from '$define'
+import { EApiType } from '$define/index.shared'
 import { IconForDislike } from '$modules/icon'
 import { antMessage } from '$utility/antd'
 import toast from '$utility/toast'
@@ -25,14 +26,14 @@ export function useDislikeRelated({
   // show icon even accessKey not found
   // https://greasyfork.org/zh-CN/scripts/443530-bilibili-gate/discussions/244405
 
-  const hasDislikeEntry = isApp(item) && !!item.three_point?.dislike_reasons?.length
+  const hasDislikeEntry = isAppRecommend(item) && !!item.three_point?.dislike_reasons?.length
 
   const onTriggerDislike = useMemoizedFn((e?: MouseEvent) => {
     e?.preventDefault()
     e?.stopPropagation()
 
     if (!hasDislikeEntry) {
-      if (item.api !== 'app') {
+      if (item.api !== EApiType.AppRecommend) {
         return antMessage.error('当前视频不支持提交「我不想看」')
       }
       return

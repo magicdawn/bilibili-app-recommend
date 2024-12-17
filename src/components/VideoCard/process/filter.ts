@@ -15,6 +15,7 @@ export function getFollowedStatus(recommendReason?: string): boolean {
 
 /**
  * 用于快速判断是否应该启用过滤, 避免 normalizeData 等一些列操作
+ * 有可能返回 true, 应尽量返回 true
  */
 
 export function anyFilterEnabled(tab: ETab) {
@@ -22,13 +23,18 @@ export function anyFilterEnabled(tab: ETab) {
     return true
   }
 
-  // common checks for: recommend / hot
-  if (shouldEnableCommonChecks(tab)) {
+  // 推荐 / 热门
+  const mayNeedCheck_blacklist_filterByUp_filterByTitle = [
+    ETab.AppRecommend,
+    ETab.PcRecommend,
+    ETab.Hot,
+  ].includes(tab)
+  if (mayNeedCheck_blacklist_filterByUp_filterByTitle) {
     if (
       blacklistMids.size ||
       (settings.filter.enabled &&
-        ((settings.filter.byAuthor.enabled && settings.filter.byAuthor.keywords.length > 0) ||
-          (settings.filter.byTitle.enabled && settings.filter.byTitle.keywords.length > 0)))
+        ((settings.filter.byAuthor.enabled && !!settings.filter.byAuthor.keywords.length) ||
+          (settings.filter.byTitle.enabled && !!settings.filter.byTitle.keywords.length)))
     ) {
       return true
     }
@@ -36,23 +42,12 @@ export function anyFilterEnabled(tab: ETab) {
 
   // recommend
   if (tab === ETab.AppRecommend || tab === ETab.PcRecommend) {
-    if (
-      settings.filter.enabled &&
-      (settings.filter.minDuration.enabled ||
-        settings.filter.minPlayCount.enabled ||
-        settings.filter.hideGotoTypePicture ||
-        settings.filter.hideGotoTypeBangumi)
-    ) {
+    if (settings.filter.enabled) {
       return true
     }
   }
 
   return false
-}
-
-function shouldEnableCommonChecks(tab: ETab) {
-  const enableForTabs: ETab[] = [ETab.AppRecommend, ETab.PcRecommend, ETab.Hot]
-  return enableForTabs.includes(tab)
 }
 
 export function filterRecItems(items: RecItemTypeOrSeparator[], tab: ETab) {
@@ -104,7 +99,7 @@ export function filterRecItems(items: RecItemTypeOrSeparator[], tab: ETab) {
       if (!followed) return false
     }
 
-    function commonChecks() {
+    function check_blacklist_filterByUp_filterByTitle() {
       // blacklist
       if (authorMid && blacklistMids.size) {
         if (blacklistMids.has(authorMid)) {
@@ -161,19 +156,22 @@ export function filterRecItems(items: RecItemTypeOrSeparator[], tab: ETab) {
       }
     }
 
-    // except
-    // KeepFollowOnly = 'keep-follow-only',
-    // DynamicFeed = 'dynamic-feed',
-    // Watchlater = 'watchlater',
-    // Fav = 'fav',
-    if (shouldEnableCommonChecks(tab)) {
-      if (commonChecks() === false) {
+    // 推荐 / 热门
+    const should_check_blacklist_filterByUp_filterByTitle = [
+      EApiType.AppRecommend,
+      EApiType.PcRecommend,
+      EApiType.Ranking,
+      EApiType.PopularGeneral,
+      EApiType.PopularWeekly,
+    ].includes(item.api)
+    if (should_check_blacklist_filterByUp_filterByTitle) {
+      if (check_blacklist_filterByUp_filterByTitle() === false) {
         return false
       }
     }
 
     // 推荐
-    if (item.api === EApiType.App || item.api === EApiType.Pc) {
+    if (item.api === EApiType.AppRecommend || item.api === EApiType.PcRecommend) {
       if (filter.enabled) {
         const isVideo = goto === 'av'
         const isPicture = goto === 'picture'

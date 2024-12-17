@@ -404,7 +404,7 @@ export class DynamicFeedRecService implements IService {
       .map((item) => {
         return {
           ...item,
-          api: EApiType.Dynamic,
+          api: EApiType.DynamicFeed,
           uniqId: item.id_str || crypto.randomUUID(),
         }
       })
