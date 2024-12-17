@@ -247,5 +247,5 @@ function useExpandToFullWidthCss() {
 
 function useShouldShowAccessKeyManage() {
   const tabKeys = useCurrentDisplayingTabKeys()
-  return tabKeys.includes(ETab.RecommendApp)
+  return tabKeys.includes(ETab.AppRecommend)
 }

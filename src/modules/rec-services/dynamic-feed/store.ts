@@ -25,7 +25,7 @@ export enum DynamicFeedQueryKey {
 
 const searchParams = new URLSearchParams(location.search)
 export const QUERY_DYNAMIC_UP_MID = searchParams.get(DynamicFeedQueryKey.Mid)?.trim()
-export const QUERY_DYNAMIC_OFFSET = searchParams.get(DynamicFeedQueryKey.Offset) // where to start, exclusive
+export const QUERY_DYNAMIC_OFFSET = searchParams.get(DynamicFeedQueryKey.Offset) || undefined // where to start, exclusive
 export const QUERY_DYNAMIC_SEARCH_TEXT = QUERY_DYNAMIC_UP_MID // only support using with `dyn-mid`
   ? searchParams.get(DynamicFeedQueryKey.SearchText) || undefined
   : undefined

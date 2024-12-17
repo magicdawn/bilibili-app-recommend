@@ -52,8 +52,8 @@ export const RefreshButton = forwardRef<RefreshButtonActions, RefreshButtonProps
   const { watchlaterUseShuffle, popularWeeklyUseShuffle } = useSettingsSnapshot()
   const { usingShuffle: favUsingShuffle } = useSnapshot(favStore)
   const text =
-    tab === ETab.RecommendApp ||
-    tab === ETab.RecommendPc ||
+    tab === ETab.AppRecommend ||
+    tab === ETab.PcRecommend ||
     tab === ETab.KeepFollowOnly ||
     (tab === ETab.Watchlater && watchlaterUseShuffle) ||
     (tab === ETab.Fav && favUsingShuffle) ||

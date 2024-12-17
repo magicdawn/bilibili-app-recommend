@@ -36,8 +36,8 @@ export function concatThenUniq(
   return uniqBy([...existing, ...newItems], recItemUniqer)
 }
 
-const usePcApi = (tab: ETab): tab is ETab.RecommendPc | ETab.KeepFollowOnly =>
-  tab === ETab.RecommendPc || tab === ETab.KeepFollowOnly
+const usePcApi = (tab: ETab): tab is ETab.PcRecommend | ETab.KeepFollowOnly =>
+  tab === ETab.PcRecommend || tab === ETab.KeepFollowOnly
 
 async function fetchMinCount(count: number, fetcherOptions: FetcherOptions, filterMultiplier = 5) {
   const { tab, abortSignal, serviceMap } = fetcherOptions
@@ -95,8 +95,11 @@ async function fetchMinCount(count: number, fetcherOptions: FetcherOptions, filt
       cur = (await service.getRecommendTimes(times, abortSignal)) || []
       hasMore = service.hasMore
     } else {
-      const service = serviceMap[ETab.RecommendApp]
-      cur = (await service.getRecommendTimes(times)) || []
+      const service = serviceMap[ETab.AppRecommend]
+      cur =
+        (await (service.config.addOtherTabContents
+          ? service.loadMore(abortSignal)
+          : service.getRecommendTimes(times))) || []
       hasMore = service.hasMore
     }
 

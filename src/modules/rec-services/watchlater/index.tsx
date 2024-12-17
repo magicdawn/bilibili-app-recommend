@@ -35,14 +35,12 @@ if (getHasLogined() && getUid()) {
   })()
 }
 
-/**
- * Q: 为什么不一次性加载?
- * A: 全部加载特别卡, 没有滚动时没必要全部加载
- */
-
 export class WatchLaterRecService implements IService {
   innerService: NormalOrderService | ShuffleOrderService
-  constructor(keepOrderWhenShuffle?: boolean) {
+  constructor(
+    public useShuffle: boolean,
+    keepOrderWhenShuffle?: boolean,
+  ) {
     this.innerService = settings.watchlaterUseShuffle
       ? new ShuffleOrderService(keepOrderWhenShuffle)
       : new NormalOrderService()

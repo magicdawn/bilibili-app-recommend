@@ -19,7 +19,7 @@ import { ETab, TabKeys } from './tab-enum'
  */
 
 export const videoSourceTabState = await proxyWithGmStorage<{ value: ETab }>(
-  { value: ETab.RecommendApp },
+  { value: ETab.AppRecommend },
   `video-source-tab`,
 )
 
@@ -48,7 +48,7 @@ export function useCurrentDisplayingTabKeys() {
   const keys = useMemo(() => {
     const tabkeys = getSortedTabKeys(customTabKeysOrder)
     return tabkeys.filter((key) => {
-      if (key === ETab.RecommendApp && !logined) {
+      if (key === ETab.AppRecommend && !logined) {
         return true
       }
 
@@ -86,7 +86,7 @@ export function useCurrentUsingTab(): ETab {
   const tab = useSnapshot(videoSourceTabState).value
   const displayTabKeys = useCurrentDisplayingTabKeys()
   const logined = useHasLogined()
-  const fallbackTab = ETab.RecommendApp
+  const fallbackTab = ETab.AppRecommend
 
   // invalid
   if (!displayTabKeys.includes(tab)) return fallbackTab

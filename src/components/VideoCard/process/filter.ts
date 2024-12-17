@@ -35,7 +35,7 @@ export function anyFilterEnabled(tab: ETab) {
   }
 
   // recommend
-  if (tab === ETab.RecommendApp || tab === ETab.RecommendPc) {
+  if (tab === ETab.AppRecommend || tab === ETab.PcRecommend) {
     if (
       settings.filter.enabled &&
       (settings.filter.minDuration.enabled ||
@@ -51,7 +51,7 @@ export function anyFilterEnabled(tab: ETab) {
 }
 
 function shouldEnableCommonChecks(tab: ETab) {
-  const enableForTabs: ETab[] = [ETab.RecommendApp, ETab.RecommendPc, ETab.Hot]
+  const enableForTabs: ETab[] = [ETab.AppRecommend, ETab.PcRecommend, ETab.Hot]
   return enableForTabs.includes(tab)
 }
 
@@ -173,7 +173,7 @@ export function filterRecItems(items: RecItemTypeOrSeparator[], tab: ETab) {
     }
 
     // 推荐
-    if (tab === ETab.RecommendApp || tab === ETab.RecommendPc) {
+    if (item.api === EApiType.App || item.api === EApiType.Pc) {
       if (filter.enabled) {
         const isVideo = goto === 'av'
         const isPicture = goto === 'picture'
@@ -183,8 +183,6 @@ export function filterRecItems(items: RecItemTypeOrSeparator[], tab: ETab) {
         if (isBangumi) return filterBangumi()
       }
     }
-
-    return true // just keep it
 
     function filterVideo() {
       // 不过滤已关注视频
@@ -225,7 +223,6 @@ export function filterRecItems(items: RecItemTypeOrSeparator[], tab: ETab) {
 
       return true
     }
-
     function filterPicture() {
       if (filter.hideGotoTypePicture) {
         // 不去掉已关注的图文
@@ -241,7 +238,6 @@ export function filterRecItems(items: RecItemTypeOrSeparator[], tab: ETab) {
         return true
       }
     }
-
     function filterBangumi() {
       if (filter.hideGotoTypeBangumi) {
         debug('filter out by goto-type-bangumi-rule: %s %o', goto, { title, href })
@@ -249,5 +245,7 @@ export function filterRecItems(items: RecItemTypeOrSeparator[], tab: ETab) {
       }
       return true
     }
+
+    return true // just keep it
   })
 }

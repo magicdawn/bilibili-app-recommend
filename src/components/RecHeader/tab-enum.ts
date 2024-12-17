@@ -1,6 +1,6 @@
 export enum ETab {
-  RecommendApp = 'recommend-app',
-  RecommendPc = 'recommend-pc',
+  AppRecommend = 'app-recommend',
+  PcRecommend = 'pc-recommend',
   KeepFollowOnly = 'keep-follow-only',
   DynamicFeed = 'dynamic-feed',
   Watchlater = 'watchlater',

@@ -27,13 +27,13 @@ export type TabConfigItem = {
 }
 
 export const TabConfig: Record<ETab, TabConfigItem> = {
-  [ETab.RecommendApp]: {
+  [ETab.AppRecommend]: {
     icon: <IconForPhone {...size(18)} />,
     label: '推荐',
     desc: '使用 Bilibili App 端推荐 API',
     anonymousUsage: true,
   },
-  [ETab.RecommendPc]: {
+  [ETab.PcRecommend]: {
     icon: <IconForPc {...size(18)} />,
     label: '推荐',
     desc: '使用新版首页顶部推荐 API',

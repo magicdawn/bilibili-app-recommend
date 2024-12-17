@@ -124,7 +124,7 @@ export function useContextMenus({
    */
   // 已关注 item.api 也为 'pc', 故使用 tab, 而不是 api 区分
   const hasBlacklistEntry =
-    !!authorMid && (tab === ETab.RecommendApp || tab === ETab.RecommendPc || tab === ETab.Hot)
+    !!authorMid && (tab === ETab.AppRecommend || tab === ETab.PcRecommend || tab === ETab.Hot)
 
   const onBlacklistUp = useMemoizedFn(async () => {
     if (!authorMid) return antMessage.error('UP mid 为空!')

@@ -47,7 +47,7 @@ import { explainForFlag } from '../index.shared'
 import { ResetPartialSettingsButton } from './_shared'
 
 export function TabPaneRecTabsConfig() {
-  const { appApiDecice, dynamicFeed } = useSettingsSnapshot()
+  const { dynamicFeed, appRecommend } = useSettingsSnapshot()
   const sortedTabKeys = useSortedTabKeys()
 
   return (
@@ -195,28 +195,45 @@ export function TabPaneRecTabsConfig() {
             {/* recommend */}
             <div
               css={css`
-                order: ${sortedTabKeys.indexOf(ETab.RecommendApp) + 1};
+                order: ${sortedTabKeys.indexOf(ETab.AppRecommend) + 1};
               `}
             >
               <div className={styles.settingsGroupSubTitle}>
-                <TabIcon tabKey={ETab.RecommendApp} mr={5} />
+                <TabIcon tabKey={ETab.AppRecommend} mr={5} />
                 App 推荐
               </div>
-              <div style={{ width: '100%', display: 'flex', alignItems: 'center' }}>
-                App API 设备类型
-                <HelpInfo className='ml-5px mr-10px'>
-                  默认 ipad, 视频有 头像/日期 等信息
-                  <br />
-                  可选 android, 有图文类型的推荐
-                </HelpInfo>
-                <Radio.Group
-                  optionType='button'
-                  buttonStyle='solid'
-                  size='small'
-                  options={[EAppApiDevice.ipad, EAppApiDevice.android]}
-                  value={appApiDecice}
-                  onChange={(e) => updateSettings({ appApiDecice: e.target.value })}
-                />
+              <div className='flex flex-col gap-y-5'>
+                <div className='flex items-center'>
+                  App API 设备类型
+                  <HelpInfo className='ml-5px mr-10px'>
+                    默认 ipad, 视频有 头像/日期 等信息
+                    <br />
+                    可选 android, 有图文类型的推荐
+                  </HelpInfo>
+                  <Radio.Group
+                    optionType='button'
+                    buttonStyle='solid'
+                    size='small'
+                    options={[EAppApiDevice.ipad, EAppApiDevice.android]}
+                    value={appRecommend.deviceParamForApi}
+                    onChange={(e) =>
+                      void (settings.appRecommend.deviceParamForApi = e.target.value)
+                    }
+                  />
+                </div>
+                <div className='flex items-center'>
+                  <CheckboxSettingItem
+                    configPath='appRecommend.addOtherTabContents'
+                    label='显示来自其他 Tab 的内容'
+                    tooltip={
+                      <>
+                        显示来自其他 Tab 的内容 <br />
+                        如动态 / 收藏 / 稍后再看 <br />
+                        但是: 刷新时间会更长
+                      </>
+                    }
+                  />
+                </div>
               </div>
             </div>
           </div>

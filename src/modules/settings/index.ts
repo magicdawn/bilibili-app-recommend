@@ -34,9 +34,12 @@ export const initialSettings = {
   pureRecommend: true,
 
   /**
-   * app recommend
+   * tab = app-recommend
    */
-  appApiDecice: EAppApiDevice.ipad,
+  appRecommend: {
+    deviceParamForApi: EAppApiDevice.ipad,
+    addOtherTabContents: false, // this flag will results MUCH more requests
+  },
 
   /**
    * 查看更多, aka ModalFeed
@@ -311,6 +314,9 @@ export function runSettingsMigration(val: object) {
     ['style.videoCard.useBorderOnlyOnHover', 'styleUseCardBorderOnlyOnHover'],
     ['style.videoCard.useBoxShadow', 'styleUseCardBoxShadow'],
     ['style.videoCard.usePadding', 'styleUseCardPadding'],
+
+    // 2024-12-17
+    ['appRecommend.deviceParamForApi', 'appApiDecice'],
   ]
   // 伪代码: savedConfig[newName] = savedConfig[legacyName]
   for (const [configPath, legacyConfigPath] of config) {
