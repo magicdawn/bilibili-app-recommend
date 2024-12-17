@@ -45,7 +45,10 @@ export class FavAllService implements IFavInnerService {
     return (
       <>
         <FavItemsOrderSwitcher />
-        <ViewingAllExcludeFolderConfig allFavFolderServices={this.allFolderServices} />
+        <ViewingAllExcludeFolderConfig
+          allFavFolderServices={this.allFolderServices}
+          state={this.state}
+        />
       </>
     )
   }
@@ -99,7 +102,9 @@ export class FavAllService implements IFavInnerService {
 
     // fav-folders
     this.allFolderServices = favFolders.map((f) => new FavFolderBasicService(f))
-    this.state.totalCountInFavFolders = favFolders.reduce((count, f) => count + f.media_count, 0)
+    this.state.totalCountInFavFolders = favFolders
+      .filter((f) => !this.excludedFolderIds.includes(f.id.toString()))
+      .reduce((count, f) => count + f.media_count, 0)
 
     // create services
     {

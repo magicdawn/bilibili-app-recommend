@@ -1,3 +1,4 @@
+import { baseDebug } from '$common'
 import { createUpdateDataFunction } from '$utility/async'
 import { proxyMapWithGmStorage } from '$utility/valtio'
 import ms from 'ms'
@@ -8,6 +9,8 @@ import type { FavCollection } from './types/collections/list-all-collections'
 import type { FavFolder } from './types/folders/list-all-folders'
 import { FavItemsOrder, getSavedOrder } from './usage-info/fav-items-order'
 import { fetchFavFolder } from './user-fav-service'
+
+const debug = baseDebug.extend('modules:rec-services:fav:store')
 
 export type FavSelectedKeyPrefix = 'fav-folder' | 'fav-collection' | 'all'
 export type FavStore = typeof favStore
@@ -103,13 +106,16 @@ export const favStore = proxy({
 })
 
 export function updateFavFolderMediaCount(
-  currentFavFolderId: number,
+  targetFavFolderId: number,
   count: number | ((old: number) => number),
 ) {
-  const folder = favStore.favFolders.find((x) => currentFavFolderId)
-  if (folder) {
-    const newCount = typeof count === 'function' ? count(folder.media_count) : count
+  const folder = favStore.favFolders.find((x) => x.id === targetFavFolderId)
+  if (!folder) return
+
+  const newCount = typeof count === 'function' ? count(folder.media_count) : count
+  if (newCount !== folder.media_count) {
     folder.media_count = newCount
+    debug('update folder(id=%s title=%s) media_count to %s', folder.id, folder.title, newCount)
   }
 }
 

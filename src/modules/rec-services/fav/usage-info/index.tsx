@@ -11,6 +11,7 @@ import { useSnapshot } from 'valtio'
 import { usePopupContainer } from '../../_base'
 import { dropdownMenuStyle } from '../../_shared'
 import { isFavFolderDefault, isFavFolderPrivate } from '../fav-util'
+import type { FavAllService } from '../service/fav-all'
 import type { FavFolderBasicService } from '../service/fav-folder'
 import { favStore, type FavStore } from '../store'
 
@@ -173,12 +174,15 @@ export function FavUsageInfo({ extraContent }: { extraContent?: ReactNode }) {
 
 export function ViewingAllExcludeFolderConfig({
   allFavFolderServices,
+  state,
 }: {
   allFavFolderServices: FavFolderBasicService[]
+  state: FavAllService['state']
 }) {
   const { fav } = useSettingsSnapshot()
   const onRefresh = useOnRefreshContext()
   const { ref, getPopupContainer } = usePopupContainer()
+  const { totalCountInFavFolders } = useSnapshot(state)
 
   const [excludeFavFolderIdsChanged, setExcludeFavFolderIdsChanged] = useState(false)
 
@@ -196,12 +200,6 @@ export function ViewingAllExcludeFolderConfig({
         .length,
     [allFavFolderServices, fav.excludedFolderIds],
   )
-
-  const videosCount = useMemo(() => {
-    return allFavFolderServices
-      .filter((s) => !fav.excludedFolderIds.includes(s.entry.id.toString()))
-      .reduce((count, s) => count + s.entry.media_count, 0)
-  }, [allFavFolderServices, fav.excludedFolderIds])
 
   const onPopupOpenChange = useMemoizedFn((open: boolean) => {
     // when open
@@ -247,7 +245,7 @@ export function ViewingAllExcludeFolderConfig({
           font-size: 12px;
         `}
       >
-        收藏夹({foldersCount}) 收藏({videosCount})
+        收藏夹({foldersCount}) 收藏({totalCountInFavFolders})
       </Tag>
     </Popover>
   )
