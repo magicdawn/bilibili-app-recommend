@@ -2,7 +2,7 @@ import { flexVerticalCenterStyle } from '$common/emotion-css'
 import { type OnRefresh } from '$components/RecGrid/useRefresh'
 import { HelpInfo } from '$components/_base/HelpInfo'
 import { QUERY_DYNAMIC_UP_MID } from '$modules/rec-services/dynamic-feed/store'
-import { QUERY_FAV_COLLECTION_ID } from '$modules/rec-services/fav/store'
+import { SHOW_FAV_TAB_ONLY } from '$modules/rec-services/fav/store'
 import { settings, useSettingsSnapshot } from '$modules/settings'
 import { checkLoginStatus, useHasLogined } from '$utility/cookie'
 import { proxyWithGmStorage } from '$utility/valtio'
@@ -22,9 +22,11 @@ export const videoSourceTabState = await proxyWithGmStorage<{ value: ETab }>(
   { value: ETab.AppRecommend },
   `video-source-tab`,
 )
-
 if (QUERY_DYNAMIC_UP_MID && videoSourceTabState.value !== ETab.DynamicFeed) {
   videoSourceTabState.value = ETab.DynamicFeed
+}
+if (SHOW_FAV_TAB_ONLY && videoSourceTabState.value !== ETab.Fav) {
+  videoSourceTabState.value = ETab.Fav
 }
 
 function getSortedTabKeys(customTabKeysOrder: ETab[]) {
@@ -56,7 +58,7 @@ export function useCurrentDisplayingTabKeys() {
         return true
       }
 
-      if (key === ETab.Fav && typeof QUERY_FAV_COLLECTION_ID === 'number') {
+      if (key === ETab.Fav && SHOW_FAV_TAB_ONLY) {
         return true
       }
 
@@ -70,7 +72,7 @@ export function useCurrentDisplayingTabKeys() {
   }
 
   // fav only
-  if (typeof QUERY_FAV_COLLECTION_ID === 'number' && keys.includes(ETab.Fav)) {
+  if (SHOW_FAV_TAB_ONLY && keys.includes(ETab.Fav)) {
     return [ETab.Fav]
   }
 

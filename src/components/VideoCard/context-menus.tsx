@@ -39,6 +39,7 @@ import {
 } from '$modules/rec-services/dynamic-feed/store'
 import { dynamicFeedFilterSelectUp } from '$modules/rec-services/dynamic-feed/usage-info'
 import { formatFavCollectionUrl, formatFavFolderUrl } from '$modules/rec-services/fav/fav-url'
+import { FavSearchParamsKey, favStore } from '$modules/rec-services/fav/store'
 import { UserFavService, defaultFavFolderName } from '$modules/rec-services/fav/user-fav-service'
 import { settings, updateSettingsInnerArray } from '$modules/settings'
 import { antMessage, defineAntMenus, type AntMenuItem } from '$utility/antd'
@@ -47,9 +48,9 @@ import { delay } from 'es-toolkit'
 import { size } from 'polished'
 import type { MouseEvent } from 'react'
 import { useSnapshot } from 'valtio'
-import { copyContent } from '.'
 import type { watchlaterDel } from './card.service'
 import { watchlaterAdd } from './card.service'
+import { copyContent } from './index.shared'
 import { getFollowedStatus, isApiRecLike } from './process/filter'
 import type { IVideoCardData } from './process/normalize'
 import { getLinkTarget } from './use/useOpenRelated'
@@ -420,7 +421,10 @@ export function useContextMenus({
                   onClick() {
                     if (!isFav(item)) return
                     const { id } = item.folder
-                    const url = formatFavFolderUrl(id)
+                    const url =
+                      tab !== ETab.Fav || (favStore.selectedKey === 'all' && favStore.usingShuffle)
+                        ? `/?${FavSearchParamsKey.FolderIdFull}=${id}`
+                        : formatFavFolderUrl(id)
                     window.open(url, getLinkTarget())
                   },
                 },
@@ -453,7 +457,10 @@ export function useContextMenus({
                   onClick() {
                     if (!isFav(item)) return
                     const { id } = item.collection
-                    const url = formatFavCollectionUrl(id)
+                    const url =
+                      tab !== ETab.Fav || (favStore.selectedKey === 'all' && favStore.usingShuffle)
+                        ? `/?${FavSearchParamsKey.CollectionIdFull}=${id}`
+                        : formatFavCollectionUrl(id)
                     window.open(url, getLinkTarget())
                   },
                 },

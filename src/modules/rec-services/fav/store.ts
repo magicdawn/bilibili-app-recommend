@@ -4,10 +4,11 @@ import { proxyMapWithGmStorage } from '$utility/valtio'
 import ms from 'ms'
 import { proxy } from 'valtio'
 import { fetchAllFavCollections } from './collection/api'
+import { FavItemsOrder } from './fav-enum'
 import type { FavCollectionDetailInfo } from './types/collections/collection-detail'
 import type { FavCollection } from './types/collections/list-all-collections'
 import type { FavFolder } from './types/folders/list-all-folders'
-import { FavItemsOrder, getSavedOrder } from './usage-info/fav-items-order'
+import { getSavedOrder } from './usage-info/fav-items-order'
 import { fetchFavFolder } from './user-fav-service'
 
 const debug = baseDebug.extend('modules:rec-services:fav:store')
@@ -16,22 +17,32 @@ export type FavSelectedKeyPrefix = 'fav-folder' | 'fav-collection' | 'all'
 export type FavStore = typeof favStore
 
 export enum FavSearchParamsKey {
-  CollectionId = 'fav-cid',
   CollectionIdFull = 'fav-collection-id',
+  CollectionId = 'fav-cid',
+  FolderIdFull = 'fav-folder-id',
+  FolderId = 'fav-fid',
 }
-const searchParams = new URLSearchParams(location.search)
-export const QUERY_FAV_COLLECTION_ID = (() => {
-  const getText = () =>
-    searchParams.get(FavSearchParamsKey.CollectionId) ??
-    searchParams.get(FavSearchParamsKey.CollectionIdFull) ??
-    undefined
-  if (!getText()) return
 
-  const num = Number(getText())
+const parseId = (text: string | undefined | null) => {
+  if (!text) return
+  const num = Number(text)
   if (isNaN(num)) return
-
   return num
-})()
+}
+
+const searchParams = new URLSearchParams(location.search)
+
+export const QUERY_FAV_COLLECTION_ID = parseId(
+  searchParams.get(FavSearchParamsKey.CollectionIdFull) ??
+    searchParams.get(FavSearchParamsKey.CollectionId),
+)
+export const QUERY_FAV_FOLDER_ID = parseId(
+  searchParams.get(FavSearchParamsKey.FolderIdFull) ??
+    searchParams.get(FavSearchParamsKey.FolderId),
+)
+
+export const SHOW_FAV_TAB_ONLY =
+  typeof QUERY_FAV_FOLDER_ID === 'number' || typeof QUERY_FAV_COLLECTION_ID === 'number'
 
 export const favStore = proxy({
   // methods
@@ -39,7 +50,7 @@ export const favStore = proxy({
 
   favFolders: [] as FavFolder[],
   favFoldersUpdateAt: 0,
-  selectedFavFolderId: undefined as number | undefined,
+  selectedFavFolderId: QUERY_FAV_FOLDER_ID,
   get selectedFavFolder(): FavFolder | undefined {
     if (typeof this.selectedFavFolderId !== 'number') return
     return this.favFolders.find((x) => x.id === this.selectedFavFolderId)
@@ -47,7 +58,7 @@ export const favStore = proxy({
 
   favCollections: [] as FavCollection[],
   favCollectionsUpdateAt: 0,
-  selectedFavCollectionId: (QUERY_FAV_COLLECTION_ID ?? undefined) as number | undefined,
+  selectedFavCollectionId: QUERY_FAV_COLLECTION_ID,
   selectedFavCollectionDetailInfo: undefined as FavCollectionDetailInfo | undefined,
   get selectedFavCollection(): FavCollection | undefined {
     if (typeof this.selectedFavCollectionId !== 'number') return
@@ -152,3 +163,13 @@ const updateCollectionList = createUpdateDataFunction({
     }
   },
 })
+
+/**
+ * side effects
+ */
+
+// 通过 query 查看 fav-folder, 需要先拉取 fav-folder, 作为 entry
+// fav-collection 只需要 id, 不用等待
+if (SHOW_FAV_TAB_ONLY && QUERY_FAV_FOLDER_ID) {
+  await updateFolderList()
+}

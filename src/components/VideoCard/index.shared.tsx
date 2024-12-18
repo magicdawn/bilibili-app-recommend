@@ -1,6 +1,7 @@
 import { APP_SHORT_PREFIX } from '$common'
 import { IconForOpenExternalLink, IconForPlayer } from '$modules/icon'
 import { isMac } from '$ua'
+import { antMessage } from '$utility/antd'
 import mitt, { type Emitter } from 'mitt'
 import { size } from 'polished'
 import type { ReactNode } from 'react'
@@ -126,3 +127,7 @@ export type VideoCardEvents = {
 export type VideoCardEmitter = Emitter<VideoCardEvents>
 
 export const defaultEmitter = mitt<VideoCardEvents>()
+export function copyContent(content: string) {
+  GM.setClipboard(content)
+  antMessage.success(`已复制: ${content}`)
+}

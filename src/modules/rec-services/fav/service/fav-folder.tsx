@@ -9,36 +9,23 @@ import { wrapWithIdbCache } from '$utility/idb'
 import toast from '$utility/toast'
 import { shuffle, uniqBy } from 'es-toolkit'
 import ms from 'ms'
+import { FavItemsOrder, handleItemsOrder } from '../fav-enum'
 import { formatFavFolderUrl, formatFavPlaylistUrl } from '../fav-url'
 import { type IFavInnerService } from '../index'
 import { updateFavFolderMediaCount } from '../store'
 import type { FavItemExtend } from '../types'
 import type { FavFolder } from '../types/folders/list-all-folders'
 import type { FavFolderDetailInfo, ResourceListJSON } from '../types/folders/list-folder-items'
-import {
-  FavItemsOrder,
-  FavItemsOrderSwitcher,
-  handleItemsOrder,
-} from '../usage-info/fav-items-order'
+import { FavItemsOrderSwitcher } from '../usage-info/fav-items-order'
 import { FAV_PAGE_SIZE, favSeparatorCss } from './_base'
-
-// Q: why function
-// A: circular deps
-export const getFavFolderApiSuppoetedOrder = () =>
-  [FavItemsOrder.FavTimeDesc, FavItemsOrder.PlayCountDesc, FavItemsOrder.PubTimeDesc] as const
-
-export type FavFolderApiSuppoetedOrder = ReturnType<typeof getFavFolderApiSuppoetedOrder>[number]
-
-export function isFavFolderApiSuppoetedOrder(
-  order: FavItemsOrder,
-): order is FavFolderApiSuppoetedOrder {
-  return getFavFolderApiSuppoetedOrder().includes(order)
-}
 
 export function FavFolderSeparator({ service }: { service: FavFolderBasicService }) {
   return (
     <>
-      <CustomTargetLink href={formatFavFolderUrl(service.entry.id)} css={favSeparatorCss.item}>
+      <CustomTargetLink
+        href={formatFavFolderUrl(service.entry.id, service.entry.attr)}
+        css={favSeparatorCss.item}
+      >
         <IconForOpenExternalLink css={C.size(16)} />
         {service.entry.title}
       </CustomTargetLink>
@@ -48,6 +35,18 @@ export function FavFolderSeparator({ service }: { service: FavFolderBasicService
       </CustomTargetLink>
     </>
   )
+}
+
+const FAV_FOLDER_API_SUPPOETED_ORDER = [
+  FavItemsOrder.FavTimeDesc,
+  FavItemsOrder.PlayCountDesc,
+  FavItemsOrder.PubTimeDesc,
+] as const
+
+type FavFolderApiSuppoetedOrder = (typeof FAV_FOLDER_API_SUPPOETED_ORDER)[number]
+
+function isFavFolderApiSuppoetedOrder(order: FavItemsOrder): order is FavFolderApiSuppoetedOrder {
+  return FAV_FOLDER_API_SUPPOETED_ORDER.includes(order)
 }
 
 export class FavFolderService implements IFavInnerService {

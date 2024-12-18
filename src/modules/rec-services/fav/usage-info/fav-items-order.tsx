@@ -1,7 +1,6 @@
 import { buttonOpenCss, usePopoverBorderColor } from '$common/emotion-css'
 import { HelpInfo } from '$components/_base/HelpInfo'
 import { useOnRefreshContext } from '$components/RecGrid/useRefresh'
-import type { FavItemExtend } from '$define'
 import { styled } from '$libs'
 import {
   IconForAsc,
@@ -15,23 +14,11 @@ import {
 import { usePopupContainer } from '$modules/rec-services/_base'
 import { defineAntMenus } from '$utility/antd'
 import { Button, Dropdown } from 'antd'
-import { delay, orderBy, shuffle } from 'es-toolkit'
+import { delay } from 'es-toolkit'
 import type { CSSProperties, MouseEvent, ReactNode } from 'react'
 import { useSnapshot } from 'valtio'
+import { FavItemsOrder } from '../fav-enum'
 import { favStore, type FavSelectedKeyPrefix } from '../store'
-
-export enum FavItemsOrder {
-  Default = 'default',
-  Shuffle = 'shuffle',
-  PubTimeDesc = 'pub-time-desc',
-  PubTimeAsc = 'pub-time-asc',
-  PlayCountDesc = 'play-count-desc', // asc has no real use case
-  CollectCountDesc = 'collect-count-desc',
-
-  // fav-folder only
-  FavTimeDesc = 'fav-time-desc',
-  FavTimeAsc = 'fav-time-asc',
-}
 
 const clsIconTextWrapper = 'inline-flex items-center justify-center line-height-[0]'
 
@@ -236,38 +223,4 @@ export function FavItemsOrderSwitcher() {
       </HelpInfo>
     </>
   )
-}
-
-export function handleItemsOrder(items: FavItemExtend[], itemsOrder: FavItemsOrder) {
-  if (itemsOrder === FavItemsOrder.Default) {
-    return items
-  }
-  if (itemsOrder === FavItemsOrder.Shuffle) {
-    return shuffle(items)
-  }
-
-  // pub time
-  if (itemsOrder === FavItemsOrder.PubTimeDesc || itemsOrder === FavItemsOrder.PubTimeAsc) {
-    const order = itemsOrder === FavItemsOrder.PubTimeDesc ? 'desc' : 'asc'
-    return orderBy(items, [(x) => x.pubtime], [order])
-  }
-
-  // fav time: fav-folder only!
-  if (
-    (itemsOrder === FavItemsOrder.FavTimeDesc || itemsOrder === FavItemsOrder.FavTimeAsc) &&
-    items.every((x) => x.from === 'fav-folder')
-  ) {
-    const order = itemsOrder === FavItemsOrder.FavTimeDesc ? 'desc' : 'asc'
-    return orderBy(items, [(x) => x.fav_time], [order])
-  }
-
-  // count
-  if (itemsOrder === FavItemsOrder.PlayCountDesc) {
-    return orderBy(items, [(x) => x.cnt_info.play], ['desc'])
-  }
-  if (itemsOrder === FavItemsOrder.CollectCountDesc) {
-    return orderBy(items, [(x) => x.cnt_info.collect], ['desc'])
-  }
-
-  return items
 }

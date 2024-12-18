@@ -9,6 +9,7 @@ import { cloneDeep, countBy, orderBy, shuffle } from 'es-toolkit'
 import { tryit } from 'radash'
 import { proxy, useSnapshot } from 'valtio'
 import { fetchCollectionDetail } from '../collection/api'
+import { FavItemsOrder, handleItemsOrder } from '../fav-enum'
 import { formatBvidUrl, formatFavCollectionUrl } from '../fav-url'
 import { type IFavInnerService } from '../index'
 import { favStore } from '../store'
@@ -17,11 +18,7 @@ import type {
   FavCollectionDetailInfo,
   FavCollectionDetailMedia,
 } from '../types/collections/collection-detail'
-import {
-  FavItemsOrder,
-  FavItemsOrderSwitcher,
-  handleItemsOrder,
-} from '../usage-info/fav-items-order'
+import { FavItemsOrderSwitcher } from '../usage-info/fav-items-order'
 import { FAV_PAGE_SIZE, favSeparatorCss } from './_base'
 
 export class FavCollectionService implements IFavInnerService {

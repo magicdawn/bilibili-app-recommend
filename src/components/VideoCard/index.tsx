@@ -24,7 +24,7 @@ import { useWatchlaterState } from '$modules/rec-services/watchlater'
 import { settings, useSettingsSnapshot } from '$modules/settings'
 import { isWebApiSuccess } from '$request'
 import { isFirefox, isSafari } from '$ua'
-import { antMessage, antNotification } from '$utility/antd'
+import { antNotification } from '$utility/antd'
 import type { CssProp } from '$utility/type'
 import { css } from '@emotion/react'
 import { useLockFn } from 'ahooks'
@@ -55,11 +55,6 @@ import { useDislikeRelated } from './use/useDislikeRelated'
 import { useLinkTarget, useOpenRelated } from './use/useOpenRelated'
 import { usePreviewAnimation } from './use/usePreviewAnimation'
 import { useWatchlaterRelated } from './use/useWatchlaterRelated'
-
-export function copyContent(content: string) {
-  GM.setClipboard(content)
-  antMessage.success(`已复制: ${content}`)
-}
 
 export type VideoCardProps = {
   style?: CSSProperties

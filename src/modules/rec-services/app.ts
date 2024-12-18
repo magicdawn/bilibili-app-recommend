@@ -4,6 +4,7 @@ import type { ipad } from '$define/app-recommend.ipad'
 import { EApiType, EAppApiDevice } from '$define/index.shared'
 import { getSettingsSnapshot } from '$modules/settings'
 import { gmrequest } from '$request'
+import { getHasLogined } from '$utility/cookie'
 import { randomInt, shuffle, uniqBy } from 'es-toolkit'
 import { times } from 'es-toolkit/compat'
 import { QueueStrategy, type IService } from './_base'
@@ -18,7 +19,7 @@ import {
   DynamicFeedVideoType,
 } from './dynamic-feed/store'
 import { FavRecService, getFavServiceConfig, type FavServiceConfig } from './fav'
-import { FavItemsOrder } from './fav/usage-info/fav-items-order'
+import { FavItemsOrder } from './fav/fav-enum'
 import { WatchLaterRecService } from './watchlater'
 
 type AppRecServiceConfig = ReturnType<typeof getAppRecServiceConfig>
@@ -52,6 +53,7 @@ export class AppRecService implements IService {
   }
 
   initOtherTabServices() {
+    if (!getHasLogined()) return
     if (!this.config.addOtherTabContents) return
 
     let dynamicFeedService: IService
