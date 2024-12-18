@@ -33,11 +33,6 @@ export const QUERY_FAV_COLLECTION_ID = (() => {
   return num
 })()
 
-const { map: savedOrderMap, actions: savedOrderMapActions } = await proxyMapWithGmStorage<
-  string,
-  FavItemsOrder
->('fav-saved-order')
-
 export const favStore = proxy({
   // methods
   updateList,
@@ -96,8 +91,7 @@ export const favStore = proxy({
   },
 
   // 保存的顺序
-  savedOrderMap,
-  savedOrderMapActions,
+  savedOrderMap: (await proxyMapWithGmStorage<string, FavItemsOrder>('fav-saved-order')).map,
 
   get usingShuffle() {
     const curret = getSavedOrder(this.selectedKey, this.savedOrderMap)

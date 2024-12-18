@@ -2,6 +2,7 @@ import { baseDebug, IN_BILIBILI_HOMEPAGE } from '$common'
 import { ETab } from '$components/RecHeader/tab-enum'
 import { VideoLinkOpenMode } from '$components/VideoCard/index.shared'
 import { EAppApiDevice } from '$define/index.shared'
+import { reciveGmValueUpdatesFromOtherTab } from '$modules/gm'
 import {
   getLeafPaths,
   type BooleanPaths,
@@ -9,7 +10,7 @@ import {
   type ListPaths,
 } from '$utility/object-paths'
 import toast from '$utility/toast'
-import { cloneDeep, isEqual, isNil } from 'es-toolkit'
+import { cloneDeep, isNil } from 'es-toolkit'
 import { get, set } from 'es-toolkit/compat'
 import type { Get, PartialDeep, ReadonlyDeep } from 'type-fest'
 import { proxy, snapshot, subscribe, useSnapshot } from 'valtio'
@@ -334,53 +335,44 @@ export function runSettingsMigration(val: object) {
   }
 }
 
-/**
- * @private
- */
 async function __pickSettingsFromGmStorage(): Promise<PartialDeep<Settings>> {
   const saved = await GM.getValue<Settings>(storageKey)
-  if (saved && typeof saved === 'object') {
-    runSettingsMigration(saved)
-    return pickSettings(saved, allowedLeafSettingsPaths).pickedSettings
-  } else {
-    return {}
-  }
+  if (!saved || typeof saved !== 'object') return {}
+  runSettingsMigration(saved)
+  return pickSettings(saved, allowedLeafSettingsPaths).pickedSettings
 }
 
 export async function loadAndSetup() {
   const val = await __pickSettingsFromGmStorage()
   updateSettings(val)
+
   // persist when config change
-  __lastSnapForGmSave = snapshot(settings)
   subscribe(settings, () => {
-    save()
+    _onSettingsChange()
+  })
+
+  // replace memory-settings when other tabs change
+  reciveGmValueUpdatesFromOtherTab<PartialDeep<Settings>>({
+    storageKey,
+    setPersist(val) {
+      _persist = val
+    },
+    onUpdate(newValue) {
+      updateSettings(newValue)
+    },
   })
 }
 
-let __lastSnapForGmSave: ReadonlyDeep<PartialDeep<Settings>> | undefined
-async function saveToGmStorage(snap: ReadonlyDeep<PartialDeep<Settings>>) {
-  // only persist CHANGED fields
-  const changedPaths = allowedLeafSettingsPaths.filter(
-    (p) => !isEqual(get(__lastSnapForGmSave, p), get(snap, p)),
-  )
-  if (!changedPaths.length) return
-
-  const newest = await __pickSettingsFromGmStorage()
-  for (const p of changedPaths) {
-    set(newest, p, get(snap, p))
-  }
-  await GM.setValue(storageKey, newest)
-  __lastSnapForGmSave = snap
-}
-
-async function save() {
+async function _onSettingsChange() {
   const snap = cloneDeep(snapshot(settings))
-  await saveToGmStorage(snap)
+  await _saveToGmStorage(snap)
   await saveToDraft(snap) // http backup
 }
 
-export function getSettings(path: LeafSettingsPath) {
-  return get(settings, path)
+let _persist = true
+async function _saveToGmStorage(snap: ReadonlyDeep<PartialDeep<Settings>>) {
+  if (!_persist) return
+  await GM.setValue(storageKey, snap)
 }
 
 /**
@@ -403,7 +395,7 @@ export function pickSettings(
 }
 
 /**
- * update & persist
+ * manipulate memory settings
  */
 export function updateSettings(payload: PartialDeep<Settings>) {
   const { pickedPaths } = pickSettings(payload, allowedLeafSettingsPaths)
@@ -413,9 +405,6 @@ export function updateSettings(payload: PartialDeep<Settings>) {
   }
 }
 
-/**
- * reset
- */
 export function resetSettings() {
   return updateSettings(initialSettings)
 }
@@ -426,15 +415,9 @@ export function resetSettings() {
 
 export type SettingsInnerArrayItem<P extends ListSettingsPath> = Get<Settings, P>[number]
 
-/**
- * @deprecated use `getNewestValueOfSettingsInnerArray` instead
- */
-export function getSettingsInnerArray<P extends ListSettingsPath>(path: P) {
-  return get(settings, path) as SettingsInnerArrayItem<P>[]
-}
-// Q: 为什么重新获取
-// A: 在多 Tab 访问的情况下, `settings` 上的数据可能不是最新的, 不想丢失 collection 数据
 export async function getNewestValueOfSettingsInnerArray<P extends ListSettingsPath>(path: P) {
+  // Q: 为什么重新获取
+  // A: 在多 Tab 访问的情况下, `settings` 上的数据可能不是最新的, 不想丢失 collection 数据
   const newest = await __pickSettingsFromGmStorage()
   return (get(newest, path) || get(getSettingsSnapshot(), path)) as SettingsInnerArrayItem<P>[]
 }

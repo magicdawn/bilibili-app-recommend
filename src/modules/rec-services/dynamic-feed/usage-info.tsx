@@ -327,13 +327,13 @@ export function DynamicFeedUsageInfo() {
               checked={hideChargeOnlyVideos}
               onChange={async (e) => {
                 const val = e.target.checked
-                await dfStore.hideChargeOnlyVideosForKeysActions.performUpdate((set) => {
-                  if (val) {
-                    set.add(selectedKey)
-                  } else {
-                    set.delete(selectedKey)
-                  }
-                })
+                const set = dfStore.hideChargeOnlyVideosForKeysSet
+                if (val) {
+                  set.add(selectedKey)
+                } else {
+                  set.delete(selectedKey)
+                }
+
                 await delay(100)
                 onRefresh?.()
               }}

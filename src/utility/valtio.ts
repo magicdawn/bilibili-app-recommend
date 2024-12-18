@@ -1,3 +1,4 @@
+import { reciveGmValueUpdatesFromOtherTab } from '$modules/gm'
 import { isEqual, pick, throttle, toMerged } from 'es-toolkit'
 import pLimit from 'p-limit'
 import { proxy, snapshot, subscribe, useSnapshot } from 'valtio'
@@ -88,18 +89,7 @@ export async function proxyWithGmStorage<T extends object>(initialVaue: T, stora
 export async function proxySetWithGmStorage<T>(storageKey: string) {
   const load = async (): Promise<T[]> => (await GM.getValue(storageKey)) || []
   const p = proxySet<T>(await load())
-  // start subscribe in nextTick, so value can be changed synchronously without persist
-  setTimeout(setupSubscribe)
-
-  let unsubscribe: (() => void) | undefined
-  function setupSubscribe() {
-    unsubscribe?.()
-    unsubscribe = subscribe(p, () => {
-      GM.setValue(storageKey, Array.from(snapshot(p)))
-    })
-  }
-
-  async function replaceAllWith(newVal: Iterable<T>) {
+  const replaceAllWith = (newVal: Iterable<T>) => {
     const newSet = new Set(newVal)
     for (const x of [...p, ...newSet]) {
       if (!newSet.has(x)) p.delete(x)
@@ -107,29 +97,25 @@ export async function proxySetWithGmStorage<T>(storageKey: string) {
     }
   }
 
-  // 如果需要覆盖, 直接修改即可
-  // 不覆盖, 使用 `await p.performUpdate(() => {})`
-  async function performUpdate(action: (this: Set<T>, set: Set<T>) => void | Promise<void>) {
-    // reload GM storage to memory
-    const newest = await load()
-    unsubscribe?.()
-    unsubscribe = undefined
-    // modify: sync with newest
-    replaceAllWith(newest)
-    // listen change
-    setupSubscribe()
-
-    // perform the action
-    await action.call(p, p)
+  // start subscribe in nextTick, so value can be changed synchronously without persist
+  setTimeout(setupSubscribe)
+  let persist = true
+  function setupSubscribe() {
+    subscribe(p, () => {
+      if (!persist) return
+      GM.setValue(storageKey, Array.from(snapshot(p)))
+    })
+    reciveGmValueUpdatesFromOtherTab({
+      storageKey,
+      setPersist: (val) => (persist = val),
+      onUpdate: replaceAllWith,
+    })
   }
 
   // p is sealed, can't be modified
   return {
     set: p,
-    actions: {
-      performUpdate,
-      replaceAllWith,
-    },
+    replaceAllWith,
   }
 }
 
@@ -139,21 +125,7 @@ export async function proxyMapWithGmStorage<K, V>(
 ) {
   const load = async (): Promise<[K, V][]> => (await GM.getValue(storageKey)) || []
   const p = proxyMap<K, V>(await load())
-  // start subscribe in nextTick, so value can be changed synchronously without persist
-  setTimeout(setupSubscribe)
-
-  let unsubscribe: (() => void) | undefined
-  function setupSubscribe() {
-    unsubscribe?.()
-    unsubscribe = subscribe(p, () => {
-      // serialize
-      let val = Array.from(snapshot(p))
-      if (beforeSave) val = beforeSave(val)
-      GM.setValue(storageKey, val)
-    })
-  }
-
-  async function replaceAllWith(newVal: Iterable<[K, V]>) {
+  const replaceAllWith = (newVal: Iterable<[K, V]>) => {
     const newMap = new Map(newVal)
     for (const [k, v] of [...p, ...newMap]) {
       if (!newMap.has(k)) p.delete(k)
@@ -161,30 +133,27 @@ export async function proxyMapWithGmStorage<K, V>(
     }
   }
 
-  async function reloadFromGmStorage() {
-    // reload GM storage to memory
-    const newest = await load()
-    unsubscribe?.()
-    unsubscribe = undefined
-    // modify: sync with newest
-    replaceAllWith(newest)
-    // listen change
-    setupSubscribe()
-  }
+  // start subscribe in nextTick, so value can be changed synchronously without persist
+  setTimeout(setupSubscribe)
+  let persist = true
+  function setupSubscribe() {
+    subscribe(p, () => {
+      if (!persist) return
+      let val = Array.from(snapshot(p))
+      if (beforeSave) val = beforeSave(val)
+      GM.setValue(storageKey, val)
+    })
 
-  async function performUpdate(action: (this: Map<K, V>, map: Map<K, V>) => void | Promise<void>) {
-    // reload
-    await reloadFromGmStorage()
-    // perform the action
-    await action.call(p, p)
+    // reload when other tab change storage value
+    reciveGmValueUpdatesFromOtherTab<[K, V][]>({
+      storageKey,
+      setPersist: (val) => (persist = val),
+      onUpdate: replaceAllWith,
+    })
   }
 
   return {
     map: p,
-    actions: {
-      performUpdate,
-      reloadFromGmStorage,
-      replaceAllWith,
-    },
+    replaceAllWith,
   }
 }

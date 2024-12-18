@@ -93,8 +93,8 @@ importers:
         specifier: ^4.3.1
         version: 4.3.1
       promise.map:
-        specifier: ^1.1.0
-        version: 1.1.0
+        specifier: ^1.1.1
+        version: 1.1.1
       quick-lru:
         specifier: ^7.0.0
         version: 7.0.0
@@ -3577,8 +3577,8 @@ packages:
     resolution: {integrity: sha512-E9e9HJ9R9NasGOgPaPE8VMeiPKAyWR5jcFpNnwIejslIhWqdqOrb2wShBsncMPUb+BcCd2OPYfh7p2W6oemTng==}
     engines: {node: '>=18'}
 
-  promise.map@1.1.0:
-    resolution: {integrity: sha512-cdg61zKO9Ts/LT+FC9G00Ftx2BLu09eqOIMhCCbhvaJ9GfNn8NH0EVv54Nztd1RbFMGAfMRuUO7/mu5YtQP/EA==}
+  promise.map@1.1.1:
+    resolution: {integrity: sha512-cG//79mM8mFtHWm5PR7hHsGZM83NjWTKWqkSlZxt3rWcdmNaX9/02nrmRmgoGfi4Uv4QYZhosa5HMGilaSo8yw==}
 
   promise.retry@2.1.0:
     resolution: {integrity: sha512-kuNTksWa2LxbL92oQUz2Y7fnKYd4RhxLhZLmhJNZsI/asHpYmytaVCzp2zPWKreXiEDLKDFR0dZr6Vlz3IJ0NA==}
@@ -8294,7 +8294,7 @@ snapshots:
     dependencies:
       parse-ms: 4.0.0
 
-  promise.map@1.1.0: {}
+  promise.map@1.1.1: {}
 
   promise.retry@2.1.0:
     dependencies:

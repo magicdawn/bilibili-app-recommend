@@ -21,7 +21,7 @@ export const UserBlacklistService = {
   remove: blacklistRemove,
 }
 
-export const { set: blacklistMids, actions: blacklistMidsActions } =
+export const { set: blacklistMids, replaceAllWith: blacklistMidsReplaceAllWith } =
   await proxySetWithGmStorage<UpMidType>('blacklist-mids')
 
 export function useInBlacklist(upMid?: string) {
@@ -36,13 +36,12 @@ function blacklistActionFactory(action: 'follow' | 'remove') {
     const success = await modifyRelations(upMid, act)
 
     if (success) {
-      await blacklistMidsActions.performUpdate((set) => {
-        if (action === 'follow') {
-          set.add(upMid)
-        } else if (action === 'remove') {
-          set.delete(upMid)
-        }
-      })
+      const set = blacklistMids
+      if (action === 'follow') {
+        set.add(upMid)
+      } else if (action === 'remove') {
+        set.delete(upMid)
+      }
     }
 
     return success
@@ -92,6 +91,6 @@ export async function getUserBlacklist() {
   const ids = await getUserBlacklist()
   debug('user blocklist fetched: %o', ids)
   if (ids) {
-    blacklistMidsActions.replaceAllWith(ids.map((x) => x.toString()))
+    blacklistMidsReplaceAllWith(ids.map((x) => x.toString()))
   }
 })()
