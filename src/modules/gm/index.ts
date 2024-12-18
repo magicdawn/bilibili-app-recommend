@@ -23,10 +23,12 @@ export function reciveGmValueUpdatesFromOtherTab<T>({
   onUpdate: (newValue: T) => void
   setPersist: (val: boolean) => void
 }) {
-  const limit = pLimit(1) // mutex
-
+  // check if script manager support this API
   // safari Userscripts has only `GM.` API, this API is only available on `GM_`
-  GM_addValueChangeListener<T>?.(storageKey, (name, oldValue, newValue, remote) => {
+  if (typeof GM_addValueChangeListener === 'undefined') return
+
+  const limit = pLimit(1) // mutex
+  GM_addValueChangeListener<T>(storageKey, (name, oldValue, newValue, remote) => {
     if (!remote) return
     if (!newValue) return
     limit(async () => {
