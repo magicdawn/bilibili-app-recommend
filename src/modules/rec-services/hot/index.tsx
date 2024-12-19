@@ -13,8 +13,8 @@ import { Button, Dropdown } from 'antd'
 import { size } from 'polished'
 import type { ReactNode } from 'react'
 import { useSnapshot } from 'valtio'
-import type { IService } from '../_base'
-import { usePopupContainer } from '../_base'
+import type { IService, ITabService } from '../_base'
+import { QueueStrategy, usePopupContainer } from '../_base'
 import { PopularGeneralRecService } from './popular-general'
 import { PopularWeeklyRecService } from './popular-weekly'
 import { RankingRecService } from './ranking'
@@ -67,7 +67,7 @@ const HotSubTabConfig = {
   },
 }
 
-export class HotRecService implements IService {
+export class HotRecService implements ITabService {
   subtab: EHotSubTab
   service: IService
   constructor() {
@@ -76,11 +76,18 @@ export class HotRecService implements IService {
   }
 
   get hasMore() {
-    return this.service.hasMore
+    return !!this.qs.bufferQueue.length || this.service.hasMore
   }
 
-  loadMore(abortSignal: AbortSignal): Promise<RecItemTypeOrSeparator[] | undefined> {
-    return this.service.loadMore(abortSignal)
+  qs = new QueueStrategy<RecItemTypeOrSeparator>(20)
+  restore(): void {
+    this.qs.restore()
+  }
+
+  async loadMore(abortSignal: AbortSignal): Promise<RecItemTypeOrSeparator[] | undefined> {
+    if (!this.hasMore) return
+    if (this.qs.bufferQueue.length) return this.qs.sliceFromQueue()
+    return this.qs.doReturnItems(await this.service.loadMore(abortSignal))
   }
 
   get usageInfo() {

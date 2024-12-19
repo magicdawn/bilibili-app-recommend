@@ -1,7 +1,7 @@
 import type { FavItemExtend, ItemsSeparator } from '$define'
 import { settings } from '$modules/settings'
 import { snapshot } from 'valtio'
-import { QueueStrategy, type IService } from '../_base'
+import { QueueStrategy, type ITabService } from '../_base'
 import type { FavItemsOrder } from './fav-enum'
 import { FAV_PAGE_SIZE } from './service/_base'
 import { FavAllService } from './service/fav-all'
@@ -38,7 +38,7 @@ export interface IFavInnerService {
   extraUsageInfo?: ReactNode
 }
 
-export class FavRecService implements IService {
+export class FavRecService implements ITabService {
   static PAGE_SIZE = FAV_PAGE_SIZE
 
   innerService: IFavInnerService
@@ -75,11 +75,15 @@ export class FavRecService implements IService {
     return typeof this.config.selectedFavCollectionId === 'number'
   }
 
-  // for shuffle restore
-  qs = new QueueStrategy<FavItemExtend | ItemsSeparator>(FavRecService.PAGE_SIZE)
   get hasMore() {
     return !!this.qs.bufferQueue.length || this.innerService.hasMore
   }
+
+  qs = new QueueStrategy<FavItemExtend | ItemsSeparator>(FavRecService.PAGE_SIZE)
+  restore(): void {
+    this.qs.restore()
+  }
+
   async loadMore(abortSignal?: AbortSignal) {
     if (!this.hasMore) return
     if (this.qs.bufferQueue.length) return this.qs.sliceFromQueue()

@@ -1,10 +1,10 @@
 import { REQUEST_FAIL_MSG } from '$common'
-import type { LiveItemExtend, RecItemTypeOrSeparator } from '$define'
+import type { ItemsSeparator, LiveItemExtend } from '$define'
 import { EApiType } from '$define/index.shared'
 import { isWebApiSuccess, request } from '$request'
 import toast from '$utility/toast'
 import dayjs from 'dayjs'
-import type { IService } from '../_base'
+import { QueueStrategy, type ITabService } from '../_base'
 import { ELiveStatus } from './live-enum'
 import type { ListFollowingLiveJson } from './types/list-live'
 
@@ -21,10 +21,10 @@ export async function getLiveList(page: number) {
   return json
 }
 
-export class LiveRecService implements IService {
+export class LiveRecService implements ITabService {
   static PAGE_SIZE = 10
 
-  hasMore: boolean = true
+  hasMoreInApi: boolean = true
   page = 0
   loaded = false
 
@@ -33,18 +33,27 @@ export class LiveRecService implements IService {
 
   separatorAdded = false
 
-  async loadMore(): Promise<RecItemTypeOrSeparator[] | undefined> {
+  qs = new QueueStrategy<LiveItemExtend | ItemsSeparator>(LiveRecService.PAGE_SIZE)
+  restore(): void {
+    this.qs.restore()
+  }
+  get hasMore() {
+    return !!this.qs.bufferQueue.length || this.hasMoreInApi
+  }
+
+  async loadMore() {
     if (!this.hasMore) return
+    if (this.qs.bufferQueue.length) return this.qs.sliceFromQueue()
 
     if (this.page + 1 > this.totalPage) {
-      this.hasMore = false
+      this.hasMoreInApi = false
       return
     }
 
     const json = await getLiveList(this.page + 1)
     if (!isWebApiSuccess(json)) {
       toast(json.message || REQUEST_FAIL_MSG)
-      this.hasMore = false
+      this.hasMoreInApi = false
     }
 
     // success
@@ -69,11 +78,11 @@ export class LiveRecService implements IService {
       const lastStatus = last.live_status
       const lastLiveTime = last.record_live_time
       if (lastStatus !== ELiveStatus.Streaming && lastLiveTime && lastLiveTime < gateTime) {
-        this.hasMore = false
+        this.hasMoreInApi = false
       }
     }
 
-    const ret: RecItemTypeOrSeparator[] = items
+    const ret: (LiveItemExtend | ItemsSeparator)[] = items
 
     // add separator
     if (!this.separatorAdded && items.some((x) => x.live_status !== ELiveStatus.Streaming)) {
@@ -86,7 +95,7 @@ export class LiveRecService implements IService {
       })
     }
 
-    return ret
+    return this.qs.doReturnItems(ret)
   }
 
   get usageInfo() {

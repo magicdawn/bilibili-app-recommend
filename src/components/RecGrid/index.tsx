@@ -3,7 +3,7 @@
  */
 
 import { APP_CLS_CARD, APP_CLS_CARD_ACTIVE, APP_CLS_GRID, baseDebug } from '$common'
-import { useRefStateBox } from '$common/hooks/useRefState'
+import { useRefStateBox, type RefStateBox } from '$common/hooks/useRefState'
 import { useModalDislikeVisible } from '$components/ModalDislike'
 import { useCurrentUsingTab } from '$components/RecHeader/tab'
 import { EHotSubTab, ETab } from '$components/RecHeader/tab-enum'
@@ -20,8 +20,9 @@ import { EApiType } from '$define/index.shared'
 import { $headerHeight } from '$header'
 import { IconForOpenExternalLink } from '$modules/icon'
 import { concatThenUniq, refreshForGrid } from '$modules/rec-services'
+import type { IService } from '$modules/rec-services/_base'
 import { hotStore } from '$modules/rec-services/hot'
-import { getIService } from '$modules/rec-services/service-map.ts'
+import { type ServiceMap } from '$modules/rec-services/service-map.ts'
 import { useSettingsSnapshot } from '$modules/settings'
 import { isSafari } from '$ua'
 import { antMessage } from '$utility/antd'
@@ -29,10 +30,10 @@ import { css } from '@emotion/react'
 import { useEventListener, useLatest } from 'ahooks'
 import { Divider } from 'antd'
 import type { AxiosError } from 'axios'
-import { cloneDeep, delay } from 'es-toolkit'
+import { cloneDeep, delay, invariant } from 'es-toolkit'
 import mitt from 'mitt'
 import ms from 'ms'
-import type { ReactNode } from 'react'
+import type { ForwardedRef, ReactNode } from 'react'
 import { useInView } from 'react-intersection-observer'
 import { VirtuosoGrid } from 'react-virtuoso'
 import * as scopedClsNames from '../video-grid.module.scss'
@@ -44,10 +45,7 @@ import { ENABLE_VIRTUAL_GRID, gridComponents } from './virtuoso.config'
 
 const debug = baseDebug.extend('components:RecGrid')
 
-export type RecGridRef = {
-  refresh: OnRefresh
-}
-
+export type RecGridRef = { refresh: OnRefresh }
 export type RecGridProps = {
   shortcutEnabled: boolean
   infiniteScrollUseWindow: boolean
@@ -57,21 +55,36 @@ export type RecGridProps = {
   setRefreshing: (val: boolean) => void
   setExtraInfo?: (n?: ReactNode) => void
 }
+export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function (props, ref) {
+  const tab = useDeferredValue(useCurrentUsingTab())
+  const existingServices = useRefStateBox<Partial<ServiceMap>>(() => ({}))
+  return (
+    <RecGridInner
+      {...props}
+      key={tab}
+      tab={tab}
+      handlersRef={ref}
+      existingServices={existingServices}
+    />
+  )
+})
 
-export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
-  {
-    infiniteScrollUseWindow,
-    shortcutEnabled,
-    onScrollToTop,
-    className,
-    scrollerRef,
-    setRefreshing: setUpperRefreshing,
-    setExtraInfo,
-  },
-  ref,
-) {
-  const tab = useCurrentUsingTab()
-
+const RecGridInner = memo(function ({
+  infiniteScrollUseWindow,
+  shortcutEnabled,
+  onScrollToTop,
+  className,
+  scrollerRef,
+  setRefreshing: setUpperRefreshing,
+  setExtraInfo,
+  tab,
+  handlersRef,
+  existingServices,
+}: RecGridProps & {
+  tab: ETab
+  handlersRef?: ForwardedRef<RecGridRef>
+  existingServices: RefStateBox<Partial<ServiceMap>>
+}) {
   // 已加载完成的 load call count, 类似 page
   const loadCompleteCountBox = useRefStateBox(0)
 
@@ -91,24 +104,25 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
   })
 
   const updateExtraInfo = useMemoizedFn((tab: ETab) => {
-    const info = getIService(serviceMapBox.val, tab)?.usageInfo ?? null
+    const service: IService | undefined = existingServices.val[tab]
+    const info = service?.usageInfo
     setExtraInfo?.(info)
   })
 
   const {
     itemsBox,
     error: refreshError,
-
     refresh,
     hasMoreBox,
     refreshingBox,
     refreshTsBox,
     refreshAbortController,
-
-    useSkeleton,
-    serviceMapBox,
+    showSkeleton,
+    beforeMount,
   } = useRefresh({
     tab,
+    existingServices,
+
     debug,
     fetcher: refreshForGrid,
 
@@ -120,8 +134,8 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
     setUpperRefreshing,
   })
 
-  useMount(refresh)
-  useImperativeHandle(ref, () => ({ refresh }), [refresh])
+  useImperativeHandle(handlersRef, () => ({ refresh }), [refresh])
+  // useMount(() => refresh(true))
 
   const goOutAt = useRef<number | undefined>()
   useEventListener(
@@ -168,6 +182,7 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
   const loadMore = useMemoizedFn(async () => {
     if (refreshingBox.val) return
     if (!hasMoreBox.val) return
+    if (refreshAbortController.signal.aborted) return
 
     const refreshTsWhenStart = refreshTsBox.val
     if (isLocked(refreshTsWhenStart)) return
@@ -177,7 +192,8 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
     let newHasMore = true
     let err: any
     try {
-      const service = getIService(serviceMapBox.val, tab)
+      const service = existingServices.val[tab]
+      invariant(service, `service not found for tab=${tab}`)
       let more = (await service.loadMore(refreshAbortController.signal)) || []
       more = filterRecItems(more, tab)
       newItems = concatThenUniq(newItems, more)
@@ -314,11 +330,11 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
       antMessage.success(`已移除: ${data.title}`, 4)
 
       if (tab === ETab.Watchlater) {
-        serviceMapBox.val[tab].decreaseTotal()
+        existingServices.val[tab]?.decreaseTotal()
         updateExtraInfo(tab)
       }
       if (tab === ETab.Fav) {
-        serviceMapBox.val[tab].decreaseTotal()
+        existingServices.val[tab]?.decreaseTotal()
         updateExtraInfo(tab)
       }
 
@@ -418,24 +434,40 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
     }
   }, [footer, containerRef, gridClassName])
 
+  // 总是 render grid, getColumnCount 依赖 grid columns
+  const wrap = (gridChildren: ReactNode, gridSiblings: ReactNode = undefined) => {
+    return (
+      <div
+        ref={containerRef}
+        className={scopedClsNames.videoGridContainer}
+        css={css`
+          min-height: 100vh;
+        `}
+      >
+        <div className={gridClassName}>{gridChildren}</div>
+        {gridSiblings}
+      </div>
+    )
+  }
+
   // Shit happens!
   if (refreshError) {
     console.error('RecGrid.refresh error:', refreshError.stack || refreshError)
-    return <ErrorDetail tab={tab} err={refreshError} />
+    return wrap(undefined, <ErrorDetail tab={tab} err={refreshError} />)
+  }
+
+  // before mount
+  if (beforeMount) {
+    return wrap(undefined)
   }
 
   // skeleton loading
-  const _skeleton = refreshing && useSkeleton
-  if (_skeleton) {
+  if (refreshing && showSkeleton) {
     const cardCount = getColumnCount() * 4
-    return (
-      <div className={scopedClsNames.videoGridContainer}>
-        <div className={gridClassName}>
-          {new Array(cardCount).fill(0).map((_, index) => {
-            return <VideoCard key={index} loading={true} className={APP_CLS_CARD} tab={tab} />
-          })}
-        </div>
-      </div>
+    return wrap(
+      new Array(cardCount).fill(0).map((_, index) => {
+        return <VideoCard key={index} loading={true} className={APP_CLS_CARD} tab={tab} />
+      }),
     )
   }
 
@@ -507,13 +539,9 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function RecGrid(
   }
 
   // plain dom
-  return (
-    <div style={{ minHeight: '100%' }} className={scopedClsNames.videoGridContainer}>
-      <div ref={containerRef} className={gridClassName}>
-        {usingItems.map((item) => renderItem(item))}
-      </div>
-      {footer}
-    </div>
+  return wrap(
+    usingItems.map((item) => renderItem(item)),
+    footer,
   )
 })
 

@@ -5,11 +5,11 @@ import { anyFilterEnabled, filterRecItems } from '$components/VideoCard/process/
 import { lookinto } from '$components/VideoCard/process/normalize'
 import type { RecItemTypeOrSeparator } from '$define'
 import { EApiType } from '$define/index.shared'
-import { uniqBy } from 'es-toolkit'
+import { invariant, uniqBy } from 'es-toolkit'
 import { AppRecService } from './app'
 import { DynamicFeedVideoMinDuration, DynamicFeedVideoType } from './dynamic-feed/store'
 import { PcRecService } from './pc'
-import { REC_TABS, getIService, type FetcherOptions } from './service-map'
+import { REC_TABS, type FetcherOptions } from './service-map'
 
 const debug = baseDebug.extend('service')
 
@@ -54,7 +54,8 @@ async function fetchMinCount(count: number, fetcherOptions: FetcherOptions, filt
     // hot              热门 (popular-general  综合热门, popular-weekly  每周必看, ranking  排行榜)
     // live             直播
     if (!REC_TABS.includes(tab)) {
-      const service = getIService(serviceMap, tab)
+      const service = serviceMap[tab]
+      invariant(service, `no service for tab=${tab}`)
       cur = (await service.loadMore(abortSignal)) || []
       hasMore = service.hasMore
       cur = filterRecItems(cur, tab) // filter
@@ -92,10 +93,12 @@ async function fetchMinCount(count: number, fetcherOptions: FetcherOptions, filt
 
     if (usePcApi(tab)) {
       const service = serviceMap[tab]
+      invariant(service, `no service for tab=${tab}`)
       cur = (await service.getRecommendTimes(times, abortSignal)) || []
       hasMore = service.hasMore
     } else {
       const service = serviceMap[ETab.AppRecommend]
+      invariant(service, `no service for tab=${tab}`)
       cur =
         (await (service.config.addOtherTabContents
           ? service.loadMore(abortSignal)
@@ -143,7 +146,7 @@ export async function refreshForGrid(fetcherOptions: FetcherOptions) {
 
   // 当结果很少的, 不用等一屏
   if (fetcherOptions.tab === ETab.DynamicFeed) {
-    const s = fetcherOptions.serviceMap[ETab.DynamicFeed]
+    const s = fetcherOptions.serviceMap[ETab.DynamicFeed]!
     if (
       typeof s.followGroupTagId !== 'undefined' || // 选择了分组 & 分组很少更新, TODO: 考虑 merge-timeline
       // 过滤结果可能比较少
