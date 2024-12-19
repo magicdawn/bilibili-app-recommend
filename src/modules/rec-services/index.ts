@@ -141,8 +141,10 @@ export async function refreshForHome(fetcherOptions: FetcherOptions) {
   return items
 }
 
+export const getGridRefreshCount = () => getColumnCount() * 4
+
 export async function refreshForGrid(fetcherOptions: FetcherOptions) {
-  let minCount = getColumnCount() * 3 + 1 // 7 * 3-row, 1 screen
+  let minCount = getGridRefreshCount() // 7 * 3-row, 1 screen
 
   // 当结果很少的, 不用等一屏
   if (fetcherOptions.tab === ETab.DynamicFeed) {

@@ -161,11 +161,6 @@ export function VideoSourceTab({ onRefresh }: { onRefresh: OnRefresh }) {
           }
 
           videoSourceTabState.value = newValue
-
-          // so that `RecGrid.refresh` can access latest `tab`
-          // reuse results & keep original order when switch tab
-          // await delay(0)
-          // onRefresh(true, { watchlaterKeepOrderWhenShuffle: true })
         }}
       >
         {currentTabConfigList.map(({ key, label }) => (

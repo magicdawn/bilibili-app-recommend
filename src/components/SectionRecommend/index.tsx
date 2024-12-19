@@ -19,7 +19,7 @@ export function SectionRecommend() {
   )
 
   const tab = useDeferredValue(useCurrentUsingTab())
-  const existingServices = useRefStateBox<Partial<ServiceMap>>(() => ({}))
+  const servicesRegistry = useRefStateBox<Partial<ServiceMap>>(() => ({}))
   const {
     refreshingBox,
     itemsBox,
@@ -30,9 +30,8 @@ export function SectionRecommend() {
     tab,
     debug,
     fetcher: refreshForHome,
-    existingServices,
+    servicesRegistry,
   })
-  useMount(() => refresh(true))
 
   const refreshing = refreshingBox.state
   const items = itemsBox.state

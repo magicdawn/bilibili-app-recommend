@@ -1,7 +1,9 @@
+import type { RefStateBox } from '$common/hooks/useRefState'
 import type { OnRefreshOptions } from '$components/RecGrid/useRefresh'
 import { ETab } from '$components/RecHeader/tab-enum'
 import { settings } from '$modules/settings'
-import type { IService } from './_base'
+import { invariant } from 'es-toolkit'
+import type { IService, ITabService } from './_base'
 import { AppRecService, getAppRecServiceConfig } from './app'
 import { DynamicFeedRecService, getDynamicFeedServiceConfig } from './dynamic-feed'
 import { FavRecService, getFavServiceConfig } from './fav'
@@ -39,9 +41,14 @@ export type ServiceMap = {
   [K in ServiceMapKey]: ReturnType<(typeof createServiceMap)[K]>
 }
 
-// export function getIService(serviceMap: ServiceMap, tab: ETab): IService {
-//   return serviceMap[tab]
-// }
+export function getServiceFromRegistry(
+  servicesRegistry: RefStateBox<Partial<ServiceMap>>,
+  tab: ETab,
+): ITabService {
+  const service = servicesRegistry.val[tab]
+  invariant(service, `servicesRegistry.val[tab=${tab}] should not be nil`)
+  return service
+}
 
 export type FetcherOptions = {
   tab: ETab
