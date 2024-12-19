@@ -5,7 +5,7 @@
 import { APP_CLS_CARD, APP_CLS_CARD_ACTIVE, APP_CLS_GRID, baseDebug } from '$common'
 import { useRefStateBox, type RefStateBox } from '$common/hooks/useRefState'
 import { useModalDislikeVisible } from '$components/ModalDislike'
-import { useCurrentUsingTab } from '$components/RecHeader/tab'
+import { useCurrentUsingTab, useSortedTabKeys } from '$components/RecHeader/tab'
 import { EHotSubTab, ETab } from '$components/RecHeader/tab-enum'
 import { VideoCard } from '$components/VideoCard'
 import { getActiveCardBorderCss, useCardBorderCss } from '$components/VideoCard/card-border-css'
@@ -27,7 +27,7 @@ import { useSettingsSnapshot } from '$modules/settings'
 import { isSafari } from '$ua'
 import { antMessage } from '$utility/antd'
 import { css } from '@emotion/react'
-import { useEventListener, useLatest } from 'ahooks'
+import { useEventListener, useLatest, usePrevious } from 'ahooks'
 import { Divider } from 'antd'
 import type { AxiosError } from 'axios'
 import { cloneDeep, delay, invariant } from 'es-toolkit'
@@ -56,18 +56,39 @@ export type RecGridProps = {
   setExtraInfo?: (n?: ReactNode) => void
 }
 export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function (props, ref) {
-  const tab = useDeferredValue(useCurrentUsingTab())
   const existingServices = useRefStateBox<Partial<ServiceMap>>(() => ({}))
+
+  const tab = useDeferredValue(useCurrentUsingTab())
+  const prevTab = usePrevious(tab)
+
+  const tabOrders = useSortedTabKeys()
+  const direction = useMemo(() => {
+    return prevTab
+      ? tabOrders.indexOf(tab) > tabOrders.indexOf(prevTab)
+        ? 'right'
+        : 'left'
+      : undefined
+  }, [tabOrders, tab]) // only SYNC with `tab`
+
   return (
     <RecGridInner
       {...props}
       key={tab}
       tab={tab}
+      direction={direction}
       handlersRef={ref}
       existingServices={existingServices}
     />
   )
 })
+
+const variants = {
+  hidden: (direction?: 'left' | 'right') => ({
+    opacity: 0,
+    x: direction ? (direction === 'right' ? -200 : 200) : 0,
+  }),
+  visible: { opacity: 1, x: 0 },
+}
 
 const RecGridInner = memo(function ({
   infiniteScrollUseWindow,
@@ -78,13 +99,20 @@ const RecGridInner = memo(function ({
   setRefreshing: setUpperRefreshing,
   setExtraInfo,
   tab,
+  direction,
   handlersRef,
   existingServices,
 }: RecGridProps & {
   tab: ETab
+  direction?: 'left' | 'right' // how to get to current tab, moved left or right
   handlersRef?: ForwardedRef<RecGridRef>
   existingServices: RefStateBox<Partial<ServiceMap>>
 }) {
+  // useWhyDidYouUpdate(`RecGridInner(tab = ${tab})`, {
+  //   tab,
+  //   direction,
+  // })
+
   // 已加载完成的 load call count, 类似 page
   const loadCompleteCountBox = useRefStateBox(0)
 
@@ -436,6 +464,16 @@ const RecGridInner = memo(function ({
 
   // 总是 render grid, getColumnCount 依赖 grid columns
   const wrap = (gridChildren: ReactNode, gridSiblings: ReactNode = undefined) => {
+    // h slide
+    // initial={direction ? { opacity: 0, x: direction === 'right' ? '10vw' : '-10vw' } : false}
+    // animate={{ opacity: 1, x: 0 }}
+    // transition={{ bounce: false, duration: 0.3 }}
+
+    // v slide
+    // initial={direction ? { opacity: 0, y: -10 } : false}
+    // animate={{ opacity: 1, y: 0 }}
+    // transition={{ bounce: false, duration: 0.3 }}
+
     return (
       <div
         ref={containerRef}
