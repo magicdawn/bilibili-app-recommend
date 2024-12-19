@@ -175,8 +175,8 @@ export const ModalFeed = memo(function ModalFeed({ show, onHide }: IProps) {
             onScrollToTop={onScrollToTop}
             infiniteScrollUseWindow={false}
             scrollerRef={scrollerRef}
-            setRefreshing={setRefreshing}
-            setExtraInfo={setExtraInfo}
+            onUpdateRefreshing={setRefreshing}
+            onUpdateExtraInfo={setExtraInfo}
           />
         </div>
       </OnRefreshContext.Provider>

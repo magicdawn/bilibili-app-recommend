@@ -50,8 +50,8 @@ export function PureRecommend() {
         shortcutEnabled={!(modalFeedVisible || modalSettingsVisible)}
         infiniteScrollUseWindow={true}
         onScrollToTop={onScrollToTop}
-        setRefreshing={setRefreshing}
-        setExtraInfo={setExtraInfo}
+        onUpdateRefreshing={setRefreshing}
+        onUpdateExtraInfo={setExtraInfo}
       />
     </section>
   )

@@ -19,15 +19,14 @@ import { type RecItemType, type RecItemTypeOrSeparator } from '$define'
 import { EApiType } from '$define/index.shared'
 import { $headerHeight } from '$header'
 import { IconForOpenExternalLink } from '$modules/icon'
-import { concatThenUniq, refreshForGrid } from '$modules/rec-services'
-import type { IService } from '$modules/rec-services/_base'
+import { concatThenUniq, getGridRefreshCount, refreshForGrid } from '$modules/rec-services'
 import { hotStore } from '$modules/rec-services/hot'
 import { type ServiceMap } from '$modules/rec-services/service-map.ts'
 import { useSettingsSnapshot } from '$modules/settings'
 import { isSafari } from '$ua'
 import { antMessage } from '$utility/antd'
 import { css } from '@emotion/react'
-import { useEventListener, useLatest, usePrevious } from 'ahooks'
+import { useEventListener, useLatest, usePrevious, useUnmountedRef } from 'ahooks'
 import { Divider } from 'antd'
 import type { AxiosError } from 'axios'
 import { cloneDeep, delay, invariant } from 'es-toolkit'
@@ -39,7 +38,7 @@ import { VirtuosoGrid } from 'react-virtuoso'
 import * as scopedClsNames from '../video-grid.module.scss'
 import type { OnRefresh } from './useRefresh'
 import { useRefresh } from './useRefresh'
-import { getColumnCount, useShortcut } from './useShortcut'
+import { useShortcut } from './useShortcut'
 import type { CustomGridComponents, CustomGridContext } from './virtuoso.config'
 import { ENABLE_VIRTUAL_GRID, gridComponents } from './virtuoso.config'
 
@@ -49,14 +48,14 @@ export type RecGridRef = { refresh: OnRefresh }
 export type RecGridProps = {
   shortcutEnabled: boolean
   infiniteScrollUseWindow: boolean
-  onScrollToTop?: () => void | Promise<void>
+  onScrollToTop?: () => void
   className?: string
   scrollerRef?: RefObject<HTMLElement | null>
-  setRefreshing: (val: boolean) => void
-  setExtraInfo?: (n?: ReactNode) => void
+  onUpdateRefreshing: (val: boolean) => void
+  onUpdateExtraInfo?: (n?: ReactNode) => void
 }
 export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function (props, ref) {
-  const existingServices = useRefStateBox<Partial<ServiceMap>>(() => ({}))
+  const servicesRegistry = useRefStateBox<Partial<ServiceMap>>(() => ({}))
 
   const tab = useDeferredValue(useCurrentUsingTab())
   const prevTab = usePrevious(tab)
@@ -77,18 +76,10 @@ export const RecGrid = forwardRef<RecGridRef, RecGridProps>(function (props, ref
       tab={tab}
       direction={direction}
       handlersRef={ref}
-      existingServices={existingServices}
+      servicesRegistry={servicesRegistry}
     />
   )
 })
-
-const variants = {
-  hidden: (direction?: 'left' | 'right') => ({
-    opacity: 0,
-    x: direction ? (direction === 'right' ? -200 : 200) : 0,
-  }),
-  visible: { opacity: 1, x: 0 },
-}
 
 const RecGridInner = memo(function ({
   infiniteScrollUseWindow,
@@ -96,45 +87,38 @@ const RecGridInner = memo(function ({
   onScrollToTop,
   className,
   scrollerRef,
-  setRefreshing: setUpperRefreshing,
-  setExtraInfo,
+  onUpdateRefreshing,
+  onUpdateExtraInfo,
   tab,
-  direction,
   handlersRef,
-  existingServices,
+  servicesRegistry,
 }: RecGridProps & {
   tab: ETab
   direction?: 'left' | 'right' // how to get to current tab, moved left or right
   handlersRef?: ForwardedRef<RecGridRef>
-  existingServices: RefStateBox<Partial<ServiceMap>>
+  servicesRegistry: RefStateBox<Partial<ServiceMap>>
 }) {
-  // useWhyDidYouUpdate(`RecGridInner(tab = ${tab})`, {
-  //   tab,
-  //   direction,
-  // })
-
   // 已加载完成的 load call count, 类似 page
   const loadCompleteCountBox = useRefStateBox(0)
 
-  // before refresh
+  const unmountedRef = useUnmountedRef()
+
+  const updateExtraInfo = useMemoizedFn((tab: ETab) => {
+    if (unmountedRef.current) return
+    const info = servicesRegistry.val[tab]?.usageInfo
+    onUpdateExtraInfo?.(info)
+  })
+
   const preAction = useMemoizedFn(() => {
     clearActiveIndex()
     updateExtraInfo(tab)
+    onScrollToTop?.()
   })
-
-  // after refresh, setItems
   const postAction = useMemoizedFn(() => {
     clearActiveIndex()
-    loadCompleteCountBox.set(1)
     updateExtraInfo(tab)
-    // check need loadMore
+    loadCompleteCountBox.set(1)
     setTimeout(checkShouldLoadMore)
-  })
-
-  const updateExtraInfo = useMemoizedFn((tab: ETab) => {
-    const service: IService | undefined = existingServices.val[tab]
-    const info = service?.usageInfo
-    setExtraInfo?.(info)
   })
 
   const {
@@ -149,21 +133,17 @@ const RecGridInner = memo(function ({
     beforeMount,
   } = useRefresh({
     tab,
-    existingServices,
-
+    servicesRegistry,
     debug,
     fetcher: refreshForGrid,
 
+    // actions
     preAction,
     postAction,
-    updateExtraInfo,
-
-    onScrollToTop,
-    setUpperRefreshing,
+    onUpdateRefreshing,
   })
 
   useImperativeHandle(handlersRef, () => ({ refresh }), [refresh])
-  // useMount(() => refresh(true))
 
   const goOutAt = useRef<number | undefined>()
   useEventListener(
@@ -208,9 +188,10 @@ const RecGridInner = memo(function ({
   const isLocked = useMemoizedFn((refreshedAt: number) => !!loadMoreLocker.current[refreshedAt])
 
   const loadMore = useMemoizedFn(async () => {
-    if (refreshingBox.val) return
+    if (unmountedRef.current) return
     if (!hasMoreBox.val) return
     if (refreshAbortController.signal.aborted) return
+    if (refreshingBox.val) return
 
     const refreshTsWhenStart = refreshTsBox.val
     if (isLocked(refreshTsWhenStart)) return
@@ -220,7 +201,7 @@ const RecGridInner = memo(function ({
     let newHasMore = true
     let err: any
     try {
-      const service = existingServices.val[tab]
+      const service = servicesRegistry.val[tab]
       invariant(service, `service not found for tab=${tab}`)
       let more = (await service.loadMore(refreshAbortController.signal)) || []
       more = filterRecItems(more, tab)
@@ -358,11 +339,11 @@ const RecGridInner = memo(function ({
       antMessage.success(`已移除: ${data.title}`, 4)
 
       if (tab === ETab.Watchlater) {
-        existingServices.val[tab]?.decreaseTotal()
+        servicesRegistry.val[tab]?.decreaseTotal()
         updateExtraInfo(tab)
       }
       if (tab === ETab.Fav) {
-        existingServices.val[tab]?.decreaseTotal()
+        servicesRegistry.val[tab]?.decreaseTotal()
         updateExtraInfo(tab)
       }
 
@@ -463,7 +444,10 @@ const RecGridInner = memo(function ({
   }, [footer, containerRef, gridClassName])
 
   // 总是 render grid, getColumnCount 依赖 grid columns
-  const wrap = (gridChildren: ReactNode, gridSiblings: ReactNode = undefined) => {
+  const wrap = ({
+    gridChildren,
+    gridSiblings,
+  }: { gridChildren?: ReactNode; gridSiblings?: ReactNode } = {}) => {
     // h slide
     // initial={direction ? { opacity: 0, x: direction === 'right' ? '10vw' : '-10vw' } : false}
     // animate={{ opacity: 1, x: 0 }}
@@ -488,25 +472,25 @@ const RecGridInner = memo(function ({
     )
   }
 
+  // before mount
+  if (beforeMount) {
+    return wrap()
+  }
+
   // Shit happens!
   if (refreshError) {
     console.error('RecGrid.refresh error:', refreshError.stack || refreshError)
-    return wrap(undefined, <ErrorDetail tab={tab} err={refreshError} />)
-  }
-
-  // before mount
-  if (beforeMount) {
-    return wrap(undefined)
+    return wrap({ gridSiblings: <ErrorDetail tab={tab} err={refreshError} /> })
   }
 
   // skeleton loading
   if (refreshing && showSkeleton) {
-    const cardCount = getColumnCount() * 4
-    return wrap(
-      new Array(cardCount).fill(0).map((_, index) => {
+    const cardCount = getGridRefreshCount()
+    return wrap({
+      gridChildren: new Array(cardCount).fill(0).map((_, index) => {
         return <VideoCard key={index} loading={true} className={APP_CLS_CARD} tab={tab} />
       }),
-    )
+    })
   }
 
   const renderItem = (item: RecItemTypeOrSeparator) => {
@@ -577,10 +561,10 @@ const RecGridInner = memo(function ({
   }
 
   // plain dom
-  return wrap(
-    usingItems.map((item) => renderItem(item)),
-    footer,
-  )
+  return wrap({
+    gridChildren: usingItems.map((item) => renderItem(item)),
+    gridSiblings: footer,
+  })
 })
 
 const isAxiosError = (err: any): err is AxiosError => {

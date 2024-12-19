@@ -15,11 +15,13 @@ const uniqId = () => Date.now() + _id++
 export class PcRecService implements ITabService {
   static PAGE_SIZE = 14
 
-  page = 0
-  hasMore = true
   constructor(public isKeepFollowOnly: boolean) {
     this.isKeepFollowOnly = isKeepFollowOnly
   }
+
+  page = 0
+  hasMore = true
+  usageInfo = undefined
 
   qs = new QueueStrategy<PcRecItemExtend>(PcRecService.PAGE_SIZE)
   restore(): void {
