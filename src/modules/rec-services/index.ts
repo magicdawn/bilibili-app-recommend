@@ -5,11 +5,11 @@ import { anyFilterEnabled, filterRecItems } from '$components/VideoCard/process/
 import { lookinto } from '$components/VideoCard/process/normalize'
 import type { RecItemTypeOrSeparator } from '$define'
 import { EApiType } from '$define/index.shared'
-import { invariant, uniqBy } from 'es-toolkit'
+import { uniqBy } from 'es-toolkit'
 import { AppRecService } from './app'
 import { DynamicFeedVideoMinDuration, DynamicFeedVideoType } from './dynamic-feed/store'
 import { PcRecService } from './pc'
-import { REC_TABS, type FetcherOptions } from './service-map'
+import { assertService, getServiceFromRegistry, REC_TABS, type FetcherOptions } from './service-map'
 
 const debug = baseDebug.extend('service')
 
@@ -40,7 +40,7 @@ const usePcApi = (tab: ETab): tab is ETab.PcRecommend | ETab.KeepFollowOnly =>
   tab === ETab.PcRecommend || tab === ETab.KeepFollowOnly
 
 async function fetchMinCount(count: number, fetcherOptions: FetcherOptions, filterMultiplier = 5) {
-  const { tab, abortSignal, serviceMap } = fetcherOptions
+  const { tab, abortSignal, servicesRegistry } = fetcherOptions
 
   let items: RecItemTypeOrSeparator[] = []
   let hasMore = true
@@ -54,8 +54,7 @@ async function fetchMinCount(count: number, fetcherOptions: FetcherOptions, filt
     // hot              热门 (popular-general  综合热门, popular-weekly  每周必看, ranking  排行榜)
     // live             直播
     if (!REC_TABS.includes(tab)) {
-      const service = serviceMap[tab]
-      invariant(service, `no service for tab=${tab}`)
+      const service = getServiceFromRegistry(servicesRegistry, tab)
       cur = (await service.loadMore(abortSignal)) || []
       hasMore = service.hasMore
       cur = filterRecItems(cur, tab) // filter
@@ -92,13 +91,13 @@ async function fetchMinCount(count: number, fetcherOptions: FetcherOptions, filt
     }
 
     if (usePcApi(tab)) {
-      const service = serviceMap[tab]
-      invariant(service, `no service for tab=${tab}`)
+      const service = servicesRegistry.val[tab]
+      assertService(service, tab)
       cur = (await service.getRecommendTimes(times, abortSignal)) || []
       hasMore = service.hasMore
     } else {
-      const service = serviceMap[ETab.AppRecommend]
-      invariant(service, `no service for tab=${tab}`)
+      const service = servicesRegistry.val[ETab.AppRecommend]
+      assertService(service, tab)
       cur =
         (await (service.config.addOtherTabContents
           ? service.loadMore(abortSignal)
@@ -148,13 +147,14 @@ export async function refreshForGrid(fetcherOptions: FetcherOptions) {
 
   // 当结果很少的, 不用等一屏
   if (fetcherOptions.tab === ETab.DynamicFeed) {
-    const s = fetcherOptions.serviceMap[ETab.DynamicFeed]!
+    const service = fetcherOptions.servicesRegistry.val[ETab.DynamicFeed]
+    assertService(service, fetcherOptions.tab)
     if (
-      typeof s.followGroupTagId !== 'undefined' || // 选择了分组 & 分组很少更新, TODO: 考虑 merge-timeline
+      typeof service.followGroupTagId !== 'undefined' || // 选择了分组 & 分组很少更新, TODO: 考虑 merge-timeline
       // 过滤结果可能比较少
-      s.searchText ||
-      s.dynamicFeedVideoType === DynamicFeedVideoType.DynamicOnly ||
-      s.filterMinDuration !== DynamicFeedVideoMinDuration.All
+      service.searchText ||
+      service.dynamicFeedVideoType === DynamicFeedVideoType.DynamicOnly ||
+      service.filterMinDuration !== DynamicFeedVideoMinDuration.All
     ) {
       minCount = 1
     }
