@@ -120,12 +120,6 @@ export function getElementOffset(el: HTMLElement, rect?: DOMRect) {
   }
 }
 
-export function nextTick(): Promise<void> {
-  return new Promise((resolve) => {
-    queueMicrotask(resolve)
-  })
-}
-
 export function whenIdle(options?: IdleRequestOptions): Promise<void> {
   return new Promise((resolve) => {
     // safari has no requestIdleCallback

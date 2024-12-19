@@ -1,10 +1,14 @@
 import { APP_CLS_TAB_BAR } from '$common'
 import type { RecItemTypeOrSeparator } from '$define'
 
-export interface IService {
+export type IService = {
   hasMore: boolean
   loadMore(abortSignal: AbortSignal): Promise<RecItemTypeOrSeparator[] | undefined>
   usageInfo?: ReactNode
+}
+
+export type ITabService = IService & {
+  restore(): void
 }
 
 export class QueueStrategy<T = RecItemTypeOrSeparator> {

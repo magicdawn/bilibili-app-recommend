@@ -8,7 +8,6 @@ import { checkLoginStatus, useHasLogined } from '$utility/cookie'
 import { proxyWithGmStorage } from '$utility/valtio'
 import { css } from '@emotion/react'
 import { Radio } from 'antd'
-import { delay } from 'es-toolkit'
 import { useSnapshot } from 'valtio'
 import type { TabConfigItem } from './tab-config'
 import { TabConfig, TabIcon, toastNeedLogin } from './tab-config'
@@ -165,8 +164,8 @@ export function VideoSourceTab({ onRefresh }: { onRefresh: OnRefresh }) {
 
           // so that `RecGrid.refresh` can access latest `tab`
           // reuse results & keep original order when switch tab
-          await delay(0)
-          onRefresh(true, { watchlaterKeepOrderWhenShuffle: true })
+          // await delay(0)
+          // onRefresh(true, { watchlaterKeepOrderWhenShuffle: true })
         }}
       >
         {currentTabConfigList.map(({ key, label }) => (

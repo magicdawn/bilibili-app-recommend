@@ -1,13 +1,13 @@
 import { baseDebug } from '$common'
 import { CHARGE_ONLY_TEXT } from '$components/VideoCard/top-marks'
-import { type DynamicFeedItem, type DynamicFeedItemExtend } from '$define'
+import { type DynamicFeedItem, type DynamicFeedItemExtend, type LiveItemExtend } from '$define'
 import { EApiType } from '$define/index.shared'
 import { settings } from '$modules/settings'
 import type { Nullable } from '$utility/type'
 import { parseDuration } from '$utility/video'
 import pmap from 'promise.map'
 import { snapshot } from 'valtio'
-import { QueueStrategy, type IService } from '../_base'
+import { QueueStrategy, type ITabService } from '../_base'
 import { LiveRecService } from '../live'
 import { fetchVideoDynamicFeeds } from './api'
 import {
@@ -96,7 +96,7 @@ function isValidNumber(str: Nullable<string>) {
 
 const debug = baseDebug.extend('modules:rec-services:dynamic-feed')
 
-export class DynamicFeedRecService implements IService {
+export class DynamicFeedRecService implements ITabService {
   static PAGE_SIZE = 15
 
   offset: string = ''
@@ -115,6 +115,8 @@ export class DynamicFeedRecService implements IService {
   }
 
   get hasMore() {
+    if (this.qs.bufferQueue.length) return true
+
     if (this.hasMoreStreamingLive) return true
 
     if (this.viewingSomeGroup && this.whenViewSomeGroupMergeTimelineService) {
@@ -232,20 +234,16 @@ export class DynamicFeedRecService implements IService {
 
   private _queueForSearchCache: QueueStrategy<DynamicFeedItem> | undefined
 
-  async loadMore(signal: AbortSignal | undefined = undefined) {
-    if (!this.hasMore) {
-      return
-    }
-
+  async _loadMore(signal?: AbortSignal) {
     // load live first
     if (this.liveRecService && this.hasMoreStreamingLive) {
       const items = (await this.liveRecService.loadMore()) || []
       const hasSep = items.some((x) => x.api === EApiType.Separator)
       if (!hasSep) {
-        return items
+        return items.filter((x) => x.api !== EApiType.Separator)
       } else {
         const idx = items.findIndex((x) => x.api === EApiType.Separator)
-        return items.slice(0, idx)
+        return items.slice(0, idx).filter((x) => x.api !== EApiType.Separator)
       }
     }
 
@@ -467,6 +465,16 @@ export class DynamicFeedRecService implements IService {
     }
 
     return items
+  }
+
+  qs = new QueueStrategy<DynamicFeedItemExtend | LiveItemExtend>(DynamicFeedRecService.PAGE_SIZE)
+  restore(): void {
+    this.qs.restore()
+  }
+  async loadMore(signal?: AbortSignal) {
+    if (!this.hasMore) return
+    if (this.qs.bufferQueue.length) return this.qs.sliceFromQueue()
+    return this.qs.doReturnItems(await this._loadMore(signal))
   }
 
   get usageInfo(): ReactNode {

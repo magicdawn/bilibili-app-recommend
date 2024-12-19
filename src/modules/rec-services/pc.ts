@@ -3,7 +3,7 @@ import { EApiType } from '$define/index.shared'
 import { isWebApiSuccess, request } from '$request'
 import toast from '$utility/toast'
 import { uniqBy } from 'es-toolkit'
-import { QueueStrategy, type IService } from './_base'
+import { QueueStrategy, type ITabService } from './_base'
 
 /**
  * 使用 web api 获取推荐
@@ -12,18 +12,27 @@ import { QueueStrategy, type IService } from './_base'
 let _id = 0
 const uniqId = () => Date.now() + _id++
 
-export class PcRecService implements IService {
+export class PcRecService implements ITabService {
   static PAGE_SIZE = 14
 
   page = 0
   hasMore = true
-  qs = new QueueStrategy<PcRecItemExtend>(PcRecService.PAGE_SIZE)
-
   constructor(public isKeepFollowOnly: boolean) {
     this.isKeepFollowOnly = isKeepFollowOnly
   }
 
-  private async getRecommend(signal: AbortSignal | undefined = undefined) {
+  qs = new QueueStrategy<PcRecItemExtend>(PcRecService.PAGE_SIZE)
+  restore(): void {
+    this.qs.restore()
+  }
+  async loadMore() {
+    if (!this.hasMore) return
+    if (this.qs.bufferQueue.length) return this.qs.sliceFromQueue()
+    const times = this.isKeepFollowOnly ? 5 : 2
+    return this.getRecommendTimes(times)
+  }
+
+  private async getRecommend(signal?: AbortSignal) {
     const curpage = ++this.page // this has parallel call, can not ++ after success
 
     let url: string
@@ -89,15 +98,8 @@ export class PcRecService implements IService {
     return items
   }
 
-  loadMore() {
-    const times = this.isKeepFollowOnly ? 5 : 2
-    return this.getRecommendTimes(times)
-  }
-
-  async getRecommendTimes(times: number, signal: AbortSignal | undefined = undefined) {
-    if (this.qs.bufferQueue.length) {
-      return this.qs.sliceFromQueue()
-    }
+  async getRecommendTimes(times: number, signal?: AbortSignal) {
+    if (this.qs.bufferQueue.length) return this.qs.sliceFromQueue()
 
     let list: PcRecItem[] = []
 

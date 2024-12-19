@@ -39,12 +39,12 @@ export type ServiceMap = {
   [K in ServiceMapKey]: ReturnType<(typeof createServiceMap)[K]>
 }
 
-export function getIService(serviceMap: ServiceMap, tab: ETab): IService {
-  return serviceMap[tab]
-}
+// export function getIService(serviceMap: ServiceMap, tab: ETab): IService {
+//   return serviceMap[tab]
+// }
 
 export type FetcherOptions = {
   tab: ETab
   abortSignal: AbortSignal
-  serviceMap: ServiceMap
+  serviceMap: Partial<ServiceMap>
 }

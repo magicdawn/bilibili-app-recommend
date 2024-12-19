@@ -7,7 +7,7 @@ import { gmrequest } from '$request'
 import { getHasLogined } from '$utility/cookie'
 import { randomInt, shuffle, uniqBy } from 'es-toolkit'
 import { times } from 'es-toolkit/compat'
-import { QueueStrategy, type IService } from './_base'
+import { QueueStrategy, type IService, type ITabService } from './_base'
 import {
   DynamicFeedRecService,
   getDynamicFeedServiceConfig,
@@ -38,9 +38,8 @@ export function getAppRecServiceConfig() {
   }
 }
 
-export class AppRecService implements IService {
+export class AppRecService implements ITabService {
   static PAGE_SIZE = 20
-  qs = new QueueStrategy<RecItemType>(AppRecInnerService.PAGE_SIZE)
 
   innerService: AppRecInnerService
   allServices: IService[] = []
@@ -50,6 +49,13 @@ export class AppRecService implements IService {
     this.innerService = new AppRecInnerService(this.config.deviceParamForApi)
     this.allServices = [this.innerService]
     this.initOtherTabServices()
+  }
+
+  usageInfo?: globalThis.ReactNode
+
+  qs = new QueueStrategy<RecItemType>(AppRecInnerService.PAGE_SIZE)
+  restore() {
+    this.qs.restore()
   }
 
   initOtherTabServices() {
@@ -139,8 +145,10 @@ export class AppRecService implements IService {
     return this.qs.sliceFromQueue()
   }
 
-  getRecommendTimes(times: number) {
-    return this.innerService.getRecommendTimes(times)
+  async getRecommendTimes(times: number) {
+    if (!this.hasMore) return
+    if (this.qs.bufferQueue.length) return this.qs.sliceFromQueue(times)
+    return this.qs.doReturnItems(await this.innerService.getRecommendTimes(times))
   }
 }
 
