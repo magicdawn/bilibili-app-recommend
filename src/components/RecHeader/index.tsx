@@ -132,9 +132,8 @@ export const RecHeader = forwardRef<
               display: flex;
               flex-direction: row;
               justify-content: space-between;
-              align-items: center;
-              z-index: 1;
 
+              align-items: center;
               margin-bottom: 0;
               height: auto;
               column-gap: 20px; // gap between left & right
