@@ -21,8 +21,7 @@ import {
 } from '../../modules/rec-services/service-map'
 import { setGlobalGridItems } from './unsafe-window-export'
 
-export type OnRefreshOptions = { watchlaterKeepOrderWhenShuffle?: boolean }
-export type OnRefresh = (reuse?: boolean, options?: OnRefreshOptions) => void | Promise<void>
+export type OnRefresh = (reuse?: boolean) => void | Promise<void>
 
 export const OnRefreshContext = createContext<OnRefresh | undefined>(undefined)
 export function useOnRefreshContext() {
@@ -73,7 +72,7 @@ export function useRefresh({
     refreshAbortController.abort()
   })
 
-  const refresh: OnRefresh = useMemoizedFn(async (reuse = false, options) => {
+  const refresh: OnRefresh = useMemoizedFn(async (reuse = false) => {
     const start = performance.now()
     await using stack = new AsyncDisposableStack()
     const serviceMap = servicesRegistry.val
@@ -201,7 +200,7 @@ export function useRefresh({
     }
 
     if (willRefresh) {
-      const [err, service] = tryit(() => createServiceMap[tab](options))()
+      const [err, service] = tryit(() => createServiceMap[tab]({ existingService }))()
       if (err) {
         onError(err)
       } else {

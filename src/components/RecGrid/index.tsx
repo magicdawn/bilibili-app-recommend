@@ -161,7 +161,7 @@ const RecGridInner = memo(function ({
       // 场景
       // 当前 Tab: 稍后再看, 点视频进去, 在视频页移除了, 关闭视频页, 回到首页
       if (tab === ETab.Watchlater && goOutAt.current && Date.now() - goOutAt.current > ms('1h')) {
-        refresh(true, { watchlaterKeepOrderWhenShuffle: true })
+        refresh(true)
       }
     },
     { target: document },

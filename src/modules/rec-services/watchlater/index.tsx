@@ -38,14 +38,15 @@ if (getHasLogined() && getUid()) {
 export class WatchLaterRecService implements ITabService {
   static PAGE_SIZE = 10
 
-  innerService: NormalOrderService | ShuffleOrderService
+  innerService: WatchlaterNormalOrderService | WatchlaterShuffleOrderService
+
   constructor(
     public useShuffle: boolean,
-    keepOrderWhenShuffle?: boolean,
+    prevShuffleBvids?: string[],
   ) {
     this.innerService = settings.watchlaterUseShuffle
-      ? new ShuffleOrderService(keepOrderWhenShuffle)
-      : new NormalOrderService()
+      ? new WatchlaterShuffleOrderService(prevShuffleBvids)
+      : new WatchlaterNormalOrderService()
   }
 
   get usageInfo(): ReactNode {
@@ -109,9 +110,11 @@ function showApiRequestError(err: string) {
  * shuffle pre-requirements: load ALL
  */
 
-class ShuffleOrderService implements IService {
+export class WatchlaterShuffleOrderService implements IService {
   static PAGE_SIZE = 20
-  qs = new QueueStrategy<WatchLaterItemExtend | ItemsSeparator>(ShuffleOrderService.PAGE_SIZE)
+  qs = new QueueStrategy<WatchLaterItemExtend | ItemsSeparator>(
+    WatchlaterShuffleOrderService.PAGE_SIZE,
+  )
 
   addSeparator = settings.watchlaterAddSeparator
   loaded = false
@@ -119,11 +122,17 @@ class ShuffleOrderService implements IService {
 
   // shuffle related
   keepOrder: boolean
-  private static LastShuffleBvids: string[] = []
-  constructor(keepOrder?: boolean) {
-    this.keepOrder = keepOrder ?? false
+  prevShuffleBvids?: string[]
+  constructor(prevShuffleBvids?: string[]) {
+    if (prevShuffleBvids?.length) {
+      this.keepOrder = true
+      this.prevShuffleBvids = prevShuffleBvids
+    } else {
+      this.keepOrder = false
+    }
   }
 
+  currentShuffleBvids: string[] = []
   private async fetch(abortSignal: AbortSignal) {
     const { items: rawItems, err } = await getAllWatchlaterItemsV2(false, abortSignal)
     if (typeof err !== 'undefined') {
@@ -141,21 +150,18 @@ class ShuffleOrderService implements IService {
       let earlier = items.slice(firstNotRecentIndex)
 
       // earlier: shuffle or restore
-      if (this.keepOrder && ShuffleOrderService.LastShuffleBvids.length) {
+      if (this.keepOrder && this.prevShuffleBvids?.length) {
         earlier = earlier
           .map((item) => ({
             item,
             // if not found, -1, front-most
-            index: ShuffleOrderService.LastShuffleBvids.findIndex((bvid) => item.bvid === bvid),
+            index: this.prevShuffleBvids!.findIndex((bvid) => item.bvid === bvid),
           }))
           .sort((a, b) => a.index - b.index)
           .map((x) => x.item)
       } else {
         earlier = shuffle(earlier)
       }
-
-      // save lastShuffleBvids
-      ShuffleOrderService.LastShuffleBvids = [...recent, ...earlier].map((x) => x.bvid)
 
       // combine
       itemsWithSeparator = [
@@ -168,6 +174,9 @@ class ShuffleOrderService implements IService {
     }
 
     this.total = rawItems.length
+    this.currentShuffleBvids = itemsWithSeparator
+      .filter((x) => x.api !== EApiType.Separator)
+      .map((x) => x.bvid)
     return itemsWithSeparator
   }
 
@@ -195,7 +204,7 @@ class ShuffleOrderService implements IService {
   }
 }
 
-class NormalOrderService implements IService {
+class WatchlaterNormalOrderService implements IService {
   // configs
   addSeparator = settings.watchlaterAddSeparator
   addAtAsc = settings.watchlaterNormalOrderSortByAddAtAsc
