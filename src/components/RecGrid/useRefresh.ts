@@ -166,7 +166,7 @@ export function useRefresh({
       const fetcherOptions: FetcherOptions = {
         tab,
         abortSignal: _signal,
-        serviceMap: servicesRegistry.val,
+        servicesRegistry,
       }
       try {
         currentItems = await fetcher(fetcherOptions)

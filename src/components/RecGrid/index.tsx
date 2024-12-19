@@ -21,7 +21,7 @@ import { $headerHeight } from '$header'
 import { IconForOpenExternalLink } from '$modules/icon'
 import { concatThenUniq, getGridRefreshCount, refreshForGrid } from '$modules/rec-services'
 import { hotStore } from '$modules/rec-services/hot'
-import { type ServiceMap } from '$modules/rec-services/service-map.ts'
+import { getServiceFromRegistry, type ServiceMap } from '$modules/rec-services/service-map.ts'
 import { useSettingsSnapshot } from '$modules/settings'
 import { isSafari } from '$ua'
 import { antMessage } from '$utility/antd'
@@ -29,7 +29,7 @@ import { css } from '@emotion/react'
 import { useEventListener, useLatest, usePrevious, useUnmountedRef } from 'ahooks'
 import { Divider } from 'antd'
 import type { AxiosError } from 'axios'
-import { cloneDeep, delay, invariant } from 'es-toolkit'
+import { cloneDeep, delay } from 'es-toolkit'
 import mitt from 'mitt'
 import ms from 'ms'
 import type { ForwardedRef, ReactNode } from 'react'
@@ -201,8 +201,7 @@ const RecGridInner = memo(function ({
     let newHasMore = true
     let err: any
     try {
-      const service = servicesRegistry.val[tab]
-      invariant(service, `service not found for tab=${tab}`)
+      const service = getServiceFromRegistry(servicesRegistry, tab)
       let more = (await service.loadMore(refreshAbortController.signal)) || []
       more = filterRecItems(more, tab)
       newItems = concatThenUniq(newItems, more)

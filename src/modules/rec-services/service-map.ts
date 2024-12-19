@@ -45,6 +45,14 @@ export type ServiceMap = {
   [K in ServiceMapKey]: ReturnType<(typeof createServiceMap)[K]>
 }
 
+export type ServicesRegistry = RefStateBox<Partial<ServiceMap>>
+
+export type FetcherOptions = {
+  tab: ETab
+  abortSignal: AbortSignal
+  servicesRegistry: ServicesRegistry
+}
+
 export function getServiceFromRegistry(
   servicesRegistry: RefStateBox<Partial<ServiceMap>>,
   tab: ETab,
@@ -54,8 +62,9 @@ export function getServiceFromRegistry(
   return service
 }
 
-export type FetcherOptions = {
-  tab: ETab
-  abortSignal: AbortSignal
-  serviceMap: Partial<ServiceMap>
+export function assertService(
+  service: ITabService | undefined,
+  tab?: ETab,
+): asserts service is ITabService {
+  invariant(service, `service is nil for tab=${tab || 'unknown'}`)
 }
